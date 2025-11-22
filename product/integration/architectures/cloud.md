@@ -1,0 +1,101 @@
+---
+title: "Cloud Architecture"
+description: "Get started in 5 minutes with fully-managed Forest Admin Cloud - no infrastructure required"
+---
+
+The Cloud architecture is Forest Admin's fully-managed solution where everything is hosted for you. Connect your database and start building your admin panel in minutes without any infrastructure setup.
+
+## Architecture Overview
+
+<img src="/assets/architecture-cloud.svg" alt="Cloud Architecture Diagram" />
+
+### How it Works
+
+1. **Your users** access the Forest Admin UI hosted at `app.forestadmin.com`
+2. **Forest Admin Cloud** hosts both the agent and UI
+3. **Cloud agent** connects to your database using credentials you provide
+4. **Your database** must be network-accessible to Forest Admin's servers
+5. **All queries** are executed from Forest Admin's infrastructure
+
+{% hint style="info" %}
+
+**Perfect for**: Quick prototypes, internal tools, and simple CRUD operations where you don't need custom code.
+
+{% endhint %}
+
+## Limitations
+
+### Native datasources only
+
+Cloud mode only supports native database connections (PostgreSQL, MySQL, MongoDB, SQL Server, SQLite). You cannot use:
+
+- **Community datasources** (Hubspot, Elasticsearch, etc.)
+- **Custom datasources** (APIs, third-party services)
+- **Multi-datasources** (connecting multiple databases)
+
+For these advanced data source options, use [Self-Hosted architecture](/product/integration/architectures/self-hosted).
+
+### Limited environment management
+
+Cloud mode has a simplified environment workflow:
+
+- **Development environment only** - No staging or multiple production environments
+- **No branch-based workflow** - Cannot use Forest CLI for branch management
+- **No environment promotion** - Cannot promote changes between environments
+
+For full developer workflow with staging environments and branch management, use [Self-Hosted architecture](/product/integration/architectures/self-hosted).
+
+### Database Must Be Network Accessible
+
+Your database must accept connections from Forest Admin's IP address:
+
+```
+Required: Allow inbound connections from Forest Admin
+- Whitelist IP: 35.180.175.97
+- Your database needs a public endpoint or VPN
+- Cannot use localhost or internal-only databases
+```
+
+{% hint style="info" %}
+
+**Forest Admin Cloud IP to whitelist**: `35.180.175.97`
+
+{% endhint %}
+
+### Data Queries Through Forest Admin
+
+Unlike self-hosted where your agent queries your database directly, Cloud mode queries go through Forest Admin's servers:
+
+```
+Self-Hosted:  Your Agent → Your Database (direct)
+Cloud:        Forest Admin Cloud → Your Database (external)
+```
+
+This means:
+- Slightly higher latency
+- Data in transit goes through Forest Admin
+- Subject to Forest Admin's availability
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="Can I use Cloud mode with a local database?">
+    No, Cloud mode requires your database to be network-accessible. For local databases, use [Self-Hosted architecture](/product/integration/architectures/self-hosted) instead.
+  </Accordion>
+
+  <Accordion title="Is my data secure in Cloud mode?">
+    Yes. Forest Admin uses TLS encryption for all connections. However, data does transit through Forest Admin's servers. For maximum security with data sovereignty, use [Self-Hosted](/product/integration/architectures/self-hosted) or [On-Premise](/product/integration/architectures/on-premise).
+  </Accordion>
+
+  <Accordion title="Can I switch from Cloud to Self-Hosted later?">
+    Yes! You can migrate your configuration and settings.
+  </Accordion>
+
+  <Accordion title="What are the IP addresses to whitelist?">
+    Contact [Forest Admin support](https://www.forestadmin.com/contact) to get the current list of IP addresses for whitelisting.
+  </Accordion>
+
+  <Accordion title="Can I use Cloud mode in production?">
+    Cloud mode is suitable for production use cases that don't require custom code. For production applications with custom business logic, we recommend [Self-Hosted architecture](/product/integration/architectures/self-hosted).
+  </Accordion>
+</AccordionGroup>

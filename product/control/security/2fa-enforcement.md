@@ -1,0 +1,48 @@
+---
+title: "Two-Factor Authentication Enforcement"
+description: "Enforce 2FA for specific environments"
+---
+
+## Overview
+
+Two-Factor Authentication (2FA) enforcement allows organizations to enforce a second authentication factor while login to specific environments.
+
+{% hint style="info" %}
+
+This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
+
+{% endhint %}
+
+## How 2FA Enforcement Works
+
+While 2FA is available platform-wide in Forest Admin, the Security tab allows you to make 2FA mandatory before users can access specific environments.
+
+## Third-Party Login Providers
+
+{% hint style="warning" %}
+
+For users who log in through third-party providers, ensure that 2FA is enabled on that provider to maintain security parity.
+
+{% endhint %}
+
+When using third-party login providers (such as Google, Microsoft, etc.), the 2FA security must be configured at the provider level to ensure consistent protection.
+
+## Configuration
+
+To enforce 2FA for specific environments:
+
+<Steps>
+  <Step title="Navigate to Security Settings">
+    Go to **Project Settings** > **Security Tab**
+  </Step>
+
+  <Step title="Configure 2FA Enforcement">
+    Select the environments where 2FA should be mandatory
+  </Step>
+
+  <Step title="Save Settings">
+    Save your configuration to enforce 2FA requirements
+  </Step>
+</Steps>
+
+Once configured, users will be required to complete two-factor authentication before accessing the specified environments.

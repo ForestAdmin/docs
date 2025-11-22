@@ -1,0 +1,369 @@
+---
+title: Related data invalidation
+description: Refresh related data after action execution
+---
+
+When actions modify data that users are viewing, Forest Admin automatically reloads the current page. However, Related Data sections in Summary Views require explicit invalidation to refresh.
+
+## When to use invalidation
+
+Use related data invalidation when your action:
+
+- Creates, updates, or deletes records in a related collection
+- Modifies data displayed in Related Data sections of Summary Views
+- Changes relationships between records
+
+Forest Admin handles most cases automatically, but Summary Views with Related Data sections need manual refresh to avoid displaying stale data.
+
+## Basic usage
+
+Add an `invalidated` array to your success result specifying which relationships to refresh:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+collection.addAction('Add new transaction', {
+  scope: 'Single',
+  execute: async (context, resultBuilder) => {
+    const company = await context.getRecord(['id']);
+
+    // Create a new transaction
+    await createTransaction({
+      companyId: company.id,
+      amount: context.formValues.amount,
+    });
+
+    // Refresh the "emitted_transactions" Related Data section
+    return resultBuilder.success('New transaction created', {
+      invalidated: ['emitted_transactions'],
+    });
+  },
+});
+```
+
+```ruby Ruby
+collection.add_action(
+  'Add new transaction',
+  BaseAction.new(scope: ActionScope::SINGLE) do |context, result_builder|
+    company = context.get_record(['id'])
+
+    # Create a new transaction
+    create_transaction(
+      company_id: company['id'],
+      amount: context.form_values['amount']
+    )
+
+    # Refresh the "emitted_transactions" Related Data section
+    result_builder.success(
+      'New transaction created',
+      invalidated: ['emitted_transactions']
+    )
+  end
+)
+```
+</CodeGroup>
+
+## Multiple relationships
+
+Invalidate multiple Related Data sections at once:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+return resultBuilder.success('Data updated', {
+  invalidated: ['transactions', 'invoices', 'payments'],
+});
+```
+
+```ruby Ruby
+result_builder.success(
+  'Data updated',
+  invalidated: ['transactions', 'invoices', 'payments']
+)
+```
+</CodeGroup>
+
+## Example: Add comment
+
+<CodeGroup>
+```javascript Node.js / Cloud
+collection.addAction('Add comment', {
+  scope: 'Single',
+  form: [
+    {
+      type: 'String',
+      label: 'Comment',
+      widget: 'TextArea',
+      isRequired: true,
+    },
+  ],
+  execute: async (context, resultBuilder) => {
+    const ticket = await context.getRecord(['id']);
+    const comment = context.formValues.Comment;
+
+    // Create comment
+    await createComment({
+      ticketId: ticket.id,
+      text: comment,
+      authorId: context.caller.id,
+      createdAt: new Date(),
+    });
+
+    // Refresh comments section in Summary View
+    return resultBuilder.success('Comment added', {
+      invalidated: ['comments'],
+    });
+  },
+});
+```
+
+```ruby Ruby
+collection.add_action(
+  'Add comment',
+  BaseAction.new(
+    scope: ActionScope::SINGLE,
+    form: [
+      {
+        type: FieldType::STRING,
+        label: 'Comment',
+        widget: 'TextArea',
+        is_required: true
+      }
+    ]
+  ) do |context, result_builder|
+    ticket = context.get_record(['id'])
+    comment = context.form_values['Comment']
+
+    # Create comment
+    create_comment(
+      ticket_id: ticket['id'],
+      text: comment,
+      author_id: context.caller.id,
+      created_at: Time.now
+    )
+
+    # Refresh comments section in Summary View
+    result_builder.success('Comment added', invalidated: ['comments'])
+  end
+)
+```
+</CodeGroup>
+
+## Example: Update order items
+
+<CodeGroup>
+```javascript Node.js / Cloud
+collection.addAction('Add item to order', {
+  scope: 'Single',
+  form: [
+    {
+      type: 'Collection',
+      label: 'Product',
+      collectionName: 'products',
+      isRequired: true,
+    },
+    {
+      type: 'Number',
+      label: 'Quantity',
+      isRequired: true,
+    },
+  ],
+  execute: async (context, resultBuilder) => {
+    const order = await context.getRecord(['id']);
+    const { Product, Quantity } = context.formValues;
+
+    // Add item to order
+    await createOrderItem({
+      orderId: order.id,
+      productId: Product[0],  // Collection returns array of IDs
+      quantity: Quantity,
+    });
+
+    // Refresh order items and total
+    return resultBuilder.success('Item added', {
+      invalidated: ['order_items'],
+    });
+  },
+});
+```
+
+```ruby Ruby
+collection.add_action(
+  'Add item to order',
+  BaseAction.new(
+    scope: ActionScope::SINGLE,
+    form: [
+      {
+        type: FieldType::COLLECTION,
+        label: 'Product',
+        collection_name: 'products',
+        is_required: true
+      },
+      {
+        type: FieldType::NUMBER,
+        label: 'Quantity',
+        is_required: true
+      }
+    ]
+  ) do |context, result_builder|
+    order = context.get_record(['id'])
+    product = context.form_values['Product']
+    quantity = context.form_values['Quantity']
+
+    # Add item to order
+    create_order_item(
+      order_id: order['id'],
+      product_id: product[0],  # Collection returns array of IDs
+      quantity: quantity
+    )
+
+    # Refresh order items and total
+    result_builder.success('Item added', invalidated: ['order_items'])
+  end
+)
+```
+</CodeGroup>
+
+## Example: Assign task
+
+<CodeGroup>
+```javascript Node.js / Cloud
+collection.addAction('Assign task', {
+  scope: 'Single',
+  form: [
+    {
+      type: 'Collection',
+      label: 'Assignee',
+      collectionName: 'users',
+      isRequired: true,
+    },
+  ],
+  execute: async (context, resultBuilder) => {
+    const task = await context.getRecord(['id']);
+    const assigneeId = context.formValues.Assignee[0];
+
+    // Assign task
+    await updateTask(task.id, {
+      assignedTo: assigneeId,
+      assignedAt: new Date(),
+    });
+
+    // Refresh both task assignee and user's assigned tasks
+    return resultBuilder.success('Task assigned', {
+      invalidated: ['assignee', 'assigned_tasks'],
+    });
+  },
+});
+```
+
+```ruby Ruby
+collection.add_action(
+  'Assign task',
+  BaseAction.new(
+    scope: ActionScope::SINGLE,
+    form: [
+      {
+        type: FieldType::COLLECTION,
+        label: 'Assignee',
+        collection_name: 'users',
+        is_required: true
+      }
+    ]
+  ) do |context, result_builder|
+    task = context.get_record(['id'])
+    assignee_id = context.form_values['Assignee'][0]
+
+    # Assign task
+    update_task(
+      task['id'],
+      assigned_to: assignee_id,
+      assigned_at: Time.now
+    )
+
+    # Refresh both task assignee and user's assigned tasks
+    result_builder.success(
+      'Task assigned',
+      invalidated: ['assignee', 'assigned_tasks']
+    )
+  end
+)
+```
+</CodeGroup>
+
+## With HTML result
+
+Combine invalidation with HTML content:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+return resultBuilder.success('Transaction created', {
+  html: `
+    <p>Transaction #${transactionId} created successfully</p>
+    <p>Amount: $${amount}</p>
+  `,
+  invalidated: ['transactions', 'balance'],
+});
+```
+
+```ruby Ruby
+result_builder.success(
+  'Transaction created',
+  html: "<p>Transaction ##{transaction_id} created successfully</p>
+    <p>Amount: $#{amount}</p>",
+  invalidated: ['transactions', 'balance']
+)
+```
+</CodeGroup>
+
+## With error result
+
+Invalidation works with success results only. Errors don't refresh data:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+try {
+  await createTransaction(data);
+  return resultBuilder.success('Success', {
+    invalidated: ['transactions'],
+  });
+} catch (error) {
+  // No invalidation on error
+  return resultBuilder.error(`Failed: ${error.message}`);
+}
+```
+
+```ruby Ruby
+begin
+  create_transaction(data)
+  result_builder.success('Success', invalidated: ['transactions'])
+rescue => error
+  # No invalidation on error
+  result_builder.error("Failed: #{error.message}")
+end
+```
+</CodeGroup>
+
+## Finding relationship names
+
+The relationship name in `invalidated` must match the field name in your schema:
+
+1. Open the Summary View in Layout Editor
+2. Find the Related Data section you want to refresh
+3. Note the relationship field name (e.g., `emitted_transactions`, `comments`, `order_items`)
+4. Use that exact name in the `invalidated` array
+
+## Limitations
+
+- Invalidation only works with `success()` result type
+- Only affects Summary Views with Related Data sections
+- Cannot invalidate data in other collections
+- Requires exact match of relationship field names
+
+## Alternative: Full page reload
+
+If you need to refresh all data on the page, you can redirect to the current page:
+
+```javascript
+const currentUrl = context.request.url;  // If available
+return resultBuilder.redirectTo(currentUrl);
+```
+
+However, this is less efficient than targeted invalidation.

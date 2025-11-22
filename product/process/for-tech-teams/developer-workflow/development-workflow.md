@@ -1,0 +1,38 @@
+---
+title: Development Workflow
+description: Overview of the development workflow for Forest Admin
+---
+
+One of the goals of Forest Admin is empowering technical teams to achieve more in less time: in other words, giving them the means to create and maintain a great admin panel in as little time as possible.
+
+## Development tools
+
+Your Forest Admin panel is composed of 2 parts - [the frontend (UI) and the backend](/product/integration/architectures/self-hosted) - and for each one, you need the right tools:
+
+The **Admin backend** is part of your codebase. As a result, you'll be using your favorite tools to customize it:
+
+- Editing: your favorite IDE
+- Versioning: your favorite versioning tool (git, svn, mercurial, etc)
+
+Your **Forest Admin UI** is **not** part of your codebase: it is managed on Forest Admin servers. As a result, you depend on Forest Admin tools to customize it. Here's what we've built for you:
+
+- Editing: use the [Layout Editor mode](https://docs.forestadmin.com/user-guide/getting-started/master-your-ui/using-the-layout-editor-mode) to intuitively manage your layout (UI)
+- Versioning: use [Forest Admin CLI](/product/reference/cli/overview) to seamlessly manage your layout versions
+
+## Development workflow
+
+You'll find below a state diagram showcasing development scenarios and their related steps for the recommended development workflow:
+
+![Development Workflow Diagram](https://docs.forestadmin.com/assets/dev-workflow-diagram.jpg)
+
+In the next pages, we'll cover each step in detail.
+
+## Related pages
+
+
+
+  * [Environments](/product/process/for-tech-teams/developer-workflow/environments.md) - Create and manage your environments
+  * [Using Branches](/product/process/for-tech-teams/developer-workflow/using-branches.md) - Version control for your layouts
+  * [Deploying Changes](/product/process/for-tech-teams/developer-workflow/deploying-your-changes.md) - Deploy your layout changes
+
+

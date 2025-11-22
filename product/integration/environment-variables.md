@@ -1,0 +1,103 @@
+---
+title: "Environment Variables"
+description: "Configure your Forest Admin agent with required environment variables"
+---
+
+Environment variables are used to configure your Forest Admin agent securely, keeping sensitive information separate from your codebase.
+
+## Required Variables
+
+### FOREST_ENV_SECRET
+
+Your unique environment secret provided by Forest Admin.
+
+<CodeGroup>
+```bash Node.js
+FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
+```
+
+```bash Ruby
+FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
+```
+</CodeGroup>
+
+**Purpose:**
+- Authenticates your agent with Forest Admin
+- Links your agent to your Forest Admin project
+- Required for all architectures (Cloud, Self-Hosted, On-Premise)
+
+**Where to find it:**
+1. Go to [app.forestadmin.com](https://app.forestadmin.com)
+2. Select your project
+3. Go to Settings → Environments
+4. Copy the environment secret
+
+{% hint style="warning" %}
+
+Never commit `FOREST_ENV_SECRET` to version control. Always use environment variables or secret management tools.
+
+{% endhint %}
+
+### FOREST_AUTH_SECRET
+
+Secret key used to sign authentication tokens (Self-Hosted and On-Premise only).
+
+<CodeGroup>
+```bash Node.js
+FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
+```
+
+```bash Ruby
+FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
+```
+</CodeGroup>
+
+**Purpose:**
+- Signs JWT tokens for user authentication
+- Required for Self-Hosted and On-Premise architectures
+- Not needed for Cloud architecture
+
+**Generate a secure secret:**
+```bash
+# Generate a random 32-character string
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+# Or use OpenSSL
+openssl rand -hex 32
+```
+
+### NODE_ENV (Node.js only)
+
+Environment mode for Node.js applications.
+
+```bash
+NODE_ENV=production  # Options: development, production, test
+```
+
+**Purpose:**
+- `production`: Optimized performance, minimal logging
+- `development`: Detailed logging, development mode
+- `test`: Testing mode
+
+<CodeGroup>
+```javascript Node.js
+const agent = createAgent({
+  envSecret: process.env.FOREST_ENV_SECRET,
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  isProduction: process.env.NODE_ENV === 'production'
+});
+```
+
+```ruby Ruby
+agent = ForestAdminAgent::Agent.new do |config|
+  config.env_secret = ENV['FOREST_ENV_SECRET']
+  config.auth_secret = ENV['FOREST_AUTH_SECRET']
+end
+```
+</CodeGroup>
+
+{% hint style="warning" %}
+
+**Security reminder:** These environment variables contain sensitive secrets that authenticate your agent with Forest Admin. Never commit them to version control, share them publicly, or reuse them across different environments (development, staging, production). Always use separate secrets for each environment and store them securely using environment variables or secret management tools.
+
+{% endhint %}

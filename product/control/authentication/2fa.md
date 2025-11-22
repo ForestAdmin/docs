@@ -1,0 +1,565 @@
+---
+title: "Two-Factor Authentication (2FA)"
+description: "Enable and enforce two-factor authentication to add an extra layer of security to user accounts"
+---
+
+## Overview
+
+Two-Factor Authentication (2FA) adds an additional security layer beyond username and password. Users must provide a second factor - typically a time-based one-time password (TOTP) from an authenticator app - to access Forest Admin.
+
+{% hint style="info" %}
+
+**Recommended for All Users**: 2FA significantly reduces the risk of unauthorized access, even if passwords are compromised.
+
+{% endhint %}
+
+## Why Enable 2FA?
+
+
+
+  * [Prevent Account Takeover](#) - Protect against password theft, phishing, and credential stuffing attacks
+
+  * [Compliance Requirements](#) - Meet security requirements for GDPR, HIPAA, SOC 2, and other frameworks
+
+  * [Protect Sensitive Data](#) - Add extra protection for admin panels accessing customer or financial data
+
+  * [Audit Trail](#) - Track 2FA events in audit logs for security monitoring
+
+
+
+## Supported 2FA Methods
+
+### Authenticator Apps (Recommended)
+
+Time-based One-Time Password (TOTP) apps generate 6-digit codes that change every 30 seconds:
+
+
+
+  * [Google Authenticator](#) - Free app for iOS and Android
+
+  * [Microsoft Authenticator](#) - Supports backup and cloud sync
+
+  * [Authy](#) - Multi-device support with encrypted backups
+
+  * [1Password](#) - Password manager with built-in TOTP
+
+  * [Bitwarden](#) - Open-source with TOTP support
+
+  * [LastPass Authenticator](#) - One-tap push notifications
+
+
+
+### Backup Codes
+
+Recovery codes that can be used if you lose access to your authenticator app:
+
+- Generated during 2FA setup
+- One-time use only
+- Store securely (password manager or printed copy)
+- Can regenerate if needed
+
+{% hint style="warning" %}
+
+**Save Your Backup Codes**: Without backup codes or access to your authenticator, you'll be locked out if your device is lost.
+
+{% endhint %}
+
+## Enabling 2FA (For Users)
+
+### Setup Process
+
+<Steps>
+  <Step title="Access Account Settings">
+    Click your profile picture > **Account Settings** > **Security**
+  </Step>
+
+  <Step title="Enable Two-Factor Authentication">
+    Click **Enable 2FA** button
+  </Step>
+
+  <Step title="Scan QR Code">
+    1. Open your authenticator app
+    2. Tap "Add account" or "+" button
+    3. Scan the QR code displayed in Forest Admin
+
+    **Or** enter the setup key manually if you can't scan
+  </Step>
+
+  <Step title="Verify Setup">
+    Enter the 6-digit code from your authenticator app to confirm it's working correctly
+  </Step>
+
+  <Step title="Save Backup Codes">
+    1. Download or copy your backup codes
+    2. Store them securely (password manager recommended)
+    3. Check the box to confirm you've saved them
+  </Step>
+
+  <Step title="2FA Enabled">
+    You'll now be prompted for a code each time you log in
+  </Step>
+</Steps>
+
+### Manual Setup Key
+
+If you can't scan the QR code, use the manual setup key:
+
+```
+Setup Key: JBSWY3DPEHPK3PXP
+Account: your-email@example.com
+Type: Time-based
+```
+
+## Using 2FA to Log In
+
+### Login Flow
+
+<Steps>
+  <Step title="Enter Credentials">
+    Enter your email and password as usual
+  </Step>
+
+  <Step title="Enter 2FA Code">
+    Open your authenticator app and enter the current 6-digit code
+  </Step>
+
+  <Step title="Remember Device (Optional)">
+    Check "Trust this device for 30 days" to skip 2FA on this device
+  </Step>
+
+  <Step title="Access Granted">
+    You're logged in to Forest Admin
+  </Step>
+</Steps>
+
+### Using Backup Codes
+
+If you don't have access to your authenticator app:
+
+<Steps>
+  <Step title="Click 'Use Backup Code'">
+    On the 2FA prompt, click the link to use a backup code
+  </Step>
+
+  <Step title="Enter Backup Code">
+    Enter one of your saved backup codes (case-insensitive)
+  </Step>
+
+  <Step title="Code is Consumed">
+    Each backup code can only be used once. Generate new ones if running low.
+  </Step>
+</Steps>
+
+### Trusted Devices
+
+Mark devices as trusted to skip 2FA for 30 days:
+
+- **Use Case**: Your primary work computer
+- **Security**: Device is identified by secure cookie
+- **Removal**: Go to Account Settings > Security > Trusted Devices to revoke
+
+{% hint style="warning" %}
+
+**Public Computers**: Never mark public or shared computers as trusted.
+
+{% endhint %}
+
+## Enforcing 2FA (For Admins)
+
+Administrators can require 2FA for all users or specific roles.
+
+### Project-Wide Enforcement
+
+Require 2FA for everyone:
+
+<Steps>
+  <Step title="Navigate to Security Settings">
+    Go to **Project Settings** > **Security** > **Authentication**
+  </Step>
+
+  <Step title="Enable 2FA Requirement">
+    Toggle **Require Two-Factor Authentication** to ON
+  </Step>
+
+  <Step title="Set Grace Period">
+    Choose how long users have to enable 2FA:
+    - 24 hours (urgent)
+    - 7 days (recommended)
+    - 30 days (gradual rollout)
+  </Step>
+
+  <Step title="Notify Users">
+    Forest Admin automatically emails users about the requirement
+  </Step>
+
+  <Step title="Monitor Compliance">
+    Track which users have enabled 2FA in **Project Settings** > **Teams** > **Users**
+  </Step>
+</Steps>
+
+### Role-Based Enforcement
+
+Require 2FA only for specific roles:
+
+```javascript
+// Example: Require 2FA for Admins and Editors
+{
+  "roles": {
+    "admin": {
+      "require2FA": true
+    },
+    "editor": {
+      "require2FA": true
+    },
+    "viewer": {
+      "require2FA": false  // Optional for viewers
+    }
+  }
+}
+```
+
+**Configuration**:
+1. Go to **Project Settings** > **Roles**
+2. Edit each role
+3. Check **Require 2FA for this role**
+
+### Exceptions
+
+Allow specific users to bypass 2FA requirement:
+
+- **Use Case**: Emergency access accounts, service accounts, external contractors
+- **Configuration**: Edit user profile > **Security** > **Exempt from 2FA requirement**
+
+{% hint style="info" %}
+
+**Best Practice**: Minimize exceptions. If a user truly needs access, they should enable 2FA.
+
+{% endhint %}
+
+## Managing 2FA
+
+### Regenerating Backup Codes
+
+If you've used all your backup codes or lost them:
+
+<Steps>
+  <Step title="Access Security Settings">
+    Go to **Account Settings** > **Security**
+  </Step>
+
+  <Step title="Regenerate Codes">
+    Click **Regenerate Backup Codes**
+  </Step>
+
+  <Step title="Enter 2FA Code">
+    Verify with current authenticator code
+  </Step>
+
+  <Step title="Save New Codes">
+    Old codes are invalidated. Save the new ones securely.
+  </Step>
+</Steps>
+
+### Resetting Your Own 2FA
+
+If you need to switch authenticator apps or devices:
+
+<Steps>
+  <Step title="Disable 2FA">
+    Go to **Account Settings** > **Security** > **Disable 2FA**
+  </Step>
+
+  <Step title="Verify Identity">
+    Enter your current 2FA code or a backup code
+  </Step>
+
+  <Step title="Re-enable 2FA">
+    Follow the setup process again with your new device/app
+  </Step>
+</Steps>
+
+### Admin: Resetting User's 2FA
+
+If a user loses access to their authenticator and backup codes:
+
+{% hint style="warning" %}
+
+**Security Risk**: Only reset 2FA after verifying the user's identity through alternate means (video call, ID verification, etc.).
+
+{% endhint %}
+
+<Steps>
+  <Step title="Verify User Identity">
+    Confirm the user's identity (don't rely solely on email, which could be compromised)
+  </Step>
+
+  <Step title="Navigate to User Management">
+    Go to **Project Settings** > **Teams** > **Users**
+  </Step>
+
+  <Step title="Find User">
+    Search for the user who needs 2FA reset
+  </Step>
+
+  <Step title="Reset 2FA">
+    Click user menu (...) > **Reset Two-Factor Authentication**
+  </Step>
+
+  <Step title="Confirm Action">
+    Confirm the reset. User must set up 2FA again at next login (if required).
+  </Step>
+
+  <Step title="Log the Action">
+    This action is automatically logged in audit logs for security tracking
+  </Step>
+</Steps>
+
+## 2FA + SSO
+
+### How They Work Together
+
+2FA and SSO can be used simultaneously for defense in depth:
+
+<Tabs>
+  <Tab title="IdP-Based 2FA (Recommended)">
+    **MFA enforced at identity provider**
+
+    - User authenticates with IdP (e.g., Okta, Azure AD)
+    - IdP requires MFA (push notification, TOTP, etc.)
+    - Forest Admin trusts the IdP's authentication
+
+    **Advantages**:
+    - Centralized MFA management
+    - One MFA prompt for all applications
+    - Better user experience
+
+    **Configuration**: Enable MFA in your IdP settings
+  </Tab>
+
+  <Tab title="Forest Admin 2FA + SSO">
+    **Additional 2FA layer in Forest Admin**
+
+    - User authenticates via SSO
+    - Forest Admin requires its own 2FA
+
+    **Advantages**:
+    - Extra layer of security
+    - Works even if IdP MFA is disabled
+    - Forest Admin-specific second factor
+
+    **Use Case**: Very high security environments, compliance requirements
+  </Tab>
+
+  <Tab title="SSO Only (No Forest 2FA)">
+    **Rely entirely on IdP security**
+
+    - User authenticates via SSO
+    - No additional 2FA in Forest Admin
+    - IdP should enforce MFA
+
+    **Advantages**:
+    - Simplified user experience
+    - Consistent with other applications
+
+    **Requirement**: IdP must have strong MFA policies
+  </Tab>
+</Tabs>
+
+### Recommended Configuration
+
+
+
+  * [For SSO Users](#) - Enforce MFA at the IdP level
+
+    Disable Forest Admin 2FA for SSO users to avoid double-prompting
+
+  * [For Password Users](#) - Require Forest Admin 2FA
+
+    These users don't benefit from IdP security
+
+
+
+## Security Best Practices
+
+### For Users
+
+
+
+  * [Use Secure Authenticator](#) - Choose reputable authenticator apps with backup/sync features
+
+  * [Backup Your Codes](#) - Store backup codes in a password manager or secure location
+
+  * [Don't Share Codes](#) - Never share your 2FA codes with anyone, including IT or admins
+
+  * [Update When Changing Devices](#) - Transfer or re-setup 2FA before wiping old device
+
+
+
+### For Administrators
+
+1. **Enforce 2FA Universally**: All users with access to sensitive data should use 2FA
+2. **Document Reset Process**: Have a clear, secure process for handling 2FA resets
+3. **Monitor Adoption**: Track which users have enabled 2FA
+4. **Regular Reminders**: Remind users to keep backup codes updated
+5. **Audit 2FA Events**: Review audit logs for failed 2FA attempts
+6. **Emergency Access**: Maintain one admin account with password + 2FA for emergencies
+
+### Security Checklist
+
+- [ ] 2FA enabled for all admin accounts
+- [ ] 2FA required for users accessing sensitive data
+- [ ] Backup codes generated and stored securely
+- [ ] 2FA reset process documented and communicated
+- [ ] Regular audits of 2FA usage and exemptions
+- [ ] Monitoring for suspicious 2FA activity
+
+## Compliance Requirements
+
+### GDPR
+
+2FA helps satisfy GDPR Article 32 (Security of Processing):
+
+- Implement appropriate technical measures
+- Protect against unauthorized access
+- Document security controls
+
+### HIPAA
+
+2FA addresses HIPAA Security Rule requirements:
+
+- Access Control (§164.312(a)(1))
+- User authentication (§164.312(d))
+- Protection of ePHI access
+
+### SOC 2
+
+2FA supports SOC 2 Trust Service Criteria:
+
+- CC6.1: Logical and physical access controls
+- CC6.2: Prior to issuing system credentials
+- CC6.7: Access removed when no longer needed (2FA reset tracked)
+
+### PCI DSS
+
+2FA meets PCI DSS Requirement 8.3:
+
+- Multi-factor authentication for admin access
+- Reduces risk of credential theft
+- Protects cardholder data environment
+
+## Troubleshooting
+
+### Code Not Working
+
+<AccordionGroup>
+  <Accordion title="Time Sync Issues">
+    **Problem**: Authenticator app time is out of sync
+
+    **Symptoms**: Code is always rejected, even when entered correctly
+
+    **Solution**:
+    1. Check your phone's time settings
+    2. Enable automatic time/date
+    3. Try the next code (they change every 30 seconds)
+
+    **For Google Authenticator**:
+    - Go to Settings > Time correction for codes > Sync now
+  </Accordion>
+
+  <Accordion title="Wrong Code Entered">
+    **Problem**: Entering an old or incorrect code
+
+    **Solution**:
+    - Wait for the code to refresh in your app
+    - Ensure you're using the correct account (if you have multiple)
+    - Check for typos (0 vs O, 1 vs l)
+  </Accordion>
+
+  <Accordion title="Authenticator App Deleted">
+    **Problem**: Removed app or factory reset phone without backing up
+
+    **Solution**:
+    - Use a backup code if you have one
+    - Contact your admin for 2FA reset
+    - Admin must verify your identity before resetting
+  </Accordion>
+</AccordionGroup>
+
+### Can't Scan QR Code
+
+**Solutions**:
+
+1. **Use Manual Entry**: Copy the setup key and enter it manually in your authenticator app
+2. **Try Different Device**: Use a tablet or another phone to scan
+3. **Check Camera Permissions**: Ensure authenticator app has camera access
+4. **Screenshot**: Take a screenshot (secure it afterwards) and scan from photos
+
+### Lost Backup Codes
+
+**If you still have authenticator access**:
+1. Log in with your authenticator code
+2. Regenerate new backup codes
+3. Save them securely
+
+**If you don't have authenticator or backup codes**:
+1. Contact your administrator
+2. Admin will verify your identity
+3. Admin can reset your 2FA
+4. Set up 2FA again immediately
+
+### Can't Log In After 2FA Enforcement
+
+**Problem**: 2FA was enforced but user hasn't set it up
+
+**Solution**:
+1. Users receive grace period to enable 2FA
+2. During grace period, they're prompted to set up 2FA
+3. After grace period, they must set up 2FA before accessing
+
+**Admin Override**:
+- Admin can temporarily exempt user from 2FA requirement
+- User can then log in and set up 2FA properly
+
+## Best Practices by Industry
+
+### Healthcare (HIPAA)
+
+- **Require**: 2FA for all users accessing PHI
+- **Method**: Authenticator apps (TOTP)
+- **Monitoring**: Alert on failed 2FA attempts
+- **Documentation**: Log all 2FA resets with justification
+
+### Financial Services
+
+- **Require**: 2FA for all employees
+- **Method**: Hardware tokens or authenticator apps
+- **No Exceptions**: Even executives must use 2FA
+- **Audit**: Quarterly review of 2FA compliance
+
+### E-Commerce / Retail
+
+- **Require**: 2FA for admins and finance team
+- **Optional**: For customer service with read-only access
+- **Balance**: Security vs. operational efficiency
+- **Review**: Monthly check of 2FA exceptions
+
+### SaaS / Tech
+
+- **Require**: 2FA for all internal employees
+- **Customer Admins**: Enforce or strongly recommend
+- **Grace Period**: 7 days for new users
+- **Integration**: Prefer IdP-based MFA with SSO
+
+## Next Steps
+
+
+
+  * [SSO Setup](/product/control/authentication/sso.md) - Combine 2FA with Single Sign-On for enhanced security
+
+  * [IP Whitelisting](/product/control/security/ip-whitelisting.md) - Add network-level security restrictions
+
+  * [Session Management](/product/control/security/session-management.md) - Configure session timeouts and policies
+
+  * [Audit Logs](/product/control/audit.md) - Monitor 2FA events and failed login attempts
+
+

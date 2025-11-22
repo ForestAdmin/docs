@@ -1,0 +1,643 @@
+---
+title: Code-based actions
+description: Build advanced Smart Actions with custom code for complex business logic
+---
+
+Code-based actions (also called Smart Actions) let you implement custom business logic in your backend code. They provide full control over action behavior, forms, validation, and results.
+
+Use code-based actions when you need complex workflows, dynamic forms, external API integrations, file generation, or custom validation that goes beyond what no-code actions can do.
+
+## Basic structure
+
+Here's what a code-based action looks like:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+agent.customizeCollection('companies', collection =>
+  collection.addAction('Mark as Live', {
+    scope: 'Single',
+    description: 'Mark the company as live',
+    form: [
+      {
+        type: 'Date',
+        label: 'Live date',
+        isRequired: true,
+      },
+      {
+        type: 'String',
+        label: 'Notes',
+        widget: 'TextArea',
+      },
+    ],
+    execute: async (context, resultBuilder) => {
+      // Access form values
+      const { 'Live date': liveDate, Notes: notes } = context.formValues;
+
+      // Access selected record
+      const company = await context.getRecord(['id', 'name']);
+
+      // Perform business logic
+      await markCompanyAsLive(company.id, liveDate, notes);
+
+      // Return result
+      return resultBuilder.success(`${company.name} is now live!`);
+    },
+  }),
+);
+```
+
+```ruby Ruby
+include ForestAdminDatasourceCustomizer::Decorators::Action
+include ForestAdminDatasourceCustomizer::Decorators::Action::Types
+
+forest_agent.customize_collection('companies') do |collection|
+  collection.add_action(
+    'Mark as Live',
+    BaseAction.new(
+      scope: ActionScope::SINGLE,
+      description: 'Mark the company as live',
+      form: [
+        {
+          type: FieldType::DATE,
+          label: 'Live date',
+          is_required: true
+        },
+        {
+          type: FieldType::STRING,
+          label: 'Notes',
+          widget: 'TextArea'
+        }
+      ]
+    ) do |context, result_builder|
+      # Access form values
+      live_date = context.form_values['Live date']
+      notes = context.form_values['Notes']
+
+      # Access selected record
+      company = context.get_record(['id', 'name'])
+
+      # Perform business logic
+      mark_company_as_live(company['id'], live_date, notes)
+
+      # Return result
+      result_builder.success("#{company['name']} is now live!")
+    end
+  )
+end
+```
+</CodeGroup>
+
+## Action configuration
+
+### Required properties
+
+| Property | Description |
+|----------|-------------|
+| **scope** | `'Single'`, `'Bulk'`, or `'Global'` - defines when the action is available |
+| **execute** | Function that runs when the action is triggered |
+
+### Optional properties
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| **form** | Array of form fields or dynamic form function | `[{ type: 'String', label: 'Name' }]` |
+| **description** | Help text shown in the UI | `'Mark the company as live'` |
+| **submitButtonLabel** | Custom label for submit button | `'Turn On'` |
+| **generateFile** | Set to `true` for file download actions | `true` |
+
+## Context object
+
+The context object provides access to everything you need in your action:
+
+### Form values
+
+Access user input from the form:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+const amount = context.formValues.Amount;
+const email = context.formValues['Email Address'];
+```
+
+```ruby Ruby
+amount = context.form_values['Amount']
+email = context.form_values['Email Address']
+```
+</CodeGroup>
+
+### Selected records
+
+Get the records the action is running on:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+// Single action
+const user = await context.getRecord(['id', 'email', 'name']);
+
+// Bulk action
+const users = await context.getRecords(['id', 'email']);
+```
+
+```ruby Ruby
+# Single action
+user = context.get_record(['id', 'email', 'name'])
+
+# Bulk action
+users = context.get_records(['id', 'email'])
+```
+</CodeGroup>
+
+### Current user
+
+Access information about who triggered the action:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+const userId = context.caller.id;
+const userEmail = context.caller.email;
+const userRole = context.caller.role;
+const userTeam = context.caller.team;
+```
+
+```ruby Ruby
+user_id = context.caller.id
+user_email = context.caller.email
+user_role = context.caller.role
+user_team = context.caller.team
+```
+</CodeGroup>
+
+### Collection metadata
+
+Access collection schema and information:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+const collectionName = context.collection.name;
+const fields = context.collection.schema.fields;
+```
+
+```ruby Ruby
+collection_name = context.collection.name
+fields = context.collection.schema.fields
+```
+</CodeGroup>
+
+### Filters
+
+For Bulk and Global actions, access current filters:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+const filter = context.filter;
+// Use filter to query records matching current view
+```
+
+```ruby Ruby
+filter = context.filter
+# Use filter to query records matching current view
+```
+</CodeGroup>
+
+### Change detection
+
+Check if a form field value has changed:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+if (context.hasFieldChanged('Status')) {
+  // Status field was modified by user
+}
+```
+
+```ruby Ruby
+if context.has_field_changed('Status')
+  # Status field was modified by user
+end
+```
+</CodeGroup>
+
+* [Context & scope](/product/process/actions/custom-actions/context-scope.md) - Learn more about context and scopes
+
+## Result builder
+
+Return appropriate feedback to users:
+
+### Success notification
+
+<CodeGroup>
+```javascript Node.js / Cloud
+return resultBuilder.success('Operation completed!');
+```
+
+```ruby Ruby
+result_builder.success('Operation completed!')
+```
+</CodeGroup>
+
+### Error notification
+
+<CodeGroup>
+```javascript Node.js / Cloud
+return resultBuilder.error('Something went wrong');
+```
+
+```ruby Ruby
+result_builder.error('Something went wrong')
+```
+</CodeGroup>
+
+### HTML content
+
+<CodeGroup>
+```javascript Node.js / Cloud
+return resultBuilder.success('Results', {
+  html: '<p>Detailed results...</p>'
+});
+```
+
+```ruby Ruby
+result_builder.success('Results', html: '<p>Detailed results...</p>')
+```
+</CodeGroup>
+
+### File download
+
+<CodeGroup>
+```javascript Node.js / Cloud
+return resultBuilder.file(
+  fileContent,
+  'report.pdf',
+  'application/pdf'
+);
+```
+
+```ruby Ruby
+result_builder.file(
+  content: file_content,
+  name: 'report.pdf',
+  mime_type: 'application/pdf'
+)
+```
+</CodeGroup>
+
+### Redirect
+
+<CodeGroup>
+```javascript Node.js / Cloud
+return resultBuilder.redirectTo('https://example.com');
+```
+
+```ruby Ruby
+result_builder.redirect_to('https://example.com')
+```
+</CodeGroup>
+
+### Webhook
+
+<CodeGroup>
+```javascript Node.js / Cloud
+return resultBuilder.webhook(
+  'https://api.example.com/webhook',
+  'POST',
+  { Authorization: 'Bearer token' },
+  { data: 'value' }
+);
+```
+
+```ruby Ruby
+result_builder.webhook(
+  url: 'https://api.example.com/webhook',
+  method: 'POST',
+  headers: { 'Authorization' => 'Bearer token' },
+  body: { data: 'value' }
+)
+```
+</CodeGroup>
+
+* [Result types](/product/process/actions/custom-actions/result-types.md) - Explore all result types
+
+## Forms
+
+Actions can include forms to collect user input:
+
+### Static forms
+
+Define fields with fixed configuration:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+form: [
+  { type: 'String', label: 'Name', isRequired: true },
+  { type: 'Number', label: 'Amount', description: 'Amount in USD' },
+  { type: 'Enum', label: 'Status', enumValues: ['pending', 'approved'] },
+  { type: 'Date', label: 'Start date' },
+  { type: 'Boolean', label: 'Send email?' },
+]
+```
+
+```ruby Ruby
+form: [
+  { type: FieldType::STRING, label: 'Name', is_required: true },
+  { type: FieldType::NUMBER, label: 'Amount', description: 'Amount in USD' },
+  { type: FieldType::ENUM, label: 'Status', enum_values: ['pending', 'approved'] },
+  { type: FieldType::DATE, label: 'Start date' },
+  { type: FieldType::BOOLEAN, label: 'Send email?' }
+]
+```
+</CodeGroup>
+
+### Dynamic forms
+
+Make forms reactive to user input or record data:
+
+<CodeGroup>
+```javascript Node.js / Cloud
+form: [
+  { type: 'Boolean', label: 'Send email?', id: 'sendEmail' },
+  {
+    type: 'String',
+    label: 'Email address',
+    // Only show if "Send email?" is checked
+    if: context => context.formValues.sendEmail === true,
+  },
+  {
+    type: 'Number',
+    label: 'Amount',
+    // Set default from record data
+    defaultValue: async context => {
+      const order = await context.getRecord(['total']);
+      return order.total;
+    },
+  },
+]
+```
+
+```ruby Ruby
+form: [
+  { type: FieldType::BOOLEAN, label: 'Send email?', id: 'sendEmail' },
+  {
+    type: FieldType::STRING,
+    label: 'Email address',
+    # Only show if "Send email?" is checked
+    if: ->(context) { context.form_values['sendEmail'] == true }
+  },
+  {
+    type: FieldType::NUMBER,
+    label: 'Amount',
+    # Set default from record data
+    default_value: ->(context) {
+      order = context.get_record(['total'])
+      order['total']
+    }
+  }
+]
+```
+</CodeGroup>
+
+* [Forms](/product/process/actions/custom-actions/forms.md) - Learn about form fields and dynamic forms
+
+## Common patterns
+
+### Send email
+
+<CodeGroup>
+```javascript Node.js / Cloud
+collection.addAction('Send Welcome Email', {
+  scope: 'Single',
+  form: [
+    { type: 'String', label: 'Subject', isRequired: true },
+    { type: 'String', label: 'Message', widget: 'TextArea', isRequired: true },
+  ],
+  execute: async (context, resultBuilder) => {
+    const user = await context.getRecord(['email', 'name']);
+    const { Subject, Message } = context.formValues;
+
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: Subject,
+        body: Message,
+      });
+      return resultBuilder.success(`Email sent to ${user.email}`);
+    } catch (error) {
+      return resultBuilder.error(`Failed to send email: ${error.message}`);
+    }
+  },
+});
+```
+
+```ruby Ruby
+collection.add_action(
+  'Send Welcome Email',
+  BaseAction.new(
+    scope: ActionScope::SINGLE,
+    form: [
+      { type: FieldType::STRING, label: 'Subject', is_required: true },
+      { type: FieldType::STRING, label: 'Message', widget: 'TextArea', is_required: true }
+    ]
+  ) do |context, result_builder|
+    user = context.get_record(['email', 'name'])
+    subject = context.form_values['Subject']
+    message = context.form_values['Message']
+
+    begin
+      send_email(
+        to: user['email'],
+        subject: subject,
+        body: message
+      )
+      result_builder.success("Email sent to #{user['email']}")
+    rescue => error
+      result_builder.error("Failed to send email: #{error.message}")
+    end
+  end
+)
+```
+</CodeGroup>
+
+### Charge credit card
+
+<CodeGroup>
+```javascript Node.js / Cloud
+collection.addAction('Charge Credit Card', {
+  scope: 'Single',
+  form: [
+    { type: 'Number', label: 'Amount', isRequired: true },
+    { type: 'String', label: 'Description', isRequired: true },
+  ],
+  execute: async (context, resultBuilder) => {
+    const customer = await context.getRecord(['stripeId', 'email']);
+    const { Amount, Description } = context.formValues;
+
+    try {
+      const charge = await stripe.charges.create({
+        amount: Amount * 100,
+        currency: 'usd',
+        customer: customer.stripeId,
+        description: Description,
+      });
+
+      return resultBuilder.success('Charge successful', {
+        html: `
+          <p>Charged $${Amount} to ${customer.email}</p>
+          <p>Transaction ID: ${charge.id}</p>
+        `,
+      });
+    } catch (error) {
+      return resultBuilder.error(`Charge failed: ${error.message}`);
+    }
+  },
+});
+```
+
+```ruby Ruby
+collection.add_action(
+  'Charge Credit Card',
+  BaseAction.new(
+    scope: ActionScope::SINGLE,
+    form: [
+      { type: FieldType::NUMBER, label: 'Amount', is_required: true },
+      { type: FieldType::STRING, label: 'Description', is_required: true }
+    ]
+  ) do |context, result_builder|
+    customer = context.get_record(['stripeId', 'email'])
+    amount = context.form_values['Amount']
+    description = context.form_values['Description']
+
+    begin
+      charge = Stripe::Charge.create(
+        amount: (amount * 100).to_i,
+        currency: 'usd',
+        customer: customer['stripeId'],
+        description: description
+      )
+
+      result_builder.success(
+        'Charge successful',
+        html: "<p>Charged $#{amount} to #{customer['email']}</p>
+               <p>Transaction ID: #{charge.id}</p>"
+      )
+    rescue => error
+      result_builder.error("Charge failed: #{error.message}")
+    end
+  end
+)
+```
+</CodeGroup>
+
+### Bulk status update
+
+<CodeGroup>
+```javascript Node.js / Cloud
+collection.addAction('Update Status', {
+  scope: 'Bulk',
+  form: [
+    {
+      type: 'Enum',
+      label: 'New Status',
+      enumValues: ['pending', 'approved', 'rejected'],
+      isRequired: true,
+    },
+  ],
+  execute: async (context, resultBuilder) => {
+    const orders = await context.getRecords(['id']);
+    const newStatus = context.formValues['New Status'];
+
+    const ids = orders.map(o => o.id);
+    await Order.update({ status: newStatus }, { where: { id: ids } });
+
+    return resultBuilder.success(`Updated ${ids.length} orders to ${newStatus}`);
+  },
+});
+```
+
+```ruby Ruby
+collection.add_action(
+  'Update Status',
+  BaseAction.new(
+    scope: ActionScope::BULK,
+    form: [
+      {
+        type: FieldType::ENUM,
+        label: 'New Status',
+        enum_values: ['pending', 'approved', 'rejected'],
+        is_required: true
+      }
+    ]
+  ) do |context, result_builder|
+    orders = context.get_records(['id'])
+    new_status = context.form_values['New Status']
+
+    ids = orders.map { |o| o['id'] }
+    Order.where(id: ids).update_all(status: new_status)
+
+    result_builder.success("Updated #{ids.length} orders to #{new_status}")
+  end
+)
+```
+</CodeGroup>
+
+### Generate report
+
+<CodeGroup>
+```javascript Node.js / Cloud
+collection.addAction('Generate Report', {
+  scope: 'Global',
+  generateFile: true,
+  form: [
+    { type: 'DateOnly', label: 'Start Date', isRequired: true },
+    { type: 'DateOnly', label: 'End Date', isRequired: true },
+  ],
+  execute: async (context, resultBuilder) => {
+    const { 'Start Date': startDate, 'End Date': endDate } = context.formValues;
+
+    const data = await fetchReportData(startDate, endDate);
+    const pdf = await generatePDF(data);
+
+    return resultBuilder.file(
+      pdf,
+      `report-${startDate}-${endDate}.pdf`,
+      'application/pdf'
+    );
+  },
+});
+```
+
+```ruby Ruby
+collection.add_action(
+  'Generate Report',
+  BaseAction.new(
+    scope: ActionScope::GLOBAL,
+    is_generate_file: true,
+    form: [
+      { type: FieldType::DATE_ONLY, label: 'Start Date', is_required: true },
+      { type: FieldType::DATE_ONLY, label: 'End Date', is_required: true }
+    ]
+  ) do |context, result_builder|
+    start_date = context.form_values['Start Date']
+    end_date = context.form_values['End Date']
+
+    data = fetch_report_data(start_date, end_date)
+    pdf = generate_pdf(data)
+
+    result_builder.file(
+      content: pdf,
+      name: "report-#{start_date}-#{end_date}.pdf",
+      mime_type: 'application/pdf'
+    )
+  end
+)
+```
+</CodeGroup>
+
+## Learn more
+
+
+
+  * [Forms](/product/process/actions/custom-actions/forms.md) - Form fields, validation, and dynamic behavior
+  * [Result types](/product/process/actions/custom-actions/result-types.md) - All the ways to return feedback to users
+  * [Context & scope](/product/process/actions/custom-actions/context-scope.md) - Understanding scopes and the context object
+  * [Related data invalidation](/product/process/actions/custom-actions/related-data-invalidation.md) - Refresh related data after actions
+
+

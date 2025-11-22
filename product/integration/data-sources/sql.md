@@ -1,0 +1,269 @@
+---
+title: "SQL datasource"
+description: "Connect to PostgreSQL, MySQL, MariaDB, SQL Server, or SQLite with automatic schema introspection"
+---
+
+The SQL datasource connects directly to SQL databases with automatic schema introspection. Each database table or view maps to a Forest Admin collection - tables offer full read-write capabilities while views are read-only.
+
+## Basic usage
+
+<CodeGroup>
+```javascript
+
+
+const agent = createAgent(options);
+
+agent.addDataSource(
+  createSqlDataSource({
+    uri: 'postgresql://user:pass@localhost:5432/mydb',
+    sslMode: 'preferred'
+  })
+);
+```
+
+```ruby
+require 'forest_admin_agent'
+
+ForestAdminAgent::Agent.new do |config|
+  config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
+end
+```
+</CodeGroup>
+
+## Automatic schema introspection
+
+By default, the SQL datasource automatically discovers your database structure when the agent starts. It extracts:
+
+- **Tables and views** - Each becomes a collection
+- **Columns** - With automatic type detection
+- **Primary keys** - For record identification
+- **Foreign keys** - Converted to relationships
+- **Indexes** - Used for query optimization
+
+This requires database credentials with access to `information_schema`. Ownership roles are recommended.
+
+{% hint style="info" %}
+
+Introspection is supported for PostgreSQL, MySQL, MariaDB, and Microsoft SQL Server.
+
+{% endhint %}
+
+## Configuration options
+
+### Connection URI
+
+The connection URI format varies by database:
+
+<CodeGroup>
+```javascript
+createSqlDataSource({
+  uri: 'postgresql://user:password@host:5432/database'
+})
+```
+
+```javascript
+createSqlDataSource({
+  uri: 'mysql://user:password@host:3306/database'
+})
+```
+
+```javascript
+createSqlDataSource({
+  uri: 'mssql://user:password@host:1433/database'
+})
+```
+
+```javascript
+createSqlDataSource({
+  uri: 'sqlite://path/to/database.db'
+})
+```
+</CodeGroup>
+
+### SSL configuration
+
+Control SSL/TLS connection behavior:
+
+```javascript
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  sslMode: 'preferred' // or 'verify', 'required', 'disabled', 'manual'
+})
+```
+
+**SSL modes:**
+- `preferred` - Use SSL if available, otherwise unencrypted (default)
+- `required` - Require SSL, fail if unavailable
+- `verify` - Require SSL with certificate verification
+- `disabled` - Never use SSL
+- `manual` - Custom SSL configuration (advanced)
+
+### Schema selection
+
+Specify which database schema to use (PostgreSQL, SQL Server):
+
+```javascript
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  schema: 'my_schema' // default: 'public'
+})
+```
+
+### Connection pooling
+
+Configure connection pool for optimal performance:
+
+```javascript
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  pool: {
+    max: 20,        // Maximum connections
+    min: 5,         // Minimum connections
+    acquire: 30000, // Max time (ms) to get connection
+    idle: 10000     // Close idle connections after 10s
+  }
+})
+```
+
+### Read replicas
+
+Distribute read operations across replica databases:
+
+```javascript
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  replication: {
+    write: { host: 'primary.example.com' },
+    read: [
+      { host: 'replica1.example.com' },
+      { host: 'replica2.example.com' }
+    ]
+  }
+})
+```
+
+### SSH tunnel
+
+Connect through an SSH tunnel:
+
+```javascript
+createSqlDataSource({
+  uri: 'postgresql://user:pass@localhost:5432/db',
+  ssh: {
+    host: 'ssh-host.example.com',
+    port: 22,
+    username: 'ssh-user',
+    privateKey: require('fs').readFileSync('/path/to/private-key')
+  }
+})
+```
+
+### SOCKS5 proxy
+
+Route connections through a SOCKS5 proxy:
+
+```javascript
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  proxySocks: {
+    host: 'proxy.example.com',
+    port: 1080,
+    username: 'proxy-user',
+    password: 'proxy-pass'
+  }
+})
+```
+
+### Connection timeout
+
+Set maximum time to establish connection:
+
+```javascript
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  connectionTimeoutInMs: 5000 // 5 seconds
+})
+```
+
+## Soft-deleted records
+
+Display records marked as deleted (soft deletes):
+
+```javascript
+// Show soft-deleted for specific collections
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  displaySoftDeleted: ['users', 'projects']
+})
+
+// Show soft-deleted for all collections
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  displaySoftDeleted: true
+})
+```
+
+This is useful when your application uses soft deletes (e.g., `deleted_at` column) and you want to manage deleted records in Forest Admin.
+
+## Caching introspection
+
+The schema introspection is JSON serializable and can be cached to a file:
+
+```javascript
+
+
+// Option 1: Generate and cache schema
+const dataSource = await createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db'
+});
+
+writeFileSync('./schema-cache.json', JSON.stringify(dataSource.schema));
+
+// Option 2: Load from cache (faster startup, works offline)
+const schema = JSON.parse(readFileSync('./schema-cache.json', 'utf8'));
+const dataSource = createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  schema: schema
+});
+```
+
+**Benefits:**
+- Faster agent startup (no introspection delay)
+- Work offline or with restricted credentials
+- Separate introspection and runtime credentials
+- Version control your schema
+
+## Live Query support
+
+Enable SQL-based reporting by setting a connection identifier:
+
+```javascript
+createSqlDataSource({
+  uri: process.env.DATABASE_URL,
+  liveQueryConnections: 'main_database'
+})
+```
+
+This allows authorized users to create Live Query charts and segments that execute custom SQL directly against your database.
+
+{% hint style="warning" %}
+
+Live Queries execute raw SQL. Ensure proper access controls and review queries before deploying to production.
+
+{% endhint %}
+
+## Supported databases
+
+| Database | Versions | Driver Package | Status |
+|----------|----------|----------------|--------|
+| **PostgreSQL** | 10+ | `pg` + `pg-hstore` | ✅ Full support (recommended) |
+| **MySQL** | 5.7+ | `mysql2` | ✅ Production-ready |
+| **MariaDB** | 10+ | `mariadb` | ✅ Production-ready |
+| **SQL Server** | 2017+ | `tedious` | ✅ Enterprise support |
+| **SQLite** | 3+ | `sqlite3` | ⚠️ Development only |
+
+{% hint style="info" %}
+
+SQLite is suitable for development and testing but not recommended for production use due to concurrency limitations.
+
+{% endhint %}

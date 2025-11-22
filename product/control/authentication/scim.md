@@ -1,0 +1,742 @@
+---
+title: "SCIM User Provisioning"
+description: "Automate user lifecycle management with SCIM (System for Cross-domain Identity Management) integration with your identity provider"
+---
+
+## Overview
+
+SCIM (System for Cross-domain Identity Management) is an open standard for automating user provisioning and deprovisioning between your identity provider (IdP) and Forest Admin. With SCIM, user accounts are automatically created, updated, and disabled based on changes in your IdP.
+
+{% hint style="info" %}
+
+This feature may not be available on all plans and requires SSO to be configured first. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
+
+{% endhint %}
+
+## Why Use SCIM?
+
+
+
+  * [Automated Provisioning](#) - New employees automatically get Forest Admin access when added to your IdP
+
+  * [Instant Offboarding](#) - Departing employees lose access immediately when disabled in your IdP
+
+  * [Synchronized Updates](#) - User profile changes in IdP automatically sync to Forest Admin
+
+  * [Reduced Admin Overhead](#) - Eliminate manual user management and reduce IT workload
+
+
+
+## How SCIM Works
+
+SCIM enables bidirectional communication between your IdP and Forest Admin:
+
+```
+┌──────────────────┐                    ┌──────────────────┐
+│   Identity       │                    │   Forest Admin   │
+│   Provider       │                    │                  │
+│  (Okta, Azure)   │                    │                  │
+└────────┬─────────┘                    └────────┬─────────┘
+         │                                       │
+         │  1. User created in IdP               │
+         ├──────────────────────────────────────>│
+         │     SCIM POST /Users                  │
+         │                                       │
+         │  2. Forest Admin creates user         │
+         │<──────────────────────────────────────┤
+         │     200 OK                            │
+         │                                       │
+         │  3. User updated in IdP               │
+         ├──────────────────────────────────────>│
+         │     SCIM PATCH /Users/{id}            │
+         │                                       │
+         │  4. Forest Admin updates user         │
+         │<──────────────────────────────────────┤
+         │     200 OK                            │
+         │                                       │
+         │  5. User disabled in IdP              │
+         ├──────────────────────────────────────>│
+         │     SCIM PATCH /Users/{id}            │
+         │     { active: false }                 │
+         │                                       │
+         │  6. Forest Admin disables user        │
+         │<──────────────────────────────────────┤
+         │     200 OK                            │
+         │                                       │
+```
+
+### User Lifecycle Events
+
+SCIM handles the complete user lifecycle:
+
+<Tabs>
+  <Tab title="Create">
+    **Event**: New user added to Forest Admin app in IdP
+
+    **SCIM Action**: `POST /Users`
+
+    **Forest Admin**:
+    - Creates new user account
+    - Assigns default or mapped role
+    - Adds to specified teams (if configured)
+    - User can log in via SSO immediately
+  </Tab>
+
+  <Tab title="Update">
+    **Event**: User profile updated in IdP (name, email, department)
+
+    **SCIM Action**: `PATCH /Users/{id}`
+
+    **Forest Admin**:
+    - Updates user profile information
+    - Changes team membership if department changed
+    - Updates role if role mapping configured
+  </Tab>
+
+  <Tab title="Deactivate">
+    **Event**: User disabled/suspended in IdP
+
+    **SCIM Action**: `PATCH /Users/{id}` with `active: false`
+
+    **Forest Admin**:
+    - Disables user account
+    - Revokes all sessions immediately
+    - User cannot log in
+    - User data and audit logs preserved
+  </Tab>
+
+  <Tab title="Reactivate">
+    **Event**: Previously disabled user re-enabled in IdP
+
+    **SCIM Action**: `PATCH /Users/{id}` with `active: true`
+
+    **Forest Admin**:
+    - Reactivates user account
+    - Restores previous role and team memberships
+    - User can log in again
+  </Tab>
+
+  <Tab title="Delete">
+    **Event**: User permanently deleted from IdP (rare)
+
+    **SCIM Action**: `DELETE /Users/{id}`
+
+    **Forest Admin**:
+    - Marks user as deleted
+    - Revokes all access
+    - Preserves audit logs for compliance
+  </Tab>
+</Tabs>
+
+## Supported Identity Providers
+
+Forest Admin supports SCIM 2.0 with these major IdPs:
+
+
+
+  * [Okta](#) - Full SCIM 2.0 support with user and group provisioning
+
+  * [Azure AD / Entra ID](#) - Enterprise Application with automatic provisioning
+
+  * [OneLogin](#) - SCIM connector for user lifecycle management
+
+  * [Google Workspace](#) - SCIM provisioning via third-party connectors
+
+  * [JumpCloud](#) - Directory-as-a-Service with SCIM support
+
+  * [Custom SCIM 2.0](#) - Any SCIM 2.0 compliant identity provider
+
+
+
+## Setting Up SCIM
+
+### Prerequisites
+
+Before configuring SCIM:
+
+- [SSO must be enabled](/product/control/authentication/sso) and working
+- Admin access to your identity provider
+- Admin access to Forest Admin
+
+### Configuration Steps
+
+<Steps>
+  <Step title="Enable SCIM in Forest Admin">
+    1. Go to **Project Settings** > **Authentication** > **SCIM**
+    2. Click **Enable SCIM Provisioning**
+    3. Copy the **SCIM Base URL**: `https://api.forestadmin.com/scim/v2`
+    4. Generate and copy the **SCIM Bearer Token** (keep this secure!)
+  </Step>
+
+  <Step title="Configure SCIM in Your IdP">
+    Navigate to your Forest Admin SSO application in your IdP and enable provisioning:
+
+    **Settings to configure**:
+    - **SCIM Base URL**: Paste from Forest Admin
+    - **Authentication**: Bearer Token
+    - **Bearer Token**: Paste the token from Forest Admin
+    - **Supported Features**: Enable Create, Update, Deactivate users
+  </Step>
+
+  <Step title="Map User Attributes">
+    Configure attribute mapping between IdP and Forest Admin:
+
+    | IdP Attribute | Forest Admin Field | Required |
+    |---------------|-------------------|----------|
+    | userName | email | Yes |
+    | givenName | firstName | Recommended |
+    | familyName | lastName | Recommended |
+    | active | active | Yes |
+    | department | team | Optional |
+  </Step>
+
+  <Step title="Enable Group/Team Mapping (Optional)">
+    Map IdP groups to Forest Admin teams:
+    - IdP Group "Engineering" → Forest Admin Team "Engineering"
+    - IdP Group "Sales" → Forest Admin Team "Sales"
+  </Step>
+
+  <Step title="Test Provisioning">
+    1. Assign a test user to the Forest Admin app in your IdP
+    2. Verify the user appears in Forest Admin **Project Settings** > **Teams** > **Users**
+    3. Verify the user can log in via SSO
+    4. Test updating the user's name in IdP (should sync to Forest Admin)
+    5. Test disabling the user in IdP (should disable in Forest Admin)
+  </Step>
+
+  <Step title="Enable for All Users">
+    Once tested, assign all relevant users/groups to the Forest Admin app in your IdP
+  </Step>
+</Steps>
+
+## Provider-Specific Setup
+
+### Okta
+
+<Steps>
+  <Step title="Navigate to Application">
+    In Okta Admin Console, go to your Forest Admin application
+  </Step>
+
+  <Step title="Enable Provisioning">
+    - Go to **Provisioning** tab
+    - Click **Configure API Integration**
+    - Check **Enable API integration**
+    - Enter SCIM Base URL and Bearer Token from Forest Admin
+    - Click **Test API Credentials** to verify
+  </Step>
+
+  <Step title="Configure Provisioning Features">
+    Under **Provisioning** > **To App**:
+    - Enable **Create Users**
+    - Enable **Update User Attributes**
+    - Enable **Deactivate Users**
+  </Step>
+
+  <Step title="Map Attributes">
+    Go to **Provisioning** > **To App** > **Attribute Mappings**:
+    ```
+    user.email → userName
+    user.firstName → givenName
+    user.lastName → familyName
+    user.status → active
+    user.department → department
+    ```
+  </Step>
+
+  <Step title="Assign Users">
+    Go to **Assignments** tab and assign users or groups
+  </Step>
+</Steps>
+
+### Azure AD / Entra ID
+
+<Steps>
+  <Step title="Navigate to Enterprise Application">
+    In Azure Portal, go to **Azure Active Directory** > **Enterprise Applications** > Your Forest Admin app
+  </Step>
+
+  <Step title="Enable Provisioning">
+    - Go to **Provisioning** section
+    - Set **Provisioning Mode** to **Automatic**
+    - Under **Admin Credentials**:
+      - Tenant URL: SCIM Base URL from Forest Admin
+      - Secret Token: Bearer Token from Forest Admin
+    - Click **Test Connection**
+  </Step>
+
+  <Step title="Configure Mappings">
+    Under **Mappings**:
+    - Edit **Provision Azure Active Directory Users**
+    - Configure attribute mappings:
+    ```
+    userPrincipalName → userName
+    givenName → givenName
+    surname → familyName
+    accountEnabled → active
+    department → department
+    ```
+  </Step>
+
+  <Step title="Set Scope">
+    Choose who gets provisioned:
+    - **Sync only assigned users and groups** (recommended)
+    - **Sync all users and groups**
+  </Step>
+
+  <Step title="Start Provisioning">
+    - Set **Provisioning Status** to **On**
+    - Click **Save**
+    - Wait for initial sync (can take up to 40 minutes)
+  </Step>
+</Steps>
+
+### OneLogin
+
+<Steps>
+  <Step title="Enable SCIM Provisioning">
+    In OneLogin, edit your Forest Admin application:
+    - Go to **Provisioning** tab
+    - Enable **Provisioning**
+    - Choose **SCIM**
+  </Step>
+
+  <Step title="Configure SCIM">
+    - **SCIM Base URL**: Paste from Forest Admin
+    - **SCIM Bearer Token**: Paste from Forest Admin
+    - **SCIM Version**: 2.0
+  </Step>
+
+  <Step title="Enable Actions">
+    - Enable **Create user**
+    - Enable **Update user**
+    - Enable **Suspend user**
+    - Enable **Delete user** (optional)
+  </Step>
+
+  <Step title="Assign Users">
+    Go to **Users** tab and assign users to the Forest Admin application
+  </Step>
+</Steps>
+
+## Attribute Mapping
+
+### Standard User Attributes
+
+Map IdP user attributes to Forest Admin fields:
+
+<Tabs>
+  <Tab title="Required Attributes">
+    | SCIM Attribute | IdP Field | Forest Admin Field | Description |
+    |----------------|-----------|-------------------|-------------|
+    | `userName` | Email | Email | User's email address (unique identifier) |
+    | `active` | Status | Active | Whether user account is enabled |
+  </Tab>
+
+  <Tab title="Recommended Attributes">
+    | SCIM Attribute | IdP Field | Forest Admin Field | Description |
+    |----------------|-----------|-------------------|-------------|
+    | `givenName` | First Name | First Name | User's first name |
+    | `familyName` | Last Name | Last Name | User's last name |
+    | `displayName` | Display Name | Display Name | Full name for UI display |
+  </Tab>
+
+  <Tab title="Optional Attributes">
+    | SCIM Attribute | IdP Field | Forest Admin Field | Description |
+    |----------------|-----------|-------------------|-------------|
+    | `department` | Department | Team | Auto-assign to team based on department |
+    | `title` | Job Title | Tags | Store job title in user metadata |
+    | `phoneNumber` | Phone | Phone | Contact phone number |
+  </Tab>
+</Tabs>
+
+### Custom Attribute Mapping
+
+Configure custom attributes for advanced use cases:
+
+```json
+{
+  "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
+  "userName": "jane.doe@example.com",
+  "name": {
+    "givenName": "Jane",
+    "familyName": "Doe"
+  },
+  "active": true,
+  "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+    "department": "Engineering",
+    "division": "Product",
+    "manager": {
+      "value": "john.smith@example.com"
+    }
+  },
+  "urn:forestadmin:schemas:extension:forestadmin:2.0:User": {
+    "defaultRole": "developer",
+    "teams": ["engineering", "product-alpha"],
+    "territory": "west-coast"
+  }
+}
+```
+
+## Group/Team Synchronization
+
+### Mapping IdP Groups to Teams
+
+Automatically assign users to Forest Admin teams based on their IdP group membership:
+
+<Steps>
+  <Step title="Enable Group Provisioning">
+    In Forest Admin SCIM settings:
+    - Enable **Group Provisioning**
+    - Configure group mappings
+  </Step>
+
+  <Step title="Create Group Mappings">
+    | IdP Group | Forest Admin Team | Role |
+    |-----------|------------------|------|
+    | Engineering | Engineering | Developer |
+    | Sales-West | Sales - West Coast | Sales Rep |
+    | Support-T1 | Customer Support - Tier 1 | Support Agent |
+    | Admins | Administrators | Admin |
+  </Step>
+
+  <Step title="Enable in IdP">
+    Configure your IdP to push group memberships:
+    - **Okta**: Enable "Push Groups" in Provisioning settings
+    - **Azure AD**: Enable group provisioning in mappings
+    - **OneLogin**: Enable group synchronization
+  </Step>
+
+  <Step title="Test Group Sync">
+    1. Add test user to a group in IdP
+    2. Wait for sync (or trigger manually)
+    3. Verify user appears in corresponding Forest Admin team
+  </Step>
+</Steps>
+
+### Dynamic Team Assignment
+
+Users are automatically added/removed from teams based on group membership:
+
+```javascript
+// Example: User lifecycle with groups
+{
+  // User added to "Engineering" group in IdP
+  // → SCIM sends group membership
+  // → Forest Admin adds user to "Engineering" team
+
+  // User moved to "Sales" group in IdP
+  // → SCIM updates group membership
+  // → Forest Admin moves user from "Engineering" to "Sales" team
+
+  // User removed from all groups
+  // → SCIM updates group membership to empty
+  // → Forest Admin removes user from all teams (keeps account active)
+}
+```
+
+## Role Assignment with SCIM
+
+### Automatic Role Assignment
+
+Assign Forest Admin roles based on IdP attributes:
+
+<Tabs>
+  <Tab title="Based on Department">
+    ```json
+    // Attribute mapping configuration
+    {
+      "roleMappings": {
+        "department": {
+          "Engineering": "developer",
+          "Sales": "sales_rep",
+          "Support": "support_agent",
+          "Finance": "finance",
+          "IT": "admin"
+        }
+      }
+    }
+    ```
+
+    **Result**: When a user with `department: "Sales"` is provisioned, they're automatically assigned the "sales_rep" role.
+  </Tab>
+
+  <Tab title="Based on Job Title">
+    ```json
+    {
+      "roleMappings": {
+        "title": {
+          "Engineer": "developer",
+          "Senior Engineer": "senior_developer",
+          "Manager": "manager",
+          "Director": "director",
+          "VP": "admin"
+        }
+      }
+    }
+    ```
+  </Tab>
+
+  <Tab title="Based on Custom Attribute">
+    ```json
+    {
+      "roleMappings": {
+        "customAttribute": "forestAdminRole",
+        "mapping": {
+          "admin": "admin",
+          "editor": "editor",
+          "viewer": "viewer"
+        }
+      }
+    }
+    ```
+
+    **IdP Configuration**: Add custom attribute `forestAdminRole` to users with values like "admin", "editor", "viewer".
+  </Tab>
+</Tabs>
+
+### Default Role Fallback
+
+Configure a default role for users without mapped attributes:
+
+```json
+{
+  "defaultRole": "viewer",  // Safe default with minimal permissions
+  "requireRoleMapping": false  // Allow users without explicit role mapping
+}
+```
+
+## Monitoring SCIM Sync
+
+### Sync Status
+
+Monitor SCIM provisioning status:
+
+<Steps>
+  <Step title="View Sync Logs">
+    Go to **Project Settings** > **Authentication** > **SCIM** > **Sync Logs**
+  </Step>
+
+  <Step title="Check Recent Activity">
+    View recent SCIM operations:
+    - User creations
+    - User updates
+    - User deactivations
+    - Group assignments
+    - Errors and warnings
+  </Step>
+
+  <Step title="Identify Issues">
+    Look for:
+    - Failed user creations (email conflicts, invalid data)
+    - Attribute mapping errors
+    - Authentication failures
+    - Rate limit warnings
+  </Step>
+</Steps>
+
+### IdP-Side Monitoring
+
+Check provisioning status in your IdP:
+
+<Tabs>
+  <Tab title="Okta">
+    **Provisioning Dashboard**:
+    - Go to Application > **Provisioning** > **Integration**
+    - View **Dashboard** for sync statistics
+    - Check **Provisioning Log** for detailed events
+    - Monitor errors in **Unmatched Users** section
+  </Tab>
+
+  <Tab title="Azure AD">
+    **Provisioning Logs**:
+    - Go to **Azure Active Directory** > **Provisioning Logs**
+    - Filter by your Forest Admin application
+    - View success/failure status
+    - Check **Troubleshooting & Support** for issues
+  </Tab>
+
+  <Tab title="OneLogin">
+    **Provisioning Logs**:
+    - Go to Application > **Provisioning** > **Logs**
+    - View recent provisioning events
+    - Check error messages for failed operations
+  </Tab>
+</Tabs>
+
+## Troubleshooting
+
+### SCIM Connection Issues
+
+<AccordionGroup>
+  <Accordion title="Authentication Failed">
+    **Error**: `401 Unauthorized` or `403 Forbidden`
+
+    **Causes**:
+    - Invalid or expired Bearer Token
+    - Token not correctly copied/pasted
+    - Token permissions insufficient
+
+    **Solution**:
+    1. Regenerate Bearer Token in Forest Admin
+    2. Update token in IdP configuration
+    3. Test connection again
+  </Accordion>
+
+  <Accordion title="SCIM Endpoint Not Found">
+    **Error**: `404 Not Found` or connection timeout
+
+    **Causes**:
+    - Incorrect SCIM Base URL
+    - SCIM not enabled in Forest Admin
+    - Network/firewall blocking requests
+
+    **Solution**:
+    1. Verify SCIM Base URL is exactly: `https://api.forestadmin.com/scim/v2`
+    2. Ensure SCIM is enabled in Forest Admin settings
+    3. Check IdP can reach Forest Admin (no firewall blocking)
+  </Accordion>
+
+  <Accordion title="User Creation Failed">
+    **Error**: User not created in Forest Admin
+
+    **Causes**:
+    - Email already exists (duplicate user)
+    - Invalid email format
+    - Required attributes missing
+    - Role mapping failed
+
+    **Solution**:
+    1. Check if user already exists in Forest Admin
+    2. Verify email is valid and unique
+    3. Ensure all required SCIM attributes are mapped
+    4. Check role mapping configuration
+  </Accordion>
+
+  <Accordion title="User Not Deactivated">
+    **Error**: User disabled in IdP but still active in Forest Admin
+
+    **Causes**:
+    - Deactivation not enabled in IdP provisioning
+    - Sync delay (can take minutes to hours)
+    - SCIM error not surfaced
+
+    **Solution**:
+    1. Verify "Deactivate Users" is enabled in IdP
+    2. Wait for sync cycle (or trigger manual sync)
+    3. Check SCIM logs for errors
+    4. Manually disable user in Forest Admin if urgent
+  </Accordion>
+</AccordionGroup>
+
+### Attribute Mapping Issues
+
+**Problem**: User attributes not syncing correctly
+
+**Checklist**:
+- [ ] Attribute mapping configured in IdP
+- [ ] IdP user has values for mapped attributes
+- [ ] Attribute names match exactly (case-sensitive)
+- [ ] SCIM logs show attributes in payload
+- [ ] Forest Admin recognizes the attributes
+
+**Debug**: Check SCIM logs to see actual JSON payload sent by IdP
+
+### Group/Team Sync Issues
+
+**Problem**: Users not assigned to correct teams
+
+**Possible Causes**:
+1. Group provisioning not enabled
+2. Group mappings not configured
+3. User not in expected group in IdP
+4. Sync delay
+
+**Solution**:
+1. Enable group provisioning in both IdP and Forest Admin
+2. Configure exact group → team mappings
+3. Verify user's group membership in IdP
+4. Wait for or trigger sync
+
+## Security Best Practices
+
+### SCIM Token Management
+
+
+
+  * [Secure Storage](#) - Store SCIM Bearer Token securely in your IdP's credential store
+
+  * [Rotate Regularly](#) - Rotate SCIM tokens annually or per your security policy
+
+  * [Limit Access](#) - Only IdP admins should have access to SCIM tokens
+
+  * [Monitor Usage](#) - Review SCIM logs for unauthorized API calls
+
+
+
+### Access Controls
+
+1. **Principle of Least Privilege**: Default role should be minimal (e.g., Viewer)
+2. **Role Validation**: Verify role mappings assign appropriate permissions
+3. **Team Restrictions**: Use team-based scopes for data isolation
+4. **Audit Provisioning**: Review SCIM sync logs regularly
+5. **Test Deprovisioning**: Verify disabled users lose access immediately
+
+### Compliance Considerations
+
+- **SOC 2**: SCIM automates user lifecycle management (CC6.3)
+- **GDPR**: Prompt deprovisioning helps with data access controls
+- **HIPAA**: Automated access removal reduces unauthorized PHI access
+- **Audit Trail**: SCIM events logged in Forest Admin audit logs
+
+## Best Practices
+
+### Initial Rollout
+
+<Steps>
+  <Step title="Start Small">
+    Test with 5-10 users before rolling out to entire organization
+  </Step>
+
+  <Step title="Verify Mappings">
+    Confirm role and team assignments are correct for test users
+  </Step>
+
+  <Step title="Test All Scenarios">
+    Create, update, deactivate, and reactivate test users
+  </Step>
+
+  <Step title="Document Process">
+    Document your SCIM configuration, mappings, and troubleshooting steps
+  </Step>
+
+  <Step title="Train Admins">
+    Ensure IT admins understand SCIM behavior and how to troubleshoot
+  </Step>
+
+  <Step title="Gradual Rollout">
+    Enable SCIM for departments/teams incrementally
+  </Step>
+</Steps>
+
+### Ongoing Management
+
+1. **Monitor Sync Status**: Check SCIM logs weekly for errors
+2. **Review Mappings**: Verify role/team mappings quarterly
+3. **Clean Up Orphans**: Remove users no longer in IdP
+4. **Update Documentation**: Keep SCIM configuration documented
+5. **Test Periodically**: Quarterly test of full user lifecycle
+
+## Next Steps
+
+
+
+  * [SSO Setup](/product/control/authentication/sso.md) - Configure SSO before enabling SCIM
+
+  * [Teams & Roles](/product/control/teams.md) - Set up teams for SCIM group mappings
+
+  * [Audit Logs](/product/control/audit.md) - Monitor SCIM provisioning events
+
+  * [Scopes](/product/control/scopes-and-visibility.md) - Configure data access for provisioned users
+
+

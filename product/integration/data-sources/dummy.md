@@ -1,0 +1,70 @@
+---
+title: "Dummy datasource"
+description: "In-memory test datasource for development, testing, and demonstrations"
+---
+
+The Dummy datasource is an in-memory test datasource for **testing and learning Forest Admin agent functionality only**. It is not intended for production use.
+
+{% hint style="warning" %}
+
+This datasource is strictly for development, testing, and learning purposes. All data is stored in memory and resets on application restart.
+
+{% endhint %}
+
+## Basic usage
+
+```javascript
+
+
+const agent = createAgent(options);
+
+agent.addDataSource(createDummyDataSource());
+```
+
+## Sample data
+
+The dummy datasource provides 4 pre-configured collections with realistic relationships:
+
+### Collections
+
+**persons** (Authors)
+- `id` (Number, Primary Key)
+- `firstName` (String)
+- `lastName` (String)
+
+Sample: Edward O. Thorp, Isaac Asimov, Roberto Saviano, Stephen King
+
+**books**
+- `id` (Number, Primary Key)
+- `title` (String)
+- `publication` (Date)
+- `authorId` (Number)
+
+Sample: Beat the dealer, Foundation, Gomorrah, Misery, Christine, Running Man
+
+**libraries**
+- `id` (Number, Primary Key)
+- `name` (String)
+
+Sample: Mollat, Cultura, Amazon
+
+**librariesBooks** (Junction table)
+- `bookId` (Number, Primary Key)
+- `libraryId` (Number, Primary Key)
+
+### Relationships
+
+The datasource demonstrates all common relationship types:
+
+- **One-to-Many**: persons → books (one author has many books)
+- **Many-to-One**: books → persons (many books have one author)
+- **Many-to-Many**: books ↔ libraries (via librariesBooks junction table)
+
+## Features
+
+- **Full CRUD operations** - Create, read, update, and delete records
+- **Filtering** - 16+ filter operators (Contains, StartsWith, Equal, In, etc.)
+- **Sorting** - All columns are sortable
+- **Pagination** - Full pagination support
+- **Relationships** - Demonstrates 1-to-Many, Many-to-One, and Many-to-Many relationships
+

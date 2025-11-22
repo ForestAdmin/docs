@@ -1,0 +1,98 @@
+---
+title: Segments
+---
+
+A Segment is a subset of a collection gathering filtered records.
+
+Segments are designed for those who want to _systematically_ visualize data according to specific sets of filters. They allow you to save filter configurations so users don't have to do repetitive actions every day.
+
+![Segment example](/assets/segment-example.png)
+
+## Creating Segments in the UI
+
+Segments can be configured directly from the interface, without the need to write any code.
+
+### Basic filter segments
+
+To create a simple segment:
+
+1. Activate **Layout Editor mode** (top right)
+2. Click the **settings gear** next to your collection
+3. Select the **Segments** tab
+4. Choose "Create your first segment" or "+ New segment"
+5. Provide a name and add one or more filters
+6. Optionally configure sorting fields and order
+
+By default, newly created segments remain disabled until you activate them. You can also reorder segments through the Layout Editor to match your workflow sequence.
+
+### SQL Query segments
+
+For databases that support SQL, Forest Admin allows you to create segments using SQL queries. This enables more sophisticated filtering by joining multiple tables or using complex logic.
+
+**Important notes:**
+- Only SELECT queries are permitted (read-only for security)
+- The returned column must be the primary key field
+- This approach is useful for complex filter logic that spans multiple tables
+
+## Smart Segments (Advanced)
+
+For complex business logic that changes dynamically, you can code Smart Segments directly in your agent. This is particularly useful when:
+
+- Segment filters are closely tied to your business logic
+- You need to query external APIs
+- The segment logic requires complex calculations or aggregations
+
+For instance, in our [Live Demo example](https://app.forestadmin.com/livedemo), we've implemented a Segment on the collection `products` to allow admin users to see the bestsellers at a glance.
+
+### Example
+
+{% hint style="info" %}
+
+In the following example, we are making queries using the Forest Admin Query Interface.
+
+As Forest Admin does not impose any restriction on the handler, you are free to call external APIs or query your database directly instead.
+
+{% endhint %}
+
+The only requirement when implementing a Smart Segment from your agent is to return a valid `ConditionTree`.
+
+<CodeGroup>
+
+```javascript Node.js
+agent.customizeCollection('products', collection =>
+  collection.addSegment('mostPurchased', async context => {
+    // Query the ids of the 10 most ordered products.
+    const rows = await context.dataSource
+      .getCollection('orders')
+      .aggregate({}, { operation: 'Count', groups: [{ field: 'product_id' }] }, 10);
+
+    // Return a condition tree which matches those records
+    return { field: 'id', operator: 'In', value: rows.map(r => r['product_id']) };
+  });
+);
+```
+
+```ruby Ruby
+include ForestAdminDatasourceToolkit::Components::Query
+include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
+
+@create_agent.customize_collection('products') do |collection|
+  collection.add_segment('mostPurchased') do |context|
+    # Query the ids of the 10 most ordered products
+    rows = context.datasource.get_collection('order').aggregate(
+      Filter.new,
+      Aggregation.new(operation: 'Count', groups: [{ field: 'product_id' }]),
+      10
+    )
+
+    # Return a condition tree which matches those records
+    {
+      field: 'id',
+      operator: Operators::IN,
+      value: rows.map { |r| r['product_id'] }
+    }
+  end
+end
+```
+
+</CodeGroup>

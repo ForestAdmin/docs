@@ -1,0 +1,69 @@
+---
+title: "Billing & Invoices"
+description: "View your subscription details and access invoice history"
+---
+
+The Billing tab provides access to your Forest Admin subscription information and invoice history.
+
+## Accessing Billing Settings
+
+1. Click your **project logo** in the top-left corner
+2. Select **Project Settings**
+3. Navigate to the **Billing** tab
+
+## Billing Details
+
+View your current Forest Admin plan information, including:
+
+- **Current plan** - Your active subscription tier
+- **Monthly fee estimate** - Based on your current number of users
+- **Commitment details** - Contract length and terms
+- **Payment frequency** - Monthly or annual billing
+- **Total user count** - Number of active users in your organization
+- **Activated features** - List of features available on your plan
+
+{% hint style="info" %}
+
+The monthly fee is calculated based on your current number of users. Adding or removing users will affect your next invoice.
+
+{% endhint %}
+
+## Managing Your Plan
+
+To modify your subscription or upgrade your plan:
+
+1. Click **Manage your plan** in the Billing tab
+2. You'll be directed to Forest Admin's pricing page
+3. Review available plans and features
+4. Contact the sales team or modify your subscription as needed
+
+## Invoices
+
+The invoices section displays a historical record of your billing activity:
+
+| Information | Description |
+|-------------|-------------|
+| **Invoice date** | Month and year of the invoice |
+| **Amount** | Total amount charged |
+| **Payment status** | Confirmation of payment |
+
+You can download invoices for accounting and expense tracking purposes.
+
+## Payment Methods
+
+Update your payment information to ensure uninterrupted service:
+- Credit or debit card details
+- Billing address
+- Tax information (if applicable)
+
+{% hint style="warning" %}
+
+Keep your payment information up to date to avoid service interruptions. Failed payments may result in restricted access to your Forest Admin project.
+
+{% endhint %}
+
+## Need Help?
+
+For billing questions or to discuss custom enterprise plans:
+- [Contact Sales](https://www.forestadmin.com/contact) - Discuss plan options and pricing
+- [Support](mailto:support@forestadmin.com) - Get help with billing issues

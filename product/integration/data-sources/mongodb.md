@@ -1,0 +1,91 @@
+---
+title: "MongoDB datasource"
+description: "Connect directly to MongoDB without an ORM using automatic schema introspection"
+---
+
+The MongoDB datasource connects directly to MongoDB without requiring Mongoose or another ORM. It automatically introspects your collections by sampling documents to infer the schema.
+
+{% hint style="warning" %}
+
+MongoDB datasource is only available for Node.js. For Ruby, check the [Mongoid datasource](/product/integration/data-sources/mongoid).
+
+{% endhint %}
+
+## Basic usage
+
+```javascript
+
+
+const agent = createAgent(options);
+
+agent.addDataSource(
+  createMongoDataSource({
+    uri: 'mongodb://localhost:27017',
+    dataSource: { flattenMode: 'auto' }
+  })
+);
+```
+
+## Schema introspection
+
+Since MongoDB lacks a predefined schema, the agent samples documents from each collection during startup to infer the structure. You can control this behavior:
+
+```javascript
+createMongoDataSource({
+  uri: 'mongodb://localhost:27017',
+  introspection: {
+    collectionSampleSize: 100,    // Documents sampled per collection
+    referenceSampleSize: 10,       // References analyzed for relationships
+    maxPropertiesPerObject: 30     // Maximum properties extracted as columns
+  }
+})
+```
+
+{% hint style="info" %}
+
+Setting sample sizes too high may slow agent startup times.
+
+{% endhint %}
+
+## Filtering collections
+
+Exclude specific collections from Forest Admin:
+
+```javascript
+const agent = createAgent(options);
+
+agent.addDataSource(
+  createMongoDataSource({ uri: connectionString }),
+  { exclude: ['accounts', 'accounts_bills', 'accounts_bills_items'] }
+);
+```
+
+## Flattening nested data
+
+MongoDB stores nested BSON documents. Configure flattening to convert nested structures into columns or separate collections:
+
+```javascript
+createMongoDataSource({
+  uri: 'mongodb://localhost:27017',
+  dataSource: {
+    flattenMode: 'manual',
+    flattenOptions: {
+      persons: {
+        asModels: ['bills'],                    // Convert to separate collections
+        asFields: ['address']                   // Move to root level
+        // or: asFields: ['address.city', 'address.country']
+        // or: asFields: [{ field: 'address', level: 1 }]
+      }
+    }
+  }
+})
+```
+
+## Data navigation
+
+When customizing your agent, navigate paths using these separators:
+
+- **Nested fields**: Use `@@@` to access nested properties
+- **Related data**: Use `:` to navigate relationships
+
+**Example**: `address:city@@@name` accesses the name field within city within the address relation.

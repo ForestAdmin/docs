@@ -1,0 +1,75 @@
+---
+title: Forest Admin Product
+description: Build, configure, and operate powerful admin panels tailored to your business needs.
+---
+Forest Admin follows a 4-layer architecture that enables you to build and operate admin panels efficiently. This section covers all product capabilities organized by these layers and operational categories.
+
+## The 4-Layer Architecture
+
+
+
+  * [Integration](/product/integration/overview.md) - Connect to any data source - SQL, NoSQL, REST APIs, or custom sources
+  * [Control](/product/control/overview.md) - Secure access with roles, permissions, SSO, and authentication
+  * [Process](/product/process/overview.md) - Add business logic with Smart Actions, Fields, Segments, and Hooks
+  * [Build](/product/build/overview.md) - Configure and customize your admin panel's UI and layout
+
+
+
+## The 5 Operations Categories
+
+
+
+  * [Execute](/product/execute/overview.md) - Browse data, run actions, execute workflows, and export records
+  * [Collaborate](/product/collaborate/overview.md) - Work together with notes, approvals, inbox, and escalation
+  * [Manage](/product/manage/overview.md) - Monitor performance with dashboards, charts, and activity logs
+  * [Embed](/product/embed/overview.md) - Integrate Forest Admin into your applications
+
+
+
+## Quick Navigation
+
+<AccordionGroup>
+  <Accordion title="Layer 1: Integration - Connect Your Data" icon="database">
+    - **Setup**: Get started with Node.js, Ruby, or Python agents
+    - **Architectures**: Choose between cloud and self-hosted
+    - **Data Sources**: Connect SQL, MongoDB, REST APIs, and custom sources
+    - **Relationships**: Define and manage data relationships
+  </Accordion>
+
+  <Accordion title="Layer 2: Control - Secure Access" icon="lock">
+    - **Roles & Permissions**: Define who can access what
+    - **Teams**: Organize users into teams
+    - **Scopes**: Filter data visibility per user
+    - **Authentication**: SSO, 2FA, SCIM integration
+    - **Security**: IP whitelisting and audit logs
+  </Accordion>
+
+  <Accordion title="Layer 3: Process - Business Logic" icon="code">
+    - **Actions**: Create custom operations for your data
+    - **Fields**: Compute and display custom fields
+    - **Segments**: Create filtered views of your data
+    - **Workflows**: Automate multi-step processes
+    - **Hooks**: Intercept and modify requests
+    - **Plugins**: Extend functionality with reusable components
+    - **Aggregations**: Compute complex statistics
+  </Accordion>
+
+  <Accordion title="Layer 4: Build - Configure UI" icon="paintbrush">
+    - **Layout Editor**: Customize table and detail views
+    - **Workspaces**: Create dedicated interfaces for different teams
+    - **Collection Configuration**: Customize collections
+    - **Fields & Widgets**: Choose display and edit widgets
+    - **Custom Views**: Build completely custom interfaces
+    - **Branding**: Apply your brand colors and logo
+  </Accordion>
+</AccordionGroup>
+
+## Getting Started
+
+New to Forest Admin? We recommend following this path:
+
+1. **Start with Integration** to connect your data
+2. **Set up Control** to secure access
+3. **Add Process logic** to implement business rules
+4. **Customize with Build** to match your needs
+5. **Use Operations** (Execute, Collaborate, Manage) for daily work

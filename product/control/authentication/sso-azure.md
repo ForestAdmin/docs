@@ -1,0 +1,51 @@
+---
+title: SSO with Azure
+description: Configure Single Sign-On with Azure Active Directory
+---
+
+Forest Admin enables Azure Active Directory single sign-on integration for enterprise authentication.
+
+## Accessing Organization Settings
+
+To configure SSO or SCIM:
+
+1. Click your **Gravatar** in the bottom-left corner
+2. Select **Organization Settings**
+3. Navigate to the **SSO** or **SCIM** tab
+
+## Prerequisites
+
+{% hint style="warning" %}
+
+This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
+
+{% endhint %}
+
+## Configuration Steps
+
+### Step 1: Application Setup
+
+In Azure Active Directory admin center, add a new Enterprise application. Since Forest Admin isn't pre-listed in the gallery, select "Create your own application" and choose "Integrate any other application you don't find in the gallery (Non-gallery)."
+
+### Step 2: Required Parameters
+
+Configure these settings with specified values:
+
+- **Reply URL (Assertion Consumer Service URL)**: `https://api.forestadmin.com/api/saml/callback`
+- **Sign on URL**: `https://api.forestadmin.com/api/saml/callback`
+- **Identifier (Entity ID)**: `forestadmin-OrganizationName` (your unique identifier)
+- **Logout URL** (optional): `https://app.forestadmin.com/login`
+- **Relay State** (optional, for IDP-initiated login): `{"organizationName": "<OrganizationName>", "destinationUrl": "organization.projects"}`
+
+### Step 3: Certificate Configuration
+
+Navigate to SAML Signing Certificate section, copy the App Federation Metadata URL, then in Forest Admin select "XML file upload or XML file endpoint" and paste the metadata URL.
+
+### Step 4: Testing
+
+Perform tests before company-wide enablement.
+
+## Troubleshooting
+
+- Verify all endpoints and certificate expiration dates
+- Ensure `nameID` on your Identity Provider matches the email address used on Forest Admin accounts

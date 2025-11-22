@@ -1,0 +1,115 @@
+---
+title: "Mongoose datasource"
+description: "Connect to MongoDB using Mongoose ODM with flexible data transformation strategies"
+---
+
+The Mongoose datasource connects to MongoDB through Mongoose models, automatically importing your collections into Forest Admin with support for nested objects, arrays, and relationships.
+
+{% hint style="warning" %}
+
+Mongoose datasource is only available for Node.js. For Ruby, check the [Mongoid datasource](/product/integration/data-sources/mongoid).
+
+{% endhint %}
+
+## Basic usage
+
+```javascript
+
+
+
+const agent = createAgent(options);
+
+agent.addDataSource(
+  createMongooseDataSource(connection, {
+    flattenMode: 'none'
+  })
+);
+```
+
+## Example schema
+
+Here's an example Mongoose schema with nested data:
+
+```javascript
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  address: {
+    streetName: String,
+    city: String,
+    country: String
+  },
+  bills: [{
+    title: String,
+    amount: Number,
+    issueDate: Date,
+    paidBy: [String]
+  }]
+});
+
+const Person = mongoose.model('persons', personSchema);
+```
+
+## Flatten modes
+
+The Mongoose datasource offers four transformation strategies:
+
+### `flattenMode: 'auto'`
+
+Arrays of objects and references are converted to independent collections. Other nested fields are moved to the root level.
+
+```javascript
+createMongooseDataSource(connection, {
+  flattenMode: 'auto'
+})
+```
+
+### `flattenMode: 'none'`
+
+No transformations are made. Forest Admin collections use the exact same structure as your Mongoose models.
+
+```javascript
+createMongooseDataSource(connection, {
+  flattenMode: 'none'
+})
+```
+
+### `flattenMode: 'manual'`
+
+You are in full control of which virtual collections are created and which fields are moved to the root level.
+
+```javascript
+createMongooseDataSource(connection, {
+  flattenMode: 'manual',
+  asModels: {
+    'persons': ['bills']  // Convert bills array to separate collection
+  },
+  asFields: {
+    'persons': ['address']  // Flatten address to root level
+  }
+})
+```
+
+### `flattenMode: 'legacy'`
+
+Maintains backward compatibility with previous datasource versions.
+
+```javascript
+createMongooseDataSource(connection, {
+  flattenMode: 'legacy'
+})
+```
+
+## Data navigation
+
+When working with nested or related data, use specific separators:
+
+- **Nested fields**: Use `@@@` to access nested properties
+- **Related data**: Use `:` to navigate relationships
+
+**Example**: `address:city@@@name` accesses the name field within city within the address relation.
+
+## Virtual collections
+
+In `auto` mode, the datasource may create virtual collections to represent relationships. If you use a collection whitelist, make sure to include these virtual collections in your configuration.

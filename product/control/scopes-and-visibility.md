@@ -1,0 +1,38 @@
+---
+title: "Scopes"
+description: "Control which records users can see with dynamic data filtering"
+---
+
+## What is a Scope?
+
+A scope functions as "a filter which applies to a collection and all its segments." Scopes enable dynamic data filtering based on the current user, allowing organizations to control which data different users can access throughout the application.
+
+{% hint style="warning" %}
+
+**Scope Limitations**: Scopes apply to the entire application except for global Smart Actions, API & SQL charts, and Collaboration & Activities sections.
+
+{% endhint %}
+
+## Setup Process
+
+To configure scopes, navigate to a collection's settings page using the Layout editor mode, then access the Scopes tab. Users can establish a filter and save it to restrict visible data.
+
+For example, filtering for customers whose email addresses end with "@forestadmin.com" would limit collection display to only those matching records.
+
+## Dynamic Scopes with User Variables
+
+Scopes become powerful when applying dynamic filters based on user attributes. Available dynamic variables include:
+
+- `$currentUser.id` — user identifier
+- `$currentUser.firstName` / `lastName` / `fullName` — user name data
+- `$currentUser.email` — user email address
+- `$currentUser.team.id` / `team.name` — team information
+- `$currentUser.tags.your-tag` — custom user tag values
+
+### Practical Example
+
+An organization with regional operations teams (France team, Germany team) can filter by team name. When Marc from the France team logs in, he sees only French customer data. Louis from the Germany team simultaneously sees only German customer data.
+
+## User Tags
+
+When user data doesn't directly match database records, user tags provide a solution. Administrators assign tags to individual users through their details pages, then reference those tags in scope filters using `$currentUser.tags.your-tag` syntax. This creates flexible mappings between users and accessible data.
