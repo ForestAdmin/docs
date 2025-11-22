@@ -1,9 +1,6 @@
 ---
 title: Use a Smart Action Form
 ---
-
-# Use a Smart Action Form
-
 We've just introduced Smart actions: they're great because you can execute virtually any business logic. However, there is one big part missing: how do you let your users provide more information or have interaction when they trigger the Smart action? In short, you need to open a **Smart Action Form**.
 
 ## Opening a **Smart Action Form**
@@ -97,23 +94,6 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
   end
 end
 ```
-
-### Django
-On our Live Demo example, we’ve defined 4 input fields on the Smart Action `Upload Legal Docs` on the collection `Company`.
-
-
-Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
-
-
-### Laravel
-On our Live Demo example, we’ve defined 4 input fields on the Smart Action `Upload Legal Docs` on the collection `Company`.
-
-<Info>
-The 2nd parameter of the `SmartAction` method is not required. If you don't fill it, the name of your smartAction will be the name of your method that wrap it.
-</Info>
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.34.41.png>)
 
 ### Handling input values
 
@@ -347,14 +327,6 @@ class Forest::Customers
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.40.08.png>)
-
 ### Making a field read-only
 
 To make a field read only, you can use the `isReadOnly` property:
@@ -365,7 +337,7 @@ To make a field read only, you can use the `isReadOnly` property:
 
 Combined with the **load** [hook](./#making-a-form-dynamic) feature, this can be used to make a field read-only dynamically:
 
-javascript
+```ruby
 actions 'Send invoice',
   type: 'single',
   fields: [
@@ -427,12 +399,6 @@ actions 'Send invoice',
   }
 ```
 
-### Django
-
-
-### Laravel
-
-
 #### How does it work?
 
 The `hooks` property receives a _context_ object containing:
@@ -458,7 +424,7 @@ To dynamically change a property within a `load` or `change` [hook](use-a-smart-
 
 ### Rails
 
-ruby
+```ruby
 :hooks => {
   :change => {
     'onFieldChanged' => -> (context) {
@@ -472,18 +438,6 @@ ruby
   }
 }
 ```
-
-### Django
-
-
-### Laravel
-
-
-<Info>
-We added the `changedField` attribute so that you can easily know what changed.
-</Info>
-
-Note that you may add a `change` hook on a dynamically-added field. Simply use the following syntax:
 
 ### Rails
 
@@ -506,12 +460,6 @@ Note that you may add a `change` hook on a dynamically-added field. Simply use t
   }
 }
 ```
-
-### Django
-
-
-### Laravel
-
 
 ### Get selected records with bulk action
 
@@ -559,10 +507,4 @@ class Forest::Customers
     },
 end
 ```
-
-### Django
-
-
-### Laravel
-
 

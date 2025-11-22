@@ -350,49 +350,6 @@ The relationship name in `invalidated` must match the field name in your schema:
 3. Note the relationship field name (e.g., `emitted_transactions`, `comments`, `order_items`)
 4. Use that exact name in the `invalidated` array
 
-## Best practices
-
-<AccordionGroup>
-  <Accordion title="Only invalidate what changed" icon="list-check">
-    Only include relationships that were actually modified. Unnecessary invalidation causes extra API calls.
-
-    ```javascript
-    // Good - only invalidate what changed
-    return resultBuilder.success('Comment added', {
-      invalidated: ['comments'],
-    });
-
-    // Avoid - invalidating unrelated data
-    return resultBuilder.success('Comment added', {
-      invalidated: ['comments', 'transactions', 'users'],
-    });
-    ```
-  </Accordion>
-
-  <Accordion title="Use exact field names" icon="spell-check">
-    The relationship name must exactly match the schema field name. Check your schema if invalidation doesn't work.
-  </Accordion>
-
-  <Accordion title="Consider Summary View usage" icon="eye">
-    Only actions triggered from Summary Views need invalidation. Actions from list or detail views auto-refresh.
-  </Accordion>
-
-  <Accordion title="Test in Summary Views" icon="flask">
-    Always test actions that use invalidation from Summary Views to verify Related Data sections refresh correctly.
-  </Accordion>
-
-  <Accordion title="Document invalidated relationships" icon="book">
-    Add comments explaining which relationships are invalidated and why:
-
-    ```javascript
-    // Invalidate transactions list after creating new transaction
-    return resultBuilder.success('Created', {
-      invalidated: ['emitted_transactions'],
-    });
-    ```
-  </Accordion>
-</AccordionGroup>
-
 ## Limitations
 
 - Invalidation only works with `success()` result type

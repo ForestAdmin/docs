@@ -1,56 +1,89 @@
 ---
 title: Environments & Branches
+description: Overview of environments and branches for Forest Admin development workflow
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+This section covers the development workflow for Forest Admin, including how to manage environments, branches, and deploy your changes.
 
-Manage development environments and branches for your Forest Admin project.
+## Overview
 
-## Sources to migrate
+Your Forest Admin panel is composed of two parts:
+- **Backend (Agent)**: Part of your codebase, versioned with Git
+- **Frontend (UI)**: Managed on Forest Admin servers, versioned with Branches
 
-- `documentation-user-guide/project-settings/environments-tab.md`
-- `developer-guide-agent-v2/sources/deployment/using-branches.md`
-- `developer-guide-agent-v2/sources/deployment/deploying-your-changes.md`
-- `developer-guide-agent-v2/sources/deployment/development-workflow.md`
-- `developer-guide-agent-v2/sources/deployment/environments.md`
+This separation requires specific tools and workflows to manage both effectively.
 
-## Content outline
+## Development Workflow
 
-1. **Environments**
-   - Development vs Production
-   - Environment creation
-   - Environment configuration
-   - Environment-specific settings
+<CardGroup cols={2}>
+  <Card title="Development Workflow" icon="diagram-project" href="/product/process/for-tech-teams/developer-workflow/development-workflow">
+    Understand the complete development workflow with Forest Admin
+  </Card>
+  <Card title="Environments" icon="layer-group" href="/product/process/for-tech-teams/developer-workflow/environments">
+    Create and manage Development, Production, and Remote environments
+  </Card>
+  <Card title="Using Branches" icon="code-branch" href="/product/process/for-tech-teams/developer-workflow/using-branches">
+    Version control for your Forest Admin layouts
+  </Card>
+  <Card title="Deploying Changes" icon="rocket" href="/product/process/for-tech-teams/developer-workflow/deploying-your-changes">
+    Deploy your layout changes to Remote and Production
+  </Card>
+</CardGroup>
 
-2. **Branches**
-   - Branch creation and management
-   - Layout version control
-   - Branch switching
-   - Conflict resolution
+## Key Concepts
 
-3. **Development Workflow**
-   - Local development → Branch → Test → Merge → Deploy
-   - Schema comparison
-   - Layout versioning
-   - Environment promotion
+### Environments
 
-4. **Best Practices**
-   - Branch naming conventions
-   - Environment parity
-   - Testing before deployment
-   - Rollback strategies
+Forest Admin supports multiple environments:
+- **Development**: Your local environment for testing
+- **Production**: Your live environment with real data
+- **Remote**: Staging, QA, or other testing environments
 
-## Migration notes
+Each environment has its own:
+- Agent URL
+- Database connection
+- Environment secret (`FOREST_ENV_SECRET`)
+- Layout configuration
 
-- Core developer workflow content
-- Critical for team collaboration
-- Integrates with CLI commands
+### Branches
 
-## Related pages
+Branches allow you to version your UI layout changes:
+- Create a branch from any environment
+- Make layout changes without affecting the origin
+- Test changes before deploying
+- Push to Remote environments or deploy to Production
 
-- [Reference > CLI](/product/reference/cli/overview)
-- [Guides > Deployment](/product/guides/deployment/overview)
-- [Schema Updates](/product/process/for-tech-teams/developer-workflow/schema-updates)
+### Layout
+
+A **layout** is the complete UI configuration including:
+- Collection visibility and ordering
+- Field configurations
+- Smart Actions
+- Smart Views
+- Charts and dashboards
+- Permissions and roles
+
+## CLI Commands
+
+<CardGroup cols={3}>
+  <Card title="forest branch" href="/product/reference/cli/branch">
+    Create a new branch
+  </Card>
+  <Card title="forest deploy" href="/product/reference/cli/deploy">
+    Deploy to production
+  </Card>
+  <Card title="forest push" href="/product/reference/cli/push">
+    Push to remote environment
+  </Card>
+</CardGroup>
+
+## Related Topics
+
+<CardGroup cols={2}>
+  <Card title="Schema Updates" href="/product/process/for-tech-teams/developer-workflow/schema-updates">
+    Learn how to update your data schema
+  </Card>
+  <Card title="CLI Reference" href="/product/reference/cli/overview">
+    Complete CLI command reference
+  </Card>
+</CardGroup>

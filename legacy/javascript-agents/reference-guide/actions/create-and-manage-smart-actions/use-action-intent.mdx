@@ -1,9 +1,6 @@
 ---
 title: Smart Action Intents
 ---
-
-# Smart Action Intents
-
 ### What are smart action intents ?
 
 Action intents allows you to redirect your operators from the outside worlds directly to a specific action, by using an url.
@@ -37,8 +34,8 @@ Here is an example of all of these parameters combined:
 
 Your parameters provided to the action intent will be passed to your agent over change and load hooks, allowing you to compute any value for your fields based on the provided parameters. You can access those parameters like such:
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const { collection } = require('forest-express-sequelize');
 const { customers } = require('../models');
@@ -74,9 +71,8 @@ collection('aCollection', {
   ...
 });
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const { collection } = require('forest-express-mongoose');
 const { customers } = require('../models');
@@ -112,43 +108,8 @@ collection('aCollection', {
   ...
 });
 ```
-
-### Rails
-
-```ruby
-class Forest::ACollection
-  include ForestLiana::Collection
-
-  collection :ACollection
-
-  action 'an_action',
-    type: 'single',
-    fields: [{
-      field: 'a_field',
-      type: 'String',
-      hook: 'on_value_change',
-    }],
-    :hooks => {
-      :change => {
-        'on_value_change' => -> (context) {
-          action_intent_params = context[:params][:data][:attributes][:action_intent_params];
-          
-          ...
-          
-          return context[:fields];
-        }
-      }
-      :load => -> (context, request) {
-        action_intent_params = context[:params][:data][:attributes][:action_intent_params];
-        
-        ...
-
-        return context[:fields];
-      }
-    }
-    ...
-end
-```
+  </Tab>
+</Tabs>
 
 ### How to use actionIntentIds
 

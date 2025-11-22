@@ -5,9 +5,6 @@ description: >-
   The goal of this tutorial is to help people deploy their admin backend to
   Ubuntu server.
 ---
-
-# Deploy your admin backend to Ubuntu server
-
 ### Connect to your Ubuntu server using SSH
 
 Before starting anything, you have to make sure you're able to connect to your server using SSH.
@@ -159,7 +156,7 @@ ubuntu@ip-172-31-83-152:~/QuickStart$
 
 ### Install dependencies
 
-First, you have to make sure you have Node.js and NPM correctly installed on your server.
+First, you have to make sure you have Ruby on Rails and NPM correctly installed on your server.
 
 ```bash
 sudo apt update
@@ -329,7 +326,7 @@ The admin backend is by default listening on port **3310**. Be sure you authoriz
 
 ### Manage Application with PM2
 
-> PM2 is a Production Runtime and Process Manager for Node.js applications with a built-in Load Balancer. It allows you to keep applications alive forever, to reload them without downtime and facilitate common Devops tasks. source: [npmjs/pm2](https://www.npmjs.com/package/pm2)​
+> PM2 is a Production Runtime and Process Manager for Ruby on Rails applications with a built-in Load Balancer. It allows you to keep applications alive forever, to reload them without downtime and facilitate common Devops tasks. source: [npmjs/pm2](https://www.npmjs.com/package/pm2)​
 
 #### Install PM2
 

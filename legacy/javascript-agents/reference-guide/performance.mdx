@@ -5,9 +5,6 @@ description: >-
   Loading performance is key to streamlining your operations. Here are a few
   steps we recommend taking to ensure your Forest is optimized.
 ---
-
-# Performance
-
 Please find here all the hands-on best practices to keep your admin panel performant. Depending on your user's needs, you might either hide or optimize some fields to limit the number of components, avoid a large datasets display or rework complex logic.
 
 You can display bellow performances improvement tricks in [this video](https://www.youtube.com/watch?v=UC5nH8q5YUI). For any further help to improve admin panel performances, get in touch with [the community](https://community.forestadmin.com).
@@ -46,7 +43,8 @@ To optimize your smart field performances, please check out [this section](smart
 
 Sometimes, searching in all fields is not relevant and may even result in big performance issues. You can restrict your search to specific fields only using the `searchFields` option.
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 In this example, we configure Forest Admin to only search on the fields `name` and `industry` of our collection `companies`.
 
 ```javascript
@@ -56,8 +54,8 @@ collection('companies', {
   searchFields: ['name', 'industry'],
 });
 ```
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 In this example, we configure Forest to only search on the fields `name` and `industry` of our collection `companies`.
 
 ```javascript
@@ -67,114 +65,36 @@ collection('companies', {
   searchFields: ['name', 'industry'],
 });
 ```
+  </Tab>
+</Tabs>
 
-### Rails
-In this example, we configure Forest to only search on the fields `name` and `industry` of our collection `Company`.
-
-ruby
-class Forest::BooksController < ForestLiana::ResourcesController
-  def count
-    deactivate_count_response
-  end
-end
-```
-
-- adding a route in `app/config/routes.rb` before `mount ForestLiana::Engine => '/forest'`
-
-```ruby
-namespace :forest do
-    get '/Book/count' , to: 'books#count'
-end
-```
-
-### Django
-..adding the following middleware in settings.py and set the collection(s) to deactivate.
-
-
-### Laravel
-
-
-adding a route in `app/routes/web.php`
-
+### Disable count queries
 
 To disable the count request in the table of a relationship (Related data section):
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 router.get(
   '/books/:recordId/relationships/companies/count',
   deactivateCountMiddleware
 );
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 router.get(
   '/books/:recordId/relationships/companies/count',
   deactivateCountMiddleware
 );
 ```
+  </Tab>
+</Tabs>
 
-### Rails
+You can also deactivate count queries conditionally based on the user's team:
 
-```ruby
-class Forest::BookCompaniesController < ForestLiana::AssociationsController
-  def count
-      if (params[:search])
-        params[:collection] = 'Book'
-        params[:association_name] = 'company'
-        super
-      else
-        deactivate_count_response
-    end
-  end
-end
-```
-
-```ruby
-namespace :forest do
-    get '/Book/:id/relationships/companies/count' , to: 'book_companies#count'
-end
-```
-
-### Django
-
-
-Furthermore, if you want to disable on all relationships at once:
-
-python
-class CustomDeactivateCountMiddleware(DeactivateCountMiddleware):
-
-    def is_deactivated(self, request, view_func, *args, **kwargs):
-        is_deactivated = super().is_deactivated(request, view_func, *args, **kwargs)
-        return is_deactivated and 'search' not in request.GET
-```
-
-```python
-MIDDLEWARE = [
-   'myproject.myapp.middlewares.CustomDeactivateCountMiddleware',
-   # ...
-]
-
-# To deactivate the count on /apps_books/count if there is no search argument
-FOREST = {
-   # ...,
-   DEACTIVATED_COUNT = [
-      'apps_books', # apps_model
-   ],
-   # ...
-}
-```
-
-### Laravel
-
-
-One more example: you may want to deactivate the pagination count request for a specific team:
-
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 router.get('/books/count', (request, response, next) => {
   // Count is deactivated for the Operations team
@@ -186,9 +106,8 @@ router.get('/books/count', (request, response, next) => {
   }
 });
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 router.get('/books/count', (request, response, next) => {
   // Count is deactivated for the Operations team
@@ -200,24 +119,8 @@ router.get('/books/count', (request, response, next) => {
   }
 });
 ```
-
-### Rails
-
-```ruby
-class Forest::BooksController < ForestLiana::ResourcesController
-  def count
-    if forest_user['team'] == 'Operations'
-      deactivate_count_response
-    else
-      params[:collection] = 'Book'
-      super
-    end
-  end
-end
-```
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 ### Database Indexing
 

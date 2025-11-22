@@ -1,9 +1,6 @@
 ---
 title: Serializing your records
 ---
-
-# Serializing your records
-
 To be interpreted correctly by the ForestAdmin UI, the data must be sent from your admin backend using a particular structure.\
 \
 This structure needs to comply to the JSON API standard. The JSON API standard is used to ensure a standardized way to format JSON responses returned to clients. You can find some more information directly from their [website](https://jsonapi.org/).\
@@ -14,16 +11,15 @@ In order to help you do so, the helper `RecordSerializer` is made available thro
 
 ### Initializing the record serializer
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const { RecordSerializer } = require('forest-express-sequelize');​
 
 const recordSerializer = new RecordSerializer({ name: 'customer_stats' });
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const { RecordSerializer } = require('forest-express-mongoose');​
 
@@ -36,8 +32,8 @@ To make use of the serializer, simply get it from your agent package, and initia
 
 Let's take a look at the collection defined in the documentation's [smart collection example](./):
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const { collection } = require('forest-express-sequelize');
 
@@ -59,9 +55,8 @@ collection('customer_stats', {
   ],
 });
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const { collection } = require('forest-express-mongoose');
 
@@ -85,9 +80,8 @@ collection('customer_stats', {
 ```
 
 The serializer exposes a `.serialize()` method that takes as an argument an array of objects (or a single object). In the smart collection example, this array would be as such:
-
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const records = [
   {
@@ -109,9 +103,8 @@ const records = [
   ...
 ]
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const records = [
   {
@@ -141,9 +134,11 @@ const serializedRecords = recordSerializer.serialize(records);
 ```
 
 The serialized records are formatted as follows:
+  </Tab>
+</Tabs>
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 {
   data: [
@@ -169,9 +164,8 @@ The serialized records are formatted as follows:
   ]
 }
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 {
   data: [
@@ -199,13 +193,15 @@ The serialized records are formatted as follows:
 ```
 
 This is the proper format expected by the UI to correctly display the records.‌
+  </Tab>
+</Tabs>
 
 ### Example 2 - Smart collection example with an added belongsTo relationship
 
 Now let's say we want to reference the customer related to a stat instead of just displaying its `email`. We would then adapt the smart collection definition to include a field `customer` referencing the `customers` collection:
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const { collection } = require('forest-express-sequelize');
 
@@ -228,9 +224,8 @@ collection('customer_stats', {
   ],
 });
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const { collection } = require('forest-express-mongoose');
 
@@ -255,9 +250,8 @@ collection('customer_stats', {
 ```
 
 For the belongsTo relationship to be properly serialized, the records passed on to the serializer should include the related object (here `customer`), following this structure:
-
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const records = [
   {
@@ -283,9 +277,8 @@ const records = [
   ...
 ]
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const records = [
   {
@@ -311,9 +304,11 @@ const serializedRecords = recordsSerializer.serialize(records);
 ```
 
 The serialized records are formatted as follows:
+  </Tab>
+</Tabs>
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 {
   data: [
@@ -345,9 +340,8 @@ The serialized records are formatted as follows:
   ]
 }
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 {
   data: [
@@ -381,3 +375,12 @@ The serialized records are formatted as follows:
 ```
 
 Note that the `customer` relationship is clearly indicated under the `relationships` attribute. Also note that the customer is automatically wrapped in the `included` section, with its attributes if you specified some (only `id` in this case).
+  </Tab>
+</Tabs>
+  </Tab>
+</Tabs>
+  </Tab>
+</Tabs>
+  </Tab>
+</Tabs>
+

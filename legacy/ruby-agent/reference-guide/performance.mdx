@@ -5,9 +5,6 @@ description: >-
   Loading performance is key to streamlining your operations. Here are a few
   steps we recommend taking to ensure your Forest is optimized.
 ---
-
-# Performance
-
 Please find here all the hands-on best practices to keep your admin panel performant. Depending on your user's needs, you might either hide or optimize some fields to limit the number of components, avoid a large datasets display or rework complex logic.
 
 You can display bellow performances improvement tricks in [this video](https://www.youtube.com/watch?v=UC5nH8q5YUI). For any further help to improve admin panel performances, get in touch with [the community](https://community.forestadmin.com).
@@ -93,18 +90,6 @@ namespace :forest do
 end
 ```
 
-### Django
-..adding the following middleware in settings.py and set the collection(s) to deactivate.
-
-
-### Laravel
-
-
-adding a route in `app/routes/web.php`
-
-
-To disable the count request in the table of a relationship (Related data section):
-
 ### Rails
 
 ```ruby
@@ -127,17 +112,6 @@ namespace :forest do
 end
 ```
 
-### Django
-
-
-Furthermore, if you want to disable on all relationships at once:
-
-
-### Laravel
-
-
-You can also disable the count request in a collection only in certain conditions. For instance, you can disable the count if you're using a filter:
-
 ### Rails
 
 ```ruby
@@ -153,14 +127,6 @@ class Forest::BooksController < ForestLiana::ResourcesController
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
-One more example: you may want to deactivate the pagination count request for a specific team:
-
 ### Rails
 
 ```ruby
@@ -175,9 +141,6 @@ class Forest::BooksController < ForestLiana::ResourcesController
   end
 end
 ```
-
-### Laravel
-
 
 ### Database Indexing
 

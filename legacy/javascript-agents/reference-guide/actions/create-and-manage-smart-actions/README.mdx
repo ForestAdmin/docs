@@ -1,9 +1,6 @@
 ---
 title: Create and manage Smart Actions
 ---
-
-# Create and manage Smart Actions
-
 ### What is a Smart Action?
 
 Sooner or later, you will need to perform actions on your data that are specific to your business. Moderating comments, generating an invoice, logging into a customer’s account or banning a user are exactly the kind of important tasks to unlock in order to manage your day-to-day operations.
@@ -46,10 +43,8 @@ collection('companies', {
 });
 ```
 
-### Rails
-
-javascript
-req.user content example
+```javascript
+// req.user content example
 
 {
   "id": "172",
@@ -118,7 +113,7 @@ We will see a success message in the browser:
 
 #### Custom success notification
 
-If we return a 200 status code with an object `{ success: '...' }` as the payload like this…
+If we return a 200 status code with an object `{'{ success: \'...\' }'}` as the payload like this…
 
 ### SQL
 
@@ -145,25 +140,6 @@ router.post('/actions/mark-as-live', permissionMiddlewareCreator.smartAction(), 
 
 ...
 ```
-
-### Rails
-
-```ruby
-class Forest::CompaniesController < ForestLiana::SmartActionsController
-  def mark_as_live
-    # ...
-    render json: { success: 'Company is now live!' }
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
-
-… the success notification will look like this:
 
 ![](/images/legacy/javascript-agents/toastr-success-custom.png)
 
@@ -196,25 +172,6 @@ router.post('/actions/mark-as-live', permissionMiddlewareCreator.smartAction(), 
 
 ...
 ```
-
-### Rails
-
-```ruby
-class Forest::CompaniesController < ForestLiana::SmartActionsController
-  def mark_as_live
-    # ...
-    render status: 400, json: { error: 'The company was already live!' }
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
-
-![](/images/legacy/javascript-agents/toastr-error.png)
 
 #### Custom HTML response
 
@@ -366,83 +323,6 @@ router.post('/actions/charge-credit-card', (req, res) => {
 module.exports = router;
 ```
 
-### Rails
-
-```ruby
-class Forest::Customer
-  include ForestLiana::Collection
-
-  collection :Customer
-
-  action 'Charge credit card', type: 'single', fields: [{
-    field: 'amount',
-    is_required: true,
-    description: 'The amount (USD) to charge the credit card. Example: 42.50',
-    type: 'Number'
-  }, {
-    field: 'description',
-    is_required: true,
-    description: 'Explain the reason why you want to charge manually the customer here',
-    type: 'String'
-  }]
-end
-```
-
-```ruby
-Rails.application.routes.draw do
-  # MUST be declared before the mount ForestLiana::Engine.
-  namespace :forest do
-    post '/actions/charge-credit-card' => 'customers#charge_credit_card'
-  end
-
-  mount ForestLiana::Engine => '/forest'
-end
-```
-
-```ruby
-class Forest::CustomersController < ForestLiana::SmartActionsController
-  def charge_credit_card
-    customer_id = ForestLiana::ResourcesGetter.get_ids_from_request(params).first
-    amount = params.dig('data', 'attributes', 'values', 'amount').to_i
-    description = params.dig('data', 'attributes', 'values', 'description')
-
-    customer = Customer.find(customer_id)
-
-    response = Stripe::Charge.create(
-      amount: amount * 100,
-      currency: 'usd',
-      customer: customer.stripe_id,
-      description: description
-    )
-
-    render json: { html: <<EOF
-<p class="c-clr-1-4 l-mt l-mb">$#{response.amount / 100.0} USD has been successfully charged.</p>
-
-<strong class="c-form__label--read c-clr-1-2">Credit card</strong>
-<p class="c-clr-1-4 l-mb">**** **** **** #{response.source.last4}</p>
-
-<strong class="c-form__label--read c-clr-1-2">Expire</strong>
-<p class="c-clr-1-4 l-mb">#{response.source.exp_month}/#{response.source.exp_year}</p>
-
-<strong class="c-form__label--read c-clr-1-2">Card type</strong>
-<p class="c-clr-1-4 l-mb">#{response.source.brand}</p>
-
-<strong class="c-form__label--read c-clr-1-2">Country</strong>
-<p class="c-clr-1-4 l-mb">#{response.source.country}</p>
-EOF
-    }
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
-
-<img src="/images/legacy/javascript-agents/actions-html-response-success.png" alt="" />
-
 You can either respond with an HTML page in case of error. The user will be able to go back to his smart action's form by using the cross icon at the top right of the panel.
 
 ### SQL
@@ -581,77 +461,6 @@ router.post('/actions/charge-credit-card', (req, res) => {
 module.exports = router;
 ```
 
-### Rails
-
-```ruby
-class Forest::Customer
-  include ForestLiana::Collection
-
-  collection :Customer
-
-  action 'Charge credit card', type: 'single', fields: [{
-    field: 'amount',
-    is_required: true,
-    description: 'The amount (USD) to charge the credit card. Example: 42.50',
-    type: 'Number'
-  }, {
-    field: 'description',
-    is_required: true,
-    description: 'Explain the reason why you want to charge manually the customer here',
-    type: 'String'
-  }]
-end
-```
-
-```ruby
-Rails.application.routes.draw do
-  # MUST be declared before the mount ForestLiana::Engine.
-  namespace :forest do
-    post '/actions/charge-credit-card' => 'customers#charge_credit_card'
-  end
-
-  mount ForestLiana::Engine => '/forest'
-end
-```
-
-```ruby title="/app/controllers/forest/customers_controller.rb"
-class Forest::CustomersController &#x3C; ForestLiana::SmartActionsController
-  def charge_credit_card
-    customer_id = ForestLiana::ResourcesGetter.get_ids_from_request(params, forest_user).first
-    amount = params.dig('data', 'attributes', 'values', 'amount').to_i
-    description = params.dig('data', 'attributes', 'values', 'description')
-
-    customer = Customer.find(customer_id)
-
-    response = Stripe::Charge.create(
-      amount: amount * 100,
-      currency: 'usd',
-      customer: customer.stripe_id,
-      description: description
-    )
-
-    render status: 400, json: {
-      html: &#x3C;&#x3C;EOF
-      &#x3C;p class="c-clr-1-4 l-mt l-mb">\$#{record.amount / 100} USD has not been charged.&#x3C;/p>
-      &#x3C;strong class="c-form__label--read c-clr-1-2">Credit card&#x3C;/strong>
-      &#x3C;p class="c-clr-1-4 l-mb">**** **** **** #{record.source.last4}&#x3C;/p>
-      &#x3C;strong class="c-form__label--read c-clr-1-2">Reason&#x3C;/strong>
-      &#x3C;p class="c-clr-1-4 l-mb">You can not charge this credit card. The card is marked as blocked&#x3C;/p>
-      EOF
-    }
-  end
-end
-
-```
-
-### Django
-
-
-### Laravel
-
-
-<img src="/images/legacy/javascript-agents/actions-html-response-error.png" alt="" />
-
 ### Setting up a webhook
 
 After a smart action you can set up a HTTP (or HTTPS) callback - a webhook - to forward information to other applications.\
@@ -692,27 +501,7 @@ response.send({
 });
 ```
 
-### Rails
-
-```ruby
-render json: {
-  webhook: { # This is the object that will be used to fire http calls.
-    url: 'http://my-company-name', # The url of the company providing the service.
-    method: 'POST', # The method you would like to use (typically a POST).
-    headers: {}, # You can add some headers if needed (you can remove it).
-    body: { # A body to send to the url (only JSON supported).
-      adminToken: 'your-admin-token',
-    }
-  }
-}
-```
-
-### Django
-
-python
-from django_forest.utils.collection import Collection
-from app.models import Customer
-
+```python
 class CustomerForest(Collection):
     def load(self):
         self.actions = [{
@@ -722,11 +511,6 @@ class CustomerForest(Collection):
 
 Collection.register(CustomerForest, Customer)
 ```
-
-
-### Laravel
-On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
-
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.52.05 (2).png>)
 
@@ -874,84 +658,7 @@ router.post(
 );
 ```
 
-### Rails
 Below is the sample code. We use the `gem 'faker'` to easily generate fake data. Remember to add this gem to your `Gemfile` and install it (`bundle install`) if you wish to use it.
-
-```ruby
-class Forest::Company
-  include ForestLiana::Collection
-
-  collection :Company
-  # ...
-
-  action 'Add new transaction', fields: [{
-    field: 'Beneficiary company',
-    description: 'Name of the company who will receive the transaction.',
-    reference: 'Company.id'
-  }, {
-    field: 'Amount',
-    type: 'Number'
-  }]
-
-  # ...
-end
-```
-
-```ruby
-class Forest::CompaniesController < ForestLiana::SmartActionsController
-  # ...
-
-  def add_new_transaction
-    attrs = params.dig('data','attributes', 'values')
-    beneficiary_company_id = attrs['Beneficiary company']
-    emitter_company_id = ForestLiana::ResourcesGetter.get_ids_from_request(params, forest_user).first
-    amount = attrs['Amount']
-    Transaction.create!(
-      emitter_company_id: emitter_company_id,
-      beneficiary_company_id: beneficiary_company_id,
-      beneficiary_iban: Faker::Code.imei,
-      emitter_iban: Faker::Code.imei,
-      vat_amount: Faker::Number.number(4),
-      fee_amount: Faker::Number.number(4),
-      status: ['to_validate', 'validated', 'rejected'].sample,
-      note: Faker::Lorem.paragraph,
-      amount: amount,
-      emitter_bic: Faker::Code.nric,
-      beneficiary_bic: Faker::Code.nric
-    )
-
-    # the code below automatically refresh the related data
-    # 'emitted_transactions' on the Companies' Summary View
-    # after submitting the Smart action form.
-    render json: {
-      success: 'New transaction emitted',
-      refresh: { relationships: ['emitted_transactions'] },
-    }
-  end
-end
-```
-
-```ruby
-Rails.application.routes.draw do
-  # MUST be declared before the mount ForestLiana::Engine.
-  namespace :forest do
-    # ...
-    post '/actions/add-new-transaction' => 'companies#add_new_transaction'
-    # ...
-  end
-
-  mount ForestLiana::Engine => '/forest'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-end
-```
-
-### Django
-Below is the sample code. We use the python Faker package to easily generate fake data. Remember to add this package to your `requirements.txt` and install it if you wish to use it.
-
-
-### Laravel
-Below is the sample code. We use the Faker package to easily generate fake data. Remember to add this package to your `composer.json` and install it if you wish to use it.
-
 
 ### Redirecting to a different page on success
 
@@ -1056,62 +763,6 @@ router.post('/actions/show-some-activity', Liana.ensureAuthenticated,
 
 module.exports = router;
 ```
-
-### Rails
-
-```ruby
-class Forest::Company
-  include ForestLiana::Collection
-
-  collection :Company
-
-  action 'Return and track'
-  action 'Show some activity'
-end
-```
-
-```ruby
-...
-
-namespace :forest do
-  post '/actions/return-and-track' => 'company#redirect_externally'
-  post '/actions/show-some-activity' => 'company#redirect_internally'
-end
-
-...
-```
-
-```ruby
-...
-
-def redirect_externally
-  # External redirection
-  render json: {
-    success: 'Return initiated successfully.',
-    redirectTo: 'https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB',
-  }
-end
-
-def redirect_internally
-  # Internal redirection
-  render json: {
-    success: 'Return initiated successfully.',
-    redirectTo: '/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity',
-  }
-end
-
-...
-```
-
-### Django
-
-
-### Laravel
-
-
-<Warning>
-Your **external** links must use the `http` or `https` protocol.
-</Warning>
 
 ### Enable/Disable a Smart Action according to the state of a record
 

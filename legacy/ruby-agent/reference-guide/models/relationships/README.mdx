@@ -1,9 +1,6 @@
 ---
 title: Relationships
 ---
-
-# Relationships
-
 ## What is a relationship?
 
 A relationship is a connection between two collections.
@@ -21,12 +18,12 @@ If you installed Forest Admin directly on a database, then most relationships sh
 
 ## Adding relationships (databases only)
 
-Depending on your database type, your models will have been generated in Sequelize (for SQL databases) or Mongoose (for Mongo databases).
+Depending on your database type, your models will have been generated in ActiveRecord (for SQL databases) or Mongoid (for Mongo databases).
 
 Below are some simple snippets showing you how to add relationships. However, should you want to dig deeper, please refer to the appropriate framework's documentations:
 
-- [Sequelize's documentation](https://sequelize.org/master/manual/assocs.html) on adding relationships in your models (SQL)
-- [Mongoose's documentation](https://mongoosejs.com/docs/guide.html) on adding relationships in your models (Mongodb)
+- [ActiveRecord's documentation](https://sequelize.org/master/manual/assocs.html) on adding relationships in your models (SQL)
+- [Mongoid's documentation](https://mongoosejs.com/docs/guide.html) on adding relationships in your models (Mongodb)
 
 ### Adding a `hasMany` relationship
 
@@ -48,7 +45,7 @@ In that case, adding the above code will not suffice to add the `belongsTo` rela
 
 If the field `fk_customername` of a table **Address** points to the field `name` of a table **Customer**, add the following:
 
-javascript
+```javascript
 ...
 UserProjects.associate = (models) => {
   UserProjects.belongsTo(models.projects, {
@@ -98,5 +95,4 @@ Projects.associate = (models) => {
 ## Relationship generation rules
 
 Forest Admin automatically generates most relationships, according to the below rules:
-
 

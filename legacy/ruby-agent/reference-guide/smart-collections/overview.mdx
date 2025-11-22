@@ -1,9 +1,6 @@
 ---
 title: Smart Collections
 ---
-
-# Smart Collections
-
 ### What is a Smart Collection?
 
 A Smart Collection is a Forest Collection based on your API implementation. It allows you to reconcile fields of data coming from different or external sources in a single tabular view (by default), without having to physically store them into your database.
@@ -49,45 +46,6 @@ end
 
 <Info>
 The option`is_searchable: true` added to your collection allows to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic in your collection controller.
-</Info>
-
-### Django
-First, we declare the `CustomerStat` collection in the `app/forest/customer_stat.py` file.
-
-In this Smart Collection, we want to display for each customer its email address, the number of orders made (in a field `orders_count`) and the sum of the price of all those orders (in a field `total_amount`).
-
-You can check out the list of [available field options ](../smart-fields/#available-field-options)if you need it.
-
-<Warning>
-You **MUST** declare an `id` field when creating a Smart Collection. The value of this field for each record **MUST** be unique.
-
-As we are using the _customer id_ in this example, we do not need to declare an `id`
-</Warning>
-
-
-Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
-
-
-<Info>
-The option`is_searchable = True` added to your collection allows to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic in your collection controller.
-</Info>
-
-### Laravel
-First, we declare the `CustomerStat` collection in the `app/Models/SmartCollections/CustomerStat.php` file.
-
-In this Smart Collection, we want to display for each customer its email address, the number of orders made (in a field `orders_count`) and the sum of the price of all those orders (in a field `total_amount`).
-
-You can check out the list of [available field options ](../smart-fields/#available-field-options)if you need it.
-
-<Warning>
-You **MUST** declare an `id` field when creating a Smart Collection. The value of this field for each record **MUST** be unique.
-
-As we are using the _customer id_ in this example, we do not need to declare an `id`
-</Warning>
-
-
-<Info>
-The option`is_searchable = True` added to your collection allows to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic in your collection controller.
 </Info>
 
 ### Implementing the GET (all records)
@@ -194,24 +152,3 @@ Rails.application.routes.draw do
 end
 ```
 
-### Django
-First we will add the right path to the **urls.py** file
-
-
-Then we will create the pertained view
-
-
-### Laravel
-Create a controller `CustomerStatsController`
-
-
-Then add the route.
-
-
-Now we are all set, we can access the Smart Collection as any other collection.
-
-![](</images/legacy/javascript-agents/image (296).png>)
-
-<Info>
-In this example we have only implemented the **GET all records** action but you can also add the following actions: **GET specific records**, **PUT, DELETE** and **POST**. These are shown in the next page explaining how a Smart Collection can be used to access and manipulate data stored in Amazon S3.
-</Info>

@@ -1,9 +1,6 @@
 ---
 title: Override a route
 ---
-
-# Override a route
-
 Overriding a route allows you to change or completely replace a Forest Admin's route behavior.
 
 ### Changing Forest Admin's behavior
@@ -37,18 +34,6 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
-With this snippet, only the `companies` collection would use extended search by default.
-
-<Warning>
-Using extended search is less performant than default search. Use this wisely.
-</Warning>
-
 #### Protect a specific record
 
 ### Rails
@@ -68,12 +53,6 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 ### Replacing Forest Admin's behavior
 
 To achieve this, simply remove the `next()` statement of any route:
@@ -90,14 +69,6 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
   end
 end
 ```
-
-### Django
-
-
-### Laravel
-
-
-For instance, if you have a `Users` collection, you might want to create your users via your own api:
 
 ### Rails
 
@@ -121,10 +92,4 @@ if ForestLiana::UserSpace.const_defined?('UserController')
   end
 end
 ```
-
-### Django
-
-
-### Laravel
-
 

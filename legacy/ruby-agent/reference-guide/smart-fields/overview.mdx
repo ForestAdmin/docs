@@ -1,9 +1,6 @@
 ---
 title: Smart Fields
 ---
-
-# Smart Fields
-
 ### What is a Smart Field?
 
 A field that displays a computed value in your collection.
@@ -44,29 +41,6 @@ class Forest::Customer
 end
 ```
 
-### Django
-On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` collection.
-
-
-Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
-
-
-Very often, the business logic behind the Smart Field is more complex and must interact with the database. Here’s an example with the Smart Field `full_address` on the `Customer` collection.
-
-
-### Laravel
-On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` model.
-
-
-Very often, the business logic behind the Smart Field is more complex and must interact with the database. Here’s an example with the Smart Field `full_address` on the `Customer` model.
-
-
-<Warning>
-The collection name must be the same as the **model name**.
-</Warning>
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 12.16.05.png>)
-
 ### Updating a Smart Field
 
 ### Rails
@@ -97,15 +71,6 @@ end
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
 </Info>
 
-### Django
-By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the `set` method should always return the object it’s working on**. In the example hereunder, the `customer` object is returned including only the modified data.
-
-
-### Laravel
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 12.23.14.png>)
-
 ### Searching, Sorting and Filtering on a Smart Field
 
 To perform a search on a Smart Field, you also need to write the logic to “unzip” the data, then the search query which is specific to your zipping. In the example hereunder, the `firstname` and `lastname` are searched separately after having been unzipped.
@@ -132,14 +97,6 @@ class Forest::Customer
   end
 end
 ```
-
-### Django
-
-
-### Laravel
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 12.25.58.png>)
 
 #### Filtering
 
@@ -181,20 +138,6 @@ class Forest::Customer
   end
 end
 ```
-
-### Django
-
-
-### Laravel
-
-
-![](</images/legacy/javascript-agents/screenshot 2021-04-02 at 16.09.16.png>)
-
-<Info>
-Make sure you set the option `isFilterable: true` in the field definition of your code. Then, you will be able to toggle the "Filtering enabled" option in the browser, in your **Fields Settings**.
-</Info>
-
-![](</images/legacy/javascript-agents/image (405).png>)
 
 #### Sorting
 

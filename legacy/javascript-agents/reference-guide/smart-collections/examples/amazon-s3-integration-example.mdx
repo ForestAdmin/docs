@@ -1,14 +1,12 @@
 ---
 title: Create a Smart Collection with Amazon S3
 ---
-
-# Create a Smart Collection with Amazon S3
-
 ### Creating the Smart Collection
 
 On our Live Demo, we’ve stored the `Legal Documents` of a `Company` on Amazon S3. In the following example, we show you how to create the Smart Collection to see and manipulate them in your Forest admin.
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 First, we declare the `legal_docs` collection in the `forest/` directory. In this Smart Collection, all fields are related to S3 attributes except the field `is_verified` that is stored on our database in the collection `documents`.&#x20;
 
 You can check out the list of [available field options ](../../smart-fields/#available-field-options)if you need it.
@@ -51,8 +49,8 @@ collection('legal_docs', {
   ],
 });
 ```
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 First, we declare the `legal_docs` collection in the `forest/` directory. In this Smart Collection, all fields are related to S3 attributes except the field `is_verified` that is stored on our database in the collection `documents`.&#x20;
 
 You can check out the list of [available field options here ](../../smart-fields/#available-field-options)if you need it.
@@ -99,12 +97,15 @@ collection('legal_docs', {
 <Info>
 You can add the option `isSearchable: true` to your collection to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic.
 </Info>
+  </Tab>
+</Tabs>
 
 ### Implementing the GET (all records)
 
 At this time, there’s no Smart Collection Implementation because no route in your admin backend handles the API call yet.&#x20;
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 In the file `routes/legal_docs.js`, we’ve created a new route to implement the API behind the Smart Collection.
 
 The logic here is to list all the files uploaded on a specific S3 Bucket. We use a custom service `services/s3-helper.js` for this example. The implementation code of this service is [available on Github](https://github.com/ForestAdmin/forest-live-demo-lumber/blob/master/services/s3-helper.js).
@@ -148,8 +149,8 @@ module.exports = new JSONAPISerializer('legal_docs', {
   keyForAttribute: 'underscore_case',
 });
 ```
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 In the file `routes/legal_docs.js`, we’ve created a new route to implement the API behind the Smart Collection.
 
 The logic here is to list all the files uploaded on a specific S3 Bucket. We use a custom service `services/s3-helper.js` for this example. The implementation code of this service is [available on Github](https://github.com/ForestAdmin/forest-live-demo-lumber/blob/master/services/s3-helper.js).
@@ -195,10 +196,13 @@ module.exports = new JSONAPISerializer('legal_docs', {
 ```
 
 ![](/images/legacy/javascript-agents/live-demo-s3-integration.png)
+  </Tab>
+</Tabs>
 
 ### Implementing the GET (specific record)
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 To access the details view of a Smart Collection record, you have to catch the GET API call on a specific record. One more time, we use a custom service `services/s3-helper.js` that encapsulates the S3 business logic for this example.
 
 The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already described in the [Implementing the GET (all records)](../#implementing-the-get-all-records) section.
@@ -224,8 +228,8 @@ router.get('/legal_docs/:doc_id', (req, res, next) => {
 
 module.exports = router;
 ```
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 To access the details view of a Smart Collection record, you have to catch the GET API call on a specific record. One more time, we use a custom service `services/s3-helper.js` that encapsulates the S3 business logic for this example.
 
 The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already described in the [Implementing the GET (all records)](../#implementing-the-get-all-records) section.
@@ -253,12 +257,15 @@ module.exports = router;
 ```
 
 ![](</images/legacy/javascript-agents/image (257).png>)
+  </Tab>
+</Tabs>
 
 ### Implementing the PUT
 
 To handle the update of a record we have to catch the PUT API call. In our example, all S3-related fields are set as read-only and only `is_verified` can be updated.
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already explained in the [Implementing the GET (all records)](../#implementing-the-get-all-records) section.
 
 ```javascript
@@ -287,8 +294,8 @@ router.put('/legal_docs/:doc_id', (req, res, next) => {
 
 module.exports = router;
 ```
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already explained in the [Implementing the GET (all records)](../#implementing-the-get-all-records) section.
 
 ```javascript
@@ -319,13 +326,15 @@ module.exports = router;
 ```
 
 ![](/images/legacy/javascript-agents/live-demo-s3-integration-verified.png)
+  </Tab>
+</Tabs>
 
 ### Implementing the DELETE
 
 Now we are able to see all the legal documents on Forest Admin, it’s time to implement the DELETE HTTP method in order to remove the documents on S3 when the admin user needs it.
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const express = require('express');
 const router = express.Router();
@@ -343,9 +352,8 @@ router.delete('/legal_docs/:doc_id', (req, res, next) => {
 
 module.exports = router;
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const express = require('express');
 const router = express.Router();
@@ -365,13 +373,15 @@ module.exports = router;
 ```
 
 ![](/images/legacy/javascript-agents/live-demo-s3-integration-delete.png)
+  </Tab>
+</Tabs>
 
 ### Implementing the POST
 
 On our Live Demo example, creating a record directly from this Smart Collection does not make any sense because the admin user will upload the legal docs in the company details view. For the documentation purpose, we catch the call and returns an appropriate error message to the admin user.
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 ...
 
@@ -383,9 +393,8 @@ router.post('/legal_docs', permissionMiddlewareCreator.create(), (request, respo
 
 module.exports = router;
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const P = require('bluebird');
 const express = require('express');
@@ -408,3 +417,6 @@ module.exports = router;
 ```
 
 ![](</images/legacy/javascript-agents/image (346).png>)
+  </Tab>
+</Tabs>
+

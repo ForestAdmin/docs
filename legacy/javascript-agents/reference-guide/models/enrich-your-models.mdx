@@ -3,18 +3,15 @@ title: Enrich your models
 
 description: >-
   ⚠️ This page is relevant only if you installed Forest Admin directly on a
-  database (SQL/Mongodb). If you installed in a Rails/Django/Laravel app, you
+  database (SQL/Mongodb). If you installed in a Node.js app, you
   manage your models like you normally would.
 ---
-
-# Enrich your models
-
 ### Declaring a new model
 
 Whenever you have a new table/collection in your database, you will have to create file to declare it. Here is a **template example** for a `companies` table:
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 module.exports = (sequelize, DataTypes) => {
   const { Sequelize } = sequelize;
@@ -48,9 +45,8 @@ Company.associate = (models) => {};
 ```
 
 You can learn more about relationships on this [dedicated page](relationships/).
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 module.exports = (mongoose, Mongoose) => {
   const schema = Mongoose.Schema({
@@ -79,12 +75,15 @@ You can learn more about relationships on this [dedicated page](relationships/).
 <Info>
 When you manually add a new model, you need to configure the permissions for the corresponding collection in the UI (allow record details view, record creation, record edit, etc). By default a new collection is not visible and all permissions are disabled. You can set permissions by going to the [Roles settings](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles).
 </Info>
+  </Tab>
+</Tabs>
 
 ### Declaring a new field in a model
 
 Any new field must be added **manually** within the corresponding model of your `/models` folder.
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 Fields are declared as follows:
 
 ```javascript
@@ -96,8 +95,8 @@ createdAt: {
 An exhaustive list of **DataTypes** can be found in [Sequelize documentation](https://sequelize.org/master/manual/data-types.html).
 
 You can see how that snippet fits into your code in the [model example](enrich-your-models.md#declaring-a-new-model) above.
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 Fields are declared as follows:
 
 ```javascript
@@ -107,6 +106,8 @@ Fields are declared as follows:
 An exhaustive list of **SchemaTypes** can be found in [Mongoose documentation](https://mongoosejs.com/docs/schematypes.html#what-is-a-schematype).
 
 You can see how that snippet fits into your code in the [model example](enrich-your-models.md#declaring-a-new-model) above.
+  </Tab>
+</Tabs>
 
 ### Managing nested documents in Mongoose
 
@@ -178,7 +179,8 @@ If so, you'll have to do it **manually**, using the below examples.
 
 Depending on your database type, your models will have been generated in _Sequelize_ (for SQL databases) or _Mongoose_ (for Mongo databases).
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 In Sequelize, you add validation using the `validate` property:
 
 ```javascript
@@ -206,8 +208,8 @@ The 2 validators above will have the following effect on your email field:
 ![Email too short (not within 10-25 range)](</images/legacy/javascript-agents/image (304).png>)
 
 For an exhaustive list of available validators, check out the [Sequelize documentation](https://sequelize.org/master/manual/models-definition.html#validations).
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 In Mongoose, you add validators alongside the `type` property:
 
 ```javascript
@@ -274,6 +276,8 @@ You then that any invalid email is refused:
 ![](</images/legacy/javascript-agents/image (307).png>)
 
 For further details on validators in Mongoose, check out the [Mongoose documentation](https://mongoosejs.com/docs/validation.html#built-in-validators).
+  </Tab>
+</Tabs>
 
 ###
 
@@ -281,8 +285,8 @@ For further details on validators in Mongoose, check out the [Mongoose documenta
 
 You can choose to add a default value for some fields in your models. As a result, the corresponding fields will be prefilled with their default value in the creation form:
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 module.exports = (sequelize, DataTypes) => {
   const Customer = sequelize.define('customers', {
@@ -297,9 +301,8 @@ module.exports = (sequelize, DataTypes) => {
   return Customer;
 };
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 module.exports = (mongoose, Mongoose) => {
   const schema = Mongoose.Schema({
@@ -317,6 +320,8 @@ module.exports = (mongoose, Mongoose) => {
 ```
 
 ![](</images/legacy/javascript-agents/image (309).png>)
+  </Tab>
+</Tabs>
 
 ### Adding a hook
 
@@ -324,7 +329,8 @@ Hooks are a powerful mechanism which allow you to automatically **trigger an eve
 
 In our case, let's pretend we want to update a `update_count` field every time a record is updated:
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 To add a `beforeSave` hook in Sequelize, use the following syntax:
 
 ```javascript
@@ -352,8 +358,8 @@ Every time the order is updated, the updateCount field will be incremented by 1:
 ![](</images/legacy/javascript-agents/screenshot 2019-09-27 at 15.10.56.png>)
 
 The exhaustive list of available hooks in Sequelize are available [here](https://sequelize.org/master/manual/hooks.html).
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 To add a hook in Mongoose on `save` event, you may use the following snippet:
 
 ```javascript
@@ -385,4 +391,6 @@ _Pre and post `save()` hooks are **not** executed on `update()`, `findOneAndUpda
 
 This would only work if you specifically call `save` in your update method.
 </Warning>
+  </Tab>
+</Tabs>
 

@@ -1,9 +1,6 @@
 ---
 title: Manage SQL views
 ---
-
-# Manage SQL views
-
 In SQL, a view is a virtual table based on the result-set of an SQL statement. Views can provide advantages over tables, such as:
 
 - represent a subset of the data contained in a table (see also[ segments](https://docs.forestadmin.com/user-guide/collections/segments)).
@@ -36,8 +33,7 @@ CREATE VIEW customer_stats AS
 
 ## Adding the model
 
-To display the SQL view on your Forest Admin interface, you must add the associated Sequelize model in your application.
-
+To display the SQL view on your Forest Admin interface, you must add the associated ActiveRecord model in your application.
 
 <Info>
 You must restart your server to see the changes on your interface.

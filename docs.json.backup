@@ -1,0 +1,358 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Forest Admin Documentation",
+  "colors": {
+    "primary": "#00D4AA",
+    "light": "#00E5BA",
+    "dark": "#00B392"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Home",
+        "pages": [
+          "index"
+        ]
+      }
+    ],
+    "tabs": [
+      {
+        "tab": "Get Started",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "get-started/overview",
+              "get-started/introduction",
+              "get-started/quickstart-self-hosted",
+              "get-started/quickstart-cloud",
+              "get-started/administrate-your-project"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Product",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "product/overview"
+            ]
+          },
+          {
+            "group": "Integration",
+            "pages": [
+              "product/integration/overview",
+              "product/integration/setup/overview",
+              "product/integration/setup/nodejs",
+              "product/integration/setup/ruby",
+              "product/integration/setup/python",
+              "product/integration/architectures/comparison",
+              "product/integration/architectures/self-hosted",
+              "product/integration/architectures/cloud",
+              "product/integration/data-sources/overview",
+              "product/integration/data-sources/sql",
+              "product/integration/data-sources/mongodb",
+              "product/integration/data-sources/custom",
+              "product/integration/data-sources/relationships",
+              "product/integration/data-sources/rest-api/overview",
+              "product/integration/data-sources/advanced-patterns/replication"
+            ]
+          },
+          {
+            "group": "Control & Security",
+            "pages": [
+              "product/control/overview",
+              "product/control/roles-permissions",
+              "product/control/teams",
+              "product/control/scopes-and-visibility",
+              "product/control/security",
+              "product/control/security/ip-whitelisting",
+              "product/control/audit",
+              "product/control/authentication/overview",
+              "product/control/authentication/sso",
+              "product/control/authentication/2fa",
+              "product/control/authentication/scim",
+              "product/control/authentication/sso-providers/overview",
+              "product/control/authentication/sso-providers/google",
+              "product/control/authentication/sso-providers/azure",
+              "product/control/authentication/sso-providers/okta",
+              "product/control/authentication/sso-providers/aws",
+              "product/control/authentication/sso-providers/generic-saml"
+            ]
+          },
+          {
+            "group": "Process",
+            "pages": [
+              "product/process/overview",
+              "product/process/actions/overview",
+              "product/process/actions/using-actions",
+              "product/process/actions/coding-actions/overview",
+              "product/process/actions/coding-actions/nodejs",
+              "product/process/actions/coding-actions/ruby",
+              "product/process/actions/coding-actions/python",
+              "product/process/actions/coding-actions/cloud",
+              "product/process/fields/overview",
+              "product/process/fields/configuring-fields",
+              "product/process/fields/smart-fields/overview",
+              "product/process/fields/smart-fields/nodejs",
+              "product/process/fields/smart-fields/ruby",
+              "product/process/fields/smart-fields/python",
+              "product/process/fields/smart-fields/cloud",
+              "product/process/segments/overview",
+              "product/process/segments/creating-segments",
+              "product/process/segments/smart-segments/overview",
+              "product/process/segments/smart-segments/nodejs",
+              "product/process/segments/smart-segments/ruby",
+              "product/process/segments/smart-segments/python",
+              "product/process/segments/smart-segments/cloud",
+              "product/process/workflows/overview",
+              "product/process/for-tech-teams/smart-actions/overview",
+              "product/process/for-tech-teams/hooks/overview",
+              "product/process/for-tech-teams/hooks/nodejs",
+              "product/process/for-tech-teams/hooks/ruby",
+              "product/process/for-tech-teams/hooks/python",
+              "product/process/for-tech-teams/plugins/overview",
+              "product/process/for-tech-teams/plugins/nodejs",
+              "product/process/for-tech-teams/plugins/ruby",
+              "product/process/for-tech-teams/plugins/python",
+              "product/process/for-tech-teams/aggregations/overview",
+              "product/process/for-tech-teams/aggregations/nodejs",
+              "product/process/for-tech-teams/aggregations/ruby",
+              "product/process/for-tech-teams/aggregations/python",
+              "product/process/for-tech-teams/advanced-patterns/action-patterns",
+              "product/process/for-tech-teams/advanced-patterns/query-optimization",
+              "product/process/for-tech-teams/advanced-patterns/relationship-patterns",
+              "product/process/for-tech-teams/developer-workflow/environments-and-branches",
+              "product/process/for-tech-teams/developer-workflow/schema-updates",
+              "product/process/for-tech-teams/developer-workflow/typescript-setup"
+            ]
+          },
+          {
+            "group": "Build",
+            "pages": [
+              "product/build/overview",
+              "product/build/collection-configuration",
+              "product/build/layout-editor",
+              "product/build/layout-versioning",
+              "product/build/layout-maintenance",
+              "product/build/workspaces",
+              "product/build/action-ui-configuration",
+              "product/build/branding",
+              "product/build/search-configuration",
+              "product/build/pagination",
+              "product/build/fields-and-widgets/overview",
+              "product/build/fields-and-widgets/display-widgets",
+              "product/build/fields-and-widgets/edit-widgets",
+              "product/build/custom-views/smart-views",
+              "product/build/workspace-patterns/customer-success",
+              "product/build/workspace-patterns/incident-management",
+              "product/build/workspace-patterns/kyc-workspace",
+              "product/build/workspace-patterns/fraud-detection"
+            ]
+          },
+          {
+            "group": "Execute",
+            "pages": [
+              "product/execute/overview",
+              "product/execute/browse",
+              "product/execute/actions",
+              "product/execute/workflows",
+              "product/execute/export"
+            ]
+          },
+          {
+            "group": "Collaborate",
+            "pages": [
+              "product/collaborate/overview",
+              "product/collaborate/approval-workflows",
+              "product/collaborate/inbox",
+              "product/collaborate/notes",
+              "product/collaborate/escalation"
+            ]
+          },
+          {
+            "group": "Manage",
+            "pages": [
+              "product/manage/overview",
+              "product/manage/dashboards",
+              "product/manage/activity",
+              "product/manage/team-performance",
+              "product/manage/charts/overview",
+              "product/manage/charts/chart-patterns"
+            ]
+          },
+          {
+            "group": "Embed",
+            "pages": [
+              "product/embed/overview",
+              "product/embed/assist"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "reference/overview"
+            ]
+          },
+          {
+            "group": "Agent API",
+            "pages": [
+              "reference/agent-api/overview",
+              "reference/agent-api/nodejs",
+              "reference/agent-api/ruby",
+              "reference/agent-api/deprecated/overview",
+              "reference/agent-api/deprecated/forest-express-sequelize",
+              "reference/agent-api/deprecated/forest-express-mongoose"
+            ]
+          },
+          {
+            "group": "Public API",
+            "pages": [
+              "reference/api/introduction",
+              "reference/api/authentication",
+              "reference/api/rate-limits",
+              "reference/api/endpoints/activity-logs",
+              "reference/api/endpoints/admin-logs",
+              "reference/api/endpoints/notes"
+            ]
+          },
+          {
+            "group": "CLI",
+            "pages": [
+              "reference/cli/overview",
+              "reference/cli/init",
+              "reference/cli/login",
+              "reference/cli/branch",
+              "reference/cli/push",
+              "reference/cli/deploy",
+              "reference/cli/switch"
+            ]
+          },
+          {
+            "group": "Schema",
+            "pages": [
+              "reference/schema/forestadmin-schema"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "guides/overview"
+            ]
+          },
+          {
+            "group": "Deployment",
+            "pages": [
+              "guides/deployment/overview",
+              "guides/deployment/development-workflow",
+              "guides/deployment/environments",
+              "guides/deployment/platforms/aws",
+              "guides/deployment/platforms/heroku"
+            ]
+          },
+          {
+            "group": "Migration",
+            "pages": [
+              "guides/migration/overview",
+              "guides/migration/from-v1/overview",
+              "guides/migration/from-v1/steps/datasources",
+              "guides/migration/from-v1/steps/smart-actions"
+            ]
+          },
+          {
+            "group": "Best Practices",
+            "pages": [
+              "guides/best-practices/performance",
+              "guides/best-practices/security",
+              "guides/best-practices/troubleshooting"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "guides/integrations/overview",
+              "guides/integrations/stripe"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Legacy",
+        "groups": [
+          {
+            "group": "Deprecated",
+            "pages": [
+              "legacy/overview",
+              "legacy/agent-v1/README",
+              "legacy/php/README"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@forestadmin.com"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://app.forestadmin.com"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "claude",
+      "cursor",
+      "vscode"
+    ]
+  },
+  "footer": {
+    "socials": {
+      "twitter": "https://twitter.com/forest_admin",
+      "github": "https://github.com/ForestAdmin",
+      "linkedin": "https://linkedin.com/company/forestadmin"
+    }
+  },
+  "anchors": [
+    {
+      "name": "Forest Admin",
+      "url": "https://www.forestadmin.com",
+      "icon": "globe"
+    },
+    {
+      "name": "Community",
+      "url": "https://community.forestadmin.com",
+      "icon": "comments"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/ForestAdmin",
+      "icon": "github"
+    }
+  ]
+}

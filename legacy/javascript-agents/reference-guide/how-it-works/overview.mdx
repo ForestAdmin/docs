@@ -1,23 +1,23 @@
 ---
 title: How it works
 ---
-
-# How it works
-
 Before you start writing a single line of code, it’s a good idea to get an overview of how Forest Admin works. The magic lies in its architecture.
 
 Forest Admin provides you with:
 
 - An API hosted on your server to retrieve your data. We call it the **Admin Backend**
   - if you chose a database as a datasource (PostgreSQLL, MySQL / MariaDB, MSSQL, MongoDB), your Admin Backend will be generated as a **standalone folder**.
-  - if you chose an existing app as a datasource (Rails, Django, Laravel, Express/Sequelize, Express/Mongoose), your Admin Backend will be generated **within your app**.
+  - if you chose an existing app as a datasource (Express/Sequelize, Express/Mongoose), your Admin Backend will be generated **within your app**.
 - A user interface to access and manage your data from your browser. This **Forest Admin User Interface** is built and managed through resources hosted on Forest Admin's servers.
 
-### SQL/Mongodb
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ![The Admin Backend is a Node.JS REST API hosted on your servers](/images/legacy/javascript-agents/how-it-works-2.jpg)
-
-### Rails/Django/Laravel
-![The Admin Backend is a Rails Engine mounted on your application](/images/legacy/javascript-agents/how-it-works-3.jpg)
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
+![The Admin Backend is a Node.JS REST API hosted on your servers](/images/legacy/javascript-agents/how-it-works-2.jpg)
+  </Tab>
+</Tabs>
 
 <Info>
 For a more in-depth explanation of Forest Admin's architecture (the Node.JS agent version), please read the [following article](https://medium.com/forest-admin/a-deep-dive-into-forest-admins-architecture-and-its-benefits-for-the-developers-who-trust-it-1d49212fb4b).
@@ -42,11 +42,14 @@ When logging into the **Forest Admin UI** in your browser, you will connect to:
 As your data transits directly from the Admin Backend hosted on your end and the user browser, **it never transits through our servers**.
 </Warning>
 
-### SQL/Mongodb
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ![](/images/legacy/javascript-agents/how-it-works-4.jpg)
-
-### Rails/Django/Laravel
-![](/images/legacy/javascript-agents/how-it-works-3.jpg)
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
+![](/images/legacy/javascript-agents/how-it-works-4.jpg)
+  </Tab>
+</Tabs>
 
 ## Security
 
@@ -55,11 +58,14 @@ The connection to both servers to the **Admin Backend** and the **Forest Admin S
 1. `FOREST_ENV_SECRET` to authenticate all requests made to the **Forest Admin Servers**
 2. `FOREST_AUTH_SECRET` to authenticate all requests made to the **Admin Backend**
 
-### SQL/Mongodb
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ![](/images/legacy/javascript-agents/how-it-works-5.jpg)
-
-### Rails/Django/Laravel
-![](/images/legacy/javascript-agents/how-it-works-6.jpg)
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
+![](/images/legacy/javascript-agents/how-it-works-5.jpg)
+  </Tab>
+</Tabs>
 
 <Warning>
 `FOREST_ENV_SECRET` is provided by Forest Admin and ensures your **Admin Backend** interacts with the relevant environment configuration on our end\*\*.\*\*
@@ -94,7 +100,7 @@ The **Forest Admin UI** has an option to completely disable any 3rd-party provid
 ### SQL/Mongodb
 ![](/images/legacy/javascript-agents/how-it-works-7.jpg)
 
-### Rails/Django/Laravel
+### Node.js
 ![](/images/legacy/javascript-agents/how-it-works-8.jpg)
 
 ### IP Whitelisting
@@ -104,7 +110,7 @@ The [IP whitelisting](../../how-tos/setup/forest-admin-ip-white-listing-forest-c
 ### SQL/Mongodb
 ![](/images/legacy/javascript-agents/how-it-works-9.jpg)
 
-### Rails/Django/Laravel
+### Node.js
 ![](/images/legacy/javascript-agents/how-it-works-10.jpg)
 
 ### **DMZ & VPN**

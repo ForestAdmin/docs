@@ -6,15 +6,12 @@ description: >-
   database (SQL/Mongodb). If you installed in a Rails app, check the "Override a
   route" page.
 ---
-
-# Extend a route
-
 Extending a route is a clean way to achieve more by building on top of Forest Admin's existing routes.
 
 To extend a route, simply **add** **your own logic before the `next()` statement:**
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const express = require('express');
 const { PermissionMiddlewareCreator } = require('forest-express-sequelize');
@@ -34,9 +31,8 @@ router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next)
 
 module.exports = router;
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const express = require('express');
 const { PermissionMiddlewareCreator } = require('forest-express-mongoose');
@@ -56,6 +52,8 @@ router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next)
 
 module.exports = router;
 ```
+  </Tab>
+</Tabs>
 
 ### Adding logic with an API call
 

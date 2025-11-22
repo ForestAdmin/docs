@@ -1,9 +1,6 @@
 ---
 title: Create a Smart relationship
 ---
-
-# Create a Smart relationship
-
 ### What is a Smart Relationship?
 
 Sometimes, you want to create a virtual relationship between two set of data that does not exist in your database. A concrete example could be creating a relationship between two collections available in two different databases. Creating a Smart Relationship allows you to customize with code how your collections are linked together.
@@ -34,17 +31,6 @@ class Forest::Order
 end
 ```
 
-### Django
-
-
-Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
-
-
-### Laravel
-
-
-![](/images/legacy/javascript-agents/live-demo-collection-smart-relationship.png)
-
 ### Create a HasMany Smart Relationship
 
 On the Live Demo example, we have a **product** `hasMany` **orders** and an **order** `belongsTo` **customer**. We’ve created a Smart Relationship that acts like a shortcut: **product** `hasMany` **customers**.
@@ -62,12 +48,6 @@ class Forest::Product
   has_many :buyers, type: ['String'], reference: 'Customer.id'
 end
 ```
-
-### Django
-
-
-### Laravel
-
 
 ### Rails
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/Product/:product_id/buyers`.
@@ -103,29 +83,3 @@ class Forest::ProductsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/app_product/:product_pk/relationships/buyers`.\
-\
-You will have to declare this route in your app **urls.py** file
-
-
-Then create the pertained view
-
-
-We’ve built the right SQL query using [Django ORM](https://docs.djangoproject.com/en/3.2/topics/db/queries/) to **find all** customers who bought the current product.
-
-Then, you should handle pagination in order to avoid performance issue. The API call has a querystring available which gives you all the necessary parameters you need to enable pagination.
-
-Finally, you don’t have to serialize the data yourself. The Forest Admin agent already knows how to serialize your collection (`Customer` in this example, with the table name `app_customer`). You can access to the serializer through the `Schema().dump` function (using [marshmallow-jsonapi](https://marshmallow-jsonapi.readthedocs.io/en/latest/) internally).
-
-### Laravel
-Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/product/{id}/relationships/buyers`.
-
-We’ve built the right SQL query using [Active Record](http://guides.rubyonrails.org/active_record_basics.html) to **count** and **find all** customers who bought the current product.
-
-Then, you should handle pagination in order to avoid performance issue. The API call has a querystring available which gives you all the necessary parameters you need to enable pagination.
-
-Finally, you don’t have to serialize the data yourself. The Forest Admin agent already knows how to serialize your collection (`Customer` in this example). You can access to the serializer through the `render()` function of JsonApi facade.
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 11.02.40.png>)

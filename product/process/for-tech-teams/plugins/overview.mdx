@@ -1,64 +1,342 @@
 ---
 title: Plugins - Overview
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers
 
-## Description
+When customizing your Agent behavior, it is quite common to have to perform the same tasks on multiple Fields and Collections.
 
-Plugins extend Forest Admin functionality with reusable, packaged customizations.
+Plugins are the answer to that need, and you are strongly encouraged to use them everywhere you notice that your customization files could benefit from code factorization.
 
-## Sources to migrate
+## Using plugins
 
-- `developer-guide-agent-v2/sources/agent-customization/plugins/`
-- Look for plugin documentation across repos
+Plugins are used by either importing a module, or installing the relevant package, and then calling the `use` method.
 
-## Content outline
+Depending on the plugin, options may be provided.
 
-1. **What are Plugins?**
-   - Reusable extensions
-   - Packaged customizations
-   - Community plugins
-   - vs Custom code
+<CodeGroup>
 
-2. **Plugin Types**
-   - Field plugins
-   - Action plugins
-   - Data source plugins
-   - UI plugins
+```javascript Node.js
+import { createAgent } from '@forestadmin/agent';
+import { createFileField } from '@forestadmin/plugin-aws-s3';
+import { removeTimestamps } from './plugins/remove-timestamps';
 
-3. **Using Plugins**
-   - Finding plugins
-   - Installing plugins
-   - Configuring plugins
-   - Plugin marketplace
+// The .use() method can be called both on the agent and on collections.
+createAgent()
+  // Some plugins do not require options
+  .use(removeTimestamps)
 
-4. **Creating Plugins**
-   - Plugin structure
-   - Development workflow
-   - Testing
-   - Publishing
+  // Others do
+  .customizeCollection('accounts', collection =>
+    collection.use(createFileField, { fieldname: 'avatar' }),
+  );
+```
 
-5. **Platform-Specific Guides**
-   - [Node.js](/product/process/for-tech-teams/plugins/nodejs) ← PRIORITY 1
-   - [Ruby](/product/process/for-tech-teams/plugins/ruby) ← PRIORITY 2
-   - [Python](/product/process/for-tech-teams/plugins/python) ← PRIORITY 3
+```php PHP
+<?php
 
-6. **Best Practices**
-   - Plugin design
-   - Documentation
-   - Versioning
-   - Security
+use ForestAdmin\AgentPHP\Agent\Utils\Env;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceDoctrine\DoctrineDatasource;
+use ForestAdmin\SymfonyForestAdmin\Service\ForestAgent;
+use MyNamespace\Plugins\CreateFileField;
+use MyNamespace\Plugins\RemoveTimestamps;
 
-## Migration notes
+// The use() method can be called both on the agent and on collections
+return static function (ForestAgent $forestAgent) {
 
-- Advanced developer feature
-- May be ROADMAP for some platforms
-- Framework-specific implementations
+    $forestAgent->addDatasource(
+        new DoctrineDatasource($forestAgent->getEntityManager(), [
+                'url'      => Env::get('DATABASE_URL'),
+            ]),
+        )
 
-## Related pages
+        // Some plugins do not require options
+        ->use(RemoveTimestamps::class)
 
-- [Actions](/product/process/actions/overview)
-- [Fields](/product/process/fields/overview)
-- [Integration > Data Sources](/product/integration/data-sources/overview)
+        // Others do
+        ->customizeCollection(
+            'Book',
+            fn (CollectionCustomizer $builder) => $builder->use(
+                CreateFileField::class,
+                ['fieldname': 'avatar']
+            )
+        )
+```
+
+```python Python
+# The .use() method can be called both on the agent and on collections.
+agent.use(
+    # Some plugins do not require options
+    RemoveTimestamps
+    # Others do
+).customize_collection('accounts').use(CreateFileField, { "fieldname": 'avatar' })
+```
+
+</CodeGroup>
+
+## Writing your own plugins
+
+### Plugin structure
+
+Each Plugin is defined differently depending on your platform:
+
+- **Node.js**: An `async function` that can perform customizations at either Agent level, Collection level, or both.
+- **PHP**: A `class` that implements the `Plugin interface` and can perform customizations at either Agent level, Collection level, or both.
+- **Ruby**: A `class` that implements the `Plugin abstract class` and can perform customizations at either Agent level, Collection level, or both.
+- **Python**: A `class` that implements the `Plugin interface` with an `async method` and can perform customizations at either Agent level, Collection level, or both.
+
+<CodeGroup>
+
+```javascript Node.js
+export async function removeTimestamps(dataSource, collection, options) {
+  // ... call customization methods here
+}
+```
+
+```php PHP
+<?php
+
+namespace ...;
+
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\DatasourceCustomizer;
+
+class RemoveTimestamps implements Plugin
+{
+    public function run(DatasourceCustomizer $datasourceCustomizer, ?CollectionCustomizer $collectionCustomizer = null, $options = []): void
+    {
+       // ... call customization methods here
+    }
+}
+```
+
+```ruby Ruby
+class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
+  def run(datasource, collection, options)
+    # ... call customization methods here
+  end
+end
+```
+
+```python Python
+from forestadmin.datasource_toolkit.plugins.plugin import Plugin
+
+class RemoveTimestamps(Plugin):
+    async def run(
+        self,
+        datasource_customizer: "DatasourceCustomizer",  # noqa: F821
+        collection_customizer: Optional["CollectionCustomizer"] = None,  # noqa: F821
+        options: Optional[Dict] = {},
+    ):
+        # ... call customization methods here
+```
+
+</CodeGroup>
+
+### Plugin parameters
+
+Three parameters are provided to your plugin:
+
+#### Node.js
+
+| Name | Description |
+| --- | --- |
+| `dataSource` ([API Reference](https://forestadmin.github.io/agent-nodejs/classes/_forestadmin_datasource_customizer.DataSourceCustomizer.html)) | An object that allows customizing the whole agent. It has the same interface than the `Agent` you manipulate outside of Plugins |
+| `collection` ([API Reference](https://forestadmin.github.io/agent-nodejs/classes/_forestadmin_datasource_customizer.CollectionCustomizer.html)) | An object that allows customizing the collection that the Plugin was called from (`null` if the Plugin was called on the Agent). It is the same object than is passed when you call `customizeCollection` |
+| `options` | Options that are provided to the Plugin. There is no set structure for this parameter, as each Plugin will provide specific mandatory or optional options. |
+
+#### PHP
+
+| Name | Description |
+| --- | --- |
+| `dataSource` | An object that allows customizing the whole agent. It has the same interface than the `Agent` you manipulate outside of Plugins |
+| `collection` | An object that allows customizing the collection that the Plugin was called from (`null` if the Plugin was called on the Agent). It is the same object than is passed when you call `customizeCollection` |
+| `options` | An array of options that are provided to the Plugin. Each Plugin will provide specific mandatory or optional options. |
+
+#### Ruby
+
+| Name | Description |
+| --- | --- |
+| `dataSource` | An object that allows customizing the whole agent. It has the same interface than the `Agent` you manipulate outside of Plugins |
+| `collection` | An object that allows customizing the collection that the Plugin was called from (`nil` if the Plugin was called on the Agent). It is the same object than is passed when you call `customize_collection` |
+| `options` | An array of options that are provided to the Plugin. Each Plugin will provide specific mandatory or optional options. |
+
+#### Python
+
+| Name | Description |
+| --- | --- |
+| `datasource_customizer` | An object that allows customizing the whole agent. It has the same interface than the `Agent` you manipulate outside of Plugins |
+| `collection_customizer` | An object that allows customizing the collection that the Plugin was called from (`None` if the Plugin was called on the Agent). It is the same object than is passed when you call `customize_collection` |
+| `options` | A dictionary of options that are provided to the Plugin. Each Plugin will provide specific mandatory or optional options. |
+
+## Basic example
+
+Here's a simple plugin that removes timestamp fields from collections:
+
+<CodeGroup>
+
+```javascript Node.js
+export async function removeTimestamps(dataSource, collection) {
+  // Allow the plugin to be used both on the dataSource or on individual collections
+  const collections = collection ? [collection] : dataSource.collections;
+
+  // Remove fields
+  for (const currentCollection of collections) {
+    currentCollection.removeField('createdAt');
+    currentCollection.removeField('updatedAt');
+  }
+}
+```
+
+```php PHP
+<?php
+
+namespace ...;
+
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\DatasourceCustomizer;
+
+class RemoveTimestamps implements Plugin
+{
+    public function run(DatasourceCustomizer $datasourceCustomizer, ?CollectionCustomizer $collectionCustomizer = null, $options = []): void
+    {
+        // Allow the plugin to be used both on the dataSource or on individual collections
+        $collections = $collectionCustomizer ? [$collectionCustomizer] : $datasourceCustomizer->getCollections();
+
+        // Remove fields
+        foreach ($datasourceCustomizer->getCollection() as $currentCollection) {
+            $currentCollection->removeField('createdAt');
+            $currentCollection->removeField('updatedAt');
+        }
+    }
+}
+```
+
+```ruby Ruby
+class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
+  def run(datasource, collection, options)
+    # Allow the plugin to be used both on the dataSource or on individual collections
+    collections = collection ? [collection] : datasource.collections
+
+    # Remove fields
+    collections.each do |current_collection|
+      current_collection.remove_field('createdAt')
+      current_collection.remove_field('updatedAt')
+    end
+  end
+end
+```
+
+```python Python
+from forestadmin.datasource_toolkit.plugins.plugin import Plugin
+
+class RemoveTimestamps(Plugin):
+    async def run(
+        self,
+        datasource_customizer: "DatasourceCustomizer",  # noqa: F821
+        collection_customizer: Optional["CollectionCustomizer"] = None,  # noqa: F821
+        options: Optional[Dict] = {},
+    ):
+        # Allow the plugin to be used both on the dataSource or on individual collections
+        collections = (
+            [collection_customizer]
+            if collection_customizer
+            else datasource_customizer.collections
+        )
+
+        for current_collection in collections:
+            collection.remove_field("createdAt")
+            collection.remove_field("updatedAt")
+```
+
+</CodeGroup>
+
+## Making your Plugin act differently depending on the Collection
+
+When making a Plugin, you may want it to generalize to many different Collections.
+
+This can be achieved by adopting different behavior depending on the `schema` of the Collection being targeted.
+
+<CodeGroup>
+
+```javascript Node.js
+export async function removeTimestamps(dataSource, collection, options) {
+  for (const currentCollection of dataSource.collections) {
+    if (currentCollection.schema.fields.createdAt) {
+      currentCollection.removeField('createdAt');
+    }
+
+    if (currentCollection.schema.fields.updatedAt) {
+      currentCollection.removeField('updatedAt');
+    }
+  }
+}
+```
+
+```php PHP
+<?php
+
+namespace ...;
+
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\DatasourceCustomizer;
+
+class RemoveTimestamps implements Plugin
+{
+    public function run(DatasourceCustomizer $datasourceCustomizer, ?CollectionCustomizer $collectionCustomizer = null, $options = []): void
+    {
+        foreach ($datasourceCustomizer->getCollection() as $currentCollection) {
+            if ($currentCollection->getFields()['createdAt']) {
+                $currentCollection->removeField('createdAt');
+            }
+
+            if ($currentCollection->getFields()['updatedAt']) {
+                $currentCollection->removeField('updatedAt');
+            }
+        }
+    }
+}
+```
+
+```ruby Ruby
+class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
+  def run(datasource, _collection, _options)
+    datasource.collections.each do |current_collection|
+      if current_collection.schema[:fields]['createdAt']
+        current_collection.remove_field('createdAt')
+      end
+
+      if current_collection.schema[:fields]['updatedAt']
+        current_collection.remove_field('updatedAt')
+      end
+    end
+  end
+end
+```
+
+```python Python
+from forestadmin.datasource_toolkit.plugins.plugin import Plugin
+
+class RemoveTimestamps(Plugin):
+    async def run(
+        self,
+        datasource_customizer: "DatasourceCustomizer",  # noqa: F821
+        collection_customizer: Optional["CollectionCustomizer"] = None,  # noqa: F821
+        options: Optional[Dict] = {},
+    ):
+        for collection in datasource_customizer.collections:
+            if 'createdAt' collection.schema["fields"].keys():
+                collection.remove_field("createdAt")
+
+            if 'updatedAt' collection.schema["fields"].keys():
+                collection.remove_field("updatedAt")
+```
+
+</CodeGroup>
+
+## Platform-Specific Guides
+
+For more detailed information specific to your platform:
+
+- [Node.js](/product/process/for-tech-teams/plugins/nodejs)
+- [Ruby](/product/process/for-tech-teams/plugins/ruby)
+- [Python](/product/process/for-tech-teams/plugins/python)

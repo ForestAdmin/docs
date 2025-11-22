@@ -1,14 +1,12 @@
 ---
 title: Stripe
 ---
-
-# Stripe
-
 Configuring the Stripe integration for Forest allows you to have your **customer’s payments, invoices, cards and subscriptions** **(1)** alongside the corresponding customer from your application. A `Refund` Smart Action **(2,3)** is also implemented out-of-the-box.
 
 ![](</images/legacy/javascript-agents/image (67).png>)
 
-### SQL
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 On our Live Demo, we’ve configured the Stripe integration on the `customers` collection. The Stripe Customer ID is already stored on the database under the field `stripe_id`.
 
 ```javascript
@@ -34,8 +32,8 @@ module.exports = function (app) {
   console.log(chalk.cyan('Your admin panel is available here: https://app.forestadmin.com/projects'));
 };
 ```
-
-### Mongodb
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 On our Live Demo, we’ve configured the Stripe integration on the `customers` collection. The Stripe Customer ID is already stored on the database under the field `stripe_id`.
 
 ```javascript
@@ -61,21 +59,10 @@ module.exports = function (app) {
   console.log(chalk.cyan('Your admin panel is available here: https://app.forestadmin.com/projects'));
 };
 ```
+  </Tab>
+</Tabs>
 
-### Rails
 On our Live Demo, we’ve configured the Stripe integration on the `Customer` collection. The Stripe Customer ID is already stored on the database under the field `stripe_id`.
-
-```ruby
-ForestLiana.env_secret = Rails.application.secrets.forest_env_secret
-ForestLiana.auth_secret = Rails.application.secrets.forest_auth_secret
-
-ForestLiana.integrations = {
-  stripe: {
-    api_key: ENV['STRIPE_SECRET_KEY'],
-    mapping: 'Customer.stripe_id'
-  }
-}
-```
 
 #### Available options
 

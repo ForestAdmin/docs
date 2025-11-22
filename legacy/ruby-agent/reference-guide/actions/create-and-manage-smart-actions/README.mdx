@@ -1,9 +1,6 @@
 ---
 title: Create and manage Smart Actions
 ---
-
-# Create and manage Smart Actions
-
 ### What is a Smart Action?
 
 Sooner or later, you will need to perform actions on your data that are specific to your business. Moderating comments, generating an invoice, logging into a customer’s account or banning a user are exactly the kind of important tasks to unlock in order to manage your day-to-day operations.
@@ -29,41 +26,6 @@ class Forest::Company
   action 'Mark as Live'
 end
 ```
-
-### Django
-
-
-Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
-
-
-### Laravel
-
-
-After declaring it, your Smart action will appear in the Smart actions tab within your [collection settings](https://docs.forestadmin.com/user-guide/collections/manage-your-collection-settings).
-
-<Warning>
-A Smart action is displayed in the UI only if:
-
-- it is set as "visible" (see screenshot below)\
-  AND
-- in non-development environments, the user's [role ](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles)must grant the "trigger" permission
-</Warning>
-
-You must make the action visible there if you wish users to be able to see it.
-
-![](</images/legacy/javascript-agents/screenshot smart action visibility.png>)
-
-It will then show in the actions dropdown button:
-
-![](</images/legacy/javascript-agents/screenshot 2019-11-27 at 17.00.24.png>)
-
-<Info>
-At this point, the Smart Action does _nothing_, because no route in your Admin backend handles the API call yet.
-</Info>
-
-The **Smart Action behavior** is implemented separately from the declaration.
-
-In the following example, we've implemented the _Mark as live_ Smart Action, which simply changes a company's status to `live`.
 
 ### Rails
 The route declaration takes place in `config/routes.rb`.
@@ -99,50 +61,6 @@ You must make sure that all your Smart Actions controllers extend from the `Fore
 <Info>
 You may have to [add CORS headers](../../../how-tos/setup/configuring-cors-headers.md) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:3000_).
 </Info>
-
-### Django
-Make sure your **project** `urls.py` file include you app urls with the `forest` prefix.
-
-```javascript
-from django.contrib import admin
-from django.urls import path, include
-
-urlpatterns = [
-    path('forest', include('app.urls')),
-    path('forest', include('django_forest.urls')),
-    path('admin/', admin.site.urls),
-]
-```
-
-The route declaration takes place in `app/urls.py`.
-
-```javascript
-from django.urls import path
-from django.views.decorators.csrf import csrf_exempt
-
-from . import views
-
-app_name = 'app'
-urlpatterns = [
-    path('/actions/mark-as-live', csrf_exempt(views.MarkAsLiveView.as_view()), name='mark-as-live'),
-]
-```
-
-The business logic in this Smart Action is extremely simple. We only update here the attribute `status` of the companies to the value `live`:
-
-
-Note that Forest Admin takes care of the authentication thanks to the `ActionView` parent class view.
-
-<Info>
-You may have to [add CORS headers](../../../how-tos/setup/configuring-cors-headers.md) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:8000_).
-</Info>
-
-### Laravel
-The route declaration takes place in `routes/web.php`.
-
-
-The business logic in this Smart Action is extremely simple. We only update here the attribute `status` of the companies to the value `live`:
-
 
 #### What's happening under the hood?
 
@@ -285,16 +203,6 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
-… the success notification will look like this:
-
-![](/images/legacy/javascript-agents/toastr-success-custom.png)
-
 #### Custom error notification
 
 Finally, returning a 400 status code allows you to return errors properly.
@@ -309,14 +217,6 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
   end
 end
 ```
-
-### Django
-
-
-### Laravel
-
-
-![](/images/legacy/javascript-agents/toastr-error.png)
 
 #### Custom HTML response
 
@@ -393,16 +293,6 @@ EOF
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
-<img src="/images/legacy/javascript-agents/actions-html-response-success.png" alt="" />
-
-You can either respond with an HTML page in case of error. The user will be able to go back to his smart action's form by using the cross icon at the top right of the panel.
-
 ### Rails
 
 ```ruby
@@ -466,14 +356,6 @@ end
 
 ```
 
-### Django
-
-
-### Laravel
-
-
-<img src="/images/legacy/javascript-agents/actions-html-response-error.png" alt="" />
-
 ### Setting up a webhook
 
 After a smart action you can set up a HTTP (or HTTPS) callback - a webhook - to forward information to other applications.\
@@ -494,20 +376,6 @@ render json: {
   }
 }
 ```
-
-### Django
-
-
-### Laravel
-
-
-<Info>
-Webhooks are commonly used to perform smaller requests and tasks, like sending emails or [impersonating a user](https://docs.forestadmin.com/woodshop/how-tos/impersonate-a-user).
-</Info>
-
-<Check>
-Another interesting use of this is automating SSO authentication into your external apps.
-</Check>
 
 ### Downloading a file
 
@@ -562,24 +430,6 @@ class Forest::CustomersController < ForestLiana::SmartActionsController
   end
 end
 ```
-
-### Django
-On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
-
-<Warning>
-Don’t forget to expose the `Content-Disposition` header in the CORS configuration (as shown in the code below) to be able to customize the filename to download.
-</Warning>
-
-
-### Laravel
-On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.52.05 (2).png>)
-
-<Info>
-Want to upload your files to Amazon S3? Check out this this [Woodshop tutorial](https://docs.forestadmin.com/woodshop/how-tos/upload-files-to-s3).
-</Info>
 
 ### Refreshing your related data
 
@@ -660,14 +510,6 @@ Rails.application.routes.draw do
 end
 ```
 
-### Django
-Below is the sample code. We use the python Faker package to easily generate fake data. Remember to add this package to your `requirements.txt` and install it if you wish to use it.
-
-
-### Laravel
-Below is the sample code. We use the Faker package to easily generate fake data. Remember to add this package to your `composer.json` and install it if you wish to use it.
-
-
 ### Redirecting to a different page on success
 
 To streamline your operation workflow, it could make sense to redirect to another page after a Smart action was successfully executed.\
@@ -727,16 +569,6 @@ end
 
 ...
 ```
-
-### Django
-
-
-### Laravel
-
-
-<Warning>
-Your **external** links must use the `http` or `https` protocol.
-</Warning>
 
 ### Enable/Disable a Smart Action according to the state of a record
 

@@ -1,9 +1,6 @@
 ---
 title: Create a dynamic calendar view for an event-booking use case
 ---
-
-# Create a dynamic calendar view for an event-booking use case
-
 This example shows you how you can implement a calendar view with a custom workflow involving dynamic API calls.
 
 In our example, we want to manage the bookings for a sports court where:
@@ -148,11 +145,9 @@ This file contains the HTML and CSS needed to build the view.
 
 This file contains all the logic needed to handle events and actions.
 
-
 **File routes/available-slots.js**
 
 This file includes the logic implemented to retrieve the available slots from an API call and return them serialized to the UI.
-
 
 ### Book smart action
 
@@ -165,9 +160,7 @@ To create the action to book a slot, two files need to be updated:
 
 This file includes the smart action definition. The action form is pre-filled with the start and end date. The last step is to select the user associated with this booking.
 
-
 **File routes/available-slots.js**
 
 This file includes the logic of the smart action. It basically creates a record from the `bookings` collection with the information passed on by the user input form.
-
 

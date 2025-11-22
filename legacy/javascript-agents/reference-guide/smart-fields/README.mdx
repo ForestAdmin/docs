@@ -1,9 +1,6 @@
 ---
 title: Smart Fields
 ---
-
-# Smart Fields
-
 ### What is a Smart Field?
 
 A field that displays a computed value in your collection.
@@ -58,49 +55,13 @@ collection('customers', {
 \
 Very often, the business logic behind the Smart Field is more complex and must be asynchronous. To do that, please have a look at [this section](./#createadvancedsmartfield).
 
-### Rails
 On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` collection.
-
-```ruby
-class Forest::Customer
-  include ForestLiana::Collection
-
-  collection :Customer
-
-  field :fullname, type: 'String' do
-    "#{object.firstname} #{object.lastname}"
-  end
-end
-```
 
 Very often, the business logic behind the Smart Field is more complex and must interact with the database. Here’s an example with the Smart Field `full_address` on the `Customer` collection.
 
-```ruby
-class Forest::Customer
-  include ForestLiana::Collection
-
-  collection :Customer
-
-  field :full_address, type: 'String' do
-    address = Address.find_by(customer_id: object.id)
-    "#{address[:address_line_1]} #{address[:address_line_2]} #{address[:address_city]} #{address[:country]}"
-  end
-end
-```
-
-### Django
-On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` collection.
-
-
 Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
 
-
-### Laravel
-On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` model.
-
-
 Very often, the business logic behind the Smart Field is more complex and must interact with the database. Here’s an example with the Smart Field `full_address` on the `Customer` model.
-
 
 <Warning>
 The collection name must be the same as the **model name**.
@@ -226,42 +187,11 @@ collection('customers', {
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
 </Info>
 
-### Rails
 By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the set method should always return the object it’s working on**. In the example hereunder, the `user_params` is returned is returned including only the modified data.
-
-```ruby
-class Forest::Customer
-  include ForestLiana::Collection
-
-  collection :Customer
-
-  set_fullname = lambda do |user_params, fullname|
-    fullname = fullname.split
-    user_params[:firstname] = fullname.first
-    user_params[:lastname] = fullname.last
-
-    # Returns a hash of the updated values you want to persist.
-    user_params
-  end
-
-  field :fullname, type: 'String', set: set_fullname do
-    "#{object.firstname} #{object.lastname}"
-  end
-end
-```
 
 <Info>
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
 </Info>
-
-### Django
-By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the `set` method should always return the object it’s working on**. In the example hereunder, the `customer` object is returned including only the modified data.
-
-
-### Laravel
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 12.23.14.png>)
 
 ### Searching, Sorting and Filtering on a Smart Field
 
@@ -331,37 +261,6 @@ collection('customers', {
   }]
 });
 ```
-
-### Rails
-
-```ruby
-class Forest::Customer
-  include ForestLiana::Collection
-​
-  collection :Customer
-​
-  search_fullname = lambda do |query, search|
-    firstname, lastname = search.split
-​
-    # Injects your new filter into the WHERE clause.
-    query.where_clause.send(:predicates)[0] << " OR (firstname = '#{firstname}' AND lastname = '#{lastname}')"
-​
-    query
-  end
-​
-  field :fullname, type: 'String', set: set_fullname, search: search_fullname do
-    "#{object.firstname} #{object.lastname}"
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 12.25.58.png>)
 
 #### Filtering
 
@@ -476,45 +375,6 @@ collection('customer', {
   segments: [],
 });
 ```
-
-### Rails
-
-```ruby
-class Forest::Customer
-  include ForestLiana::Collection
-
-  collection :Customer
-
-  filter_fullname = lambda do |condition, where|
-    first_word = condition['value'] && condition['value'].split[0]
-    second_word = condition['value'] && condition['value'].split[1]
-
-    case condition['operator']
-    when 'equal'
-      "firstname = '#{first_word}' AND lastname = '#{second_word}'"
-    when 'ends_with'
-      if second_word.nil?
-        "lastname LIKE '%#{first_word}'"
-      else
-        "firstname LIKE '%#{first_word}' AND lastname = '#{second_word}'"
-      end
-    # ... And so on with the other operators not_equal, starts_with, etc.
-    end
-  end
-
-  field :fullname, type: 'String', is_read_only: false, is_required: true, is_filterable: true, filter: filter_fullname do
-    "#{object.firstname} #{object.lastname}"
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
-
-![](</images/legacy/javascript-agents/screenshot 2021-04-02 at 16.09.16.png>)
 
 <Info>
 Make sure you set the option `isFilterable: true` in the field definition of your code. Then, you will be able to toggle the "Filtering enabled" option in the browser, in your **Fields Settings**.

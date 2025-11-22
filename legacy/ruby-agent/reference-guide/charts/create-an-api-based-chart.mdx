@@ -1,9 +1,6 @@
 ---
 title: Create an API-based Chart
 ---
-
-# Create an API-based Chart
-
 ### Creating an API-based Chart
 
 Sometimes, charts data are complicated and closely tied to your business. Forest Admin allows you to code how the chart is computed. Choose **API** as the data source when configuring your chart.
@@ -54,14 +51,6 @@ class Forest::ChartsController < ForestLiana::ApplicationController
   end
 end
 ```
-
-### Django
-
-
-### Laravel
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.09.27.png>)
 
 ### Repartition API-based Chart
 
@@ -121,26 +110,6 @@ class Forest::ChartsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-
-
-### Laravel
-
-```
-{
-  value: [{
-    key: <string> ,
-    value: <number>
-  }, {
-    key: <string> ,
-    value: <number>
-  }, …]
-}
-```
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.33.41.png>)
-
 ### Time-based API-based Chart
 
 On our Live Demo, we have a `Charges` time-based chart which shows the number of charges per day. This chart queries the Stripe API to get all charges made in the current month (in March for this example) and group data by day.
@@ -198,26 +167,6 @@ class Forest::ChartsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-
-
-### Laravel
-
-```
-{
-  value: [{
-    label: <string> ,
-    values: { value: <number> }
-  }, {
-    label: <string> ,
-    values: { value: <number> }
-  }, …]
-}
-```
-
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.38.29.png>)
-
 ### Objective API-based Chart
 
 Creating an Objective Smart Chart means you'll be fetching your data from an external API endpoint:
@@ -265,19 +214,4 @@ end
 
 ...
 ```
-
-### Django
-
-
-### Laravel
-
-```
-{
-  value: {
-    value: xxxx,
-    objective: yyyy
-  }
-}
-```
-
 

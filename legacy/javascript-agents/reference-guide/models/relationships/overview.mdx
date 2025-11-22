@@ -1,9 +1,6 @@
 ---
 title: Relationships
 ---
-
-# Relationships
-
 ## What is a relationship?
 
 A relationship is a connection between two collections.
@@ -14,8 +11,6 @@ Relationships are visible and actionable in Forest Admin:
 - `belongsTo` or `hasOne`**(2)**
 
 ![](/images/legacy/javascript-agents/live-demo-collection-relationship.png)
-
-If you installed Forest Admin within a **Rails** app, then all the relationships defined in your ActiveRecord models are supported out of the box. Check the official [Rails documentation](https://guides.rubyonrails.org/association_basics.html) to create new ones.
 
 If you installed Forest Admin directly on a database, then most relationships should have been [automatically generated](./#lumber-relationship-generation-rules). However, depending on your database nature and structure, you may have to add some manually.
 
@@ -32,8 +27,8 @@ Below are some simple snippets showing you how to add relationships. However, sh
 
 In our [Live demo](https://app.forestadmin.com/Live%20Demo/Production/Operations/data/806052/index), a **customer** can have multiple **orders**. In that case, we have to use a `hasMany` relationship.
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 module.exports = (sequelize, DataTypes) => {
   const Customer = sequelize.define('customers',
@@ -47,9 +42,8 @@ module.exports = (sequelize, DataTypes) => {
   return Customer;
 };
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 module.exports = (mongoose, Mongoose) => {
   const schema = Mongoose.Schema({
@@ -63,6 +57,8 @@ module.exports = (mongoose, Mongoose) => {
   return mongoose.model('customers', schema, 'customers');
 };
 ```
+  </Tab>
+</Tabs>
 
 <Warning>
 Note that for orders to be displayed within the related data section of your customer, they have to be populated in your database. For instance:
@@ -80,8 +76,8 @@ Once you've added your relationship(s) in your model(s), they will only be taken
 
 In case of a one-to-one relationship between 2 collections, the opposite of a `belongsTo` relationship is a `hasOne` relationship. Taking the same example as before, the opposite of "an **address** `belongsTo` a **customer**" is simply "a **customer**`hasOne` **address"**.
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 module.exports = (sequelize, DataTypes) => {
   const Customer = sequelize.define('customers',
@@ -95,9 +91,8 @@ module.exports = (sequelize, DataTypes) => {
   return Customer;
 };
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 module.exports = (mongoose, Mongoose) => {
   const schema = Mongoose.Schema({
@@ -111,6 +106,8 @@ module.exports = (mongoose, Mongoose) => {
   return mongoose.model('customers', schema, 'customers');
 };
 ```
+  </Tab>
+</Tabs>
 
 ![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LR7SWfEwsNtj_ZiSkSA%2F-Linf3OXMqwbdmu1bCUF%2F-LinfN5sVRQZ7WK6VBmM%2FCapture%20d%E2%80%99e%CC%81cran%202019-07-02%20a%CC%80%2019.11.57.png?alt=media&token=96ead205-b9f0-40fa-9f24-442d5a6a7d99)
 
@@ -122,8 +119,8 @@ Don't forget to **restart your server** for your newly added relationships to be
 
 On our Live Demo example, the Address model has a foreignKey customer_id that points to the Customer. In other words, an **address**`belongsTo` a **customer**.
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 module.exports = (sequelize, DataTypes) => {
   const Address = sequelize.define('addresses',
@@ -137,9 +134,8 @@ module.exports = (sequelize, DataTypes) => {
   return Address;
 };
 ```
-
-### Mongodb
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 module.exports = (mongoose, Mongoose) => {
   const schema = Mongoose.Schema({
@@ -153,6 +149,8 @@ module.exports = (mongoose, Mongoose) => {
   return mongoose.model('addresses', schema, 'addresses');
 };
 ```
+  </Tab>
+</Tabs>
 
 <Warning>
 This will work if your foreign keys are correctly named:\

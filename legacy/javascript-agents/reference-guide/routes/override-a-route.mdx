@@ -1,9 +1,6 @@
 ---
 title: Override a route
 ---
-
-# Override a route
-
 Overriding a route allows you to change or completely replace a Forest Admin's route behavior.
 
 ### Changing Forest Admin's behavior
@@ -14,8 +11,8 @@ Here are a few examples:
 
 #### Use extended search by default
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 const express = require('express');
 const {
@@ -67,9 +64,8 @@ router.get(
 
 //...
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 const express = require('express');
 const {
@@ -121,37 +117,8 @@ router.get(
 
 //...
 ```
-
-### Rails
-
-```ruby
-if ForestLiana::UserSpace.const_defined?('CompanyController')
-  ForestLiana::UserSpace::CompanyController.class_eval do
-    alias_method :default_index, :index
-    alias_method :default_count, :count
-
-    # Get a list of Companies
-    def index
-      params['searchExtended'] = '1'
-      default_index
-    end
-
-    # Get a number of Companies
-    def count
-      params['searchExtended'] = '1'
-      default_count
-    end
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
-
-With this snippet, only the `companies` collection would use extended search by default.
+  </Tab>
+</Tabs>
 
 <Warning>
 Using extended search is less performant than default search. Use this wisely.
@@ -159,8 +126,8 @@ Using extended search is less performant than default search. Use this wisely.
 
 #### Protect a specific record
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 router.delete(
   '/companies/:recordId',
@@ -183,9 +150,8 @@ router.delete(
   }
 );
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 router.delete(
   '/companies/:recordId',
@@ -208,36 +174,15 @@ router.delete(
   }
 );
 ```
-
-### Rails
-
-```ruby
-if ForestLiana::UserSpace.const_defined?('CompanyController')
-  ForestLiana::UserSpace::CompanyController.class_eval do
-    alias_method :default_destroy, :destroy
-    def destroy
-      if params["id"] == "50"
-        render status: 403, plain: 'This record is protected, you cannot remove it.'
-      else
-        default_destroy
-      end
-    end
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 ### Replacing Forest Admin's behavior
 
 To achieve this, simply remove the `next()` statement of any route:
 
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 ...
 
@@ -248,9 +193,8 @@ router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next)
 
 ...
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 ...
 
@@ -261,30 +205,13 @@ router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next)
 
 ...
 ```
+  </Tab>
+</Tabs>
 
-### Rails
+Here's a more complete example:
 
-```ruby
-if ForestLiana::UserSpace.const_defined?('CompanyController')
-  ForestLiana::UserSpace::CompanyController.class_eval do
-    # Create a Company
-    def create
-      # >> Add your own logic here <<
-    end
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
-
-For instance, if you have a `Users` collection, you might want to create your users via your own api:
-
-### SQL
-
+<Tabs>
+  <Tab title="SQL (Sequelize)">
 ```javascript
 ...
 
@@ -311,9 +238,8 @@ router.post('/users', permissionMiddlewareCreator.create(), (request, response, 
     });
 });
 ```
-
-### MongoDB
-
+  </Tab>
+  <Tab title="MongoDB (Mongoose)">
 ```javascript
 ...
 
@@ -340,33 +266,6 @@ router.post('/users', permissionMiddlewareCreator.create(), (request, response, 
     });
 });
 ```
-
-### Rails
-
-```ruby
-require 'net/http'
-require 'uri'
-
-if ForestLiana::UserSpace.const_defined?('UserController')
-  ForestLiana::UserSpace::UserController.class_eval do
-
-    # Create a User
-    def create
-      forest_authorize!('add', forest_user, @resource)
-      begin
-        response = Net::HTTP.post URI('https://<your-api>/users'), params.to_json, "Content-Type" => "application/json"
-        render serializer: nil, json: render_record_jsonapi(response.body)
-      rescue => errors
-        render serializer: nil, json: JSONAPI::Serializer.serialize_errors(errors), status: 400
-      end
-    end
-  end
-end
-```
-
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
