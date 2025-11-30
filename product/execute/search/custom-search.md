@@ -37,9 +37,9 @@ For instance:
 - search only on the columns that are relevant to your use case.
 - use full-text indexes (i.e. Postgres `tsquery` and `tsvector`, Algolia, Elastic search, ...)
 
-{{#nodejs,php,python,ruby}}
+{{#nodejs,ruby}}
 To customize the search behavior, you must define a handler that returns a [`ConditionTree`](../datasources/getting-started/queries/filters.md#condition-trees).
-{{/nodejs,php,python,ruby}}
+{{/nodejs,ruby}}
 
 {{#nodejs}}
 

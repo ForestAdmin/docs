@@ -1,6 +1,6 @@
 Depending on the data source, not all fields may be sortable, or you may want to change how the native sorting works.
 
-By using the {{#nodejs,php}}`replaceFieldSorting`{{/nodejs,php}}{{#python,ruby}}`replace_field_sorting`{{/python,ruby}} and {{#nodejs,php}}`emulateFieldSorting`{{/nodejs,php}}{{#python,ruby}}`emulate_field_sorting`{{/python,ruby}} methods, you can change a single column's sorting behavior.
+By using the {{#nodejs}}`replaceFieldSorting`{{/nodejs}}{{#ruby}}`replace_field_sorting`{{/ruby}} and {{#nodejs}}`emulateFieldSorting`{{/nodejs}}{{#ruby}}`emulate_field_sorting`{{/ruby}} methods, you can change a single column's sorting behavior.
 
 ### Substitution
 

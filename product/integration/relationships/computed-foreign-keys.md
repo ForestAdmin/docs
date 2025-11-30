@@ -1,8 +1,8 @@
 You may want to create a relationship between 2 Collections, but you don't have a foreign key that is ready to use to connect them.
 
-{{#nodejs,php,python}}
+{{#nodejs}}
 To solve that use case, you should use both [computed fields](../fields/computed.md) and relationships.
-{{/nodejs,php,python}}
+{{/nodejs}}
 
 This is done with the following steps:
 

@@ -25,20 +25,20 @@ Note that:
 | `defaultValue` | Set the default value of the field. |
 | `description` | Set the text displayed below the label |
 {{/nodejs}}
-{{#python,php}}
+{{#}}
 | Property | Description |
 | ------------------------------------------------------------------------------- | -------------------------------------- |
-| `{{#python,ruby}}is_required{{/python,ruby}}` | Make the field required. |
-| `{{#python,ruby}}is_read_only{{/python,ruby}}` | Make the field read-only. |
-| `{{#python,ruby}}default_value{{/python,ruby}}` | Set the default value of the field. |
-{{/python,php}}
+| `{{#ruby}}is_required{{/ruby}}` | Make the field required. |
+| `{{#ruby}}is_read_only{{/ruby}}` | Make the field read-only. |
+| `{{#ruby}}default_value{{/ruby}}` | Set the default value of the field. |
+{{/}}
 
 In addition, depending on the field type, you can also use functions for the following properties:
 
 | Property                                                                                      | Description                                                            |
 | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `{{#python,ruby}}enum_values{{/python,ruby}}{{#php,nodejs}}enumValues{{/php,nodejs}}`         | Change the list of possible values of the field when `type == 'Enum'`. |
-| `{{#python,ruby}}collection_name{{/python,ruby}}{{#php,nodejs}}collectionName{{/php,nodejs}}` | Change the target collection of the field when `type: 'Collection'`.   |
+| `{{#ruby}}enum_values{{/ruby}}{{#nodejs}}enumValues{{/nodejs}}`         | Change the list of possible values of the field when `type == 'Enum'`. |
+| `{{#ruby}}collection_name{{/ruby}}{{#nodejs}}collectionName{{/nodejs}}` | Change the target collection of the field when `type: 'Collection'`.   |
 
 {{#nodejs}}
 Some widgets also support dynamic configuration:

@@ -44,16 +44,16 @@ You can find the full documentation of action customization [here](../../../../a
 
 # Steps
 
-## Step 1: Calling {{#nodejs,php}}`addAction`{{/nodejs,php}}{{#python,ruby}}`add_action`{{/python,ruby}} for the appropriate collection
+## Step 1: Calling {{#nodejs}}`addAction`{{/nodejs}}{{#ruby}}`add_action`{{/ruby}} for the appropriate collection
 
-Start by calling the {{#nodejs,php}}`addAction`{{/nodejs,php}}{{#python,ruby}}`add_action`{{/python,ruby}} function on the appropriate collection and passing the appropriate parameters.
+Start by calling the {{#nodejs}}`addAction`{{/nodejs}}{{#ruby}}`add_action`{{/ruby}} function on the appropriate collection and passing the appropriate parameters.
 
 Most notably, you will need to pass:
 
 - `type` should become `scope`
   - Note that the values are now capitalized (e.g. `single` becomes `Single`)
   - Legacy agents defaulted to `'bulk'` if no type was specified. The new agent requires you to specify the scope.
-- `download` should become {{#nodejs,php}}`generateFile`{{/nodejs,php}}{{#python,ruby}}`generate_file`{{/python,ruby}}. This is still a boolean and the same value can be passed.
+- `download` should become {{#nodejs}}`generateFile`{{/nodejs}}{{#ruby}}`generate_file`{{/ruby}}. This is still a boolean and the same value can be passed.
 - `endpoint` and `httpMethod` should be removed. The agent will now automatically handle the routing.
 
 {% tabs %} {% tab title="Before" %}
@@ -137,8 +137,8 @@ You can simply copy the field's definition from the legacy agent to the new agen
 - `fields` should become `form`.
 - `widget` choice is no longer supported. A default widget will be used depending on the field type.
 - `hook` can be removed, those will be handled by the new agent automatically.
-- `reference` no longer exists. Use {{#nodejs,php}}`{ type: 'Collection', collectionName: '...' }`{{/nodejs,php}}{{#python,ruby}}`{ type: "Collection", collection_name: '... }`{{/python,ruby}} instead.
-- `enums` no longer exist. Use {{#nodejs,php}}`{ type: 'Enum', enumValues: ['...'] }`{{/nodejs,php}}{{#python,ruby}}`{ type: "Enum", enum_values: ['...'] }`{{/python,ruby}} instead.
+- `reference` no longer exists. Use {{#nodejs}}`{ type: 'Collection', collectionName: '...' }`{{/nodejs}}{{#ruby}}`{ type: "Collection", collection_name: '... }`{{/ruby}} instead.
+- `enums` no longer exist. Use {{#nodejs}}`{ type: 'Enum', enumValues: ['...'] }`{{/nodejs}}{{#ruby}}`{ type: "Enum", enum_values: ['...'] }`{{/ruby}} instead.
 
 {% tabs %} {% tab title="Before" %}
 
@@ -257,7 +257,7 @@ This is no longer needed as the new agent provides a `context` object that conta
 When porting the route handler to the new agent, you will need to:
 
 - Move the body of the route handler to the `execute` function of the action.
-- Replace {{#nodejs,php}}`RecordsGetter.getIdsFromRequest()`{{/nodejs,php}} call with {{#nodejs,php}}`context.getRecordIds()`{{/nodejs,php}}{{#python,ruby}}`context.get_record_ids()`{{/python,ruby}}.
+- Replace {{#nodejs}}`RecordsGetter.getIdsFromRequest()`{{/nodejs}} call with {{#nodejs}}`context.getRecordIds()`{{/nodejs}}{{#ruby}}`context.get_record_ids()`{{/ruby}}.
   {{#nodejs}}
 - Replace `res.send(...)` calls with `return resultBuilder.success()` or `return resultBuilder.error()`, or the [appropriate `resultBuilder` method](../../../../agent-customization/actions/result-builder.md).
   {{/nodejs}}

@@ -34,18 +34,18 @@ Fields are configurable using the following properties:
 
 {{/nodejs}}
 
-{{#php,ruby,python}}
+{{#ruby}}
 | Property | Expected value | Description |
 | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `type` | {{#php,ruby}}`FieldType::{BOOLEAN`, `DATE`, `DATE_ONLY`, `ENUM`, `JSON`, `NUMBER`, `STRING`, `NUMBER_LIST`, `ENUM_LIST`, `STRING_LIST`, `LIST`, `FILE_LIST` and [`COLLECTION`](#references-to-records)`}`{{/php,ruby}} | Set the type of the field. |
+| `type` | {{#ruby}}`FieldType::{BOOLEAN`, `DATE`, `DATE_ONLY`, `ENUM`, `JSON`, `NUMBER`, `STRING`, `NUMBER_LIST`, `ENUM_LIST`, `STRING_LIST`, `LIST`, `FILE_LIST` and [`COLLECTION`](#references-to-records)`}`{{/ruby}} | Set the type of the field. |
 | `label` | string | Set the label of the field. |
 | `id` | string | Set the id of the field. The is used internally and to access values from the context. If not set the label will be used. |
 | `description` | string | Set the description of the field. |
-| {{#python,ruby}}`is_required`{{/python,ruby}} | boolean | Make the field required (default false). |
-| {{#python,ruby}}`is_read_only`{{/python,ruby}} | boolean | Make the field read-only (default false). |
-| {{#python,ruby}}`default_value`{{/python,ruby}} | any | Set the default value of the field. |
-| {{#python,ruby}}`enum_values`{{/python,ruby}} | array of strings | Change the list of possible values of the field when type is . |
-{{/php,ruby,python}}
+| {{#ruby}}`is_required`{{/ruby}} | boolean | Make the field required (default false). |
+| {{#ruby}}`is_read_only`{{/ruby}} | boolean | Make the field read-only (default false). |
+| {{#ruby}}`default_value`{{/ruby}} | any | Set the default value of the field. |
+| {{#ruby}}`enum_values`{{/ruby}} | array of strings | Change the list of possible values of the field when type is . |
+{{/ruby}}
 
 <details>
 <summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>

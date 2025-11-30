@@ -48,7 +48,7 @@ Note that when using `readonly: false`, the referenced record fields can be edit
 
 # Renaming and removing fields and relations
 
-Renaming and removing fields or relations can be done simply by calling the {{#nodejs,php}}`renameField`{{/nodejs,php}}{{#python,ruby}}`rename_field`{{/python,ruby}} and {{#nodejs,php}}`removeField`{{/nodejs,php}}{{#python,ruby}}`remove_field`{{/python,ruby}} methods.
+Renaming and removing fields or relations can be done simply by calling the {{#nodejs}}`renameField`{{/nodejs}}{{#ruby}}`rename_field`{{/ruby}} and {{#nodejs}}`removeField`{{/nodejs}}{{#ruby}}`remove_field`{{/ruby}} methods.
 
 <details>
 <summary><strong>collection.renameField('account_v3_uuid_new', 'account').removeField('password');</strong></summary>

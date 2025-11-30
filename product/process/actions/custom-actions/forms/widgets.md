@@ -249,7 +249,7 @@ By default, the `Checkbox` widget allows 3 states:
 To ensure having only 2 states, you need to:
 
 1. {{#nodejs}}set the `isRequired` option to `true`,{{/nodejs}}{{#ruby}}set the `is_required` option to `true`,{{/ruby}}
-2. define a value for the {{#nodejs}}`defaultValue`{{/nodejs}}{{#python,ruby}}`default_value`{{/python,ruby}} option.
+2. define a value for the {{#nodejs}}`defaultValue`{{/nodejs}}{{#ruby}}`default_value`{{/ruby}} option.
 
 {% endhint %}
 

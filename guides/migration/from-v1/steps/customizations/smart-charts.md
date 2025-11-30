@@ -87,10 +87,10 @@ info: Chart 'appointments' was mounted at '/forest/_charts/appointments'
 ```
 
 {{/nodejs}}
-{{#python,php,ruby}}
-The url of your newly created api chart is `/forest/_charts/$chartName`. The `$chartName` is the name given to the {{#python,ruby}}`add_chart`{{/python,ruby}} method.
+{{#ruby}}
+The url of your newly created api chart is `/forest/_charts/$chartName`. The `$chartName` is the name given to the {{#ruby}}`add_chart`{{/ruby}} method.
 For the previous example the url should be `/forest/_charts/appointments`
-{{/python,php,ruby}}
+{{/ruby}}
 
 ## Step 4: Change the old chart configuration
 

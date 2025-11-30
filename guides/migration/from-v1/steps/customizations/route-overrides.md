@@ -12,13 +12,13 @@ Because our new agent API is higher-level, the protocol used to communicate betw
 
 | What was the route override used for?   | How to migrate it?                                                                                                                                                                    |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Add custom permissions                  | Use [{{#nodejs,php}}.addHook(){{/nodejs,php}}{{#python,ruby}}.add_hook{{/python,ruby}}](../../../../agent-customization/hooks/README.md) and throw `forbidden errors`                 |
-| Add validation to fields                | Use [{{#nodejs,php}}.addFieldValidation(){{/nodejs,php}}{{#python,ruby}}.add_field_validation{{/python,ruby}}](../../../../agent-customization/fields/validation.md) instead          |
-| Add validation to whole records         | Use [{{#nodejs,php}}.addHook(){{/nodejs,php}}{{#python,ruby}}.add_hook{{/python,ruby}}](../../../../agent-customization/hooks/README.md) and throw `validation errors`                |
-| Run code on UI events                   | Use [{{#nodejs,php}}.addHook(){{/nodejs,php}}{{#python,ruby}}.add_hook{{/python,ruby}}](../../../../agent-customization/hooks/README.md) to perform custom logic                      |
-| Change the search behavior              | Use [{{#nodejs,php}}.replaceSearch(){{/nodejs,php}}{{#python,ruby}}.replace_search{{/python,ruby}}](../../../../agent-customization/search.md) to implement your custom search logic  |
-| Change the filtering behavior of fields | Use [{{#nodejs,php}}.replaceFieldOperator(){{/nodejs,php}}{{#python,ruby}}.replace_field_operator{{/python,ruby}}](../../../../agent-customization/fields/filter.md)                  |
-| Change the sort behavior of fields      | Use [{{#nodejs,php}}.replaceFieldSorting(){{/nodejs,php}}{{#python,ruby}}.replace_field_sorting{{/python,ruby}}](../../../../agent-customization/fields/sort.md)                      |
+| Add custom permissions                  | Use [{{#nodejs}}.addHook(){{/nodejs}}{{#ruby}}.add_hook{{/ruby}}](../../../../agent-customization/hooks/README.md) and throw `forbidden errors`                 |
+| Add validation to fields                | Use [{{#nodejs}}.addFieldValidation(){{/nodejs}}{{#ruby}}.add_field_validation{{/ruby}}](../../../../agent-customization/fields/validation.md) instead          |
+| Add validation to whole records         | Use [{{#nodejs}}.addHook(){{/nodejs}}{{#ruby}}.add_hook{{/ruby}}](../../../../agent-customization/hooks/README.md) and throw `validation errors`                |
+| Run code on UI events                   | Use [{{#nodejs}}.addHook(){{/nodejs}}{{#ruby}}.add_hook{{/ruby}}](../../../../agent-customization/hooks/README.md) to perform custom logic                      |
+| Change the search behavior              | Use [{{#nodejs}}.replaceSearch(){{/nodejs}}{{#ruby}}.replace_search{{/ruby}}](../../../../agent-customization/search.md) to implement your custom search logic  |
+| Change the filtering behavior of fields | Use [{{#nodejs}}.replaceFieldOperator(){{/nodejs}}{{#ruby}}.replace_field_operator{{/ruby}}](../../../../agent-customization/fields/filter.md)                  |
+| Change the sort behavior of fields      | Use [{{#nodejs}}.replaceFieldSorting(){{/nodejs}}{{#ruby}}.replace_field_sorting{{/ruby}}](../../../../agent-customization/fields/sort.md)                      |
 | Other use case                          | If you are stuck or think that this guide can be improved, please [expose your use case in the community forums](https://community.forestadmin.com/) and we will be happy to help you |
 
 # Examples
@@ -110,14 +110,14 @@ end
 
 {% endtab %} {% endtabs %}
 
-{{#nodejs,python,ruby}}
+{{#nodejs,ruby}}
 
 ## Add validation to fields
 
-{{/nodejs,python,ruby}}
-{{#nodejs,python,ruby}}
+{{/nodejs,ruby}}
+{{#nodejs,ruby}}
 {% tabs %} {% tab title="Before" %}
-{{/nodejs,python,ruby}}
+{{/nodejs,ruby}}
 {{#nodejs}}
 
 ```javascript
@@ -200,13 +200,13 @@ end
 
 </details>
 
-{{#nodejs,python,ruby}}
+{{#nodejs,ruby}}
 {% endtab %} {% endtabs %}
 
 ## Run code on UI events
 
 {% tabs %} {% tab title="Before" %}
-{{/nodejs,python,ruby}}
+{{/nodejs,ruby}}
 
 <details>
 <summary><strong>// Override the POST /customers route</strong></summary>
@@ -290,6 +290,6 @@ end
 
 </details>
 
-{{#nodejs,python,ruby}}
+{{#nodejs,ruby}}
 {% endtab %} {% endtabs %}
-{{/nodejs,python,ruby}}
+{{/nodejs,ruby}}

@@ -1,5 +1,5 @@
 
-{{#nodejs,python,ruby}}
+{{#nodejs,ruby}}
 Forest Admin allows customizing at a very low level the behavior of any given Collection via the usage of Collection Overrides.
 
 {% hint style="info" %}
@@ -28,7 +28,7 @@ Overrides are declared similarly to hooks but are aimed at replacing an entire o
 
 ### Custom Create Operation
 
-To replace the default create operation, use {{#nodejs}}`overrideCreate`{{/nodejs}}{{#python,ruby}}`override_create`{{/python,ruby}} with your custom handler:
+To replace the default create operation, use {{#nodejs}}`overrideCreate`{{/nodejs}}{{#ruby}}`override_create`{{/ruby}} with your custom handler:
 
 {{#nodejs}}
 {% hint style="warning" %}
@@ -202,4 +202,4 @@ end
 </details>
 
 
-{{/nodejs,python,ruby}}
+{{/nodejs,ruby}}

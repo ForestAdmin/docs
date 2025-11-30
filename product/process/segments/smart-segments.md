@@ -18,15 +18,15 @@ For instance, in our [Live Demo example](https://app.forestadmin.com/livedemo), 
 
 ## Example
 
-{{#php,nodejs}}
+{{#nodejs}}
 {% hint style='info' %}
 In the following example, we are making queries using the [Forest Admin Query Interface](../datasources/getting-started/README.md).
 
 As Forest Admin does not impose any restriction on the handler, you are free to call external APIs or query your database directly instead.
 {% endhint %}
-{{/php,nodejs}}
+{{/nodejs}}
 
-The only requirement when implementing a Segment from your agent is to return a valid `ConditionTree`{{#php,nodejs}} (see [Understanding Filters](../datasources/getting-started/queries/filters.md)){{/php,nodejs}}.
+The only requirement when implementing a Segment from your agent is to return a valid `ConditionTree`{{#nodejs}} (see [Understanding Filters](../datasources/getting-started/queries/filters.md)){{/nodejs}}.
 
 <details>
 <summary><strong>agent.customizeCollection('products', collection =></strong></summary>

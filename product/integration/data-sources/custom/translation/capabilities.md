@@ -189,7 +189,7 @@ Defining segments from your data sources can be relevant in 3 situations:
 
 ## Write support
 
-Fields may or may not be writable. To make a readonly use the {{#nodejs,php}}`isReadOnly`{{/nodejs,php}}{{#python,ruby}}`is_read_only`{{/python,ruby}} flag.
+Fields may or may not be writable. To make a readonly use the {{#nodejs}}`isReadOnly`{{/nodejs}}{{#ruby}}`is_read_only`{{/ruby}} flag.
 
 <details>
 <summary><strong>class MyCollection extends BaseCollection {</strong></summary>
@@ -228,7 +228,7 @@ Fields may or may not be writable. To make a readonly use the {{#nodejs,php}}`is
 
 ## Filtering operators
 
-When declaring a field, the {{#nodejs,php}}`filterOperators`{{/nodejs,php}}{{#python,ruby}}`filter_operators`{{/python,ruby}} set allows telling Forest Admin which operators are supported by any given field.
+When declaring a field, the {{#nodejs}}`filterOperators`{{/nodejs}}{{#ruby}}`filter_operators`{{/ruby}} set allows telling Forest Admin which operators are supported by any given field.
 
 Operators which are not explicitly enabled in that declaration won't be available.
 

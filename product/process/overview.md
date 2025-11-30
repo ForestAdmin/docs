@@ -10,11 +10,11 @@ Lastly, you can adapt your collections by including actions, fields, relations, 
 
 # Customizing collections
 
-The available customizations are listed in the sections below{{#php,nodejs,ruby}}: [actions](./actions/README.md), [charts](./charts/README.md), [fields](./fields/README.md), [hooks](./hooks/README.md), [pagination](./pagination.md), [plugins](./plugins/README.md), [relationships](./relationships/README.md), [search](./search.md) and [segments](./segments.md){{/php,nodejs,ruby}}.
+The available customizations are listed in the sections below{{#nodejs,ruby}}: [actions](./actions/README.md), [charts](./charts/README.md), [fields](./fields/README.md), [hooks](./hooks/README.md), [pagination](./pagination.md), [plugins](./plugins/README.md), [relationships](./relationships/README.md), [search](./search.md) and [segments](./segments.md){{/nodejs,ruby}}.
 
-Using them always starts with the same step: use the {{#nodejs,php}}`customizeCollection`{{/nodejs,php}}{{#python,ruby}}`customize_collection`{{/python,ruby}} method on the collection you want to customize.
+Using them always starts with the same step: use the {{#nodejs}}`customizeCollection`{{/nodejs}}{{#ruby}}`customize_collection`{{/ruby}} method on the collection you want to customize.
 
-{{#nodejs,php,ruby}}It takes two arguments: the collection name and a callback function.{{/nodejs,php,ruby}}
+{{#nodejs,ruby}}It takes two arguments: the collection name and a callback function.{{/nodejs,ruby}}
 
 
 <details>
@@ -67,7 +67,7 @@ end
 </details>
 
 
-{{#nodejs,python}}
+{{#nodejs}}
 
 # Removing collections
 
@@ -97,7 +97,7 @@ createAgent()
 ```
 
 
-{{/nodejs,python}}
+{{/nodejs}}
 
 
 {{#nodejs}}

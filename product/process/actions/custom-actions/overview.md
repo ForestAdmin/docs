@@ -8,11 +8,10 @@ Moderating comments, generating invoices, logging into a customer’s account, o
 
 To create an Action, you will first need to declare it in your code for a specific collection. Here we declare a "Mark as Live" Action for the `companies` collection.
 
-{{#nodejs,ruby,python}}The action behavior is implemented in the `execute` function.{{/nodejs,ruby,python}}
-
+The action behavior is implemented in the `execute` function.
 
 <details>
-<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
+<summary><strong>Node.js</strong></summary>
 
 ```javascript
   collection.addAction('Mark as live', {
@@ -85,7 +84,7 @@ To create an Action, you will first need to declare it in your code for a specif
 </details>
 
 <details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
+<summary><strong>Ruby</strong></summary>
 
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action
@@ -158,7 +157,7 @@ end
 | execute                                                                                            | **require** | The callable called when the action is executed, with `context` and `result builder` as parameters. See [context](./scope-context.md#the-context-object) and [result builder](./result-builder.md) pages for more details. |
 | form                                                                                               | _optional_  | A list of static fields to be input by the user or a function called with `context` as parameters which returns a list of fields. See [form](./forms-dynamic.md) page for more details.                                    |
 | description                                                                                        | _optional_  | An optional description of the action. _Default: null_                                                                                                                                                                     |
-| {{#python,ruby}}submit_button_label{{/python,ruby}}{{#nodejs,php}}submitButtonLabel{{/nodejs,php}} | _optional_  | A custom label for the submit button. _Default: the action name_                                                                                                                                                           |
+| submitButtonLabel (Node.js) / submit_button_label (Ruby) | _optional_  | A custom label for the submit button. _Default: the action name_ |
 
 ## In the admin panel
 

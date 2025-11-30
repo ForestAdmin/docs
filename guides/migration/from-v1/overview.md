@@ -20,9 +20,9 @@ Legacy agents are still supported and will continue to be for a while.
 
 No end-of-life date has been set yet for customers using the latest major version of the legacy agents.
 {{/nodejs,ruby}}
-{{#php,python}}
+{{#}}
 Legacy agents will reach their end-of-support in July 2024 and end-of-life in January 2025.
-{{/php,python}}
+{{/}}
 
 To give more visibility to our developers' community, about agent usability and support in the future, you will find [on this page](https://docs.forestadmin.com/documentation/how-tos/releases-support) the important lifecycle dates per agent stack and versions.
 

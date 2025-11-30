@@ -29,7 +29,7 @@ The hexadecimal mode is suitable for all data that you would not save in a file.
 
 It is the default mode for all binary fields that are used as either a primary or foreign key.
 
-If you want to use the hexadecimal mode for another field, use the {{#nodejs,php}}`replaceFieldBinaryMode`{{/nodejs,php}}{{#python,ruby}}`replace_field_binary_mode`{{/python,ruby}} method:
+If you want to use the hexadecimal mode for another field, use the {{#nodejs}}`replaceFieldBinaryMode`{{/nodejs}}{{#ruby}}`replace_field_binary_mode`{{/ruby}} method:
 
 <details>
 <summary><strong>agent.customizeCollection('people', collection =></strong></summary>
@@ -58,7 +58,7 @@ The data-URI mode is suitable for all data that you would save in a file (images
 
 When using that mode, you will be able to use both the [File Viewer](https://docs.forestadmin.com/user-guide/collections/customize-your-fields/display-widgets#file-viewer) and the [File Picker](https://docs.forestadmin.com/user-guide/collections/customize-your-fields/edit-widgets#file-picker) widgets in the UI to respectively preview and upload files.
 
-If the automatic detection based on the field type is not working for you, you can force the `datauri` mode using the {{#nodejs,php}}`replaceFieldBinaryMode`{{/nodejs,php}}{{#python,ruby}}`replace_field_binary_mode`{{/python,ruby}} method as so:
+If the automatic detection based on the field type is not working for you, you can force the `datauri` mode using the {{#nodejs}}`replaceFieldBinaryMode`{{/nodejs}}{{#ruby}}`replace_field_binary_mode`{{/ruby}} method as so:
 
 <details>
 <summary><strong>agent.customizeCollection('people', collection =></strong></summary>

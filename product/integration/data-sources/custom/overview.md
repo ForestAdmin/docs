@@ -8,12 +8,12 @@ That interface is only there to abstract away differences between backends so th
 
 When creating a custom data source, you can use either the "Query Translation" or "Replication" strategy:
 
-{{#python,php,ruby}}
+{{#ruby}}
 
 The Replica strategy is only available in [agent-nodejs](https://docs.forestadmin.com/developer-guide-agents-nodejs/data-sources/custom/replication).
 If it's important to you, don't hesitate to ask it on our [community forum](https://community.forestadmin.com).
 
-{{/python,php,ruby}}
+{{/ruby}}
 
 | -                | Replication connector                                                            | Query translation connector                                                         |
 | ---------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |

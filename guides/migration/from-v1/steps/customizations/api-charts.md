@@ -1,6 +1,6 @@
 API charts in the legacy agents were declared using {{#nodejs}}express{{/nodejs}} routes.
 
-In the new agent, you will need to use either the {{#nodejs,php}}`agent.addChart`{{/nodejs,php}}{{#python,ruby}}`agent.add_chart`{{/python,ruby}} or the {{#nodejs,php}}`collection.addChart`{{/nodejs,php}}{{#python,ruby}}`collection.add_chart`{{/python,ruby}} function, depending on if the chart is to be displayed on a record of a collection or a dashboard.
+In the new agent, you will need to use either the {{#nodejs}}`agent.addChart`{{/nodejs}}{{#ruby}}`agent.add_chart`{{/ruby}} or the {{#nodejs}}`collection.addChart`{{/nodejs}}{{#ruby}}`collection.add_chart`{{/ruby}} function, depending on if the chart is to be displayed on a record of a collection or a dashboard.
 
 {% hint style="info" %}
 You can find the full documentation of chart customization [here](../../../../agent-customization/charts/README.md).
@@ -29,8 +29,8 @@ You can find the full documentation of chart customization [here](../../../../ag
 
 Migrating should be straightforward: the only differences are that:
 
-- dashboard charts are now declared using the {{#nodejs,php}}`agent.addChart`{{/nodejs,php}}{{#python,ruby}}`agent.add_chart`{{/python,ruby}} function.
-- collection charts are now declared using the {{#nodejs,php}}`collection.addChart`{{/nodejs,php}}{{#python,ruby}}`collection.add_chart`{{/python,ruby}} function, and access the record id using {{#nodejs,php}}`context.recordId`{{/nodejs,php}}{{#python,ruby}}`context.record_id`{{/python,ruby}} instead of `request.query?.record_id`.
+- dashboard charts are now declared using the {{#nodejs}}`agent.addChart`{{/nodejs}}{{#ruby}}`agent.add_chart`{{/ruby}} function.
+- collection charts are now declared using the {{#nodejs}}`collection.addChart`{{/nodejs}}{{#ruby}}`collection.add_chart`{{/ruby}} function, and access the record id using {{#nodejs}}`context.recordId`{{/nodejs}}{{#ruby}}`context.record_id`{{/ruby}} instead of `request.query?.record_id`.
 - Both types should use the `resultBuilder` helper to return the chart data.
 
 {% tabs %} {% tab title="Before" %}

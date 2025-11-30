@@ -18,13 +18,13 @@ And the second `ForestAdminDatasourceCustomizer::Decorators::Action::Context::Ac
 
 It is the bridge between all the data that your agent has access to and the action's execution. It is passed to the `execute` function as the first argument and provides access to the following properties:
 
-- {{#nodejs,php}}`getRecord(fieldNames)`{{/nodejs,php}}{{#python,ruby}}`get_record(field_names)`{{/python,ruby}} (or {{#nodejs,php}}`getRecords(fieldNames)`{{/nodejs,php}}{{#python,ruby}}`get_records(field_names)`{{/python,ruby}} for `Bulk` and `Global` Actions)
-- {{#nodejs,php}}`getRecordId()`{{/nodejs,php}}{{#python,ruby}}`get_record_id()`{{/python,ruby}} (or {{#nodejs,php}}`getRecordIds()`{{/nodejs,php}}{{#python,ruby}}`get_record_ids()`{{/python,ruby}} for `Bulk` and `Global` Actions)
-- {{#nodejs,python,ruby}}`collection`{{/nodejs,python,ruby}} the collection on which the action is declared, which can be queried using the [Forest Admin Query Interface](../../datasources/getting-started/queries/README.md#collection-interface).
-- {{#nodejs}}`dataSource`{{/nodejs}}{{#ruby,python}}`datasource`{{/ruby,python}} the composite data source who contains all your collections, which can be queried using the [Forest Admin Query Interface](../../datasources/getting-started/queries/README.md#data-source-interface)
-- {{#nodejs,python,ruby}}`filter`{{/nodejs,python,ruby}} a filter that can be used to query the collection, and which is based on action scope and the list of selected records.
-- {{#nodejs,python,ruby}}`caller`{{/nodejs,python,ruby}} an object containing information about the user who is performing the action (including email, username, timezone, team, role …)
-- {{#nodejs,php}}`hasFieldChanged(fieldName)`{{/nodejs,php}}{{#ruby}}`field_changed?(field_name)`{{/ruby}} the name of the field who has changed in the UI. [See an example of usage](./forms-dynamic.md#example-4-using-hasfieldchanged-to-reset-value)
+- {{#nodejs}}`getRecord(fieldNames)`{{/nodejs}}{{#ruby}}`get_record(field_names)`{{/ruby}} (or {{#nodejs}}`getRecords(fieldNames)`{{/nodejs}}{{#ruby}}`get_records(field_names)`{{/ruby}} for `Bulk` and `Global` Actions)
+- {{#nodejs}}`getRecordId()`{{/nodejs}}{{#ruby}}`get_record_id()`{{/ruby}} (or {{#nodejs}}`getRecordIds()`{{/nodejs}}{{#ruby}}`get_record_ids()`{{/ruby}} for `Bulk` and `Global` Actions)
+- {{#nodejs,ruby}}`collection`{{/nodejs,ruby}} the collection on which the action is declared, which can be queried using the [Forest Admin Query Interface](../../datasources/getting-started/queries/README.md#collection-interface).
+- {{#nodejs}}`dataSource`{{/nodejs}}{{#ruby}}`datasource`{{/ruby}} the composite data source who contains all your collections, which can be queried using the [Forest Admin Query Interface](../../datasources/getting-started/queries/README.md#data-source-interface)
+- {{#nodejs,ruby}}`filter`{{/nodejs,ruby}} a filter that can be used to query the collection, and which is based on action scope and the list of selected records.
+- {{#nodejs,ruby}}`caller`{{/nodejs,ruby}} an object containing information about the user who is performing the action (including email, username, timezone, team, role …)
+- {{#nodejs}}`hasFieldChanged(fieldName)`{{/nodejs}}{{#ruby}}`field_changed?(field_name)`{{/ruby}} the name of the field who has changed in the UI. [See an example of usage](./forms-dynamic.md#example-4-using-hasfieldchanged-to-reset-value)
 
 {{#nodejs}}
 {% hint style="warning" %}
@@ -35,7 +35,7 @@ It is the bridge between all the data that your agent has access to and the acti
 
 ## Example 1: Getting data from the selected records
 
-We can simply use the {{#nodejs,php}}`getRecord(fieldNames)`{{/nodejs,php}}{{#python,ruby}}`get_record(field_names)`{{/python,ruby}} method to get any column from the selected record or a relation.
+We can simply use the {{#nodejs}}`getRecord(fieldNames)`{{/nodejs}}{{#ruby}}`get_record(field_names)`{{/ruby}} method to get any column from the selected record or a relation.
 
 <details>
 <summary><strong>agent.customizeCollection('customers', collection =></strong></summary>
@@ -85,7 +85,7 @@ end
 
 ## Example 2: Updating a field of the selected record
 
-For simple queries, use {{#nodejs,python,ruby}}`context.collection`{{/nodejs,python,ruby}} and {{#nodejs,python,ruby}}`context.filter`{{/nodejs,python,ruby}} to query the collection.
+For simple queries, use {{#nodejs,ruby}}`context.collection`{{/nodejs,ruby}} and {{#nodejs,ruby}}`context.filter`{{/nodejs,ruby}} to query the collection.
 
 Those are instances of objects from the [Forest Admin Query Interface](../../datasources/getting-started/README.md).
 

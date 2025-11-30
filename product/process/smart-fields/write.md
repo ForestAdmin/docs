@@ -4,7 +4,7 @@ This is useful when you want to change how a given field behaves, but also to ma
 
 ## How does it work
 
-The {{#nodejs,php}}`replaceFieldWriting`{{/nodejs,php}}{{#python,ruby}}`replace_field_writing`{{/python,ruby}} function allows to change the behavior of any change by creating a new patch that will be applied to the record.
+The {{#nodejs}}`replaceFieldWriting`{{/nodejs}}{{#ruby}}`replace_field_writing`{{/ruby}} function allows to change the behavior of any change by creating a new patch that will be applied to the record.
 
 You should refrain from using handlers that have side effects (to perform error handling, validation, ...) and [use hooks instead](../hooks/README.md).
 
@@ -103,7 +103,7 @@ end
 ### Changing fields in related records
 
 {% hint style="info" %}
-Handling relationships inside a {{#nodejs,php,ruby}}`replaceFieldWriting`{{/nodejs,php,ruby}}{{#python,ruby}}`replace_field_writing`{{/python,ruby}} will only work for `ManyToOne` and `OneToOne` relationships.
+Handling relationships inside a {{#nodejs,ruby}}`replaceFieldWriting`{{/nodejs,ruby}}{{#ruby}}`replace_field_writing`{{/ruby}} will only work for `ManyToOne` and `OneToOne` relationships.
 {% endhint %}
 
 In this simple example, we have two collections that are linked together:

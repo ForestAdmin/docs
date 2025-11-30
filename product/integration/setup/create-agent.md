@@ -53,7 +53,7 @@ All mandatory variables are provided as environment variables during onboarding.
 
 Your agent cannot be started without them, and no default values are provided.
 
-### {{#nodejs,php}}`authSecret`{{/nodejs,php}}{{#python,ruby}}`auth_secret`{{/python,ruby}} (string, no default)
+### {{#nodejs}}`authSecret`{{/nodejs}}{{#ruby}}`auth_secret`{{/ruby}} (string, no default)
 
 This variable contains a random secret token which is used to sign authentication tokens used in request between your users and your agent.
 
@@ -61,15 +61,15 @@ It is generated during onboarding, but never leaves your browser, and is not sav
 
 Never share it to anybody, as that would allow attackers to impersonate your users on your agent!
 
-### {{#nodejs,php}}`envSecret`{{/nodejs,php}}{{#python,ruby}}`env_secret`{{/python,ruby}} (string, no default)
+### {{#nodejs}}`envSecret`{{/nodejs}}{{#ruby}}`env_secret`{{/ruby}} (string, no default)
 
 This variable contains a random secret token which is used to authenticate requests between your agent and our servers.
 
-Unlike the {{#nodejs,php}}`authSecret`{{/nodejs,php}}{{#python,ruby}}`auth_secret`{{/python,ruby}}, it is stored in our database, so it can be **privately** shared with Forest Admin employees.
+Unlike the {{#nodejs}}`authSecret`{{/nodejs}}{{#ruby}}`auth_secret`{{/ruby}}, it is stored in our database, so it can be **privately** shared with Forest Admin employees.
 
 Never share it publicly, as it would allow attackers to impersonate your agent with our servers. That would not cause any data leak, but opens the possibility for attackers to cause denial of service.
 
-### {{#nodejs,php}}`isProduction`{{/nodejs,php}}{{#python,ruby}}`is_production`{{/python,ruby}} (boolean, no default)
+### {{#nodejs}}`isProduction`{{/nodejs}}{{#ruby}}`is_production`{{/ruby}} (boolean, no default)
 
 In development mode the agent has a few extra behaviors (when using {{#nodejs}}`isProduction: false`{{/nodejs}}){{#ruby}}`is_production = false`{{/ruby}})
 
@@ -79,9 +79,9 @@ In development mode the agent has a few extra behaviors (when using {{#nodejs}}`
 
 ## Optional variables
 
-### {{#nodejs,php}}`customizeErrorMessage`{{/nodejs,php}}{{#python,ruby}}`customize_error_message`{{/python,ruby}} (function, defaults to {{#nodejs,php}}null{{/nodejs,php}}{{#ruby}}nil{{/ruby}})
+### {{#nodejs}}`customizeErrorMessage`{{/nodejs}}{{#ruby}}`customize_error_message`{{/ruby}} (function, defaults to {{#nodejs}}null{{/nodejs}}{{#ruby}}nil{{/ruby}})
 
-When unexpected errors are raised in the agent code during a request, the error will be logged (using {{#nodejs,php,ruby}}`options.logger`{{/nodejs,php,ruby}}), but in the admin-panel, the final user will get a default message 'Unexpected error'.
+When unexpected errors are raised in the agent code during a request, the error will be logged (using {{#nodejs,ruby}}`options.logger`{{/nodejs,ruby}}), but in the admin-panel, the final user will get a default message 'Unexpected error'.
 
 This is done as to:
 
@@ -110,7 +110,7 @@ createAgent({
 ```
 
 
-### {{#nodejs,php}}`forestServerUrl`{{/nodejs,php}}{{#ruby}}`forest_server_url`{{/ruby}} (string, defaults to 'https://api.forestadmin.com') <!-- markdown-link-check-disable-line -->
+### {{#nodejs}}`forestServerUrl`{{/nodejs}}{{#ruby}}`forest_server_url`{{/ruby}} (string, defaults to 'https://api.forestadmin.com') <!-- markdown-link-check-disable-line -->
 
 This variable should be used only for customers using [the self-hosted version of Forest Admin](https://www.forestadmin.com/self-hosted).
 
@@ -124,7 +124,7 @@ createAgent({
 ```
 
 
-### `logger` (function) and {{#nodejs,php,ruby}}`loggerLevel`{{/nodejs,php,ruby}} (string, defaults to {{#nodejs,php,ruby}}'Info'{{/nodejs,php,ruby}})
+### `logger` (function) and {{#nodejs,ruby}}`loggerLevel`{{/nodejs,ruby}} (string, defaults to {{#nodejs,ruby}}'Info'{{/nodejs,ruby}})
 
 {{#nodejs}}Forest Admin encourages customers to use [In-app installations](./README.md#standalone-vs-in-app-installation).{{/nodejs}}
 
@@ -160,7 +160,7 @@ end
 </details>
 
 
-### {{#nodejs,php}}`permissionsCacheDurationInSeconds`{{/nodejs,php}}{{#python,ruby}}`permissions_cache_duration_in_seconds`{{/python,ruby}} (number, defaults to 15 minutes)
+### {{#nodejs}}`permissionsCacheDurationInSeconds`{{/nodejs}}{{#ruby}}`permissions_cache_duration_in_seconds`{{/ruby}} (number, defaults to 15 minutes)
 
 Forest Admin administrators can [restrict operations which final users can perform](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users).
 
@@ -234,7 +234,7 @@ end
 
 </details>
 
-### {{#nodejs,php}}`schemaPath`{{/nodejs,php}}{{#python,ruby}}`schema_path`{{/python,ruby}} (string, defaults to '.forestadmin-schema.json')
+### {{#nodejs}}`schemaPath`{{/nodejs}}{{#ruby}}`schema_path`{{/ruby}} (string, defaults to '.forestadmin-schema.json')
 
 This variable allows to choose where the `.forestadmin-schema.json` file should be written in development, and read from in production.
 

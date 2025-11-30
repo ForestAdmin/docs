@@ -7,9 +7,9 @@ Most actions will simply perform work and display the default notification, howe
 - [Generating a file download](#file-generation)
 - [Redirecting the user to another page](#redirections)
 - [Calling a webhook from the user's browser](#webhooks) (for instance to trigger a login in a third-party application)
-  {{#nodejs,python,php}}
+  {{#nodejs}}
 - [Setting up response headers](#response-headers)
-  {{/nodejs,python,php}}
+  {{/nodejs}}
 - [Invalidating related data](./related-data-invalidation.md)
 
 ## Default behavior
@@ -373,7 +373,7 @@ end
 </details>
 
 
-{{#nodejs,python}}
+{{#nodejs}}
 
 {% hint style="warning" %}
 Please note that the webhook function and the setHeader function operate independently and do not modify the same HTTP call. Webhook headers will be sent along with the webhook call, while setHeaders will modify directly the Action response headers.
@@ -381,7 +381,7 @@ Please note that the webhook function and the setHeader function operate indepen
 
 ## Response headers
 
-Sometimes you may want to setup custom response headers after action execution, the {{#nodejs,php}}`setHeader`{{/nodejs,php}} function is here to reach out this goal.
+Sometimes you may want to setup custom response headers after action execution, the {{#nodejs}}`setHeader`{{/nodejs}} function is here to reach out this goal.
 
 Before executing any end function described above, you should be able to add headers to the action response like the exemple below.
 
@@ -401,4 +401,4 @@ agent.customizeCollection('companies', collection =>
 ```
 
 
-{{/nodejs,python}}
+{{/nodejs}}

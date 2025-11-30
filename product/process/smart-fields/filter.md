@@ -8,13 +8,13 @@ You may want to read about the following topics before using those features:
 
 {{/nodejs}}
 
-{{#php,python}}
+{{#}}
 
 - [Structure of a `ConditionTree`](../../datasources/getting-started/queries/filters.md#examples)
 - [List of all filtering Operators](../../datasources/getting-started/queries/filters.md#operators)
 - [Operator equivalence system](../../datasources/getting-started/queries/filters.md#operator-equivalence)
 
-{{/php,python}}
+{{/}}
 
 ## Disabling operators
 

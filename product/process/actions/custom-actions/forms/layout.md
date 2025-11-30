@@ -312,8 +312,8 @@ Please note this list of limitations:
 | ---------------------------------------------------------------------------------------------- | ------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | component                                                                                      | **required**  | "Page"                              | To enable this component                                                                                         |
 | elements                                                                                       |  **required** | Array of fields and layout elements | The layout elements defined in this page and the fields defined [in the others documentation](./forms-static.md) |
-| {{#nodejs}}nextButtonLabel{{/nodejs}}{{#python,ruby}}next_button_label{{/python,ruby}}         |  optional     | String                              | The label on the `next` button                                                                                   |
-| {{#nodejs}}previousButtonLabel{{/nodejs}}{{#python,ruby}}previous_button_label{{/python,ruby}} |  optional     | String                              | The label on the `previous` button                                                                               |
+| {{#nodejs}}nextButtonLabel{{/nodejs}}{{#ruby}}next_button_label{{/ruby}}         |  optional     | String                              | The label on the `next` button                                                                                   |
+| {{#nodejs}}previousButtonLabel{{/nodejs}}{{#ruby}}previous_button_label{{/ruby}} |  optional     | String                              | The label on the `previous` button                                                                               |
 
 Example:
 

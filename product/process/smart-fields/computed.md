@@ -1,8 +1,8 @@
 Forest Admin allows creating new Fields on any Collection, either computationally, by fetching data on an external API or based on other data that is available on the connected data sources.
 
-{{#nodejs,php,ruby}}
+{{#nodejs,ruby}}
 By default, the fields that you create will be read-only, but you can make them [filterable](./filter.md), [sortable](./sort.md), and [writable](./write.md) by using the relevant methods.
-{{/nodejs,php,ruby}
+{{/nodejs,ruby}}
 
 ## How does it work?
 
@@ -10,10 +10,10 @@ When creating a new field you will need to provide:
 
 | Field                                                                                           | Description                                                                                                                                                                                  |
 | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| {{#nodejs,php}}columnType{{/nodejs,php}}{{#python,ruby}}column_type{{/python,ruby}}             | Type of the new field which can be [any primitive](../../under-the-hood/data-model/typing.md#primitive-types) or [composite type](../../under-the-hood/data-model/typing.md#composite-types) |
+| {{#nodejs}}columnType{{/nodejs}}{{#ruby}}column_type{{/ruby}}             | Type of the new field which can be [any primitive](../../under-the-hood/data-model/typing.md#primitive-types) or [composite type](../../under-the-hood/data-model/typing.md#composite-types) |
 | dependencies                                                                                    | List of fields that you need from the source records and linked records in order to run the handler                                                                                          |
-| {{#nodejs,php}}getValues{{/nodejs,php}}{{#ruby}}values{{/ruby}} | Handler which computes the new value **for a batch of records**                                                                                                                              |
-| {{#nodejs,php}}enumValues{{/nodejs,php}}{{#python,ruby}}enum_values{{/python,ruby}} (optional)  | When columnType is `Enum`, you must specify the values that the field will support                                                                                                           |
+| {{#nodejs}}getValues{{/nodejs}}{{#ruby}}values{{/ruby}} | Handler which computes the new value **for a batch of records**                                                                                                                              |
+| {{#nodejs}}enumValues{{/nodejs}}{{#ruby}}enum_values{{/ruby}} (optional)  | When columnType is `Enum`, you must specify the values that the field will support                                                                                                           |
 
 ## Examples
 

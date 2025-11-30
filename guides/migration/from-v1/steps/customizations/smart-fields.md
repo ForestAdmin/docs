@@ -12,11 +12,11 @@ You can find the full documentation of field customization [here](../../../../ag
 
 | Legacy agent                              | New agent                                                                                                                                                                                                                                                                                                                                            |
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| get: (record) => { ... }                  | {{#nodejs,php}}getValues: (records) => { ... }{{/nodejs,php}}{{#ruby}}"values": proc { \|records\| ... }{{/ruby}}                                                                                                                                                                            |
-| set: (record, value) => { ... }           | .{{#nodejs,php}}replaceFieldWriting{{/nodejs,php}}{{#python,ruby}}replace_field_writing{{/python,ruby}}(...)                                                                                                                                                                                                                                         |
-| filter: ({ condition, where }) => { ... } | .{{#nodejs,php}}replaceFieldOperator{{/nodejs,php}}{{#python,ruby}}replace_field_operator{{/python,ruby}}(...)<br>.{{#nodejs,php}}emulateFieldOperator{{/nodejs,php}}{{#python,ruby}}emulate_field_operator{{/python,ruby}}(...)<br>.{{#nodejs,php}}emulateFieldFiltering{{/nodejs,php}}{{#python,ruby}}emulate_field_filtering{{/python,ruby}}(...) |
+| get: (record) => { ... }                  | {{#nodejs}}getValues: (records) => { ... }{{/nodejs}}{{#ruby}}"values": proc { \|records\| ... }{{/ruby}}                                                                                                                                                                            |
+| set: (record, value) => { ... }           | .{{#nodejs}}replaceFieldWriting{{/nodejs}}{{#ruby}}replace_field_writing{{/ruby}}(...)                                                                                                                                                                                                                                         |
+| filter: ({ condition, where }) => { ... } | .{{#nodejs}}replaceFieldOperator{{/nodejs}}{{#ruby}}replace_field_operator{{/ruby}}(...)<br>.{{#nodejs}}emulateFieldOperator{{/nodejs}}{{#ruby}}emulate_field_operator{{/ruby}}(...)<br>.{{#nodejs}}emulateFieldFiltering{{/nodejs}}{{#ruby}}emulate_field_filtering{{/ruby}}(...) |
 | type: 'String'                            | columnType: 'String'                                                                                                                                                                                                                                                                                                                                 |
-| enums: ['foo', 'bar']                     | {{#nodejs,php}}columnType: 'Enum', enumValues: ['foo', 'bar']{{/nodejs,php}}{{#python,ruby}}"column_type": "Enum", "enum_values": ['foo', 'bar']{{/python,ruby}}                                                                                                                                                                                     |
+| enums: ['foo', 'bar']                     | {{#nodejs}}columnType: 'Enum', enumValues: ['foo', 'bar']{{/nodejs}}{{#ruby}}"column_type": "Enum", "enum_values": ['foo', 'bar']{{/ruby}}                                                                                                                                                                                     |
 | reference: 'otherCollection.id'           | [Use a smart relationship](./smart-relationships.md)                                                                                                                                                                                                                                                                                                 |
 
 # Do you still need a computed field?
@@ -34,7 +34,7 @@ If you were using a smart field to move a field from one collection to another o
 
 ## Step 1: Implement a read-only version of the field
 
-Computed fields in the new agent are declared by calling the {{#nodejs,php}}`addField`{{/nodejs,php}}{{#python,ruby}}`add_field`{{/python,ruby}} function on the appropriate collection.
+Computed fields in the new agent are declared by calling the {{#nodejs}}`addField`{{/nodejs}}{{#ruby}}`add_field`{{/ruby}} function on the appropriate collection.
 
 Many changes have been made to the API.
 
@@ -42,7 +42,7 @@ Many changes have been made to the API.
 
 You will notice that a new `dependencies` property is required when declaring a computed field.
 
-It is an array of field names that tells Forest Admin which fields the {{#nodejs,php}}`getValues()`{{/nodejs,php}}{{#ruby}}`values`{{/ruby}} function depends on. Unlike the legacy agent, the new agent will not automatically fetch the whole record.
+It is an array of field names that tells Forest Admin which fields the {{#nodejs}}`getValues()`{{/nodejs}}{{#ruby}}`values`{{/ruby}} function depends on. Unlike the legacy agent, the new agent will not automatically fetch the whole record.
 
 You can [fetch data from relations](../../../../agent-customization/fields/computed.md#adding-a-field-that-depends-on-a-many-to-one-relationship) and [fetch data from other computed fields](../../../../agent-customization/fields/computed.md#adding-a-field-that-depends-on-another-computed-field).
 
@@ -50,17 +50,17 @@ You can [fetch data from relations](../../../../agent-customization/fields/compu
 
 Even if it adds some complexity, exposing a batch API to our customers is a much better solution for performance.
 
-{{#nodejs,php,python}}The `get` function is now called {{#nodejs,php}}`getValues`{{/nodejs,php}}: it no longer takes a single record as its first argument, but an array of records, and must return an array of values, one for each record, in the same order.{{/nodejs,php,python}}
+{{#nodejs}}The `get` function is now called {{#nodejs}}`getValues`{{/nodejs}}: it no longer takes a single record as its first argument, but an array of records, and must return an array of values, one for each record, in the same order.{{/nodejs}}
 {{#ruby}}The function now returns a value called `values` which is an array of values, one for each record, in the same order. It no longer takes a single record as its first argument, but an array of records.{{/ruby}}
 
 ### Other changes
 
 There are other minor changes to the API:
 
-- the `type` property was renamed to {{#nodejs,php}}`columnType`{{/nodejs,php}}{{#python,ruby}}`column_type`{{/python,ruby}}.
-- The `field` property no longer exists. The field name is now the first argument of the {{#nodejs,php}}`addField`{{/nodejs,php}}{{#python,ruby}}`add_field`{{/python,ruby}} function.
+- the `type` property was renamed to {{#nodejs}}`columnType`{{/nodejs}}{{#ruby}}`column_type`{{/ruby}}.
+- The `field` property no longer exists. The field name is now the first argument of the {{#nodejs}}`addField`{{/nodejs}}{{#ruby}}`add_field`{{/ruby}} function.
 - The `reference` property no longer exists: use the [smart relationships guide](./smart-relationships.md).
-- The `enums` property was renamed to {{#nodejs,php}}`enumValues`{{/nodejs,php}}{{#python,ruby}}`enum_values`{{/python,ruby}}.
+- The `enums` property was renamed to {{#nodejs}}`enumValues`{{/nodejs}}{{#ruby}}`enum_values`{{/ruby}}.
 
 ### Example
 
@@ -153,7 +153,7 @@ end
 
 ## Step 2: Implement write handler
 
-If you want your computed field to be writable, you will need to call the {{#nodejs,php}}`.replaceFieldWriting()`{{/nodejs,php}}{{#python,ruby}}`.replace_field_writing()`{{/python,ruby}} function.
+If you want your computed field to be writable, you will need to call the {{#nodejs}}`.replaceFieldWriting()`{{/nodejs}}{{#ruby}}`.replace_field_writing()`{{/ruby}} function.
 
 This part is very similar to the legacy agent. The API change is because this function can be used to make any field writable, not just computed fields, or to change the default writing behavior of a normal field.
 
@@ -283,7 +283,7 @@ Instead, you'll be building a [condition tree](../../../../datasources/getting-s
 
 ### Emulation
 
-At the cost of performance, you can tell the agent to [emulate](../../../../agent-customization/fields/filter.md#emulation) the behavior of a given operator by calling the {{#nodejs,php}}`.emulateFieldOperator()`{{/nodejs,php}} function.
+At the cost of performance, you can tell the agent to [emulate](../../../../agent-customization/fields/filter.md#emulation) the behavior of a given operator by calling the {{#nodejs}}`.emulateFieldOperator()`{{/nodejs}} function.
 
 ### Example
 
