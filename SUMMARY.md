@@ -1,10 +1,7 @@
 # Summary
 * [Introduction](README.md)
-* [Developer Guide Overview](developer-guide-overview.md)
+  * [How Forest Admin Works](get-started/how-it-works.md)
 
-* Welcome
-  * [Forest Admin Documentation](index.md)
-  * [Placeholder Page](home/placeholder.md)
 
 ## Get Started
 
@@ -16,12 +13,6 @@
     * [Quickstart: Self-Hosted](get-started/quickstart-self-hosted.md)
     * [Quickstart: On-Premise](get-started/quickstart-on-premise.md)
   * [Features Overview](get-started/features-overview.md)
-  * Framework-Specific Quickstarts
-    * [Quickstart: Node.js](get-started/quickstart-nodejs.md)
-    * [Quickstart: Ruby on Rails](get-started/quickstart-ruby.md)
-    * [Quickstart: Python/Django](get-started/quickstart-python.md)
-    * [Quickstart: Flask](get-started/quickstart-flask.md)
-  * [How Forest Admin Works](get-started/how-it-works.md)
 
 * Connect
   * [Overview](product/integration/overview.md)
@@ -29,14 +20,9 @@
     * [Self-Hosted Architecture](product/integration/architectures/self-hosted.md)
     * [Cloud Architecture](product/integration/architectures/cloud.md)
     * [On-Premise Architecture](product/integration/architectures/on-premise.md)
-  * Setup & Installation
-    * [Installation Guide](product/integration/setup/installation.md)
-    * [Creating Your Agent](product/integration/setup/create-agent.md)
-    * [Autocompletion & Typings](product/integration/setup/autocompletion.md)
-    * [Troubleshooting Setup](product/integration/setup/troubleshooting.md)
   * Data Sources
     * [Add datasources to your project](product/integration/data-sources/overview.md)
-    * Native Datasources
+    * [Creating Your Agent](product/integration/setup/create-agent.md)
     * Provided Datasources
       * [SQL Datasource](product/integration/data-sources/provided/sql.md)
       * [Sequelize Datasource](product/integration/data-sources/provided/sequelize.md)
@@ -45,12 +31,10 @@
       * [ActiveRecord Datasource](product/integration/data-sources/provided/active-record.md)
       * [Mongoid Datasource](product/integration/data-sources/provided/mongoid.md)
       * [Django Datasource](product/integration/data-sources/provided/django.md)
-      * [SQLAlchemy Datasource](product/integration/data-sources/provided/sqlalchemy.md)
-      * [Eloquent Datasource](product/integration/data-sources/provided/eloquent.md)
-      * [Doctrine Datasource](product/integration/data-sources/provided/doctrine.md)
     * Community Datasources
       * [Hubspot](product/integration/data-sources/community-datasources/hubspot.md)
       * [Elasticsearch](product/integration/data-sources/community-datasources/elasticsearch.md)
+      * [CosmosDB](product/integration/data-sources/community-datasources/cosmosdb.md)
     * Custom Datasources
       * [Custom Datasources Overview](product/integration/data-sources/custom/overview.md)
       * Translation Strategy
@@ -83,13 +67,14 @@
     * [Data Types](product/integration/data-types.md)
     * [Relationships](product/integration/relationships-schema.md)
     * [TypeScript Autocompletion](product/integration/typescript-autocompletion.md)
+    * [Autocompletion & Typings](product/integration/setup/autocompletion.md)
+    * [Troubleshooting Setup](product/integration/setup/troubleshooting.md)
     * [.forestadmin-schema.json Reference](reference/schema/forestadmin-schema.md)
+    * [Schema Reference](reference/technical/schema.md)
+    * [Security & Privacy](reference/technical/security.md)
+    * [Data Model](reference/technical/typing.md)
+    * [Relationships Model](reference/technical/relationships.md)
 
-* Technical Reference
-  * [Schema Reference](reference/technical/schema.md)
-  * [Security & Privacy](reference/technical/security.md)
-  * [Data Model](reference/technical/typing.md)
-  * [Relationships Model](reference/technical/relationships.md)
 
 * Control
   * [Control](product/control/overview.md)
@@ -137,7 +122,7 @@
         * [Form Widgets Catalog](product/process/actions/custom-actions/forms/widgets.md)
         * [Form Layout](product/process/actions/custom-actions/forms/layout.md)
       * [Result types](product/process/actions/custom-actions/result-types.md)
-      * [Context & scope](product/process/actions/custom-actions/context-scope.md)
+      * [Scope & Context](product/process/actions/custom-actions/scope-context.md)
       * [Related data invalidation](product/process/actions/custom-actions/related-data-invalidation.md)
   * Fields
     * [Overview](product/process/fields/overview.md)
@@ -163,13 +148,9 @@
   * [Workflows](product/process/workflows/overview.md)
   * Advanced Concepts
     * Hooks
-      * [Hooks - Overview](product/process/for-tech-teams/hooks/overview.md)
-    * Hooks
       * [Hooks Overview](product/process/hooks/overview.md)
       * [Collection Hooks](product/process/hooks/collection-hooks.md)
       * [Collection Override](product/process/hooks/collection-override.md)
-    * Plugins
-      * [Plugins - Overview](product/process/for-tech-teams/plugins/overview.md)
     * Plugins
       * [Plugins Overview](product/process/plugins/overview.md)
       * [Custom Plugins](product/process/plugins/custom-plugins.md)
@@ -297,12 +278,11 @@
 
 * Schema
   * [.forestadmin-schema.json Reference](reference/schema/forestadmin-schema.md)
+    * [Schema Reference](reference/technical/schema.md)
+    * [Security & Privacy](reference/technical/security.md)
+    * [Data Model](reference/technical/typing.md)
+    * [Relationships Model](reference/technical/relationships.md)
 
-* Technical Reference
-  * [Schema Reference](reference/technical/schema.md)
-  * [Security & Privacy](reference/technical/security.md)
-  * [Data Model](reference/technical/typing.md)
-  * [Relationships Model](reference/technical/relationships.md)
 
 ## Guides
 
