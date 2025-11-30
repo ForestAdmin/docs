@@ -10,8 +10,10 @@ In the example below, the “Add new transaction” action is accessible from th
 
 ![](../../assets/actions-refresh-related.png)
 
+<details>
+<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('companies', collection =>
   // This Action can be triggered from the Summary View
   // (see the top arrow of the screenshot above)
   collection.addAction('Add new transaction', {
@@ -29,38 +31,12 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Add new transaction',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
-                    /* ... Create new transaction here ... */
-
-                    // Tell the GUI to refresh the "emitted_transactions" related data section.
-                    // (see left arrow of the screenshot above)
-                    return $resultBuilder->success(
-                        'New transaction emitted',
-                        ['invalidated' => ['emitted_transactions']]
-                    );
-                }
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -79,26 +55,6 @@ end
 
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
-
-def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    # ... Create new transaction here ...
-
-    # Tell the GUI to refresh the "emitted_transactions" related data section.
-    # (see left arrow of the screenshot above)
-    return result_builder.success(
-        "New transaction emitted", {"invalidated": ["emitted_transactions"]}
-    )
+</details>
 
 
-agent.customize_collection("Company").add_action("Add new transaction", {
-    "scope": "Single",
-    "execute": execute,
-})
-```

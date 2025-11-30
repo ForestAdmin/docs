@@ -8,8 +8,10 @@ To bridge that gap, Forest Admin allows adding, moving, removing, and overriding
 
 ## Minimal example
 
+<details>
+<summary><strong>collection</strong></summary>
+
 ```javascript
-collection
   // Create a new field
   .addField('fullName', {
     columnType: 'String',
@@ -38,50 +40,12 @@ collection
   .removeField('firstName', 'lastName');
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Computed\ComputedDefinition;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->addField(
-            'fullName',
-            new ComputedDefinition(
-                columnType: 'String',
-                dependencies: ['firstName', 'lastName'],
-                values: fn ($records) => collect($records)->map(fn ($record) => $record['firstName'] . ' ' . $record['lastName']),
-            )
-        )
-            // Make it writable
-            ->replaceFieldWriting(
-                'fullName',
-                function($value) {
-                    [$firstName, $lastName] = explode(' ', $value);
-
-                    return compact('firstName', 'lastName');
-                }
-            )
-
-            // Add validators
-            ->addFieldValidation('fullName', Operators::PRESENT)
-            ->addFieldValidation('fullName', Operators::SHORTER_THAN, 30)
-            ->addFieldValidation('fullName', Operators::GREATER_THAN, 2)
-
-           // Make it filterable and sortable
-            ->emulateFieldFiltering('fullName')
-            ->emulateFieldSorting('fullName')
-
-            // Remove previous fields
-            ->removeField('firstName', 'lastName');
-        }
-    );
-
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
 @create_agent.customize_collection('user') do |collection|
@@ -111,37 +75,6 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
+</details>
 
-agent.customize_collection("User").add_field(
-    "fullName",
-    {
-        "column_type": "String",
-        "dependencies": ["firstName", "lastName"],
-        "get_values": "get_user_full_name",
-    }
-    # Make it writable
-).replace_field_writing(
-    "fullname",
-    lambda value, context: {
-        "firstName": value.split(" ")[0], "lastName": value.split(" ")[1]
-    }
-    # add validations
-).add_field_validation(
-    "fullName", "present"
-).add_field_validation(
-    "fullName", "shorter_than", 30
-).add_field_validation(
-    "fullName", "longer_than", 2
-    # Make it filterable and sortable
-).emulate_field_filtering(
-    "fullName"
-).emulate_field_sorting(
-    "fullName"
-    # remove  previous fields
-).remove_field(
-    "firstName", "lastName"
-)
 
-```

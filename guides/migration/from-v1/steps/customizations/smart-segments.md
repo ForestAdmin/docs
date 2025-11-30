@@ -35,8 +35,10 @@ In this example, we migrate a segment that returns the 5 bestsellers of a produc
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('products', {</strong></summary>
+
 ```javascript
-collection('products', {
   segments: [
     {
       name: 'Bestsellers',
@@ -61,69 +63,12 @@ collection('products', {
 });
 ```
 
-```php
-<?php
+</details>
 
-namespace App\Models;
-
-use ForestAdmin\LaravelForestAdmin\Services\Concerns\ForestCollection;
-use ForestAdmin\LaravelForestAdmin\Services\SmartFeatures\SmartSegment;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Product extends Model
-{
-    use HasFactory
-    use ForestCollection;
-
-    /**
-     * @return SmartSegment
-     */
-    public function bestSellers(): SmartSegment
-    {
-        return $this->smartSegment(
-            fn(Builder $query) => $query->whereIn('products.id', function($q) {
-                $q->select('products.id')
-                    ->from('products')
-                    ->join('order_product', 'order_product.product_id', '=', 'products.id')
-                    ->groupBy('products.id')
-                    ->orderByRaw('COUNT(order_product.order_id) DESC')
-                    ->limit(10);
-            }),
-            'Best sellers'
-        );
-    }
-```
-
-```python
-from app.models import Product
-from django.db.models import Q
-from django_forest.utils.collection import Collection
-
-class ProductsForest(Collection):
-    def load(self):
-        self.segments = [
-            {
-                "name": "best_sellers",
-                "where": self.get_best_sellers
-            }
-        ]
-
-    def get_best_sellers(self):
-        products = Product.objects.raw("""
-            SELECT products.id, COUNT(orders.*)
-            FROM products
-            JOIN orders ON orders.product_id = products.id
-            GROUP BY products.id
-            ORDER BY count DESC
-            LIMIT 5;"""
-        )
-        return Q(id__in=[p.id for p in products])
-```
+<details>
+<summary><strong>class Forest::Product</strong></summary>
 
 ```ruby
-class Forest::Product
   include ForestLiana::Collection
 
   collection :Product
@@ -144,10 +89,12 @@ class Forest::Product
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('products', products => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('products', products => {
   products.addSegment('Bestsellers', async () => {
     const query = `
       SELECT products.id, COUNT(orders.*)
@@ -167,49 +114,12 @@ agent.customizeCollection('products', products => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Product',
-    function (CollectionCustomizer $builder) {
-        $builder->addSegment(
-            'bestSellers',
-            function (CollectionCustomizationContext $context, ResultBuilder $resultBuilder) {
-                $rows = $context->getDatasource()->getCollection('Order')->aggregate(
-                    new Filter(),
-                    new Aggregation(operation: 'Count', groups: [['field' => 'product_id']]),
-                    10
-                );
+</details>
 
-                return $resultBuilder->value($rows);
-            }
-        );
-    }
-);
-```
-
-```python
-from app.models import Product
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-
-def best_sellers_segment_handler(context: CollectionCustomizationContext)
-    products = Product.objects.raw("""
-        SELECT products.id, COUNT(orders.*)
-        FROM products
-        JOIN orders ON orders.product_id = products.id
-        GROUP BY products.id
-        ORDER BY count DESC
-        LIMIT 5;"""
-    )
-    return ConditionTreeLeaf("id", "in", [p.id for p in products])
-
-
-agent.customize_collection("Products").add_segment(
-    "best_sellers", best_seller_segment_handler
-)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.setup!
       @create_agent.customize_collection('product') do |collection|
@@ -234,5 +144,7 @@ module ForestAdminRails
   end
 end
 ```
+
+</details>
 
 {% endtab %} {% endtabs %}

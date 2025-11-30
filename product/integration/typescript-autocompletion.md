@@ -27,7 +27,6 @@ In TypeScript projects, import and template the generated schema:
 ```typescript
 
 
-
 await createAgent<Schema>({
   // ...
   typingsPath: './typings.ts',

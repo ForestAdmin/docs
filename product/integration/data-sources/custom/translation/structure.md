@@ -8,9 +8,10 @@ Creating a custom data source always starts with declaring the structure of the 
 
 ## Examples
 
-```javascript
-const { BaseCollection } = require('@forestadmin/datasource-toolkit');
+<details>
+<summary><strong>const { BaseCollection } = require('@forestadmin/datasource-toolkit');</strong></summary>
 
+```javascript
 class MovieCollection extends BaseCollection {
   constructor() {
     // [...]
@@ -42,92 +43,12 @@ class MovieCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-
-class MyCollection(Collection):
-    def __init__(self, datasource):
-        super().__init__("MyCollection", datasource)
-        # [...]
-        self.add_field("id", {
-          "type": "Column",
-          "column_type": "Number",
-          "is_primary_key": True,
-        })
-
-        self.add_field("title", {
-          "type": "Column",
-          "column_type": "String",
-          "validations": [{"operator": "present"}],
-        })
-
-        self.add_field("mpa_rating", {
-          "type": "Column",
-          "column_type": "Enum",
-          "enum_values": ["G", "PG", "PG-13", "R", "NC-17"],
-          "default_value": "G",
-        })
-
-        self.add_field("stars", {
-          "type": "Column",
-          "column_type": [{ "firstName": "String", "lastName": "String" }],
-        })
-```
-
-```php
-<?php
-
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\ColumnSchema;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\Relations\ManyToManySchema;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\Relations\ManyToOneSchema;
-
-class MovieCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        parent::__construct(
-            $datasource,
-            'Movie'
-        );
-
-        $this->addField('id', new ColumnSchema(
-            columnType: 'Number',
-            filterOperators: [],
-            isPrimaryKey: true
-        ));
-
-        $this->addField('title', new ColumnSchema(
-            columnType: 'String',
-            filterOperators: [],
-            validation: [
-                ['operator' => Operators::PRESENT],
-            ]
-        ));
-
-        $this->addField('mpa_rating', new ColumnSchema(
-            columnType: 'Enum',
-            defaultValue: 'G',
-            enumValues: ['G', 'PG', 'PG-13', 'R', 'NC-17']
-        ));
-
-        $this->addField('stars', new ColumnSchema(
-            columnType: [
-                [
-                    'firstName' => 'String',
-                    'lastName'  => 'String',
-                ],
-            ]
-        ));
-    }
-}
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class Movie < ForestAdminDatasourceToolkit::Collection
       include ForestAdminDatasourceToolkit::Schema
@@ -164,6 +85,8 @@ module App
   end
 end
 ```
+
+</details>
 
 ## Typing
 
@@ -202,9 +125,10 @@ This will work out of the box for data sources using the "local-cache" strategy,
 
 ## Examples
 
-```javascript
-const { BaseCollection } = require('@forestadmin/datasource-toolkit');
+<details>
+<summary><strong>const { BaseCollection } = require('@forestadmin/datasource-toolkit');</strong></summary>
 
+```javascript
 class MovieCollection extends BaseCollection {
   constructor() {
     // [...]
@@ -230,71 +154,12 @@ class MovieCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-
-class MyCollection(Collection):
-    def __init__(self, datasource):
-        super().__init__("MyCollection", datasource)
-        # [...]
-        self.add_field(
-            "director",
-            {
-                "type": "ManyToOne",
-                "foreign_collection": "people",
-                "foreign_key": "directorId",
-                "foreign_key_target": "id",
-            },
-        )
-
-        self.add_field(
-            "actors",
-            {
-                "type": "ManyToMany",
-                "foreign_collection": "people",
-                "through_collection": "actorsOnMovies",
-                "origin_key": "movieId",
-                "origin_key_target": "id",
-                "foreign_key": "actorId",
-                "foreign_key_target": "id",
-            },
-        )
-```
-
-```php
-<?php
-
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\ColumnSchema;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\Relations\ManyToManySchema;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\Relations\ManyToOneSchema;
-
-class MovieCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        // [...]
-
-        $this->addField('director', new ManyToOneSchema(
-            foreignKey: 'directorId',
-            foreignKeyTarget: 'id',
-            foreignCollection: 'People'
-        ));
-
-        $this->addField('actors', new ManyToManySchema(
-            originKey: 'movieId',
-            originKeyTarget: 'id',
-            foreignKey: 'actorId',
-            foreignKeyTarget: 'id',
-            foreignCollection: 'People',
-            throughCollection: 'ActorsOnMovies'
-        ));
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class Movie < ForestAdminDatasourceToolkit::Collection
       include ForestAdminDatasourceToolkit::Schema
@@ -319,6 +184,8 @@ module App
 end
 
 ```
+
+</details>
 
 ## Typing
 

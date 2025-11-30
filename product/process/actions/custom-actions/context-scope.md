@@ -180,7 +180,10 @@ if (context.hasFieldChanged('Status')) {
 
 ### Example: Access record data
 
-```javascript Node.js / Cloud
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
+
+```javascript
 collection.addAction('Display customer info', {
   scope: 'Single',
   execute: async (context, resultBuilder) => {
@@ -203,7 +206,12 @@ collection.addAction('Display customer info', {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 collection.add_action(
   'Display customer info',
   BaseAction.new(scope: ActionScope::SINGLE) do |context, result_builder|
@@ -225,9 +233,12 @@ collection.add_action(
 )
 ```
 
-### Example: Update selected records
+</details>
 
-```javascript Node.js / Cloud
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
+
+```javascript
 collection.addAction('Mark as live', {
   scope: 'Single',
   execute: async (context, resultBuilder) => {
@@ -242,7 +253,12 @@ collection.addAction('Mark as live', {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 collection.add_action(
   'Mark as live',
   BaseAction.new(scope: ActionScope::SINGLE) do |context, result_builder|
@@ -257,9 +273,12 @@ collection.add_action(
 )
 ```
 
-### Example: Bulk processing with error handling
+</details>
 
-```javascript Node.js / Cloud
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
+
+```javascript
 collection.addAction('Send notifications', {
   scope: 'Bulk',
   execute: async (context, resultBuilder) => {
@@ -293,7 +312,12 @@ collection.addAction('Send notifications', {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 collection.add_action(
   'Send notifications',
   BaseAction.new(scope: ActionScope::BULK) do |context, result_builder|
@@ -324,9 +348,12 @@ collection.add_action(
 )
 ```
 
-### Example: Use user context
+</details>
 
-```javascript Node.js / Cloud
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
+
+```javascript
 collection.addAction('Assign to me', {
   scope: 'Single',
   execute: async (context, resultBuilder) => {
@@ -343,7 +370,12 @@ collection.addAction('Assign to me', {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 collection.add_action(
   'Assign to me',
   BaseAction.new(scope: ActionScope::SINGLE) do |context, result_builder|
@@ -360,9 +392,12 @@ collection.add_action(
 )
 ```
 
-### Example: Global action with filters
+</details>
 
-```javascript Node.js / Cloud
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
+
+```javascript
 collection.addAction('Export filtered data', {
   scope: 'Global',
   generateFile: true,
@@ -381,7 +416,12 @@ collection.addAction('Export filtered data', {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 collection.add_action(
   'Export filtered data',
   BaseAction.new(
@@ -401,4 +441,6 @@ collection.add_action(
   end
 )
 ```
+
+</details>
 

@@ -63,7 +63,6 @@ To deploy Forest Admin On-Premise:
 If On-Premise seems like overkill for your needs, consider:
 
 
-
   * [Self-Hosted](/get-started/quickstart-self-hosted.md) - Deploy the agent in your infrastructure while using our hosted UI
 
   * [Cloud](/get-started/quickstart-cloud.md) - Let us manage everything for you

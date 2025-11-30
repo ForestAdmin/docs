@@ -1,8 +1,4 @@
-{{#php}}
 
-## Coming soon...
-
-{{/php}}
 {{#nodejs,python,ruby}}
 Forest Admin allows customizing at a very low level the behavior of any given Collection via the usage of Collection Overrides.
 
@@ -40,39 +36,34 @@ Unknown properties in returned records will be removed.
 {% endhint %}
 {{/nodejs}}
 
+<details>
+<summary><strong>collection.overrideCreate(async context => {</strong></summary>
+
 ```javascript
-collection.overrideCreate(async context => {
   // Custom logic to handle creation
   // context.data contains the data intended for creation
   // Return an array of created records
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>collection.override_create do |context|</strong></summary>
+
 ```ruby
-collection.override_create do |context|
   # Custom logic to handle creation
   # context.data contains the data intended for creation
   # Return an array of created records
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.override.context import CreateOverrideCustomizationContext
+</details>
 
-async def create_handle(context: CreateOverrideCustomizationContext)
-    # Custom logic to handle creation
-    # context.data contains the data intended for creation
-    # Return an array of created records
-
-collection.override_create(create_handle)
-```
-
-### Custom Update Operation
-
-To replace the default update operation, use {{#nodejs}}`overrideUpdate`{{/nodejs}}{{#python}}`override_update`{{/python}} with your custom handler:
+<details>
+<summary><strong>collection.overrideUpdate(async context => {</strong></summary>
 
 ```javascript
-collection.overrideUpdate(async context => {
   // Custom logic to handle update
   // context.filter to determine which records are targeted
   // context.patch contains the data for update
@@ -80,8 +71,12 @@ collection.overrideUpdate(async context => {
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>collection.override_update do |context|</strong></summary>
+
 ```ruby
-collection.override_update do |context|
   # Custom logic to handle update
   # context.filter to determine which records are targeted
   # context.patch contains the data for update
@@ -90,54 +85,32 @@ end
 
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.override.context import UpdateOverrideCustomizationContext
+</details>
 
-async def update_handle(context: UpdateOverrideCustomizationContext)
-    # Custom logic to handle update
-    # context.filter to determine which records are targeted
-    # context.patch contains the data for update
-    # Perform update operation
-
-collection.override_update(update_handle)
-```
-
-### Custom Delete Operation
-
-To replace the default delete operation, use {{#nodejs}}`overrideDelete`{{/nodejs}}{{#python}}`override_delete`{{/python}} with your custom handler:
+<details>
+<summary><strong>collection.overrideDelete(async context => {</strong></summary>
 
 ```javascript
-collection.overrideDelete(async context => {
   // Custom logic to handle deletion
   // context.filter to determine which records are targeted
   // Perform deletion operation
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>collection.override_delete do |context|</strong></summary>
+
 ```ruby
-collection.override_delete do |context|
   # Custom logic to handle deletion
   # context.filter to determine which records are targeted
   # Perform deletion operation
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.override.context import DeleteOverrideCustomizationContext
+</details>
 
-async def delete_handle(context: DeleteOverrideCustomizationContext)
-    # Custom logic to handle deletion
-    # context.filter to determine which records are targeted
-    # Perform deletion operation
-
-collection.override_delete(delete_handle)
-```
-
-{{#python}}
-{% hint style="info" %}
-In theses examples, we use async function as handler, but you can also use sync or lambda function.
-{% endhint %}
-{{/python}}
 
 {% hint style="warning" %}
 Overrides take precedence over the default operation. Ensure your custom handlers properly manage all necessary logic for the operation, as the default behavior will not be executed.
@@ -149,9 +122,10 @@ Overrides take precedence over the default operation. Ensure your custom handler
 
 You might want to create the record with your custom API:
 
-```javascript
-const { MissingFieldError } = require('@forestadmin/datasource-toolkit');
+<details>
+<summary><strong>const { MissingFieldError } = require('@forestadmin/datasource-toolkit');</strong></summary>
 
+```javascript
 product.overrideCreate(async context => {
   const { data } = context;
 
@@ -171,30 +145,23 @@ product.overrideCreate(async context => {
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>product.override_create do |context|</strong></summary>
+
 ```ruby
-product.override_create do |context|
   response = HTTParty.post("https://my-product-api.com/products", body: context.data)
   response.parsed_response
 end
 ```
 
-```python
-import requests
-from forestadmin.datasource_toolkit.decorators.override.context import CreateOverrideCustomizationContext
+</details>
 
-def create_handle(context: CreateOverrideCustomizationContext)
-    response = requests.post("https://my-product-api.com/products", json=context.data)
-    return response.json()
-
-collection.override_create(create_handle)
-```
-
-### Modify data before update
-
-You might want to modify payload data before update your record:
+<details>
+<summary><strong>product.overrideUpdate(async context => {</strong></summary>
 
 ```javascript
-product.overrideUpdate(async context => {
   const { patch } = context;
 
   // Execute data modification and validation only if one of name or slug was edited
@@ -213,8 +180,12 @@ product.overrideUpdate(async context => {
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>product.override_update do |context|</strong></summary>
+
 ```ruby
-product.override_update do |context|
   # Execute data modification and validation only if one of name or slug was edited
   if context.patch.key?('name') || context.patch.key?('slug')
     name = context.patch['name'] || context.patch['slug'].split("-")[0]
@@ -228,23 +199,7 @@ product.override_update do |context|
 end
 ```
 
-```python
-import requests
-from forestadmin.datasource_toolkit.decorators.override.context import UpdateOverrideCustomizationContext
+</details>
 
-async def update_handle(context: UpdateOverrideCustomizationContext)
-    # Execute data modification and validation only if one of name or slug was edited
-    if "name" in context.patch or "slug" in context.patch:
-        name = context.get("name", context["slug"].split("-")[0])
-        response = requests.get("https://my-product-api.com/slug", json={"name": name})
-        uuid = response.text
-
-        context.patch["name"] = name
-        context.patch["slug"] = f"{name}-{uuid}"
-
-    await context.collection.update(context.filter, context.patch)
-
-collection.override_update(update_handle)
-```
 
 {{/nodejs,python,ruby}}

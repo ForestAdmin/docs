@@ -73,7 +73,10 @@ NODE_ENV=production  # Options: development, production, test
 - `development`: Detailed logging, development mode
 - `test`: Testing mode
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const agent = createAgent({
   envSecret: process.env.FOREST_ENV_SECRET,
   authSecret: process.env.FOREST_AUTH_SECRET,
@@ -81,12 +84,19 @@ const agent = createAgent({
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 agent = ForestAdminAgent::Agent.new do |config|
   config.env_secret = ENV['FOREST_ENV_SECRET']
   config.auth_secret = ENV['FOREST_AUTH_SECRET']
 end
 ```
+
+</details>
 
 {% hint style="warning" %}
 **Security reminder:** These environment variables contain sensitive secrets that authenticate your agent with Forest Admin. Never commit them to version control, share them publicly, or reuse them across different environments (development, staging, production). Always use separate secrets for each environment and store them securely using environment variables or secret management tools.

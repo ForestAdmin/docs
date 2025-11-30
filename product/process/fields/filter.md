@@ -20,7 +20,10 @@ You can provide a handler that converts a `ConditionTree` to one or more others 
 
 This example tells Forest Admin "When a user filters by first name, I want to filter by last name instead".
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.replaceFieldOperator('firstName', 'Contains', value => {
   // Return a condition tree that makes sense for your use-case.
   return {
@@ -31,7 +34,12 @@ collection.replaceFieldOperator('firstName', 'Contains', value => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
 @create_agent.customize_collection('user') do |collection|
@@ -45,6 +53,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
+</details>
+
 ### Emulation
 
 You can also use the `emulateFieldOperator``emulate_field_operator` method. This allows you to define filtering behavior for fields that are not filterable by default.
@@ -55,7 +65,10 @@ Under the hood, it will work by fetching all records from the datasource and fil
 
 For more information about operator equivalence, refer to the Forest Admin documentation on filtering.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.emulateFieldOperator('aField', 'LongerThan', (recordFieldValue, value) => {
   // recordFieldValue is the value of the field on the record
   // value is the value of the filter (the one provided by the user)
@@ -63,10 +76,17 @@ collection.emulateFieldOperator('aField', 'LongerThan', (recordFieldValue, value
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 @create_agent.customize_collection('user') do |collection|
   collection.emulate_field_operator('aField', 'LongerThan') do |record_field_value, value|
     record_field_value.is_a?(String) && record_field_value.length > value
   end
 end
 ```
+
+</details>

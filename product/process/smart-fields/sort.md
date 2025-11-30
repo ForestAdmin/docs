@@ -6,32 +6,21 @@ By using the {{#nodejs,php}}`replaceFieldSorting`{{/nodejs,php}}{{#python,ruby}}
 
 You can also provide replacement sort clauses. In this example, we're telling Forest Admin "When a user sorts by full name, I want to sort by the last name, and then by the first name".
 
+<details>
+<summary><strong>collection.replaceFieldSorting('fullName', [</strong></summary>
+
 ```javascript
-collection.replaceFieldSorting('fullName', [
   { field: 'lastName', ascending: true },
   { field: 'firstName', ascending: true },
 ]);
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldSorting(
-        	'fullName',
-        	[
-        		['field' => 'lastName', 'ascending' => true],
-        		['field' => 'firstName', 'ascending' => true],
-            ]
-        );
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('customer') do |collection|
   collection.replace_field_sorting('fullName', [
     { field: 'lastName', ascending: true },
     { field: 'firstName', ascending: true },
@@ -39,51 +28,28 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-collection.replace_field_sorting(
-    "fullName",
-    [
-        {"field": "lastName", "ascending": True},
-        {"field": "firstName", "ascending": True},
-    ],
-)
-```
+</details>
 
-Another very common reason is performance. For instance, with auto-incrementing ids, sorting by `creationDate` is equivalent to sorting by the primary key in reverse order.
-
-Using sort substitution where needed can save you from adding many indexes to your database.
+<details>
+<summary><strong>// Sorting by creationDate ascending <=> Sorting by id descending</strong></summary>
 
 ```javascript
-// Sorting by creationDate ascending <=> Sorting by id descending
 collection.replaceFieldSorting('creationDate', [{ field: 'id', ascending: false }]);
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldSorting('creationDate', [['field' => 'id', 'ascending' => false]]);
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('customer') do |collection|
   collection.replace_field_sorting('creationDate', [{ field: 'id', ascending: false }])
 end
 
 ```
 
-```python
-collection.replace_field_sorting(
-    "creationDate",
-    [
-        {"field": "id", "ascending": False},
-    ],
-)
-```
+</details>
+
 
 ### Emulation
 
@@ -95,27 +61,22 @@ This emulation forces the Agent to retrieve all the Collection records and compu
 As a consequence, sorting emulation performance cost is **linear** with the number of records in the Collection, so **activate it sparingly and with great care**.
 {% endhint %}
 
+<details>
+<summary><strong>collection.emulateFieldSorting('fullName');</strong></summary>
+
 ```javascript
-collection.emulateFieldSorting('fullName');
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->emulateFieldSorting('fullName');
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('customer') do |collection|
   collection.emulate_field_sorting('fullName')
 end
 ```
 
-```python
-collection.emulate_field_sorting("fullName")
-```
+</details>
+
+

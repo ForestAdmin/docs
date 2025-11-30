@@ -15,31 +15,22 @@ However, you may want to enforce stricter restrictions than the ones which are i
 
 The list of operators (`Present`, `LongerThan`, ...) which can be used when adding validators is the same as the [filter operators](../../datasources/getting-started/queries/filters.md#operators).
 
+<details>
+<summary><strong>collection</strong></summary>
+
 ```javascript
-collection
   .addFieldValidation('firstName', 'Present')
   .addFieldValidation('firstName', 'LongerThan', 2)
   .addFieldValidation('firstName', 'ShorterThan', 13)
   .addFieldValidation('firstName', 'Match', /^[a-z]+$/i);
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->addFieldValidation('firstName', Operators::PRESENT])
-        	->addFieldValidation('firstName', Operators::LONGER_THAN, 2)
-            ->addFieldValidation('firstName', Operators::SHORTER_THAN, 13);
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
-
 @create_agent.customize_collection('customer') do |collection|
   collection.add_field_validation('firstName', Operators::PRESENT)
     .add_field_validation('firstName', Operators::LONGER_THAN, 2)
@@ -48,17 +39,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-```python
-collection.add_field_validation(
-    "firstName", "present"
-).add_field_validation(
-    "firstName", "longer_than", 2
-).add_field_validation(
-    "firstName", "shorter_than", 30
-).add_field_validation(
-    "firstName", "match", r"^[a-z]+$"
-)
-```
+</details>
+
 
 {{#nodejs}}
 

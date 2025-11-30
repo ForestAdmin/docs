@@ -66,25 +66,6 @@ transaction.addHook('Before', 'Update', async context => {
 });
 ```
 
-```php PHP
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-
-$forestAgent->customizeCollection(
-    'Transactions',
-    function (CollectionCustomizer $builder) {
-        $builder->addHook('Before', 'Update', function ($context) {
-            // $context->getCaller() contains information about the current user, the defined timezone, etc.
-            // In this case, $context->getCaller()->getValue('email') is the email used in Forest Admin by the user that initiated the call
-            $email = $context->getCaller()->getValue('email');
-            $isAllowed = myFunctionToCheckIfUserIsAllowed($email);
-
-            if (!$isAllowed) {
-                $context->throwForbiddenError($context->getCaller()->getValue('email') . ' is not allowed!');
-            }
-        });
-    }
-);
-```
 
 ```ruby Ruby
 @create_agent.customize_collection('transactions') do |collection|
@@ -101,21 +82,6 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python Python
-from forestadmin.datasource_toolkit.decorators.hook.context.update import (
-    HookBeforeUpdateContext
-)
-
-async def transaction_before_update_fn(context: HookBeforeUpdateContext):
-    is_allowed = my_function_to_check_user_is_allowed(context.caller.email)
-    if not is_allowed:
-        context.throw_forbidden_error(f"{context.caller.email} is not allowed")
-
-
-agent.customize_collection("Transactions").add_hook(
-    "Before", "Update", transaction_before_update_fn
-)
-```
 
 Another good example would be the following: Each time a new `User` is created in the database, I want to send him an email.
 
@@ -131,27 +97,6 @@ user.addHook('After', 'Create', async (context, responseBuilder) => {
 });
 ```
 
-```php PHP
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use MyEmailSender;
-
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->addHook('After', 'Create', function ($context) {
-            // The result of the create function always return a record
-            $email = $context->getRecord()['email'];
-            MyEmailSender::sendEmail(
-                [
-                    'from'    => 'erlich@bachman.com',
-                    'to'      => $email,
-                    'message' => 'Hey, a new account was created with this email.',
-                ]
-            );
-        });
-    }
-);
-```
 
 ```ruby Ruby
 @create_agent.customize_collection('user') do |collection|
@@ -167,19 +112,6 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python Python
-agent.customize_collection("User").add_hook(
-    "After",
-    "Create",
-    lambda context: MyEmailSender.send_email(
-        {
-            "from": "erlich@bachman.com",
-            "to": context.records[0]['email'],
-            "message": "Hey, a new account was created with this email.",
-        }
-    ),
-)
-```
 
 ## Collection Overrides
 
@@ -237,16 +169,6 @@ collection.override_create do |context|
 end
 ```
 
-```python Python
-from forestadmin.datasource_toolkit.decorators.override.context import CreateOverrideCustomizationContext
-
-async def create_handle(context: CreateOverrideCustomizationContext)
-    # Custom logic to handle creation
-    # context.data contains the data intended for creation
-    # Return an array of created records
-
-collection.override_create(create_handle)
-```
 
 #### Custom Update Operation
 
@@ -268,17 +190,6 @@ collection.override_update do |context|
 end
 ```
 
-```python Python
-from forestadmin.datasource_toolkit.decorators.override.context import UpdateOverrideCustomizationContext
-
-async def update_handle(context: UpdateOverrideCustomizationContext)
-    # Custom logic to handle update
-    # context.filter to determine which records are targeted
-    # context.patch contains the data for update
-    # Perform update operation
-
-collection.override_update(update_handle)
-```
 
 #### Custom Delete Operation
 
@@ -298,16 +209,6 @@ collection.override_delete do |context|
 end
 ```
 
-```python Python
-from forestadmin.datasource_toolkit.decorators.override.context import DeleteOverrideCustomizationContext
-
-async def delete_handle(context: DeleteOverrideCustomizationContext)
-    # Custom logic to handle deletion
-    # context.filter to determine which records are targeted
-    # Perform deletion operation
-
-collection.override_delete(delete_handle)
-```
 
 <Info>
 In Python examples, you can use async functions, sync functions, or lambda functions as handlers.
@@ -352,16 +253,6 @@ product.override_create do |context|
 end
 ```
 
-```python Python
-import requests
-from forestadmin.datasource_toolkit.decorators.override.context import CreateOverrideCustomizationContext
-
-def create_handle(context: CreateOverrideCustomizationContext)
-    response = requests.post("https://my-product-api.com/products", json=context.data)
-    return response.json()
-
-collection.override_create(create_handle)
-```
 
 #### Modify data before update
 
@@ -402,24 +293,6 @@ product.override_update do |context|
 end
 ```
 
-```python Python
-import requests
-from forestadmin.datasource_toolkit.decorators.override.context import UpdateOverrideCustomizationContext
-
-async def update_handle(context: UpdateOverrideCustomizationContext)
-    # Execute data modification and validation only if one of name or slug was edited
-    if "name" in context.patch or "slug" in context.patch:
-        name = context.get("name", context["slug"].split("-")[0])
-        response = requests.get("https://my-product-api.com/slug", json={"name": name})
-        uuid = response.text
-
-        context.patch["name"] = name
-        context.patch["slug"] = f"{name}-{uuid}"
-
-    await context.collection.update(context.filter, context.patch)
-
-collection.override_update(update_handle)
-```
 
 ## Platform-Specific Guides
 
@@ -427,4 +300,3 @@ For detailed implementation guides specific to your platform:
 
 - [Node.js](/product/process/for-tech-teams/hooks/nodejs)
 - [Ruby](/product/process/for-tech-teams/hooks/ruby)
-- [Python](/product/process/for-tech-teams/hooks/python)

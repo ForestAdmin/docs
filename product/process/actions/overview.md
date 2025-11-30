@@ -140,7 +140,6 @@ Control who can execute actions by configuring permissions per team and role. Sh
 ## Learn more
 
 
-
   * [No-code actions](/product/process/actions/nocode-actions.md) - Create actions with webhooks and integrations
   * [Code-based actions](/product/process/actions/custom-actions/overview.md) - Build Smart Actions with code
   * [Execute actions](/product/execute/actions.md) - Learn how to trigger actions as a user

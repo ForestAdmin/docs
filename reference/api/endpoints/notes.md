@@ -60,73 +60,47 @@ Retrieve all notes for a specific record.
 
   Array of note objects
 
-  
-    
+
       Unique identifier for the note
-    
 
-    
+
       Resource type (always `notes`)
-    
 
-    
-      
-        
+
           The note content (supports Markdown and @mentions)
-        
 
-        
-          
-            
+
               Author user ID
-            
 
-            
+
               Author email address
-            
 
-            
+
               Author full name
-            
-          
-        
 
-        
+
           Array of mentioned user IDs
-        
 
-        
+
           ISO 8601 timestamp when the note was created
-        
 
-        
+
           ISO 8601 timestamp when the note was last updated
-        
-      
-    
-  
-
 
 
   Pagination metadata
 
-  
-    
+
       Current page number
-    
 
-    
+
       Results per page
-    
 
-    
+
       Total number of notes
-    
 
-    
+
       Total number of pages
-    
-  
 
 
 <RequestExample>
@@ -138,7 +112,10 @@ curl -X GET \
   -H 'Content-Type: application/json'
 ```
 
-```javascript JavaScript
+<details>
+<summary><strong>JavaScript</strong></summary>
+
+```javascript
 const axios = require('axios');
 
 const response = await axios.get(
@@ -154,24 +131,12 @@ const response = await axios.get(
 console.log(response.data);
 ```
 
-```python Python
-import requests
-import os
+</details>
 
-headers = {
-    'Authorization': f'Bearer {os.getenv("FOREST_API_TOKEN")}',
-    'Content-Type': 'application/json'
-}
+<details>
+<summary><strong>Ruby</strong></summary>
 
-response = requests.get(
-    'https://api.forestadmin.com/api/v1/collections/customers/records/123/notes',
-    headers=headers
-)
-
-print(response.json())
-```
-
-```ruby Ruby
+```ruby
 require 'net/http'
 require 'json'
 
@@ -187,6 +152,8 @@ end
 
 puts JSON.parse(response.body)
 ```
+
+</details>
 
 </RequestExample>
 
@@ -300,7 +267,10 @@ curl -X POST \
   }'
 ```
 
-```javascript JavaScript
+<details>
+<summary><strong>JavaScript</strong></summary>
+
+```javascript
 const axios = require('axios');
 
 const response = await axios.post(
@@ -320,30 +290,12 @@ const response = await axios.post(
 console.log(response.data);
 ```
 
-```python Python
-import requests
-import os
+</details>
 
-headers = {
-    'Authorization': f'Bearer {os.getenv("FOREST_API_TOKEN")}',
-    'Content-Type': 'application/json'
-}
+<details>
+<summary><strong>Ruby</strong></summary>
 
-data = {
-    'content': 'Customer requested callback. @john please reach out by EOD.',
-    'mentions': ['user_456']
-}
-
-response = requests.post(
-    'https://api.forestadmin.com/api/v1/collections/customers/records/123/notes',
-    headers=headers,
-    json=data
-)
-
-print(response.json())
-```
-
-```ruby Ruby
+```ruby
 require 'net/http'
 require 'json'
 
@@ -363,6 +315,8 @@ end
 
 puts JSON.parse(response.body)
 ```
+
+</details>
 
 </RequestExample>
 
@@ -541,27 +495,6 @@ const response = await axios.put(
 console.log(response.data);
 ```
 
-```python Python
-import requests
-import os
-
-headers = {
-    'Authorization': f'Bearer {os.getenv("FOREST_API_TOKEN")}',
-    'Content-Type': 'application/json'
-}
-
-data = {
-    'content': 'Customer called regarding shipping delay. Issue resolved. @john thanks for the follow-up!'
-}
-
-response = requests.put(
-    'https://api.forestadmin.com/api/v1/notes/note_789',
-    headers=headers,
-    json=data
-)
-
-print(response.json())
-```
 
 </RequestExample>
 
@@ -644,21 +577,6 @@ const response = await axios.delete(
 console.log(response.data);
 ```
 
-```python Python
-import requests
-import os
-
-headers = {
-    'Authorization': f'Bearer {os.getenv("FOREST_API_TOKEN")}'
-}
-
-response = requests.delete(
-    'https://api.forestadmin.com/api/v1/notes/note_789',
-    headers=headers
-)
-
-print(response.json())
-```
 
 </RequestExample>
 
@@ -957,7 +875,6 @@ Note permissions follow your Forest Admin role configuration:
 - **Delete:** Can only delete own notes or admin role
 
 ## Related Resources
-
 
 
   * [Authentication](/reference/api/authentication.md) - Learn about API authentication

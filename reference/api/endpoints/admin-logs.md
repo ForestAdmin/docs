@@ -78,117 +78,77 @@ Retrieve a paginated list of admin logs with optional filtering.
 
   Array of admin log objects
 
-  
-    
+
       Unique identifier for the admin log
-    
 
-    
+
       Resource type (always `admin_logs`)
-    
 
-    
-      
-        
+
           Type of operation: `config_change`, `permission_update`, `team_management`, `integration_change`, `settings_update`
-        
 
-        
+
           Specific operation name (e.g., "Update collection layout", "Add team member")
-        
 
-        
+
           Severity level: `info`, `warning`, `critical`
-        
 
-        
-          
-            
+
               Admin user ID
-            
 
-            
+
               Admin email address
-            
 
-            
+
               Admin full name
-            
 
-            
+
               Admin role (e.g., "Admin", "Owner", "Developer")
-            
-          
-        
 
-        
+
           Target of the operation (user, collection, setting, etc.)
 
-          
-            
+
               Type of target (e.g., "user", "collection", "role", "api_key")
-            
 
-            
+
               Target identifier
-            
 
-            
+
               Target name or description
-            
-          
-        
 
-        
+
           Details of changes made
 
-          
-            
+
               State before the change
-            
 
-            
+
               State after the change
-            
-          
-        
 
-        
+
           ISO 8601 timestamp when the operation occurred
-        
 
-        
+
           IP address from which the operation was performed
-        
 
-        
+
           Environment where the change was made (e.g., "production", "staging")
-        
-      
-    
-  
-
 
 
   Pagination metadata
 
-  
-    
+
       Current page number
-    
 
-    
+
       Results per page
-    
 
-    
+
       Total number of results
-    
 
-    
+
       Total number of pages
-    
-  
 
 
 <RequestExample>
@@ -200,7 +160,10 @@ curl -X GET \
   -H 'Content-Type: application/json'
 ```
 
-```javascript JavaScript
+<details>
+<summary><strong>JavaScript</strong></summary>
+
+```javascript
 const axios = require('axios');
 
 const response = await axios.get(
@@ -221,31 +184,12 @@ const response = await axios.get(
 console.log(response.data);
 ```
 
-```python Python
-import requests
-import os
+</details>
 
-headers = {
-    'Authorization': f'Bearer {os.getenv("FOREST_API_TOKEN")}',
-    'Content-Type': 'application/json'
-}
+<details>
+<summary><strong>Ruby</strong></summary>
 
-params = {
-    'start_date': '2024-01-01',
-    'severity': 'critical',
-    'limit': 100
-}
-
-response = requests.get(
-    'https://api.forestadmin.com/api/v1/admin-logs',
-    headers=headers,
-    params=params
-)
-
-print(response.json())
-```
-
-```ruby Ruby
+```ruby
 require 'net/http'
 require 'json'
 require 'uri'
@@ -267,6 +211,8 @@ end
 
 puts JSON.parse(response.body)
 ```
+
+</details>
 
 </RequestExample>
 
@@ -414,22 +360,6 @@ const response = await axios.get(
 console.log(response.data);
 ```
 
-```python Python
-import requests
-import os
-
-headers = {
-    'Authorization': f'Bearer {os.getenv("FOREST_API_TOKEN")}',
-    'Content-Type': 'application/json'
-}
-
-response = requests.get(
-    'https://api.forestadmin.com/api/v1/admin-logs/adminlog_98765',
-    headers=headers
-)
-
-print(response.json())
-```
 
 </RequestExample>
 
@@ -730,7 +660,6 @@ Admin Logs API is subject to standard rate limits:
 See [Rate Limits](/reference/api/rate-limits) for detailed information on handling rate limits.
 
 ## Related Resources
-
 
 
   * [Authentication](/reference/api/authentication.md) - Learn about API authentication

@@ -14,7 +14,6 @@ This feature may not be available on all plans and requires SSO to be configured
 ## Why Use SCIM?
 
 
-
   * [Automated Provisioning](#) - New employees automatically get Forest Admin access when added to your IdP
 
   * [Instant Offboarding](#) - Departing employees lose access immediately when disabled in your IdP
@@ -22,7 +21,6 @@ This feature may not be available on all plans and requires SSO to be configured
   * [Synchronized Updates](#) - User profile changes in IdP automatically sync to Forest Admin
 
   * [Reduced Admin Overhead](#) - Eliminate manual user management and reduce IT workload
-
 
 
 ## How SCIM Works
@@ -131,7 +129,6 @@ SCIM handles the complete user lifecycle:
 Forest Admin supports SCIM 2.0 with these major IdPs:
 
 
-
   * [Okta](#) - Full SCIM 2.0 support with user and group provisioning
 
   * [Azure AD / Entra ID](#) - Enterprise Application with automatic provisioning
@@ -143,7 +140,6 @@ Forest Admin supports SCIM 2.0 with these major IdPs:
   * [JumpCloud](#) - Directory-as-a-Service with SCIM support
 
   * [Custom SCIM 2.0](#) - Any SCIM 2.0 compliant identity provider
-
 
 
 ## Setting Up SCIM
@@ -585,7 +581,6 @@ Check provisioning status in your IdP:
 </details>
 
 
-  
 <details>
 <summary>SCIM Endpoint Not Found</summary>
 
@@ -604,7 +599,6 @@ Check provisioning status in your IdP:
 </details>
 
 
-  
 <details>
 <summary>User Creation Failed</summary>
 
@@ -625,7 +619,6 @@ Check provisioning status in your IdP:
 </details>
 
 
-  
 <details>
 <summary>User Not Deactivated</summary>
 
@@ -679,7 +672,6 @@ Check provisioning status in your IdP:
 ### SCIM Token Management
 
 
-
   * [Secure Storage](#) - Store SCIM Bearer Token securely in your IdP's credential store
 
   * [Rotate Regularly](#) - Rotate SCIM tokens annually or per your security policy
@@ -687,7 +679,6 @@ Check provisioning status in your IdP:
   * [Limit Access](#) - Only IdP admins should have access to SCIM tokens
 
   * [Monitor Usage](#) - Review SCIM logs for unauthorized API calls
-
 
 
 ### Access Controls
@@ -744,7 +735,6 @@ Check provisioning status in your IdP:
 5. **Test Periodically**: Quarterly test of full user lifecycle
 
 ## Next Steps
-
 
 
   * [SSO Setup](/product/control/authentication/sso.md) - Configure SSO before enabling SCIM

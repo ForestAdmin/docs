@@ -42,41 +42,6 @@ agent.addChart('densitymap', async (context, resultBuilder) => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Context\AgentCustomizationContext;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Chart\ResultBuilder;
-
-$forestAgent->addChart(
-    'densitymap',
-    function (AgentCustomizationContext $context, ResultBuilder $resultBuilder) {
-       $client = new GuzzleHttp\Client();
-       $contours = $client->get(
-           'https://static.observableusercontent.com/files/6b1776f5a0a0e76e6428805c0074a8f262e3' .
-           'f34b1b50944da27903e014b409958dc29b03a1c9cc331949d6a2a404c19dfd0d9d36d9c32274e6ffb' .
-           'c07c11350ee?response-content-disposition=attachment%3Bfilename*%3DUTF-8%27%27coun' .
-           'ties-albers-10m.json'
-       )
-           ->getBody()
-           ->getContents();
-
-       $population = $client->get(
-           'https://static.observableusercontent.com/files/beb56a2d9534662123fa352ffff2db8472e4' .
-           '81776fcc1608ee4adbd532ea9ccf2f1decc004d57adc76735478ee68c0fd18931ba01fc859ee4901d' .
-           'eb1bee2ed1b?response-content-disposition=attachment%3Bfilename*%3DUTF-8%27%27popu' .
-           'lation.json',
-       )
-           ->getBody()
-           ->getContents();
-
-       return $resultBuilder->smart(
-           [
-               'contours'   => json_decode($contours, true, 512, JSON_THROW_ON_ERROR),
-               'population' => json_decode($population, true, 512, JSON_THROW_ON_ERROR),
-           ]
-       )
-    }
-);
-```
 
 {% endtab %} {% tab title="Component" %}
 

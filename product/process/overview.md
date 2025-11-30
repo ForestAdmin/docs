@@ -15,11 +15,12 @@ The available customizations are listed in the sections below{{#php,nodejs,ruby}
 Using them always starts with the same step: use the {{#nodejs,php}}`customizeCollection`{{/nodejs,php}}{{#python,ruby}}`customize_collection`{{/python,ruby}} method on the collection you want to customize.
 
 {{#nodejs,php,ruby}}It takes two arguments: the collection name and a callback function.{{/nodejs,php,ruby}}
-{{#python}}It takes one argument: the collection name and returns the collection customizer.{{/python}}
+
+
+<details>
+<summary><strong>const { createAgent } = require('@forestadmin/agent');</strong></summary>
 
 ```javascript
-const { createAgent } = require('@forestadmin/agent');
-
 createAgent()
   // Add your data source.
   .addDataSource(createSqlDataSource('mariadb://localhost:3808/example'))
@@ -36,26 +37,12 @@ createAgent()
   });
 ```
 
-```php
-use ForestAdmin\AgentPHP\Agent\Utils\Env;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Computed\ComputedDefinition;
+</details>
 
-$forestAgent->addDatasource(
-    new DoctrineDatasource($forestAgent->getEntityManager(), ['url' => Env::get('DATABASE_URL')])
-)
-    ->customizeCollection(
-        'Task',
-        function (CollectionCustomizer $builder) {
-            $builder->addField('title', new ComputedDefinition(/* ... field definition ... */));
-        }
-    )
-
-
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.setup!
       database_configuration = Rails.configuration.database_configuration
@@ -77,27 +64,20 @@ module ForestAdminRails
 end
 ```
 
-```python
-from ....models import Base
+</details>
 
-agent.add_datasource(SqlAlchemyDatasource(Base))
-
-agent.customize_collection("Task").add_field("title", {
-    # field definition
-})
-```
 
 {{#nodejs,python}}
 
 # Removing collections
 
 You may want collections to be imported into your Forest Admin agent, but not exposed to the end-users.
-To do so, you can use the {{#nodejs}}`removeCollection`{{/nodejs}}{{#python}}`remove_collection`{{/python}} method.
+To do so, you can use the {{#nodejs}}`removeCollection`{{/nodejs}} method.
 
 All relations to this collection will be removed as well, but the collection will still be available in the Forest Admin agent and can be used in your code
 
 {% hint style="info" %}
-Using the [include/exclude options](../datasources/getting-started/partial-imports.md) of {{#nodejs}}`addDataSource`{{/nodejs}}{{#python}}`add_datasource`{{/python}} ensures that a collection is not imported in the first place. In that case, it won't be available in your code.
+Using the [include/exclude options](../datasources/getting-started/partial-imports.md) of {{#nodejs}}`addDataSource`{{/nodejs}} ensures that a collection is not imported in the first place. In that case, it won't be available in your code.
 {% endhint %}
 
 ```javascript
@@ -116,52 +96,10 @@ createAgent()
   });
 ```
 
-```python
-agent = create_agent()
-
-# Add your data source.
-agent.add_datasource(SqlAlchemyDatasource(Base))
-
-# Remove the 'task' collection from your user's admin-panel.
-agent.remove_collections('task')
-
-# You can still use the collection in your code
-agent.customize_collection('task')# ...
-```
 
 {{/nodejs,python}}
 
-{{#python}}
 
-## Using Django
-
-Because the apps must be correctly loaded before accessing any Django model, you need to set `FOREST_CUSTOMIZE_FUNCTION` setting to a function that will be called after agent creation when apps are loaded.
-{% tabs %}
-{% tab title="my_project.settings.py" %}
-
-```python
-FOREST_CUSTOMIZE_FUNCTION = "my_app.forest_admin.customize_agent"
-# or it can be a function directly
-# from my_app.forest_admin import customize_agent
-# FOREST_CUSTOMIZE_FUNCTION = my_app.forest_admin.customize_agent
-
-```
-
-{% endtab %}
-{% tab title="my_app.forest_admin.py" %}
-
-```python
-from forestadmin.django_agent.agent import DjangoAgent
-
-def customize_agent(agent: DjangoAgent):
-    # customizations here
-    agent.remove_collections('task')
-    # ...
-```
-
-{% endtab %}
-{% endtabs %}
-{{/python}}
 {{#nodejs}}
 
 # Auto-completion & Typings & Best practices

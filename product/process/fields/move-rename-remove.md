@@ -15,7 +15,10 @@ You can import fields from single record relationships (many-to-one or one-to-on
 
 The imported fields will behave as if they were on that collection.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 // Assuming the following structure:
 // User    { id, firstName, lastName, addressId }
 // Address { id, streetName, streetNumber, city, countryId }
@@ -26,7 +29,12 @@ userCollection
   .importField('country', { path: 'address:country:name', readonly: true });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 # Assuming the following structure:
 # User    { id, firstName, lastName, addressId }
 # Address { id, streetName, streetNumber, city, countryId }
@@ -37,6 +45,8 @@ userCollection
 end
 ```
 
+</details>
+
 {% hint style="info" %}
 Note that when using `readonly: false`, the referenced record fields can be edited.
 {% endhint %}
@@ -45,16 +55,26 @@ Note that when using `readonly: false`, the referenced record fields can be edit
 
 Renaming and removing fields or relations can be done simply by calling the `renameField` (or `rename_field` in Ruby) and `removeField` (or `remove_field` in Ruby) methods.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.renameField('account_v3_uuid_new', 'account').removeField('password');
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 @create_agent.customize_collection('user') do |collection|
   collection.rename_field('account_v3_uuid_new', 'account').remove_field('password')
 end
 
 ```
+
+</details>
 
 {% hint style="warning" %}
 Renamed and removed fields are renamed and removed ONLY in the admin panel.

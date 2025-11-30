@@ -12,7 +12,7 @@ When creating a new field you will need to provide:
 | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | {{#nodejs,php}}columnType{{/nodejs,php}}{{#python,ruby}}column_type{{/python,ruby}}             | Type of the new field which can be [any primitive](../../under-the-hood/data-model/typing.md#primitive-types) or [composite type](../../under-the-hood/data-model/typing.md#composite-types) |
 | dependencies                                                                                    | List of fields that you need from the source records and linked records in order to run the handler                                                                                          |
-| {{#nodejs,php}}getValues{{/nodejs,php}}{{#python}}get_values{{/python}}{{#ruby}}values{{/ruby}} | Handler which computes the new value **for a batch of records**                                                                                                                              |
+| {{#nodejs,php}}getValues{{/nodejs,php}}{{#ruby}}values{{/ruby}} | Handler which computes the new value **for a batch of records**                                                                                                                              |
 | {{#nodejs,php}}enumValues{{/nodejs,php}}{{#python,ruby}}enum_values{{/python,ruby}} (optional)  | When columnType is `Enum`, you must specify the values that the field will support                                                                                                           |
 
 ## Examples
@@ -21,8 +21,10 @@ When creating a new field you will need to provide:
 
 This example adds a `user.displayName` field, which is computed by concatenating the first and last names.
 
+<details>
+<summary><strong>// "user" Collection has the following structure: { id, firstName, lastName }</strong></summary>
+
 ```javascript
-// "user" Collection has the following structure: { id, firstName, lastName }
 agent.customizeCollection('user', collection => {
   collection.addField('displayName', {
     // Type of the new field
@@ -41,37 +43,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Computed\ComputedDefinition;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-// "User" Collection has the following structure: { id, firstName, lastName }
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->addField(
-            'displayName',
-            new ComputedDefinition(
-                // Type of the new field
-                columnType: 'String',
-
-                // Dependencies which are needed to compute the new field (must not be empty)
-                dependencies: ['firstName', 'lastName'],
-
-                // Compute function for the new field
-                // Note that the function computes the new values in batches: the return value must be
-                // an array which contains the new values in the same order than the provided records.
-                values: fn ($records) => collect($records)->map(fn ($record) => $record['firstName'] . ' ' . $record['lastName']),
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Computed
-
 # User Collection has the following structure: { id, firstName, lastName }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
@@ -90,38 +67,12 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
 end
 ```
 
-```python
-from typing import Any, List
+</details>
 
-from forestadmin.datasource_toolkit.context.collection_context import (
-    CollectionCustomizationContext
-)
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
-
-def get_display_name(
-    records:List[RecordsDataAlias], context: CollectionCustomizationContext
-) -> List[Any]:
-    return [f"{record['firstName']} {record['lastName']}" for record in records]
-
-
-# "User" Collection has the following structure: { id, firstName, lastName }
-agent.customize_collection("user").add_field(
-    "displayName",
-    {
-        "column_type": "String",
-        "dependencies": ["firstName", "lastName"],
-        "get_values": get_display_name,
-    },
-)
-
-```
-
-### Adding a field that depends on another computed field
-
-This example adds a `user.displayName` field, which is computed by concatenating the first and last names, and then another which capitalize it.
+<details>
+<summary><strong>// "user" Collection has the following structure: { id, firstName, lastName }</strong></summary>
 
 ```javascript
-// "user" Collection has the following structure: { id, firstName, lastName }
 agent.customizeCollection('user', collection => {
   collection
     // Create a field which is computed by concatenating the first and last names
@@ -141,40 +92,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Computed\ComputedDefinition;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-// "User" Collection has the following structure: { id, firstName, lastName }
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        // Create a first field which is computed by concatenating the first and last names
-        $builder->addField(
-                'displayName',
-                new ComputedDefinition(
-                    columnType: 'String',
-                    dependencies: ['firstName', 'lastName'],
-                    values: fn ($records) => collect($records)->map(fn ($record) => $record['firstName'] . ' ' . $record['lastName']),
-                )
-            );
-        // Create a second field which is computed by uppercasing the first field
-        ->addField(
-            'displayNameCaps',
-            new ComputedDefinition(
-                columnType: 'String',
-                dependencies: ['displayName'], // It is legal to depend on another computed field
-                values: fn ($records) => collect($records)->map(fn ($record) => strtoupper($record['displayName'])),
-            )
-        )
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Computed
-
 # User Collection has the following structure: { id, firstName, lastName }
 @create_agent.customize_collection('user') do |collection|
   collection
@@ -200,47 +123,12 @@ end
 
 ```
 
-```python
-from typing import Any, List
+</details>
 
-from forestadmin.datasource_toolkit.context.collection_context import (
-    CollectionCustomizationContext
-)
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
-
-def get_display_name(
-    records:List[RecordsDataAlias], context: CollectionCustomizationContext
-) -> List[Any]:
-    return [f"{record['firstName']} {record['lastName']}" for record in records]
-
-
-# "User" Collection has the following structure: { id, firstName, lastName }
-agent.customize_collection("user").add_field(
-  # Create a first field which is computed by concatenating the first and last names
-    "displayName",
-    {
-        "column_type": "String",
-        "dependencies": ["firstName", "lastName"],
-        "get_values": get_display_name,
-    },
-).add_field(
-    "displayNameCaps",
-    {
-        "column_type": "String",
-        "dependencies": ["displayName"],
-        "get_values": lambda records, context: [
-            record["displayName"].upper() for record in records
-        ],
-    },
-)
-```
-
-### Adding a field that depends on a many-to-one relationship
-
-We can improve the previous example by adding the city of the user to the display name.
+<details>
+<summary><strong>// Structure:</strong></summary>
 
 ```javascript
-// Structure:
 // User    { id, addressId, firstName, lastName }
 // Address { id, city }
 
@@ -259,36 +147,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Computed\ComputedDefinition;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-// Structure:
-// User    { id, addressId, firstName, lastName }
-// Address { id, city }
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->addField(
-            'displayName',
-            new ComputedDefinition(
-                columnType: 'String',
-
-                // We added 'address:city' in the list of dependencies,
-                // which tells forest to fetch the related record
-                dependencies: ['firstName', 'lastName', 'address:city'],
-                values: fn ($records) => collect($records)
-                    ->map(fn ($record) => $record['firstName'] . ' ' . $record['lastName'] . ' (from ' . $record['address']['city'] . ' )'),
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Computed
-
 # Structure:
 # User    { id, addressId, firstName, lastName }
 # Address { id, city }
@@ -307,32 +171,12 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
 end
 ```
 
-```python
-# Structure:
-# User    { id, addressId, firstName, lastName }
-# Address { id, city }
-agent.customize_collection("user").add_field(
-    "displayName",
-    {
-        "column_type": "String",
-        # We added 'address:city' in the list of dependencies,
-        # which tells forest to fetch the related record
-        "dependencies":["firstName", "lastName", "address:city"],
-        "get_values": lambda records, context: [
-            f"{record['firstName']} {record['lastName']} (from {record['customer']['city']})"
-            for record in records
-      ],
-    },
-)
+</details>
 
-```
-
-### Adding a field that depends on a one-to-many relationship
-
-Let's now add a `user.totalSpending` field by summing the amount of all `orders`.
+<details>
+<summary><strong>// Structure</strong></summary>
 
 ```javascript
-// Structure
 // User  { id }
 // Order { id, customer_id, amount }
 
@@ -366,58 +210,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Computed\ComputedDefinition;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Aggregation;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Filters\Filter;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\ConditionTreeFactory;
+</details>
 
-// Structure:
-// User    { id }
-// Order { id, customer_id, amount }
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->addField(
-            'totalSpending',
-            new ComputedDefinition(
-                columnType: 'Number',
-                dependencies: ['id'],
-                values: function ($records, $context) {
-                    $recordIds = array_map(fn ($r) => $r['id'], $records);
-
-                    // We're using Forest Admin's query interface
-                    $filter = new Filter(
-                        conditionTree: ConditionTreeFactory::fromArray(
-                            ['field' => 'customer_id', 'operator' => 'In', 'value' => $recordIds]
-                        )
-                    );
-                    $aggregation = new Aggregation(operation: 'Sum', field: 'amount', groups: [[ 'field' =>'customer_id' ]]);
-                    $rows = $context->getDatasource()->getCollection('Car')->aggregate($filter, $aggregation);
-
-                    return array_map(
-                        function ($record) use ($rows) {
-                            foreach ($rows as $row) {
-                                if ($row['group']['customer_id'] === $record['id']) {
-                                    return $row['value'] ?? 0;
-                                }
-                            }
-
-                            return 0;
-                        },
-                        $records
-                    );
-                }
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -448,52 +246,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-```python
-from typing import Any, List
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
-from forestadmin.datasource_toolkit.interfaces.query.aggregation import Aggregation,
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.leaf import ConditionTreeLeaf
+</details>
 
-# Structure
-# Customer  { id }
-# Order { id, customerId, amount }
-async def get_user_spending_values(
-    records: List[RecordsDataAlias], context: CollectionCustomizationContext
-) -> List[Any]:
-    record_ids = [record["id"] for record in records]
-    condition = {
-        "conditionTree": [ConditionTreeLeaf("customer_id", "in", record_ids)]
-    }
-    aggregation = Aggregation(
-        {"operation": "Sum", "field": "amount", "groups": [{"field": "customer_id"}]},
-    )
-
-    # We're using Forest Admin's query interface (you can use an ORM or a plain SQL query)
-    rows = await context.datasource.get_collection("order").aggregate(
-        condition, aggregation
-    )
-    ret = []
-    for record in records:
-        filtered = list(
-            filter(
-                lambda row: row["group"]["customer_id"] == record["id"], rows
-            )
-        )
-        row = filtered[0] if len(filtered) == 1 else {}
-        ret.append(row.get("value", 0))
-    return ret
-
-
-agent.customize_collection("Customer").add_field(
-    "TotalSpending",
-    {
-        "column_type": "Number",
-        "dependencies": ["id"],
-        "get_values": get_user_spending_values
-    },
-)
-```
 
 ### Adding a field fetching data from an API
 
@@ -517,8 +271,10 @@ The API we're using is fictional, and the structure of the response is:
 }
 ```
 
+<details>
+<summary><strong>const emailVerificationClient = require('@sendchimplio/client');</strong></summary>
+
 ```javascript
-const emailVerificationClient = require('@sendchimplio/client');
 emailVerificationClient.setApiKey(process.env.SENDCHIMPLIO_API_KEY);
 
 // "User" Collection has the following structure: { id, email }
@@ -542,44 +298,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Computed\ComputedDefinition;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-// Fictional verification API.
-use Fake\EmailVerificationClient;
-$client = new EmailVerificationClient();
-$client->setApiKey('MY_FAKE_API_KEY');
-
-// "User" Collection has the following structure: { id, email }
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->addField(
-            'emailDeliverable',
-            new ComputedDefinition(
-                columnType: 'Boolean',
-                dependencies: ['email'],
-                values: function ($records) {
-                    $response = $client->verifyEmails(collect($records)->map(fn ($record) => $record['email'])->toArray());
-
-                    return collect($records)
-                        ->map(function ($record) use ($response) {
-                            $check = $response[$record['email']];
-
-                            return $check['domainValid'] && (! $check['usernameChecked'] || $check['usernameValid'])
-                        });
-                    }
-                }
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -609,44 +333,8 @@ client.api_key = 'MY_FAKE_API_KEY'
 end
 ```
 
-```python
-from typing import Any, List
+</details>
 
-from forestadmin.datasource_toolkit.context.collection_context import (
-    CollectionCustomizationContext
-)
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
-from fake import EmailVerificationClient
-
-client = EmailVerificationClient()
-client.set_api_key("MY_FAKE_API_KEY")
-
-# "User" Collection has the following structure: { id, email }
-async def get_user_spending_values(
-    records: List[RecordsDataAlias], context: CollectionCustomizationContext
-) -> List[Any]:
-    emails = [record["email"] for record in records]
-    response = client.verifyEmails(emails)
-    # Always return values in the same order than the source records
-    ret = []
-    for record in records:
-        check = response[record["email"]]
-        ret.append(
-            check["domainValid"]
-            and (not check["usernameChecked"] or check["usernameValid"])
-        )
-    return ret
-
-
-agent.customize_collection("User").add_field(
-    "TotalSpending",
-    {
-        "column_type":"Boolean",
-        "dependencies":["email"],
-        "get_values":get_user_spending_values
-    },
-)
-```
 
 ## Performance
 

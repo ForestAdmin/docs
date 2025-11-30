@@ -16,7 +16,6 @@ Some features may not be available on all plans. Check the [pricing page](https:
 The Security tab provides four key security features:
 
 
-
   * [IP Whitelisting](/product/control/security/ip-whitelisting.md) - Control which IP addresses can access your admin panel
 
   * [Auto Logout](/product/control/security/auto-logout.md) - Force user session logout after a few minutes of inactivity

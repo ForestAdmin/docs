@@ -2,7 +2,7 @@
 
 The form layout feature lets you organize your fields in pages or rows, and add separators or html blocks. This is especially useful if you have many fields to display, and you want to break down your action form into more manageable chunks !
 
-{{#python}}Theses form elements are available since the version `1.16.0` of the agent.{{/python}}
+
 {{#ruby}}Theses form elements are available since the version `1.0.0` of the agent.{{/ruby}}
 {{#nodejs}}Theses form elements are available since the version `1.49.0` of the agent.{{/nodejs}}
 
@@ -23,7 +23,7 @@ Some layouts items will have options, but here are the common properties to all 
 | ------------------------------------------------------- | ------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |  type                                                   | **required** |  `Layout`                                             | It differentiate a `field` from `layout` elements. See over values in [static form documentation](forms-static.md#properties)                                 |
 | component                                               | **required** | `Separator`, `Row`, `HtmlBlock`, or `Page`            | The layout component                                                                                                                                          |
-| if{{#python}}\_{{/python}}{{#ruby}}\_condition{{/ruby}} | optional     | callable with [context](./scope-context.md) parameter | Only display the field if the function returns true. This one is the exact same one as presented in [dynamic forms](./forms-dynamic.md#form-field-properties) |
+| if{{#ruby}}\_condition{{/ruby}} | optional     | callable with [context](./scope-context.md) parameter | Only display the field if the function returns true. This one is the exact same one as presented in [dynamic forms](./forms-dynamic.md#form-field-properties) |
 
 # Separator element
 
@@ -35,8 +35,10 @@ This item doesn't have specific options.
 
 Example:
 
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
+
 ```javascript
-agent.customizeCollection('customer', collection => {
   collection.addAction("What's your name", {
     scope: 'Single',
     form: [
@@ -51,8 +53,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
+
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('customer') do |collection|
@@ -82,17 +88,8 @@ end
 
 ```
 
-```python
-agent.customize_collection("customer").add_action("What's your name",{
-    "scope": "Single",
-    "execute": lambda context, result_builder: result_builder.success(),
-    "form": [
-        {"type": "String", "label": "firstName"},
-        {"type": "Layout", "component": "Separator"},
-        {"type": "String", "label": "lastName"},
-    ]}
-)
-```
+</details>
+
 
 ![Example](../../assets/action-form-layout-separator.png)
 
@@ -105,46 +102,11 @@ agent.customize_collection("customer").add_action("What's your name",{
 
 Example:
 
-```python
-agent.customize_collection("customer").add_action("Boring form", {
-    "scope": "Global",
-    "execute": lambda context, result_builder: result_builder.success(),
-    "form": [
-        {
-            "type": "String",
-            "label": "firstName",
-            "default_value": lambda ctx: ctx.caller.first_name,
-        },
-        {
-            "type": "String",
-            "label": "lastName",
-            "default_value": lambda ctx: ctx.caller.last_name,
-        },
-        {
-            "type": "Layout",
-            "component": "HtmlBlock",
-            "content": lambda ctx: f"""
-<div style="text-align:center;">
-    <p>
-        <strong>Hi {ctx.form_values["firstName"]} {ctx.form_values["lastName"]}</strong>,
-        <br/>here you can put
-        <strong style="color: red;">all the html</strong> you want.
-    </p>
-</div>
-<div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
-    <a href="https://www.w3schools.com" target="_blank">
-        <img src="https://www.w3schools.com/html/w3schools.jpg">
-    </a>
-    <iframe src="https://www.youtube.com/embed/xHPKuu9-yyw?autoplay=1&mute=1"></iframe>
-</div>
-""",
-        },
-    ]}
-)
-```
+
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customer', collection => {
   collection.addAction('Boring form', {
     scope: 'Global',
     form: [
@@ -184,8 +146,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
+
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('customer') do |collection|
@@ -234,11 +200,13 @@ end
 
 ```
 
+</details>
+
 ![Example](../../assets/action-form-layout-htmlblock.png)
 
 # Row element
 
-:warning: **This element is designed to work with only two inner fields.** You can control the display of each field using the `if{{#python}}_{{/python}}{{#ruby}}_condition{{/ruby}}` property. If only one field is displayed, it will occupy the entire line. However, if the conditions defined by the `if{{#python}}_{{/python}}{{#ruby}}_condition{{/ruby}}` properties result in more than two fields being displayed, only the first two will be shown. If there is nothing inside, it will be removed.
+:warning: **This element is designed to work with only two inner fields.** You can control the display of each field using the `if{{#ruby}}_condition{{/ruby}}` property. If only one field is displayed, it will occupy the entire line. However, if the conditions defined by the `if{{#ruby}}_condition{{/ruby}}` properties result in more than two fields being displayed, only the first two will be shown. If there is nothing inside, it will be removed.
 
 | Name      | Usage        | Expected value                                               | Description                                                                                                                                 |
 | --------- | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -247,36 +215,11 @@ end
 
 Example:
 
-```python
-agent.customize_collection("customer").add_action("Personal form", {
-    "scope": "Global",
-    "execute": lambda context, result_builder: result_builder.success(),
-    "form": [
-        # ...
-        {
-            "type": "Layout",
-            "component": "Row",
-            "fields": [
-                {
-                    "label": "gender",
-                    "type": "Enum",
-                    "enum_values": ["M", "F", "other"],
-                },
-                {
-                    "label": "specify",
-                    "description": "you may specify here"
-                    "type": "String",
-                    "if_": lambda ctx: ctx.form_values.get("gender") == "other",
-                },
-            ]
-        },
-        # ...
-    ]}
-)
-```
+
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customer', collection => {
   collection.addAction('Personal form', {
     scope: 'Global',
     form: [
@@ -305,8 +248,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
+
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('customer') do |collection|
@@ -343,6 +290,8 @@ end
 
 ```
 
+</details>
+
 ![Example](../../assets/action-form-layout-row.png)
 
 # Multi pages form
@@ -368,48 +317,11 @@ Please note this list of limitations:
 
 Example:
 
-```python
-agent.customize_collection("customer").add_action("Create user with address", {
-    "scope": "Global",
-    "execute": lambda context, result_builder: result_builder.success(),
-    "form": [
-        {
-            "type": "Layout",
-            "component": "Page",
-            "next_button_label": "Go to address",
-            "elements": [
-                {"type": "String", "id": "Firstname", "label": "First name"},
-                {"type": "String", "id": "Lastname", "label": "Last name"},
-                {"type": "Layout", "component": "Separator"},
-                {"type": "Date", "id": "Birthdate", "label": "Birth date"},
-            ],
-        },
-        {
-            "type": "Layout",
-            "component": "Page",
-            "previous_button_label": "Go back to identity",
-            "elements": [
-                {
-                    "type": "Layout",
-                    "component": "Row",
-                    "fields": [
-                        {"type": "Number", "id": "StreetNumber", "label": "Street number"},
-                        {"type": "String", "id": "StreetName", "label": "Street name"},
-                    ],
-                },
-                {"type": "Layout", "component": "Separator"},
-                {"type": "String", "id": "PostalCode", "label": "Postal code"},
-                {"type": "String", "id": "City"},
-                {"type": "Layout", "component": "Separator"},
-                {"type": "String", "label": "Country"},
-            ],
-        },
-    ]}
-)
-```
+
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customer', collection => {
   collection.addAction('Create user with address', {
     scope: 'Global',
     form: [
@@ -453,8 +365,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
+
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('customer') do |collection|
@@ -502,5 +418,7 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 
 ```
+
+</details>
 
 ![page 1](../../assets/action-form-layout-pages-1.png) ![page 2](../../assets/action-form-layout-pages-2.png)

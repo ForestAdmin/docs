@@ -1125,7 +1125,7 @@ Create a Multi-line Time-based chart.
 ```typescript
 collection.addChart('comparison', async (context, resultBuilder) => {
   const dates = [new Date('2024-01-01'), new Date('2024-01-02'), new Date('2024-01-03')];
-  
+
   return resultBuilder.multipleTimeBased('Day', dates, [
     { label: 'Sales', values: [100, 150, 200] },
     { label: 'Returns', values: [10, 15, null] },

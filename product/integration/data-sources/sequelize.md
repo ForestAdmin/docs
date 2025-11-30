@@ -14,7 +14,6 @@ Sequelize datasource is only available for Node.js. For Ruby, check the [ActiveR
 ```javascript
 
 
-
 // Initialize Sequelize
 const sequelize = new Sequelize('postgresql://user:pass@localhost:5432/mydb');
 

@@ -88,7 +88,6 @@ This may be due to an outdated version of node. Try the following:
 </details>
 
 
-  
 <details>
 <summary>Issue: Encountering an unknown error</summary>
 

@@ -24,7 +24,10 @@ Can be achieved without any code [in the field settings](https://docs.forestadmi
 
 In the following example, editing or creating a `fullName` will update both `firstName` and `lastName` fields of the record.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.replaceFieldWriting('fullName', value => {
   const [firstName, lastName] = value.split(' ');
 
@@ -32,7 +35,12 @@ collection.replaceFieldWriting('fullName', value => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('fullName') do |value|
     first_name, last_name = value.split(' ')
@@ -44,13 +52,18 @@ collection.replaceFieldWriting('fullName', value => {
 end
 ```
 
+</details>
+
 ### Having specific behavior only for updates
 
 You can have different behavior for `creations` and `updates`.
 
 In this example, each time the `firstName` field is edited, we also want to update a timestamp field.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.replaceFieldWriting('firstName', async (value, context) => {
   switch (context.action) {
     case 'create':
@@ -65,7 +78,12 @@ collection.replaceFieldWriting('firstName', async (value, context) => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('firstName') do |value, context|
     case context.action
@@ -86,6 +104,8 @@ collection.replaceFieldWriting('firstName', async (value, context) => {
 end
 ```
 
+</details>
+
 ### Changing fields in related records
 
 {% hint style="info" %}
@@ -99,13 +119,21 @@ In this simple example, we have two collections that are linked together:
 
 When the user updates his `job` field we want also to update the `title` of the portfolio by the `job` name.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolio: { title: job } };
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
     {
@@ -117,19 +145,29 @@ end
 
 ```
 
+</details>
+
 {% hint style="info" %}
 If the relationships do not exist it will create them with the given field values.
 {% endhint %}
 
 You can also provide another `portfolioId` to update the relationships and their fields:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolioId: 8, portfolio: { title: job } };
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
     {
@@ -141,16 +179,23 @@ collection.replaceFieldWriting('job', (job, { action }) => {
 end
 ```
 
-Of course, you can chain the relationships. For example, if a portfolio has a `one-to-one` relationship
-with the `formats` collection, you can update it by writing the right path.
+</details>
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolioId: 8, portfolio: { title: job, format: { name: 'pdf' } } };
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
     {
@@ -164,3 +209,5 @@ collection.replaceFieldWriting('job', (job, { action }) => {
   end
 end
 ```
+
+</details>

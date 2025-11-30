@@ -19,8 +19,10 @@ The new system is completely different: it is based on primary keys and foreign 
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>// Many to one relationships</strong></summary>
+
 ```javascript
-// Many to one relationships
 collection('order', {
   fields: [
     {
@@ -46,108 +48,12 @@ router.get('/address/:id/relationships/orders', (req, res) => {
 // ... other routes
 ```
 
-```php
-// Model
-class Product extends Model
-{
-    public function buyers(): SmartRelationship
-    {
-        return $this->smartRelationship(
-            [
-                'type' => ['String'],
-                'reference' => 'customer.id'
-            ]
-        );
-    }
-    ...
+</details>
 
-// routes/web.php
-Route::get('forest/product/{id}/relationships/buyers', [ProductsController::class, 'buyers']);
-
-// Controller
-class ProductsController extends ForestController
-{
-    public function buyers(int $id): JsonResponse
-    {
-        $query = Customer::whereHas('orders.products', fn ($query) => $query->where('products.id', $id))
-            ->paginate($pageParams['size'] ?? null, '*', 'page', $pageParams['number'] ?? null);
-
-        return response()->json(
-            JsonApi::render($query, 'customers', ['count' => $query->total()])
-        );
-    }
-}
-
-```
-
-```python
-from app.models import Address
-from django_forest.utils.collection import Collection
-
-# Many to one relationships
-class OrderForest(Collection):
-    def load(self):
-        self.fields = [
-            {
-                "field": "delivery_address",
-                "type": "String",
-                "reference": "Address.id",
-                "get": self.get_delivery_address,
-            }
-        ]
-
-    def get_delivery_address(self, obj):
-        return obj.delivery_address
-
-# Reverse relationship
-class AddressForest(Collection):
-    def load(self):
-        self.fields = [
-            {
-                "field": "orders",
-                "type": ["String"],
-                "reference": "Order.id",
-            }
-        ]
-
-# urls.py
-from app.views import AddressOrders
-
-urlpatterns = [
-    path(
-        '/forest/address/<pk>/relationships/orders',
-        AddressOrdersView.as_view(),
-        name='address_orders'
-    ),
-    # ...
-]
-
-# views.py
-from django.http import JsonResponse
-from django.views import generic
-from django_forest.resources.utils.queryset import PaginationMixin
-from django_forest.utils.schema.json_api_schema import JsonApiSchema
-
-from app.models import Order
-
-
-class AddressOrdersView(PaginationMixin, generic.ListView):
-    def get(self, request, pk, *args, **kwargs):
-        params = request.GET.dict()
-        queryset = Orders.objects.filter(delivery_address_id=pk)
-
-        # pagination
-        queryset = self.get_pagination(params, queryset)
-
-        # json api serializer
-        Schema = JsonApiSchema.get('orders')
-        data = Schema().dump(queryset, many=True)
-
-        return JsonResponse(data, safe=False)
-```
+<details>
+<summary><strong># Model</strong></summary>
 
 ```ruby
-# Model
 class Forest::Product
   include ForestLiana::Collection
 
@@ -177,10 +83,12 @@ class Forest::ProductsController < ForestLiana::ApplicationController
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>// Create the relationship</strong></summary>
 
 ```javascript
-// Create the relationship
 agent.customizeCollection('order', orders => {
   orders.addManyToOneRelation('deliveryAddress', 'address', {
     foreignKey: 'deliveryAddressId',
@@ -195,38 +103,12 @@ agent.customizeCollection('address', addresses => {
 });
 ```
 
-```php
-// Create the relationship
-$forestAgent->customizeCollection(
-    'Product',
-    function (CollectionCustomizer $builder) {
-        $builder->addManyToOneRelation(name: 'buyers', foreignCollection: 'Customer', foreignKey: 'customerId');
-    }
-);
+</details>
 
-// Create the reverse relationship
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->addOneToManyRelation(name: 'products', foreignCollection: 'Product', originKey: 'customerId');
-    }
-);
-```
-
-```python
-# Create the relationship
-agent.customize_collection("order").add_many_to_one_relation(
-    "delivery_address", "Address", "delivery_address_id"
-)
-
-# Create the reverse relationship
-agent.customize_collection("Address").add_one_to_many_relation(
-    "orders", "Order", "delivery_address_id"
-)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.setup!
       @create_agent.customize_collection('Product') do |collection|
@@ -240,6 +122,8 @@ module ForestAdminRails
   end
 end
 ```
+
+</details>
 
 {% endtab %} {% endtabs %}
 
@@ -260,8 +144,10 @@ This will be much faster and will not require `In` filter operators to be implem
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('order', {</strong></summary>
+
 ```javascript
-collection('order', {
   fields: [
     {
       field: 'delivery_address',
@@ -275,42 +161,12 @@ collection('order', {
 });
 ```
 
-```php
-class ProductsController extends ForestController
-{
-    public function buyers(int $id): JsonResponse
-    {
-        $query = // complex query
+</details>
 
-        return response()->json(
-            JsonApi::render($query, 'customers', ['count' => $query->total()])
-        );
-    }
-}
-```
-
-```python
-from app.models import Address
-from django_forest.utils.collection import Collection
-
-# Many to one relationships
-class OrderForest(Collection):
-    def load(self):
-        self.fields = [
-            {
-                "field": "delivery_address",
-                "type": "String",
-                "reference": "Address.id",
-                "get": self.get_delivery_address,
-            }
-        ]
-
-    def get_delivery_address(self, obj):
-        return Address.objects.filter( """complex_query""" )
-```
+<details>
+<summary><strong>class Forest::ProductsController < ForestLiana::ApplicationController</strong></summary>
 
 ```ruby
-class Forest::ProductsController < ForestLiana::ApplicationController
   def buyers
     query = # complex query
 
@@ -319,10 +175,12 @@ class Forest::ProductsController < ForestLiana::ApplicationController
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('order', orders => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('order', orders => {
   // Create a computed field that will contain the address ID (the foreign key)
   orders.addField('deliveryAddressId', {
     columnType: 'Number',
@@ -346,64 +204,12 @@ agent.customizeCollection('order', orders => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Product',
-    function (CollectionCustomizer $builder) {
-        $builder->addField(
-            'customerId',
-            new ComputedDefinition(
-                columnType: 'Number',
-                dependencies: ['id'],
-                values: function ($customers, $context) {
-                    ...
-                }
-            )
-        )
-        ->replaceFieldOperator(
-            'customerId',
-            'In',
-            function ($customerIds, $context) {
-                ...
-            }
-        )
-        ->addManyToOneRelation(name: 'buyers', foreignCollection: 'Customer', foreignKey: 'customerId');
-    }
-);
-```
+</details>
 
-```python
-from typing import List, Dict
-
-from app.models import Address
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
-
-
-def get_delivery_address_id(
-    records: List[RecordsDataAlias], context: CollectionCustomizationContext
-):
-    addresses_by_order_id = Address.objects.filter("""complex_query_here""")
-    return [addresses_by_order_id[order["id"]]["id"] for order in records]
-
-
-# Create a computed field that will contain the address ID (the foreign key)
-agent.customize_collection("order").add_field("delivery_address_id", {
-    "column_type": "Number",
-    "dependencies": ["id"],
-    "get_values": get_delivery_address_id
-}).replace_field_operator(
-    # Make the field filterable (this is required for the relationship to work)
-    "delivery_address_id", "in",
-    lambda value, context: pass  # implement the reverse-lookup logic here
-).add_many_to_one_relation(
-    # Create the relationship
-    "delivery_address", "Address", "delivery_address_id"
-)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Computed
     include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
@@ -429,5 +235,7 @@ module ForestAdminRails
   end
 end
 ```
+
+</details>
 
 {% endtab %} {% endtabs %}

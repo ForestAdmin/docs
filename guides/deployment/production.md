@@ -199,11 +199,9 @@ Enable structured logging in production:
 See platform-specific guides:
 
 
-
   * [AWS](/guides/deployment/platforms/aws.md) - Deploy to AWS Lambda, ECS, or EC2
   * [Heroku](/guides/deployment/platforms/heroku.md) - One-click deployment to Heroku
   * [Vercel](/guides/deployment/platforms/vercel.md) - Deploy serverless to Vercel
-
 
 
 ### General Deployment Checklist
@@ -282,10 +280,8 @@ After deploying:
 ## Next Steps
 
 
-
   * [Development Workflow](/guides/deployment/development-workflow.md) - Set up staging, branches, and CI/CD
   * [Environments](/guides/deployment/environments.md) - Manage multiple environments
-
 
 
 ## Need Help?

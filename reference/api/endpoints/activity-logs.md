@@ -78,95 +78,62 @@ Retrieve a paginated list of activity logs with optional filtering.
 
   Array of activity log objects
 
-  
-    
+
       Unique identifier for the activity log
-    
 
-    
+
       Resource type (always `activity_logs`)
-    
 
-    
-      
-        
+
           Type of action performed: `create`, `read`, `update`, `delete`, `export`, `custom_action`
-        
 
-        
+
           Name of the collection affected
-        
 
-        
+
           ID of the record affected (if applicable)
-        
 
-        
-          
-            
+
               User ID
-            
 
-            
+
               User email address
-            
 
-            
+
               User full name
-            
-          
-        
 
-        
+
           Object containing the changes made (for update actions)
 
-          
-            
+
               Field values before the change
-            
 
-            
+
               Field values after the change
-            
-          
-        
 
-        
+
           ISO 8601 timestamp when the action occurred
-        
 
-        
+
           IP address from which the action was performed
-        
 
-        
+
           Browser/client user agent string
-        
-      
-    
-  
-
 
 
   Pagination metadata
 
-  
-    
+
       Current page number
-    
 
-    
+
       Results per page
-    
 
-    
+
       Total number of results
-    
 
-    
+
       Total number of pages
-    
-  
 
 
 <RequestExample>
@@ -178,7 +145,10 @@ curl -X GET \
   -H 'Content-Type: application/json'
 ```
 
-```javascript JavaScript
+<details>
+<summary><strong>JavaScript</strong></summary>
+
+```javascript
 const axios = require('axios');
 
 const response = await axios.get(
@@ -199,31 +169,12 @@ const response = await axios.get(
 console.log(response.data);
 ```
 
-```python Python
-import requests
-import os
+</details>
 
-headers = {
-    'Authorization': f'Bearer {os.getenv("FOREST_API_TOKEN")}',
-    'Content-Type': 'application/json'
-}
+<details>
+<summary><strong>Ruby</strong></summary>
 
-params = {
-    'start_date': '2024-01-01',
-    'end_date': '2024-01-31',
-    'limit': 100
-}
-
-response = requests.get(
-    'https://api.forestadmin.com/api/v1/activity-logs',
-    headers=headers,
-    params=params
-)
-
-print(response.json())
-```
-
-```ruby Ruby
+```ruby
 require 'net/http'
 require 'json'
 require 'uri'
@@ -245,6 +196,8 @@ end
 
 puts JSON.parse(response.body)
 ```
+
+</details>
 
 </RequestExample>
 
@@ -375,22 +328,6 @@ const response = await axios.get(
 console.log(response.data);
 ```
 
-```python Python
-import requests
-import os
-
-headers = {
-    'Authorization': f'Bearer {os.getenv("FOREST_API_TOKEN")}',
-    'Content-Type': 'application/json'
-}
-
-response = requests.get(
-    'https://api.forestadmin.com/api/v1/activity-logs/log_12345',
-    headers=headers
-)
-
-print(response.json())
-```
 
 </RequestExample>
 
@@ -633,7 +570,6 @@ Activity Logs API is subject to standard rate limits:
 See [Rate Limits](/reference/api/rate-limits) for detailed information on handling rate limits.
 
 ## Related Resources
-
 
 
   * [Authentication](/reference/api/authentication.md) - Learn about API authentication

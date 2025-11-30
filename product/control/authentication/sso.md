@@ -14,7 +14,6 @@ This feature may not be available on all plans. Check the [pricing page](https:/
 ## Benefits of SSO
 
 
-
   * [Centralized Authentication](#) - Users authenticate once through your IdP and access Forest Admin seamlessly
 
   * [Enhanced Security](#) - Leverage your IdP's security features: MFA, conditional access, device policies
@@ -24,11 +23,9 @@ This feature may not be available on all plans. Check the [pricing page](https:/
   * [Instant Offboarding](#) - Disabling a user in your IdP immediately revokes Forest Admin access
 
 
-
 ## Supported Identity Providers
 
 Forest Admin supports any SAML 2.0-compliant identity provider:
-
 
 
   * [Google Workspace](/product/control/authentication/sso-providers/google.md) - Setup guide for Google Workspace SSO
@@ -46,7 +43,6 @@ Forest Admin supports any SAML 2.0-compliant identity provider:
   * [Ping Identity](#) - SAML 2.0 compatible
 
   * [Generic SAML](/product/control/authentication/sso-providers/generic-saml.md) - Any SAML 2.0-compliant IdP
-
 
 
 ## How SSO Works
@@ -385,7 +381,6 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
 </details>
 
 
-  
 <details>
 <summary>Error: User Email Not Found</summary>
 
@@ -402,7 +397,6 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
 </details>
 
 
-  
 <details>
 <summary>User Can't Access After Login</summary>
 
@@ -419,7 +413,6 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
 </details>
 
 
-  
 <details>
 <summary>Redirect Loop</summary>
 
@@ -463,7 +456,6 @@ Error: Signature verification failed
 Use SAML debugging tools to diagnose issues:
 
 
-
   * [SAML Tracer (Browser Extension)](#) - Capture and inspect SAML requests and responses in real-time
 
   * [SAML Decoder](#) - Decode base64-encoded SAML assertions to view contents
@@ -473,11 +465,9 @@ Use SAML debugging tools to diagnose issues:
   * [Forest Admin Logs](#) - Review Forest Admin audit logs for SSO authentication events
 
 
-
 ## Security Best Practices
 
 ### Certificate Management
-
 
 
   * [Use SHA-256](#) - Configure your IdP to sign assertions with SHA-256 (not SHA-1)
@@ -487,7 +477,6 @@ Use SAML debugging tools to diagnose issues:
   * [Rotate Certificates](#) - Update certificates annually or per your security policy
 
   * [Secure Metadata](#) - Protect IdP metadata and private keys
-
 
 
 ### Access Control
@@ -587,7 +576,6 @@ Map custom SAML attributes to Forest Admin user fields:
 - Regular access reviews and recertification
 
 ## Next Steps
-
 
 
   * [SCIM Provisioning](/product/control/authentication/scim.md) - Automate user provisioning from your IdP

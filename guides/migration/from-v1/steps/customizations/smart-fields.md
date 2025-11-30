@@ -12,7 +12,7 @@ You can find the full documentation of field customization [here](../../../../ag
 
 | Legacy agent                              | New agent                                                                                                                                                                                                                                                                                                                                            |
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| get: (record) => { ... }                  | {{#nodejs,php}}getValues: (records) => { ... }{{/nodejs,php}}{{#python}}"get_values": lambda records : ...{{/python}}{{#ruby}}"values": proc { \|records\| ... }{{/ruby}}                                                                                                                                                                            |
+| get: (record) => { ... }                  | {{#nodejs,php}}getValues: (records) => { ... }{{/nodejs,php}}{{#ruby}}"values": proc { \|records\| ... }{{/ruby}}                                                                                                                                                                            |
 | set: (record, value) => { ... }           | .{{#nodejs,php}}replaceFieldWriting{{/nodejs,php}}{{#python,ruby}}replace_field_writing{{/python,ruby}}(...)                                                                                                                                                                                                                                         |
 | filter: ({ condition, where }) => { ... } | .{{#nodejs,php}}replaceFieldOperator{{/nodejs,php}}{{#python,ruby}}replace_field_operator{{/python,ruby}}(...)<br>.{{#nodejs,php}}emulateFieldOperator{{/nodejs,php}}{{#python,ruby}}emulate_field_operator{{/python,ruby}}(...)<br>.{{#nodejs,php}}emulateFieldFiltering{{/nodejs,php}}{{#python,ruby}}emulate_field_filtering{{/python,ruby}}(...) |
 | type: 'String'                            | columnType: 'String'                                                                                                                                                                                                                                                                                                                                 |
@@ -42,7 +42,7 @@ Many changes have been made to the API.
 
 You will notice that a new `dependencies` property is required when declaring a computed field.
 
-It is an array of field names that tells Forest Admin which fields the {{#nodejs,php}}`getValues()`{{/nodejs,php}}{{#python}}`get_values()`{{/python}}{{#ruby}}`values`{{/ruby}} function depends on. Unlike the legacy agent, the new agent will not automatically fetch the whole record.
+It is an array of field names that tells Forest Admin which fields the {{#nodejs,php}}`getValues()`{{/nodejs,php}}{{#ruby}}`values`{{/ruby}} function depends on. Unlike the legacy agent, the new agent will not automatically fetch the whole record.
 
 You can [fetch data from relations](../../../../agent-customization/fields/computed.md#adding-a-field-that-depends-on-a-many-to-one-relationship) and [fetch data from other computed fields](../../../../agent-customization/fields/computed.md#adding-a-field-that-depends-on-another-computed-field).
 
@@ -50,7 +50,7 @@ You can [fetch data from relations](../../../../agent-customization/fields/compu
 
 Even if it adds some complexity, exposing a batch API to our customers is a much better solution for performance.
 
-{{#nodejs,php,python}}The `get` function is now called {{#nodejs,php}}`getValues`{{/nodejs,php}}{{#python}}`get_values`{{/python}}: it no longer takes a single record as its first argument, but an array of records, and must return an array of values, one for each record, in the same order.{{/nodejs,php,python}}
+{{#nodejs,php,python}}The `get` function is now called {{#nodejs,php}}`getValues`{{/nodejs,php}}: it no longer takes a single record as its first argument, but an array of records, and must return an array of values, one for each record, in the same order.{{/nodejs,php,python}}
 {{#ruby}}The function now returns a value called `values` which is an array of values, one for each record, in the same order. It no longer takes a single record as its first argument, but an array of records.{{/ruby}}
 
 ### Other changes
@@ -70,8 +70,10 @@ Note that when displaying a list of records, the new agent will only make one ca
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('users', {</strong></summary>
+
 ```javascript
-collection('users', {
   fields: [
     {
       field: 'full_address',
@@ -86,44 +88,12 @@ collection('users', {
 });
 ```
 
-```php
-public function fullAddress(): SmartField
-{
-    return $this->smartField(['type' => 'String'])
-        ->get(
-            function () {
-                $address = Address::firstWhere('customer_id', $this->id);
+</details>
 
-                return "$address->address_line1  $address->address_line2 $address->address_city  $address->country";
-            }
-        );
-}
-```
-
-```python
-from django_forest.utils.collection import Collection
-
-class UsersForest(Collection):
-    def load(self):
-        self.fields = [
-            {
-                "field": "full_address",
-                "type": "String",
-                "get": self.get_full_address,
-            }
-        ]
-
-    def get_full_address(self, obj):
-        return "\n".join([
-            obj.address_line_1,
-            obj.address_line_2,
-            obj.address_city,
-            obj.address_country
-        ])
-```
+<details>
+<summary><strong>class Forest::User</strong></summary>
 
 ```ruby
-class Forest::User
   collection :User
 
   field :full_address, type: 'String' do
@@ -133,10 +103,12 @@ class Forest::User
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('users', users => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('users', users => {
   users.addField('full_address', {
     columnType: 'String',
     dependencies: ['address_id'],
@@ -150,54 +122,12 @@ agent.customizeCollection('users', users => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Address',
-    function (CollectionCustomizer $builder) {
-        $builder->addField(
-            'fullAddress',
-            new ComputedDefinition(
-                columnType: 'String',
-                dependencies: ['line1', 'line2', 'city', 'country'],
-                values: fn ($records) => collect($records)->map(fn ($record) => $record['line1'] . ' ' . $record['line2'] . ' ' . $record['city'] . ' ' . $record['country']),
-            )
-        );
-    }
-);
-```
+</details>
 
-```python
-from typing import List
-
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
-
-
-def get_customer_full_address(
-    records: List[RecordsDataAlias], context: CollectionCustomizationContext
-):
-    return [
-        "\n".join(
-            [
-              rec["address_line_1"],
-              rec["address_line_2"],
-              rec["address_city"],
-              rec["address_country"],
-            ]
-        ) for rec in records
-    ]
-
-agent.customize_collection("customer").add_field("full_address", {
-    "column_type": "String",
-    "dependencies": [
-        "address_line_1", "address_line_2", "address_city", "address_country"
-    ],
-    "get_values": get_customer_full_address,
-})
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Computed
 
@@ -217,6 +147,8 @@ module ForestAdminRails
 end
 ```
 
+</details>
+
 {% endtab %} {% endtabs %}
 
 ## Step 2: Implement write handler
@@ -227,8 +159,10 @@ This part is very similar to the legacy agent. The API change is because this fu
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('users', {</strong></summary>
+
 ```javascript
-collection('users', {
   fields: [
     {
       field: 'full_address',
@@ -251,53 +185,12 @@ collection('users', {
 });
 ```
 
-```php
-public function fullAddress(): SmartField
-{
-    return $this->smartField(['type' => 'String'])
-        ->get(...)
-        ->set(
-            function ($value) {
-                [$line1, $line2, $city, $country] = explode(' ', $value);
-                $this->line1 = $line1;
-                $this->line2 = $line2;
-                $this->city = $city;
-                $this->country = $country;
+</details>
 
-                return $this;
-            }
-        );
-}
-```
-
-```python
-from django_forest.utils.collection import Collection
-
-class UsersForest(Collection):
-    def load(self):
-        self.fields = [
-            {
-                "field": "full_address",
-                "type": "String",
-                "get": self.get_full_address,
-                "set": self.set_full_address,
-            }
-        ]
-
-    def set_full_name(self, obj, value):
-        obj.address_line_1 = value.split('\n')[0]
-        obj.address_line_2 = value.split('\n')[1]
-        obj.address_city = value.split('\n')[2]
-        obj.address_country = value.split('\n')[3]
-        return obj
-
-    def get_full_address(self, obj):
-        # ...
-
-```
+<details>
+<summary><strong>class Forest::User</strong></summary>
 
 ```ruby
-class Forest::User
   collection :User
 
   set_full_address = lambda do |address_params, full_address|
@@ -316,10 +209,12 @@ class Forest::User
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('users', users => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('users', users => {
   users
     .addField('full_address', { /* ... same as before ... */ })
     .replaceFieldWriting('full_address', (value) => {
@@ -337,47 +232,12 @@ agent.customizeCollection('users', users => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Address',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldWriting(
-        	'fullAddress',
-        	function($value) {
-        		[$line1, $line2, $city, $country] = explode(' ', $value);
+</details>
 
-        		return compact('line1', 'line2', 'city', 'country);
-        	}
-        );
-    }
-);
-```
-
-```python
-from typing import Any, List
-
-from forestadmin.datasource_toolkit.decorators.write.write_replace.write_customization_context import (
-    WriteCustomizationContext,
-)
-
-
-def set_customer_full_address(value: Any, context: WriteCustomizationContext):
-    return {
-        "address_line_1": value.split('\n')[0],
-        "address_line_2": value.split('\n')[1],
-        "address_city": value.split('\n')[2],
-        "address_country": value.split('\n')[3],
-    }
-
-agent.customize_collection("customer").add_field("full_address", {
-    # ... same as before
-}).replace_field_writing(
-    "full_address", set_customer_full_address
-)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Computed
 
@@ -401,6 +261,8 @@ module ForestAdminRails
 end
 ```
 
+</details>
+
 {% endtab %} {% endtabs %}
 
 ## Step 3: Implement the filters you use
@@ -421,14 +283,16 @@ Instead, you'll be building a [condition tree](../../../../datasources/getting-s
 
 ### Emulation
 
-At the cost of performance, you can tell the agent to [emulate](../../../../agent-customization/fields/filter.md#emulation) the behavior of a given operator by calling the {{#nodejs,php}}`.emulateFieldOperator()`{{/nodejs,php}}{{#python}}`.emulate_field_operator()`{{/python}} function.
+At the cost of performance, you can tell the agent to [emulate](../../../../agent-customization/fields/filter.md#emulation) the behavior of a given operator by calling the {{#nodejs,php}}`.emulateFieldOperator()`{{/nodejs,php}} function.
 
 ### Example
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('users', {</strong></summary>
+
 ```javascript
-collection('users', {
   fields: [
     {
       field: 'full_address',
@@ -449,64 +313,12 @@ collection('users', {
 });
 ```
 
-```php
-public function fullAddress(): SmartField
-{
-    return $this->smartField(['type' => 'String'])
-        ->get(/* ... same as before ... */)
-        ->filter(
-            function (Builder $query, $value, string $operator, string $aggregator) {
-                $data = explode(' ', $value);
-                switch ($operator) {
-                    case 'equal':
-                        $query->where(...);
-                        break;
-                    case 'less_than':
-                        $query->where(...);
-                        break;
-                   // [...] all other operators
-                }
+</details>
 
-                return $query;
-            }
-        );
-}
-```
-
-```python
-from django.db.models import Q
-from django_forest.utils.collection import Collection
-
-class UsersForest(Collection):
-    def load(self):
-        self.fields = [
-            {
-                "field": "full_address",
-                "type": "String",
-                "get": self.get_full_address,
-                "set": self.set_full_address,
-                "filter": self.filter_full_name,
-            }
-        ]
-
-    def filter_full_name(self, operator, value):
-        if operator == "equal":
-            return Q(...)
-        elif operator == "less_than":
-            return Q(...)
-        # [...] all other operators
-
-
-    def set_full_name(self, obj, value):
-        # ...
-
-    def get_full_address(self, obj):
-        # ...
-
-```
+<details>
+<summary><strong>class Forest::User</strong></summary>
 
 ```ruby
-class Forest::User
   collection :User
 
   def filter_fullname(operator, value)
@@ -524,10 +336,12 @@ class Forest::User
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('users', users => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('users', users => {
   users
     .addField('full_address', {
       /* ... same as before ... */
@@ -552,56 +366,12 @@ agent.customizeCollection('users', users => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Address',
-    function (CollectionCustomizer $builder) {
-        $builder->addField(
-            /* ... same as before ... */
-        )
-        ->replaceFieldOperator('fullAddress', Operators::EQUAL, ...)
-        ->replaceFieldOperator('fullAddress', Operators::LESS_THAN, ...)
+</details>
 
-        // Emulate other operators.
-        ->emulateFieldOperator('fullName', Operators::GREATER_THAN)
-        ->emulateFieldOperator('fullName', Operators::NOT_EQUAL)
-
-        // [Or] Emulate all operators which are not already defined in one call.
-        ->emulateFieldFiltering('fullName');
-    }
-);
-```
-
-```python
-from typing import Any, List
-
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-
-def full_address_operator_equal(value, context: CollectionCustomizationContext):
-    pass
-
-
-agent.customize_collection("customer").add_field("full_address", {
-    # ... same as before
-}).replace_field_writing(
-    # ... same as before
-).replace_field_operator(
-    "full_address", "equal", full_address_operator_equal
-).replace_field_operator(
-    "full_address", "less_than", lambda value, context: ...
-
-# Emulate other operators.
-).emulate_field_operator(
-    "full_address", "greater_than"
-).emulate_field_operator(
-    "full_address", "not_equal"
-
-# [Or] Emulate all operators which are not already defined in one call.
-).emulate_field_filtering("full_address")
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -629,5 +399,7 @@ module ForestAdminRails
   end
 end
 ```
+
+</details>
 
 {% endtab %} {% endtabs %}

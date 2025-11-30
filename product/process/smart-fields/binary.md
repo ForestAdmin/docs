@@ -31,32 +31,26 @@ It is the default mode for all binary fields that are used as either a primary o
 
 If you want to use the hexadecimal mode for another field, use the {{#nodejs,php}}`replaceFieldBinaryMode`{{/nodejs,php}}{{#python,ruby}}`replace_field_binary_mode`{{/python,ruby}} method:
 
+<details>
+<summary><strong>agent.customizeCollection('people', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('people', collection =>
   collection.replaceFieldBinaryMode('avatar', 'hex'),
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-  'People',
-  function (CollectionCustomizer $builder) {
-    $builder->replaceFieldBinaryMode('avatar', 'hex')
-  }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('people') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('people') do |collection|
   collection.replace_field_binary_mode('avatar', 'hex')
 end
 ```
 
-```python
-agent.customize_collection('people').replace_field_binary_mode('avatar', 'hex')
-```
+</details>
+
 
 ## Using the data-URI mode
 
@@ -66,29 +60,24 @@ When using that mode, you will be able to use both the [File Viewer](https://doc
 
 If the automatic detection based on the field type is not working for you, you can force the `datauri` mode using the {{#nodejs,php}}`replaceFieldBinaryMode`{{/nodejs,php}}{{#python,ruby}}`replace_field_binary_mode`{{/python,ruby}} method as so:
 
+<details>
+<summary><strong>agent.customizeCollection('people', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('people', collection =>
   collection.replaceFieldBinaryMode('avatar', 'datauri'),
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-  'People',
-  function (CollectionCustomizer $builder) {
-    $builder->replaceFieldBinaryMode('avatar', 'datauri')
-  }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('User') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('User') do |collection|
   collection.replace_field_binary_mode('avatar', 'datauri')
 end
 ```
 
-```python
-agent.customize_collection('people').replace_field_binary_mode('avatar', 'datauri')
-```
+</details>
+
+

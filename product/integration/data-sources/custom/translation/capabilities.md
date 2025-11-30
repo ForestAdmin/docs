@@ -61,8 +61,10 @@ Enabling this feature allows the pagination widget to display the total number o
 
 Once enabled, your collections must implement the [`aggregate` method](../../getting-started/queries/aggregations.md).
 
+<details>
+<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
+
 ```javascript
-class MyCollection extends BaseCollection {
   constructor() {
     // [...]
 
@@ -72,19 +74,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-class MyCollection(Collection):
-    def __init__(self):
-        # [...]
-
-        # If you have implemented the aggregate method
-        self.enable_count()
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
@@ -94,23 +89,8 @@ module App
         enable_count
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-
-class MyCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        // [...]
-
-        // If you have implemented the aggregate method
-        $this->setCountable(true);
-    }
-}
-```
 
 ## Search
 
@@ -125,8 +105,10 @@ Enabling this feature allows you to either:
 
 This is relevant mostly for data sources that target data sources that have native full-text search capabilities (ElasticSearch, ...)
 
+<details>
+<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
+
 ```javascript
-class MyCollection extends BaseCollection {
   constructor() {
     // [...]
 
@@ -136,19 +118,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-class MyCollection(Collection):
-    def __init__(self):
-        # [...]
-
-        # If you want to implement search yourself
-        self.enable_search()
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
@@ -158,23 +133,8 @@ module App
         enable_search
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-
-class MyCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        // [...]
-
-        // If you want to implement search yourself
-        $this->setSearchable(true);
-    }
-}
-```
 
 ## Segments
 
@@ -188,8 +148,10 @@ Defining segments from your data sources can be relevant in 3 situations:
 - The underlying data source has a concept that maps to Forest Admin segments (i.e. ["scopes" in Sequelize](https://sequelize.org/master/manual/scopes.html))
 - Your data source is used in multiple Forest Admin projects, and the segment should be shared across all deployments (i.e. segments coming from a third-party SaaS)
 
+<details>
+<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
+
 ```javascript
-class MyCollection extends BaseCollection {
   constructor() {
     // [...]
 
@@ -202,22 +164,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-class MyCollection(Collection):
-    def __init__(self):
-        # [...]
-
-        # If you want to implement segments at the data source level
-        self.enable_segments(['Active records', 'Deleted records'])
-
-        # From now on, all methods that take a filter as parameter *MUST* not ignore
-        # its segment field.
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
@@ -230,26 +182,8 @@ module App
         # its segment field.
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-
-class MyCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        // [...]
-
-        // If you want to implement segments at the data source level
-        $this->setSegments(['Active records', 'Deleted records']);
-
-        // From now on, all methods that take a filter as parameter *MUST* not ignore
-        // its segment field.
-    }
-}
-```
 
 # Field level capabilities
 
@@ -257,8 +191,10 @@ class MyCollection extends Collection
 
 Fields may or may not be writable. To make a readonly use the {{#nodejs,php}}`isReadOnly`{{/nodejs,php}}{{#python,ruby}}`is_read_only`{{/python,ruby}} flag.
 
+<details>
+<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
+
 ```javascript
-class MyCollection extends BaseCollection {
   constructor() {
     // [...]
 
@@ -270,22 +206,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-class MyCollection(Collection):
-    def __init__(self):
-      # [...]
-
-      self.add_field('id', {
-          # [...]
-          "is_read_only": True,
-      })
-
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
@@ -297,26 +223,8 @@ module App
         })
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\ColumnSchema;
-
-class MyCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        // [...]
-    }
-
-    $this->addField('id', new ColumnSchema(
-        // [...]
-        isReadOnly: true,
-    ));
-}
-```
 
 ## Filtering operators
 
@@ -324,8 +232,10 @@ When declaring a field, the {{#nodejs,php}}`filterOperators`{{/nodejs,php}}{{#py
 
 Operators which are not explicitly enabled in that declaration won't be available.
 
+<details>
+<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
+
 ```javascript
-class MyCollection extends BaseCollection {
   constructor() {
     // [...]
 
@@ -340,25 +250,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-class MyCollection(Collection):
-    def __init__(self):
-      # [...]
-
-      self.add_field('id', {
-          # [...]
-          "filter_operators": {
-              'equal', # Tell Forest Admin the equal operator is available on the id field
-              # ...
-          },
-      })
-
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
@@ -372,37 +269,12 @@ module App
       end
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\ColumnSchema;
-
-class MyCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        // [...]
-    }
-
-    $this->addField('id', new ColumnSchema(
-        // [...]
-        filterOperators: [
-            Operators::EQUAL, // Tell Forest Admin the equal operator is available on the id field
-            // ...
-        ],
-    ));
-}
-```
-
-## Sort
-
-Not all fields need to be sortable. Sortable fields should be flagged in the following way.
+<details>
+<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
 
 ```javascript
-class MyCollection extends BaseCollection {
   constructor() {
     // [...]
 
@@ -414,22 +286,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-class MyCollection(Collection):
-    def __init__(self):
-      # [...]
-
-      self.add_field('id', {
-          # [...]
-          "is_sortable": True
-      })
-
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
@@ -442,24 +304,6 @@ module App
       end
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\ColumnSchema;
 
-class MyCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        // [...]
-    }
-
-    $this->addField('id', new ColumnSchema(
-        // [...]
-        isSortable: true,
-    ));
-}
-```

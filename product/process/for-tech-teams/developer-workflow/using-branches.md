@@ -76,7 +76,6 @@ Now that you've mastered Branch creation and management, let's dive into the nex
 ## Related pages
 
 
-
   * [Deploying Changes](/product/process/for-tech-teams/developer-workflow/deploying-your-changes.md) - Deploy your layout changes
   * [CLI Reference](/product/reference/cli/overview.md) - Learn about CLI commands
 

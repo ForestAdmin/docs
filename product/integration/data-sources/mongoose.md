@@ -14,7 +14,6 @@ Mongoose datasource is only available for Node.js. For Ruby, check the [Mongoid 
 ```javascript
 
 
-
 const agent = createAgent(options);
 
 agent.addDataSource(

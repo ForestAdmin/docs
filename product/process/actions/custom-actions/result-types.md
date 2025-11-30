@@ -18,8 +18,10 @@ The default behavior, when no exception is thrown in the handler is to display a
 
 <img src="../../assets/actions-default-success-result.png" width="300">
 
+<details>
+<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async context => {
@@ -30,31 +32,12 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as live',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context) {
-                    // Not using the resultBuilder here will display the generic success notification.
-                    // (as long as no exception is thrown)
-                }
-            )
-        );
-   }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('company') do |collection|
@@ -69,37 +52,20 @@ end
 
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-import requests
-
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    # Not using the resultBuilder here will display the generic success notification.
-    # (as long as no exception is thrown)
-
-
-agent.customize_collection("Company").add_action("Mark as live", {
-    "scope": "Single",
-    "execute": execute,
-})
-```
 
 ## Custom notifications
 
-When customizing the notification message, you can use the {{#nodejs}}`resultBuilder`{{/nodejs}}{{#php}}`ResultBuilder`{{/php}}{{#ruby}}`ForestAdminDatasourceCustomizer::Decorators::Action::ResultBuilder`{{/ruby}} to generate different types of responses.
+When customizing the notification message, you can use the {{#nodejs}}`resultBuilder`{{/nodejs}}{{#ruby}}`ForestAdminDatasourceCustomizer::Decorators::Action::ResultBuilder`{{/ruby}} to generate different types of responses.
 
 <img src="../../assets/actions-custom-success-result.png" width="300">
 <img src="../../assets/actions-custom-error-result.png" width="300">
 
+<details>
+<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
@@ -117,35 +83,12 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as live',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
-                    if (/* ... Company is not live ... */) {
-                        return $resultBuilder->success('Company is now live!');
-                    } else {
-                        return $resultBuilder->error('The company was already live!');
-                    }
-                }
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('company') do |collection|
@@ -162,27 +105,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    is_not_live_company = # Company is not live
-    if is_not_live_company:
-        return result_builder.success("Company is now live!")
-    else:
-        return result_builder.error("The company was already live!")
-
-agent.customize_collection("Company").add_action("Mark as live", {
-    "scope": "Single",
-    "execute": execute,
-})
-```
 
 ## HTML result
 
@@ -190,8 +114,10 @@ You can also return an HTML page to give more feedback to the user who triggered
 
 ![](../../assets/actions-html-result-success.png)
 
+<details>
+<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('companies', collection =>
   collection.addAction('Charge credit card', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
@@ -228,53 +154,12 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-    	$builder->addAction(
-    	    'Mark as live',
-    	    new BaseAction(
-    	    	scope: ActionScope::SINGLE,
-    	    	execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
-    	    	    /* ... charge the credit card ... */
-    	    	    $record = $context->getRecord(['amount', 'source:last4']);
-    	    	    if (/* ... the credit card was successfully charged ... */) {
-    	    	        return $responseBuilder->success(
-    	    	            'Success',
-    	    	            [
-    	    	                'html' => '<p class="c-clr-1-4 l-mt l-mb">'. $record['amount'] / 100 .' USD has been successfuly charged.</p>
-    	    	                    <strong class="c-form__label--read c-clr-1-2">Credit card</strong>
-    	    	                    <p class="c-clr-1-4 l-mb">**** **** **** '. $record['source']['last4'] .'</p>'
-    	    	            ]
-    	    	        );
-    	    	    } else {
-    	    	        return $responseBuilder->error(
-    	    	            'An error occured',
-    	    	            [
-    	    	                'html' => '<p class="c-clr-1-4 l-mt l-mb">'. $record['amount'] / 100 .' USD has not been charged.</p>
-    	    	                     <strong class="c-form__label--read c-clr-1-2">Credit card</strong>
-    	    	                     <p class="c-clr-1-4 l-mb">**** **** **** '. $record['source']['last4'] .'</p>
-    	    	                     <strong class="c-form__label--read c-clr-1-2">Reason</strong>
-    	    	                     <p class="c-clr-1-4 l-mb">You can not charge this credit card. The card is marked as blocked</p>'
-    	    	            ]
-    	    	        );
-    	    	    }
-    	    	}
-    	    )
-    	);
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('company') do |collection|
@@ -309,44 +194,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    # ... charge the credit card ...
-    record = context.get_record(['amount', 'source:last4'])
-    if credit_card_successfully_charged:
-        return result_builder.success(
-            '<p class="c-clr-1-4 l-mt l-mb">{record["amount"] / 100}  USD has been '
-            + 'successfully charged.</p>'
-            + '<strong class="c-form__label--read c-clr-1-2">Credit card</strong>'
-            + '<p class="c-clr-1-4 l-mb">**** **** **** {record["source"]["last4"]} '
-            + '</p>',
-            {"type": "html"}
-        )
-    else:
-        return result_builder.error(
-            '<p class="c-clr-1-4 l-mt l-mb">{record["amount"] / 100} USD has not '
-            + 'been charged.</p>'
-            + '<strong class="c-form__label--read c-clr-1-2">Credit card</strong>'
-            + '<p class="c-clr-1-4 l-mb">**** **** **** {$record["source"]["last4"]}'
-            + '</p>'
-            + '<strong class="c-form__label--read c-clr-1-2">Reason</strong>'
-            + '<p class="c-clr-1-4 l-mb">You can not charge this credit card. The '
-            + 'card is marked as blocked</p>',
-            {"type": "html"}
-        )
-
-agent.customize_collection("Company").add_action("Charge credit card", {
-    "scope": "Single",
-    "execute": execute,
-})
-```
 
 ## File generation
 
@@ -360,8 +209,10 @@ Smart actions can be used to generate or download files.
 
 The example code below will trigger a file download (with the file named `filename.txt`, containing `StringThatWillBeInTheFile` using `text/plain` mime-type).
 
+<details>
+<summary><strong>collection.addAction('Download a file', {</strong></summary>
+
 ```javascript
-collection.addAction('Download a file', {
   scope: 'Global',
   // This option is required to trigger the file download.
   generateFile: true,
@@ -389,36 +240,12 @@ collection.addAction('Download a file', {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Download a file',
-            new BaseAction(
-                scope: ActionScope::GLOBAL,
-                isGenerateFile: true,
-                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
-                    $myfile = fopen('filename.txt', 'w');
-                    fwrite($myfile, 'StringThatWillBeInTheFile');
-                    fclose($myfile);
-
-                    return $resultBuilder->file('filename.txt', 'filename.txt', 'text/plain');
-                }
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('company') do |collection|
@@ -435,26 +262,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    return result_builder.file(
-        io.BytesIO("StringThatWillBeInTheFile"
-    ).encode("utf-8"), "filename.txt", "text/plain")
-
-agent.customize_collection("Company").add_action("Download a file", {
-    "scope": "Single",
-    "generate_file": True,
-    "execute": execute,
-})
-```
 
 ## Redirections
 
@@ -466,8 +275,10 @@ The redirection works both for internal (`\*.forestadmin.com` pages) and externa
 
 {% tabs %} {% tab title="Internal link" %}
 
+<details>
+<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
@@ -479,56 +290,21 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as live',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
-                    return $resultBuilder->redirectTo('/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity');
-                }
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
+</details>
 
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    return result_builder.redirect(
-        "/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity"
-    )
-
-agent.customize_collection("Company").add_action("Mark as live", {
-    "scope": "Single",
-    "execute": execute,
-})
-```
-
-{% endtab %} {% tab title="External link" %}
+<details>
+<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
 
 ```javascript
-agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
@@ -540,48 +316,8 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as live',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
-                    return $resultBuilder->redirectTo('https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB');
-                }
-            )
-        );
-    }
-);
-```
-
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
-
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    return result_builder.redirect(
-        "https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB"
-    )
-
-agent.customize_collection("Company").add_action("Mark as live", {
-    "scope": "Single",
-    "execute": execute,
-})
-```
 
 {% endtab %} {% endtabs %}
 
@@ -593,8 +329,10 @@ Note that the webhook will be triggered from the user's browser, so it will be s
 
 Its intended use is often to perform a login on a third-party application or to trigger a background job on the current user's behalf.
 
+<details>
+<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
@@ -609,36 +347,12 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as live',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
-                    return $resultBuilder->webhook(
-                        'http://my-company-name', // The url of the company providing the service.
-                        'POST', // The method you would like to use (typically a POST).
-                        [], // You can add some headers if needed.
-                        ['adminToken' => 'your-admin-token'], // A body to send to the url.
-                    );
-                }
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
 @create_agent.customize_collection('company') do |collection|
@@ -656,28 +370,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    return result_builder.webhook(
-        "http://my-company-name",  # The url of the company providing the service.
-        "POST",  # The method you would like to use (typically a POST).
-        {},  # You can add some headers if needed.
-        {"adminToken": "your-admin-token"}  # A body to send to the url.
-    )
-
-agent.customize_collection("Company").add_action("Mark as live", {
-    "scope": "Single",
-    "execute": execute,
-})
-```
 
 {{#nodejs,python}}
 
@@ -687,7 +381,7 @@ Please note that the webhook function and the setHeader function operate indepen
 
 ## Response headers
 
-Sometimes you may want to setup custom response headers after action execution, the {{#nodejs,php}}`setHeader`{{/nodejs,php}}{{#python}}`set_header`{{/python}} function is here to reach out this goal.
+Sometimes you may want to setup custom response headers after action execution, the {{#nodejs,php}}`setHeader`{{/nodejs,php}} function is here to reach out this goal.
 
 Before executing any end function described above, you should be able to add headers to the action response like the exemple below.
 
@@ -706,49 +400,5 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
-
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as live',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
-                    return $resultBuilder->setHeader('myHeaderName', 'myHeaderValue')
-                    	->redirectTo(
-                    		'https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB'
-                    	);
-                }
-            )
-        );
-   }
-);
-```
-
-```python
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
-
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    return result_builder.set_header("myHeaderName", "myHeaderValue").redirect(
-        "https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB"
-    )
-
-agent.customize_collection("companies").add_action("Mark as live", {
-    "scope": "Single",
-    "execute": execute
-})
-```
 
 {{/nodejs,python}}

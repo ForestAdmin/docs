@@ -10,13 +10,11 @@ Now that you've completed the quickstart, choose a learning path tailored to you
 ## Choose Your Path
 
 
-
   * [Developer Path](/guides/learning-paths/developer.md) - Learn to customize the agent, add business logic, and integrate external services
 
   * [Operations Path](/guides/learning-paths/operations.md) - Master the UI, create workflows, and manage your team efficiently
 
   * [Product/Business Path](/guides/learning-paths/business.md) - Understand capabilities, design workspaces, and measure team performance
-
 
 
 ## How Learning Paths Work

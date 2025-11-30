@@ -11,8 +11,10 @@ You can import fields from [single record relationships](../relationships/single
 
 The imported fields will behave as if they were on that collection.
 
+<details>
+<summary><strong>// Assuming the following structure:</strong></summary>
+
 ```javascript
-// Assuming the following structure:
 // User    { id, firstName, lastName, addressId }
 // Address { id, streetName, streetNumber, city, countryId }
 // Country { id, name }
@@ -22,25 +24,12 @@ userCollection
   .importField('country', { path: 'address:country:name', readonly: true });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-// Assuming the following structure:
-// User    { id, firstName, lastName, addressId }
-// Address { id, streetName, streetNumber, city, countryId }
-// Country { id, name }
-
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->importField('city', ['path' => 'address:city', 'readonly' => true])
-            ->importField('country', ['path' => 'address:country:name', 'readonly' => true]);
-    }
-);
-```
+<details>
+<summary><strong># Assuming the following structure:</strong></summary>
 
 ```ruby
-# Assuming the following structure:
 # User    { id, firstName, lastName, addressId }
 # Address { id, streetName, streetNumber, city, countryId }
 # Country { id, name }
@@ -50,15 +39,8 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-# Assuming the following structure:
-# User    { id, firstName, lastName, addressId }
-# Address { id, streetName, streetNumber, city, countryId }
-# Country { id, name }
-agent.customize_collection("User").import_field(
-    "city", {"path": "address:city", "readonly": True}
-).import_field("country", {"path": "address:country:name", "readonly": True})
-```
+</details>
+
 
 {% hint style="info" %}
 Note that when using `readonly: false`, the referenced record fields can be edited.
@@ -68,37 +50,25 @@ Note that when using `readonly: false`, the referenced record fields can be edit
 
 Renaming and removing fields or relations can be done simply by calling the {{#nodejs,php}}`renameField`{{/nodejs,php}}{{#python,ruby}}`rename_field`{{/python,ruby}} and {{#nodejs,php}}`removeField`{{/nodejs,php}}{{#python,ruby}}`remove_field`{{/python,ruby}} methods.
 
+<details>
+<summary><strong>collection.renameField('account_v3_uuid_new', 'account').removeField('password');</strong></summary>
+
 ```javascript
-collection.renameField('account_v3_uuid_new', 'account').removeField('password');
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->renameField('account_v3_uuid_new', 'account')->removeField('password');
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('user') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('user') do |collection|
   collection.rename_field('account_v3_uuid_new', 'account').remove_field('password')
 end
 
 ```
 
-```python
-# Assuming the following structure:
-# User    { id, firstName, lastName, addressId }
-# Address { id, streetName, streetNumber, city, countryId }
-# Country { id, name }
-user_collection.rename_field('account_v3_uuid_new', 'account').remove_field(
-    'password'
-)
-```
+</details>
+
 
 {% hint style="warning" %}
 Renamed and removed fields are renamed and removed ONLY in the admin panel.

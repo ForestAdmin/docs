@@ -14,7 +14,6 @@ Two-Factor Authentication (2FA) adds an additional security layer beyond usernam
 ## Why Enable 2FA?
 
 
-
   * [Prevent Account Takeover](#) - Protect against password theft, phishing, and credential stuffing attacks
 
   * [Compliance Requirements](#) - Meet security requirements for GDPR, HIPAA, SOC 2, and other frameworks
@@ -24,13 +23,11 @@ Two-Factor Authentication (2FA) adds an additional security layer beyond usernam
   * [Audit Trail](#) - Track 2FA events in audit logs for security monitoring
 
 
-
 ## Supported 2FA Methods
 
 ### Authenticator Apps (Recommended)
 
 Time-based One-Time Password (TOTP) apps generate 6-digit codes that change every 30 seconds:
-
 
 
   * [Google Authenticator](#) - Free app for iOS and Android
@@ -44,7 +41,6 @@ Time-based One-Time Password (TOTP) apps generate 6-digit codes that change ever
   * [Bitwarden](#) - Open-source with TOTP support
 
   * [LastPass Authenticator](#) - One-tap push notifications
-
 
 
 ### Backup Codes
@@ -358,7 +354,6 @@ If a user loses access to their authenticator and backup codes:
 ### Recommended Configuration
 
 
-
   * [For SSO Users](#) - Enforce MFA at the IdP level
 
     Disable Forest Admin 2FA for SSO users to avoid double-prompting
@@ -368,11 +363,9 @@ If a user loses access to their authenticator and backup codes:
     These users don't benefit from IdP security
 
 
-
 ## Security Best Practices
 
 ### For Users
-
 
 
   * [Use Secure Authenticator](#) - Choose reputable authenticator apps with backup/sync features
@@ -382,7 +375,6 @@ If a user loses access to their authenticator and backup codes:
   * [Don't Share Codes](#) - Never share your 2FA codes with anyone, including IT or admins
 
   * [Update When Changing Devices](#) - Transfer or re-setup 2FA before wiping old device
-
 
 
 ### For Administrators
@@ -460,7 +452,6 @@ If a user loses access to their authenticator and backup codes:
 </details>
 
 
-  
 <details>
 <summary>Wrong Code Entered</summary>
 
@@ -474,7 +465,6 @@ If a user loses access to their authenticator and backup codes:
 </details>
 
 
-  
 <details>
 <summary>Authenticator App Deleted</summary>
 
@@ -554,7 +544,6 @@ If a user loses access to their authenticator and backup codes:
 - **Integration**: Prefer IdP-based MFA with SSO
 
 ## Next Steps
-
 
 
   * [SSO Setup](/product/control/authentication/sso.md) - Combine 2FA with Single Sign-On for enhanced security

@@ -76,7 +76,6 @@ You can also create a new branch with your Remote Environment as the origin and 
 ## Related pages
 
 
-
   * [Using Branches](/product/process/for-tech-teams/developer-workflow/using-branches.md) - Learn about branches
   * [Environments](/product/process/for-tech-teams/developer-workflow/environments.md) - Manage your environments
   * [CLI Reference](/product/reference/cli/overview.md) - CLI commands reference

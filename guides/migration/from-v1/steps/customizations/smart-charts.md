@@ -20,8 +20,10 @@ You can retrieve the SQL query of a `Live query chart` by clicking on the `Cog` 
 
 The next step will be to create a new [API chart](../../../../agent-customization/charts/README.md) using the SQL query you retrieved in the previous step.
 
+<details>
+<summary><strong>agent.addChart('appointments', async (context, resultBuilder) => {</strong></summary>
+
 ```javascript
-agent.addChart('appointments', async (context, resultBuilder) => {
   const rows = await context.dataSource.getCollection('appointments').nativeDriver
     .rawQuery(`
       SELECT current.count AS value, previous.count AS previous
@@ -39,66 +41,12 @@ agent.addChart('appointments', async (context, resultBuilder) => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Context\AgentCustomizationContext;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Chart\ResultBuilder;
+</details>
 
-$forestAgent->addChart('appointments',
-  function (AgentCustomizationContext $context, ResultBuilder $resultBuilder) {
-  $conn = $context->dataSource->getCollection('appointments')
-      ->getNativeDriver()->getConnection();
-  $query = $conn->executeQuery("
-      SELECT current.count AS value, previous.count AS previous
-      FROM (
-        SELECT COUNT(*)
-        FROM appointments
-        WHERE start_date BETWEEN '2018-01-01' AND '2018-02-01'
-      ) as current, (
-        SELECT COUNT(*)
-        FROM appointments
-        WHERE start_date BETWEEN '2017-12-01' AND '2018-01-01'
-      ) as previous;");
-    $rows = $query->fetchAllAssociative();
-
-  return $resultBuilder->value(rows[0]->value, rows[0]->previous);
-});
-```
-
-```python
-from forestadmin.datasource_toolkit.context.agent_context import (
-    AgentCustomizationContext
-)
-from forestadmin.datasource_toolkit.decorators.chart.result_builder import (
-    ResultBuilder
-)
-
-
-def appointments_chart(
-  context: AgentCustomizationContext, result_builder: ResultBuilder
-):
-    raw_query = """SELECT current.count AS value, previous.count AS previous
-      FROM (
-        SELECT COUNT(*)
-        FROM appointments
-        WHERE start_date BETWEEN '2018-01-01' AND '2018-02-01'
-      ) as current, (
-        SELECT COUNT(*)
-        FROM appointments
-        WHERE start_date BETWEEN '2017-12-01' AND '2018-01-01'
-      ) as previous;"""
-
-    with (
-        context.datasource.get_collection("appointments").get_native_driver()
-    ) as cursor:
-        cursor.execute(raw_query)
-        rows = cursor.fetchall()
-    return resultBuilder.value(rows[0][0], rows[0][1])
-
-agent.add_chart('appointments', appointments_chart)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.customize
       @create_agent.add_chart('appointments') do |_context, result_builder|
@@ -121,6 +69,8 @@ module ForestAdminRails
 end
 ```
 
+</details>
+
 ## Step 3: Retrieve the URL of the generated chart
 
 {{#nodejs}}
@@ -138,7 +88,7 @@ info: Chart 'appointments' was mounted at '/forest/_charts/appointments'
 
 {{/nodejs}}
 {{#python,php,ruby}}
-The url of your newly created api chart is `/forest/_charts/$chartName`. The `$chartName` is the name given to the {{#python,ruby}}`add_chart`{{/python,ruby}}{{#php}}`addChart`{{/php}} method.
+The url of your newly created api chart is `/forest/_charts/$chartName`. The `$chartName` is the name given to the {{#python,ruby}}`add_chart`{{/python,ruby}} method.
 For the previous example the url should be `/forest/_charts/appointments`
 {{/python,php,ruby}}
 

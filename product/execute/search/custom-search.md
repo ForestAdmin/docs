@@ -92,8 +92,10 @@ agent.customizeCollection('people', collection => {
 
 In this example, we use the `searchExtended` condition to toggle between case-sensitive and insensitive searches.
 
+<details>
+<summary><strong>agent.customizeCollection('people', collection => {</strong></summary>
+
 ```javascript
-agent.customizeCollection('people', collection => {
   collection.replaceSearch((searchString, extendedMode) => {
     const operator = extendedMode ? 'Contains' : 'IContains';
 
@@ -108,33 +110,12 @@ agent.customizeCollection('people', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'People',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceSearch(
-            function ($searchString, $extendedMode) {
-           	    $operator = $extendedMode ? Operators::CONTAINS : Operators::ICONTAINS;
-
-                return [
-                	'aggregator' => 'Or',
-                	'conditions' => [
-                	    ['field' => 'firstName', 'operator' => $operator, 'value' => $searchString],
-                	    ['field' => 'lastName', 'operator' => $operator, 'value' => $searchString],
-                	]
-                ];
-            }
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
-
 @create_agent.customize_collection('people') do |collection|
   collection.replace_search do |search_string, extended_search|
     operator = extended_search ? OPERATORS::CONTAINS : OPERATORS::I_CONTAINS
@@ -150,31 +131,12 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.base import ConditionTree
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.branch import ConditionTreeBranch
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.leaf import ConditionTreeLeaf
+</details>
 
-def search_in_people(
-    search_string, extended_search: bool, context: CollectionCustomizationContext
-) -> ConditionTree:
-    return ConditionTreeBranch(
-        "or",
-        [
-            ConditionTreeLeaf("firstName", "contains", search_string),
-            ConditionTreeLeaf("lastName", "contains", search_string),
-        ],
-    )
-
-
-agent.customize_collection("people").replace_search(search_in_people)
-```
-
-### Changing searched columns
+<details>
+<summary><strong>const productReferenceRegexp = /^[a-f]{16}$/i;</strong></summary>
 
 ```javascript
-const productReferenceRegexp = /^[a-f]{16}$/i;
 const barCodeRegexp = /^[0-9]{10}$/i;
 
 agent.customizeCollection('products', collection => {
@@ -203,51 +165,12 @@ agent.customizeCollection('products', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'Product',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceSearch(
-            function ($searchString, $extendedMode) {
-                $productReferenceRegexp = '/^[a-f]{16}$/i';
-                $barCodeRegexp = '/^[0-9]{10}$/i';
-
-           	    // User is searching using a product reference.
-           	    if (preg_match($productReferenceRegexp, $str)) {
-           	        return ['field' => 'reference', 'operator' => Operators::EQUAL, 'value' => $searchString];
-           	    }
-
-           	    // User is search a barcode
-           	    if (preg_match($barCodeRegexp, $str)) {
-           	        return ['field' => 'barCode', 'operator' => Operators::EQUAL, 'value' => $searchString];
-           	    }
-
-           	    // User is searching something else, in "normal" mode, let's search in the product name only
-           	    if (! $extendedMode) {
-           	        return ['field' => 'name', 'operator' => Operators::CONTAINS, 'value' => $searchString];
-           	    }
-
-           	    // In "extended" mode, we search on name, description and brand name
-                return [
-                	'aggregator' => 'Or',
-                	'conditions' => [
-                	    ['field' => 'name', 'operator' => Operators::CONTAINS, 'value' => $searchString],
-                	    ['field' => 'description', 'operator' => Operators::CONTAINS, 'value' => $searchString],
-                	    ['field' => 'brand:name', 'operator' => Operators::EQUAL, 'value' => $searchString],
-                	]
-                ];
-            }
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
-
 @create_agent.customize_collection('product') do |collection|
   product_reference_regexp = /^[a-f]{16}$/i
   barcode_regexp = /^[0-9]{10}$/i
@@ -282,52 +205,12 @@ end
 
 ```
 
-```python
-import re
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.base import ConditionTree
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.branch import ConditionTreeBranch
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.leaf import ConditionTreeLeaf
+</details>
 
-
-product_reference_regexp = r"^[a-f]{16}$"
-barcode_regexp = r"^[0-9]{10}$"
-
-async def search_in_products(
-    search_string, extended_search: bool, context: CollectionCustomizationContext
-) -> ConditionTree:
-    # User is searching using a product reference.
-    if re.match(product_reference_regexp, search_string):
-        return ConditionTreeLeaf("reference", "equal", search_string)
-
-    # User is search a barcode
-    if re.match(barcode_regexp, search_string):
-        return ConditionTreeLeaf("barCode", "equal", int(search_string))
-
-    # User is searching something else, let's search in the product name only
-    if not extended_search:
-        return ConditionTreeLeaf("name", "contains", search_string)
-
-    # In "extended" mode, we search on name, description and brand name
-    return ConditionTreeBranch(
-        "or",
-        [
-            ConditionTreeLeaf("name", "contains", search_string),
-            ConditionTreeLeaf("description", "contains", search_string),
-            ConditionTreeLeaf("brand:name", "equal", search_string),
-        ],
-    )
-
-
-agent.customize_collection("products").replace_search(search_in_products)
-```
-
-### Calling an external API
-
-If your data is indexed using a SaaS, an external store, or a full-text index, you can call it in the search handler.
+<details>
+<summary><strong>const algoliasearch = require('algoliasearch');</strong></summary>
 
 ```javascript
-const algoliasearch = require('algoliasearch');
 const client = algoliasearch('APPLICATION_ID', 'WRITE_API_KEY');
 const index = client.initIndex('indexName');
 
@@ -343,36 +226,12 @@ agent.customizeCollection('products', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
-use Algolia\AlgoliaSearch\SearchClient;
+</details>
 
-$forestAgent->customizeCollection(
-    'Product',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceSearch(
-            function ($searchString, $extendedMode) {
-                $client = SearchClient::create("YourApplicationID", "YourWriteAPIKey");
-                $index = $client->initIndex("test_index");
-                $results = $index->search(
-                    $searchString,
-                    [
-                        'attributesToRetrieve' => ['id'],
-                        'hitsPerPage' => 50,
-                    ]
-                );
-
-                return ['field' => 'id', 'operator' => Operators::IN, 'value' => array_map(fn ($hit) => $hit['id'], $results)];
-            }
-        );
-    }
-);
-```
+<details>
+<summary><strong>require 'algolia'</strong></summary>
 
 ```ruby
-require 'algolia'
-
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
 @create_agent.customize_collection('product') do |collection|
@@ -396,28 +255,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.base import ConditionTree
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.leaf import ConditionTreeLeaf
-from algoliasearch.search_client import SearchClient
+</details>
 
-client = SearchClient.create("YourApplicationID", "YourWriteAPIKey")
-index = client.init_index("test_index")
-
-
-async def search_in_products(
-    search_string, extended_search: bool, context: CollectionCustomizationContext
-) -> ConditionTree:
-    hits = index.search(
-        search_string,
-        {"attributesToRetrieve": ["id"], "hitsPerPage": 50},
-    )
-    return ConditionTreeLeaf("id", "in", [hit["id"] for hit in hits])
-
-
-agent.customize_collection("products").replace_search(search_in_products)
-```
 
 ### Disable the search
 
@@ -425,29 +264,24 @@ By default, the search bar is displayed when at least one field supports the ope
 
 You can remove the search bar by disabling the search on a collection:
 
+<details>
+<summary><strong>agent.customizeCollection('Products', collection => {</strong></summary>
+
 ```javascript
-agent.customizeCollection('Products', collection => {
   collection.disableSearch();
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-    'Product',
-    function (CollectionCustomizer $builder) {
-        $builder->disableSearch();
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('product') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('product') do |collection|
   collection.disable_search
 end
 ```
 
-```python
-agent.customize_collection("product").disable_search()
-```
+</details>
+
+

@@ -107,12 +107,10 @@
       * [Hooks - Overview](product/process/for-tech-teams/hooks/overview.md)
       * [Hooks - Node.js](product/process/for-tech-teams/hooks/nodejs.md)
       * [Hooks - Ruby](product/process/for-tech-teams/hooks/ruby.md)
-      * [Hooks - Python](product/process/for-tech-teams/hooks/python.md)
     * Plugins
       * [Plugins - Overview](product/process/for-tech-teams/plugins/overview.md)
       * [Plugins - Node.js](product/process/for-tech-teams/plugins/nodejs.md)
       * [Plugins - Ruby](product/process/for-tech-teams/plugins/ruby.md)
-      * [Plugins - Python](product/process/for-tech-teams/plugins/python.md)
     * Developer Workflow
       * [Development Workflow](product/process/for-tech-teams/developer-workflow/development-workflow.md)
       * [Environments & Branches](product/process/for-tech-teams/developer-workflow/environments-and-branches.md)
@@ -524,4 +522,3 @@
   * [Releases Support](legacy/ruby-agent/how-tos/releases-support/README.md)
 
 * Python Agent
-  * [Python Agent v1 (Deprecated)](legacy/python-agent-v1.md)

@@ -51,7 +51,10 @@ Collection Hooks are only called when the Collection function is contacted by th
 
 In the following example, we want to prevent a set of users from updating any records of the `Transactions` table. We want to check if the user email is allowed to update a record via an external API call.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 transaction.addHook('Before', 'Update', async context => {
   // context.caller contains information about the current user, the defined
   // timezone, etc.
@@ -66,27 +69,12 @@ transaction.addHook('Before', 'Update', async context => {
 });
 ```
 
-```php PHP
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-    'Transactions',
-    function (CollectionCustomizer $builder) {
-        $builder->addHook('Before', 'Update', function ($context) {
-            // $context->getCaller() contains information about the current user, the defined timezone, etc.
-            // In this case, $context->getCaller()->getValue('email') is the email used in Forest Admin by the user that initiated the call
-            $email = $context->getCaller()->getValue('email');
-            $isAllowed = myFunctionToCheckIfUserIsAllowed($email);
+<details>
+<summary><strong>Ruby</strong></summary>
 
-            if (!$isAllowed) {
-                $context->throwForbiddenError($context->getCaller()->getValue('email') . ' is not allowed!');
-            }
-        });
-    }
-);
-```
-
-```ruby Ruby
+```ruby
 @create_agent.customize_collection('transactions') do |collection|
   collection.add_hook('Before', 'Update') do |context|
     # context.caller contains information about the current user, the defined timezone, etc.
@@ -101,25 +89,12 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python Python
-from forestadmin.datasource_toolkit.decorators.hook.context.update import (
-    HookBeforeUpdateContext
-)
+</details>
 
-async def transaction_before_update_fn(context: HookBeforeUpdateContext):
-    is_allowed = my_function_to_check_user_is_allowed(context.caller.email)
-    if not is_allowed:
-        context.throw_forbidden_error(f"{context.caller.email} is not allowed")
+<details>
+<summary><strong>Node.js</strong></summary>
 
-
-agent.customize_collection("Transactions").add_hook(
-    "Before", "Update", transaction_before_update_fn
-)
-```
-
-Another good example would be the following: Each time a new `User` is created in the database, I want to send him an email.
-
-```javascript Node.js
+```javascript
 user.addHook('After', 'Create', async (context, responseBuilder) => {
   // The result of the create function always return an array of records
   const userEmail = context.records[0]?.email;
@@ -131,29 +106,12 @@ user.addHook('After', 'Create', async (context, responseBuilder) => {
 });
 ```
 
-```php PHP
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use MyEmailSender;
+</details>
 
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->addHook('After', 'Create', function ($context) {
-            // The result of the create function always return a record
-            $email = $context->getRecord()['email'];
-            MyEmailSender::sendEmail(
-                [
-                    'from'    => 'erlich@bachman.com',
-                    'to'      => $email,
-                    'message' => 'Hey, a new account was created with this email.',
-                ]
-            );
-        });
-    }
-);
-```
+<details>
+<summary><strong>Ruby</strong></summary>
 
-```ruby Ruby
+```ruby
 @create_agent.customize_collection('user') do |collection|
   collection.add_hook('After', 'Create') do |context|
     # The result of the create function always return a record
@@ -167,19 +125,8 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python Python
-agent.customize_collection("User").add_hook(
-    "After",
-    "Create",
-    lambda context: MyEmailSender.send_email(
-        {
-            "from": "erlich@bachman.com",
-            "to": context.records[0]['email'],
-            "message": "Hey, a new account was created with this email.",
-        }
-    ),
-)
-```
+</details>
+
 
 ## Collection Overrides
 
@@ -221,7 +168,10 @@ Overrides are declared similarly to hooks but are aimed at replacing an entire o
 Unknown properties in returned records will be removed (Node.js).
 {% endhint %}
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection.overrideCreate(async context => {
   // Custom logic to handle creation
   // context.data contains the data intended for creation
@@ -229,7 +179,12 @@ collection.overrideCreate(async context => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 collection.override_create do |context|
   # Custom logic to handle creation
   # context.data contains the data intended for creation
@@ -237,20 +192,12 @@ collection.override_create do |context|
 end
 ```
 
-```python Python
-from forestadmin.datasource_toolkit.decorators.override.context import CreateOverrideCustomizationContext
+</details>
 
-async def create_handle(context: CreateOverrideCustomizationContext)
-    # Custom logic to handle creation
-    # context.data contains the data intended for creation
-    # Return an array of created records
+<details>
+<summary><strong>Node.js</strong></summary>
 
-collection.override_create(create_handle)
-```
-
-#### Custom Update Operation
-
-```javascript Node.js
+```javascript
 collection.overrideUpdate(async context => {
   // Custom logic to handle update
   // context.filter to determine which records are targeted
@@ -259,7 +206,12 @@ collection.overrideUpdate(async context => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 collection.override_update do |context|
   # Custom logic to handle update
   # context.filter to determine which records are targeted
@@ -268,21 +220,12 @@ collection.override_update do |context|
 end
 ```
 
-```python Python
-from forestadmin.datasource_toolkit.decorators.override.context import UpdateOverrideCustomizationContext
+</details>
 
-async def update_handle(context: UpdateOverrideCustomizationContext)
-    # Custom logic to handle update
-    # context.filter to determine which records are targeted
-    # context.patch contains the data for update
-    # Perform update operation
+<details>
+<summary><strong>Node.js</strong></summary>
 
-collection.override_update(update_handle)
-```
-
-#### Custom Delete Operation
-
-```javascript Node.js
+```javascript
 collection.overrideDelete(async context => {
   // Custom logic to handle deletion
   // context.filter to determine which records are targeted
@@ -290,7 +233,12 @@ collection.overrideDelete(async context => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 collection.override_delete do |context|
   # Custom logic to handle deletion
   # context.filter to determine which records are targeted
@@ -298,16 +246,8 @@ collection.override_delete do |context|
 end
 ```
 
-```python Python
-from forestadmin.datasource_toolkit.decorators.override.context import DeleteOverrideCustomizationContext
+</details>
 
-async def delete_handle(context: DeleteOverrideCustomizationContext)
-    # Custom logic to handle deletion
-    # context.filter to determine which records are targeted
-    # Perform deletion operation
-
-collection.override_delete(delete_handle)
-```
 
 {% hint style="info" %}
 In Python examples, you can use async functions, sync functions, or lambda functions as handlers.
@@ -323,7 +263,10 @@ Overrides take precedence over the default operation. Ensure your custom handler
 
 You might want to create the record with your custom API:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const { MissingFieldError } = require('@forestadmin/datasource-toolkit');
 
 product.overrideCreate(async context => {
@@ -345,29 +288,24 @@ product.overrideCreate(async context => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 product.override_create do |context|
   response = HTTParty.post("https://my-product-api.com/products", body: context.data)
   response.parsed_response
 end
 ```
 
-```python Python
-import requests
-from forestadmin.datasource_toolkit.decorators.override.context import CreateOverrideCustomizationContext
+</details>
 
-def create_handle(context: CreateOverrideCustomizationContext)
-    response = requests.post("https://my-product-api.com/products", json=context.data)
-    return response.json()
+<details>
+<summary><strong>Node.js</strong></summary>
 
-collection.override_create(create_handle)
-```
-
-#### Modify data before update
-
-You might want to modify payload data before update your record:
-
-```javascript Node.js
+```javascript
 product.overrideUpdate(async context => {
   const { patch } = context;
 
@@ -387,7 +325,12 @@ product.overrideUpdate(async context => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 product.override_update do |context|
   # Execute data modification and validation only if one of name or slug was edited
   if context.patch.key?('name') || context.patch.key?('slug')
@@ -402,24 +345,8 @@ product.override_update do |context|
 end
 ```
 
-```python Python
-import requests
-from forestadmin.datasource_toolkit.decorators.override.context import UpdateOverrideCustomizationContext
+</details>
 
-async def update_handle(context: UpdateOverrideCustomizationContext)
-    # Execute data modification and validation only if one of name or slug was edited
-    if "name" in context.patch or "slug" in context.patch:
-        name = context.get("name", context["slug"].split("-")[0])
-        response = requests.get("https://my-product-api.com/slug", json={"name": name})
-        uuid = response.text
-
-        context.patch["name"] = name
-        context.patch["slug"] = f"{name}-{uuid}"
-
-    await context.collection.update(context.filter, context.patch)
-
-collection.override_update(update_handle)
-```
 
 ## Platform-Specific Guides
 
@@ -427,4 +354,3 @@ For detailed implementation guides specific to your platform:
 
 - [Node.js](/product/process/for-tech-teams/hooks/nodejs)
 - [Ruby](/product/process/for-tech-teams/hooks/ruby)
-- [Python](/product/process/for-tech-teams/hooks/python)

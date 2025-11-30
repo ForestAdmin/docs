@@ -2,21 +2,6 @@
 
 Forest admin can interact with polymorphic relations by enabling the `polymorphic` option on the datasource instance.
 
-{{#php}}
-
-```php
-return static function () {
-    $defaultDB = config('database.default');
-    $forestAgent = app()->make(AgentFactory::class);
-
-    $forestAgent->addDatasource(
-        // set the second parameter to true to enable polymorphic relations
-        new EloquentDatasource(config('database.connections.' . $defaultDB), true),
-    );
-};
-```
-
-{{/php}}
 
 ```ruby
 def self.setup!
@@ -33,39 +18,10 @@ end
 def self.customize; end
 ```
 
-{{#python}}
-
-{% tabs %}
-{% tab title="my_project.settings.py" %}
-
-```python
-# ...
-FOREST_CUSTOMIZE_FUNCTION = "my_app.forest_admin.customize_agent"
-FOREST_AUTO_ADD_DJANGO_DATASOURCE = False
-```
-
-{% endtab %}{% tab title="my_app.forest_admin.py" %}
-
-```python
-from forestadmin.datasource_django.datasource import DjangoDatasource
-from forestadmin.django_agent.agent import DjangoAgent
-
-
-def customize_forest(agent: DjangoAgent):
-    agent.add_datasource(DjangoDatasource(support_polymorphic_relations=True))
-
-```
-
-{% endtab %}
-{% endtabs %}
-
-Because Django usea a foreign key to `django_content_type` and Forest requires a string field for the type field, an enum field will automatically be created to replace the relationship to `django_content_type`. This enum field will have enum one entry per reverse relation declared with `django.contrib.contenttypes.fields.GenericRelation`.
-
-{{/python}}
 
 ## Tips
 
-The `id field` and the `type field`{{#python}}(along with the foreign key to `django_content_type`){{/python}} of the relationship are still shown. You can use them to create segment, [hide them from the agent](../agent-customization/fields/import-rename-remove.md#renaming-and-removing-fields-and-relations) or through the front-end configuration.
+The `id field` and the `type field` of the relationship are still shown. You can use them to create segment, [hide them from the agent](../agent-customization/fields/import-rename-remove.md#renaming-and-removing-fields-and-relations) or through the front-end configuration.
 
 ## Limitations
 
@@ -125,7 +81,7 @@ Before renaming a field, ensure that the field you want to rename is not used as
 When using [computed fields](../agent-customization/fields/computed.md), a list of `dependency` fields is required. Theses fields can travels '\*toOne' relationships using ':'.
 However, due to the unpredictable target collection of polymorphic relationship, they cannot be used as dependencies for computed fields; an error will be thrown with the following message:
 
-``` 
+```
 Dependencies over a polymorphic relations({CollectionName}.{PolymorphicRelationName}) are forbidden.
 ```
 

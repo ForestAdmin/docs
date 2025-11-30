@@ -75,8 +75,10 @@ With `flatten_mode: 'auto'`, Forest Admin will automatically generate two separa
    - fields: `title`, `amount`, `issue_date`, `payed_by`
    - the `bills` array is extracted as a relation, where each bill is a separate record
 
+<details>
+<summary><strong>// Automatic mode</strong></summary>
+
 ```javascript
-// Automatic mode
 const dataSource = createMongooseDataSource(mongoose.connection, {
   flattenMode: 'auto',
 });
@@ -101,8 +103,12 @@ const dataSource = createMongooseDataSource(mongoose.connection, {
 });
 ```
 
+</details>
+
+<details>
+<summary><strong># Automatic mode</strong></summary>
+
 ```ruby
-# Automatic mode
 datasource = ForestAdminDatasourceMongoid::Datasource.new(
   options: {
     flatten_mode: 'auto',
@@ -131,9 +137,11 @@ datasource = ForestAdminDatasourceMongoid::Datasource.new(
 )
 ```
 
+</details>
+
 ## Data Navigation
 
-When customizing your agent, you need a consistent way to navigate through your data.  
+When customizing your agent, you need a consistent way to navigate through your data.
 This section explains how to structure paths based on different field types.
 
 ### Separator Behavior

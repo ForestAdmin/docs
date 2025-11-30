@@ -22,25 +22,6 @@ agent.addChart('mytablechart', async (context, resultBuilder) => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Context\AgentCustomizationContext;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Chart\ResultBuilder;
-
-$forestAgent->addChart(
-    'mytablechart',
-    function (AgentCustomizationContext $context, ResultBuilder $resultBuilder) {
-       // You may want to load the data dynamically
-       // [...]
-
-       return $resultBuilder->smart(
-           [
-               [ 'username' => 'Darth Vador', 'points' => 1500000 ],
-               [ 'username' => 'Luke Skywalker', 'points' => 2 ],
-           ]
-       )
-    }
-);
-```
 
 {% endtab %} {% tab title="Component" %}
 

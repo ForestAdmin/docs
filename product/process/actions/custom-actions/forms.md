@@ -23,7 +23,10 @@ Fields are configurable using the following properties:
 
 ## Basic form example
 
-```javascript Node.js / Cloud
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
+
+```javascript
 agent.customizeCollection('customers', collection => {
   collection.addAction('Charge credit card', {
     scope: 'Single',
@@ -58,7 +61,12 @@ agent.customizeCollection('customers', collection => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 forest_agent.customize_collection('customers') do |collection|
   collection.add_action(
     'Charge credit card',
@@ -89,6 +97,8 @@ forest_agent.customize_collection('customers') do |collection|
   )
 end
 ```
+
+</details>
 
 ## Field types
 
@@ -186,7 +196,10 @@ Make forms reactive by using functions instead of static values. Functions recei
 
 Make a field required based on another field's value:
 
-```javascript Node.js / Cloud
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
+
+```javascript
 form: [
   {
     type: 'Number',
@@ -203,7 +216,12 @@ form: [
 ]
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 form: [
   {
     type: FieldType::NUMBER,
@@ -220,11 +238,12 @@ form: [
 ]
 ```
 
-### Conditional visibility
+</details>
 
-Show or hide fields based on conditions:
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
 
-```javascript Node.js / Cloud
+```javascript
 form: [
   {
     type: 'Boolean',
@@ -240,7 +259,12 @@ form: [
 ]
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 form: [
   {
     type: FieldType::BOOLEAN,
@@ -256,11 +280,12 @@ form: [
 ]
 ```
 
-### Default values from record data
+</details>
 
-Pre-fill form with data from the selected record:
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
 
-```javascript Node.js / Cloud
+```javascript
 form: [
   {
     type: 'Number',
@@ -274,7 +299,12 @@ form: [
 ]
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 form: [
   {
     type: FieldType::NUMBER,
@@ -288,11 +318,12 @@ form: [
 ]
 ```
 
-### Dynamic enum values
+</details>
 
-Change dropdown options based on context:
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
 
-```javascript Node.js / Cloud
+```javascript
 form: [
   {
     type: 'Enum',
@@ -315,7 +346,12 @@ form: [
 ]
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 form: [
   {
     type: FieldType::ENUM,
@@ -343,11 +379,12 @@ form: [
 ]
 ```
 
-### Dynamic collection references
+</details>
 
-Change the target collection dynamically:
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
 
-```javascript Node.js / Cloud
+```javascript
 form: [
   {
     type: 'Enum',
@@ -364,7 +401,12 @@ form: [
 ]
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 form: [
   {
     type: FieldType::ENUM,
@@ -380,6 +422,8 @@ form: [
   }
 ]
 ```
+
+</details>
 
 ## Widgets
 
@@ -499,7 +543,10 @@ Rich text editor with formatting options.
 
 Create wizard-like forms by conditionally showing sections:
 
-```javascript Node.js / Cloud
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
+
+```javascript
 form: [
   {
     type: 'Enum',
@@ -529,7 +576,12 @@ form: [
 ]
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 form: [
   {
     type: FieldType::ENUM,
@@ -559,11 +611,12 @@ form: [
 ]
 ```
 
-### Read-only fields for context
+</details>
 
-Show record data as read-only context:
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
 
-```javascript Node.js / Cloud
+```javascript
 form: [
   {
     type: 'String',
@@ -582,7 +635,12 @@ form: [
 ]
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 form: [
   {
     type: FieldType::STRING,
@@ -601,11 +659,12 @@ form: [
 ]
 ```
 
-### Validation with required fields
+</details>
 
-Combine conditions for complex validation:
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
 
-```javascript Node.js / Cloud
+```javascript
 {
   type: 'String',
   label: 'Manager approval',
@@ -617,7 +676,12 @@ Combine conditions for complex validation:
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 {
   type: FieldType::STRING,
   label: 'Manager approval',
@@ -629,11 +693,12 @@ Combine conditions for complex validation:
 }
 ```
 
-## Accessing form values
+</details>
 
-In the execute handler, access form values from the context:
+<details>
+<summary><strong>Node.js / Cloud</strong></summary>
 
-```javascript Node.js / Cloud
+```javascript
 execute: async (context, resultBuilder) => {
   // Access by label
   const amount = context.formValues.Amount;
@@ -649,7 +714,12 @@ execute: async (context, resultBuilder) => {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 execute: ->(context, result_builder) {
   # Access by label
   amount = context.form_values['Amount']
@@ -665,4 +735,6 @@ execute: ->(context, result_builder) {
   description = context.form_values['Description']
 }
 ```
+
+</details>
 

@@ -79,11 +79,9 @@ Forest Admin automatically captures every action with complete context, creating
 Integrate Forest Admin with your existing identity infrastructure. Support for SSO, SAML, 2FA, and SCIM provisioning ensures users authenticate securely and access is automatically managed through your Identity Provider.
 
 
-
   * [SSO & SAML](/product/control/authentication/sso.md) - Integrate with Google, Okta, Azure AD, AWS, or any SAML provider for centralized authentication
   * [Two-Factor Auth](/product/control/authentication/2fa.md) - Require 2FA for all users or specific roles for enhanced security
   * [SCIM Provisioning](/product/control/authentication/scim.md) - Automatically provision and deprovision users from your IdP (Okta, Azure AD)
-
 
 
 **Example:** When a new employee joins, they're automatically provisioned in Forest Admin via SCIM. When they leave, access is immediately revoked across all systems.
@@ -97,10 +95,8 @@ Integrate Forest Admin with your existing identity infrastructure. Support for S
 Beyond authentication and access control, Forest Admin provides advanced security features to meet enterprise requirements and protect your data from unauthorized access.
 
 
-
   * [IP Whitelisting](/product/control/security/ip-whitelisting.md) - Restrict access to specific IP addresses or ranges - only allow corporate VPN or office networks
   * [Session Management](/product/control/security/session-management.md) - Configure session timeouts, idle policies, and automatic logout for enhanced security
-
 
 
 **Example:** Restrict Forest Admin access to only corporate VPN IP ranges, automatically log users out after 30 minutes of inactivity.

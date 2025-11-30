@@ -9,10 +9,12 @@ Moderating comments, generating invoices, logging into a customer’s account, o
 To create an Action, you will first need to declare it in your code for a specific collection. Here we declare a "Mark as Live" Action for the `companies` collection.
 
 {{#nodejs,ruby,python}}The action behavior is implemented in the `execute` function.{{/nodejs,ruby,python}}
-{{#php}}The action behavior is implemented in the `execute` parameter of BaseAction.{{/php}}
+
+
+<details>
+<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
 
 ```javascript
-agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as live', {
     scope: 'Single',
     description: 'Mark the company as live',
@@ -80,30 +82,12 @@ agent.customizeCollection('companies', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+</details>
 
-$forestAgent->customizeCollection(
-    'companies',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as Live',
-            new BaseAction(
-                scope: ActionScope::GLOBAL,
-                execute: function (ActionContextSingle $context) {
-                    // Implement your controller here.
-                }
-            )
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action
 
 @create_agent.customize_collection('companies') do |collection|
@@ -165,71 +149,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action
 end
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    pass
-    # implement your controller here
-
-
-agent.customize_collection("companies").add_action("Mark as Live", {
-    "scope": "Global",
-    "execute": execute,  # this method can be a callable, awaitable or a lambda
-    "description": "Mark the company as live",
-    "submit_button_label": "Validate 🫵",
-    "form": [
-        {
-            "type": "Layout",
-            "component": 'Page',
-            "next_button_label": "Go to address",
-            "elements":[
-                {"type": "Date", "label": "Live date","id": "LiveDate"},
-                {"type": "Date", "label": "Exist since", "id": "CreationDate"},
-                {"type": "Layout", "component": "Separator"},
-                {
-                    "type": "Layout",
-                    "component": "Row",
-                    "fields": [
-                        {"type": "Boolean", "label": "CreditCard ?" "id": "WithCreditCard"},
-                        {
-                            "type": "String",
-                            "if_": lambda ctx :ctx.form_values.get("WithCreditCard") is True,
-                            "label": "Number",
-                            "id": "CreditCardNumber",
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            "type": "Layout",
-            "component": "Page",
-            "previous_button_label": "Go back to identity",
-            "elements": [
-                {
-                    "type": "Layout",
-                    "component": "Row",
-                    "fields": [
-                        {"type": "Number", "label": "StreetNumber"},
-                        {"type": "String", "label": "StreetName"},
-                    ],
-                },
-                {"type": "Layout", "component": "Separator"},
-                {"type": "String", "label": "PostalCode"},
-                {"type": "Number", "label": "City"},
-                {"type": "Layout", "component": "Separator"},
-                {"type": "String", "label": "Country"},
-            ],
-        },
-    ],
-})
-```
 
 | Property                                                                                           | Usage       | Description                                                                                                                                                                                                                |
 | -------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

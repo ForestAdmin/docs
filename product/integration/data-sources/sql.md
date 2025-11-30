@@ -7,11 +7,10 @@ The SQL datasource connects directly to SQL databases with automatic schema intr
 
 ## Basic usage
 
+<details>
+<summary><strong>const agent = createAgent(options);</strong></summary>
+
 ```javascript
-
-
-const agent = createAgent(options);
-
 agent.addDataSource(
   createSqlDataSource({
     uri: 'postgresql://user:pass@localhost:5432/mydb',
@@ -20,13 +19,18 @@ agent.addDataSource(
 );
 ```
 
-```ruby
-require 'forest_admin_agent'
+</details>
 
+<details>
+<summary><strong>require 'forest_admin_agent'</strong></summary>
+
+```ruby
 ForestAdminAgent::Agent.new do |config|
   config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
 end
 ```
+
+</details>
 
 ## Automatic schema introspection
 

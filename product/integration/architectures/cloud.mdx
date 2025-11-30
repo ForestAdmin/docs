@@ -83,7 +83,6 @@ No, Cloud mode requires your database to be network-accessible. For local databa
 </details>
 
 
-  
 <details>
 <summary>Is my data secure in Cloud mode?</summary>
 
@@ -92,7 +91,6 @@ Yes. Forest Admin uses TLS encryption for all connections. However, data does tr
 </details>
 
 
-  
 <details>
 <summary>Can I switch from Cloud to Self-Hosted later?</summary>
 
@@ -101,7 +99,6 @@ Yes! You can migrate your configuration and settings.
 </details>
 
 
-  
 <details>
 <summary>What are the IP addresses to whitelist?</summary>
 
@@ -110,7 +107,6 @@ Contact [Forest Admin support](https://www.forestadmin.com/contact) to get the c
 </details>
 
 
-  
 <details>
 <summary>Can I use Cloud mode in production?</summary>
 

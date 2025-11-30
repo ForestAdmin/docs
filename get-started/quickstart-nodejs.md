@@ -28,20 +28,8 @@ This guide will help you to set up Forest Admin as a standalone process, using a
 - If you want to use our example database, make sure Docker is installed and running
 
 {{/nodejs}}
-{{#php}}
 
-- PHP ^8.0
-- Symfony ^5.4 / Laravel ^8.0
 
-{{/php}}
-{{#python}}
-
-- python >= 3.8
-- Flask[async] >= 2.0 # if using flask agent
-- SQLAlchemy >= 1.4 # if using SQLAlchemy datasource
-- Django >= 3.2 # if using Django agent or/and datasource
-
-{{/python}}
 {{#ruby}}
 
 - Ruby ^3.0
@@ -173,14 +161,7 @@ Click on the "eye" icons of the collections you want to display, then exit the l
 ![](../assets/quickstart-make-collection-visible.png)
 
 {{/nodejs}}
-{{#php}}
 
-## Add dependency to your PHP app
-
-- [Add dependency forestadmin/symfony-forestadmin to your symfony app](../getting-started/quick-start-symfony.md)
-- [Add dependency forestadmin/laravel-forestadmin to your laravel app](../getting-started/quick-start-laravel.md)
-
-{{/php}}
 {{#ruby}}
 
 ## Add dependency to your Ruby app
@@ -188,14 +169,7 @@ Click on the "eye" icons of the collections you want to display, then exit the l
 - [Add dependency forestadmin/forest_admin_rails to your rails app](../getting-started/quick-start-rails.md)
 
 {{/ruby}}
-{{#python}}
 
-## Add dependency to your python app
-
-- [Add dependency forestadmin-agent-flask to your Flask app](./quick-start-flask.md)
-- [Add dependency forestadmin-agent-django to your Django app](../getting-started/quick-start-django.md)
-
-{{/python}}
 
 You're all set!
 

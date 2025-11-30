@@ -37,7 +37,6 @@ Learn how to create custom data aggregations for advanced analytics and reportin
 4. **Platform-Specific Guides**
    - [Node.js](/product/process/for-tech-teams/aggregations/nodejs) ← PRIORITY 1
    - [Ruby](/product/process/for-tech-teams/aggregations/ruby) ← PRIORITY 2
-   - [Python](/product/process/for-tech-teams/aggregations/python) ← PRIORITY 3
 
 5. **Best Practices**
    - Performance optimization

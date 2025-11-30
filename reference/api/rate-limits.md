@@ -78,19 +78,6 @@ console.log(`Resets at: ${new Date(reset * 1000).toISOString()}`);
 
 **Python:**
 
-```python
-response = requests.get(
-    'https://api.forestadmin.com/api/v1/activity-logs',
-    headers={'Authorization': f'Bearer {token}'}
-)
-
-limit = response.headers.get('X-RateLimit-Limit')
-remaining = response.headers.get('X-RateLimit-Remaining')
-reset = response.headers.get('X-RateLimit-Reset')
-
-print(f'{remaining}/{limit} requests remaining')
-print(f'Resets at: {datetime.fromtimestamp(int(reset))}')
-```
 
 ## 429 Too Many Requests
 
@@ -235,49 +222,6 @@ for (const id of recordIds) {
 
 Implement a token bucket algorithm:
 
-```python
-import time
-from threading import Lock
-
-class TokenBucket:
-    def __init__(self, rate, capacity):
-        self.rate = rate  # tokens per second
-        self.capacity = capacity  # maximum tokens
-        self.tokens = capacity
-        self.last_update = time.time()
-        self.lock = Lock()
-
-    def consume(self, tokens=1):
-        with self.lock:
-            now = time.time()
-            elapsed = now - self.last_update
-
-            # Add tokens based on elapsed time
-            self.tokens = min(
-                self.capacity,
-                self.tokens + elapsed * self.rate
-            )
-            self.last_update = now
-
-            if self.tokens >= tokens:
-                self.tokens -= tokens
-                return True
-            return False
-
-    def wait_for_token(self):
-        while not self.consume():
-            time.sleep(0.1)
-
-# Usage (60 requests per minute)
-bucket = TokenBucket(rate=1, capacity=60)
-
-for record_id in record_ids:
-    bucket.wait_for_token()
-    response = requests.get(
-        f'https://api.forestadmin.com/api/v1/records/{record_id}',
-        headers={'Authorization': f'Bearer {token}'}
-    )
-```
 
 ## Best Practices
 
@@ -563,7 +507,6 @@ console.log('Stats:', client.getStats());
 ```
 
 ## Next Steps
-
 
 
   * [Authentication](/reference/api/authentication.md) - Learn about API authentication

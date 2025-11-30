@@ -40,13 +40,11 @@ Single Sign-On allows your team to authenticate using your organization's existi
 ### Supported Providers
 
 
-
   * [Google Workspace](/product/control/authentication/sso-google.md) - Configure SSO with Google Workspace for your organization
   * [Azure AD](/product/control/authentication/sso-azure.md) - Set up SSO with Microsoft Azure Active Directory
   * [Okta](/product/control/authentication/sso-okta.md) - Integrate Forest Admin with Okta identity provider
   * [AWS IAM](/product/control/authentication/sso-aws.md) - Configure SSO using AWS IAM Identity Center
   * [OneLogin](/product/control/authentication/sso-onelogin.md) - Set up SSO with OneLogin identity platform
-
 
 
 ### How SSO Works
@@ -77,11 +75,9 @@ Before configuring SCIM:
 ### Supported Providers
 
 
-
   * [Okta SCIM](/product/control/authentication/scim-okta.md) - Automatic user provisioning with Okta
   * [OneLogin SCIM](/product/control/authentication/scim-onelogin.md) - Automatic user provisioning with OneLogin
   * [Okta Manual Setup](/product/control/authentication/scim-okta-manual.md) - Manual SCIM configuration for Okta
-
 
 
 ### What SCIM Syncs

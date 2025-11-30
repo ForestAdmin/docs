@@ -10,8 +10,10 @@ However, you may want to create additional intra and cross data source relations
 
 ## Minimal example
 
+<details>
+<summary><strong>agent.customizeCollection('towns', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('towns', collection =>
   collection
     // Towns belong to 1 country
     .addManyToOneRelation('country', 'countries', { foreignKey: 'country_id' })
@@ -41,61 +43,12 @@ agent.customizeCollection('towns', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\SymfonyForestAdmin\Service\ForestAgent;
+</details>
 
-$forestAgent->customizeCollection(
-    'Town',
-    function (CollectionCustomizer $builder) {
-        $builder
-            // Towns belong to 1 country
-            ->addManyToOneRelation(
-                name: 'country',
-                foreignCollection: 'Country',
-                foreignKey: 'country_id'
-            )
-
-            // Towns have 1 mayor
-            ->addOneToOneRelation(
-                name: 'myMayor',
-                foreignCollection: 'Mayor',
-                originKey: 'town_id'
-            )
-
-            // Towns have multiple inhabitants
-            ->addOneToManyRelation(
-                name: 'inhabitants',
-                foreignCollection: 'Person',
-                originKey: 'town_id'
-            )
-
-            // Towns electricity is supplied by power-plants which are shared with other towns.
-            ->addManyToManyRelation(
-                name: 'energyProviders',
-                foreignCollection: 'PowerPlant',
-                throughCollection: 'UtilityContract',
-                originKey: 'town_id',
-                foreignKey: 'power_plant_id'
-            );
-
-            ->addExternalRelation(
-                'honoraryCitizen',
-                [
-                    'schema' => ['firstName' => 'String', 'lastName' => 'String'],
-                    'listRecords' => function ($record) {
-                        $client = new \GuzzleHttp\Client();
-                        $response = $client->get('https://api.example.com/user/' . $record['id']);
-                        return $response->getBody();
-                    }
-                ]
-            )
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('town') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('town') do |collection|
   collection
     # Towns belong to 1 country
     .add_many_to_one_relation('country', 'Country', { foreign_key: 'country_id' })
@@ -121,40 +74,6 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
+</details>
 
-agent.customize_collection("Town").add_many_to_one_relation(
-    # Towns belong to 1 country
-    name="country",
-    foreign_collection="Country",
-    foreign_key="country_id"
-).add_one_to_one_relation(
-    # Towns have 1 mayor
-    name="myMayor",
-    foreign_collection="Mayor",
-    origin_key="town_id"
-).add_one_to_many_relation(
-    # Towns have multiple inhabitants
-    name= 'inhabitants',
-    foreign_collection= 'Person',
-    origin_key= 'town_id'
-).add_many_to_many_relation(
-    # Towns electricity is supplied by power-plants which are shared with other towns
-    name="energyProviders",
-    foreign_collection="PowerPlant",
-    through_collection="UtilityContract",
-    origin_key="town_id",
-    foreign_key="power_plant_id"
-).add_external_relation(
-    "honoraryCitizen",
-    {
-        "schema": {
-            "firstName": "String",
-            "lastName": "String"
-        },
-        "list_records": lambda record, context: requests.get(
-            f"https://api.example.com/user/{record['id']}"
-        ).json(),
-    },
-)
-```
+

@@ -30,7 +30,6 @@ In the next pages, we'll cover each step in detail.
 ## Related pages
 
 
-
   * [Environments](/product/process/for-tech-teams/developer-workflow/environments.md) - Create and manage your environments
   * [Using Branches](/product/process/for-tech-teams/developer-workflow/using-branches.md) - Version control for your layouts
   * [Deploying Changes](/product/process/for-tech-teams/developer-workflow/deploying-your-changes.md) - Deploy your layout changes

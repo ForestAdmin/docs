@@ -23,7 +23,10 @@ Implementing this strategy requires completing three main phases:
 
 ### Minimal example
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 class MyCollection extends BaseCollection {
   constructor(dataSource) {
     super('myCollection', dataSource);
@@ -39,7 +42,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def initialize(datasource)
     super(datasource, 'MyCollection')
@@ -55,13 +63,18 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
+</details>
+
 ## Structure Declaration
 
 ### Columns
 
 Define fields with types, validation, and default values:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 
 class MovieCollection extends BaseCollection {
@@ -95,7 +108,12 @@ class MovieCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MovieCollection < ForestAdminDatasourceToolkit::Collection
   include ForestAdminDatasourceToolkit::Schema
 
@@ -130,6 +148,8 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
+</details>
+
 ### Typing
 
 The typing system for columns is the same as the one used when declaring fields in the agent customization step.
@@ -157,7 +177,10 @@ The validation API mirrors the condition tree structure but excludes a "field" e
 
 Data sources using the query translation strategy require careful implementation for relationships.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 
 class MovieCollection extends BaseCollection {
@@ -185,7 +208,12 @@ class MovieCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MovieCollection < ForestAdminDatasourceToolkit::Collection
   def initialize(datasource)
     super(datasource, 'Movie')
@@ -207,6 +235,8 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
+
+</details>
 
 ## Capabilities Declaration
 
@@ -252,7 +282,10 @@ To unlock GUI filtering:
 
 Enables pagination widget to display total page count. Requires implementing the `aggregate` method:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 class MyCollection extends BaseCollection {
   constructor() {
     this.enableCount();
@@ -260,7 +293,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def initialize
     # [...]
@@ -269,11 +307,12 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
-#### Search
+</details>
 
-Allows custom search implementation instead of default condition tree approach. Useful for full-text search (ElasticSearch, etc.):
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 class MyCollection extends BaseCollection {
   constructor() {
     this.enableSearch();
@@ -281,7 +320,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def initialize
     # [...]
@@ -290,11 +334,12 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
-#### Segments
+</details>
 
-Define segments at datasource level when condition trees are insufficient or segments are shared across projects:
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 class MyCollection extends BaseCollection {
   constructor() {
     this.addSegments(['Active records', 'Deleted records']);
@@ -303,7 +348,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def initialize
     # [...]
@@ -313,29 +363,40 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
+</details>
+
 ### Field-level capabilities
 
 #### Write support
 
 Mark fields as read-only:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 this.addField('id', {
   isReadOnly: true,
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 add_field('id', {
   is_read_only: true
 })
 ```
 
-#### Filtering operators
+</details>
 
-Declare supported operators per field:
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 this.addField('id', {
   filterOperators: new Set([
     'Equal',
@@ -344,27 +405,40 @@ this.addField('id', {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 add_field('id', {
   filter_operators: ['Equal']
 })
 ```
 
-#### Sort support
+</details>
 
-Flag sortable fields:
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 this.addField('id', {
   isSortable: true,
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 add_field('id', {
   is_sortable: true
 })
 ```
+
+</details>
 
 ## Read implementation
 
@@ -374,7 +448,10 @@ Emulation enables rapid development by allowing features to be tested in Node.js
 
 ### Basic list implementation
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 const axios = require('axios');
 
@@ -395,7 +472,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def list(caller, filter, projection)
     # Fetch all records on all requests (inefficient approach)
@@ -415,29 +497,36 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
-### Aggregate method
+</details>
 
-The `aggregate` method handles both record counting and chart data generation:
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 async aggregate(caller, filter, aggregation, limit) {
   const records = await this.list(caller, filter, aggregation.projection);
   return aggregation.apply(records, caller.timezone, limit);
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 def aggregate(caller, filter, aggregation, limit = nil)
   records = list(caller, filter, aggregation.projection)
   aggregation.apply(records, caller.timezone, limit)
 end
 ```
 
-### Optimization: count queries
+</details>
 
-Handle count operations separately if your API supports efficient counting:
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 async aggregate(caller, filter, aggregation, limit) {
   if (aggregation.operation === 'Count' && aggregation.groups.length === 0) {
     return [{ value: await this.count(caller, filter) }];
@@ -446,7 +535,12 @@ async aggregate(caller, filter, aggregation, limit) {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 def aggregate(caller, filter, aggregation, limit = nil)
   # Optimize count-only queries
   if aggregation.operation == 'Count' && aggregation.groups.empty? && !aggregation.field
@@ -456,13 +550,18 @@ def aggregate(caller, filter, aggregation, limit = nil)
 end
 ```
 
+</details>
+
 ## Write implementation
 
 Making your records editable is achieved by implementing the `create`, `update` and `delete` methods.
 
 **Important:** The three write methods accept filter parameters, but unlike the `list` method, pagination support is unnecessary.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 const axios = require('axios'); // client for the target API
 
@@ -502,7 +601,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   include ForestAdminDatasourceToolkit::Schema
 
@@ -535,6 +639,8 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
+</details>
+
 ### Method details
 
 - **create()**: Must return the newly created records with all fields populated
@@ -565,7 +671,10 @@ When a `many-to-one` relationship exists, the collection must accept references 
 
 #### Structure declaration example
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 class MovieCollection extends BaseCollection {
   constructor() {
     super('movies', null);
@@ -580,7 +689,12 @@ class MovieCollection extends BaseCollection {
 }
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 class MovieCollection < ForestAdminDatasourceToolkit::Collection
   def initialize(datasource)
     super(datasource, 'Movie')
@@ -594,11 +708,12 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
-#### Query example
+</details>
 
-The system can execute calls using both source and target collection fields:
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 await dataSource.getCollection('movies').list(
   caller,
   {
@@ -615,7 +730,12 @@ await dataSource.getCollection('movies').list(
 );
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 datasource.collection('Movie').list(
   caller,
   ForestAdminDatasourceToolkit::Components::Query::Filter.new(
@@ -643,6 +763,8 @@ datasource.collection('Movie').list(
   )
 )
 ```
+
+</details>
 
 #### Expected response structure
 

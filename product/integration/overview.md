@@ -9,7 +9,10 @@ The **Integration** layer is the foundation of Forest Admin. It determines what 
 
 Forest Admin loads data through **datasources** - connections to your databases, APIs, or any system that stores data. The agent introspects your datasources to automatically discover tables, collections, and their relationships.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const agent = createAgent(options);
 
 // Connect your primary database
@@ -24,7 +27,12 @@ agent.addDataSource(
 // - Creates collections for each table
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 agent = Forestadmin::Agent.new(options)
 
 # Connect your primary database
@@ -38,6 +46,8 @@ agent.add_datasource(
 # - Identifies relationships (foreign keys)
 # - Creates collections for each table
 ```
+
+</details>
 
 ### What gets loaded
 
@@ -65,7 +75,10 @@ Once introspection is complete, Forest Admin automatically:
 
 Connect multiple databases or APIs in the same agent:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 // Primary PostgreSQL database
 agent.addDataSource(
   createSqlDataSource('postgresql://localhost/main'),
@@ -79,7 +92,12 @@ agent.addDataSource(
 );
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 # Primary PostgreSQL database
 agent.add_datasource(
   Forestadmin::Datasource::ActiveRecord.new,
@@ -92,6 +110,8 @@ agent.add_datasource(
   name: 'analytics'
 )
 ```
+
+</details>
 
 {% hint style="warning" %}
 **Looking to enrich a single record?**

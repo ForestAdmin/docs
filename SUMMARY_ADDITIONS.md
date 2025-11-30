@@ -4,8 +4,6 @@
   * Framework-Specific Quickstarts
     * [Quickstart: Node.js](get-started/quickstart-nodejs.md)
     * [Quickstart: Ruby on Rails](get-started/quickstart-ruby.md)
-    * [Quickstart: Python/Django](get-started/quickstart-python.md)
-    * [Quickstart: Flask](get-started/quickstart-flask.md)
   * [How Forest Admin Works](get-started/how-it-works.md)
 
 ## À ajouter dans "Data Sources" (remplacer les lignes 27-40)
@@ -18,10 +16,6 @@
       * [MongoDB Datasource](product/integration/data-sources/provided/mongodb.md)
       * [ActiveRecord Datasource](product/integration/data-sources/provided/active-record.md)
       * [Mongoid Datasource](product/integration/data-sources/provided/mongoid.md)
-      * [Django Datasource](product/integration/data-sources/provided/django.md)
-      * [SQLAlchemy Datasource](product/integration/data-sources/provided/sqlalchemy.md)
-      * [Eloquent Datasource](product/integration/data-sources/provided/eloquent.md)
-      * [Doctrine Datasource](product/integration/data-sources/provided/doctrine.md)
     * Custom Datasources
       * [Custom Datasources Overview](product/integration/data-sources/custom/overview.md)
       * Translation Strategy

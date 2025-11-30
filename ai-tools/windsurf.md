@@ -22,7 +22,7 @@ Create `.windsurf/rules.md` in your project root:
 ## Project context
 
 - This is a documentation project on the GitBook platform
-- We use MDX files with YAML frontmatter  
+- We use MDX files with YAML frontmatter
 - Navigation is configured in `docs.json`
 - We follow technical writing best practices
 
@@ -52,7 +52,7 @@ description: "Concise description for SEO and navigation"
 
 - `<Note>` for helpful supplementary information
 - `<Warning>` for important cautions and breaking changes
-- `<Tip>` for best practices and expert advice  
+- `<Tip>` for best practices and expert advice
 - `<Info>` for neutral contextual information
 - `<Check>` for success confirmations
 
@@ -80,7 +80,7 @@ description: "Concise description for SEO and navigation"
 
 ## API documentation requirements
 
-- Document all parameters with `<ParamField>` 
+- Document all parameters with `<ParamField>`
 - Show response structure with ``
 - Include both success and error examples
 - Use `` for nested object properties

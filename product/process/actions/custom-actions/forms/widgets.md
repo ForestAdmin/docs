@@ -28,31 +28,6 @@ Field Widgets empower your [Actions Forms](./forms-static.md) providing various 
 
 {{/nodejs}}
 
-{{#python}}
-
-| Widget                                                | Supported types                                      | Minimal version | Description                                                       |
-| ----------------------------------------------------- | ---------------------------------------------------- | --------------- | ----------------------------------------------------------------- |
-| `null`                                                | All types                                            | `1.3.0`         | Use the default widget                                            |
-| [`AddressAutocomplete`](#address-autocomplete-widget) | `String`                                             | `1.3.0`         | Display a text input with address autocomplete.                   |
-| [`Checkbox`](#checkbox-widget)                        | `Boolean`                                            | `1.3.0`         | Display a checkbox with true/false and possibly null values.      |
-| [`CheckboxGroup`](#checkbox-group-widget)             | `StringList`, `NumberList`                           | `1.3.0`         | Display a group of checkboxes to select multiple values.          |
-| [`ColorPicker`](#color-picker-widget)                 | `String`                                             | `1.3.0`         | Display a color picker to select a color.                         |
-| [`CurrencyInput`](#currency-input-widget)             | `Number`                                             | `1.3.0`         | Display a currency input.                                         |
-| [`DatePicker`](#datepicker-widget)                    | `Date`, `Dateonly`, `String`                         | `1.3.0`         | Display a calendar date picker                                    |
-| [`Dropdown`](#dropdown-widget)                        | `Date`, `Dateonly`, `Number`, `String`, `StringList` | `1.3.0`         | Users can choose between a limited set of values.                 |
-| [`FilePicker`](#file-picker-widget)                   | `File`, `FileList`                                   | `1.3.0`         | Users can upload files.                                           |
-| [`JsonEditor`](#json-editor-widget)                   | `Json`                                               | `1.3.0`         | Display a Json editor with syntax highlighting.                   |
-| [`NumberInput`](#number-input-widget)                 | `Number`                                             | `1.3.0`         | Display a standard number input.                                  |
-| [`NumberInputList`](#number-input-list-widget)        | `NumberList`                                         | `1.3.0`         | Display a standard number input to enter a list of number values. |
-| [`RadioGroup`](#radio-group-widget)                   | `Date`, `Dateonly`, `Number`, `String`               | `1.3.0`         | Group of radio buttons to choose a value from.                    |
-| [`RichText`](#rich-text-widget)                       | `String`                                             | `1.3.0`         | Rich text area allowing to input formatted text.                  |
-| [`TextArea`](#text-area-widget)                       | `String`                                             | `1.3.0`         | Multi-line text area.                                             |
-| [`TextInput`](#text-input-widget)                     | `String`                                             | `1.3.0`         | One-line text input.                                              |
-| [`TextInputList`](#text-input-list-widget)            | `StringList`                                         | `1.3.0`         | One-line text input to enter a list of string values              |
-| [`TimePicker`](#time-picker-widget)                   | `Time`                                               | `1.3.0`         | Input for entering a time                                         |
-| [`UserDropdown`](#user-dropdown-widget)               | `String`, `StringList`                               | `1.3.0`         | Dropdown containing the users available in the current project    |
-
-{{/python}}
 
 {{#ruby}}
 
@@ -84,8 +59,10 @@ Field Widgets empower your [Actions Forms](./forms-static.md) providing various 
 
 The address autocomplete widget allows to input an address as a text value, autocompleted by the Google Maps API.
 
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('customer', collection => {
   collection.addAction('Update address', {
     scope: 'Single',
     form: [
@@ -103,23 +80,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
-```python
-agent.customize_collection('customer').add_action('Update address', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": 'Address',
-            "type": 'String',
-            "widget": 'AddressAutocomplete',
-            "placeholder": 'Type the address here',
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('customer') do |collection|
@@ -142,6 +108,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 
 ```
+
+</details>
 
 The above code will produce the following form (when empty):
 
@@ -167,18 +135,6 @@ And once the user starts typing:
 \*
 {{/nodejs}}
 
-{{#python}}
-
-| Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
-| --------------- | ------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------ |
-| `default_value` | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.        |
-| `description`   | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users. |
-| `is_read_only`  | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                        |
-| `is_required`   | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.              |
-| `label`         | string  | static value only                       | **required** | `*`             | Field's label.                                                     |
-| `placeholder`   | string  | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                |
-
-{{/python}}
 
 {{#ruby}}
 
@@ -197,8 +153,10 @@ And once the user starts typing:
 
 The checkbox widget allows to activate or deactivate a boolean value.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Refresh price', {
     scope: 'Single',
     form: [
@@ -217,24 +175,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Refresh price', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": 'Send a notification',
-            "type": 'Single',
-            "widget": 'Checkbox',
-            "is_required": True,
-            "default_value": False,
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -258,6 +204,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Checkbox widget on an action form](../../assets/action-forms-widget-checkbox.png)
@@ -277,17 +225,6 @@ The `Checkbox` widget has no specific options, but its behavior can be customize
 
 {{/nodejs}}
 
-{{#python}}
-
-| Option          | Type              | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                                                                                         |
-| --------------- | ----------------- | --------------------------------------- | ------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `default_value` | boolean or `None` | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Default value of the field. Define a value different from `None` in combination to `is_required` to receive a not-null value even if the user did not click the widget.                                                                                                             |
-| `description`   | string            | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users.                                                                                                                                                                                                                  |
-| `is_read_only`  | boolean           | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                                                                                                                                                                                                                                         |
-| `is_required`   | boolean           | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | If `is_required` is set to false (default value), the checkbox widget allows users to choose between 3 states: `True`, `False` and `Null`. Setting `is_required` to `True` only allows 2 states: `True` and `False`. In both cases the default value will be `None` if not defined. |
-| `label`         | string            | static value only                       | **required** | `*`             | Field's label.                                                                                                                                                                                                                                                                      |
-
-{{/python}}
 
 {{#ruby}}
 
@@ -305,13 +242,13 @@ The `Checkbox` widget has no specific options, but its behavior can be customize
 
 By default, the `Checkbox` widget allows 3 states:
 
-- {{#nodejs}}`null`{{/nodejs}}{{#python}}`None`{{/python}}{{#ruby}}`nil`{{/ruby}}
-- {{#nodejs,ruby}}`true`{{/nodejs,ruby}}{{#python}}`True`{{/python}}
-- {{#nodejs,ruby}}`false`{{/nodejs,ruby}}{{#python}}`False`{{/python}}
+- {{#nodejs}}`null`{{/nodejs}}{{#ruby}}`nil`{{/ruby}}
+- {{#nodejs,ruby}}`true`{{/nodejs,ruby}}
+- {{#nodejs,ruby}}`false`{{/nodejs,ruby}}
 
 To ensure having only 2 states, you need to:
 
-1. {{#nodejs}}set the `isRequired` option to `true`,{{/nodejs}}{{#python}}set the `is_required` option to `True`,{{/python}}{{#ruby}}set the `is_required` option to `true`,{{/ruby}}
+1. {{#nodejs}}set the `isRequired` option to `true`,{{/nodejs}}{{#ruby}}set the `is_required` option to `true`,{{/ruby}}
 2. define a value for the {{#nodejs}}`defaultValue`{{/nodejs}}{{#python,ruby}}`default_value`{{/python,ruby}} option.
 
 {% endhint %}
@@ -320,8 +257,10 @@ To ensure having only 2 states, you need to:
 
 The checkbox group widget allows to select multiple values from a list of options.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Leave a review', {
     scope: 'Single',
     form: [
@@ -343,27 +282,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Leave a review', {
-    "scope": 'Single',
-    "form": [
-        {
-            "label": "Why do you like this product?",
-            "type": "StringList",
-            "widget": "CheckboxGroup",
-            "options": [
-              { "value": "price", "label": "Good price" },
-              { "value": "quality", "label": "Build quality" },
-              { "value": "look", "label": "It looks good" },
-            ],
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -390,6 +314,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Checkbox group widget on an action form](../../assets/action-forms-widgets-checkbox-group.png)
@@ -408,18 +334,7 @@ The above code will produce the following form:
 | `options`      | An array of values, or array of value/label pairs. | [dynamic](./forms-dynamic.md) or static | **required** | `@forestadmin/agent@1.24.0` | List of available options in the component. Supported formats: <ul><li>`['Good', 'Very good']`</li><li>`[{value: 2, label: 'Good'}, {value: 3, label: 'Very good'}]`</li><li>`(context) => ['Good', 'Very good']`</li><li>`(context) => [{value: 2, label: 'Good'}, {value: 3, label: 'Very good'}]`</li></ul> |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type                                                  | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                                                                                                                                       |
-| --------------- | ----------------------------------------------------- | --------------------------------------- | ------------ | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `default_value` | StringList or NumberList                              | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.                                                                                                                                                                                                                                                                       |
-| `description`   | string                                                | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users.                                                                                                                                                                                                                                                                |
-| `is_read_only`  | boolean                                               | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                                                                                                                                                                                                                                                                                       |
-| `is_required`   | boolean                                               | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.                                                                                                                                                                                                                                                                             |
-| `label`         | string                                                | static value only                       | **required** | `*`             | Field's label.                                                                                                                                                                                                                                                                                                                    |
-| `options`       | An array of values, or an array of value/label pairs. | [dynamic](./forms-dynamic.md) or static | **required** | `1.3.0`         | List of available options in the component. Supported formats: <ul><li>`["Good", "Very good"]`</li><li>`[{"value": 2, "label": "Good"}, {"value": 3, "label": "Very good"}]`</li><li>`lambda context: ["Good", "Very good"]`</li><li>`(context) => [{"value": 2, "label": "Good"}, {"value": 3, "label": "Very good"}]`</li></ul> |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type                                                  | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                                                                                                                                                                    |
@@ -437,8 +352,10 @@ The above code will produce the following form:
 
 The color picker widget allows to select a color.
 
+<details>
+<summary><strong>organization.addAction('Customize UI', {</strong></summary>
+
 ```typescript
-organization.addAction('Customize UI', {
   scope: 'Single',
   form: [
     {
@@ -462,33 +379,12 @@ organization.addAction('Customize UI', {
 });
 ```
 
-```python
-agent.customize_collection('organization').add_action('Customize UI', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Background color",
-            "type": "String",
-            "widget": "ColorPicker",
-            "placeholder": "Select the color",
-            "is_required": True,
-            "enable_opacity": False,
-            "quickPalette": [
-                "#6002ee",
-                "#90ee02",
-                "#021aee",
-                "#d602ee",
-                "#ee0290",
-                "#ee6002",
-            ],
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('organization') do |collection|
@@ -522,6 +418,8 @@ end
 
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Color picker widget on an action form](../../assets/action-forms-widgets-color-picker.png)
@@ -543,20 +441,7 @@ The above code will produce the following form:
 
 {{/nodejs}}
 
-{{#python}}
 
-| Option           | Type     | Dynamic support                         | Usage        | Minimal version | Description                                                                                            |
-| ---------------- | -------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------------------------------------------ |
-| `default_value`  | string   | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.                                            |
-| `description`    | string   | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users.                                     |
-| `enable_opacity` | boolean  | static value only                       | _optional_   | `1.3.0`         | Allow users to select a color with an opacity.                                                         |
-| `is_read_only`   | boolean  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                                                            |
-| `is_required`    | boolean  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.                                                  |
-| `label`          | string   | static value only                       | **required** | `*`             | Field's label.                                                                                         |
-| `placeholder`    | string   | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                                                    |
-| `quick_palette`  | string[] | static value only                       | _optional_   | `1.3.0`         | List of colors to display in the quick palette. The list can be an array of hex colors or rgba colors. |
-
-{{/python}}
 {{#ruby}}
 
 | Option           | Type     | Dynamic support                         | Usage        | Minimal version | Description                                                                                            |
@@ -576,8 +461,10 @@ The above code will produce the following form:
 
 The currency input widget allows to input a currency value.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Change price', {
     scope: 'Single',
     form: [
@@ -601,29 +488,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Change price', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Price",
-            "type": "Number",
-            "widget": "CurrencyInput",
-            "placeholder": "Enter the new price",
-            "is_required": True,
-            "min": 0,
-            "max": 1000,
-            "step": 1,
-            "currency": 'USD',
-            "base": 'Unit',
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -652,6 +522,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Currency input widget on an action form](../../assets/action-forms-widget-currency-input.png)
@@ -675,23 +547,7 @@ The above code will produce the following form:
 | `step`         | number                           | [dynamic](./forms-dynamic.md) or static | _optional_   | `@forestadmin/agent@1.28.0` | Step between two values.                                                                                                                                                                                     |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type                             | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                  |
-| --------------- | -------------------------------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `currency`      | string                           | [dynamic](./forms-dynamic.md) or static | **required** | `1.3.0`         | Currency code to display in the component. Valid currency [ISO codes](https://en.wikipedia.org/wiki/ISO_4217) is required.                                                                                   |
-| `default_value` | number                           | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.                                                                                                                                                  |
-| `description`   | string                           | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users.                                                                                                                                           |
-| `base`          | `Unit` (default value) or `Cent` | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Base unit to use for the value. <dl><dt>unit</dt><dd>Value is expressed in the currency's base unit.</dd><dt>cent</dt><dd>Value is expressed as a hundredth of the base unit (typically in cents).</dd></dl> |
-| `is_read_only`  | boolean                          | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                                                                                                                                                                  |
-| `is_required`   | boolean                          | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.                                                                                                                                                        |
-| `label`         | string                           | static value only                       | **required** | `*`             | Field's label.                                                                                                                                                                                               |
-| `min`           | number                           | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Minimum value allowed.                                                                                                                                                                                       |
-| `max`           | number                           | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Maximum value allowed.                                                                                                                                                                                       |
-| `placeholder`   | string                           | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                                                                                                                                                          |
-| `step`          | number                           | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Step between two values.                                                                                                                                                                                     |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type                             | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                  |
@@ -714,8 +570,10 @@ The above code will produce the following form:
 
 The date picker widget allows to input a date in a form
 
+<details>
+<summary><strong>agent.customizeCollection('order', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('order', collection => {
   collection.addAction('Set shipping date', {
     scope: 'Single',
     form: [
@@ -736,27 +594,12 @@ agent.customizeCollection('order', collection => {
 });
 ```
 
-```python
-from datetime import datetime, timedelta
-agent.customize_collection('order').add_action('Set shipping date', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Shipping date",
-            "type": "Date",
-            "widget": "DatePicker",
-            "format": 'DD-MM-YYYY',
-            "min": datetime.now() - timedelta(days=10),
-            "max": datetime.now(),
-            "placeholder": "please indicate when you shipped the item",
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('order') do |collection|
@@ -782,6 +625,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form :
 
 ![Date input on an action form](../../assets/action-form-widgets-date-picker.png)
@@ -806,21 +651,6 @@ Note: using a `Dateonly` field type will hide the time section from the date pic
 
 {{/nodejs}}
 
-{{#python}}
-
-| Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                          |
-| --------------- | ------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `default_value` | Date    | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.                                                                                                                          |
-| `description`   | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users.                                                                                                                   |
-| `format`        | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | The date picker uses `moment.js` library under the hood. You can refer to [this documentation](https://momentjs.com/docs/#/displaying/format/) to specify your date display `format` |
-| `is_read_only`  | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                                                                                                                                          |
-| `is_required`   | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.                                                                                                                                |
-| `label`         | string  | static value only                       | **required** | `*`             | Field's label.                                                                                                                                                                       |
-| `min`           | Date    | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | The minimum date allowed to be set in the field                                                                                                                                      |
-| `max`           | Date    | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | The maximum date allowed to be set in the field                                                                                                                                      |
-| `placeholder`   | string  | static value only                       | _optional_   | `1.3.0`         | Text will be shown as placeholder if the field is empty                                                                                                                              |
-
-{{/python}}
 
 {{#ruby}}
 
@@ -852,8 +682,10 @@ const shippingDate = new Date(context.formValues['Shipping date']))
 
 The dropdown widget allows to select a value from a list of options.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Leave a review', {
     scope: 'Single',
     form: [
@@ -880,32 +712,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Leave a review', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Rating",
-            "type": "Number",
-            "widget": "Dropdown",
-            "options": [
-                { "value": 0, "label": "Poor" },
-                { "value": 1, "label": "Fair" },
-                { "value": 2, "label": "Good" },
-                { "value": 3, "label": "Very good" },
-                { "value": 4, "label": "Excellent" },
-            ],
-            "search": "disabled",
-            "placeholder": "Select a rating",
-            "is_required": True,
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -938,19 +750,23 @@ end
 
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Dropdown widget on an action form](../../assets/actions-forms-widget-dropdown.png)
 
 In this next example, we call a remote api to get a list of products and then perform a custom filter based on given fields of the json response, and return the first 25.
-This example uses {{#nodejs}}`search: 'dynamic'`{{/nodejs}}{{#python}}`"search": "dynamic"`{{/python}} dropdown widget, which provides you with the {{#nodejs}}`searchValue`{{/nodejs}}{{#python}}`search_value`{{/python}} in the callback context.
+This example uses {{#nodejs}}`search: 'dynamic'`{{/nodejs}} dropdown widget, which provides you with the {{#nodejs}}`searchValue`{{/nodejs}} in the callback context.
 
 {% hint style='info' %}
 Note: when a search is performed, only the field on which it is performed will have its options recomputed.
 {% endhint %}
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Add more products', {
     execute: async (context, resultBuilder) => {
       // ...
@@ -986,45 +802,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.action.context.base import (
-    ActionContext
-)
-import requests
+</details>
 
-def options_fn(context: ActionContext, search_value: str | None):
-    products = requests.get('https://api.fake-eshop.com/v2/products').json()
-    searched_products = []
-    for product in products:
-        if search_value is None:  # case of initialization
-            searched_products.append({ "label": product["name"], "value": product["id"] })
-            continue
-
-        for field in ['description', 'name', 'features', 'keyword', 'category']:
-            if search_value.lower() in product[field].lower():
-                searched_products.append({ "label": product["name"], "value": product["id"] })
-                break
-
-    return sorted(searched_products, key=lambda x: ["label"])[0:25]
-
-
-agent.customize_collection('product').add_action('Add more products', {
-    "scope": "Global",
-    "form": [
-        {
-            "label": "Select some products",
-            "type": "StringList",
-            "widget": "Dropdown",
-            "options": options_fn,
-            "search": "dynamic",
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -1062,6 +845,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 ### Options
 
 {{#nodejs}}
@@ -1078,20 +863,7 @@ end
 | `search`       | `static`, `dynamic` or `disabled`(default)           | static value only                       | _optional_   | `@forestadmin/agent@1.17.0`, `dynamic` available from `@forestadmin/agent@1.30.0` | Allow users to input text to filter values displayed in the dropdown. <br/> - `disabled`: Users need to scroll to find the appropriate option. <br/> - `static`: Users can search a value by typing terms in an input. The search will be done in <strong>the browser</strong>, based on the label.<br/> - `dynamic` The search is performed on the agent side, using any custom logic needed to fetch the required options |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type                                                 | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| --------------- | ---------------------------------------------------- | --------------------------------------- | ------------ | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `default_value` | Coherent with `Type`                                 | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.                                                                                                                                                                                                                                                                                                                                                                 |
-| `description`   | string                                               | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users.                                                                                                                                                                                                                                                                                                                                                          |
-| `is_read_only`  | boolean                                              | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `is_required`   | boolean                                              | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.                                                                                                                                                                                                                                                                                                                                                                       |
-| `label`         | string                                               | static value only                       | **required** | `*`             | Field's label.                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `options`       | An array of values, or an array of value/label pairs | [dynamic](./forms-dynamic.md) or static | **required** | `1.3.0`         | List of available options in the component. Supported formats: <ul><li>`["Good", "Very good"]`</li><li>`[{"value": 2, "label": "Good"}, {"value": 3, "label": "Very good"}]`</li></ul>                                                                                                                                                                                                                                      |
-| `placeholder`   | string                                               | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                                                                                                                                                                                                                                                                                                                                                                         |
-| `search`        | `static`, `dynamic` or `disabled`(default)           | static value only                       | _optional_   | `1.3.0`         | Allow users to input text to filter values displayed in the dropdown. <br/> - `disabled`: Users need to scroll to find the appropriate option. <br/> - `static`: Users can search a value by typing terms in an input. The search will be done in <strong>the browser</strong>, based on the label.<br/> - `dynamic` The search is performed on the agent side, using any custom logic needed to fetch the required options |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type                                                 | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                                                                                                                                                                                                                                 |
@@ -1111,8 +883,10 @@ end
 
 The file picker allows to upload files
 
+<details>
+<summary><strong>import { File } from '@forestadmin/datasource-toolkit';</strong></summary>
+
 ```typescript
-import { File } from '@forestadmin/datasource-toolkit';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -1187,72 +961,12 @@ export default async (collection: UserCustomizer) => {
 };
 ```
 
-```python
-import os
-from forestadmin.datasource_toolkit.interfaces.actions import File
-from forestadmin.datasource_toolkit.decorators.action.context.single import (
-    ActionContextSingle
-)
-from forestadmin.datasource_toolkit.decorators.action.result_builder import (
-    ResultBuilder
-)
+</details>
 
-def read_file(path: str):
-    with open(path, "rb") as fin:
-        return fin.read()
-
-def write_file(directory: str, file: File):
-    with open(os.path.join(directory, os.path.basename(file.name)), "wb") as fout:
-        fout.write(file.buffer)
-
-async def execute(context: ActionContextSingle, result_builder: ResultBuilder):
-  try:
-      username = await context.get_record(["username"])["username"]
-      user_directory = os.path.join(
-          __dirname,
-          'data',
-          'documents',
-          sanitize(username),
-      )
-      write_file(user_director, context.form_values["Avatar picture"])
-      for f in context.form_values["Identification"]:
-          write_file(user_director, f)
-      return result_builder.success("Profile updated")
-  except Exception as exc:
-      return result_builder.error(f"Upload failed with error: {exc}")
-
-
-agent.customize_collection('user').add_action('Update user identification details', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Avatar picture",
-            "type": "File",
-            "widget": "FilePicker",
-            "description": "Upload a profile picture or leave it to use the default one",
-            "extensions": ['png', 'jpg'],
-            "max_size_mb": 20,
-            "default_value": readFile(
-              os.path.join(__dirname, './data/avatars/default-avatar.png'),
-            ),
-        },
-        {
-            "label": "Identification",
-            "type": "FileList",
-            "widget": "FilePicker",
-            "description": "Upload up to 4 documents to identify the user",
-            "extensions": ["png", "jpg", "bmp", "pdf", "gif"],
-            "max_size_mb": 2,
-            "max_count": 4,
-            "is_required": True,
-        },
-    ],
-    "execute": execute
-})
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 def read_file(file_path)
@@ -1313,6 +1027,8 @@ end
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![File picker widget on an action form](../../assets/action-forms-widget-file-picker.png)
@@ -1333,20 +1049,7 @@ The above code will produce the following form:
 | `maxCount`     | number (positive integer) | [dynamic](./forms-dynamic.md) or static | _optional_   | `@forestadmin/agent@1.35.0` (only available if the field type is `FileList`) | The max number of files allowed to be uploaded. If not specified, any number of files is allowed                              |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type                      | Dynamic support                         | Usage        | Minimal version                                          | Description                                                                                                                   |
-| --------------- | ------------------------- | --------------------------------------- | ------------ | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `default_value` | File or File[]            | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`                                                      | Default value when displaying the field for the first time.                                                                   |
-| `description`   | string                    | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`                                                      | Description shown above the field, with additional help for users.                                                            |
-| `is_read_only`  | boolean                   | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`                                                      | Displays a read only field.                                                                                                   |
-| `is_required`   | boolean                   | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`                                                      | Requires the user to input a value before validating.                                                                         |
-| `label`         | string                    | static value only                       | **required** | `*`                                                      | Field's label.                                                                                                                |
-| `extensions`    | string[]                  | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`                                                  | The whitelist of file extensions allowed. If not specified, any file extension will be accepted                               |
-| `max_size_mb`   | number                    | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`                                                  | The max file size allowed to upload. Any file size is allowed if left empty. Make sure your server will be able to handle it. |
-| `max_count`     | number (positive integer) | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0` (only available if the field type is `FileList`) | The max number of files allowed to be uploaded. If not specified, any number of files is allowed                              |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type                      | Dynamic support                         | Usage        | Minimal version                                          | Description                                                                                                                   |
@@ -1366,8 +1069,10 @@ The above code will produce the following form:
 
 The JSON editor widget display a rich editor with syntax highlighting for JSON.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Set properties', {
     scope: 'Single',
     form: [
@@ -1385,23 +1090,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Set properties', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Properties",
-            "type": "Json",
-            "widget": "JsonEditor",
-            "default_value": {"color": "red"},
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -1424,6 +1118,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![JSON editor widget on an action form](../../assets/action-forms-widget-json-editor.png)
@@ -1436,8 +1132,10 @@ This widget does not have any options.
 
 The number input widget allows to input a number value.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Change price', {
     scope: 'Single',
     form: [
@@ -1459,27 +1157,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Change price', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Price",
-            "type": "Number",
-            "widget": "NumberInput",
-            "placeholder": "Enter the new price",
-            "isRequired": True,
-            "min": 0,
-            "max": 1000,
-            "step": 1,
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -1506,6 +1189,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Number input widget on an action form](../../assets/action-forms-widgets-number-input.png)
@@ -1527,21 +1212,7 @@ The above code will produce the following form:
 | `step`         | number  | [dynamic](./forms-dynamic.md) or static | _optional_   | `@forestadmin/agent@1.25.0` | Step between two values.                                           |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
-| --------------- | ------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------ |
-| `default_value` | number  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.        |
-| `description`   | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users. |
-| `is_read_only`  | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                        |
-| `is_required`   | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.              |
-| `label`         | string  | static value only                       | **required** | `*`             | Field's label.                                                     |
-| `min`           | number  | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Minimum value allowed.                                             |
-| `max`           | number  | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Maximum value allowed.                                             |
-| `placeholder`   | string  | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                |
-| `step`          | number  | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Step between two values.                                           |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
@@ -1562,8 +1233,10 @@ The above code will produce the following form:
 
 The number input list widget allows to input a list of number values.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Change step values', {
     scope: 'Single',
     form: [
@@ -1585,27 +1258,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Change step values', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Step values",
-            "type": "NumberList",
-            "widget": "NumberInputList",
-            "placeholder": "Enter the new step value",
-            "is_required": True,
-            "min": 0,
-            "max": 1000,
-            "step": 1,
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -1632,6 +1290,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form (once the user entered two step values):
 
 ![Number input list widget on an action form](../../assets/action-forms-widgets-number-input-list.png)
@@ -1656,24 +1316,7 @@ The above code will produce the following form (once the user entered two step v
 | `step`             | number   | [dynamic](./forms-dynamic.md) or static | _optional_   | `@forestadmin/agent@1.26.0` | Step between two values.                                           |
 
 {{/nodejs}}
-{{#python}}
 
-| Option               | Type     | Dynamic support                         | Usage        | Minimal version | Description                                                        |
-| -------------------- | -------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------ |
-| `allow_duplicates`   | boolean  | static value only                       | _optional_   | `1.3.0`         | Allow users to enter duplicate values.                             |
-| `allow_empty_values` | boolean  | static value only                       | _optional_   | `1.3.0`         | Allow users to enter empty values.                                 |
-| `default_value`      | number[] | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.        |
-| `description`        | string   | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users. |
-| `enable_reorder`     | boolean  | static value only                       | _optional_   | `1.3.0`         | Allow users to reorder values.                                     |
-| `is_read_only`       | boolean  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                        |
-| `is_required`        | boolean  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.              |
-| `label`              | string   | static value only                       | **required** | `*`             | Field's label.                                                     |
-| `min`                | number   | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Minimum value allowed.                                             |
-| `max`                | number   | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Maximum value allowed.                                             |
-| `placeholder`        | string   | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                |
-| `step`               | number   | [dynamic](./forms-dynamic.md) or static | _optional_   | `1.3.0`         | Step between two values.                                           |
-
-{{/python}}
 {{#ruby}}
 
 | Option               | Type     | Dynamic support                         | Usage        | Minimal version | Description                                                        |
@@ -1697,8 +1340,10 @@ The above code will produce the following form (once the user entered two step v
 
 The radio group widget allows to select a value from a list of options.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Leave a review', {
     scope: 'Single',
     form: [
@@ -1720,27 +1365,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Leave a review', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Appreciation",
-            "type": "Number",
-            "widget": "RadioGroup",
-            "options": [
-                { "value": 1, "label": "Good" },
-                { "value": 0, "label": "Average" },
-                { "value": -1, "label": "Bad" },
-            ],
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -1767,6 +1397,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Radio group widget on an action form](../../assets/action-forms-widget-radio-group.png)
@@ -1785,18 +1417,7 @@ The above code will produce the following form:
 | `options`      | An array of values, or an array of value/label pairs | [dynamic](./forms-dynamic.md) or static | **required** | `@forestadmin/agent@1.23.0` | List of available options in the component. Supported formats: <ul><li>`['Good', 'Very good']`</li><li>`[{value: 2, label: 'Good'}, {value: 3, label: 'Very good'}]`</li><li>`(context) => ['Good', 'Very good']`</li><li>`(context) => [{value: 2, label: 'Good'}, {value: 3, label: 'Very good'}]`</li></ul> |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type                                                 | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                                                                                                                                         |
-| --------------- | ---------------------------------------------------- | --------------------------------------- | ------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `default_value` | Coherent with `Type`                                 | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.                                                                                                                                                                                                                                                                         |
-| `description`   | string                                               | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users.                                                                                                                                                                                                                                                                  |
-| `is_read_only`  | boolean                                              | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                                                                                                                                                                                                                                                                                         |
-| `is_required`   | boolean                                              | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.                                                                                                                                                                                                                                                                               |
-| `label`         | string                                               | static value only                       | **required** | `*`             | Field's label.                                                                                                                                                                                                                                                                                                                      |
-| `options`       | An array of values, or an array of value/label pairs | [dynamic](./forms-dynamic.md) or static | **required** | `1.3.0`         | List of available options in the component. Supported formats: <ul><li>`["Good", "Very good"]`</li><li>`[{"value": 2, "label": "Good"}, {"value": 3, "label": "Very good"}]`</li><li>`lambda context: ["Good", "Very good"]`</li><li>`lambda context:[{"value": 2, "label": "Good"}, {"value": 3, "label": "Very good"}]`</li></ul> |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type                                                 | Dynamic support                         | Usage        | Minimal version | Description                                                                                                                                                                                                                                                                                                                                                    |
@@ -1818,8 +1439,10 @@ Using the `options` function, you can dynamically change the list of options bas
 
 The rich text widget allows to input a formatted text value.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Leave a review', {
     scope: 'Single',
     form: [
@@ -1838,24 +1461,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Leave a review', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Comment",
-            "type": "String",
-            "widget": "RichText",
-            "is_required": True,
-            "placeholder": "Type your comment here",
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -1879,6 +1490,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Rich text widget on an action form](../../assets/action-forms-widget-rich-text.png)
@@ -1897,18 +1510,7 @@ The above code will produce the following form:
 | `placeholder`  | string  | static value only                       | _optional_   | `@forestadmin/agent@1.22.0` | Placeholder shown in the component.                                |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
-| --------------- | ------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------ |
-| `default_value` | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.        |
-| `description`   | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users. |
-| `is_read_only`  | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                        |
-| `is_required`   | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.              |
-| `label`         | string  | static value only                       | **required** | `*`             | Field's label.                                                     |
-| `placeholder`   | string  | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
@@ -1926,8 +1528,10 @@ The above code will produce the following form:
 
 The text area widget allows to input a multiline string value.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Leave a review', {
     scope: 'Single',
     form: [
@@ -1947,24 +1551,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Leave a review', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Comment",
-            "type": "String",
-            "widget": "TextArea",
-            "is_required": True,
-            "placeholder": "Type your comment here...",
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -1989,6 +1581,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Text area widget on an action form](../../assets/action-forms-widget-text-area.png)
@@ -2008,19 +1602,7 @@ The above code will produce the following form:
 | `rows`         | number  |                                         | _optional_   | `@forestadmin/agent@1.21.0` | Widget's height expressed as a number of rows.                     |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
-| --------------- | ------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------ |
-| `default_value` | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.        |
-| `description`   | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users. |
-| `is_read_only`  | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                        |
-| `is_required`   | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.              |
-| `label`         | string  | static value only                       | **required** | `*`             | Field's label.                                                     |
-| `placeholder`   | string  |                                         | _optional_   | `1.3.0`         | Placeholder shown in the component.                                |
-| `rows`          | number  |                                         | _optional_   | `1.3.0`         | Widget's height expressed as a number of rows.                     |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
@@ -2039,8 +1621,10 @@ The above code will produce the following form:
 
 The text input widget allows to input a string value.
 
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('customer', collection => {
   collection.addAction('Send notification', {
     scope: 'Single',
     form: [
@@ -2058,23 +1642,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Send notification', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Message",
-            "type": "String",
-            "widget": "TextInput",
-            "placeholder": "Enter your message here",
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -2097,6 +1670,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form:
 
 ![Text input widget on an action form](../../assets/action-forms-widget-text-input.png)
@@ -2115,18 +1690,7 @@ The above code will produce the following form:
 | `placeholder`  | string  | static value only                       | _optional_   | `@forestadmin/agent@1.19.0` | Placeholder shown in the component.                                |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
-| --------------- | ------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------ |
-| `default_value` | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.        |
-| `description`   | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users. |
-| `is_read_only`  | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                        |
-| `is_required`   | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.              |
-| `label`         | string  | static value only                       | **required** | `*`             | Field's label.                                                     |
-| `placeholder`   | string  | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
@@ -2144,8 +1708,10 @@ The above code will produce the following form:
 
 The text input list widget allows to input a list of string values.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('product', collection => {
   collection.addAction('Add tags', {
     scope: 'Single',
     form: [
@@ -2167,27 +1733,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```python
-agent.customize_collection('product').add_action('Add tags', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Message",
-            "type": "StringList",
-            "widget": "TextInputList",
-            "is_required": True,
-            "placeholder": "Enter a tag",
-            "allow_duplicates": False,
-            "allow_empty_values": False,
-            "enable_reorder": False,
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('product') do |collection|
@@ -2214,6 +1765,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form (once the user entered two tags):
 
 ![Text input list widget on an action form](../../assets/action-forms-widget-text-input-list.png)
@@ -2235,21 +1788,7 @@ The above code will produce the following form (once the user entered two tags):
 | `placeholder`      | string   | static value only                       | _optional_   | `@forestadmin/agent@1.20.0` | Placeholder shown in the component.                                |
 
 {{/nodejs}}
-{{#python}}
 
-| Option               | Type     | Dynamic support                         | Usage        | Minimal version | Description                                                        |
-| -------------------- | -------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------ |
-| `allow_duplicates`   | boolean  | static value only                       | _optional_   | `@1.3.0`        | Allow users to enter duplicate values.                             |
-| `allow_empty_values` | boolean  | static value only                       | _optional_   | `@1.3.0`        | Allow users to enter empty values.                                 |
-| `enable_reorder`     | boolean  | static value only                       | _optional_   | `@1.3.0`        | Allow users to reorder values.                                     |
-| `default_value`      | string[] | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.        |
-| `description`        | string   | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users. |
-| `is_read_only`       | boolean  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                        |
-| `is_required`        | boolean  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.              |
-| `label`              | string   | static value only                       | **required** | `*`             | Field's label.                                                     |
-| `placeholder`        | string   | static value only                       | _optional_   | `@1.3.0`        | Placeholder shown in the component.                                |
-
-{{/python}}
 {{#ruby}}
 
 | Option               | Type     | Dynamic support                         | Usage        | Minimal version | Description                                                        |
@@ -2270,8 +1809,10 @@ The above code will produce the following form (once the user entered two tags):
 
 The time picker widget allows to select a time
 
+<details>
+<summary><strong>agent.customizeCollection('store', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('store', collection => {
   collection.addAction('set opening and closing time', {
     scope: 'Single',
     form: [
@@ -2293,27 +1834,12 @@ agent.customizeCollection('store', collection => {
 });
 ```
 
-```python
-agent.customize_collection('store').add_action('set opening and closing time', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Opening time",
-            "type": "Time",
-            "widget": "TimePicker",
-        },
-        {
-            "label": "Closing time",
-            "type": "Time",
-            "widget": "TimePicker",
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('store') do |collection|
@@ -2340,6 +1866,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form :
 
 ![Time widget on an action form](../../assets/action-forms-widget-time-picker.png)
@@ -2352,8 +1880,10 @@ time picker does not support additional options
 
 The user dropdown widget allows to input a user or list of users from the project
 
+<details>
+<summary><strong>agent.customizeCollection('Ticket', collection => {</strong></summary>
+
 ```typescript
-agent.customizeCollection('Ticket', collection => {
   collection.addAction('Assign to the record', {
     scope: 'Single',
     form: [
@@ -2377,29 +1907,12 @@ agent.customizeCollection('Ticket', collection => {
 });
 ```
 
-```python
-agent.customize_collection('Ticket').add_action('Assign to the record', {
-    "scope": "Single",
-    "form": [
-        {
-            "label": "Manager",
-            "type": "String",
-            "widget": "UserDropdown",
-            "placeholder": "Select the manager in charge",
-        },
-        {
-            "label": "Operators",
-            "type": "StringList",
-            "widget": "UserDropdown",
-            "placeholder": "Select operators for this record",
-        },
-    ],
-    "execute": lambda context, result_builder: pass,  # perform work here
-})
-```
+</details>
+
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
 @create_agent.customize_collection('Ticket') do |collection|
@@ -2428,6 +1941,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 end
 ```
 
+</details>
+
 The above code will produce the following form (once the user has selected some users)
 
 ![Dropdown widget on an action form](../../assets/action-forms-widget-user-dropdown.png)
@@ -2446,18 +1961,7 @@ The above code will produce the following form (once the user has selected some 
 | `placeholder`  | string  | static value only                       | _optional_   | `@forestadmin/agent@1.33.0` | Placeholder shown in the component.                                |
 
 {{/nodejs}}
-{{#python}}
 
-| Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |
-| --------------- | ------- | --------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------ |
-| `default_value` | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Default value when displaying the field for the first time.        |
-| `description`   | string  | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Description shown above the field, with additional help for users. |
-| `is_read_only`  | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Displays a read only field.                                        |
-| `is_required`   | boolean | [dynamic](./forms-dynamic.md) or static | _optional_   | `*`             | Requires the user to input a value before validating.              |
-| `label`         | string  | static value only                       | **required** | `*`             | Field's label.                                                     |
-| `placeholder`   | string  | static value only                       | _optional_   | `1.3.0`         | Placeholder shown in the component.                                |
-
-{{/python}}
 {{#ruby}}
 
 | Option          | Type    | Dynamic support                         | Usage        | Minimal version | Description                                                        |

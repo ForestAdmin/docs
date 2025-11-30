@@ -22,9 +22,7 @@ In this module, you'll learn how to handle advanced use cases, including NoSQL d
 ## Topics Covered
 
 
-
   * [Coming Soon](#) - Content is being migrated
-
 
 
 ## Prerequisites

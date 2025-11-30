@@ -28,7 +28,10 @@ If this fails, check your firewall rules, proxy settings, or network security gr
 
 The `FOREST_ENV_SECRET` environment variable must match the secret provided in your Forest Admin project settings. A mismatch will prevent authentication.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 // Check your agent initialization
 createAgent({
   authSecret: process.env.FOREST_AUTH_SECRET,
@@ -37,7 +40,12 @@ createAgent({
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 # Check your agent initialization
 ForestAdminAgent::Agent.new do |config|
   config.auth_secret = ENV['FOREST_AUTH_SECRET']
@@ -45,6 +53,8 @@ ForestAdminAgent::Agent.new do |config|
   # ...
 end
 ```
+
+</details>
 
 ### Review agent logs
 
@@ -162,7 +172,10 @@ Your session token will be refreshed automatically.
 
 The agent automatically detects schema changes, but you can force a refresh:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 // Add this temporarily to force schema regeneration
 createAgent({
   // ... your config
@@ -173,10 +186,17 @@ createAgent({
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 # Schema is auto-detected on startup
 # Restart your agent to force refresh
 ```
+
+</details>
 
 Then restart your agent:
 
@@ -253,8 +273,10 @@ Ensure your agent URL is correctly configured in Forest Admin project settings:
 
 If your database requires SSL but has a self-signed certificate:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
 
+```javascript
 createSqlDataSource({
   uri: 'postgresql://user:pass@host:5432/db',
   sslMode: 'require',
@@ -263,7 +285,12 @@ createSqlDataSource({
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 # In your database.yml or connection configuration
 production:
   adapter: postgresql
@@ -272,6 +299,8 @@ production:
   # For self-signed certificates (not recommended for production)
   sslrootcert: /path/to/ca-certificate.crt
 ```
+
+</details>
 
 {% hint style="warning" %}
 Disabling certificate verification (`rejectUnauthorized: false`) is not recommended for production. Use proper SSL certificates whenever possible.

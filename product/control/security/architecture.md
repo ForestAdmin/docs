@@ -145,7 +145,10 @@ Both tokens are JSON Web Tokens (JWT) containing user context:
 - Dynamic filtering based on user context
 - Integration with your internal systems
 
-```javascript Node.js - Access user context
+<details>
+<summary><strong>Node.js - Access user context</strong></summary>
+
+```javascript
 agent.customizeCollection('orders', collection => {
   collection.addHook('Before', 'List', async (context) => {
     const { email, role } = context.caller;
@@ -158,7 +161,12 @@ agent.customizeCollection('orders', collection => {
 });
 ```
 
-```ruby Ruby - Access user context
+</details>
+
+<details>
+<summary><strong>Ruby - Access user context</strong></summary>
+
+```ruby
 collection.add_hook(:Before, :List) do |context|
   email = context.caller.email
   role = context.caller.role
@@ -170,16 +178,8 @@ collection.add_hook(:Before, :List) do |context|
 end
 ```
 
-```python Python - Access user context
-@collection.add_hook('Before', 'List')
-def filter_by_user(context):
-    email = context.caller.email
-    role = context.caller.role
+</details>
 
-    # Custom logic based on user context
-    if role != 'admin':
-        context.filter = {'user_email': email}
-```
 
 ### IP Whitelisting
 

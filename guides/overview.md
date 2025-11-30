@@ -5,12 +5,10 @@ description: Step-by-step guides for deployment, migration, integrations, and be
 Practical guides to help you deploy, migrate, integrate, and optimize your Forest Admin implementation.
 
 
-
   * [Deployment](/guides/deployment/overview.md) - Deploy Forest Admin to production on AWS, Heroku, and other platforms
   * [Migration](/guides/migration/overview.md) - Migrate from v1 to the latest version of Forest Admin
   * [Best Practices](/guides/best-practices/performance.md) - Learn security, performance, and troubleshooting best practices
   * [Integrations](/guides/integrations/overview.md) - Integrate with Stripe, payment providers, and third-party services
-
 
 
 ## Deployment Guides
@@ -28,7 +26,6 @@ Learn how to deploy Forest Admin on various platforms:
 </details>
 
 
-  
 <details>
 <summary>Environment Management</summary>
 
@@ -72,7 +69,6 @@ Complete migration path from Forest Admin v1 to the latest version:
 </details>
 
 
-  
 <details>
 <summary>Security Best Practices</summary>
 
@@ -86,7 +82,6 @@ Complete migration path from Forest Admin v1 to the latest version:
 </details>
 
 
-  
 <details>
 <summary>Troubleshooting</summary>
 
@@ -114,7 +109,6 @@ Complete migration path from Forest Admin v1 to the latest version:
 </details>
 
 
-  
 <details>
 <summary>Data Sync & ETL</summary>
 

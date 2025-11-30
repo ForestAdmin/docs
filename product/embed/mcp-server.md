@@ -96,10 +96,8 @@ Only provide MCP server access to trusted AI tools and users. The server can per
 ## Related Features
 
 
-
   * [MCP Integration](/product/integration/integrations/mcp-servers.md) - Configure MCP servers in Forest Admin
   * [AI Assist](/product/embed/assist.md) - Learn about Forest Admin's built-in AI features
-
 
 
 ## Learn More

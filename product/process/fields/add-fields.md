@@ -23,7 +23,10 @@ When creating a new field you will need to provide:
 
 This example adds a `user.displayName` field, which is computed by concatenating the first and last names.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 // "user" Collection has the following structure: { id, firstName, lastName }
 agent.customizeCollection('user', collection => {
   collection.addField('displayName', {
@@ -43,7 +46,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
 # User Collection has the following structure: { id, firstName, lastName }
@@ -64,11 +72,12 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
 end
 ```
 
-### Adding a field that depends on another computed field
+</details>
 
-This example adds a `user.displayName` field, which is computed by concatenating the first and last names, and then another which capitalize it.
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 // "user" Collection has the following structure: { id, firstName, lastName }
 agent.customizeCollection('user', collection => {
   collection
@@ -89,7 +98,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
 # User Collection has the following structure: { id, firstName, lastName }
@@ -117,11 +131,12 @@ end
 
 ```
 
-### Adding a field that depends on a many-to-one relationship
+</details>
 
-We can improve the previous example by adding the city of the user to the display name.
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 // Structure:
 // User    { id, addressId, firstName, lastName }
 // Address { id, city }
@@ -141,7 +156,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
 # Structure:
@@ -162,11 +182,12 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
 end
 ```
 
-### Adding a field that depends on a one-to-many relationship
+</details>
 
-Let's now add a `user.totalSpending` field by summing the amount of all `orders`.
+<details>
+<summary><strong>Node.js</strong></summary>
 
-```javascript Node.js
+```javascript
 // Structure
 // User  { id }
 // Order { id, customer_id, amount }
@@ -201,7 +222,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
@@ -233,6 +259,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
+</details>
+
 ### Adding a field fetching data from an API
 
 Let's imagine that we want to check if the email address of our users is deliverable.
@@ -255,7 +283,10 @@ The API we're using is fictional, and the structure of the response is:
 }
 ```
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const emailVerificationClient = require('@sendchimplio/client');
 emailVerificationClient.setApiKey(process.env.SENDCHIMPLIO_API_KEY);
 
@@ -280,7 +311,12 @@ agent.customizeCollection('user', collection => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
@@ -310,6 +346,8 @@ client.api_key = 'MY_FAKE_API_KEY'
   )
 end
 ```
+
+</details>
 
 ## Performance
 

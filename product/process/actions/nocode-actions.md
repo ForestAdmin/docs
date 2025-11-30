@@ -23,31 +23,38 @@ No-code actions support two main behaviors.
 
 No-code actions work seamlessly with popular automation platforms:
 
-<Tabs>
-  <Tab title="Make">
-    1. Create a webhook in Make
-    2. Copy the webhook URL
-    3. In Forest Admin, create an action with "Call an API"
-    4. Paste the webhook URL
-    5. Make receives the payload and continues your workflow
-  </Tab>
+<details>
+<summary><strong>Make</strong></summary>
 
-  <Tab title="n8n">
-    1. Create a webhook node in n8n
-    2. Copy the webhook URL
-    3. In Forest Admin, create an action with "Call an API"
-    4. Paste the webhook URL
-    5. n8n processes the data through your workflow
-  </Tab>
+1. Create a webhook in Make
+2. Copy the webhook URL
+3. In Forest Admin, create an action with "Call an API"
+4. Paste the webhook URL
+5. Make receives the payload and continues your workflow
 
-  <Tab title="Zapier">
-    1. Create a "Webhooks by Zapier" trigger
-    2. Copy the webhook URL
-    3. In Forest Admin, create an action with "Call an API"
-    4. Paste the webhook URL
-    5. Zapier triggers your Zap
-  </Tab>
-</Tabs>
+</details>
+
+<details>
+<summary><strong>n8n</strong></summary>
+
+1. Create a webhook node in n8n
+2. Copy the webhook URL
+3. In Forest Admin, create an action with "Call an API"
+4. Paste the webhook URL
+5. n8n processes the data through your workflow
+
+</details>
+
+<details>
+<summary><strong>Zapier</strong></summary>
+
+1. Create a "Webhooks by Zapier" trigger
+2. Copy the webhook URL
+3. In Forest Admin, create an action with "Call an API"
+4. Paste the webhook URL
+5. Zapier triggers your Zap
+
+</details>
 
 ## Creating an action
 

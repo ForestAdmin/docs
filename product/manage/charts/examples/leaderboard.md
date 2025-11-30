@@ -2,8 +2,10 @@
 
 Leaderboard Charts display a list of records sorted by their value in descending order.
 
+<details>
+<summary><strong>agent.addChart('companiesLive', async (context, resultBuilder) => {</strong></summary>
+
 ```javascript
-agent.addChart('companiesLive', async (context, resultBuilder) => {
   // [...]
 
   return resultBuilder.leaderboard({
@@ -16,26 +18,12 @@ agent.addChart('companiesLive', async (context, resultBuilder) => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Context\AgentCustomizationContext;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Chart\ResultBuilder;
+</details>
 
-$forestAgent->addChart(
-    'companiesLive',
-    fn(AgentCustomizationContext $context, ResultBuilder $resultBuilder) => $resultBuilder->leaderboard(
-        [
-            'Bonanza'   => 5835694,
-            'TalkSpace' => 4179218,
-            'Tesco'     => 3959931,
-            'BitPesa'   => 3856685,
-            'Octiv'     => 3747458,
-        ]
-    )
-);
-```
+<details>
+<summary><strong>@create_agent.add_chart('companiesLive') do |_context, result_builder|</strong></summary>
 
 ```ruby
-@create_agent.add_chart('companiesLive') do |_context, result_builder|
   result_builder.leaderboard({
     Bonanza: 5835694,
     TalkSpace: 4179218,
@@ -46,21 +34,6 @@ $forestAgent->addChart(
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.context.agent_context import AgentCustomizationContext
-from forestadmin.datasource_toolkit.decorators.chart.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.chart import Chart
+</details>
 
-async def companies_live_chart_fn(
-    context: AgentCustomizationContext, result_builder: ResultBuilder
-) -> Chart:
-    return result_builder.leaderboard({
-        "Bonanza": 5835694,
-        "TalkSpace": 4179218,
-        "Tesco": 3959931,
-        "BitPesa": 3856685,
-        "Octiv": 3747458,
-    })
 
-agent.add_chart("companiesLive", companies_live_chart_fn)
-```

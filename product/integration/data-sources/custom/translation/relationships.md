@@ -12,8 +12,10 @@ On the other hand, `many-to-one` and `one-to-one` relationships require the impl
 
 If a structure declaration contains the following statement
 
+<details>
+<summary><strong>class MovieCollection extends BaseCollection {</strong></summary>
+
 ```javascript
-class MovieCollection extends BaseCollection {
   constructor() {
     super('movies', null);
 
@@ -29,46 +31,12 @@ class MovieCollection extends BaseCollection {
 }
 ```
 
-```python
-from forestadmin.datasource_toolkit.collections import Collection
+</details>
 
-class MyCollection(Collection):
-    def __init__(self, datasource):
-        super().__init__("movies", datasource)
-
-        #  [...]
-
-        self.add_field("director", {
-            "type": "ManyToOne",
-            "foreign_collection": "people",
-            "foreign_key": "directorId",
-            "foreign_key_target": "id",
-        })
-```
-
-```php
-class MyCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        parent::__construct(
-            $datasource,
-            'Movie'
-        );
-
-        // [...]
-
-        $this->addField('director', new ManyToOneSchema(
-            foreignKey: 'directorId',
-            foreignKeyTarget: 'id',
-            foreignCollection: 'People'
-        ));
-    }
-}
-```
+<details>
+<summary><strong>module App</strong></summary>
 
 ```ruby
-module App
   module Collections
     class Movie < ForestAdminDatasourceToolkit::Collection
       include ForestAdminDatasourceToolkit::Schema
@@ -91,10 +59,12 @@ end
 
 ```
 
-Then the collection must accept references to fields from the `people` collection under the `director` prefix in all method parameters.
+</details>
+
+<details>
+<summary><strong>// The following call is using both fields from the "movies" and "people" collection</strong></summary>
 
 ```javascript
-// The following call is using both fields from the "movies" and "people" collection
 await dataSource.getCollection('movies').list(
   caller,
   {
@@ -111,70 +81,12 @@ await dataSource.getCollection('movies').list(
 );
 ```
 
-```python
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.branch import ConditionTreeBranch
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.leaf import ConditionTreeLeaf
-from forestadmin.datasource_toolkit.interfaces.query.filter.paginated import PaginatedFilter
-from forestadmin.datasource_toolkit.interfaces.query.projections import Projection
+</details>
 
-# The following call is using both fields from the "movies" and "people" collection
-await datasource.get_collection("movies").list(
-    caller,
-    PaginatedFilter(
-        {
-            "condition_tree": ConditionTreeBranch(
-                aggregator="and",
-                conditions=[
-                    ConditionTreeLeaf(field="title", operator="Equal", value="E.T."),
-                    ConditionTreeLeaf("director:firstName", "Equal", "Steven"),
-                ],
-            ),
-            "sort": [{"field": "director:birthDate", "ascending": True}],
-        }
-    ),
-    Projection("id", "title", "director:firstName", "director:lastName"),
-)
-```
-
-```php
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Caller;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Nodes\ConditionTreeBranch;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Nodes\ConditionTreeLeaf;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Filters\PaginatedFilter;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Sort;
-
-$dataSource->getCollection('Movie')->list(
-    $caller,
-    new PaginatedFilter(
-        conditionTree: new ConditionTreeBranch(
-            aggregator: 'and',
-            conditions: [
-                new ConditionTreeLeaf(
-                    field: 'title',
-                    operator: 'Equal',
-                    value: 'E.T.'
-                ),
-                new ConditionTreeLeaf(
-                    field: 'director:firstName',
-                    operator: 'Equal',
-                    value: 'Steven'
-                ),
-            ],
-        ),
-        sort: new Sort(
-            [
-               [
-                  'field'     => 'director:birthDate',
-                  'ascending' => true,
-               ],
-            ]
-        )
-    )
-);
-```
+<details>
+<summary><strong>datasource.collection('Movie').list(</strong></summary>
 
 ```ruby
-datasource.collection('Movie').list(
   caller,
   ForestAdminDatasourceToolkit::Components::Query::Filter.new(
     condition_tree: ForestAdminDatasourceToolkit::Components::Query::ConditionTree::ConditionTreeBranch.new(
@@ -203,6 +115,8 @@ datasource.collection('Movie').list(
   )
 )
 ```
+
+</details>
 
 should return
 

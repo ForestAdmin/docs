@@ -84,7 +84,7 @@ const agent = createAgent(options).addDataSource(
 
 ## Data Navigation
 
-When customizing your agent, you will need to navigate through your data efficiently.  
+When customizing your agent, you will need to navigate through your data efficiently.
 This section explains how to structure paths based on different field types.
 
 ### Separator Behavior

@@ -16,12 +16,10 @@ This separation requires specific tools and workflows to manage both effectively
 ## Development Workflow
 
 
-
   * [Development Workflow](/product/process/for-tech-teams/developer-workflow/development-workflow.md) - Understand the complete development workflow with Forest Admin
   * [Environments](/product/process/for-tech-teams/developer-workflow/environments.md) - Create and manage Development, Production, and Remote environments
   * [Using Branches](/product/process/for-tech-teams/developer-workflow/using-branches.md) - Version control for your Forest Admin layouts
   * [Deploying Changes](/product/process/for-tech-teams/developer-workflow/deploying-your-changes.md) - Deploy your layout changes to Remote and Production
-
 
 
 ## Key Concepts
@@ -60,15 +58,12 @@ A **layout** is the complete UI configuration including:
 ## CLI Commands
 
 
-
   * [forest branch](/product/reference/cli/branch.md) - Create a new branch
   * [forest deploy](/product/reference/cli/deploy.md) - Deploy to production
   * [forest push](/product/reference/cli/push.md) - Push to remote environment
 
 
-
 ## Related Topics
-
 
 
   * [Schema Updates](/product/process/for-tech-teams/developer-workflow/schema-updates.md) - Learn how to update your data schema

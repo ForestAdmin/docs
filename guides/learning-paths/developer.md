@@ -21,9 +21,7 @@ In this module, you'll learn how to customize the Forest Admin agent to match yo
 ## Topics Covered
 
 
-
   * [Coming Soon](#) - Content is being migrated
-
 
 
 ## Prerequisites

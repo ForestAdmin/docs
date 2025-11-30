@@ -2,67 +2,34 @@
 Each Plugin is nothing more than an `async function` that can perform customizations at either Agent level, Collection level, or both.
 {{/nodejs}}
 
-{{#php}}
-Each Plugin is nothing more than a `class` that implements our `Plugin interface` and can perform customizations at either Agent level, Collection level, or both.
-{{/php}}
 
 {{#ruby}}
 Each Plugin is nothing more than a `class` that implements our `Plugin abstract class` and can perform customizations at either Agent level, Collection level, or both.
 {{/ruby}}
 
-{{#python}}
-Each Plugin is nothing more than a `class` that implements our `Plugin interface` with an `async method` and can perform customizations at either Agent level, Collection level, or both.
-{{/python}}
+
+<details>
+<summary><strong>export async function removeTimestamps(dataSource, collection, options) {</strong></summary>
 
 ```javascript
-export async function removeTimestamps(dataSource, collection, options) {
   // ... call customization methods here
 }
 ```
 
-```php
-<?php
+</details>
 
-namespace ...;
-
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\DatasourceCustomizer;
-
-class RemoveTimestamps implements Plugin
-{
-    public function run(DatasourceCustomizer $datasourceCustomizer, ?CollectionCustomizer $collectionCustomizer = null, $options = []): void
-    {
-       // ... call customization methods here
-    }
-}
-```
+<details>
+<summary><strong>class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin</strong></summary>
 
 ```ruby
-class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
   def run(datasource, collection, options)
     # ... call customization methods here
   end
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.plugins.plugin import Plugin
-# from forestadmin.datasource_toolkit.datasource_customizer.collection_customizer import (
-#     CollectionCustomizer
-# )
-# from forestadmin.datasource_toolkit.datasource_customizer.datasource_customizer import (
-#     DatasourceCustomizer
-# )
+</details>
 
-class RemoveTimestamps(Plugin):
-    async def run(
-        self,
-        datasource_customizer: "DatasourceCustomizer",  # noqa: F821
-        collection_customizer: Optional["CollectionCustomizer"] = None,  # noqa: F821
-        options: Optional[Dict] = {},
-    ):
-        # ... call customization methods here
-```
 
 3 parameters are provided:
 
@@ -73,13 +40,7 @@ class RemoveTimestamps(Plugin):
 | collection<br>([API Reference](https://forestadmin.github.io/agent-nodejs/classes/_forestadmin_datasource_customizer.CollectionCustomizer.html)) | An object that allows customizing the collection that the Plugin was called from (`null` if the Plugin was called on the Agent). It is the same object than is passed when you call `customizeCollection` |
 | options | Options that are provided to the Plugin. There is no set structure for this parameter, as each Plugin will provide specific mandatory or optional options. |
 {{/nodejs}}
-{{#php}}
-| Name | Description |
-| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| dataSource | An object that allows customizing the whole agent. It has the same interface than the `Agent` you manipulate outside of Plugins |
-| collection | An object that allows customizing the collection that the Plugin was called from (`null` if the Plugin was called on the Agent). It is the same object than is passed when you call `customizeCollection` |
-| options | An array of options that are provided to the Plugin. Each Plugin will provide specific mandatory or optional options.
-{{/php}}
+
 {{#ruby}}
 | Name | Description |
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -87,13 +48,7 @@ class RemoveTimestamps(Plugin):
 | collection | An object that allows customizing the collection that the Plugin was called from (`nil` if the Plugin was called on the Agent). It is the same object than is passed when you call `customize_collection` |
 | options | An array of options that are provided to the Plugin. Each Plugin will provide specific mandatory or optional options.
 {{/ruby}}
-{{#python}}
-| Name | Description |
-| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| datasource_customizer | An object that allows customizing the whole agent. It has the same interface than the `Agent` you manipulate outside of Plugins |
-| collection_customizer | An object that allows customizing the collection that the Plugin was called from (`None` if the Plugin was called on the Agent). It is the same object than is passed when you call `customize_collection` |
-| options | An dictionary of options that are provided to the Plugin. Each Plugin will provide specific mandatory or optional options.
-{{/python}}
+
 
 ## Making your Plugin act differently depending on the Collection
 
@@ -108,8 +63,10 @@ Relevant documentation:
 
 {{/nodejs}}
 
+<details>
+<summary><strong>export async function removeTimestamps(dataSource, collection, options) {</strong></summary>
+
 ```javascript
-export async function removeTimestamps(dataSource, collection, options) {
   for (const currentCollection of dataSource.collections) {
     if (currentCollection.schema.fields.createdAt) {
       currentCollection.removeField('createdAt');
@@ -122,33 +79,12 @@ export async function removeTimestamps(dataSource, collection, options) {
 }
 ```
 
-```php
-<?php
+</details>
 
-namespace ...;
-
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\DatasourceCustomizer;
-
-class RemoveTimestamps implements Plugin
-{
-    public function run(DatasourceCustomizer $datasourceCustomizer, ?CollectionCustomizer $collectionCustomizer = null, $options = []): void
-    {
-        foreach ($datasourceCustomizer->getCollection() as $currentCollection) {
-            if ($currentCollection->getFields()['createdAt']) {
-                $currentCollection->removeField('createdAt');
-            }
-
-            if ($currentCollection->getFields()['updatedAt']) {
-                $currentCollection->removeField('updatedAt');
-            }
-        }
-    }
-}
-```
+<details>
+<summary><strong>class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin</strong></summary>
 
 ```ruby
-class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
   def run(datasource, _collection, _options)
     datasource.collections.each do |current_collection|
       if current_collection.schema[:fields]['createdAt']
@@ -163,22 +99,6 @@ class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.plugins.plugin import Plugin
+</details>
 
 
-class RemoveTimestamps(Plugin):
-    async def run(
-        self,
-        datasource_customizer: "DatasourceCustomizer",  # noqa: F821
-        collection_customizer: Optional["CollectionCustomizer"] = None,  # noqa: F821
-        options: Optional[Dict] = {},
-    ):
-        for collection in datasource_customizer.collections:
-            if 'createdAt' collection.schema["fields"].keys():
-                collection.remove_field("createdAt")
-
-            if 'updatedAt' collection.schema["fields"].keys():
-                collection.remove_field("updatedAt")
-
-```

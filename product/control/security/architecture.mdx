@@ -170,16 +170,6 @@ collection.add_hook(:Before, :List) do |context|
 end
 ```
 
-```python Python - Access user context
-@collection.add_hook('Before', 'List')
-def filter_by_user(context):
-    email = context.caller.email
-    role = context.caller.role
-
-    # Custom logic based on user context
-    if role != 'admin':
-        context.filter = {'user_email': email}
-```
 
 ### IP Whitelisting
 

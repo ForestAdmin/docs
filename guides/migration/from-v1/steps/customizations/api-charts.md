@@ -15,20 +15,8 @@ You can find the full documentation of chart customization [here](../../../../ag
 | Liana.StatSerializer | return resultBuilder.value(...)<br>return resultBuilder.distribution(...) |
 | request.query?.record_id | context.recordId |
 {{/nodejs}}
-{{#php}}
-| Legacy agent | New agent |
-| ---------------- | ------------------------------------------------------------------------- |
-| route in web.php | $agent->addChart<br>collection.addChart(...) |
-| render Chart | return $resultBuilder->value(...)<br>return $resultBuilder->distribution(...) |
-| request object | $context->recordId |
-{{/php}}
-{{#python}}
-| Legacy agent | New agent |
-| ---------------- | ------------------------------------------------------------------------- |
-| route in urls.py | agent.add_chart<br>collection.add_chart(...) |
-| render Chart | return result_builder.value(...)<br>return result_builder.distribution(...) |
-| request object | context.record_id |
-{{/python}}
+
+
 {{#ruby}}
 | Legacy agent | New agent |
 | ---------------- | ------------------------------------------------------------------------- |
@@ -47,8 +35,10 @@ Migrating should be straightforward: the only differences are that:
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>router.post('/stats/mrr', (req, res) => {</strong></summary>
+
 ```javascript
-router.post('/stats/mrr', (req, res) => {
   // Load data
   const from = moment.utc('2018-03-01').unix();
   const to = moment.utc('2018-03-31').unix();
@@ -62,74 +52,12 @@ router.post('/stats/mrr', (req, res) => {
 });
 ```
 
-{{#php}}
+</details>
 
-- Define a new route in `web.php`:
-- Setup an action into a controller
-
-```php
-<?php
-
-namespace App\Http\Controllers;
-
-use ForestAdmin\LaravelForestAdmin\Facades\ChartApi;
-use Stripe\StripeClient;
-
-class ChartsController extends Controller
-{
-    public function mrr()
-    {
-        $mrr = 0;
-        $stripe = new StripeClient('sk_AABBCCDD11223344');
-        $charges = $stripe->charges->all(['limit' => 3]);
-        foreach ($charges as $charge) {
-            $mrr += $charge->amount;
-        }
-        return ChartApi::renderValue($mrr);
-    }
-}
-```
-
-{{/php}}
-
-{{#python}}
-
-- Define a new route in `urls.py`:
-- Setup an action into a controller
-
-```python
-from django_forest.utils.views.base import BaseView
-
-
-class MrrChartView(BaseView):
-    def post(self, request):
-        mrr = 0
-        stripe = StripeClient("sk_AABBCCDD11223344")
-        for charge in stripe.charges.all({"limit": 3}):
-            mrr += charge.amount
-        res = {
-            "data": {
-                "attributes": {
-                    "value": {"countCurrent": mrr}
-                },
-                "type": "stats",
-                "id": uuid.uuid4(),
-            }
-        }
-        return JsonResponse(status=200, data=res)
-
-
-```
-
-{{/python}}
-
-{{#ruby}}
-
-- Define a new route in `routes.rb`:
-- Setup an action into a controller
+<details>
+<summary><strong>def mrr</strong></summary>
 
 ```ruby
-def mrr
     mrr = 0
 
     Stripe.api_key = 'sk_AABBCCDD11223344'
@@ -142,12 +70,12 @@ def mrr
   end
 ```
 
-{{/ruby}}
+</details>
 
-{% endtab %} {% tab title="After" %}
+<details>
+<summary><strong>agent.addChart('monthlyRecuringRevenue', async (context, resultBuilder) => {</strong></summary>
 
 ```javascript
-agent.addChart('monthlyRecuringRevenue', async (context, resultBuilder) => {
   // Load data
   const from = moment.utc('2018-03-01').unix();
   const to = moment.utc('2018-03-31').unix();
@@ -160,55 +88,12 @@ agent.addChart('monthlyRecuringRevenue', async (context, resultBuilder) => {
 });
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\Agent\Builder\AgentFactory;
-use ForestAdmin\AgentPHP\DatasourceEloquent\EloquentDatasource;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Context\AgentCustomizationContext;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Chart\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Aggregation;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\ConditionTreeFactory;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Filters\Filter;
-
-return static function () {
-	$forestAgent = app()->make(AgentFactory::class);
-    $forestAgent->addDatasource(
-        new EloquentDatasource(...),
-    )
-    ->addChart(
-    'monthlyRecuringRevenue',
-    function (AgentCustomizationContext $context, ResultBuilder $resultBuilder) {
-        $mrr = 0;
-        $stripe = new StripeClient('sk_AABBCCDD11223344');
-        $charges = $stripe->charges->all(['limit' => 3]);
-        foreach ($charges as $charge) {
-            $mrr += $charge->amount;
-        }
-
-        return $resultBuilder->value($mrr)
-    }
-);
-
-```
-
-```python
-from forestadmin.datasource_toolkit.context.agent_context import AgentCustomizationContext
-from forestadmin.datasource_toolkit.decorators.chart.result_builder import ResultBuilder
-
-def mrr_chart(context: AgentCustomizationContext, result_builder: ResultBuilder):
-    mrr = 0
-    stripe = StripeClient("sk_AABBCCDD11223344")
-    for charge in stripe.charges.all({"limit": 3}):
-        mrr += charge.amount
-    return result_builder.value(mrr)
-
-agent.add_chart("monthlyRecuringRevenue", mrr_chart)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.customize
       @create_agent.add_chart('monthlyRecuringRevenue') do |_context, result_builder|
@@ -224,5 +109,7 @@ module ForestAdminRails
   end
 end
 ```
+
+</details>
 
 {% endtab %} {% endtabs %}

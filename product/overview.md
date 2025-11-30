@@ -7,23 +7,19 @@ Forest Admin follows a 4-layer architecture that enables you to build and operat
 ## The 4-Layer Architecture
 
 
-
   * [Integration](/product/integration/overview.md) - Connect to any data source - SQL, NoSQL, REST APIs, or custom sources
   * [Control](/product/control/overview.md) - Secure access with roles, permissions, SSO, and authentication
   * [Process](/product/process/overview.md) - Add business logic with Smart Actions, Fields, Segments, and Hooks
   * [Build](/product/build/overview.md) - Configure and customize your admin panel's UI and layout
 
 
-
 ## The 5 Operations Categories
-
 
 
   * [Execute](/product/execute/overview.md) - Browse data, run actions, execute workflows, and export records
   * [Collaborate](/product/collaborate/overview.md) - Work together with notes, approvals, inbox, and escalation
   * [Manage](/product/manage/overview.md) - Monitor performance with dashboards, charts, and activity logs
   * [Embed](/product/embed/overview.md) - Integrate Forest Admin into your applications
-
 
 
 ## Quick Navigation
@@ -40,7 +36,6 @@ Forest Admin follows a 4-layer architecture that enables you to build and operat
 </details>
 
 
-  
 <details>
 <summary>Layer 2: Control - Secure Access</summary>
 
@@ -53,7 +48,6 @@ Forest Admin follows a 4-layer architecture that enables you to build and operat
 </details>
 
 
-  
 <details>
 <summary>Layer 3: Process - Business Logic</summary>
 
@@ -68,7 +62,6 @@ Forest Admin follows a 4-layer architecture that enables you to build and operat
 </details>
 
 
-  
 <details>
 <summary>Layer 4: Build - Configure UI</summary>
 

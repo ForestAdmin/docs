@@ -1,5 +1,5 @@
 {% hint style="info" %}
-Due to popular demand, Live Query Charts and Live Query Segments are reintroduced in ForestAdmin agents since version {{#python}}`agent-python>=1.19.1`{{/python}}{{#nodejs}}`@forestadmin/agent>=1.56.0`{{/nodejs}}{{#ruby}}`agent-ruby>=v1.0.0-beta.85`{{/ruby}}{{#php}}`agent-php>=1.20.0`{{/php}}
+Due to popular demand, Live Query Charts and Live Query Segments are reintroduced in ForestAdmin agents since version {{#nodejs}}`@forestadmin/agent>=1.56.0`{{/nodejs}}{{#ruby}}`agent-ruby>=v1.0.0-beta.85`{{/ruby}}
 {% endhint %}
 
 ForestAdmin still recommends using [smart charts](./api-charts.md) and [smart segments](./smart-segments.md) over LiveQueries.
@@ -12,19 +12,12 @@ To make use of LiveQuery feature, you will need to enable the nativeQuery on you
 This ensures a coherent naming scheme for your native query connections as well as only enabling LiveQuery on a restricted set of datasources.
 Refer to the following documentation to enable nativeQuery on your desired datasources.
 
-{{#python}}
-
-- [Django Datasource](../../../../datasources/provided/django.md#enable-support-of-live-queries)
-  <!-- - [SQLAlchemy Datasource](../../../../datasources/provided/sqlalchemy.md#enable-support-of-live-queries) There is no migration from SQLAlchemy v1, it doesn't exists-->
-  {{/python}}{{#nodejs}}
+{{#nodejs}}
 - [Sequelize Datasource](../../../../datasources/provided/sequelize.md#enable-support-of-live-queries)
 - [SQL Datasource](../../../../datasources/provided/sql.md#enable-support-of-live-queries)
   {{/nodejs}}{{#ruby}}
 - [Active Record Datasource](../../../../datasources/provided/active-record.md#enable-support-of-live-queries)
-  {{/ruby}}{{#php}}
-- [Doctrine Datasource](../../../../datasources/provided/doctrine.md#enable-support-of-live-queries)
-- [Eloquent Datasource](../../../../datasources/provided/eloquent.md#enable-support-of-live-queries)
-  {{/php}}
+  {{/ruby}}
 
 ## Migrate your UI components
 

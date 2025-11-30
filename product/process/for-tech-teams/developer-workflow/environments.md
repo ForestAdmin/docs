@@ -135,7 +135,6 @@ You may also delete an Environment. **Be very careful** as there is no going bac
 ## Related pages
 
 
-
   * [Using Branches](/product/process/for-tech-teams/developer-workflow/using-branches.md) - Learn about layout version control
   * [Deploying Changes](/product/process/for-tech-teams/developer-workflow/deploying-your-changes.md) - Deploy your changes to environments
 

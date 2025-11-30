@@ -29,8 +29,10 @@ Operation substitution can be used for two motives:
 - Performance: provide a more efficient way to perform a given filtering operation
 - Capabilities: enable filtering on a computed field or other non-filterable fields
 
+<details>
+<summary><strong>collection.replaceFieldOperator('fullName', 'Equal', (value, context) => {</strong></summary>
+
 ```javascript
-collection.replaceFieldOperator('fullName', 'Equal', (value, context) => {
   const [firstName, ...lastNames] = value.split(' ');
 
   return {
@@ -43,35 +45,12 @@ collection.replaceFieldOperator('fullName', 'Equal', (value, context) => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldOperator(
-        	'fullName',
-        	Operators::EQUAL,
-        	function ($value) {
-        		[$firstName, $lastName] = explode(' ', $value);
-
-        		return [
-        			'aggregation' => 'And',
-        			'conditions' => [
-        				['field' => 'firstName', 'operator' => Operators::EQUAL, 'value' => $firstName],
-        				['field' => 'lastName', 'operator' => Operators::EQUAL, 'value' => $lastName],
-        			],
-        		];
-        	}
-        );
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
-
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_operator('fullName', Operators::EQUAL) do |value|
     first_name, *last_names = value.split(' ')
@@ -87,26 +66,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.context.collection_context import CollectionCustomizationContext
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.base import ConditionTree
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.branch import ConditionTreeBranch
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.leaf import ConditionTreeLeaf
+</details>
 
-async def full_name_equal_fn(
-    value, context: CollectionCustomizationContext
-) -> ConditionTree:
-    first_name, last_names = value.split(" ", 1)
-    return ConditionTreeBranch(
-        "and",
-        [
-            ConditionTreeLeaf("firstName", "equal", first_name),
-            ConditionTreeLeaf("lastName", "equal", last_names),
-        ],
-    )
-
-collection.replace_field_operator("fullName", "equal", full_name_equal_fn)
-```
 
 ## Operators to support to enable the search
 
@@ -129,33 +90,22 @@ This emulation forces the Agent to retrieve all the Collection records and compu
 As a consequence, filtering emulation performance cost is **linear** with the number of records in the Collection, so **activate it sparingly and with great care**.
 {% endhint %}
 
+<details>
+<summary><strong>// Add support for all operators</strong></summary>
+
 ```javascript
-// Add support for all operators
 collection.emulateFieldFiltering('fullName');
 
 // Add support for a single operator
 collection.emulateFieldOperator('fullName', 'Equal');
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        // Add support for all operators
-    	$builder->emulateFieldFiltering('fullName');
-
-    	// Add support for a single operator
-    	$builder->emulateFieldOperator('fullName', Operators::EQUAL);
-    }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
-
 @create_agent.customize_collection('customer') do |collection|
   # Add support for all operators
   collection.emulate_field_filtering('fullName')
@@ -165,10 +115,6 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-```python
-# Add support for all operators
-collection.emulate_field_filtering("fullName")
+</details>
 
-# Add support for a single operator
-collection.emulate_field_filtering("fullName", "equal")
-```
+

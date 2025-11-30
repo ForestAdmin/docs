@@ -12,7 +12,10 @@ To bridge that gap, Forest Admin allows adding, moving, removing, and overriding
 
 ## Minimal example
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 collection
   // Create a new field
   .addField('fullName', {
@@ -42,7 +45,12 @@ collection
   .removeField('firstName', 'lastName');
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -72,3 +80,5 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
     .remove_field('firstName', 'lastName')
 end
 ```
+
+</details>

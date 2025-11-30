@@ -28,9 +28,9 @@ Note that:
 {{#python,php}}
 | Property | Description |
 | ------------------------------------------------------------------------------- | -------------------------------------- |
-| `{{#python,ruby}}is_required{{/python,ruby}}{{#php}}isRequired{{/php}}` | Make the field required. |
-| `{{#python,ruby}}is_read_only{{/python,ruby}}{{#php}}isReadOnly{{/php}}` | Make the field read-only. |
-| `{{#python,ruby}}default_value{{/python,ruby}}{{#php}}defaultValue{{/php}}` | Set the default value of the field. |
+| `{{#python,ruby}}is_required{{/python,ruby}}` | Make the field required. |
+| `{{#python,ruby}}is_read_only{{/python,ruby}}` | Make the field read-only. |
+| `{{#python,ruby}}default_value{{/python,ruby}}` | Set the default value of the field. |
 {{/python,php}}
 
 In addition, depending on the field type, you can also use functions for the following properties:
@@ -56,7 +56,7 @@ And finally, those two extra properties are available and can only be used as fu
 
 | Property                                                | Description                                          |
 | ------------------------------------------------------- | ---------------------------------------------------- |
-| `if{{#python}}_{{/python}}{{#ruby}}_condition{{/ruby}}` | Only display the field if the function returns true. |
+| `if{{#ruby}}_condition{{/ruby}}` | Only display the field if the function returns true. |
 | `value`                                                 | Set the current value of the field.                  |
 
 # Examples
@@ -65,8 +65,10 @@ And finally, those two extra properties are available and can only be used as fu
 
 In this example we make a field required only if the user enters a value greater than 1000 in another field.
 
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
+
 ```javascript
-agent.customizeCollection('customer', collection => {
   collection.addAction('Charge credit card', {
     scope: 'Single',
     form: [
@@ -94,45 +96,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\DynamicField;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\FieldType;
+</details>
 
-$forestAgent->customizeCollection(
-  'Customer',
-  function (CollectionCustomizer $builder) {
-    $builder->addAction('Charge credit card', new BaseAction(
-      scope: ActionScope::SINGLE,
-      form: [
-        new DynamicField(
-          label: 'amount',
-          type: FieldType::NUMBER,
-          description: 'The amount (USD) to charge the credit card. Example: 42.50',
-          isRequired: true,
-        ),
-        new DynamicField(
-          label: 'description',
-          type: FieldType::STRING,
-
-          /**
-           * The field will only be required if the function returns true.
-           */
-          isRequired: fn ($context) => $context->getFormValues()['amount'] > 1000,
-        ),
-      ],
-      execute: fn ($context) => ...,
-    ));
-  }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -164,38 +133,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    pass
-
-
-agent.customize_collection("customer").add_action("Charge credit card", {
-    "form": [
-        {
-          "label": 'amount',
-          "type": "Number",
-        },
-        {
-          "label": 'description',
-          "type": "String",
-          # The field will only be required if the function returns true.
-          "is_required": lambda context: context.form_values.get('amount', 0) > 1000,
-
-        },
-    ],
-    "scope": "Single",
-    "execute": execute,
-})
-
-```
 
 ## Example 2: Conditional field display based on record data
 
@@ -203,8 +142,10 @@ Unlike the previous example, this one will only display the field if the record 
 
 It is still a dynamic field, but this time, the condition does not depend on the form values but on the record data.
 
+<details>
+<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
+
 ```javascript
-agent.customizeCollection('product', collection => {
   collection.addAction('Leave a review', {
     scope: 'Single',
     form: [
@@ -227,44 +168,12 @@ agent.customizeCollection('product', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\DynamicField;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\FieldType;
+</details>
 
-$forestAgent->customizeCollection(
-  'Product',
-  function (CollectionCustomizer $builder) {
-    $builder->addAction('Leave a review', new BaseAction(
-      scope: ActionScope::SINGLE,
-      execute: fn ($context) => /* ... perform work here ... */,
-      form: [
-        new DynamicField(
-          label: 'Rating',
-          type: FieldType::ENUM,
-          enumValues: ['1', '2', '3', '4', '5'],
-        ),
-        new DynamicField(
-          label: 'Put a comment',
-          type: FieldType::STRING,
-          // Only display this field the data does not have comment already
-          if: function ($context) {
-            $existingComment = $context->getRecord(['comment']);
-            return !isset($existingComment['comment']);
-          };
-        ),
-      ]
-    ));
-  }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -296,38 +205,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-async def should_display_comment(context: ActionContextSingle):
-    existing_comment = await context.get_record(['comment']).comment
-    return existing_comment is None
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    # perform work here
-
-agent.customize_collection("Product").add_action("Leave a review", {
-    "form": [
-        {
-            "label": "Rating",
-            "type": "Enum",
-            "enum_values": ["1", "2", "3", "4", "5"]
-        },
-        {
-            "label": "Put a comment",
-            "type": "String",
-            # Only display this field the data a does not have comment already
-            "if_": should_display_comment,
-        },
-    ],
-})
-
-```
 
 ## Example 3: Conditional enum values based on both record data and form values
 
@@ -339,8 +218,10 @@ The first field displays different denominations that can be used to address the
 
 The second field displays different levels of loudness depending on if the customer is Morgan Freeman, as to ensure that we never speak `Very Loudly` at him, for the sake of politeness.
 
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
+
 ```javascript
-agent.customizeCollection('customer', collection => {
   collection.addAction('Tell me a greeting', {
     scope: 'Single',
     form: [
@@ -393,78 +274,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\DynamicField;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\FieldType;
+</details>
 
-$forestAgent->customizeCollection(
-  'Customer',
-  function (CollectionCustomizer $builder) {
-    $builder->addAction('Tell me a greeting', new BaseAction(
-      scope: ActionScope::SINGLE,
-      execute: function ($context, $resultBuilder) {
-        $denomination = $context->getFormValue('How should we refer to you?');
-        $loudness = $context.getFormValue('How loud should we say it?');
-
-        $text = "Hello $denomination";
-        if ($loudness === 'Whispering') {
-          $text = strtolower($text);
-        } elseif ($loudness === 'Loudly') {
-          $text = strtoupper($text);
-        } elseif ($loudness === 'Very Loudly') {
-          $text = strtoupper($text) + '!!!';
-        }
-
-        return $resultBuilder->success($text);
-      },
-      form: [
-        new DynamicField(
-          label: 'How loud should we say it?',
-          type: FieldType::ENUM,
-          enumValues: function (ActionContextSingle $context) {
-            // Enum values are computed based on another form field value
-            // (no need to use an async function here, but doing so would not be a problem)
-            $user = $context->getRecord(['firstName', 'lastName', 'gender']);
-            $base = [
-              $user['firstName'], $user['firstName'] . ' ' . $user['lastName']
-            ];
-
-            if ($gender === 'Female') {
-              $base[] = 'Mrs. ' . $user['lastName'];
-              $base[] = 'Miss. ' . $user['lastName'];
-            } else {
-              $base[] = 'Mr. ' . $user['lastName'];
-            }
-
-            return $base;
-          }
-        ),
-        new DynamicField(
-          label: 'How should we refer to you?',
-          type: FieldType::ENUM,
-          enumValues: function (ActionContextSingle $context) {
-            // Enum values are computed based on the record data
-            // Because we need to fetch the record data, we need to use an async function
-            $denomination = $context->getFormValue('How should we refer to you?');
-
-            return $denomination === 'Morgan Freeman'
-              ? ['Whispering', 'Softly', 'Loudly']
-              : ['Softly', 'Loudly', 'Very Loudly'];
-          }
-        ),
-      ]
-    ));
-  }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -528,75 +343,12 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from typing import Union
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-
-def get_loudly_enum_values(context: ActionContextSingle):
-    # Enum values are computed based on the record data
-    # Because we need to fetch the record data, we need to use an async function
-    denomination = context.form_values.get("How should we refer to you?")
-    if denomination == "Morgan Freeman":
-      return ['Whispering', 'Softly', 'Loudly']
-    else:
-      return ['Softly', 'Loudly', 'Very Loudly']
-
-def get_denomination_enum_values(context: ActionContextSingle):
-    # Enum values are computed based on another form field value
-    # (no need to use an async function here, but doing so would not be a problem)
-    person = context.get_record(['firstName', 'lastName', 'gender'])
-    base = [person['firstName'], f"{person['firstName']} {person['lastName']}"]
-    if (person['gender'] == 'Female'):
-      base.append(f"Mrs.  {person['lastName']}")
-      base.append(f"Miss.  {person['lastName']}")
-    else:
-      base.append(f"Mr.  {person['lastName']}")
-    return base
-
-async def execute(
-    context: ActionContextSingle, result_builder: ResultBuilder
-) -> Union[None, ActionResult]:
-    denomination = context.form_values["How should we refer to you?"]
-    loudness = context.form_values["How loud should we say it?"]
-
-    text = f"Hello {denomination}"
-    if loudness == 'Whispering':
-      text = text.lower()
-    elif loudness == 'Loudly':
-      text = text.upper()
-    elif loudness == 'Very Loudly:
-      text = f"{text.upper()}!!!"
-
-    return result_builder.success(text)
-
-
-agent.customize_collection("customer").add_action("Tell me a greeting", {
-    "form": [
-        {
-            "label": "How should we refer to you?",
-            "type": "Enum",
-            "enum_values": get_denomination_enum_values
-        }
-        {
-            "label": "How should we refer to you?",
-            "type": "Enum",
-            "enum_values": get_loudly_enum_values
-        }
-    ],
-    "scope": "Single",
-    "execute": execute,
-})
-```
-
-## Example 4: Using {{#nodejs,php,ruby}}hasFieldChanged{{/nodejs,php,ruby}}{{#python}}has_field_changed{{/python}} to reset value
-
-In this example we reset a field based on change on another one.
+<details>
+<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customer', collection => {
   collection.addAction('Create banking identity', {
     scope: 'Single',
     form: [
@@ -625,47 +377,12 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\DynamicField;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\FieldType;
+</details>
 
-$forestAgent->customizeCollection(
-  'Customer',
-  function (CollectionCustomizer $builder) {
-    $builder->addAction(
-      'Create banking identity',
-      new BaseAction(
-        scope: ActionScope::SINGLE,
-        execute: function (ActionContextSingle $context, ResultBuilder $resultBuilder) {
-          //...
-        },
-        form: [
-          new DynamicField(type: FieldType::ENUM, label: 'Bank Name', isRequired: true, enumValues: ['CE', 'BP']),
-          new DynamicField(
-            type: FieldType::STRING,
-            label: 'BIC',
-            value: function (ActionContextSingle $context) {
-              if ($context->hasFieldChanged('Bank Name')) {
-                return $context->getFormValue('Bank Name') === 'CE'
-                  ? 'CEPAFRPPXXX'
-                  : 'CCBPFRPPXXX';
-              }
-            }
-          ),
-        ],
-      )
-    );
-  }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -695,45 +412,12 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-def bank_name_value(context: ActionContextSingle):
-    if context.has_field_changed('Bank Name'):
-        if context.form_value["Bank Name"] == "CE":
-            return "CEPAFRPPXXX"
-        else:
-            return "CCBPFRPPXXX"
-
-
-
-agent.customize_collection("customer").add_action("Create banking identity", {
-    "form": [
-        {
-            "label": "Bank Name",
-            "type": "Enum",
-            "is_required": True,
-            "enum_values":  ['CE', 'BP'],
-        },
-        {
-            "label": "BIC",
-            "type": "String",
-            "value": bank_name_value,
-        }
-    ],
-    "scope": "Single",
-    "execute": lambda context, result_builder: pass,
-})
-```
-
-## Example 5: Setting up default value based on the record
-
-In this example we setup a the default value of a field based on the current record.
+<details>
+<summary><strong>agent.customizeCollection('order', collection => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('order', collection => {
   collection.addAction('Change order price', {
     scope: 'Single',
     form: [
@@ -752,42 +436,12 @@ agent.customizeCollection('order', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\DynamicField;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\FieldType;
+</details>
 
-$forestAgent->customizeCollection(
-  'Customer',
-  function (CollectionCustomizer $builder) {
-    $builder->addAction(
-      'Change order price',
-      new BaseAction(
-        scope: ActionScope::SINGLE,
-        execute: function (ActionContextSingle $context, ResultBuilder $resultBuilder) {
-          //...
-        },
-        form: [
-          new DynamicField(
-            type: FieldType::NUMBER,
-            label: 'New Price',
-            defaultValue: function (ActionContextSingle $context) {
-              return $context->getRecord(['amount'])['amount'];
-            }
-          ),
-        ],
-      )
-    );
-  }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -810,35 +464,12 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-
-async def new_price_default_value(context: ActionContextSingle):
-    return await context.get_record(['amount'])['amount']
-
-agent.customize_collection("customer").add_action("Change order price", {
-    "form": [
-        {
-            "label": 'New Price',
-            "type": "Number",
-            "default_value": new_price_default_value,
-        }
-    ],
-    "scope": "Single",
-    "execute": lambda context, result_builder: #...
-})
-
-```
-
-## Example 6: Block field edition
-
-In this example we make a field read only based on a field from the current record.
+<details>
+<summary><strong>agent.customizeCollection('order', collection => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('order', collection => {
   collection.addAction('Change order price', {
     scope: 'Single',
     form: [
@@ -860,45 +491,12 @@ agent.customizeCollection('order', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\DynamicField;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\FieldType;
+</details>
 
-$forestAgent->customizeCollection(
-  'Customer',
-  function (CollectionCustomizer $builder) {
-    $builder->addAction(
-      'Change order price',
-      new BaseAction(
-        scope: ActionScope::SINGLE,
-        execute: function (ActionContextSingle $context, ResultBuilder $resultBuilder) {
-          //...
-        },
-        form: [
-          new DynamicField(
-            type: FieldType::NUMBER,
-            label: 'New Price',
-            defaultValue: function (ActionContextSingle $context) {
-              return $context->getRecord(['amount'])['amount'];
-            },
-            isReadOnly: function (ActionContextSingle $context) {
-              return $context->getRecord(['status'])['status'] === 'paid';
-            },
-          ),
-        ],
-      )
-    );
-  }
-);
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -922,31 +520,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+</details>
 
-
-async def new_price_default_value(context: ActionContextSingle):
-    return await context.get_record(['amount'])['amount']
-
-async def new_price_is_read_only(context: ActionContextSingle):
-    return await context.get_record(['status'])['status'] == 'paid'
-
-agent.customize_collection("customer").add_action("Change order price", {
-    "form":  [
-        {
-            "label": 'New Price',
-            "type": "Number",
-            "default_value": new_price_default_value,
-            "is_read_only": new_price_is_read_only
-        }
-    ],
-    "scope": "Single",
-    "execute": lambda context, result_builder: #...
-})
-```
 
 {{#nodejs}}
 

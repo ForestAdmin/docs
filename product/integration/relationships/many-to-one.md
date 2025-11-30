@@ -18,8 +18,10 @@ Many-to-One relations are by far the most common type of relation: many records 
 
 Think about countries and towns: a town belongs to a single country, but each country can have multiple towns.
 
+<details>
+<summary><strong>agent.customizeCollection('towns', collection =></strong></summary>
+
 ```javascript
-agent.customizeCollection('towns', collection =>
   collection.addManyToOneRelation('country', 'countries', {
     foreignKey: 'country_id',
     foreignKeyTarget: 'id', // Optional (uses `country` primary key by default)
@@ -27,25 +29,12 @@ agent.customizeCollection('towns', collection =>
 );
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\SymfonyForestAdmin\Service\ForestAgent;
+</details>
 
-$forestAgent->customizeCollection(
-    'Town',
-    function (CollectionCustomizer $builder) {
-        $builder->addManyToOneRelation(
-            name: 'country',
-            foreignCollection: 'Country',
-            foreignKey: 'country_id',
-            foreignKeyTarget: 'id' // Optional (uses `Country` primary key by default)
-        );
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('town') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('town') do |collection|
   collection.add_many_to_one_relation(
     'country',
     'Country',
@@ -57,14 +46,8 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-agent.customize_collection('towns').add_many_to_one_relation(
-    name='country',
-    foreign_collection='Country',
-    foreign_key= 'country_id',
-    foreign_key_target= 'id', # Optional (uses `country` primary key by default)
-)
-```
+</details>
+
 
 ## One-to-One relations
 
@@ -78,8 +61,10 @@ Take note that the inverse of a `one-to-one` is a `many-to-one`.
 This may seem counter-intuitive: the side of the relation which should be configured as `many-to-one` is the one that carries the foreign key.
 {% endhint %}
 
+<details>
+<summary><strong>// Configure one side of the relation ...</strong></summary>
+
 ```javascript
-// Configure one side of the relation ...
 agent.customizeCollection('mayors', collection => {
   collection.addOneToOneRelation('city', 'cities', {
     originKey: 'mayor_id',
@@ -97,39 +82,12 @@ agent.customizeCollection('cities', collection => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\SymfonyForestAdmin\Service\ForestAgent;
+</details>
 
-// Configure one side of the relation ...
-$forestAgent->customizeCollection(
-    'Mayor',
-    function (CollectionCustomizer $builder) {
-        $builder->addOneToOneRelation(
-            name: 'city',
-            foreignCollection: 'City',
-            originKey: 'mayor_id',
-            originKeyTarget: 'id' // Optional (uses `Mayor` primary key by default)
-        );
-    }
-)
-    // ... and the other one.
-    ->customizeCollection(
-        'City',
-        function (CollectionCustomizer $builder) {
-            // ⚠️ Not 'OneToOne'
-            $builder->addManyToOneRelation(
-                name: 'mayor',
-                foreignCollection: 'Mayor',
-                foreignKey: 'mayor_id',
-                foreignKeyTarget: 'id' // Optional (uses `Mayor` primary key by default)
-            );
-        }
-    );
-```
+<details>
+<summary><strong>@create_agent.customize_collection('mayor') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('mayor') do |collection|
   collection.add_one_to_one_relation(
     'city',
     'City',
@@ -153,22 +111,6 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-# Configure one side of the relation ...
-agent.customize_collection('mayors').add_one_to_one_relation(
-    name='city',
-    foreign_collection='cities',
-    origin_key='mayor_id',
-    origin_key_target='id', # Optional (uses `mayors` primary key by default)
-)
+</details>
 
-# ... and the other one.
-agent.customize_collection('cities')
-  # ⚠️ Not 'OneToOne'
-  collection.add_many_to_one_relation(
-    name='mayor',
-    foreign_collection='mayors',
-    foreign_key='mayor_id',
-    foreign_key_target='id', # Optional (uses `mayors` primary key by default)
-)
-```
+

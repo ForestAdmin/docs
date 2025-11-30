@@ -1,6 +1,7 @@
-```javascript
-const { createAgent } = require('@forestadmin/agent');
+<details>
+<summary><strong>const { createAgent } = require('@forestadmin/agent');</strong></summary>
 
+```javascript
 const agent = createAgent({
   // Mandatory options (those will be provided during onboarding)
   authSecret: process.env.FOREST_AUTH_SECRET,
@@ -21,67 +22,12 @@ const agent = createAgent({
 });
 ```
 
-{{#python}}
+</details>
 
-## Integration with Flask settings
-
-Settings can be integrate to flask configuration mechanism. A rename operation is apply removing "FOREST\_" and setting the parameter name in lowercase.
-This is done by the FlaskAgent.parse_config(app) method.
-For example:
-
-```python
-from forestadmin.flask_agent.agent import parse_flask_config
-
-app.config["FOREST_ENV_SECRET"] = "env_secret"
-assert parse_flask_config(app) == {"env_secret": "env_secret"}
-```
-
-You can also give a dictionary of settings to the create_agent method as second parameter, so the parse_flask_config will not be called
-
-```python
-app = Flask(__name__)
-
-agent = create_agent(app, {
-    # Mandatory options (those will be provided during onboarding)
-    "env_secret": os.environ.get("ENV_SECRET"),
-    "auth_secret": os.environ.get("AUTH_SECRET"),
-    "is_production": os.environ.get("IS_PRODUCTION"),
-
-    # Optional variables
-    "customize_error_message": ...,
-    "forest_server_url": ...,
-    "logger": ...,
-    "logger_level": ...,
-    "permissions_cache_duration_in_seconds": ...,
-    "prefix": ...,
-    "schema_path": ...,
-})
-```
-
-{{/python}}
-
-```php
-$forestAgent->createAgent([
-  // Mandatory options (those will be provided during onboarding)
-  'authSecret' => env('FOREST_AUTH_SECRET'),
-  'envSecret' => env('FOREST_ENV_SECRET'),
-  'isProduction' => false,
-
-  // Optional variables
-  'customizeErrorMessage' => ...,
-  'logger' => ...,
-  'loggerLevel' => ...,
-  'permissionsCacheDurationInSeconds' => ...,
-  'prefix' => ...,
-  'schemaPath' => ...,
-]);
-```
-
-{{#ruby}}
-The settings can be integrated into the Rails configuration mechanism. The configuration is done in the `config/initializers/forest_admin.rb` file.
+<details>
+<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
 
 ```ruby
-ForestAdminRails.configure do |config|
   # Mandatory options (those will be provided during onboarding)
   config.auth_secret = 'YOUR_AUTH_SECRET'
   config.env_secret = 'YOUR_ENV_SECRET'
@@ -96,6 +42,8 @@ ForestAdminRails.configure do |config|
   config.schema_path = ...
 end
 ```
+
+</details>
 
 {{/ruby}}
 
@@ -123,7 +71,7 @@ Never share it publicly, as it would allow attackers to impersonate your agent w
 
 ### {{#nodejs,php}}`isProduction`{{/nodejs,php}}{{#python,ruby}}`is_production`{{/python,ruby}} (boolean, no default)
 
-In development mode the agent has a few extra behaviors (when using {{#nodejs}}`isProduction: false`{{/nodejs}}{{#python}}`is_production=False`{{/python}}){{#ruby}}`is_production = false`{{/ruby}})
+In development mode the agent has a few extra behaviors (when using {{#nodejs}}`isProduction: false`{{/nodejs}}){{#ruby}}`is_production = false`{{/ruby}})
 
 - At startup, the agent will print the URL of all mounted charts
 - At startup, the agent will update the `.forestadmin-schema.json`{{#nodejs}} and [typings](./autocompletion-and-typings.md) files{{/nodejs}}.
@@ -131,9 +79,9 @@ In development mode the agent has a few extra behaviors (when using {{#nodejs}}`
 
 ## Optional variables
 
-### {{#nodejs,php}}`customizeErrorMessage`{{/nodejs,php}}{{#python,ruby}}`customize_error_message`{{/python,ruby}} (function, defaults to {{#nodejs,php}}null{{/nodejs,php}}{{#python}}None{{/python}}{{#ruby}}nil{{/ruby}})
+### {{#nodejs,php}}`customizeErrorMessage`{{/nodejs,php}}{{#python,ruby}}`customize_error_message`{{/python,ruby}} (function, defaults to {{#nodejs,php}}null{{/nodejs,php}}{{#ruby}}nil{{/ruby}})
 
-When unexpected errors are raised in the agent code during a request, the error will be logged (using {{#nodejs,php,ruby}}`options.logger`{{/nodejs,php,ruby}}{{#python}}`options["logger"]`{{/python}}), but in the admin-panel, the final user will get a default message 'Unexpected error'.
+When unexpected errors are raised in the agent code during a request, the error will be logged (using {{#nodejs,php,ruby}}`options.logger`{{/nodejs,php,ruby}}), but in the admin-panel, the final user will get a default message 'Unexpected error'.
 
 This is done as to:
 
@@ -161,41 +109,8 @@ createAgent({
 });
 ```
 
-```python
-def error_message_customizer(error:Exception):
-    if isinstance(error, sqlalchemy.exc.OperationalError):
-      return (
-          'Failed to connect to the database, ' +
-          'contact John at 06 12 34 56 78 and tell him to reboot the server'
-      )
-    return (
-        'Unexpected error, ' +
-        'contact Jane at 06 87 65 43 21 and tell her to get it fixed.'
-    )
 
-
-create_agent(app, {
-    #...
-    "customize_error_message": error_message_customizer
-})
-```
-
-```php
-$forestAgent->createAgent([
-  ...
-  'customizeErrorMessage' => function ($error) {
-    if ($error instanceof ConnectionRefusedError) {
-      return 'Failed to connect to the database, ' +
-        'contact John at 06 12 34 56 78 and tell him to reboot the server';
-    }
-
-    return 'Unexpected error, ' +
-      'contact Jane at 06 87 65 43 21 and tell her to get it fixed.';
-  },
-]);
-```
-
-### {{#nodejs,php}}`forestServerUrl`{{/nodejs,php}}{{#python}}`server_url`{{/python}}{{#ruby}}`forest_server_url`{{/ruby}} (string, defaults to 'https://api.forestadmin.com') <!-- markdown-link-check-disable-line -->
+### {{#nodejs,php}}`forestServerUrl`{{/nodejs,php}}{{#ruby}}`forest_server_url`{{/ruby}} (string, defaults to 'https://api.forestadmin.com') <!-- markdown-link-check-disable-line -->
 
 This variable should be used only for customers using [the self-hosted version of Forest Admin](https://www.forestadmin.com/self-hosted).
 
@@ -208,14 +123,8 @@ createAgent({
 });
 ```
 
-```python
-create_agent(app, {
-    # ...
-    "server_url": 'https://api.forestadmin.com',
-})
-```
 
-### `logger` (function) and {{#nodejs,php,ruby}}`loggerLevel`{{/nodejs,php,ruby}}{{#python}}`logger_level`{{/python}} (string, defaults to {{#nodejs,php,ruby}}'Info'{{/nodejs,php,ruby}}){{#python}}logging.INFO{{/python}}
+### `logger` (function) and {{#nodejs,php,ruby}}`loggerLevel`{{/nodejs,php,ruby}} (string, defaults to {{#nodejs,php,ruby}}'Info'{{/nodejs,php,ruby}})
 
 {{#nodejs}}Forest Admin encourages customers to use [In-app installations](./README.md#standalone-vs-in-app-installation).{{/nodejs}}
 
@@ -223,8 +132,10 @@ You may want to have control of the logger which is used by Forest Admin.
 
 This configuration key allows to format and route logs to a logging service, instead of printing them in stdout.
 
+<details>
+<summary><strong>createAgent({</strong></summary>
+
 ```javascript
-createAgent({
   // ...
   loggerLevel: 'Info', // Valid values are 'Debug', 'Info', 'Warn' and 'Error'
   logger: (logLevel, message) => {
@@ -233,18 +144,12 @@ createAgent({
 });
 ```
 
-```php
-$forestAgent->createAgent([
-  ...
-  'loggerLevel' => 'Info',
-  'logger' => function (string $logLevel, string $message) {
-  	error_log($message);
-  },
-]);
-```
+</details>
+
+<details>
+<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
 
 ```ruby
-ForestAdminRails.configure do |config|
   # ...
   config.logger_level = 'Info' # Valid values are 'Debug', 'Info', 'Warn' and 'Error'
   config.logger = -> (log_level, message) { puts "#{log_level}: #{message}" }
@@ -252,40 +157,8 @@ end
 
 ```
 
-```python
-import logging
+</details>
 
-MY_LOGGER = logging.getLogger("my_custom_forest_logger")
-
-def log_function(log_level: str, message:str):
-    getattr(MY_LOGGER, log_level.lower())(message)
-    # or
-    print(f"{log_level}: {message}")
-
-create_agent(app, {
-    #...
-    # Valid values are logging.(DEBUG|INFO|WARNING|ERROR)
-    "logger_level": logging.INFO,
-    "logger": log_function
-})
-```
-
-{{#python}}If logger is not specified, the agent will log using "forestadmin" logger of [logging module](https://docs.python.org/3/library/logging.html). You can customize it as you wish.{{/python}}
-
-```python
-import logging
-
-forest_logger = logging.getLogger("forestadmin")
-for handler in forest_logger.handlers:
-    forest_logger.removeHandler(handler)
-
-handler = logging.StreamHandler()
-handler.setLevel(logging.DEBUG)
-
-forest_logger.addHandler(handler)
-forest_logger.setLevel(logging.DEBUG)
-# ...
-```
 
 ### {{#nodejs,php}}`permissionsCacheDurationInSeconds`{{/nodejs,php}}{{#python,ruby}}`permissions_cache_duration_in_seconds`{{/python,ruby}} (number, defaults to 15 minutes)
 
@@ -295,33 +168,27 @@ Those permissions are enforced both in the frontend, and in your agent.
 
 This configuration variable allows to customize how often the agent should ask the server to provide the permissions table.
 
+<details>
+<summary><strong>createAgent({</strong></summary>
+
 ```javascript
-createAgent({
   // ...
   permissionsCacheDurationInSeconds: 15 * 60,
 });
 ```
 
-```python
-create_agent(app, {
-    # ...
-    "permissions_cache_duration_in_seconds": 15 * 60,
-})
-```
+</details>
 
-```php
-$forestAgent->createAgent([
-  ...
-  'permissionsCacheDurationInSeconds' => 15 * 60,
-])
-```
+<details>
+<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
 
 ```ruby
-ForestAdminRails.configure do |config|
   # ...
   config.permission_expiration = 15 * 60
 end
 ```
+
+</details>
 
 ### `prefix` (string, default to empty string)
 
@@ -345,39 +212,32 @@ This is done so that customers using reverse proxies can implement their routing
 
 <!-- markdown-link-check-enable -->
 
+<details>
+<summary><strong>createAgent({</strong></summary>
+
 ```javascript
-createAgent({
   // ...
   prefix: 'api',
 });
 ```
 
-```php
-$forestAgent->createAgent([
-  ...
-  'prefix' => 'api',
-]);
-```
+</details>
 
-```python
-create_agent(app, {
-    # ...
-    "prefix": "/api",
-})
-```
+<details>
+<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
 
 ```ruby
-ForestAdminRails.configure do |config|
   # ...
   config.prefix = 'api'
 end
 ```
 
+</details>
+
 ### {{#nodejs,php}}`schemaPath`{{/nodejs,php}}{{#python,ruby}}`schema_path`{{/python,ruby}} (string, defaults to '.forestadmin-schema.json')
 
 This variable allows to choose where the `.forestadmin-schema.json` file should be written in development, and read from in production.
 
-{{#python}}With Flask agent, the default path is computed as : `os.path.join(self._app.root_path, ".forestadmin-schema.json")` {{/python}}
 
 This allows to:
 
@@ -385,33 +245,27 @@ This allows to:
 - Work around read only folders (for instance, if developing using a read only docker volume).
 - Have flexibility when using custom builds in production (code minification, ...)
 
+<details>
+<summary><strong>createAgent({</strong></summary>
+
 ```javascript
-createAgent({
   // ...
   schemaPath: '/volumes/fa-agent-configuration/schema.json',
 });
 ```
 
-```python
-create_agent(app, {
-    # ...
-    "schema_path": '/volumes/fa-agent-configuration/schema.json',
-})
-```
+</details>
 
-```php
-$forestAgent->createAgent([
-  ...
-  'schemaPath' => '/volumes/fa-agent-configuration/schema.json',
-]);
-```
+<details>
+<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
 
 ```ruby
-ForestAdminRails.configure do |config|
   # ...
   config.schema_path = '/volumes/fa-agent-configuration/schema.json'
 end
 ```
+
+</details>
 
 {{#nodejs}}
 

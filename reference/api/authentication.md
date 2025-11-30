@@ -68,9 +68,10 @@ curl -H "Authorization: Bearer fa_your_api_token_here" \
 
 **JavaScript (Node.js):**
 
-```javascript
-const axios = require('axios');
+<details>
+<summary><strong>const axios = require('axios');</strong></summary>
 
+```javascript
 const apiToken = process.env.FOREST_API_TOKEN;
 
 const response = await axios.get(
@@ -84,29 +85,12 @@ const response = await axios.get(
 );
 ```
 
-**Python:**
+</details>
 
-```python
-import requests
-import os
-
-api_token = os.getenv('FOREST_API_TOKEN')
-
-headers = {
-    'Authorization': f'Bearer {api_token}',
-    'Content-Type': 'application/json'
-}
-
-response = requests.get(
-    'https://api.forestadmin.com/api/v1/activity-logs',
-    headers=headers
-)
-```
-
-**Ruby:**
+<details>
+<summary><strong>require 'net/http'</strong></summary>
 
 ```ruby
-require 'net/http'
 require 'json'
 
 api_token = ENV['FOREST_API_TOKEN']
@@ -120,6 +104,8 @@ response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
   http.request(request)
 end
 ```
+
+</details>
 
 ## Token Security
 
@@ -405,7 +391,6 @@ Regular security reviews:
 - Document token purpose and owner
 
 ## Next Steps
-
 
 
   * [Rate Limits](/reference/api/rate-limits.md) - Understand API usage limits

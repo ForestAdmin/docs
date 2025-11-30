@@ -188,11 +188,9 @@ After an optional review, you can immediately access the Forest Admin UI to mana
 ## What's next?
 
 
-
   * [Follow a Learning Path](/guides/learning-paths.md) - Structured learning journey tailored to your role
   * [Customize your UI](/product/build/layout-editor.md) - Use the layout editor to customize your admin panel
   * [Add business logic](/product/process/actions/overview.md) - Create Smart Actions for custom workflows
-
 
 
 ## Troubleshooting
@@ -227,7 +225,6 @@ After an optional review, you can immediately access the Forest Admin UI to mana
 </details>
 
 
-  
 <details>
 <summary>Cannot connect from Forest Admin UI</summary>
 
@@ -250,7 +247,6 @@ After an optional review, you can immediately access the Forest Admin UI to mana
 </details>
 
 
-  
 <details>
 <summary>No tables showing up</summary>
 
@@ -278,7 +274,6 @@ After an optional review, you can immediately access the Forest Admin UI to mana
 </details>
 
 
-  
 <details>
 <summary>Deploy to production</summary>
 

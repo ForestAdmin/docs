@@ -10,10 +10,8 @@ Forest Admin is an **admin panel builder** that connects to your existing databa
 ## What Forest Admin does
 
 
-
   * [For Operations Teams](#) - Manage customers, orders, and operations without waiting on engineering. Handle support, approvals, and workflows in one place.
   * [For Engineering Teams](#) - Skip building internal tools. Connect your data sources and customize with code only when needed.
-
 
 
 **Core capabilities:**
@@ -61,11 +59,9 @@ Your Database ←→ Forest Admin Agent ←→ Forest Admin UI
 ## Next steps
 
 
-
   * [Quick Start](/get-started/quickstart.md) - Get up and running in 5 minutes
   * [Features Overview](/get-started/features-overview.md) - Explore what you can build
   * [Connect Your Data](/product/integration/overview.md) - Learn how to connect data sources
-
 
 
 ---

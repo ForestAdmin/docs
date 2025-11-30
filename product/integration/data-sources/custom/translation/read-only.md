@@ -4,8 +4,10 @@ Emulation comes to the rescue: all features that need to be implemented when mak
 
 This enables you to be up and running in minutes and then optimize your code as you go.
 
+<details>
+<summary><strong>const { BaseCollection } = require('@forestadmin/datasource-toolkit');</strong></summary>
+
 ```javascript
-const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 const axios = require('axios');
 
 /**
@@ -42,69 +44,12 @@ class MyCollection extends BaseCollection {
 }
 ```
 
-```python
-from typings import Optional
+</details>
 
-from forestadmin.agent_toolkit.utils.context import User
-from forestadmin.datasource_toolkit.collections import Collection
-from forestadmin.datasource_toolkit.interfaces.query.aggregation import AggregateResult, Aggregation
-from forestadmin.datasource_toolkit.interfaces.query.filter.paginated import PaginatedFilter
-from forestadmin.datasource_toolkit.interfaces.query.filter.unpaginated import Filter
-from forestadmin.datasource_toolkit.interfaces.query.projections import Projection
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
-
-import requests
-
-class MyCollection(Collection):
-"""
-    This collection will have terrible performance, but is perfect to test that the
-    structure declaration is well done.
-"""
-    # [... Declare structure and capabilities]
-    async def list(
-        self,
-        caller: User,
-        filter_: PaginatedFilter,
-        projection: Projection
-    ) -> List[RecordsDataAlias]:
-        # Fetch all records on all requests (this is _very_ inefficient)
-        response = requests.get('https://my-api/my-collection')
-        result = response.json()["items"]
-
-        # Use "in-process emulation" for everything else.
-        if filter_.condition_tree:
-            result = filter_.condition_tree.apply(result, self, str(caller.timezone))
-        if filter_.sort:
-            result = filter_.sort.apply(result)
-        if filter_.page:
-            result = filter_.page.apply(result)
-        if filter_.segment:
-            raise Exception('This collection does not implements native segments')
-        if filter_.search:
-            raise Exception('This collection is not natively searchable')
-
-        return projection.apply(result)
-
-    async def aggregate(
-        self,
-        caller: User,
-        filter_: Filter,
-        aggregation: Aggregation,
-        limit: Optional[int]
-    ) -> List[AggregateResult]:
-      # Fetch all records which should be aggregated
-      records = await self.list(
-        caller, PaginatedFilter.from_base_filter(filter_), aggregation.projection
-      )
-
-      # Use "in-process emulation" to aggregate the results
-      return aggregation.apply(records, str(caller.timezone), limit)
-
-```
+<details>
+<summary><strong>require 'httparty'</strong></summary>
 
 ```ruby
-require 'httparty'
-
 module App
   module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
@@ -151,61 +96,8 @@ module App
 end
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Caller;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Aggregation;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Filters\Filter;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Projection\Projection;
-
-/**
- * This collection will have terrible performance, but is perfect to test that the
- * structure declaration is well done.
- */
-class MyCollection extends Collection
-{
-    // [... Declare structure and capabilities]
-    //  $this->client = new \GuzzleHttp\Client([...]);
-
-    public function list(Caller $caller, Filter $filter, Projection $projection): array
-    {
-        // Fetch all records on all requests (this is _very_ inefficient)
-        try {
-            $response = $this->client->get('https://my-api/my-collection');
-            $result = json_decode($response->getBody()->getContents(), true)['items'] ?? [];
-
-            if ($filter->getConditionTree()) {
-                $result = $filter->getConditionTree()->apply($response, $this, $caller->getTimezone());
-            }
-            if ($filter->getSort()) {
-                $result = $filter->getSort()->apply($result);
-            }
-            if ($filter->getPage()) {
-                $result = $filter->getPage()->apply($result);
-            }
-            if ($filter->getSegment()) {
-                throw new \RuntimeException('This collection does not implements native segments');
-            }
-            if ($filter->getSearch()) {
-                throw new \RuntimeException('This collection is not natively searchable');
-            }
-
-            return $projection->apply($result);
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Failed to fetch or process items: ' . $e->getMessage());
-        }
-    }
-
-    public function aggregate(Caller $caller, Filter $filter, Aggregation $aggregation, ?int $limit = null)
-    {
-        // Fetch all records which should be aggregated
-        $records = $this->list($caller, $filter, $aggregation->getProjection());
-
-        return $aggregation->apply($records, $caller->getTimezone(), $limit);
-    }
-```
 
 # Tips
 
@@ -215,8 +107,10 @@ The `aggregate` method is used by Forest Admin both to count records and to extr
 
 If the API/Database you are targeting has an efficient API that is made for counting records, you may want to handle this case first.
 
+<details>
+<summary><strong>const { BaseCollection } = require('@forestadmin/datasource-toolkit');</strong></summary>
+
 ```javascript
-const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 const axios = require('axios');
 
  class MyCollection extends BaseCollection {
@@ -247,39 +141,12 @@ const axios = require('axios');
 }
 ```
 
-```python
-from forestadmin.agent_toolkit.utils.context import User
-from forestadmin.datasource_toolkit.collections import Collection
-from forestadmin.datasource_toolkit.interfaces.query.aggregation import AggregateResult, Aggregation
-from forestadmin.datasource_toolkit.interfaces.query.filter.unpaginated import Filter
+</details>
 
-import requests
-
-class MyCollection(Collection):
-    # [... Declare structure and capabilities]
-
-    async def aggregate(
-        self,
-        caller: User,
-        filter_: Filter,
-        aggregation: Aggregation,
-        limit: Optional[int]
-    ) -> List[AggregateResult]:
-        if aggregation.operation.value == "Count" and len(aggregation.groups) == 0:
-            return [{"value": await self.count(caller, filter_)}]
-
-    async def count(self, caller: User, filter_: Filter):
-        response = requests.get('https://my-api/my-collection/count', self._translate_filter(caller, filter_))
-        records = response.json()["items"]
-
-    def _translate_filter(self, caller: User, filter_: Filter):
-        # [... translate filter]
-
-```
+<details>
+<summary><strong>require 'httparty'</strong></summary>
 
 ```ruby
-require 'httparty'
-
 module App
   module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
@@ -310,44 +177,6 @@ module App
 end
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Caller;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Aggregation;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Filters\Filter;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Projection\Projection;
 
-class MyCollection extends Collection
-{
-    // [... Declare structure, capabilities and list method]
-    //  $this->client = new \GuzzleHttp\Client([...]);
-
-    public function aggregate(Caller $caller, Filter $filter, Aggregation $aggregation, ?int $limit = null)
-    {
-        if ($aggregation->getOperation() === 'Count' && empty($aggregation->getGroups()) && ! $aggregation->getField()) {
-            return [
-                ['value' => $this->count($caller, $filter)],
-            ];
-        }
-
-        // [... handle the general case]
-    }
-
-    public function count(Caller $caller, Filter $filter)
-    {
-        $response = $this->client->get('https://my-api/my-collection/count', [
-            'query' => ['filter' => $this->translateFilter($caller, $filter)],
-        ]);
-
-        return json_decode($response->getBody()->getContents(), true)['count'];
-    }
-
-    private function translateFilter(Caller $caller, Filter $filter)
-    {
-        // [... translate filter]
-    }
-}
-
-```

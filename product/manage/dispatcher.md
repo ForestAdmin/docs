@@ -43,7 +43,6 @@ The Dispatcher feature is part of Forest Admin's collaboration tools. Contact yo
 ## Related features
 
 
-
   * [Inbox](/product/collaborate/inbox.md) - Manage assigned tasks
   * [Actions](/product/process/actions/overview.md) - Learn about the Assign to action
 

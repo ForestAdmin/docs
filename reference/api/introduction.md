@@ -38,11 +38,9 @@ curl -H "Authorization: Bearer YOUR_API_TOKEN" \
 ## Available Endpoints
 
 
-
   * [Activity Logs](/reference/api/endpoints/activity-logs.md) - Track user actions and export audit trails
   * [Admin Logs](/reference/api/endpoints/admin-logs.md) - Monitor admin panel operations
   * [Notes](/reference/api/endpoints/notes.md) - Manage collaboration notes programmatically
-
 
 
 ## Key Features
@@ -146,7 +144,6 @@ For questions or issues with the Public API:
 - 🎫 Enterprise: Contact your account manager
 
 ## Next Steps
-
 
 
   * [Authentication](/reference/api/authentication.md) - Learn how to authenticate API requests

@@ -8,89 +8,6 @@ Creating a custom data source will require you to work on the 3 following steps:
 
 ## Minimal example
 
-```python
-from typings import Optional
-
-from forestadmin.agent_toolkit.utils.context import User
-from forestadmin.datasource_toolkit.collections import Collection
-from forestadmin.datasource_toolkit.datasources import Datasource
-from forestadmin.datasource_toolkit.interfaces.query.aggregation import AggregateResult, Aggregation
-from forestadmin.datasource_toolkit.interfaces.query.filter.paginated import PaginatedFilter
-from forestadmin.datasource_toolkit.interfaces.query.filter.unpaginated import Filter
-from forestadmin.datasource_toolkit.interfaces.query.projections import Projection
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
-
-import requests  # client for the target API
-
-# The real work is in writing this module
-# Expect a full featured query translation module to be over 1000 LOCs
-from .forest_query_translation import QueryGenerator
-
-# Minimal implementation of a readonly data source
-class MyCollection(Collection):
-    def __init__(self, datasource):
-        # Set name of the collection once imported
-        super().__init__("MyCollection", datasource)
-
-        # structure
-        self.add_field("id", {
-            "type": "Column",
-            "column_type": "Number",
-            "is_primary_key": True,
-            "is_read_only": True,  # field is readonly
-            # As we are using the query translation strategy => define capabilities
-            "filter_operators": set(), # field is not filterable
-            "is_sortable": False, # field is not sortable
-        })
-
-        self.add_field("title", {
-            "type": "Column",
-            "column_type": "String",
-            "is_read_only": True,
-            "filter_operators": set(),
-            "is_sortable": False,
-        })
-
-    async def list(
-        self,
-        caller: User,
-        filter_: PaginatedFilter,
-        projection: Projection
-    ) -> List[RecordsDataAlias]:
-        params = QueryGenerator.generate_list_query_string(filter_, projection)
-        response = requests.get('https://my-api/my-collection', params)
-
-        return response.json()["items"]
-
-    async def aggregate(
-        self,
-        caller: User,
-        filter_: Filter,
-        aggregation: Aggregation,
-        limit: Optional[int]
-    ) -> List[AggregateResult]:
-        params = QueryGenerator.generate_aggregate_query_string(
-            filter_,
-            aggregation,
-            limit
-        )
-        response = requests.get('https://my-api/my-collection', params)
-
-        return response.json()["items"]
-
-
-class MyDatasource(Datasource):
-    def __init__(self):
-        super().__init__()
-        self.add_collection(MyCollection(self))
-
-```
-
-```python
-from custom_datasources.my_datasource import MyDatasource
-
-agent.add_datasource(MyDatasource())
-```
 
 ```javascript
 const {
@@ -159,129 +76,21 @@ class MyDataSource extends BaseDataSource {
 module.exports = MyDataSource;
 ```
 
-```javascript
-const MyDataSource = require('./datasource');
+<details>
+<summary><strong>const MyDataSource = require('./datasource');</strong></summary>
 
+```javascript
 const myDataSourceFactory = async () => new MyDataSource();
 
 const agent = createAgent(options).addDataSource(myDataSourceFactory);
 ```
 
-```php
-<?php
+</details>
 
-use ForestAdmin\AgentPHP\DatasourceToolkit\Collection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Caller;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Contracts\DatasourceContract;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Aggregation;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Filters\Filter;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\Projection\Projection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Schema\ColumnSchema;
-use GuzzleHttp\Client;
-// The real work is in writing this module
-// Expect a full featured query translation module to be over 1000 LOCs
-use QueryGenerator;
-
-class MyCollection extends Collection
-{
-    public function __construct(DatasourceContract $datasource)
-    {
-        parent::__construct(
-            $datasource,
-            'MyCollection'
-        );
-
-        $this->addField('id', new ColumnSchema(
-            columnType: 'Number',
-            // As we are using the query translation strategy => define capabilities
-            filterOperators: [], // field is not filterable
-            isPrimaryKey: true,
-            isReadOnly: true,  // field is readonly
-            isSortable: false // field is not sortable
-        ));
-
-        $this->addField('title', new ColumnSchema(
-            columnType: 'String',
-            filterOperators: [],
-            isPrimaryKey: false,
-            isReadOnly: true,
-            isSortable: false
-        ));
-
-        $this->client = new Client([
-            'base_uri' => 'https://my-api/',
-            'timeout'  => 5.0,
-        ]);
-    }
-
-    public function list(Caller $caller, Filter $filter, Projection $projection): array
-    {
-        $params = QueryGenerator::generateListQueryString($filter, $projection);
-
-        try {
-            $response = $this->client->get('my-collection', [
-                'query' => $params,
-            ]);
-
-            $body = json_decode($response->getBody()->getContents(), true);
-
-            return $body['items'] ?? [];
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Failed to fetch items: ' . $e->getMessage());
-        }
-    }
-
-    public function aggregate(Caller $caller, Filter $filter, Aggregation $aggregation, ?int $limit = null)
-    {
-        $params = QueryGenerator::generateAggregateQueryString($filter, $aggregation, $limit);
-
-        try {
-            $response = $this->client->get('my-collection', [
-                'query' => $params,
-            ]);
-
-            $body = json_decode($response->getBody()->getContents(), true);
-
-            return $body['items'] ?? [];
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Failed to fetch items: ' . $e->getMessage());
-        }
-    }
-}
-```
-
-```php
-<?php
-
-use Collections\MyCollection;
-use ForestAdmin\AgentPHP\DatasourceToolkit\DataSource;
-
-class MyDataSource extends DataSource
-{
-    public function __construct()
-    {
-        parent::__construct();
-        $this->addCollection(new MyCollection($this)); // List of your collections
-    }
-
-```
-
-```php
-<?php
-
-use ForestAdmin\AgentPHP\Agent\Builder\AgentFactory;
-
-return static function () {
-    $dataSource = new MyDataSource();
-    $agent = new AgentFactory([]);
-    $agent->addDatasource($dataSource);
-
-    return $dataSource;
-};
-```
+<details>
+<summary><strong>require 'net/http'</strong></summary>
 
 ```ruby
-require 'net/http'
 require 'json'
 require 'uri'
 
@@ -340,6 +149,8 @@ module App
   end
 end
 ```
+
+</details>
 
 ```ruby
 module App

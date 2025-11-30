@@ -105,7 +105,6 @@ Connect any data, wherever it lives.
 See how teams use Forest Admin in production.
 
 
-
   * [Customer Support](#) - **What they built:**
     - Customer profile views with full history
     - One-click refund processing
@@ -139,11 +138,9 @@ See how teams use Forest Admin in production.
     **Impact:** Reduced manual reconciliation time by 90%
 
 
-
 ## Ready to Get Started?
 
 Choose your deployment option and start building in minutes.
-
 
 
   * [Quick Start: Cloud](/get-started/quickstart-cloud.md) - Get started in 5 minutes with our hosted solution

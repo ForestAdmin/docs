@@ -43,7 +43,6 @@ Answer these questions to find your best option:
 </details>
 
 
-  
 <details>
 <summary>Do you need air-gapped deployment (zero external connections)?</summary>
 
@@ -54,7 +53,6 @@ Answer these questions to find your best option:
 </details>
 
 
-  
 <details>
 <summary>Do you have strict compliance requirements (HIPAA, SOC2, data residency)?</summary>
 
@@ -65,7 +63,6 @@ Answer these questions to find your best option:
 </details>
 
 
-  
 <details>
 <summary>Do you want to manage infrastructure yourself?</summary>
 
@@ -84,13 +81,11 @@ Answer these questions to find your best option:
 ## Choose your deployment method
 
 
-
   * [Cloud](/get-started/quickstart-cloud.md) - Perfect for quick evaluation and standard use cases
 
   * [Self-hosted](/get-started/quickstart-self-hosted.md) - Ideal for private networks and compliance needs
 
   * [On-premise](/get-started/quickstart-on-premise.md) - Full control and air-gapped deployment
-
 
 
 {% hint style="info" %}

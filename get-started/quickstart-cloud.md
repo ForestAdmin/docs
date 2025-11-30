@@ -85,11 +85,9 @@ You can now:
 ## What's next?
 
 
-
   * [Customize your UI](/product/build/layout-editor.md) - Use the layout editor to customize your admin panel
   * [Add business logic](/product/process/actions/overview.md) - Create Smart Actions for custom workflows
   * [Set permissions](/product/control/roles-permissions.md) - Configure roles and access control
-
 
 
 ## Troubleshooting
@@ -108,7 +106,6 @@ You can now:
 </details>
 
 
-  
 <details>
 <summary>No tables showing up</summary>
 
@@ -119,7 +116,6 @@ You can now:
 </details>
 
 
-  
 <details>
 <summary>I want to use a local database</summary>
 

@@ -54,7 +54,10 @@ As Forest Admin does not impose any restriction on the handler, you are free to 
 
 The only requirement when implementing a Smart Segment from your agent is to return a valid `ConditionTree`.
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 agent.customizeCollection('products', collection =>
   collection.addSegment('mostPurchased', async context => {
     // Query the ids of the 10 most ordered products.
@@ -68,7 +71,12 @@ agent.customizeCollection('products', collection =>
 );
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -90,3 +98,5 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   end
 end
 ```
+
+</details>

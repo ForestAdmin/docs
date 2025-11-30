@@ -21,9 +21,7 @@ In this module, you'll learn how to design and customize the Forest Admin user i
 ## Topics Covered
 
 
-
   * [Coming Soon](#) - Content is being migrated
-
 
 
 ## Prerequisites

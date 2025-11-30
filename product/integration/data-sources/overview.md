@@ -9,9 +9,10 @@ Forest Admin connects to your data through datasources. You can add one or multi
 
 Add a datasource to your agent with `addDataSource()`:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
 
-
+```javascript
 const agent = createAgent(options);
 
 agent.addDataSource(
@@ -19,7 +20,12 @@ agent.addDataSource(
 );
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 require 'forest_admin_agent'
 
 ForestAdminAgent::Agent.new do |config|
@@ -27,13 +33,18 @@ ForestAdminAgent::Agent.new do |config|
 end
 ```
 
+</details>
+
 Your data is now exposed within Forest Admin, allowing you to browse, search, edit, and manage your records through a fully functional admin panel.
 
 ## Adding multiple datasources
 
 You can connect multiple datasources to create a unified admin panel across different databases, APIs, or systems:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 const agent = createAgent(options);
 
 // Primary PostgreSQL database
@@ -52,7 +63,12 @@ agent.addDataSource(
 );
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 ForestAdminAgent::Agent.new do |config|
   # Primary PostgreSQL database
   config.add_data_source('postgresql://user:pass@localhost:5432/main')
@@ -65,13 +81,18 @@ ForestAdminAgent::Agent.new do |config|
 end
 ```
 
+</details>
+
 All collections from all datasources will appear in your Forest Admin interface, giving you a unified view across your entire data landscape.
 
 ### Cross-database relationships
 
 You can define relationships between collections from different datasources:
 
-```javascript Node.js
+<details>
+<summary><strong>Node.js</strong></summary>
+
+```javascript
 agent.customizeCollection('orders', collection => {
   collection.addManyToOneRelation('user', 'analytics_users', {
     foreignKey: 'user_id'
@@ -79,13 +100,20 @@ agent.customizeCollection('orders', collection => {
 });
 ```
 
-```ruby Ruby
+</details>
+
+<details>
+<summary><strong>Ruby</strong></summary>
+
+```ruby
 agent.customize_collection('orders') do |collection|
   collection.add_many_to_one_relation('user', 'analytics_users',
     foreign_key: 'user_id'
   )
 end
 ```
+
+</details>
 
 This allows you to navigate between related data even when it lives in different databases or systems.
 

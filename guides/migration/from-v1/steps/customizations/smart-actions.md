@@ -5,14 +5,8 @@ In legacy agents declaring a Smart Action was a two-step process:
 - First, you had to declare by changing the parameters of the `collection` function in the appropriate `collections/*.js` file.
 - Then, you had to implement the action by creating a route handler in the appropriate `routes/*.js` file.
   {{/nodejs}}
-  {{#php}}
-- First, you had to declare by changing the parameters of the `collection` function in the appropriate `models/*.php` file.
-- Then, you had to implement the action by creating a route handler in the appropriate `routes/web.php` file.
-  {{/php}}
-  {{#python}}
-- First, you had to declare by changing the parameters of the `collection` function in the appropriate `app/forest/*.python` file.
-- Then, you had to implement the action by creating a route handler in the appropriate `app/urls.py`/`app/views.py` file.
-  {{/python}}
+
+
   {{#ruby}}
 - First, you had to declare by changing the parameters of the `collection` function in the appropriate `/lib/forest_liana/collections/*.rb` file.
 - Then, you had to implement the action by creating a route handler in the appropriate `config/routes.rb` file.
@@ -35,26 +29,8 @@ You can find the full documentation of action customization [here](../../../../a
 | Request object | context.getRecordIds() |
 | res.send(...) | return resultBuilder.success(...)<br>return resultBuilder.error(...)<br>... |
 {{/nodejs}}
-{{#php}}
-| Legacy agent | New agent |
-| ------------------------------------------------ | --------------------------------------------------------------------------- |
-| type: 'single'<br>type: 'bulk'<br>type: 'global' | scope: 'Single'<br>scope: 'Bulk'<br>scope: 'Global' |
-| download: true | generateFile: true |
-| reference: 'otherCollection.id' | { type: 'Collection', collectionName: 'otherCollection' } |
-| enums: ['foo', 'bar'] | { type: 'Enum', enumValues: ['foo', 'bar'] } |
-| Request object | context.getRecordIds() |
-| Response object | return resultBuilder.success(...)<br>return resultBuilder.error(...)<br>... |
-{{/php}}
-{{#python}}
-| Legacy agent | New agent |
-| ------------------------------------------------ | --------------------------------------------------------------------------- |
-| type: 'single'<br>type: 'bulk'<br>type: 'global' | scope: 'Single'<br>scope: 'Bulk'<br>scope: 'Global' |
-| download: True | generate_file: True |
-| reference: 'otherCollection.id' | { type: 'Collection', collection_name: 'otherCollection' } |
-| enums: ['foo', 'bar'] | { type: 'Enum', enum_values: ['foo', 'bar'] } |
-| Request object | context.get_record_ids() |
-| Response object | return result_builder.success(...)<br>return result_builder.error(...)<br>... |
-{{/python}}
+
+
 {{#ruby}}
 | Legacy agent | New agent |
 | ------------------------------------------------ | --------------------------------------------------------------------------- |
@@ -82,8 +58,10 @@ Most notably, you will need to pass:
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('companies', {</strong></summary>
+
 ```javascript
-collection('companies', {
   actions: [
     {
       name: 'Mark as Live',
@@ -95,25 +73,12 @@ collection('companies', {
 });
 ```
 
-```php
-public function markAsLive(): SmartAction
-{
-    return $this->smartAction('single', 'Mark as Live');
-}
-```
+</details>
 
-```python
-from django_forest.utils.collection import Collection
-
-class CompanyForest(Collection):
-    def load(self):
-        self.actions = [
-            {"type": "single", "name": "Mark as Live"},
-        ]
-```
+<details>
+<summary><strong>class Forest::Company</strong></summary>
 
 ```ruby
-class Forest::Company
   include ForestLiana::Collection
 
   collection :Company
@@ -122,10 +87,12 @@ class Forest::Company
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('companies', companies => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('companies', companies => {
   companies.addAction('Mark as Live', {
     scope: 'Bulk',
     execute: async (context, resultBuilder) => {},
@@ -133,37 +100,12 @@ agent.customizeCollection('companies', companies => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as live',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context) {}
-            )
-        );
-   }
-);
-```
+</details>
 
-```python
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
-
-def mark_as_live(context: ActionContextSingle, result_builder: ResultBuilder):
-    pass
-
-agent.customize_collection("Company").add_action("Mark as live", {
-        "scope": "Single",
-        "execute": mark_as_live,
-    }
-)
-```
+<details>
+<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
 
 ```ruby
-include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action
 
 module ForestAdminRails
@@ -182,6 +124,8 @@ module ForestAdminRails
 end
 ```
 
+</details>
+
 {% endtab %} {% endtabs %}
 
 ## Step 2: Porting the form definition
@@ -198,8 +142,10 @@ You can simply copy the field's definition from the legacy agent to the new agen
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('customers', {</strong></summary>
+
 ```javascript
-collection('customers', {
   actions: [
     {
       name: 'Charge credit card',
@@ -217,40 +163,12 @@ collection('customers', {
 });
 ```
 
-```php
-public function chargeCreditCard(): SmartAction
-{
-    return $this->smartAction('single', 'Charge credit card')
-        ->addField(
-            [
-                'field' => 'amount',
-                'type' => 'Number',
-                'is_required' => true,
-                'description' => 'The amount (USD) to charge the credit card. Example: 42.50'
-            ]
-        )
-        ...
-}
-```
+</details>
 
-```python
-from django_forest.utils.collection import Collection
-
-class CompanyForest(Collection):
-    def load(self):
-        self.actions = [
-            {
-                "type": "single",
-                "name": "Charge credit card",
-                "fields": [
-                    {"field": "amount", "type": "number", "isRequired": True},
-                ]
-            },
-        ]
-```
+<details>
+<summary><strong>class Forest::Company</strong></summary>
 
 ```ruby
-class Forest::Company
   include ForestLiana::Collection
 
   collection :Company
@@ -266,10 +184,12 @@ class Forest::Company
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customers', companies => {
   companies.addAction('Charge credit card', {
     // [...]
     form: [
@@ -284,44 +204,12 @@ agent.customizeCollection('customers', companies => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction('Charge credit card', new BaseAction(
-            scope: ActionScope::SINGLE,
-            form: [
-                new DynamicField(
-                    label: 'amount',
-                    type: FieldType::NUMBER,
-                    description: 'The amount (USD) to charge the credit card. Example: 42.50',
-                    isRequired: true,
-                ),
-                ...
-            ],
-            execute: fn ($context) => ...,
-        ));
-  }
-);
-```
+</details>
 
-```python
-agent.customize_collection("Customer").add_action("Charge credit card",{
-    "scope": "Single",
-    "form": [
-        {
-            "label": "amount",
-            "type": "Number",
-            "description": "The amount (USD) to charge the credit card. Example: 42.50",
-            "is_required": True
-        }
-    ],
-    "execute": lambda ctx, result_builder: pass
-})
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -349,6 +237,8 @@ module ForestAdminRails
 end
 ```
 
+</details>
+
 {% endtab %} {% endtabs %}
 
 ## Step 3: Porting the route to the new agent `execute` function
@@ -356,12 +246,8 @@ end
 {{#nodejs}}
 In the legacy agent, users had to implement the action by creating a route handler in the appropriate `routes/*.js` file.
 {{/nodejs}}
-{{#php}}
-In the legacy agent, users had to implement the action by creating a route handler in the appropriate `routes/web.php` file.
-{{/php}}
-{{#python}}
-In the legacy agent, users had to implement the action by creating a route handler in the appropriate `app/urls.py` file.
-{{/python}}
+
+
 {{#ruby}}
 In the legacy agent, users had to implement the action by creating a route handler in the appropriate `config/routes.rb` file.
 {{/ruby}}
@@ -371,21 +257,19 @@ This is no longer needed as the new agent provides a `context` object that conta
 When porting the route handler to the new agent, you will need to:
 
 - Move the body of the route handler to the `execute` function of the action.
-- Replace {{#nodejs,php}}`RecordsGetter.getIdsFromRequest()`{{/nodejs,php}}{{#python}}`self.get_ids_from_request()`{{/python}} call with {{#nodejs,php}}`context.getRecordIds()`{{/nodejs,php}}{{#python,ruby}}`context.get_record_ids()`{{/python,ruby}}.
+- Replace {{#nodejs,php}}`RecordsGetter.getIdsFromRequest()`{{/nodejs,php}} call with {{#nodejs,php}}`context.getRecordIds()`{{/nodejs,php}}{{#python,ruby}}`context.get_record_ids()`{{/python,ruby}}.
   {{#nodejs}}
 - Replace `res.send(...)` calls with `return resultBuilder.success()` or `return resultBuilder.error()`, or the [appropriate `resultBuilder` method](../../../../agent-customization/actions/result-builder.md).
   {{/nodejs}}
-  {{#php}}
-- Replace `return response();` calls with `return resultBuilder->success()` or `return resultBuilder->error()`, or the [appropriate `resultBuilder` method](../../../../agent-customization/actions/result-builder.md).
-  {{/php}}{{#python}}
-- Replace `return JsonResponse();` calls with `return result_builder.success()` or `return result_builder.error()`, or the [appropriate `result_builder` method](../../../../agent-customization/actions/result-builder.md).
-  {{/python}}{{#ruby}}
+  {{#ruby}}
 - Replace `render json` calls with `return result_builder.success()` or `return result_builder.error()`, or the [appropriate `result_builder` method](../../../../agent-customization/actions/result-builder.md).
   {{/ruby}}
   {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>router.post(</strong></summary>
+
 ```javascript
-router.post(
   '/actions/mark-as-live',
   permissionMiddlewareCreator.smartAction(),
   (req, res) => {
@@ -401,34 +285,12 @@ router.post(
 );
 ```
 
-```php
-public function markAsLive(): JsonResponse
-{
-    $id = request()->input('data.attributes.ids')[0];
-    $company = Company::findOrFail($id);
-    $company->status = 'live';
-    $company->save();
+</details>
 
-    return response()->noContent();
-}
-```
-
-```python
-from django.http import HttpResponse
-from app.model import Company
-
-class MarksLiveAction(ActionView):
-    def post(self, request, *args, **kwargs):
-        ids = self.get_ids_from_request(request, self.Model)
-        company = Company.objects.filter(id__in=ids)[0]
-        company.status = "live"
-        company.save()
-
-    return HttpResponse(status=204)
-```
+<details>
+<summary><strong>class Forest::CompaniesController < ForestLiana::SmartActionsController</strong></summary>
 
 ```ruby
-class Forest::CompaniesController < ForestLiana::SmartActionsController
   def mark_as_live
     company_id = ForestLiana::ResourcesGetter.get_ids_from_request(params, forest_user).first
     Company.update(company_id, status: 'live')
@@ -438,10 +300,12 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('companies', companies => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('companies', companies => {
   companies.addAction('Mark as Live', {
     // ...
     execute: async (context, resultBuilder) => {
@@ -454,53 +318,12 @@ agent.customizeCollection('companies', companies => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Mark as live',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                execute: function(ActionContextSingle $context, $resultBuilder) {
-                    $companyId = $context->getRecordId();
-                    $context->getCollection()->update(['status' => 'live'], new Filter('id', Operator::EQUAL, $companyId));
+</details>
 
-                    return $resultBuilder->success('Company is now live!');
-                }
-            )
-        );
-   }
-);
-```
-
-```python
-from forestadmin.datasource_toolkit.interfaces.query.filter.unpaginated import Filter
-from forestadmin.datasource_toolkit.interfaces.query.condition_tree.nodes.leaf import ConditionTreeLeaf
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-from forestadmin.datasource_toolkit.decorators.chart.result_builder import ResultBuilder
-
-async def mark_as_live(context: ActionContextSingle, result_builder: ResultBuilder):
-      company_id = await context.get_record_id()
-      await context.collection.update(
-          { "status": 'live' },
-          Filter(
-              {"condition_tree": ConditionTreeLeaf("id", "equal", company_id)}
-          )
-      )
-
-      return result_builder.success('Company is now live!')
-
-
-agent.customize_collection('companies').addAction('Mark as Live', {
-        "scope": "Single",
-        "execute": mark_as_live
-    }
-)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.customize
       include ForestAdminDatasourceCustomizer::Decorators::Action::Types
@@ -521,6 +344,8 @@ module ForestAdminRails
 end
 ```
 
+</details>
+
 {% endtab %} {% endtabs %}
 
 ## Step 4: Porting Smart Action hooks
@@ -531,8 +356,10 @@ Here is an example of a load hook where the default value of a field is set to 5
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('customers', {</strong></summary>
+
 ```javascript
-collection('customers', {
   actions: [
     {
       name: 'Charge credit card',
@@ -553,57 +380,12 @@ collection('customers', {
 });
 ```
 
-```php
-public function sendInvoice(): SmartAction
-{
-    return $this->smartAction('single', 'Charge credit card')
-        ->addField(
-            [
-                'field' => 'country',
-                'type' => 'Enum',
-                'enums' => [],
-            ]
-        )
-        ->load(
-            function () {
-                $fields = $this->getFields();
-                $fields['country']['enums'] = Company::getEnumsFromDatabaseForThisRecord();
+</details>
 
-                return $fields;
-            }
-        )
-    ...
-```
-
-```python
-from django_forest.utils.collection import Collection
-
-class CustomersForest(Collection):
-    def load(self):
-        self.actions = [
-            {
-                "type": "single",
-                "name": "Charge credit card",
-                "fields": [
-                    {
-                        "field": "amount",
-                        "type": "number",
-                    },
-                ],
-                "hooks": {
-                    "load": self.send_invoice_load_hook,
-                },
-            },
-        ]
-
-    def send_invoice_load_hook(self, fields, request, *args, **kwargs):
-        amount_field = next((x for x in fields if x["field"] == "amount"), None)
-        amount_field["value"] = convertEurosIntoDollars(50)
-        return fields
-```
+<details>
+<summary><strong>class Forest::Customer</strong></summary>
 
 ```ruby
-class Forest::Customer
   include ForestLiana::Collection
 
   collection :Customer
@@ -626,10 +408,12 @@ class Forest::Customer
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customers', companies => {
   companies.addAction('Charge credit card', {
     scope: 'Single',
     form: [
@@ -647,52 +431,12 @@ agent.customizeCollection('customers', companies => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Charge credit card',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                form: [
-                    new DynamicField(
-                        label: 'Country',
-                        type: FieldType::ENUM,
-                        enumValues: fn ($context) => Company::getEnumsFromDatabaseForThisRecord(),
-                    ),
-                ],
-            )
-        );
-    }
-);
-```
+</details>
 
-```python
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-
-def amount_default_value(context: ActionContextSingle):
-    return convertEurosIntoDollars(50)
-
-agent.customize_collection('customers').add_action('Charge credit card', {
-    "scope": "Single",
-    "form": [
-        {
-            "field": 'amount',
-            "type": "Number",
-
-            # the function given can also be an async function,
-            # it will be automatically awaited
-            "default_value": amount_default_value,
-            # or a lambda
-            # "default_value": lambda context: convertEurosIntoDollars(50),
-        },
-    ]}
-)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.customize
       include ForestAdminDatasourceCustomizer::Decorators::Action::Types
@@ -719,14 +463,18 @@ module ForestAdminRails
 end
 ```
 
+</details>
+
 {% endtab %} {% endtabs %}
 
 And another for a change hook which makes a field required if the value of another field is greater than 100:
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>collection('customers', {</strong></summary>
+
 ```javascript
-collection('customers', {
   actions: [
     {
       name: 'Charge credit card',
@@ -754,74 +502,12 @@ collection('customers', {
 });
 ```
 
-```php
-return $this->smartAction('single', 'Charge credit card')
-    ->addField(
-        [
-            'field' => 'amount',
-            'type' => 'Number',
-            'hook' => 'onAmountChange',
-        ]
-    )
-    ->addField(
-        [
-            'field' => 'motivation',
-            'type' => 'String',
-            'isRequired' => false,
-        ]
-    )
-    ->change(
-        [
-            'onAmountChange' => function () {
-                $fields = $this->getFields();
-                $fields['motivation']['isRequired'] = $fields['amount']['value'] > 100;
+</details>
 
-                return $fields;
-            },
-        ]
-    );
-```
-
-```python
-from django_forest.utils.collection import Collection
-
-class CustomersForest(Collection):
-    def load(self):
-        self.actions = [
-            {
-                "type": "single",
-                "name": "Charge credit card",
-                "fields": [
-                    {
-                        "field": "amount",
-                        "type": "number",
-                        "hook": "on_amount_change",
-                    },
-                    {
-                        "field": "motivation",
-                        "type": "string",
-                        "is_required": False,
-                    },
-                ],
-                "hooks": {
-                    "change": {
-                        "on_amount_change": on_amount_change,
-                    },
-                },
-            },
-        ]
-
-    def on_amount_change(self, fields, request, changed_field, *args, **kwargs):
-        amount_field = next((x for x in fields if x["field"] == "amount"), None)
-        motivation_field = next(
-            (x for x in fields if x["field"] == "motivation"), None
-        )
-        motivationField["is_required"] = amount_field["value"] > 100
-        return fields
-```
+<details>
+<summary><strong>class Forest::Customer</strong></summary>
 
 ```ruby
-class Forest::Customer
   include ForestLiana::Collection
 
   collection :Customer
@@ -853,10 +539,12 @@ class Forest::Customer
 end
 ```
 
-{% endtab %} {% tab title="After" %}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customers', companies => {
   companies.addAction('Charge credit card', {
     scope: 'Single',
     form: [
@@ -871,65 +559,12 @@ agent.customizeCollection('customers', companies => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection(
-    'Company',
-    function (CollectionCustomizer $builder) {
-        $builder->addAction(
-            'Send invoice',
-            new BaseAction(
-                scope: ActionScope::SINGLE,
-                form: [
-                    new DynamicField(
-                        label: 'city',
-                        type: FieldType::STRING,
-                    ),
-                    new DynamicField(
-                        label: 'zipCode',
-                        type: FieldType::STRING,
-                        value: function ($context) {
-                          if ($context->getFormValues()['city']) {
-                            return Company::getZipCodeFromCity(context->getFormValues()['city']['value']);
-                          }
-                        }
-                    ),
-                ],
-            )
-        );
-    }
-);
+</details>
 
-```
-
-```python
-from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
-
-async def amount_is_required(context: ActionContextSingle):
-    return context.form_values.get("amount", 0) > 100
-
-agent.customize_collection('customers').add_action('Charge credit card', {
-    "scope": "Single",
-    "form": [
-        {
-            "field": 'amount',
-            "type": "Number",
-        },
-        {
-            "field": 'motivation',
-            "type": "String",
-
-            # the function given can also be an async function,
-            # it will be automatically awaited
-            "is_required": amount_is_required,
-            # or a lambda
-            # "is_required": lambda context:context.form_values.get("amount", 0)>100,
-        },
-    ]}
-)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.customize
       include ForestAdminDatasourceCustomizer::Decorators::Action::Types
@@ -960,5 +595,7 @@ module ForestAdminRails
   end
 end
 ```
+
+</details>
 
 {% endtab %} {% endtabs %}

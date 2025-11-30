@@ -35,8 +35,10 @@ Collection Hooks are only called when the Collection function is contacted by th
 
 In the following example, we want to prevent a set of users from updating any records of the `Transactions` table. We want to check if the user email is allowed to update a record via an external API call.
 
+<details>
+<summary><strong>transaction.addHook('Before', 'Update', async context => {</strong></summary>
+
 ```javascript
-transaction.addHook('Before', 'Update', async context => {
   // context.caller contains information about the current user, the defined
   // timezone, etc.
   // In this case, context.caller.email is the email used in Forest Admin by the user
@@ -50,28 +52,12 @@ transaction.addHook('Before', 'Update', async context => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+</details>
 
-$forestAgent->customizeCollection(
-    'Transactions',
-    function (CollectionCustomizer $builder) {
-        $builder->addHook('Before', 'Update', function ($context) {
-            // $context->getCaller() contains information about the current user, the defined timezone, etc.
-            // In this case, $context->getCaller()->getValue('email') is the email used in Forest Admin by the user that initiated the call
-            $email = $context->getCaller()->getValue('email');
-            $isAllowed = myFunctionToCheckIfUserIsAllowed($email);
-
-            if (!$isAllowed) {
-                $context->throwForbiddenError($context->getCaller()->getValue('email') . ' is not allowed!');
-            }
-        });
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('transactions') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('transactions') do |collection|
   collection.add_hook('Before', 'Update') do |context|
     # context.caller contains information about the current user, the defined timezone, etc.
     # In this case, context.caller.email is the email used in Forest Admin by the user that initiated the call
@@ -85,26 +71,12 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.hook.context.update import (
-    HookBeforeUpdateContext
-)
+</details>
 
-async def transaction_before_update_fn(context: HookBeforeUpdateContext):
-    is_allowed = my_function_to_check_user_is_allowed(context.caller.email)
-    if not is_allowed:
-        context.throw_forbidden_error(f"{context.caller.email} is not allowed")
-
-
-agent.customize_collection("Transactions").add_hook(
-    "Before", "Update", transaction_before_update_fn
-)
-```
-
-Another good example would be the following: Each time a new `User` is created in the database, I want to send him an email.
+<details>
+<summary><strong>user.addHook('After', 'Create', async (context, responseBuilder) => {</strong></summary>
 
 ```javascript
-user.addHook('After', 'Create', async (context, responseBuilder) => {
   // The result of the create function always return an array of records
   const userEmail = context.records[0]?.email;
   await MyEmailSender.sendEmail({
@@ -115,30 +87,12 @@ user.addHook('After', 'Create', async (context, responseBuilder) => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use MyEmailSender;
+</details>
 
-$forestAgent->customizeCollection(
-    'User',
-    function (CollectionCustomizer $builder) {
-        $builder->addHook('After', 'Create', function ($context) {
-            // The result of the create function always return a record
-            $email = $context->getRecord()['email'];
-            MyEmailSender::sendEmail(
-                [
-                    'from'    => 'erlich@bachman.com',
-                    'to'      => $email,
-                    'message' => 'Hey, a new account was created with this email.',
-                ]
-            );
-        });
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('user') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('user') do |collection|
   collection.add_hook('After', 'Create') do |context|
     # The result of the create function always return a record
     email = context.record['email']
@@ -151,16 +105,6 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-agent.customize_collection("User").add_hook(
-    "After",
-    "Create",
-    lambda context: MyEmailSender.send_email(
-        {
-            "from": "erlich@bachman.com",
-            "to": context.records[0]['email'],
-            "message": "Hey, a new account was created with this email.",
-        }
-    ),
-)
-```
+</details>
+
+

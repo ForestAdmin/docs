@@ -72,10 +72,8 @@ Application Database
 If you're using a legacy v1 agent, see our migration guides:
 
 
-
   * [Migration Guide](/guides/migration/from-v1/overview.md) - Migrate from Agent v1 to v2
   * [Legacy Documentation](/legacy/agents-overview.md) - v1 agent documentation (deprecated)
-
 
 
 ## Getting Started
@@ -105,11 +103,9 @@ If you're using a legacy v1 agent, see our migration guides:
 ## Next Steps
 
 
-
   * [Node.js API](/reference/agent-api/nodejs.md) - Node.js API reference
   * [Ruby API](/reference/agent-api/ruby.md) - Ruby API reference
   * [Quickstart](/get-started/quickstart.md) - Get started guide
-
 
 
 ## Support

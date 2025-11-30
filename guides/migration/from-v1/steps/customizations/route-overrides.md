@@ -31,8 +31,10 @@ Custom permissions would better be implemented by using the [Roles](https://docs
 
 {% tabs %} {% tab title="Before" %}
 
+<details>
+<summary><strong>router.delete(</strong></summary>
+
 ```javascript
-router.delete(
   '/companies/:recordId',
   permissionMiddlewareCreator.delete(),
   (request, response, next) => {
@@ -50,57 +52,12 @@ router.delete(
 );
 ```
 
-{{#php}}
+</details>
 
-- Define a new route into your `web.php` file:
-- Add a new method into your Controller.
-
-```php
-<?php
-
-namespace App\Http\Controllers;
-
-use App\Models\Book;
-use Illuminate\Http\Response;
-
-class BooksController extends Controller
-{
-    public function destroy(int $id): Response
-    {
-        Book::where('id', $id)->delete();
-
-        return response()->noContent();
-    }
-}
-```
-
-{{/php}}
-{{#python}}
-
-- Define a new route into your `urls.py` file:
-- Add a new method in your controller.
-
-```python
-from django.http import  HttpResponse
-from django.views import generic
-
-from app.models import Book
-
-class BooksView(generic.ListView):
-    def delete(self, request, pk, *args, **kwargs):
-        Book.objects.filter(id=pk).delete()
-
-        return HttpResponse(status=204)
-```
-
-{{/python}}
-{{#ruby}}
-
-- Define a new route into your `routes.rb` file:
-- Add a new method in your controller.
+<details>
+<summary><strong>module ForestLiana</strong></summary>
 
 ```ruby
-module ForestLiana
   class BooksController < ForestLiana::ApplicationController
     def destroy
       Book.find(params[:id]).destroy
@@ -111,12 +68,12 @@ module ForestLiana
 end
 ```
 
-{{/ruby}}
+</details>
 
-{% endtab %} {% tab title="After" %}
+<details>
+<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customers', companies => {
   // Add a hook to the "customers" collection
   companies.addHook('Before', 'Delete', async context => {
     if (context.caller.email !== 'sandro.munda@forestadmin.com')
@@ -127,36 +84,12 @@ agent.customizeCollection('customers', companies => {
 });
 ```
 
-```php
-$forestAgent->customizeCollection('Book', function (CollectionCustomizer $builder) {
-    $builder->addHook('Before', 'Delete', function ($context) {
-        $isAllowed = true; // YOUR LOGIC HERE
+</details>
 
-        if (!$isAllowed) {
-            $context->throwForbiddenError('This collection is protected, you cannot remove from it.');
-        }
-    });
-})
-```
-
-```python
-from forestadmin.datasource_toolkit.decorators.hook.context.delete import (
-    HookBeforeDeleteContext
-)
-
-def before_delete_hook(context: HookBeforeDeleteContext):
-    is_allowed = True  # Your logic here
-
-    if is_allowed is False:
-        context.throw_forbidden_error(
-            "This collection is protected, you cannot remove from it."
-        )
-
-agent.customize_collection('Book').add_hook('Before', 'Delete', before_delete_hook)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.customize
       @create_agent.customize_collection('Book') do |collection|
@@ -172,6 +105,8 @@ module ForestAdminRails
   end
 end
 ```
+
+</details>
 
 {% endtab %} {% endtabs %}
 
@@ -205,51 +140,16 @@ router.put('/companies/:id', permissionMiddlewareCreator.update(), handler);
 ```
 
 {{/nodejs}}
-{{#python}}
 
-- Define a new route into your `urls.py` file.
-- Add a new method to your controller.
-
-```python
-import re
-
-from django.http import  HttpResponse
-from django_forest.resources.views.detail import DetailView
-from django_forest.resources.views.list import ListView
-
-from app.models import Book
-
-class CompanyView(ListView):
-    def post(self, request, pk, *args, **kwargs):
-        patch = self.get_body(request.body)["data"]["attributes"]
-
-        if "name" in patch and re.search(r'^Forest', patch["name"]):
-            return self.error_response(
-                "All company names should begin with 'Forest'."
-            )
-
-        return super().post(request, pk, *args, **kwargs)
-
-class CompanyDetailView(DetailView):
-    def put(self, request, pk):
-        patch = self.get_body(request.body)["data"]["attributes"]
-
-        if "name" in patch and re.search(r'^Forest', patch["name"]):
-            return self.error_response(
-                "All company names should begin with 'Forest'."
-            )
-
-        return super().put(request, pk)
-```
-
-{{/python}}
 {{#ruby}}
 
 - Define a new route into your `routes.rb` file.
 - Add a new method to your controller.
 
+<details>
+<summary><strong>module ForestLiana</strong></summary>
+
 ```ruby
-module ForestLiana
   class CompaniesController < ForestLiana::ApplicationController
     def create
       if params[:name] && params[:name].match?(/^Forest/)
@@ -270,25 +170,22 @@ module ForestLiana
 end
 ```
 
-{{/ruby}}
-{{#nodejs,python,ruby}}
-{% endtab %} {% tab title="After" %}
-{{/nodejs,python,ruby}}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('companies', companies => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('companies', companies => {
   companies.addFieldValidation('name', 'Match', /^Forest/);
 });
 ```
 
-```python
-agent.customize_collection('companies').add_field_validation(
-    'name', 'match', r'^Forest'
-)
-```
+</details>
+
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -301,6 +198,8 @@ module ForestAdminRails
 end
 ```
 
+</details>
+
 {{#nodejs,python,ruby}}
 {% endtab %} {% endtabs %}
 
@@ -309,8 +208,10 @@ end
 {% tabs %} {% tab title="Before" %}
 {{/nodejs,python,ruby}}
 
+<details>
+<summary><strong>// Override the POST /customers route</strong></summary>
+
 ```javascript
-// Override the POST /customers route
 router.post(
   '/customers',
   permissionMiddlewareCreator.create(),
@@ -331,30 +232,12 @@ router.post(
 );
 ```
 
-{{#python}}
+</details>
 
-- Define a new route into your `urls.py` file:
-- Add a new method to your controller.
-
-```python
-from django_forest.resources.views.list import ListView
-
-class CustomerView(ListView):
-    def post(self, request, pk, *args, **kwargs):
-        try:
-            superagent.post('https://my-company/create-card').set(
-                'X-API-Key', '**********'
-            ).end()
-        finally:
-            return super().post(request, pk, *args, **kwargs)
-
-```
-
-{{/python}}
-{{#ruby}}
+<details>
+<summary><strong>module ForestLiana</strong></summary>
 
 ```ruby
-module ForestLiana
   class CustomersController < ForestLiana::ApplicationController
     def create
       begin
@@ -369,13 +252,12 @@ module ForestLiana
 end
 ```
 
-{{/ruby}}
-{{#nodejs,python,ruby}}
-{% endtab %} {% tab title="After" %}
-{{/nodejs,python,ruby}}
+</details>
+
+<details>
+<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
 
 ```javascript
-agent.customizeCollection('customers', companies => {
   // Add a hook to the "customers" collection
   companies.addHook('Before', 'Create', async context => {
     await superagent
@@ -386,23 +268,12 @@ agent.customizeCollection('customers', companies => {
 });
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.hook.context.create import (
-    HookBeforeCreateContext
-)
+</details>
 
-def before_create_hook(context: HookBeforeCreateContext):
-    superagent.post('https://my-company/create-card').set(
-        'X-API-Key', '***********'
-    ).end()
-
-agent.customize_collection('customers').add_hook(
-    'Before', 'Create', before_create_hook
-)
-```
+<details>
+<summary><strong>module ForestAdminRails</strong></summary>
 
 ```ruby
-module ForestAdminRails
   class CreateAgent
     def self.customize
       @create_agent.customize_collection('Customer') do |collection|
@@ -416,6 +287,8 @@ module ForestAdminRails
   end
 end
 ```
+
+</details>
 
 {{#nodejs,python,ruby}}
 {% endtab %} {% endtabs %}

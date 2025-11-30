@@ -29,30 +29,6 @@ agent.addChart('cohort', async (context, resultBuilder) => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Context\AgentCustomizationContext;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Chart\ResultBuilder;
-
-$forestAgent->addChart(
-    'cohort',
-    fn(AgentCustomizationContext $context, ResultBuilder $resultBuilder) =>
-       $resultBuilder->smart(
-           [
-               'title' => 'Retention rates by weeks after signup',
-               'head' => ['Cohort', 'New users', '1', '2', '3', '4', '5', '6', '7'],
-               'data' => [
-                   'May 3, 2021': [79, 18, 16, 12, 16, 11, 7, 5],
-                   'May 10, 2021': [168, 35, 28, 30, 24, 12, 10],
-                   'May 17, 2021': [188, 42, 32, 34, 25, 18],
-                   'May 24, 2021': [191, 42, 32, 28, 12],
-                   'May 31, 2021': [191, 45, 34, 30],
-                   'June 7, 2021': [184, 42, 32],
-                   'June 14, 2021': [182, 44],
-               ],
-           ]
-       )
-);
-```
 
 {% endtab %} {% tab title="Component" %}
 

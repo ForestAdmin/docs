@@ -20,35 +20,22 @@ Can be achieved without any code [in the field settings](https://docs.forestadmi
 
 In the following example, editing or creating a `fullName` will update both `firstName` and `lastName` fields of the record.
 
+<details>
+<summary><strong>collection.replaceFieldWriting('fullName', value => {</strong></summary>
+
 ```javascript
-collection.replaceFieldWriting('fullName', value => {
   const [firstName, lastName] = value.split(' ');
 
   return { firstName, lastName };
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldWriting(
-        	'fullName',
-        	function($value) {
-        		[$firstName, $lastName] = explode(' ', $value);
-
-        		return compact('firstName', 'lastName');
-        	}
-        );
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('fullName') do |value|
     first_name, last_name = value.split(' ')
     {
@@ -59,21 +46,8 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-from forestadmin.datasource_toolkit.decorators.write.write_replace.write_customization_context import (
-    WriteCustomizationContext,
-)
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
+</details>
 
-def full_name_write_fn(
-    value, context: WriteCustomizationContext
-) -> RecordsDataAlias:
-    first_name, last_name = value.split(' ')
-    return {"firstName": first_name, "LastName": last_name}
-
-
-collection.replace_field_writing('fullName', full_name_write_fn)
-```
 
 ### Having specific behavior only for updates
 
@@ -81,8 +55,10 @@ You can have different behavior for `creations` and `updates`.
 
 In this example, each time the `firstName` field is edited, we also want to update a timestamp field.
 
+<details>
+<summary><strong>collection.replaceFieldWriting('firstName', async (value, context) => {</strong></summary>
+
 ```javascript
-collection.replaceFieldWriting('firstName', async (value, context) => {
   switch (context.action) {
     case 'create':
       return { firstName, firstNameLastEdited: null };
@@ -96,30 +72,12 @@ collection.replaceFieldWriting('firstName', async (value, context) => {
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
-use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Write\WriteReplace\WriteCustomizationContext;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldWriting(
-        	'firstName',
-        	function($value,  WriteCustomizationContext $context) {
-        		return match ($context->getAction()) {
-        			'create' => ['firstName' => $value, 'firstNameLastEdited' => null],
-        			'update' => ['firstName' => $value, 'firstNameLastEdited' => 'updated' => date('c')],
-        			default => throw new ForestException('invalid action'),
-                };
-        	}
-        );
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('firstName') do |value, context|
     case context.action
     when 'create'
@@ -139,27 +97,8 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-from datetime import date
-from forestadmin.datasource_toolkit.decorators.write.write_replace.write_customization_context import (
-    WriteCustomizationContext,
-)
-from forestadmin.datasource_toolkit.interfaces.records import RecordsDataAlias
+</details>
 
-
-def first_name_write_fn(
-    value, context: WriteCustomizationContext
-) -> RecordsDataAlias:
-    if context.action == "create":
-        return {"firstName": value, "firstNameLastEdited": None}
-    elif context.action == "update":
-        return {"firstName": value, "firstNameLastEdited": date.today().isoformat()}
-    else:
-      raise Exception("Unexpected value")
-
-
-collection.replace_field_writing('firstName', first_name_write_fn)
-```
 
 ### Changing fields in related records
 
@@ -174,31 +113,20 @@ In this simple example, we have two collections that are linked together:
 
 When the user updates his `job` field we want also to update the `title` of the portfolio by the `job` name.
 
+<details>
+<summary><strong>collection.replaceFieldWriting('job', (job, { action }) => {</strong></summary>
+
 ```javascript
-collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolio: { title: job } };
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldWriting(
-        	'job',
-        	function($value) {
-        		return ['job' => $value, 'portfolio' => ['title' => $value]];
-        	}
-        );
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
     {
       'job' => value,
@@ -209,11 +137,8 @@ end
 
 ```
 
-```python
-collection.replace_field_writing(
-    "job", lambda value, context: {"job": value, "portfolio": {"title": value}}
-)
-```
+</details>
+
 
 {% hint style="info" %}
 If the relationships do not exist it will create them with the given field values.
@@ -221,31 +146,20 @@ If the relationships do not exist it will create them with the given field value
 
 You can also provide another `portfolioId` to update the relationships and their fields:
 
+<details>
+<summary><strong>collection.replaceFieldWriting('job', (job, { action }) => {</strong></summary>
+
 ```javascript
-collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolioId: 8, portfolio: { title: job } };
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldWriting(
-        	'job',
-        	function($value) {
-        		return ['job' => $value, 'portfolioId' => 8, 'portfolio' => ['title' => $value]];
-        	}
-        );
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
     {
       'job' => value,
@@ -256,54 +170,22 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-collection.replace_field_writing(
-    "job",
-    lambda value, context: {
-        "job": value,
-        "portfolioId": 8,
-        "portfolio": {"title": value},
-    },
-)
-```
+</details>
 
-Of course, you can chain the relationships. For example, if a portfolio has a `one-to-one` relationship
-with the `formats` collection, you can update it by writing the right path.
+<details>
+<summary><strong>collection.replaceFieldWriting('job', (job, { action }) => {</strong></summary>
 
 ```javascript
-collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolioId: 8, portfolio: { title: job, format: { name: 'pdf' } } };
 });
 ```
 
-```php
-use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
-use ForestAdmin\AgentPHP\DatasourceToolkit\Components\Query\ConditionTree\Operators;
+</details>
 
-$forestAgent->customizeCollection(
-    'Customer',
-    function (CollectionCustomizer $builder) {
-        $builder->replaceFieldWriting(
-        	'job',
-        	function($value) {
-        		return [
-        			'job' => $value,
-        			'portfolioId' => 8,
-        			'portfolio' => [
-        				'title' => $value,
-        				'format' => [
-        					'name' => 'pdf'
-        				]
-        			]
-        		];
-        	}
-        );
-    }
-);
-```
+<details>
+<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
 
 ```ruby
-@create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
     {
       'job' => value,
@@ -317,13 +199,6 @@ $forestAgent->customizeCollection(
 end
 ```
 
-```python
-collection.replace_field_writing(
-    "job",
-    lambda value, context: {
-        "job": value,
-        "portfolioId": 8,
-        "portfolio": {"title": value, "format": {"name": "pdf"}},
-    },
-)
-```
+</details>
+
+

@@ -116,11 +116,6 @@ const response = await fetch('/api/endpoint', {
 });
 ```
 
-```python Python
-import requests
-response = requests.get('/api/endpoint', 
-  headers={'Authorization': f'Bearer {api_key}'})
-```
 
 ```curl cURL
 curl -X GET '/api/endpoint' \
@@ -143,7 +138,7 @@ curl -X POST 'https://api.example.com/users' \
 ```json Success
 {
   "id": "user_123",
-  "name": "John Doe", 
+  "name": "John Doe",
   "email": "john@example.com",
   "created_at": "2024-01-15T10:30:00Z"
 }
@@ -159,7 +154,7 @@ Example of step-by-step instructions:
 <Steps>
 <Step title="Install dependencies">
   Run `npm install` to install required packages.
-  
+
   <Check>
   Verify installation by running `npm list`.
   </Check>
@@ -167,11 +162,11 @@ Example of step-by-step instructions:
 
 <Step title="Configure environment">
   Create a `.env` file with your API credentials.
-  
+
   ```bash
   API_KEY=your_api_key_here
   ```
-  
+
   {% hint style="warning" %}
   Never commit API keys to version control.
 {% endhint %}
@@ -220,7 +215,6 @@ Example of accordion groups:
 </details>
 
 
-
 <details>
 <summary>Advanced configuration</summary>
 
@@ -241,11 +235,9 @@ Example of cards and card groups:
 * [Getting started guide](/quickstart.md) - Complete walkthrough from installation to your first API call in under 10 minutes.
 
 
-
 * [Authentication](/auth.md) - Learn how to authenticate requests using API keys or JWT tokens.
 
 * [Rate limiting](/rate-limits.md) - Understand rate limits and best practices for high-volume usage.
-
 
 
 ### API documentation components
@@ -278,9 +270,7 @@ Example of response field documentation:
 Unique identifier assigned to the newly created user.
 
 
-
 ISO 8601 formatted timestamp of when the user was created.
-
 
 
 List of permission strings assigned to this user.
@@ -294,20 +284,13 @@ Example of nested field documentation:
 Complete user object with all associated data.
 
 
-  
   User profile information including personal details.
-  
-  
-    
-    User's first name as entered during registration.
-    
-    
-    
-    URL to user's profile picture. Returns null if no avatar is set.
-    
-  
-  
 
+
+    User's first name as entered during registration.
+
+
+    URL to user's profile picture. Returns null if no avatar is set.
 
 
 ### Media and advanced components

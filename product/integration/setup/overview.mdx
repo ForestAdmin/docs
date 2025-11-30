@@ -15,7 +15,6 @@ We recommend the following priority order:
 
 1. **[Node.js](/product/integration/setup/nodejs)** ← PRIORITY 1 (Most features, best support)
 2. **[Ruby](/product/integration/setup/ruby)** ← PRIORITY 2 (Mature, Rails integration)
-3. **[Python](/product/integration/setup/python)** ← PRIORITY 3 (Django/Flask support)
 
 ## Quick Setup Summary
 
@@ -36,9 +35,7 @@ gem install forest_liana
 - Mature and stable
 
 ### Python (forestadmin-agent-python)
-```bash
-pip install forestadmin-agent-python
-```
+
 - Django/Flask support
 - SQLAlchemy/Django ORM
 - Growing feature set
@@ -57,5 +54,4 @@ Each setup guide covers:
 
 - [Node.js Setup](/product/integration/setup/nodejs)
 - [Ruby Setup](/product/integration/setup/ruby)
-- [Python Setup](/product/integration/setup/python)
 - [Integration Overview](/product/integration/overview)

@@ -7,15 +7,11 @@ The new agent is built with a different architecture and breaks API retro compat
 {{#nodejs}}
 You are using a legacy agent if you are using either the [forest-express-sequelize](https://github.com/ForestAdmin/forest-express-sequelize) or the [forest-express-mongoose](https://github.com/ForestAdmin/forest-express-mongoose) packages.
 {{/nodejs}}
-{{#php}}
-You are using a legacy agent if you are using the version 1 of [laravel-forestadmin](https://github.com/ForestAdmin/laravel-forestadmin) package.
-{{/php}}
+
 {{#ruby}}
 You are using a legacy agent if you are using the [forest-rails](https://github.com/ForestAdmin/forest-rails) package.
 {{/ruby}}
-{{#python}}
-You are using a legacy agent if you are using the version 1 of [django-forestadmin](https://github.com/ForestAdmin/django-forestadmin) package.
-{{/python}}
+
 
 # When to migrate?
 
