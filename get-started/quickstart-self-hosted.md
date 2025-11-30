@@ -7,17 +7,9 @@ With Self-Hosted deployment, you run the Forest Admin agent in your infrastructu
 
 ## What you'll do
 
-<Steps>
-  <Step title="Choose your architecture">
-    Standalone microservice or in-app integration
-  </Step>
-  <Step title="Set up the agent">
-    Follow the onboarding flow to configure Forest Admin
-  </Step>
-  <Step title="Start your agent">
-    Launch the agent and access your admin panel
-  </Step>
-</Steps>
+1. **Choose your architecture** - Standalone microservice or in-app integration
+2. **Set up the agent** - Follow the onboarding flow to configure Forest Admin
+3. **Start your agent** - Launch the agent and access your admin panel
 
 ## Prerequisites
 
@@ -83,92 +75,99 @@ Choose the architecture that best fits your needs and continue with the appropri
 
 ## Step 2: Set up the agent
 
-<Tabs>
-  <Tab title="Standalone">
-    ### Follow the onboarding flow
+<details>
+<summary><strong>Option 1: Standalone</strong></summary>
 
-    1. Go to [app.forestadmin.com](https://app.forestadmin.com) and create a new project
-    2. Choose **"Self-Hosted"** deployment
-    3. Select **"Standalone application"** option
-    4. Follow the onboarding instructions. They will guide you to:
-       - Install Forest Admin CLI: `npm install -g forest`
-       - Login to Forest Admin: `forest login`
-       - Generate the standalone application: `forest create:project`
+### Follow the onboarding flow
 
-    When this is done, you are prompted to start your newly created agent:
+1. Go to [app.forestadmin.com](https://app.forestadmin.com) and create a new project
+2. Choose **"Self-Hosted"** deployment
+3. Select **"Standalone application"** option
+4. Follow the onboarding instructions. They will guide you to:
+   - Install Forest Admin CLI: `npm install -g forest`
+   - Login to Forest Admin: `forest login`
+   - Generate the standalone application: `forest create:project`
 
-    ```bash
-    npm start
-    ```
+When this is done, you are prompted to start your newly created agent:
 
-    🎉 **Congratulations!** Your agent should start on port `3310` by default and display:
-    ```
-    [Forest] 🌳  Your agent is now running at http://localhost:3310
-    ```
+```bash
+npm start
+```
 
-    {% hint style="info" %}
-    This command automatically generates a standalone application, with all the files necessary to make Forest Admin work, including a first `.env` with the environment variables such as `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET`.
+🎉 **Congratulations!** Your agent should start on port `3310` by default and display:
+```
+[Forest] 🌳  Your agent is now running at http://localhost:3310
+```
+
+{% hint style="info" %}
+This command automatically generates a standalone application, with all the files necessary to make Forest Admin work, including a first `.env` with the environment variables such as `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET`.
 {% endhint %}
 
-    {% hint style="warning" %}
-    Never commit your `.env` file to version control. Add it to `.gitignore`.
+{% hint style="warning" %}
+Never commit your `.env` file to version control. Add it to `.gitignore`.
 {% endhint %}
-  </Tab>
 
-  <Tab title="In-app (Node.js)">
-    Forest Admin integrates with popular Node.js frameworks: **Express**, **Fastify**, **Koa**, **NestJS**, and more.
+</details>
 
-    ### Follow the onboarding flow
+<details>
+<summary><strong>Option 2: In-app (Node.js)</strong></summary>
 
-    1. Go to [app.forestadmin.com](https://app.forestadmin.com) and create a new project
-    2. Select **"In-app integration"** option
-    3. Choose your framework (**Express**, **Fastify**, **Koa**, **NestJS**)
-    4. Follow the onboarding instructions. They will provide you with:
-       - Installation command for Forest Admin packages
-       - Ready-to-use code snippet with your `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` already configured
-       - Instructions on where to add the code in your application
+Forest Admin integrates with popular Node.js frameworks: **Express**, **Fastify**, **Koa**, **NestJS**, and more.
 
-    5. Add the provided code to your application and start your app:
+### Follow the onboarding flow
 
-    ```bash
-    npm start
-    # or
-    npm run dev
-    ```
+1. Go to [app.forestadmin.com](https://app.forestadmin.com) and create a new project
+2. Select **"In-app integration"** option
+3. Choose your framework (**Express**, **Fastify**, **Koa**, **NestJS**)
+4. Follow the onboarding instructions. They will provide you with:
+   - Installation command for Forest Admin packages
+   - Ready-to-use code snippet with your `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` already configured
+   - Instructions on where to add the code in your application
 
-    🎉 **Congratulations!** The Forest Admin agent will start on port `3310` alongside your application.
+5. Add the provided code to your application and start your app:
 
-    {% hint style="warning" %}
-    Never commit your `.env` file to version control. Add it to `.gitignore`.
+```bash
+npm start
+# or
+npm run dev
+```
+
+🎉 **Congratulations!** The Forest Admin agent will start on port `3310` alongside your application.
+
+{% hint style="warning" %}
+Never commit your `.env` file to version control. Add it to `.gitignore`.
 {% endhint %}
-  </Tab>
 
-  <Tab title="In-app (Ruby)">
-    Forest Admin integrates seamlessly with **Ruby on Rails** applications.
+</details>
 
-    ### Follow the onboarding flow
+<details>
+<summary><strong>Option 3: In-app (Ruby)</strong></summary>
 
-    1. Go to [app.forestadmin.com](https://app.forestadmin.com) and create a new project
-    2. Select **"In-app integration"** option
-    3. Choose **Ruby on Rails**
-    4. Follow the onboarding instructions. They will provide you with:
-       - Installation command for the Forest Admin gem
-       - Ready-to-use configuration with your `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` already configured
-       - Instructions on where to add the configuration in your Rails application
+Forest Admin integrates seamlessly with **Ruby on Rails** applications.
 
-    5. Add the provided configuration to your application and start your app:
+### Follow the onboarding flow
 
-    ```bash
-    rails server
-    ```
+1. Go to [app.forestadmin.com](https://app.forestadmin.com) and create a new project
+2. Select **"In-app integration"** option
+3. Choose **Ruby on Rails**
+4. Follow the onboarding instructions. They will provide you with:
+   - Installation command for the Forest Admin gem
+   - Ready-to-use configuration with your `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` already configured
+   - Instructions on where to add the configuration in your Rails application
 
-    🎉 **Congratulations!** Your application (including Forest Admin) will start on port `3000` by default.
+5. Add the provided configuration to your application and start your app:
 
-    {% hint style="warning" %}
-    Never commit your `.env` file to version control. Add it to `.gitignore`.
+```bash
+rails server
+```
+
+🎉 **Congratulations!** Your application (including Forest Admin) will start on port `3000` by default.
+
+{% hint style="warning" %}
+Never commit your `.env` file to version control. Add it to `.gitignore`.
 {% endhint %}
-  </Tab>
-</Tabs>
+
+</details>
 
 ## Step 3: Access your admin panel
 
@@ -213,20 +212,17 @@ After an optional review, you can immediately access the Forest Admin UI to mana
 
     **Quick healthcheck test:**
 
-    <Tabs>
-      <Tab title="Node.js">
-        ```bash
-        curl http://localhost:3310/forest
-        ```
-        Should return: `{"meta":{"name":"@forestadmin/agent",...}}`
-      </Tab>
-      <Tab title="Ruby">
-        ```bash
-        curl http://localhost:3000/forest
-        ```
-        Should return Forest Admin metadata
-      </Tab>
-    </Tabs>
+    **Node.js:**
+    ```bash
+    curl http://localhost:3310/forest
+    ```
+    Should return: `{"meta":{"name":"@forestadmin/agent",...}}`
+
+    **Ruby:**
+    ```bash
+    curl http://localhost:3000/forest
+    ```
+    Should return Forest Admin metadata
 
 </details>
 
@@ -266,20 +262,18 @@ After an optional review, you can immediately access the Forest Admin UI to mana
     4. Ensure the database user has read permissions on tables
 
     **Test your database connection:**
-    <Tabs>
-      <Tab title="Node.js">
-        ```bash
-        # Quick connection test
-        node -e "const { Client } = require('pg'); const client = new Client(process.env.DATABASE_URL); client.connect().then(() => console.log('✅ Connected!')).catch(err => console.error('❌ Error:', err.message))"
-        ```
-      </Tab>
-      <Tab title="Ruby">
-        ```bash
-        rails dbconsole
-        # Should connect to your database
-        ```
-      </Tab>
-    </Tabs>
+
+    **Node.js:**
+    ```bash
+    # Quick connection test
+    node -e "const { Client } = require('pg'); const client = new Client(process.env.DATABASE_URL); client.connect().then(() => console.log('✅ Connected!')).catch(err => console.error('❌ Error:', err.message))"
+    ```
+
+    **Ruby:**
+    ```bash
+    rails dbconsole
+    # Should connect to your database
+    ```
 
 </details>
 
