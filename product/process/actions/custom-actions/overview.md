@@ -11,7 +11,6 @@ Use code-based actions when you need complex workflows, dynamic forms, external 
 
 Here's what a code-based action looks like:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as Live', {
@@ -85,7 +84,6 @@ forest_agent.customize_collection('companies') do |collection|
   )
 end
 ```
-</CodeGroup>
 
 ## Action configuration
 
@@ -113,7 +111,6 @@ The context object provides access to everything you need in your action:
 
 Access user input from the form:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 const amount = context.formValues.Amount;
 const email = context.formValues['Email Address'];
@@ -123,13 +120,11 @@ const email = context.formValues['Email Address'];
 amount = context.form_values['Amount']
 email = context.form_values['Email Address']
 ```
-</CodeGroup>
 
 ### Selected records
 
 Get the records the action is running on:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 // Single action
 const user = await context.getRecord(['id', 'email', 'name']);
@@ -145,13 +140,11 @@ user = context.get_record(['id', 'email', 'name'])
 # Bulk action
 users = context.get_records(['id', 'email'])
 ```
-</CodeGroup>
 
 ### Current user
 
 Access information about who triggered the action:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 const userId = context.caller.id;
 const userEmail = context.caller.email;
@@ -165,13 +158,11 @@ user_email = context.caller.email
 user_role = context.caller.role
 user_team = context.caller.team
 ```
-</CodeGroup>
 
 ### Collection metadata
 
 Access collection schema and information:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 const collectionName = context.collection.name;
 const fields = context.collection.schema.fields;
@@ -181,13 +172,11 @@ const fields = context.collection.schema.fields;
 collection_name = context.collection.name
 fields = context.collection.schema.fields
 ```
-</CodeGroup>
 
 ### Filters
 
 For Bulk and Global actions, access current filters:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 const filter = context.filter;
 // Use filter to query records matching current view
@@ -197,13 +186,11 @@ const filter = context.filter;
 filter = context.filter
 # Use filter to query records matching current view
 ```
-</CodeGroup>
 
 ### Change detection
 
 Check if a form field value has changed:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 if (context.hasFieldChanged('Status')) {
   // Status field was modified by user
@@ -215,7 +202,6 @@ if context.has_field_changed('Status')
   # Status field was modified by user
 end
 ```
-</CodeGroup>
 
 * [Context & scope](/product/process/actions/custom-actions/context-scope.md) - Learn more about context and scopes
 
@@ -225,7 +211,6 @@ Return appropriate feedback to users:
 
 ### Success notification
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.success('Operation completed!');
 ```
@@ -233,11 +218,9 @@ return resultBuilder.success('Operation completed!');
 ```ruby Ruby
 result_builder.success('Operation completed!')
 ```
-</CodeGroup>
 
 ### Error notification
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.error('Something went wrong');
 ```
@@ -245,11 +228,9 @@ return resultBuilder.error('Something went wrong');
 ```ruby Ruby
 result_builder.error('Something went wrong')
 ```
-</CodeGroup>
 
 ### HTML content
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.success('Results', {
   html: '<p>Detailed results...</p>'
@@ -259,11 +240,9 @@ return resultBuilder.success('Results', {
 ```ruby Ruby
 result_builder.success('Results', html: '<p>Detailed results...</p>')
 ```
-</CodeGroup>
 
 ### File download
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.file(
   fileContent,
@@ -279,11 +258,9 @@ result_builder.file(
   mime_type: 'application/pdf'
 )
 ```
-</CodeGroup>
 
 ### Redirect
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.redirectTo('https://example.com');
 ```
@@ -291,11 +268,9 @@ return resultBuilder.redirectTo('https://example.com');
 ```ruby Ruby
 result_builder.redirect_to('https://example.com')
 ```
-</CodeGroup>
 
 ### Webhook
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.webhook(
   'https://api.example.com/webhook',
@@ -313,7 +288,6 @@ result_builder.webhook(
   body: { data: 'value' }
 )
 ```
-</CodeGroup>
 
 * [Result types](/product/process/actions/custom-actions/result-types.md) - Explore all result types
 
@@ -325,7 +299,6 @@ Actions can include forms to collect user input:
 
 Define fields with fixed configuration:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   { type: 'String', label: 'Name', isRequired: true },
@@ -345,13 +318,11 @@ form: [
   { type: FieldType::BOOLEAN, label: 'Send email?' }
 ]
 ```
-</CodeGroup>
 
 ### Dynamic forms
 
 Make forms reactive to user input or record data:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   { type: 'Boolean', label: 'Send email?', id: 'sendEmail' },
@@ -393,7 +364,6 @@ form: [
   }
 ]
 ```
-</CodeGroup>
 
 * [Forms](/product/process/actions/custom-actions/forms.md) - Learn about form fields and dynamic forms
 
@@ -401,7 +371,6 @@ form: [
 
 ### Send email
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Send Welcome Email', {
   scope: 'Single',
@@ -454,11 +423,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Charge credit card
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Charge Credit Card', {
   scope: 'Single',
@@ -524,11 +491,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Bulk status update
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Update Status', {
   scope: 'Bulk',
@@ -576,11 +541,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Generate report
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Generate Report', {
   scope: 'Global',
@@ -629,7 +592,6 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ## Learn more
 

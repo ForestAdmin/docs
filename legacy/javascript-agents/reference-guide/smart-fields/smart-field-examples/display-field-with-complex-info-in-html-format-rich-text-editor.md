@@ -85,9 +85,7 @@ Then define what happens when the form is sent and the route is called. The rout
 You need to get account object and update each field for which a new value has been passed with the relevant value.
 
 {% hint style="warning" %}
-
 The refresh relationship part is needed to refresh the data displayed without having to refresh manually
-
 {% endhint %}
 
 ```javascript

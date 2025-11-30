@@ -16,9 +16,7 @@ To configure SSO or SCIM:
 ## Prerequisites
 
 {% hint style="warning" %}
-
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
-
 {% endhint %}
 
 ## Configuration Steps

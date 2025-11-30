@@ -8,9 +8,7 @@ In SQL, a view is a virtual table based on the result-set of an SQL statement. V
 - act as aggregated tables, where the database engine aggregates data (sum, average etc.) and presents the calculated results as part of the data.
 
 {% hint style="info" %}
-
 Forest Admin natively supports SQL views. If you have already implemented views, simply add [the associated models](https://docs.forestadmin.com/documentation/reference-guide/models/enrich-your-models#declaring-a-new-model) to display them on your interface.
-
 {% endhint %}
 
 ## Creating the SQL View
@@ -38,9 +36,7 @@ CREATE VIEW customer_stats AS
 To display the SQL view on your Forest Admin interface, you must add the associated ActiveRecord model in your application.
 
 {% hint style="info" %}
-
 You must restart your server to see the changes on your interface.
-
 {% endhint %}
 
 ## Managing the view
@@ -48,9 +44,7 @@ You must restart your server to see the changes on your interface.
 Once your SQL view is implemented, you'll be able to filter, search, export and change the order of your fields.
 
 {% hint style="warning" %}
-
 Most of the time SQL views are used as **read-only**. If this is the case, we recommend changing the CRUD permission in your [roles's settings](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles).
-
 {% endhint %}
 
 ![](/images/legacy/javascript-agents/customer-stats-sql-view.png)

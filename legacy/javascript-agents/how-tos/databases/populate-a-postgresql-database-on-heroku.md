@@ -6,9 +6,7 @@ description: >-
   database dump.
 ---
 {% hint style="info" %}
-
 If you don't have a Heroku application yet, take a look at [this how-to](../setup/deploy-to-production-on-heroku.md).
-
 {% endhint %}
 
 We recommend adding on your Heroku application the free add-on “Heroku Postgres” **(1)(2)**.

@@ -8,9 +8,7 @@ description: "Overview of security features available in Forest Admin"
 The Security tab provides essential security features for project management.
 
 {% hint style="info" %}
-
 Some features may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable them.
-
 {% endhint %}
 
 ## Available Security Features

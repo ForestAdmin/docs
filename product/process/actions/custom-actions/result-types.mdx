@@ -20,7 +20,6 @@ execute: async (context, resultBuilder) => {
 
 Display a custom success message.
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.success('Company is now live!');
 ```
@@ -28,13 +27,11 @@ return resultBuilder.success('Company is now live!');
 ```ruby Ruby
 result_builder.success(message: 'Company is now live!')
 ```
-</CodeGroup>
 
 ## Error notification
 
 Display an error message when something goes wrong.
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 if (!isValid) {
   return resultBuilder.error('The company was already live!');
@@ -46,7 +43,6 @@ if !is_valid
   result_builder.error(message: 'The company was already live!')
 end
 ```
-</CodeGroup>
 
 <Note>
 Always handle errors gracefully and return meaningful error messages to help users understand what went wrong.
@@ -56,7 +52,6 @@ Always handle errors gracefully and return meaningful error messages to help use
 
 Return rich formatted content displayed in a side panel. Perfect for showing detailed operation results.
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.success('Charge successful', {
   html: `
@@ -83,13 +78,11 @@ result_builder.success(
   }
 )
 ```
-</CodeGroup>
 
 ### HTML with error
 
 You can also return HTML content with an error:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.error('Charge failed', {
   html: `
@@ -112,7 +105,6 @@ result_builder.error(
     <p class='c-clr-1-4 l-mb'>The credit card is marked as blocked.</p>"
 )
 ```
-</CodeGroup>
 
 ## File download
 
@@ -122,7 +114,6 @@ Generate and download files (PDFs, CSVs, Excel, etc.).
 Actions that generate files must set `generateFile: true` in their configuration. This flag prevents using other result types (notifications, HTML) in the same action.
 </Warning>
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Download report', {
   scope: 'Global',
@@ -165,7 +156,6 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Common MIME types
 
@@ -182,7 +172,6 @@ collection.add_action(
 
 ### Example: Generate CSV
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Export to CSV', {
   scope: 'Bulk',
@@ -218,11 +207,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Example: Generate PDF
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Generate invoice', {
   scope: 'Single',
@@ -262,7 +249,6 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ## Redirect
 
@@ -272,7 +258,6 @@ Redirect users to another page after the action executes. Works for both interna
 
 Redirect to another page within Forest Admin:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.redirectTo(
   '/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity'
@@ -284,13 +269,11 @@ result_builder.redirect_to(
   '/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity'
 )
 ```
-</CodeGroup>
 
 ### External redirect
 
 Redirect to an external URL:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.redirectTo(
   'https://www.example.com/tracking?id=ZW924750388GB'
@@ -302,11 +285,9 @@ result_builder.redirect_to(
   'https://www.example.com/tracking?id=ZW924750388GB'
 )
 ```
-</CodeGroup>
 
 ### Example: Redirect to created record
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Create and view', {
   scope: 'Global',
@@ -336,7 +317,6 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ## Webhook
 
@@ -346,7 +326,6 @@ Trigger an HTTP callback from the user's browser. Useful for logging into third-
 Webhooks are triggered from the user's browser and are subject to CORS restrictions. Make sure the target server accepts requests from Forest Admin domains.
 </Warning>
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.webhook(
   'https://api.example.com/callback',  // URL
@@ -364,11 +343,9 @@ result_builder.webhook(
   body: { userId: 123, action: 'approve' }
 )
 ```
-</CodeGroup>
 
 ### Example: Single sign-on
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Login to external tool', {
   scope: 'Single',
@@ -408,11 +385,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Example: Trigger background job
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Process data', {
   scope: 'Bulk',
@@ -454,13 +429,11 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ## Combining results with operations
 
 ### Success with HTML details
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 execute: async (context, resultBuilder) => {
   const result = await performComplexOperation();
@@ -502,11 +475,9 @@ execute: ->(context, result_builder) {
   end
 }
 ```
-</CodeGroup>
 
 ### Conditional redirect
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 execute: async (context, resultBuilder) => {
   const order = await context.getRecord(['status', 'id']);
@@ -536,5 +507,4 @@ execute: ->(context, result_builder) {
   end
 }
 ```
-</CodeGroup>
 

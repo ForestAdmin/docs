@@ -9,15 +9,11 @@ description: >-
 ## Upgrading to v6
 
 {% hint style="warning" %}
-
 Before upgrading to v6, consider the below **breaking changes**.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
-
 {% endhint %}
 
 To upgrade to v6, simply run:
@@ -35,9 +31,7 @@ npm install forest-express-mongoose@^6.0.0
 ```
 
 {% hint style="info" %}
-
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.
-
 {% endhint %}
 
 ## Breaking changes
@@ -99,9 +93,7 @@ router.post('/actions/mark-as-live', permissionMiddlewareCreator.smartAction(), 
 ```
 
 {% hint style="warning" %}
-
 If you altered the default DELETE behavior by overriding or extending it, you'll have to do so as well with the new [BULK DELETE route](../../../reference-guide/routes/default-routes.md#delete-a-list-of-records).
-
 {% endhint %}
 
 ## Important Notice

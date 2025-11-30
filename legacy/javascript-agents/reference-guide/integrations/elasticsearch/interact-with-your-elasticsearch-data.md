@@ -13,9 +13,7 @@ First, we declare the `bank-accounts` collection in the `forest/` directory. In 
 You can check out the list of [available field options](https://docs.forestadmin.com/documentation/reference-guide/fields/create-and-manage-smart-fields#available-field-options) if you need them.
 
 {% hint style="warning" %}
-
 You **MUST** declare an `id` field when creating a Smart Collection. The value of this field for each record **MUST** be unique. On the following example, we simply use the UUID provided on every Elasticsearch documents.
-
 {% endhint %}
 
 ```javascript
@@ -89,9 +87,7 @@ collection('bank-accounts', {
 ```
 
 {% hint style="info" %}
-
 You can add the option `isSearchable: true` to your collection to display the search bar. Note that you will have to implement the search yourself by including it into your own `GET` logic.
-
 {% endhint %}
 
 ### Implementing the routes
@@ -153,9 +149,7 @@ module.exports = router;
 ```
 
 {% hint style="info" %}
-
 Our custom filter translator only support `number`, `keyword`, `text`, `date` data types. Nonetheless, you can implement more filter mapper type in the`utils/filter-translator.js`
-
 {% endhint %}
 
 ### Implementing the GET (all records)

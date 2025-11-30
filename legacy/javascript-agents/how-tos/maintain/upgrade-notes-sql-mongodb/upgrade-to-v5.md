@@ -9,15 +9,11 @@ description: >-
 ## Upgrading to v5
 
 {% hint style="warning" %}
-
 Before upgrading to v5, consider the below **breaking changes**.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
-
 {% endhint %}
 
 To upgrade to v5, simply run:
@@ -35,9 +31,7 @@ npm install forest-express-mongoose@^5.0.0
 ```
 
 {% hint style="info" %}
-
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.
-
 {% endhint %}
 
 ## Breaking changes

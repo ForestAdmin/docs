@@ -14,9 +14,7 @@ Forest Admin works through an **agent**—a lightweight backend application that
 - Translates Forest Admin UI requests into database queries
 
 {% hint style="info" %}
-
 **Important:** The agent is the only component that accesses your data. Forest Admin UI never connects directly to your database.
-
 {% endhint %}
 
 ## Deployment Options
@@ -34,37 +32,53 @@ To install Forest Admin, you need to decide **where to run the agent**:
 
 Answer these questions to find your best option:
 
-<AccordionGroup>
-  <Accordion title="Is your database accessible from the internet?" icon="globe">
-    **Yes** → Consider **Cloud** (easiest setup)
+
+<details>
+<summary>Is your database accessible from the internet?</summary>
+
+**Yes** → Consider **Cloud** (easiest setup)
 
     **No** → Go to next question ↓
-  </Accordion>
 
-  <Accordion title="Do you need air-gapped deployment (zero external connections)?" icon="shield-halved">
-    **Yes** → You need **On-Premise**
+</details>
+
+
+  
+<details>
+<summary>Do you need air-gapped deployment (zero external connections)?</summary>
+
+**Yes** → You need **On-Premise**
 
     **No** → Go to next question ↓
-  </Accordion>
 
-  <Accordion title="Do you have strict compliance requirements (HIPAA, SOC2, data residency)?" icon="file-shield">
-    **Yes** → Choose **Self-Hosted** or **On-Premise**
+</details>
+
+
+  
+<details>
+<summary>Do you have strict compliance requirements (HIPAA, SOC2, data residency)?</summary>
+
+**Yes** → Choose **Self-Hosted** or **On-Premise**
 
     **No** → Go to next question ↓
-  </Accordion>
 
-  <Accordion title="Do you want to manage infrastructure yourself?" icon="server">
-    **No, I want it managed** → Choose **Cloud**
+</details>
+
+
+  
+<details>
+<summary>Do you want to manage infrastructure yourself?</summary>
+
+**No, I want it managed** → Choose **Cloud**
 
     **Yes, I can manage it** → Choose **Self-Hosted**
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 {% hint style="info" %}
-
 **Need help choosing?**
 - [Contact sales](mailto:sales@forestadmin.com) to discuss your specific requirements
-
 {% endhint %}
 
 ## Choose your deployment method
@@ -80,9 +94,7 @@ Answer these questions to find your best option:
 
 
 {% hint style="info" %}
-
 Need guidance? Our team is here to help you choose the right deployment option for your needs. [Contact us](mailto:sales@forestadmin.com)
-
 {% endhint %}
 
 ---

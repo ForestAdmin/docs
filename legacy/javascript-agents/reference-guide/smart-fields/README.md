@@ -64,9 +64,7 @@ Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the
 Very often, the business logic behind the Smart Field is more complex and must interact with the database. Here’s an example with the Smart Field `full_address` on the `Customer` model.
 
 {% hint style="warning" %}
-
 The collection name must be the same as the **model name**.
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 12.16.05.png>)
@@ -129,9 +127,7 @@ collection('customers', {
 ```
 
 {% hint style="info" %}
-
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
-
 {% endhint %}
 
 ### Mongodb
@@ -188,17 +184,13 @@ collection('customers', {
 ```
 
 {% hint style="info" %}
-
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
-
 {% endhint %}
 
 By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the set method should always return the object it’s working on**. In the example hereunder, the `user_params` is returned is returned including only the modified data.
 
 {% hint style="info" %}
-
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
-
 {% endhint %}
 
 ### Searching, Sorting and Filtering on a Smart Field
@@ -241,9 +233,7 @@ collection('customers', {
 ```
 
 {% hint style="info" %}
-
 For **case insensitive** search using PostgreSQL database use `iLike` operator. See [Sequelize operators documentation](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators).
-
 {% endhint %}
 
 ### Mongodb
@@ -275,9 +265,7 @@ collection('customers', {
 #### Filtering
 
 {% hint style="warning" %}
-
 This feature is only available on agents version **6.7+** (version **6.2+** for Rails).
-
 {% endhint %}
 
 To perform a filter on a Smart Field, you need to write the filter query logic, which is specific to your use case.
@@ -389,9 +377,7 @@ collection('customer', {
 ```
 
 {% hint style="info" %}
-
 Make sure you set the option `isFilterable: true` in the field definition of your code. Then, you will be able to toggle the "Filtering enabled" option in the browser, in your **Fields Settings**.
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/image (405).png>)
@@ -399,12 +385,10 @@ Make sure you set the option `isFilterable: true` in the field definition of you
 #### Sorting
 
 {% hint style="warning" %}
-
 **Sorting** on a Smart Field is not _natively supported_ in Forest Admin. However you can check out those guides:
 
 - [Sort by Smart field](smart-field-examples/sort-by-smart-field.md)
 - [Sort by Smart field that includes value from a belongsTo relationship](smart-field-examples/sort-by-smart-field-that-includes-value-from-a-belongsto-relationship.md)
-
 {% endhint %}
 
 ### Available Field Options
@@ -422,9 +406,7 @@ Here are the list of available options to customize your Smart Field:
 | isRequired  | boolean          | (optional) If true, your Smart Field will be set as required in the browser. Default is false.                                 |
 
 {% hint style="info" %}
-
 You can define a widget for a smart field from the [settings of your collection](https://docs.forestadmin.com/user-guide/collections/customize-your-fields).
-
 {% endhint %}
 
 ### Building Performant Smart Fields

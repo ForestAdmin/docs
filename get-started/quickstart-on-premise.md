@@ -39,9 +39,7 @@ On-Premise deployment is an **enterprise feature** that requires:
 - Full infrastructure management on your side
 
 {% hint style="warning" %}
-
 **Not available for self-service installation.** On-Premise deployment requires coordination with Forest Admin's team to ensure proper setup and licensing.
-
 {% endhint %}
 
 ## What You Get

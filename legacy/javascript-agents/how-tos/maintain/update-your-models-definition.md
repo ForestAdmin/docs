@@ -4,9 +4,7 @@ title: Update your models' definition
 Your database schema will evolve over time. Any changes can (and probably should) be applied to your admin backend's models.&#x20;
 
 {% hint style="info" %}
-
 To upgrade your models definition in your code you need to be at least in the V7 version of `forest-express-sequelize` or `forest-express-mongoose` package. If this is not the case please follow our [migration note](upgrade-notes-sql-mongodb/upgrade-to-v7.md).
-
 {% endhint %}
 
 Now you can use the `forest schema:update` command to achieve your goal.

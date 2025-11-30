@@ -4,9 +4,7 @@ title: Running Forest Admin on multiple servers
 If you're running multiple instances of your agent (with a load balancer for example), you will need to set up a static client id.
 
 {% hint style="warning" %}
-
 **Without a static client id, authentication will fail whenever a user makes a request to a different instance than the one he logged into.**
-
 {% endhint %}
 
 First you will need to obtain a client id for your environment by running the following command:

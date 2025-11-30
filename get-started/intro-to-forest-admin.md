@@ -44,9 +44,7 @@ Your Database ←→ Forest Admin Agent ←→ Forest Admin UI
 - User management
 
 {% hint style="info" %}
-
 **Your data never leaves your control.** The agent reads/writes directly to your database. We don't store your data.
-
 {% endhint %}
 
 

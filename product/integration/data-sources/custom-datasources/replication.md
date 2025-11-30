@@ -4,9 +4,7 @@ description: "Build custom datasources that maintain a local cache of external d
 ---
 
 {% hint style="warning" %}
-
 Replication datasources are only available for Node.js.
-
 {% endhint %}
 
 The replication strategy maintains a copy of target API data in an internal cache controlled by your agent, rather than querying the API in real-time.
@@ -358,7 +356,5 @@ const myCustomDataSource = createReplicaDataSource({
 - The handlers abstract the communication layer between Forest Admin and external APIs
 
 {% hint style="info" %}
-
 Want to share your custom datasource with the community? Check out [Forest Admin experimental](/guides/forestadmin-experimental) to contribute.
-
 {% endhint %}

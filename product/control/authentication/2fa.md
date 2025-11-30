@@ -8,9 +8,7 @@ description: "Enable and enforce two-factor authentication to add an extra layer
 Two-Factor Authentication (2FA) adds an additional security layer beyond username and password. Users must provide a second factor - typically a time-based one-time password (TOTP) from an authenticator app - to access Forest Admin.
 
 {% hint style="info" %}
-
 **Recommended for All Users**: 2FA significantly reduces the risk of unauthorized access, even if passwords are compromised.
-
 {% endhint %}
 
 ## Why Enable 2FA?
@@ -59,9 +57,7 @@ Recovery codes that can be used if you lose access to your authenticator app:
 - Can regenerate if needed
 
 {% hint style="warning" %}
-
 **Save Your Backup Codes**: Without backup codes or access to your authenticator, you'll be locked out if your device is lost.
-
 {% endhint %}
 
 ## Enabling 2FA (For Users)
@@ -159,9 +155,7 @@ Mark devices as trusted to skip 2FA for 30 days:
 - **Removal**: Go to Account Settings > Security > Trusted Devices to revoke
 
 {% hint style="warning" %}
-
 **Public Computers**: Never mark public or shared computers as trusted.
-
 {% endhint %}
 
 ## Enforcing 2FA (For Admins)
@@ -231,9 +225,7 @@ Allow specific users to bypass 2FA requirement:
 - **Configuration**: Edit user profile > **Security** > **Exempt from 2FA requirement**
 
 {% hint style="info" %}
-
 **Best Practice**: Minimize exceptions. If a user truly needs access, they should enable 2FA.
-
 {% endhint %}
 
 ## Managing 2FA
@@ -283,9 +275,7 @@ If you need to switch authenticator apps or devices:
 If a user loses access to their authenticator and backup codes:
 
 {% hint style="warning" %}
-
 **Security Risk**: Only reset 2FA after verifying the user's identity through alternate means (video call, ID verification, etc.).
-
 {% endhint %}
 
 <Steps>
@@ -451,9 +441,11 @@ If a user loses access to their authenticator and backup codes:
 
 ### Code Not Working
 
-<AccordionGroup>
-  <Accordion title="Time Sync Issues">
-    **Problem**: Authenticator app time is out of sync
+
+<details>
+<summary>Time Sync Issues</summary>
+
+**Problem**: Authenticator app time is out of sync
 
     **Symptoms**: Code is always rejected, even when entered correctly
 
@@ -464,26 +456,37 @@ If a user loses access to their authenticator and backup codes:
 
     **For Google Authenticator**:
     - Go to Settings > Time correction for codes > Sync now
-  </Accordion>
 
-  <Accordion title="Wrong Code Entered">
-    **Problem**: Entering an old or incorrect code
+</details>
+
+
+  
+<details>
+<summary>Wrong Code Entered</summary>
+
+**Problem**: Entering an old or incorrect code
 
     **Solution**:
     - Wait for the code to refresh in your app
     - Ensure you're using the correct account (if you have multiple)
     - Check for typos (0 vs O, 1 vs l)
-  </Accordion>
 
-  <Accordion title="Authenticator App Deleted">
-    **Problem**: Removed app or factory reset phone without backing up
+</details>
+
+
+  
+<details>
+<summary>Authenticator App Deleted</summary>
+
+**Problem**: Removed app or factory reset phone without backing up
 
     **Solution**:
     - Use a backup code if you have one
     - Contact your admin for 2FA reset
     - Admin must verify your identity before resetting
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ### Can't Scan QR Code
 

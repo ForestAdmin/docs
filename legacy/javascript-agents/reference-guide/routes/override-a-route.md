@@ -121,9 +121,7 @@ router.get(
 </Tabs>
 
 {% hint style="warning" %}
-
 Using extended search is less performant than default search. Use this wisely.
-
 {% endhint %}
 
 #### Protect a specific record

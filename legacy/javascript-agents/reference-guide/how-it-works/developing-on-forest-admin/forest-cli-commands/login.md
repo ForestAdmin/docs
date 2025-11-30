@@ -22,7 +22,5 @@ OPTIONS
 The `--token` option refers to **application tokens** that you can create from your _Account settings_, accessible from the top right dropdown.
 
 {% hint style="info" %}
-
 Note that you can use `forest logout` to log out.
-
 {% endhint %}

@@ -4,9 +4,7 @@ description: "Connect to Hubspot CRM data including contacts, companies, deals, 
 ---
 
 {% hint style="warning" %}
-
 Hubspot datasource is only available for Node.js and is an experimental community package. This is a read-only datasource.
-
 {% endhint %}
 
 The Hubspot datasource connects to your Hubspot CRM through the HubSpot API, allowing you to browse and search contacts, companies, deals, tickets, and other CRM objects in Forest Admin.

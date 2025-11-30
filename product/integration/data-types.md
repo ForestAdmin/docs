@@ -25,10 +25,8 @@ The primitive types which are supported by Forest Admin are the following:
 ## Composite types
 
 {% hint style="info" %}
-
 - Fields using composite types are not sortable and do not implement validation.
 - Fields that are an array of a primitive type **only** are filterable (depending on the data source).
-
 {% endhint %}
 
 ```js

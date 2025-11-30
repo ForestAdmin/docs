@@ -19,7 +19,6 @@ Forest Admin handles most cases automatically, but Summary Views with Related Da
 
 Add an `invalidated` array to your success result specifying which relationships to refresh:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Add new transaction', {
   scope: 'Single',
@@ -60,13 +59,11 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ## Multiple relationships
 
 Invalidate multiple Related Data sections at once:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.success('Data updated', {
   invalidated: ['transactions', 'invoices', 'payments'],
@@ -79,11 +76,9 @@ result_builder.success(
   invalidated: ['transactions', 'invoices', 'payments']
 )
 ```
-</CodeGroup>
 
 ## Example: Add comment
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Add comment', {
   scope: 'Single',
@@ -145,11 +140,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ## Example: Update order items
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Add item to order', {
   scope: 'Single',
@@ -220,11 +213,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ## Example: Assign task
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Assign task', {
   scope: 'Single',
@@ -286,13 +277,11 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ## With HTML result
 
 Combine invalidation with HTML content:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 return resultBuilder.success('Transaction created', {
   html: `
@@ -311,13 +300,11 @@ result_builder.success(
   invalidated: ['transactions', 'balance']
 )
 ```
-</CodeGroup>
 
 ## With error result
 
 Invalidation works with success results only. Errors don't refresh data:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 try {
   await createTransaction(data);
@@ -339,7 +326,6 @@ rescue => error
   result_builder.error("Failed: #{error.message}")
 end
 ```
-</CodeGroup>
 
 ## Finding relationship names
 

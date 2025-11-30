@@ -8,9 +8,7 @@ description: Let's get you up and running on Forest Admin in minutes!
 Go to [https://app.forestadmin.com/signup](https://app.forestadmin.com/signup), create an account and install your project.
 
 {% hint style="info" %}
-
 For the purpose of this tutorial, we have used [this database](../how-tos/databases/use-a-demo-database.md). Feel free to use it if you don't have one.
-
 {% endhint %}
 
 At the end of your onboarding, you will **out-of-the-box** be able to:
@@ -103,16 +101,12 @@ module.exports = router;
 </Tabs>
 
 {% hint style="warning" %}
-
 You must make sure that all your Smart Actions routes are configured with the Smart Action middleware:
 `permissionMiddlewareCreator.smartAction()`. This is mandatory to ensure that all features built on top of Smart Actions work as expected (permissions, approval workflows,...).
-
 {% endhint %}
 
 {% hint style="info" %}
-
 You may have to [add CORS headers](../how-tos/setup/configuring-cors-headers.md) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:8000_).
-
 {% endhint %}
 
 <Check>

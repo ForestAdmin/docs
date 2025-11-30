@@ -4,9 +4,7 @@ title: Create a Smart Chart
 On the previous page, we learned how API-based charts allow you to fetch any dataset from a custom endpoint. But using the finite list of predefined charts (Single, Distribution, Time-based, etc.), you are still constrained by how that data is displayed. With **Smart Charts**, you can code exactly what data you want and how you want it displayed!
 
 {% hint style="info" %}
-
 You need a **Starter plan** or above to create Smart charts
-
 {% endhint %}
 
 ### Creating a Smart Chart
@@ -20,15 +18,11 @@ Next, use the _Template_, _Component,_ and _Style_ tabs to create your customize
 ![](</images/legacy/javascript-agents/image (206).png>)
 
 {% hint style="warning" %}
-
 Don't forget to click on **Create Chart** (or **Save** if the chart is already created) once you're done!
-
 {% endhint %}
 
 {% hint style="info" %}
-
 If you are creating a **record-specific** smart chart (in the record Analytics tab), the **`record`** object is directly accessible (either through `this.args.record` in the component or `@record` in the template).
-
 {% endhint %}
 
 ### Creating a Table Chart
@@ -236,9 +230,7 @@ export default class extends Component {
 In the above snippet, notice how we import the **D3js** library. Of course, you can choose to use any other library of your choice.
 
 {% hint style="info" %}
-
 This bar chart is inspired by [this one](https://observablehq.com/@d3/bar-chart).
-
 {% endhint %}
 
 The resulting chart can be resized to fit your use:
@@ -383,9 +375,7 @@ export default class extends Component {
 In the above snippet, notice how we import the **D3js** library. Of course, you can choose to use any other library of your choice.
 
 {% hint style="info" %}
-
 This density map chart is inspired from [this one](https://observablehq.com/@d3/bubble-map).
-
 {% endhint %}
 
 The resulting chart can be resized to fit your use:

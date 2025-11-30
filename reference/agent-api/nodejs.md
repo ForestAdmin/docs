@@ -492,9 +492,7 @@ collection.setFieldNullable(name: string): CollectionCustomizer;
 ```
 
 {% hint style="warning" %}
-
 Your database might still refuse empty values if it requires one.
-
 {% endhint %}
 
 **Example:**

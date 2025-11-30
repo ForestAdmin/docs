@@ -21,9 +21,7 @@ A Branch is a fork (i.e. copy) of the layout of the Environment it is attached t
 A Branch can only be created in your own Development Environment.
 
 {% hint style="info" %}
-
 The **origin** of a branch is either specified using the `--origin` option or selected when prompted otherwise). You should choose the environment you want to make some layout changes on.
-
 {% endhint %}
 
 Once you've created a Branch, your layout will look exactly like the layout of its origin Environment.
@@ -41,11 +39,9 @@ The branch `my-branch` is based on the production layout. Any changes made to it
 ![Branch Example](https://docs.forestadmin.com/assets/branch-example.png)
 
 {% hint style="warning" %}
-
 This also means that any changes made to the origin of your Branch will instantly reflect on your Branch.
 
 For those familiar with git's _rebase_, this means you will **never have to** **rebase** your Branch on its origin, as it is done automatically.
-
 {% endhint %}
 
 ## How do you create a Branch?
@@ -57,9 +53,7 @@ forest branch my-branch --origin production
 ```
 
 {% hint style="info" %}
-
 Using kebab-case is recommended. However, if you prefer to use spaces in your Branch names, don't forget to surround them with quotes, like so `forest branch "my branch" --origin production`.
-
 {% endhint %}
 
 To learn more about the `branch` command, please visit the [CLI reference](/product/reference/cli/branch).
@@ -74,9 +68,7 @@ These information appear in the top banner of your admin panel. The "branches pu
 Your **current** Branch will be displayed at the top.
 
 {% hint style="info" %}
-
 To switch your _current_ branch to another existing branch, check out the [switch](/product/reference/cli/switch) command.
-
 {% endhint %}
 
 Now that you've mastered Branch creation and management, let's dive into the next step of the development workflow: deployment.

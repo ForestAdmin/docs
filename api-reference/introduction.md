@@ -4,17 +4,15 @@ description: 'Example section for showcasing API endpoints'
 ---
 
 {% hint style="info" %}
-
   If you're not looking to build API reference documentation, you can delete
   this section by removing the api-reference folder.
-
 {% endhint %}
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+There are two ways to build API documentation: [OpenAPI](https://docs.gitbook.com) and [MDX components](https://docs.gitbook.com). For the starter kit, we are using the following OpenAPI specification.
 
-* [Plant Store Endpoints](https://github.com/mintlify/starter/blob/main/api-reference/openapi.json) - View the OpenAPI specification file
+* [Plant Store Endpoints](#) - View the OpenAPI specification file
 
 ## Authentication
 

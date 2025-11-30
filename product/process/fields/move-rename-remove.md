@@ -15,8 +15,6 @@ You can import fields from single record relationships (many-to-one or one-to-on
 
 The imported fields will behave as if they were on that collection.
 
-<CodeGroup>
-
 ```javascript Node.js
 // Assuming the following structure:
 // User    { id, firstName, lastName, addressId }
@@ -39,19 +37,13 @@ userCollection
 end
 ```
 
-</CodeGroup>
-
 {% hint style="info" %}
-
 Note that when using `readonly: false`, the referenced record fields can be edited.
-
 {% endhint %}
 
 ## Renaming and removing fields and relations
 
 Renaming and removing fields or relations can be done simply by calling the `renameField` (or `rename_field` in Ruby) and `removeField` (or `remove_field` in Ruby) methods.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.renameField('account_v3_uuid_new', 'account').removeField('password');
@@ -64,16 +56,11 @@ end
 
 ```
 
-</CodeGroup>
-
 {% hint style="warning" %}
-
 Renamed and removed fields are renamed and removed ONLY in the admin panel.
 
 In your code:
 
 - Removed fields are still accessible (for instance, as dependencies to compute new fields)
 - Renamed fields must still be referred to by using their original name.
-
-
 {% endhint %}

@@ -13,23 +13,13 @@ This feature may not be available on all plans and requires SSO to be configured
 
 ## Why Use SCIM?
 
-<CardGroup cols={2}>
-  <Card title="Automated Provisioning" icon="user-plus">
-    New employees automatically get Forest Admin access when added to your IdP
-  </Card>
 
-  <Card title="Instant Offboarding" icon="user-minus">
-    Departing employees lose access immediately when disabled in your IdP
-  </Card>
 
-  <Card title="Synchronized Updates" icon="arrows-rotate">
-    User profile changes in IdP automatically sync to Forest Admin
-  </Card>
+  
 
-  <Card title="Reduced Admin Overhead" icon="clock">
-    Eliminate manual user management and reduce IT workload
-  </Card>
-</CardGroup>
+  
+
+  
 
 ## How SCIM Works
 
@@ -136,31 +126,17 @@ SCIM handles the complete user lifecycle:
 
 Forest Admin supports SCIM 2.0 with these major IdPs:
 
-<CardGroup cols={2}>
-  <Card title="Okta" icon="circle-check">
-    Full SCIM 2.0 support with user and group provisioning
-  </Card>
 
-  <Card title="Azure AD / Entra ID" icon="microsoft">
-    Enterprise Application with automatic provisioning
-  </Card>
 
-  <Card title="OneLogin" icon="fingerprint">
-    SCIM connector for user lifecycle management
-  </Card>
+  
 
-  <Card title="Google Workspace" icon="google">
-    SCIM provisioning via third-party connectors
-  </Card>
+  
 
-  <Card title="JumpCloud" icon="server">
-    Directory-as-a-Service with SCIM support
-  </Card>
+  
 
-  <Card title="Custom SCIM 2.0" icon="code">
-    Any SCIM 2.0 compliant identity provider
-  </Card>
-</CardGroup>
+  
+
+  
 
 ## Setting Up SCIM
 
@@ -582,9 +558,11 @@ Check provisioning status in your IdP:
 
 ### SCIM Connection Issues
 
-<AccordionGroup>
-  <Accordion title="Authentication Failed">
-    **Error**: `401 Unauthorized` or `403 Forbidden`
+
+<details>
+<summary>Authentication Failed</summary>
+
+**Error**: `401 Unauthorized` or `403 Forbidden`
 
     **Causes**:
     - Invalid or expired Bearer Token
@@ -595,10 +573,15 @@ Check provisioning status in your IdP:
     1. Regenerate Bearer Token in Forest Admin
     2. Update token in IdP configuration
     3. Test connection again
-  </Accordion>
 
-  <Accordion title="SCIM Endpoint Not Found">
-    **Error**: `404 Not Found` or connection timeout
+</details>
+
+
+  
+<details>
+<summary>SCIM Endpoint Not Found</summary>
+
+**Error**: `404 Not Found` or connection timeout
 
     **Causes**:
     - Incorrect SCIM Base URL
@@ -609,10 +592,15 @@ Check provisioning status in your IdP:
     1. Verify SCIM Base URL is exactly: `https://api.forestadmin.com/scim/v2`
     2. Ensure SCIM is enabled in Forest Admin settings
     3. Check IdP can reach Forest Admin (no firewall blocking)
-  </Accordion>
 
-  <Accordion title="User Creation Failed">
-    **Error**: User not created in Forest Admin
+</details>
+
+
+  
+<details>
+<summary>User Creation Failed</summary>
+
+**Error**: User not created in Forest Admin
 
     **Causes**:
     - Email already exists (duplicate user)
@@ -625,10 +613,15 @@ Check provisioning status in your IdP:
     2. Verify email is valid and unique
     3. Ensure all required SCIM attributes are mapped
     4. Check role mapping configuration
-  </Accordion>
 
-  <Accordion title="User Not Deactivated">
-    **Error**: User disabled in IdP but still active in Forest Admin
+</details>
+
+
+  
+<details>
+<summary>User Not Deactivated</summary>
+
+**Error**: User disabled in IdP but still active in Forest Admin
 
     **Causes**:
     - Deactivation not enabled in IdP provisioning
@@ -640,8 +633,9 @@ Check provisioning status in your IdP:
     2. Wait for sync cycle (or trigger manual sync)
     3. Check SCIM logs for errors
     4. Manually disable user in Forest Admin if urgent
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ### Attribute Mapping Issues
 
@@ -676,23 +670,13 @@ Check provisioning status in your IdP:
 
 ### SCIM Token Management
 
-<CardGroup cols={2}>
-  <Card title="Secure Storage" icon="vault">
-    Store SCIM Bearer Token securely in your IdP's credential store
-  </Card>
 
-  <Card title="Rotate Regularly" icon="arrows-rotate">
-    Rotate SCIM tokens annually or per your security policy
-  </Card>
 
-  <Card title="Limit Access" icon="user-lock">
-    Only IdP admins should have access to SCIM tokens
-  </Card>
+  
 
-  <Card title="Monitor Usage" icon="chart-line">
-    Review SCIM logs for unauthorized API calls
-  </Card>
-</CardGroup>
+  
+
+  
 
 ### Access Controls
 
@@ -749,20 +733,22 @@ Check provisioning status in your IdP:
 
 ## Next Steps
 
-<CardGroup cols={2}>
-  <Card title="SSO Setup" icon="key" href="/product/control/authentication/sso">
-    Configure SSO before enabling SCIM
-  </Card>
+### [SSO Setup](/product/control/authentication/sso)
 
-  <Card title="Teams & Roles" icon="users" href="/product/control/teams">
-    Set up teams for SCIM group mappings
-  </Card>
+Configure SSO before enabling SCIM
 
-  <Card title="Audit Logs" icon="clock-rotate-left" href="/product/control/audit">
-    Monitor SCIM provisioning events
-  </Card>
 
-  <Card title="Scopes" icon="filter" href="/product/control/scopes-and-visibility">
-    Configure data access for provisioned users
-  </Card>
-</CardGroup>
+  ### [Teams & Roles](/product/control/teams)
+
+Set up teams for SCIM group mappings
+
+
+  ### [Audit Logs](/product/control/audit)
+
+Monitor SCIM provisioning events
+
+
+  ### [Scopes](/product/control/scopes-and-visibility)
+
+Configure data access for provisioned users
+

@@ -1,7 +1,6 @@
 ---
 title: "Claude Code setup"
 description: "Configure Claude Code for your documentation workflow"
-icon: "asterisk"
 ---
 
 Claude Code is Anthropic's official CLI tool. This guide will help you set up Claude Code to help you write and maintain your documentation.
@@ -27,7 +26,7 @@ Claude Code is Anthropic's official CLI tool. This guide will help you set up Cl
 Create a `CLAUDE.md` file at the root of your documentation repository to train Claude Code on your specific documentation standards:
 
 ````markdown
-# Mintlify documentation
+# GitBook documentation
 
 ## Working relationship
 - You can push back on ideas-this can lead to better documentation. Cite sources and explain your reasoning when you do so
@@ -37,7 +36,7 @@ Create a `CLAUDE.md` file at the root of your documentation repository to train 
 ## Project context
 - Format: MDX files with YAML frontmatter
 - Config: docs.json for navigation, theme, settings
-- Components: Mintlify components
+- Components: GitBook components
 
 ## Content strategy
 - Document just enough for user success - not too much, not too little

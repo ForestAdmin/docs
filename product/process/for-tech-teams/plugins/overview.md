@@ -12,8 +12,6 @@ Plugins are used by either importing a module, or installing the relevant packag
 
 Depending on the plugin, options may be provided.
 
-<CodeGroup>
-
 ```javascript Node.js
 
 
@@ -70,8 +68,6 @@ agent.use(
 ).customize_collection('accounts').use(CreateFileField, { "fieldname": 'avatar' })
 ```
 
-</CodeGroup>
-
 ## Writing your own plugins
 
 ### Plugin structure
@@ -82,8 +78,6 @@ Each Plugin is defined differently depending on your platform:
 - **PHP**: A `class` that implements the `Plugin interface` and can perform customizations at either Agent level, Collection level, or both.
 - **Ruby**: A `class` that implements the `Plugin abstract class` and can perform customizations at either Agent level, Collection level, or both.
 - **Python**: A `class` that implements the `Plugin interface` with an `async method` and can perform customizations at either Agent level, Collection level, or both.
-
-<CodeGroup>
 
 ```javascript Node.js
 export async function removeTimestamps(dataSource, collection, options) {
@@ -129,8 +123,6 @@ class RemoveTimestamps(Plugin):
         # ... call customization methods here
 ```
 
-</CodeGroup>
-
 ### Plugin parameters
 
 Three parameters are provided to your plugin:
@@ -170,8 +162,6 @@ Three parameters are provided to your plugin:
 ## Basic example
 
 Here's a simple plugin that removes timestamp fields from collections:
-
-<CodeGroup>
 
 ```javascript Node.js
 export async function removeTimestamps(dataSource, collection) {
@@ -247,15 +237,11 @@ class RemoveTimestamps(Plugin):
             collection.remove_field("updatedAt")
 ```
 
-</CodeGroup>
-
 ## Making your Plugin act differently depending on the Collection
 
 When making a Plugin, you may want it to generalize to many different Collections.
 
 This can be achieved by adopting different behavior depending on the `schema` of the Collection being targeted.
-
-<CodeGroup>
 
 ```javascript Node.js
 export async function removeTimestamps(dataSource, collection, options) {
@@ -329,8 +315,6 @@ class RemoveTimestamps(Plugin):
             if 'updatedAt' collection.schema["fields"].keys():
                 collection.remove_field("updatedAt")
 ```
-
-</CodeGroup>
 
 ## Platform-Specific Guides
 

@@ -7,25 +7,17 @@ description: >-
   ensure a smooth update.​
 ---
 {% hint style="warning" %}
-
-
 Please be aware that while Forest Admin make every effort to ensure that our platform updates are broadly compatible and offer detailed instructions for upgrading, Forest Admin cannot guarantee that custom code developed by the developers will always be compatible with new versions of our software. This includes any custom modifications or extensions to core functionalities, such as method overrides or custom integrations. It is the responsibility of the developers to review and test their custom code to ensure compatibility with each new version. Our team provides comprehensive upgrade guides to assist in this process, but these cannot encompass the unique customizations that may be present in each customer's environment. Therefore, Forest Admin strongly recommend establishing a thorough testing protocol for your specific customizations to safeguard against potential issues during the upgrade process.
-
-
 {% endhint %}
 
 {% hint style="info" %}
-
 Please follow the recommended procedure to upgrade your agent version by following [this note](../push-your-new-version-to-production.md).
-
 {% endhint %}
 
 ## Upgrading to v7
 
 {% hint style="warning" %}
-
 Before upgrading to v7, consider the below [**breaking changes**](upgrade-to-v7.md#breaking-change).
-
 {% endhint %}
 
 This upgrade unlocks the following feature:
@@ -40,9 +32,7 @@ bundle install
 ```
 
 {% hint style="info" %}
-
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent version 6 is the fastest way to restore your admin panel.
-
 {% endhint %}
 
 ## Breaking change
@@ -50,17 +40,13 @@ In case of a regression introduced in Production after the upgrade, a rollback t
 #### Smart actions
 
 {% hint style="warning" %}
-
 The `values` endpoint is no longer supported.
-
 {% endhint %}
 
 The smart action `change` hook is no longer linked to `fieldName`. Now it need to set a `hook` property inside field definition.
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```ruby
@@ -105,9 +91,7 @@ action 'Test action',
 The signature of `hooks` function has changed.`fields` is now an array. You must change the way you access fields.
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```ruby
@@ -155,9 +139,7 @@ After
 The signature of `hooks` functions has changed. In order to support the hooks for **global** and **bulk** smart action, `record` is no longer sent to the hook. You must change the way you get the record information.
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```ruby
@@ -204,9 +186,7 @@ This update comes with breaking changes in the prototype of helpers which are pr
 All occurrences of calls to `ResourcesGetter`, `ResourceGetter`, `ResourceUpdater` must be updated and now require the `forest_user` property to retrieve the relevant scope. The `forest_user` property is made accessible in your smart action controllers by inheriting from our controller: `ForestLiana::SmartActionsController`
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```ruby

@@ -15,9 +15,7 @@ You should refrain from using handlers that have side effects (to perform error 
 ## Making a field read-only
 
 {% hint style="info" %}
-
 Can be achieved without any code [in the field settings](https://docs.forestadmin.com/user-guide/collections/customize-your-fields#basic-settings).
-
 {% endhint %}
 
 ## Examples
@@ -25,8 +23,6 @@ Can be achieved without any code [in the field settings](https://docs.forestadmi
 ### Changing other fields in the same record
 
 In the following example, editing or creating a `fullName` will update both `firstName` and `lastName` fields of the record.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('fullName', value => {
@@ -48,15 +44,11 @@ collection.replaceFieldWriting('fullName', value => {
 end
 ```
 
-</CodeGroup>
-
 ### Having specific behavior only for updates
 
 You can have different behavior for `creations` and `updates`.
 
 In this example, each time the `firstName` field is edited, we also want to update a timestamp field.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('firstName', async (value, context) => {
@@ -94,14 +86,10 @@ collection.replaceFieldWriting('firstName', async (value, context) => {
 end
 ```
 
-</CodeGroup>
-
 ### Changing fields in related records
 
 {% hint style="info" %}
-
 Handling relationships inside a `replaceFieldWriting``replace_field_writing` will only work for `ManyToOne` and `OneToOne` relationships.
-
 {% endhint %}
 
 In this simple example, we have two collections that are linked together:
@@ -110,8 +98,6 @@ In this simple example, we have two collections that are linked together:
 - The `Portfolios` collection has a `title`
 
 When the user updates his `job` field we want also to update the `title` of the portfolio by the `job` name.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('job', (job, { action }) => {
@@ -131,17 +117,11 @@ end
 
 ```
 
-</CodeGroup>
-
 {% hint style="info" %}
-
 If the relationships do not exist it will create them with the given field values.
-
 {% endhint %}
 
 You can also provide another `portfolioId` to update the relationships and their fields:
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('job', (job, { action }) => {
@@ -161,12 +141,8 @@ collection.replaceFieldWriting('job', (job, { action }) => {
 end
 ```
 
-</CodeGroup>
-
 Of course, you can chain the relationships. For example, if a portfolio has a `one-to-one` relationship
 with the `formats` collection, you can update it by writing the right path.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('job', (job, { action }) => {
@@ -188,5 +164,3 @@ collection.replaceFieldWriting('job', (job, { action }) => {
   end
 end
 ```
-
-</CodeGroup>

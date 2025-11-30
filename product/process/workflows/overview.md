@@ -3,11 +3,9 @@ title: Workflows
 ---
 
 {% hint style="warning" %}
-
 **PLACEHOLDER - Documentation in progress**
 
 This section is currently being developed. Workflows documentation will be added soon.
-
 {% endhint %}
 
 ## What are Workflows?

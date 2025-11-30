@@ -30,9 +30,7 @@ gcloud projects describe [YOUR_PROJECT_ID]
 The next step is to initialize App Engine for your newly created project. This will create an app attached to the project.
 
 {% hint style="warning" %}
-
 Choose carefully your application's region when prompted, you will not be able to change this setting later.
-
 {% endhint %}
 
 ```
@@ -47,9 +45,7 @@ The last steps needed before you can deploy your Forest Admin backend are to:
 - [enable the Cloud Build API](https://cloud.google.com/apis/docs/getting-started#enabling_apis) on your project
 
 {% hint style="warning" %}
-
 GCP offers a free tier for the use of Google App Engine. However, it may not be sufficient for your usage in production. You can check the free plan limitations [here](https://cloud.google.com/free/). Note that you will get a USD 300 free credit when you register to App Engine.
-
 {% endhint %}
 
 ### Deploy your application
@@ -77,9 +73,7 @@ gcloud app browse
 ```
 
 {% hint style="warning" %}
-
 This does **not** mean your project is deployed to production on Forest Admin. To deploy to production, check out [this section](../../reference-guide/how-it-works/environments.md#deploying-to-production) after you've completed the above steps.
-
 {% endhint %}
 
 ### Adding environment variables
@@ -102,7 +96,5 @@ gcloud app deploy
 ```
 
 {% hint style="info" %}
-
 Having problems deploying? Check out [troubleshooting common problems](https://community.forestadmin.com/t/deploying-on-google-cloud-platform-forestadmin-schema-json-file-does-not-exist/4406) in our community.
-
 {% endhint %}

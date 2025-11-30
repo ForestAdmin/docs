@@ -23,9 +23,7 @@ To add a user to your Forest Admin project:
 2. Click **Invite**
 
 {% hint style="info" %}
-
 Your pending invitations are listed below the user list so you can track who hasn't accepted yet.
-
 {% endhint %}
 
 ## Managing User Teams
@@ -37,9 +35,7 @@ Access a user's details page to manage which teams they're part of. You can:
 - Remove them from a team
 
 {% hint style="warning" %}
-
 A user must be assigned to at least one team at all times. Make sure to add them to a new team before removing them from their current one.
-
 {% endhint %}
 
 Remember to save changes after making adjustments.
@@ -68,9 +64,7 @@ To delete a user account:
 4. Confirm by typing `CONFIRM REMOVE`
 
 {% hint style="warning" %}
-
 Removing a user is permanent and will immediately revoke their access to Forest Admin.
-
 {% endhint %}
 
 ## Related Pages

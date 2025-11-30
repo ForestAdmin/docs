@@ -16,15 +16,11 @@ Forest Admin provides an online editor to inject your Smart View code. The edito
 The code of a Smart View is a [Glimmer Component](https://guides.emberjs.com/release/upgrading/current-edition/glimmer-components/) and simply consists of a Template and Javascript code.
 
 {% hint style="info" %}
-
 You don’t need to know the **Ember.js** framework to create a Smart View. We will guide you here on all the basic requirements. For more advanced usage, you can still refer to the [Glimmer Component](https://guides.emberjs.com/release/upgrading/current-edition/glimmer-components/) documentations.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Your code must be compatible with Ember 4.12.
-
 {% endhint %}
 
 ### Getting your records
@@ -156,9 +152,7 @@ The `deleteRecords` action lets you delete one or multiple records. A pop-up wil
 ### Triggering a Smart Action
 
 {% hint style="warning" %}
-
 Please note that the smart action triggering in the context of the smart view editor can be broken as you might not have access to all the required information. We advise you to test the smart action execution from the smart view applied to the collection view.
-
 {% endhint %}
 
 Here’s how to trigger your [Smart Actions](../actions/create-and-manage-smart-actions/#what-is-a-smart-action) directly from your Smart Views.&#x20;
@@ -300,7 +294,5 @@ Once your Smart view is applied, it will also be displayed in your record's rela
 ![](</images/legacy/javascript-agents/image (282).png>)
 
 {% hint style="info" %}
-
 As of today, it's **not** possible to set different views for your table/summary/related data views.
-
 {% endhint %}

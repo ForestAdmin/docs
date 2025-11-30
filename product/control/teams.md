@@ -37,9 +37,7 @@ A team's layout encompasses all visible UI aspects that can be customized per te
 To apply an existing team's configuration to another team, access the team's settings page and use the "Copy" feature.
 
 {% hint style="warning" %}
-
 This action is irreversible, so review carefully before proceeding.
-
 {% endhint %}
 
 ## Delete a Team
@@ -47,9 +45,7 @@ This action is irreversible, so review carefully before proceeding.
 To remove a team, go to its settings page, scroll beneath the user list, and click "Delete this team". You'll be asked to retype the team name as a confirmation step.
 
 {% hint style="warning" %}
-
 This is a permanent action that cannot be undone.
-
 {% endhint %}
 
 ## Advanced Use Cases

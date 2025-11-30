@@ -29,9 +29,7 @@ ubuntu@ip-172-31-83-152:~$
 There are many ways to copy the code of your admin backend to a remote server. For example, you can use `rsync` command, or use a versioning system like `git`.
 
 {% hint style="warning" %}
-
 We **strongly advise** to version the code of your admin backend using **git** and host it to a **private repository** on Github, Bitbucket, Gitlab or other providers.
-
 {% endhint %}
 
 #### rsync
@@ -176,9 +174,7 @@ npm install
 #### PostgreSQL
 
 {% hint style="info" %}
-
 This step is **optional** if you already have a running database.
-
 {% endhint %}
 
 First, you need to install PostgreSQL:
@@ -374,13 +370,9 @@ sudo systemctl restart nginx
 That's it, your admin backend is now listening on the port **80**. Make sure your firewall allows inbound traffic from this port.
 
 {% hint style="warning" %}
-
 We now require that you configure **HTTPS** (port 443) on your admin backend service for **security reasons.** [http://nginx.org/en/docs/http/configuring_https_servers.html](http://nginx.org/en/docs/http/configuring_https_servers.html)​
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Once you've completed the above steps, it does **not** mean your project is deployed to production on Forest Admin. To deploy to production, check out [this section](../../reference-guide/how-it-works/environments.md#deploying-to-production).
-
 {% endhint %}

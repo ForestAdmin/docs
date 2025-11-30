@@ -1,12 +1,11 @@
 ---
 title: 'Images and embeds'
 description: 'Add image, video, and other HTML elements'
-icon: 'image'
 ---
 
 <img
   style={{ borderRadius: '0.5rem' }}
-  src="https://mintlify-assets.b-cdn.net/bigbend.jpg"
+  src="https://example.com/assets/bigbend.jpg"
 />
 
 ## Image
@@ -45,11 +44,7 @@ To get more customizability with images, you can also use [embeds](/writing-cont
 <br />
 
 {% hint style="success" %}
-
-
-Mintlify supports [HTML tags in Markdown](https://www.markdownguide.org/basic-syntax/#html). This is helpful if you prefer HTML tags to Markdown syntax, and lets you create documentation with infinite flexibility.
-
-
+GitBook supports [HTML tags in Markdown](https://www.markdownguide.org/basic-syntax/#html). This is helpful if you prefer HTML tags to Markdown syntax, and lets you create documentation with infinite flexibility.
 {% endhint %}
 
 ### iFrames

@@ -7,9 +7,7 @@ description: >-
   ensure a smooth upgrade.​
 ---
 {% hint style="info" %}
-
 Please follow the recommended procedure to upgrade your agent version by following [this note](../push-your-new-version-to-production.md).
-
 {% endhint %}
 
 ## Upgrading to v7
@@ -22,17 +20,13 @@ This upgrade unlocks the following feature:
 - automatic model update
 
 {% hint style="warning" %}
-
 Before upgrading to v7, please take note of the following requirement:
 
 - `express` must be **version 4.17** or higher
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
-
 {% endhint %}
 
 To upgrade to v7, simply run:
@@ -50,9 +44,7 @@ npm install forest-express-mongoose@^7.9.2
 ```
 
 {% hint style="info" %}
-
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.
-
 {% endhint %}
 
 ## Breaking changes
@@ -259,7 +251,6 @@ module.exports = [
 ```
 
 {% hint style="warning" %}
-
 Calling `sequelize` with one of the 2 following syntaxes will not work anymore:
 
 `const { sequelize } = require('../models');` ❌
@@ -270,7 +261,6 @@ Calling `sequelize` with one of the 2 following syntaxes will not work anymore:
 Instead, you should now use
 
 `const sequelize = require('../models').connections.default;`
-
 {% endhint %}
 
 #### Mongoose specific changes
@@ -297,9 +287,7 @@ One of the changes introduced by the v7 is that you no longer need to re-authent
 A new environment variable called `APPLICATION_URL` is required and must be added to your `.env` file.
 
 {% hint style="info" %}
-
 `http://localhost:3310` is the default value to be set for the `APPLICATION_URL`. If you specified a specific url for your application in place of the default one (for example for an install on a remote machine), this url should be the value set.
-
 {% endhint %}
 
 #### New CORS condition
@@ -335,9 +323,7 @@ app.use(cors(corsConfig));
 If you're running multiple instances of your agent (with a load balancer for example), you will need to set up a static client id.
 
 {% hint style="warning" %}
-
 **Without a static client id, authentication will fail whenever a user makes a request to a different instance than the one he logged into.**
-
 {% endhint %}
 
 First you will need to obtain a client id for your environment by running the following command:

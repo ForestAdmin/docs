@@ -15,8 +15,6 @@ Forest Admin allows adding validation rules to native and custom fields in your 
 
 ## Examples
 
-<CodeGroup>
-
 ```javascript Node.js
 collection.addFieldValidation('firstName', 'LongerThan', 2);
 ```
@@ -26,8 +24,6 @@ collection.addFieldValidation('firstName', 'LongerThan', 2);
   collection.add_field_validation('firstName', 'LongerThan', 2)
 end
 ```
-
-</CodeGroup>
 
 Validation is performed on a best-effort basis and should **not be relied on exclusively** to ensure data integrity.
 

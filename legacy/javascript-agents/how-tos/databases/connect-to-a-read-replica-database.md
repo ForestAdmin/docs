@@ -12,9 +12,7 @@ For example, your read replica will be used while displaying the table view of y
 As your Admin Backend relies on the Sequelize ORM, it's quite easy to configure a[ read replication](https://sequelize.org/master/manual/read-replication.html).
 
 {% hint style="warning" %}
-
 Those code snippets are an example. It is strongly advised to use environment variables for your database connection credentials.
-
 {% endhint %}
 
 ```javascript

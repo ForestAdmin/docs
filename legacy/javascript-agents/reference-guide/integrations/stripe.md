@@ -74,7 +74,5 @@ Here are the complete list of available options to customize your Stripe integra
 | mapping | string | Indicates how to reconcile your Customer data from your Stripe account and your collection/field from your database. Format must be `model_name.stripe_customer_id_field` |
 
 {% hint style="info" %}
-
 A `stripe` option is also available to use the official [Node.js Stripe library](https://github.com/stripe/stripe-node) NPM package.
-
 {% endhint %}

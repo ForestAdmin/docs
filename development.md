@@ -4,20 +4,18 @@ description: 'Preview changes locally to update your docs'
 ---
 
 {% hint style="info" %}
-
   **Prerequisites**:
   - Node.js version 19 or higher
   - A docs repository with a `docs.json` file
-
 {% endhint %}
 
-Follow these steps to install and run Mintlify on your operating system.
+Follow these steps to install and run GitBook on your operating system.
 
 <Steps>
-<Step title="Install the Mintlify CLI">
+<Step title="Install the GitBook CLI">
 
 ```bash
-npm i -g mint
+npm i -g @gitbook/cli
 ```
 </Step>
 
@@ -26,7 +24,7 @@ npm i -g mint
 Navigate to your docs directory where your `docs.json` file is located, and run the following command:
 
 ```bash
-mint dev
+gitbook serve
 ```
 
 A local preview of your documentation will be available at `http://localhost:3000`.
@@ -36,21 +34,21 @@ A local preview of your documentation will be available at `http://localhost:300
 
 ## Custom ports
 
-By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. For example, to run Mintlify on port 3333, use this command:
+By default, GitBook uses port 3000. You can customize the port GitBook runs on by using the `--port` flag. For example, to run GitBook on port 3333, use this command:
 
 ```bash
-mint dev --port 3333
+gitbook serve --port 3333
 ```
 
-If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
+If you attempt to run GitBook on a port that's already in use, it will use the next available port:
 
 ```md
 Port 3000 is already in use. Trying 3001 instead.
 ```
 
-## Mintlify versions
+## GitBook versions
 
-Please note that each CLI release is associated with a specific version of Mintlify. If your local preview does not align with the production version, please update the CLI:
+Please note that each CLI release is associated with a specific version of GitBook. If your local preview does not align with the production version, please update the CLI:
 
 ```bash
 npm mint update
@@ -78,19 +76,25 @@ We suggest using extensions on your IDE to recognize and format MDX. If you're a
 
 ## Troubleshooting
 
-<AccordionGroup>
-  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
 
-    This may be due to an outdated version of node. Try the following:
+<details>
+<summary>Details</summary>
+
+This may be due to an outdated version of node. Try the following:
     1. Remove the currently-installed version of the CLI: `npm remove -g mint`
     2. Upgrade to Node v19 or higher.
-    3. Reinstall the CLI: `npm i -g mint`
-  </Accordion>
+    3. Reinstall the CLI: `npm i -g @gitbook/cli`
 
-  <Accordion title="Issue: Encountering an unknown error">
+</details>
+
+
   
-    Solution: Go to the root of your device and delete the `~/.mintlify` folder. Then run `mint dev` again.
-  </Accordion>
-</AccordionGroup>
+<details>
+<summary>Issue: Encountering an unknown error</summary>
 
-Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://www.npmjs.com/package/mintlify?activeTab=versions).
+Solution: Go to the root of your device and delete the `~/.gitbook` folder. Then run `gitbook serve` again.
+
+</details>
+
+
+Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://docs.gitbook.com/product-tour/git-sync?activeTab=versions).

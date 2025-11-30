@@ -83,9 +83,7 @@ collection('zendesk_tickets', {
 ```
 
 {% hint style="info" %}
-
 Some fields are available for filtering or sorting using the Zendesk API. To allow this on the Forest UI, simply add the keywords `isFilterable` and `isSortable` in your field definition.
-
 {% endhint %}
 
 ### Implement the Smart Collection route
@@ -95,11 +93,8 @@ In the file `routes/zendesk-tickets.js`, we’ve created a new route to implemen
 The logic here is to list all the users of your Zendesk account.
 
 {% hint style="info" %}
-
-
 - Learn more about how to [authenticate, filter and sort with the Zendesk API](https://docs.forestadmin.com/woodshop/how-tos/zendesk-integration/authentication-filtering-and-sorting).
 - Find more information about `getTickets` variable definition in [the Github repository](https://github.com/existenz31/forest-zendesk/blob/master/services/zendesk-tickets-service.js).
-
 {% endhint %}
 
 ```javascript

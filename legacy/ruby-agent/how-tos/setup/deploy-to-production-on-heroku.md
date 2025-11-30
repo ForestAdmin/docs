@@ -94,7 +94,5 @@ The last step to have a complete running application is to deploy a database rem
 For this, you can follow our [Populate a remote database](../databases/populate-a-postgresql-database-on-heroku.md) how-to.
 
 {% hint style="warning" %}
-
 This does **not** mean your project is deployed to production on Forest Admin. To deploy to production, check out [this section](../../reference-guide/how-it-works/environments.md#deploying-to-production) after you've completed the above steps.
-
 {% endhint %}

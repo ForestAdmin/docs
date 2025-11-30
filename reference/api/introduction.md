@@ -131,11 +131,9 @@ Automate workflows based on Forest Admin activity:
 ## API Status
 
 {% hint style="info" %}
-
 **API Access Required**
 
 The Forest Admin Public API is available for Enterprise plans. Contact your account manager or [reach out to us](https://www.forestadmin.com/contact) to enable API access for your project.
-
 {% endhint %}
 
 ## Support

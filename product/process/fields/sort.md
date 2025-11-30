@@ -10,8 +10,6 @@ By using the `replaceFieldSorting` (or `replace_field_sorting` in Ruby) and `emu
 
 You can also provide replacement sort clauses. In this example, we're telling Forest Admin "When a user sorts by full name, I want to sort by the last name, and then by the first name".
 
-<CodeGroup>
-
 ```javascript Node.js
 collection.replaceFieldSorting('fullName', [
   { field: 'lastName', ascending: true },
@@ -31,15 +29,11 @@ collection.replaceFieldSorting('fullName', [
 end
 ```
 
-</CodeGroup>
-
 ## Emulation
 
 The `emulateFieldSorting``emulate_field_sorting` method works by fetching all records from the data source and sorting them in memory.
 
 **You should think twice before using emulation**, as it will have terrible performance on large collections.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.emulateFieldSorting('aField');
@@ -50,5 +44,3 @@ collection.emulateFieldSorting('aField');
   collection.emulate_field_sorting('aField')
 end
 ```
-
-</CodeGroup>

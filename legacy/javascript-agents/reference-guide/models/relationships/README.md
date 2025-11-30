@@ -62,17 +62,13 @@ module.exports = (mongoose, Mongoose) => {
 ```
 
 {% hint style="warning" %}
-
 Note that for orders to be displayed within the related data section of your customer, they have to be populated in your database. For instance:
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/screenshot 2019-09-05 at 13.41.02.png>)
 
 {% hint style="info" %}
-
 Once you've added your relationship(s) in your model(s), they will only be taken into account **after you restart your server**.
-
 {% endhint %}
 
 ![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LR7SWfEwsNtj_ZiSkSA%2F-Linf3OXMqwbdmu1bCUF%2F-LinfZ7RFMnv-1sEZZoZ%2FCapture%20d%E2%80%99e%CC%81cran%202019-07-02%20a%CC%80%2019.13.59.png?alt=media&token=b18bbf1c-3d3e-40c0-9c5b-746d3aa43096)
@@ -116,9 +112,7 @@ module.exports = (mongoose, Mongoose) => {
 ![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LR7SWfEwsNtj_ZiSkSA%2F-Linf3OXMqwbdmu1bCUF%2F-LinfN5sVRQZ7WK6VBmM%2FCapture%20d%E2%80%99e%CC%81cran%202019-07-02%20a%CC%80%2019.11.57.png?alt=media&token=96ead205-b9f0-40fa-9f24-442d5a6a7d99)
 
 {% hint style="info" %}
-
 Don't forget to **restart your server** for your newly added relationships to be taken into account.
-
 {% endhint %}
 
 ### Adding a `belongsTo` relationship
@@ -158,20 +152,16 @@ module.exports = (mongoose, Mongoose) => {
 ```
 
 {% hint style="warning" %}
-
 This will work if your foreign keys are correctly named:\
 For a collection `collectionName`, the foreign key should be `collection_name_id`.\
 \
 If this is not the case, check out the [section below](./#declaring-a-foreign-key-sql-only).
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/screenshot 2020-06-22 at 11.28.08.png>)
 
 {% hint style="info" %}
-
 Don't forget to **restart your server** for your newly added relationships to be taken into account.
-
 {% endhint %}
 
 #### Declaring a foreign key (SQL only)
@@ -194,9 +184,7 @@ Address.associate = (models) => {
 ```
 
 {% hint style="info" %}
-
 This is explained in [Sequelize's documentation](https://sequelize.org/master/manual/associations.html#target-keys).
-
 {% endhint %}
 
 ### Adding a `belongsToMany` relationship (SQL only)

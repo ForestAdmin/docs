@@ -4,15 +4,11 @@ description: "Automate user management by integrating OneLogin's SCIM provisioni
 ---
 
 {% hint style="info" %}
-
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Enabling SCIM disables Forest Admin user editing. All user management must be done through OneLogin.
-
 {% endhint %}
 
 ## Supported Features

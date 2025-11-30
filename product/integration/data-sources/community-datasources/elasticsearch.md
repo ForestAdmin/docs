@@ -4,9 +4,7 @@ description: "Connect to Elasticsearch indices with query and aggregation suppor
 ---
 
 {% hint style="warning" %}
-
 Elasticsearch datasource is only available for Node.js and is an experimental community package.
-
 {% endhint %}
 
 The Elasticsearch datasource connects to Elasticsearch indices, allowing you to query, filter, and aggregate your data through Forest Admin.

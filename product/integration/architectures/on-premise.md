@@ -30,13 +30,11 @@ On-premise is ideal for organizations with:
 ## Availability
 
 {% hint style="warning" %}
-
 **On-premise deployment is not available in self-service.**
 
 This is an **enterprise offering** that requires custom setup, configuration, and support from our team.
 
 To discuss on-premise deployment for your organization, please [contact our sales team](https://www.forestadmin.com/contact).
-
 {% endhint %}
 
 ## What's included

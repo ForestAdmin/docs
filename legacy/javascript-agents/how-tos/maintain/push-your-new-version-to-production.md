@@ -2,9 +2,7 @@
 title: Push your new version to production
 ---
 {% hint style="info" %}
-
 Forest Admin is using the [`.forestadmin-schema.json`](https://docs.forestadmin.com/developer-guide-agents-nodejs/under-the-hood/forestadmin-schema) file that is present beside your agent to reflect your model definition as well as the agent version.
-
 {% endhint %}
 
 When upgrading your agent version, it will only be taken into account if the `.forestadmin-schema.json` with the latest version has been pushed.

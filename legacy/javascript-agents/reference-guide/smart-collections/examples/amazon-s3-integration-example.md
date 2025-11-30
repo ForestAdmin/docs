@@ -12,9 +12,7 @@ First, we declare the `legal_docs` collection in the `forest/` directory. In thi
 You can check out the list of [available field options ](../../smart-fields/#available-field-options)if you need it.
 
 {% hint style="warning" %}
-
 You **MUST** declare an `id` field when creating a Smart Collection. The value of this field for each record **MUST** be unique. On the following example, we simply generate a random UUID.
-
 {% endhint %}
 
 ```javascript
@@ -58,9 +56,7 @@ First, we declare the `legal_docs` collection in the `forest/` directory. In thi
 You can check out the list of [available field options here ](../../smart-fields/#available-field-options)if you need it.
 
 {% hint style="warning" %}
-
 You **MUST** declare an `id` field when creating a Smart Collection. The value of this field for each record **MUST** be unique. On the following example, we simply generate a random UUID.
-
 {% endhint %}
 
 ```javascript
@@ -99,9 +95,7 @@ collection('legal_docs', {
 ```
 
 {% hint style="info" %}
-
 You can add the option `isSearchable: true` to your collection to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic.
-
 {% endhint %}
   </Tab>
 </Tabs>

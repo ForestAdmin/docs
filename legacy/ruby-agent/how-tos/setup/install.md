@@ -109,10 +109,8 @@ Finally, when your local server is started, you should be automatically redirect
 {/* markdown-link-check-disable */}
 
 {% hint style="info" %}
-
 If you installed using a local database, your generated admin backend will have[`http://localhost:3310`](http://localhost:3310/) as an endpoint (Notice the HTTP protocol).\
 This explains why, if you try to visit **https://**app.forestadmin.com, you will be _redirected_ to **http://**app.forestadmin.com as this is the only way it can communicate with your local admin backend.
-
 {% endhint %}
 
 {/* markdown-link-check-enable */}

@@ -4,9 +4,7 @@ description: "Build custom datasources by translating Forest Admin queries into 
 ---
 
 {% hint style="warning" %}
-
 Translation datasources require advanced knowledge of Forest Admin's query interface.
-
 {% endhint %}
 
 The translation strategy is an advanced approach for creating custom datasources that involves translating Forest Admin's query interface into the target API's query language.
@@ -25,7 +23,6 @@ Implementing this strategy requires completing three main phases:
 
 ### Minimal example
 
-<CodeGroup>
 ```javascript Node.js
 class MyCollection extends BaseCollection {
   constructor(dataSource) {
@@ -57,7 +54,6 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 ## Structure Declaration
 
@@ -65,7 +61,6 @@ end
 
 Define fields with types, validation, and default values:
 
-<CodeGroup>
 ```javascript Node.js
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 
@@ -134,7 +129,6 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 ### Typing
 
@@ -163,7 +157,6 @@ The validation API mirrors the condition tree structure but excludes a "field" e
 
 Data sources using the query translation strategy require careful implementation for relationships.
 
-<CodeGroup>
 ```javascript Node.js
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 
@@ -214,7 +207,6 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 ## Capabilities Declaration
 
@@ -260,7 +252,6 @@ To unlock GUI filtering:
 
 Enables pagination widget to display total page count. Requires implementing the `aggregate` method:
 
-<CodeGroup>
 ```javascript Node.js
 class MyCollection extends BaseCollection {
   constructor() {
@@ -277,13 +268,11 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 #### Search
 
 Allows custom search implementation instead of default condition tree approach. Useful for full-text search (ElasticSearch, etc.):
 
-<CodeGroup>
 ```javascript Node.js
 class MyCollection extends BaseCollection {
   constructor() {
@@ -300,13 +289,11 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 #### Segments
 
 Define segments at datasource level when condition trees are insufficient or segments are shared across projects:
 
-<CodeGroup>
 ```javascript Node.js
 class MyCollection extends BaseCollection {
   constructor() {
@@ -325,7 +312,6 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 ### Field-level capabilities
 
@@ -333,7 +319,6 @@ end
 
 Mark fields as read-only:
 
-<CodeGroup>
 ```javascript Node.js
 this.addField('id', {
   isReadOnly: true,
@@ -345,13 +330,11 @@ add_field('id', {
   is_read_only: true
 })
 ```
-</CodeGroup>
 
 #### Filtering operators
 
 Declare supported operators per field:
 
-<CodeGroup>
 ```javascript Node.js
 this.addField('id', {
   filterOperators: new Set([
@@ -366,13 +349,11 @@ add_field('id', {
   filter_operators: ['Equal']
 })
 ```
-</CodeGroup>
 
 #### Sort support
 
 Flag sortable fields:
 
-<CodeGroup>
 ```javascript Node.js
 this.addField('id', {
   isSortable: true,
@@ -384,7 +365,6 @@ add_field('id', {
   is_sortable: true
 })
 ```
-</CodeGroup>
 
 ## Read implementation
 
@@ -394,7 +374,6 @@ Emulation enables rapid development by allowing features to be tested in Node.js
 
 ### Basic list implementation
 
-<CodeGroup>
 ```javascript Node.js
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 const axios = require('axios');
@@ -435,13 +414,11 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 ### Aggregate method
 
 The `aggregate` method handles both record counting and chart data generation:
 
-<CodeGroup>
 ```javascript Node.js
 async aggregate(caller, filter, aggregation, limit) {
   const records = await this.list(caller, filter, aggregation.projection);
@@ -455,13 +432,11 @@ def aggregate(caller, filter, aggregation, limit = nil)
   aggregation.apply(records, caller.timezone, limit)
 end
 ```
-</CodeGroup>
 
 ### Optimization: count queries
 
 Handle count operations separately if your API supports efficient counting:
 
-<CodeGroup>
 ```javascript Node.js
 async aggregate(caller, filter, aggregation, limit) {
   if (aggregation.operation === 'Count' && aggregation.groups.length === 0) {
@@ -480,7 +455,6 @@ def aggregate(caller, filter, aggregation, limit = nil)
   # Handle general aggregation case
 end
 ```
-</CodeGroup>
 
 ## Write implementation
 
@@ -488,7 +462,6 @@ Making your records editable is achieved by implementing the `create`, `update` 
 
 **Important:** The three write methods accept filter parameters, but unlike the `list` method, pagination support is unnecessary.
 
-<CodeGroup>
 ```javascript Node.js
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 const axios = require('axios'); // client for the target API
@@ -561,7 +534,6 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 ### Method details
 
@@ -593,7 +565,6 @@ When a `many-to-one` relationship exists, the collection must accept references 
 
 #### Structure declaration example
 
-<CodeGroup>
 ```javascript Node.js
 class MovieCollection extends BaseCollection {
   constructor() {
@@ -622,13 +593,11 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-</CodeGroup>
 
 #### Query example
 
 The system can execute calls using both source and target collection fields:
 
-<CodeGroup>
 ```javascript Node.js
 await dataSource.getCollection('movies').list(
   caller,
@@ -674,7 +643,6 @@ datasource.collection('Movie').list(
   )
 )
 ```
-</CodeGroup>
 
 #### Expected response structure
 
@@ -694,7 +662,5 @@ Developers implementing custom datasources must handle prefixed field references
 - **Aggregations** (calculation operations)
 
 {% hint style="info" %}
-
 Want to share your custom datasource with the community? Check out [Forest Admin experimental](/guides/forestadmin-experimental) to contribute.
-
 {% endhint %}

@@ -7,7 +7,6 @@ The SQL datasource connects directly to SQL databases with automatic schema intr
 
 ## Basic usage
 
-<CodeGroup>
 ```javascript
 
 
@@ -28,7 +27,6 @@ ForestAdminAgent::Agent.new do |config|
   config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
 end
 ```
-</CodeGroup>
 
 ## Automatic schema introspection
 
@@ -43,9 +41,7 @@ By default, the SQL datasource automatically discovers your database structure w
 This requires database credentials with access to `information_schema`. Ownership roles are recommended.
 
 {% hint style="info" %}
-
 Introspection is supported for PostgreSQL, MySQL, MariaDB, and Microsoft SQL Server.
-
 {% endhint %}
 
 ## Configuration options
@@ -54,7 +50,6 @@ Introspection is supported for PostgreSQL, MySQL, MariaDB, and Microsoft SQL Ser
 
 The connection URI format varies by database:
 
-<CodeGroup>
 ```javascript
 createSqlDataSource({
   uri: 'postgresql://user:password@host:5432/database'
@@ -78,7 +73,6 @@ createSqlDataSource({
   uri: 'sqlite://path/to/database.db'
 })
 ```
-</CodeGroup>
 
 ### SSL configuration
 
@@ -247,9 +241,7 @@ createSqlDataSource({
 This allows authorized users to create Live Query charts and segments that execute custom SQL directly against your database.
 
 {% hint style="warning" %}
-
 Live Queries execute raw SQL. Ensure proper access controls and review queries before deploying to production.
-
 {% endhint %}
 
 ## Supported databases
@@ -263,7 +255,5 @@ Live Queries execute raw SQL. Ensure proper access controls and review queries b
 | **SQLite** | 3+ | `sqlite3` | ⚠️ Development only |
 
 {% hint style="info" %}
-
 SQLite is suitable for development and testing but not recommended for production use due to concurrency limitations.
-
 {% endhint %}

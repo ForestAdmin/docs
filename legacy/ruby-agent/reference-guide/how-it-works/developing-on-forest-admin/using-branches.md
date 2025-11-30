@@ -12,9 +12,7 @@ A **layout** is all the settings that **define your user interface (UI)**. In Fo
 <img src="/images/legacy/javascript-agents/using_branches_1 (1).jpg" alt="" />
 
 {% hint style="info" %}
-
 To manipulate your layouts, you will be using [Forest CLI](forest-cli-commands/).
-
 {% endhint %}
 
 ### What is a branch?
@@ -22,9 +20,7 @@ To manipulate your layouts, you will be using [Forest CLI](forest-cli-commands/)
 A branch is a fork (i.e copy) of the layout of its _origin_ environment. It is attached to your development environment.
 
 {% hint style="info" %}
-
 The **origin** of a branch is either specified using the `--origin` option or selected when prompted otherwise). You should choose the environment you want to make some layout changes on.
-
 {% endhint %}
 
 Once you've created a branch, your layout will look exactly like the layout of its origin environment.
@@ -42,11 +38,9 @@ The branch `my-branch` is based on the production layout. Any changes made on it
 <img src="/images/legacy/javascript-agents/using_branches_3.jpg" alt="" />
 
 {% hint style="warning" %}
-
 This also means that any changes made to the origin of your branch will instantly reflect on your branch.\
 \
 For those familiar with git's _rebase_, this means you will **never have to** **rebase** your branch on its origin.
-
 {% endhint %}
 
 ### How do you create a branch?
@@ -58,9 +52,7 @@ forest branch my-branch --origin production
 ```
 
 {% hint style="info" %}
-
 Using kebab-case is recommended; however, should you want to use spaces in your branch name, don't forget to surround it with quotes, like so `forest branch "my branch" --origin ...`.
-
 {% endhint %}
 
 To learn more about the `branch` command, please visit [this page](forest-cli-commands/branch.md).
@@ -72,9 +64,7 @@ On your interface, you can check at all times what branch you are on and how man
 ![](/images/legacy/javascript-agents/current-branch-layout-changes-count-display.png)
 
 {% hint style="info" %}
-
 To switch your _current_ branch to another existing branch, check out the [switch](forest-cli-commands/switch.md) command.
-
 {% endhint %}
 
 Now that you've mastered branch creation and management, let's dive into the next step of the development workflow: deployment

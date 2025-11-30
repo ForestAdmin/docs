@@ -11,7 +11,6 @@ Environment variables are used to configure your Forest Admin agent securely, ke
 
 Your unique environment secret provided by Forest Admin.
 
-<CodeGroup>
 ```bash Node.js
 FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
 ```
@@ -19,7 +18,6 @@ FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
 ```bash Ruby
 FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
 ```
-</CodeGroup>
 
 **Purpose:**
 - Authenticates your agent with Forest Admin
@@ -33,16 +31,13 @@ FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
 4. Copy the environment secret
 
 {% hint style="warning" %}
-
 Never commit `FOREST_ENV_SECRET` to version control. Always use environment variables or secret management tools.
-
 {% endhint %}
 
 ### FOREST_AUTH_SECRET
 
 Secret key used to sign authentication tokens (Self-Hosted and On-Premise only).
 
-<CodeGroup>
 ```bash Node.js
 FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 ```
@@ -50,7 +45,6 @@ FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 ```bash Ruby
 FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 ```
-</CodeGroup>
 
 **Purpose:**
 - Signs JWT tokens for user authentication
@@ -79,7 +73,6 @@ NODE_ENV=production  # Options: development, production, test
 - `development`: Detailed logging, development mode
 - `test`: Testing mode
 
-<CodeGroup>
 ```javascript Node.js
 const agent = createAgent({
   envSecret: process.env.FOREST_ENV_SECRET,
@@ -94,10 +87,7 @@ agent = ForestAdminAgent::Agent.new do |config|
   config.auth_secret = ENV['FOREST_AUTH_SECRET']
 end
 ```
-</CodeGroup>
 
 {% hint style="warning" %}
-
 **Security reminder:** These environment variables contain sensitive secrets that authenticate your agent with Forest Admin. Never commit them to version control, share them publicly, or reuse them across different environments (development, staging, production). Always use separate secrets for each environment and store them securely using environment variables or secret management tools.
-
 {% endhint %}

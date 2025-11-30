@@ -107,15 +107,11 @@ Choose the architecture that best fits your needs and continue with the appropri
     ```
 
     {% hint style="info" %}
-
     This command automatically generates a standalone application, with all the files necessary to make Forest Admin work, including a first `.env` with the environment variables such as `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET`.
-    
 {% endhint %}
 
     {% hint style="warning" %}
-
     Never commit your `.env` file to version control. Add it to `.gitignore`.
-    
 {% endhint %}
   </Tab>
 
@@ -143,9 +139,7 @@ Choose the architecture that best fits your needs and continue with the appropri
     🎉 **Congratulations!** The Forest Admin agent will start on port `3310` alongside your application.
 
     {% hint style="warning" %}
-
     Never commit your `.env` file to version control. Add it to `.gitignore`.
-    
 {% endhint %}
   </Tab>
 
@@ -171,9 +165,7 @@ Choose the architecture that best fits your needs and continue with the appropri
     🎉 **Congratulations!** Your application (including Forest Admin) will start on port `3000` by default.
 
     {% hint style="warning" %}
-
     Never commit your `.env` file to version control. Add it to `.gitignore`.
-    
 {% endhint %}
   </Tab>
 </Tabs>
@@ -206,9 +198,11 @@ After an optional review, you can immediately access the Forest Admin UI to mana
 
 ## Troubleshooting
 
-<AccordionGroup>
-  <Accordion title="Agent not starting" icon="circle-xmark">
-    **Check that your agent is properly started:**
+
+<details>
+<summary>Agent not starting</summary>
+
+**Check that your agent is properly started:**
 
     1. **Is your agent running?** Check the terminal for startup messages
     2. **Check for errors** in the console output
@@ -233,10 +227,15 @@ After an optional review, you can immediately access the Forest Admin UI to mana
         Should return Forest Admin metadata
       </Tab>
     </Tabs>
-  </Accordion>
 
-  <Accordion title="Cannot connect from Forest Admin UI" icon="plug">
-    **Connection troubleshooting checklist:**
+</details>
+
+
+  
+<details>
+<summary>Cannot connect from Forest Admin UI</summary>
+
+**Connection troubleshooting checklist:**
 
     1. ✅ **Is your agent running?** Check the terminal for the "agent is now running" message
     2. ✅ **Can you reach the healthcheck?**
@@ -251,10 +250,15 @@ After an optional review, you can immediately access the Forest Admin UI to mana
     - Check firewall rules allow inbound connections
     - Verify SSL certificates if using HTTPS
     - Check CORS configuration if applicable
-  </Accordion>
 
-  <Accordion title="No tables showing up" icon="table">
-    **Solution:** Make sure your database connection is working.
+</details>
+
+
+  
+<details>
+<summary>No tables showing up</summary>
+
+**Solution:** Make sure your database connection is working.
 
     1. Check your `DATABASE_URL` environment variable is correct
     2. Verify database credentials and permissions
@@ -276,10 +280,15 @@ After an optional review, you can immediately access the Forest Admin UI to mana
         ```
       </Tab>
     </Tabs>
-  </Accordion>
 
-  <Accordion title="Deploy to production" icon="cloud">
-    **Deploy your agent to production:**
+</details>
+
+
+  
+<details>
+<summary>Deploy to production</summary>
+
+**Deploy your agent to production:**
 
     For detailed deployment guides, see:
     - [Production Deployment Guide](/guides/deployment/production)
@@ -294,8 +303,9 @@ After an optional review, you can immediately access the Forest Admin UI to mana
     5. Configure your agent URL in Forest Admin UI
 
     **Learn more:** [Self-Hosted Architecture](/product/integration/architectures/self-hosted)
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ## Need help?
 

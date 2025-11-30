@@ -67,9 +67,7 @@ To initialize the middleware, here are the requirements (refer to the [code snip
 - line 10 `connections` : This wraps up the connections that Forest Admin should use to manipulate your data. We use the `default` keyword here to specify that we will be using only one connection. If you don't know where to pick up this connection object from, here are examples of what it look like in your code:
 
 {% hint style="warning" %}
-
 Do note that the connection you want to provide to ForestAdmin should be initialized with the models you want to work with.
-
 {% endhint %}
 
 ### Sequelize

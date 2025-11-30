@@ -6,9 +6,7 @@ This example shows you how to create a graph based on AWS Redshift.&#x20;
 This could be useful if you want to avoid making graphs directly from your production database.
 
 {% hint style="info" %}
-
 This tutorial is based on [this database sample](https://docs.aws.amazon.com/redshift/latest/gsg/rs-gsg-create-sample-db.html).
-
 {% endhint %}
 
 We'll create 2 charts:
@@ -41,9 +39,7 @@ const redshiftClient = new Redshift(clientCredentials);
 ```
 
 {% hint style="warning" %}
-
 Configure your database credentials in your env variables
-
 {% endhint %}
 
 ## Create the Single Value Chart

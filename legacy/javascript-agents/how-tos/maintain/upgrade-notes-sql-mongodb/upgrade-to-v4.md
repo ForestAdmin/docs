@@ -9,15 +9,11 @@ description: >-
 ## Upgrading to v4
 
 {% hint style="warning" %}
-
 Before upgrading to v4, consider the below **breaking changes**.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
-
 {% endhint %}
 
 To upgrade to v4, simply run:
@@ -35,9 +31,7 @@ npm install forest-express-mongoose@4.1.2
 ```
 
 {% hint style="info" %}
-
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent version 3 is the fastest way to restore your admin panel.
-
 {% endhint %}
 
 ## Breaking changes
@@ -47,9 +41,7 @@ In case of a regression introduced in Production after the upgrade, a rollback t
 The information format of the _session token_ have changed in v4.
 
 {% hint style="info" %}
-
 You could be impacted if you use the _user session_ in Smart Action controllers or Smart Routes
-
 {% endhint %}
 
 **Calling `req.user` in v3**
@@ -107,9 +99,7 @@ Consequently, the user information is now accessible as described below:
 The **query parameters** sent for **filtering** purposes have changed in v4.
 
 {% hint style="info" %}
-
 You could be impacted if you have custom filter implementations.
-
 {% endhint %}
 
 Below are a few example of the new filter conditions format you can access using`req.params.filters`:
@@ -140,9 +130,7 @@ Below are a few example of the new filter conditions format you can access using
 ### MongoDB
 
 {% hint style="info" %}
-
 This section is dedicated to breaking changes on projects using MongoDB connections.
-
 {% endhint %}
 
 #### MongoDB version support
@@ -150,9 +138,7 @@ This section is dedicated to breaking changes on projects using MongoDB connecti
 The minimal version supported by the agent v4 is **MongoDB v3.2** (December 2015).
 
 {% hint style="warning" %}
-
 If your project uses an older MongoDB version, **you should not upgrade to v4**.
-
 {% endhint %}
 
 The way the agent implements the resources filtering changed and this new implementation uses features that does not exist in MongoDB versions older than 3.2.
@@ -213,9 +199,7 @@ reference: 'Address._id';
 A consequence of the new session token format is:
 
 {% hint style="warning" %}
-
 Once an agent v4 deployed, **all users of your project will be automatically logged out** and be forced to re-authenticate to generate a newly formatted token. ​
-
 {% endhint %}
 
 ### Changelogs

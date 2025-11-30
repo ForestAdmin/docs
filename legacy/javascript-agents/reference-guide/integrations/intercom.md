@@ -4,9 +4,7 @@ title: Intercom
 Configuring the Intercom integration allows you to display your user’s session data (location, browser type, …) and conversations.
 
 {% hint style="warning" %}
-
 In order for your intercom integration to work properly, you will have to use the version 2 of intercom API. To do so, you'll need go to the intercom developer hub and ensure that the app registered to retrieve your API key uses the intercom API version 2.0.
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/image (352).png>)
@@ -86,9 +84,7 @@ module.exports = async function (app) {
 - `mapping` refers to the collection and field name you want to map to intercom data. It can either be a field that contain emails that refer to intercom users or a field that contain ids mapping the `external_id` in Intercom API.
 
 {% hint style="info" %}
-
 You will have to restart your server to see Intercom plugged to your project.
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/image (353).png>)

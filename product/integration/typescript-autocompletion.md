@@ -4,9 +4,7 @@ description: "Enable TypeScript autocompletion and type safety for your Forest A
 ---
 
 {% hint style="info" %}
-
 **Node.js only** - This page covers TypeScript autocompletion setup for the Node.js agent. For information about Forest Admin data types, see [Data Types](/product/integration/data-types).
-
 {% endhint %}
 
 The Forest Admin Node.js agent, built entirely in TypeScript, provides comprehensive autocompletion capabilities for collection names, field names, and handler parameters.

@@ -24,9 +24,7 @@ Very often, you’ll need to call business logic from another backend applicatio
 At installation, they are generated in `/routes`.
 
 {% hint style="warning" %}
-
 Note that for any collection added **after** installation, you will have to create a new `your_collection_name.js` file in `/routes`.
-
 {% endhint %}
 
 The generated routes use `next()` to call Forest Admin's default behavior.&#x20;
@@ -38,7 +36,5 @@ To learn **how to extend a route's behavior**, read this page:
 To learn **how to override a route's behavior**, read this page:
 
 {% hint style="info" %}
-
 If you want to trigger logic unrelated to Forest Admin's basic routes (create, update, etc), head over to our [Smart actions](../actions/create-and-manage-smart-actions/#what-is-a-smart-action) page.
-
 {% endhint %}

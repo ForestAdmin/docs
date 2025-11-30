@@ -14,9 +14,7 @@ You can display bellow performances improvement tricks in [this video](https://w
 1\. Show only [Smart fields](https://docs.forestadmin.com/documentation/reference-guide/fields/create-and-manage-smart-fields) you absolutely need.
 
 {% hint style="warning" %}
-
 As you can see in the [Loading time benchmark](performance.md#loading-time-benchmark) below, Smart fields can be quite **costly** in terms of loading performance. Limiting them to those you need is key.
-
 {% endhint %}
 
 2\. Reduce the number of records per page
@@ -28,9 +26,7 @@ As you can see in the [Loading time benchmark](performance.md#loading-time-bench
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 17.47.55 (1).png>)
 
 {% hint style="info" %}
-
 You can hide some fields in your table view; this will not prevent you from seeing them in the record details view.
-
 {% endhint %}
 
 Relationship fields are links to other collection records within your table view:
@@ -67,9 +63,7 @@ end
 ### Disable pagination count
 
 {% hint style="info" %}
-
 This feature is only available if you're using the `forest-express-sequelize` (v8.5.3+)`,` `forest-express-mongoose` (v8.6.5+), `forest-rails` (v7.5.0+) or `django-forestadmin` (v1.2.0+) agent.
-
 {% endhint %}
 
 To paginate tables properly, Forest Admin triggers a separate request to fetch the number of records.
@@ -174,9 +168,7 @@ The users cannot see the indexes, they are just used to speed up searches/querie
 Foreign key columns should be indexed if they are used intensively in Smart fields. In the table below, you can see how drastically it reduces the loading time of the page.
 
 {% hint style="warning" %}
-
 Updating a table with indexes takes more time than updating a table without (because the indexes also need an update). So, only create indexes on columns that will be frequently searched against.
-
 {% endhint %}
 
 ### Loading time benchmark

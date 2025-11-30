@@ -8,9 +8,7 @@ description: "Automate user lifecycle management with SCIM (System for Cross-dom
 SCIM (System for Cross-domain Identity Management) is an open standard for automating user provisioning and deprovisioning between your identity provider (IdP) and Forest Admin. With SCIM, user accounts are automatically created, updated, and disabled based on changes in your IdP.
 
 {% hint style="info" %}
-
 This feature may not be available on all plans and requires SSO to be configured first. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
-
 {% endhint %}
 
 ## Why Use SCIM?
@@ -568,9 +566,11 @@ Check provisioning status in your IdP:
 
 ### SCIM Connection Issues
 
-<AccordionGroup>
-  <Accordion title="Authentication Failed">
-    **Error**: `401 Unauthorized` or `403 Forbidden`
+
+<details>
+<summary>Authentication Failed</summary>
+
+**Error**: `401 Unauthorized` or `403 Forbidden`
 
     **Causes**:
     - Invalid or expired Bearer Token
@@ -581,10 +581,15 @@ Check provisioning status in your IdP:
     1. Regenerate Bearer Token in Forest Admin
     2. Update token in IdP configuration
     3. Test connection again
-  </Accordion>
 
-  <Accordion title="SCIM Endpoint Not Found">
-    **Error**: `404 Not Found` or connection timeout
+</details>
+
+
+  
+<details>
+<summary>SCIM Endpoint Not Found</summary>
+
+**Error**: `404 Not Found` or connection timeout
 
     **Causes**:
     - Incorrect SCIM Base URL
@@ -595,10 +600,15 @@ Check provisioning status in your IdP:
     1. Verify SCIM Base URL is exactly: `https://api.forestadmin.com/scim/v2`
     2. Ensure SCIM is enabled in Forest Admin settings
     3. Check IdP can reach Forest Admin (no firewall blocking)
-  </Accordion>
 
-  <Accordion title="User Creation Failed">
-    **Error**: User not created in Forest Admin
+</details>
+
+
+  
+<details>
+<summary>User Creation Failed</summary>
+
+**Error**: User not created in Forest Admin
 
     **Causes**:
     - Email already exists (duplicate user)
@@ -611,10 +621,15 @@ Check provisioning status in your IdP:
     2. Verify email is valid and unique
     3. Ensure all required SCIM attributes are mapped
     4. Check role mapping configuration
-  </Accordion>
 
-  <Accordion title="User Not Deactivated">
-    **Error**: User disabled in IdP but still active in Forest Admin
+</details>
+
+
+  
+<details>
+<summary>User Not Deactivated</summary>
+
+**Error**: User disabled in IdP but still active in Forest Admin
 
     **Causes**:
     - Deactivation not enabled in IdP provisioning
@@ -626,8 +641,9 @@ Check provisioning status in your IdP:
     2. Wait for sync cycle (or trigger manual sync)
     3. Check SCIM logs for errors
     4. Manually disable user in Forest Admin if urgent
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ### Attribute Mapping Issues
 

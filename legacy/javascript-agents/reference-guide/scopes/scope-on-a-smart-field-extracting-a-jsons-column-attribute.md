@@ -42,7 +42,5 @@ collection('users', {
 ```
 
 {% hint style="warning" %}
-
 In order to make your smart field filterable in the UI, you both need to add the `isFilterable: true` option in the field's declaration and to enable filtering on this field in the field settings in the UI.
-
 {% endhint %}

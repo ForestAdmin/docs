@@ -4,9 +4,7 @@ description: "Automate user management by integrating Okta's SCIM provisioning w
 ---
 
 {% hint style="info" %}
-
 This feature may not be available on all plans. You need administrator access to the Forest Admin project. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
-
 {% endhint %}
 
 ## Supported Features

@@ -31,9 +31,7 @@ $ forest deploy
 ```
 
 {% hint style="info" %}
-
 To be able to deploy the origin of the branch should be the reference environment (eg: production)
-
 {% endhint %}
 
 ### Deploy from the UI

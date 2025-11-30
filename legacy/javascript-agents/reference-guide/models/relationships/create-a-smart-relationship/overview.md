@@ -197,11 +197,9 @@ module.exports = router;
 ```
 
 {% hint style="warning" %}
-
 If your primary key column name (`customer_id`) is different than the model field name (`customerId`), you must alias the primary key column with the name of the model field in the **dataQuery**.\
 \
 Ex: `SELECT customers.*, customers.customer_id AS "customerId"`
-
 {% endhint %}
   </Tab>
   <Tab title="MongoDB (Mongoose)">

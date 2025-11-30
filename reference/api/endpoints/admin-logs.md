@@ -75,121 +75,121 @@ Retrieve a paginated list of admin logs with optional filtering.
 
 #### Response
 
-<ResponseField name="data" type="array">
+
   Array of admin log objects
 
-  <Expandable title="Admin Log Object">
-    <ResponseField name="id" type="string">
+  
+    
       Unique identifier for the admin log
-    </ResponseField>
+    
 
-    <ResponseField name="type" type="string">
+    
       Resource type (always `admin_logs`)
-    </ResponseField>
+    
 
-    <ResponseField name="attributes" type="object">
-      <Expandable title="Attributes">
-        <ResponseField name="operation_type" type="string">
+    
+      
+        
           Type of operation: `config_change`, `permission_update`, `team_management`, `integration_change`, `settings_update`
-        </ResponseField>
+        
 
-        <ResponseField name="operation_name" type="string">
+        
           Specific operation name (e.g., "Update collection layout", "Add team member")
-        </ResponseField>
+        
 
-        <ResponseField name="severity" type="string">
+        
           Severity level: `info`, `warning`, `critical`
-        </ResponseField>
+        
 
-        <ResponseField name="admin" type="object">
-          <Expandable title="Admin Object">
-            <ResponseField name="id" type="string">
+        
+          
+            
               Admin user ID
-            </ResponseField>
+            
 
-            <ResponseField name="email" type="string">
+            
               Admin email address
-            </ResponseField>
+            
 
-            <ResponseField name="name" type="string">
+            
               Admin full name
-            </ResponseField>
+            
 
-            <ResponseField name="role" type="string">
+            
               Admin role (e.g., "Admin", "Owner", "Developer")
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
+            
+          
+        
 
-        <ResponseField name="target" type="object">
+        
           Target of the operation (user, collection, setting, etc.)
 
-          <Expandable title="Target Object">
-            <ResponseField name="type" type="string">
+          
+            
               Type of target (e.g., "user", "collection", "role", "api_key")
-            </ResponseField>
+            
 
-            <ResponseField name="id" type="string">
+            
               Target identifier
-            </ResponseField>
+            
 
-            <ResponseField name="name" type="string">
+            
               Target name or description
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
+            
+          
+        
 
-        <ResponseField name="changes" type="object">
+        
           Details of changes made
 
-          <Expandable title="Changes Object">
-            <ResponseField name="before" type="object">
+          
+            
               State before the change
-            </ResponseField>
+            
 
-            <ResponseField name="after" type="object">
+            
               State after the change
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
+            
+          
+        
 
-        <ResponseField name="created_at" type="string">
+        
           ISO 8601 timestamp when the operation occurred
-        </ResponseField>
+        
 
-        <ResponseField name="ip_address" type="string">
+        
           IP address from which the operation was performed
-        </ResponseField>
+        
 
-        <ResponseField name="environment" type="string">
+        
           Environment where the change was made (e.g., "production", "staging")
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-  </Expandable>
-</ResponseField>
+        
+      
+    
+  
 
-<ResponseField name="meta" type="object">
+
+
   Pagination metadata
 
-  <Expandable title="Meta Object">
-    <ResponseField name="page" type="integer">
+  
+    
       Current page number
-    </ResponseField>
+    
 
-    <ResponseField name="limit" type="integer">
+    
       Results per page
-    </ResponseField>
+    
 
-    <ResponseField name="total" type="integer">
+    
       Total number of results
-    </ResponseField>
+    
 
-    <ResponseField name="total_pages" type="integer">
+    
       Total number of pages
-    </ResponseField>
-  </Expandable>
-</ResponseField>
+    
+  
+
 
 <RequestExample>
 
@@ -385,9 +385,9 @@ Retrieve a specific admin log by ID.
 
 #### Response
 
-<ResponseField name="data" type="object">
+
   Single admin log object with the same structure as the list endpoint
-</ResponseField>
+
 
 <RequestExample>
 

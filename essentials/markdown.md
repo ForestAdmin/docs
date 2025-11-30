@@ -1,7 +1,6 @@
 ---
 title: 'Markdown syntax'
 description: 'Text, title, and styling in standard markdown'
-icon: 'text-size'
 ---
 
 ## Titles
@@ -21,11 +20,7 @@ Best used for subsection headers.
 ```
 
 {% hint style="success" %}
-
-
 Each **title** and **subtitle** creates an anchor and also shows up on the table of contents on the right.
-
-
 {% endhint %}
 
 ## Text formatting
@@ -81,10 +76,10 @@ To create a blockquote, add a `>` in front of a paragraph.
 
 ### LaTeX
 
-Mintlify supports [LaTeX](https://www.latex-project.org) through the Latex component.
+GitBook supports [LaTeX](https://www.latex-project.org) through the Latex component.
 
-<Latex>8 x (vk x H1 - H2) = (0,1)</Latex>
+$$8 x (vk x H1 - H2) = (0,1)$$
 
 ```md
-<Latex>8 x (vk x H1 - H2) = (0,1)</Latex>
+$$8 x (vk x H1 - H2) = (0,1)$$
 ```

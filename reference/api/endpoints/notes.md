@@ -57,77 +57,77 @@ Retrieve all notes for a specific record.
 
 #### Response
 
-<ResponseField name="data" type="array">
+
   Array of note objects
 
-  <Expandable title="Note Object">
-    <ResponseField name="id" type="string">
+  
+    
       Unique identifier for the note
-    </ResponseField>
+    
 
-    <ResponseField name="type" type="string">
+    
       Resource type (always `notes`)
-    </ResponseField>
+    
 
-    <ResponseField name="attributes" type="object">
-      <Expandable title="Attributes">
-        <ResponseField name="content" type="string">
+    
+      
+        
           The note content (supports Markdown and @mentions)
-        </ResponseField>
+        
 
-        <ResponseField name="author" type="object">
-          <Expandable title="Author Object">
-            <ResponseField name="id" type="string">
+        
+          
+            
               Author user ID
-            </ResponseField>
+            
 
-            <ResponseField name="email" type="string">
+            
               Author email address
-            </ResponseField>
+            
 
-            <ResponseField name="name" type="string">
+            
               Author full name
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
+            
+          
+        
 
-        <ResponseField name="mentions" type="array">
+        
           Array of mentioned user IDs
-        </ResponseField>
+        
 
-        <ResponseField name="created_at" type="string">
+        
           ISO 8601 timestamp when the note was created
-        </ResponseField>
+        
 
-        <ResponseField name="updated_at" type="string">
+        
           ISO 8601 timestamp when the note was last updated
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-  </Expandable>
-</ResponseField>
+        
+      
+    
+  
 
-<ResponseField name="meta" type="object">
+
+
   Pagination metadata
 
-  <Expandable title="Meta Object">
-    <ResponseField name="page" type="integer">
+  
+    
       Current page number
-    </ResponseField>
+    
 
-    <ResponseField name="limit" type="integer">
+    
       Results per page
-    </ResponseField>
+    
 
-    <ResponseField name="total" type="integer">
+    
       Total number of notes
-    </ResponseField>
+    
 
-    <ResponseField name="total_pages" type="integer">
+    
       Total number of pages
-    </ResponseField>
-  </Expandable>
-</ResponseField>
+    
+  
+
 
 <RequestExample>
 
@@ -283,9 +283,9 @@ Create a new note for a specific record.
 
 #### Response
 
-<ResponseField name="data" type="object">
+
   The created note object with the same structure as GET response
-</ResponseField>
+
 
 <RequestExample>
 
@@ -418,9 +418,9 @@ Retrieve a specific note by ID.
 
 #### Response
 
-<ResponseField name="data" type="object">
+
   Single note object with the same structure as the list endpoint
-</ResponseField>
+
 
 <RequestExample>
 
@@ -506,9 +506,9 @@ Update an existing note.
 
 #### Response
 
-<ResponseField name="data" type="object">
+
   The updated note object
-</ResponseField>
+
 
 <RequestExample>
 
@@ -617,9 +617,9 @@ Delete a note.
 
 #### Response
 
-<ResponseField name="success" type="boolean">
+
   Returns true if deletion was successful
-</ResponseField>
+
 
 <RequestExample>
 

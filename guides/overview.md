@@ -15,84 +15,116 @@ Practical guides to help you deploy, migrate, integrate, and optimize your Fores
 
 ## Deployment Guides
 
-<AccordionGroup>
-  <Accordion title="Platform-Specific Deployment" icon="server">
-    Learn how to deploy Forest Admin on various platforms:
+
+<details>
+<summary>Platform-Specific Deployment</summary>
+
+Learn how to deploy Forest Admin on various platforms:
     - **AWS**: Deploy on EC2, ECS, Lambda, and other AWS services
     - **Heroku**: One-click deployment to Heroku
     - **Docker**: Containerize your Forest Admin agent
     - **Kubernetes**: Deploy with K8s orchestration
-  </Accordion>
 
-  <Accordion title="Environment Management" icon="layer-group">
-    Set up and manage multiple environments:
+</details>
+
+
+  
+<details>
+<summary>Environment Management</summary>
+
+Set up and manage multiple environments:
     - Development, staging, and production environments
     - Environment-specific configurations
     - Branch-based development workflow
     - CI/CD integration
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ## Migration Guides
 
-<AccordionGroup>
-  <Accordion title="Migrating from v1" icon="code-branch">
-    Complete migration path from Forest Admin v1 to the latest version:
+
+<details>
+<summary>Migrating from v1</summary>
+
+Complete migration path from Forest Admin v1 to the latest version:
     - **Overview**: Understanding changes and breaking changes
     - **Data Sources**: Migrate your data source configurations
     - **Smart Actions**: Update Smart Actions to new format
     - **Smart Fields**: Migrate computed fields
     - **Permissions**: Update role and permission configurations
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ## Best Practices
 
-<AccordionGroup>
-  <Accordion title="Performance Optimization" icon="gauge-high">
-    - Query optimization techniques
+
+<details>
+<summary>Performance Optimization</summary>
+
+- Query optimization techniques
     - Caching strategies
     - Pagination best practices
     - Index recommendations
     - Load testing guidelines
-  </Accordion>
 
-  <Accordion title="Security Best Practices" icon="shield">
-    - Authentication and authorization
+</details>
+
+
+  
+<details>
+<summary>Security Best Practices</summary>
+
+- Authentication and authorization
     - API key management
     - Data encryption
     - IP whitelisting
     - Audit logging
     - Compliance considerations (GDPR, SOC2)
-  </Accordion>
 
-  <Accordion title="Troubleshooting" icon="wrench">
-    - Common issues and solutions
+</details>
+
+
+  
+<details>
+<summary>Troubleshooting</summary>
+
+- Common issues and solutions
     - Debugging techniques
     - Log analysis
     - Performance profiling
     - Error handling patterns
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ## Integration Guides
 
-<AccordionGroup>
-  <Accordion title="Third-Party Services" icon="plug-circle-check">
-    - **Stripe**: Payment processing and subscription management
+
+<details>
+<summary>Third-Party Services</summary>
+
+- **Stripe**: Payment processing and subscription management
     - **SendGrid**: Email notifications and campaigns
     - **Twilio**: SMS and communication workflows
     - **Slack**: Team notifications and alerts
     - Custom integrations via webhooks
-  </Accordion>
 
-  <Accordion title="Data Sync & ETL" icon="arrows-rotate">
-    - Real-time data synchronization
+</details>
+
+
+  
+<details>
+<summary>Data Sync & ETL</summary>
+
+- Real-time data synchronization
     - Batch data imports/exports
     - ETL pipeline integration
     - Data warehousing connections
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ## Getting Started with Guides
 

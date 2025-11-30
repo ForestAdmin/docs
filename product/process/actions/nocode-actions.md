@@ -8,9 +8,7 @@ No-code actions let you create powerful operations directly from the Forest Admi
 Perfect for non-technical teams and simple operations that don't require custom business logic.
 
 {% hint style="info" %}
-
 For advanced actions with custom code, dynamic forms, or complex logic, see [Code-based actions](/product/process/actions/custom-actions/overview).
-
 {% endhint %}
 
 ## What you can do
@@ -93,7 +91,6 @@ Trigger HTTP requests to your API or external services (Zapier, Make, n8n).
 
 **Webhook payload format:**
 
-<CodeGroup>
 ```json Single action
 {
   "action": {
@@ -127,7 +124,6 @@ Trigger HTTP requests to your API or external services (Zapier, Make, n8n).
   }
 }
 ```
-</CodeGroup>
 
 **Configuration:**
 

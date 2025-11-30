@@ -8,9 +8,7 @@ At installation, you may only choose 1 schema:
 ![](</images/legacy/javascript-agents/screenshot 2020-02-17 at 16.27.45.png>)
 
 {% hint style="info" %}
-
 If you're not using specific schemas, you don't have to fill this advanced option.
-
 {% endhint %}
 
 ### Forest Admin can display collections from multiple schemas
@@ -75,7 +73,5 @@ Because you have changed your environment variable name from `DATABASE_SCHEMA` t
 For each of your other schemas' models, you'll need to create a file in `models`. This must be done **manually** and the schema line must be set to `DATABASE_SCHEMA_2` as per above example.
 
 {% hint style="info" %}
-
 If your other schemas have a lot of models, a quick way to generate the models is to create a another project using those other schemas (1 project for each schema).
-
 {% endhint %}

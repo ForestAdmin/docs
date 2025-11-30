@@ -22,9 +22,7 @@ Forest Admin tracks all user activities across different areas:
 For each action, the system logs the **user, targeted record(s), and timestamp**. Forest Admin tracks and stores these activities **without records' sensitive data** except the ID/primary key.
 
 {% hint style="warning" %}
-
 **Known Limitation**: When collections share identical names with different capitalization (e.g., `myCollection` and `MyCollection`), activity tracking may incorrectly attribute actions between these collections.
-
 {% endhint %}
 
 ## Viewing Activity Logs
@@ -57,13 +55,9 @@ To export activity logs:
 You will receive download links via email shortly after the export request.
 
 {% hint style="info" %}
-
 **API Access**: Audit logs are also available programmatically through the Forest Admin API. See the [Activity Logs API reference](/reference/api/endpoints/activity-logs) for more information.
-
 {% endhint %}
 
 {% hint style="info" %}
-
 **Admin Logs**: This page covers data activity logs. Permission management changes (role modifications, user access changes, etc.) are tracked separately in Admin Logs. [View Admin Logs documentation →](/product/control/admin-logs)
-
 {% endhint %}

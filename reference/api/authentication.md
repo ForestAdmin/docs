@@ -46,9 +46,7 @@ Expiration: 1 year
 ### Step 3: Save Token
 
 {% hint style="warning" %}
-
 **Important:** Copy and save your token immediately. For security reasons, you won't be able to see it again. If you lose the token, you'll need to generate a new one.
-
 {% endhint %}
 
 ## Using API Tokens
@@ -128,9 +126,7 @@ end
 ### Storing Tokens Securely
 
 {% hint style="success" %}
-
 **Best Practice:** Store API tokens in environment variables or secure secrets management systems, never in code or version control.
-
 {% endhint %}
 
 **Environment Variables:**
@@ -271,9 +267,7 @@ Immediately revoke a token if:
 4. Confirm revocation
 
 {% hint style="warning" %}
-
 Revoking a token immediately stops all integrations using it. Ensure you update integrations before revoking.
-
 {% endhint %}
 
 ## Authentication Errors

@@ -1,10 +1,9 @@
 ---
 title: "Windsurf setup"
 description: "Configure Windsurf for your documentation workflow"
-icon: "water"
 ---
 
-Configure Windsurf's Cascade AI assistant to help you write and maintain documentation. This guide shows how to set up Windsurf specifically for your Mintlify documentation workflow.
+Configure Windsurf's Cascade AI assistant to help you write and maintain documentation. This guide shows how to set up Windsurf specifically for your GitBook documentation workflow.
 
 ## Prerequisites
 
@@ -18,11 +17,11 @@ Create workspace rules that provide Windsurf with context about your documentati
 Create `.windsurf/rules.md` in your project root:
 
 ````markdown
-# Mintlify technical writing rule
+# GitBook technical writing rule
 
 ## Project context
 
-- This is a documentation project on the Mintlify platform
+- This is a documentation project on the GitBook platform
 - We use MDX files with YAML frontmatter  
 - Navigation is configured in `docs.json`
 - We follow technical writing best practices
@@ -47,7 +46,7 @@ description: "Concise description for SEO and navigation"
 ---
 ```
 
-## Mintlify components
+## GitBook components
 
 ### Callouts
 
@@ -60,7 +59,7 @@ description: "Concise description for SEO and navigation"
 ### Code examples
 
 - When appropriate, include complete, runnable examples
-- Use `<CodeGroup>` for multiple language examples
+- Use `` for multiple language examples
 - Specify language tags on all code blocks
 - Include realistic data, not placeholders
 - Use `<RequestExample>` and `<ResponseExample>` for API docs
@@ -82,9 +81,9 @@ description: "Concise description for SEO and navigation"
 ## API documentation requirements
 
 - Document all parameters with `<ParamField>` 
-- Show response structure with `<ResponseField>`
+- Show response structure with ``
 - Include both success and error examples
-- Use `<Expandable>` for nested object properties
+- Use `` for nested object properties
 - Always include authentication examples
 
 ## Quality standards

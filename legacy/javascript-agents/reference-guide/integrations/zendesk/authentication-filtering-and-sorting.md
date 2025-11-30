@@ -26,9 +26,7 @@ Zendesk API allows you to filter and sort the tickets/users, plus paginate the r
 What we need first, is to implement a way to transform the Forest Admin filtering, sorting and pagination convention to the Zendesk API format.
 
 {% hint style="info" %}
-
 Learn more about how to [authenticate, filter and sort with the Zendesk API](https://docs.forestadmin.com/woodshop/how-tos/zendesk-integration/authentication-filtering-and-sorting).
-
 {% endhint %}
 
 ### Filtering

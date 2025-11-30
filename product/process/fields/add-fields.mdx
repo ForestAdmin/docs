@@ -23,8 +23,6 @@ When creating a new field you will need to provide:
 
 This example adds a `user.displayName` field, which is computed by concatenating the first and last names.
 
-<CodeGroup>
-
 ```javascript Node.js
 // "user" Collection has the following structure: { id, firstName, lastName }
 agent.customizeCollection('user', collection => {
@@ -66,13 +64,9 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
 end
 ```
 
-</CodeGroup>
-
 ### Adding a field that depends on another computed field
 
 This example adds a `user.displayName` field, which is computed by concatenating the first and last names, and then another which capitalize it.
-
-<CodeGroup>
 
 ```javascript Node.js
 // "user" Collection has the following structure: { id, firstName, lastName }
@@ -123,13 +117,9 @@ end
 
 ```
 
-</CodeGroup>
-
 ### Adding a field that depends on a many-to-one relationship
 
 We can improve the previous example by adding the city of the user to the display name.
-
-<CodeGroup>
 
 ```javascript Node.js
 // Structure:
@@ -172,13 +162,9 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
 end
 ```
 
-</CodeGroup>
-
 ### Adding a field that depends on a one-to-many relationship
 
 Let's now add a `user.totalSpending` field by summing the amount of all `orders`.
-
-<CodeGroup>
 
 ```javascript Node.js
 // Structure
@@ -247,8 +233,6 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-</CodeGroup>
-
 ### Adding a field fetching data from an API
 
 Let's imagine that we want to check if the email address of our users is deliverable.
@@ -270,8 +254,6 @@ The API we're using is fictional, and the structure of the response is:
   }
 }
 ```
-
-<CodeGroup>
 
 ```javascript Node.js
 const emailVerificationClient = require('@sendchimplio/client');
@@ -328,8 +310,6 @@ client.api_key = 'MY_FAKE_API_KEY'
   )
 end
 ```
-
-</CodeGroup>
 
 ## Performance
 

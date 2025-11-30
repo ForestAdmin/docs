@@ -73,9 +73,7 @@ New **relationships** are to be added as properties:
 You can learn more about relationships on this [dedicated page](relationships/).
 
 {% hint style="info" %}
-
 When you manually add a new model, you need to configure the permissions for the corresponding collection in the UI (allow record details view, record creation, record edit, etc). By default a new collection is not visible and all permissions are disabled. You can set permissions by going to the [Roles settings](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles).
-
 {% endhint %}
   </Tab>
 </Tabs>
@@ -114,17 +112,13 @@ You can see how that snippet fits into your code in the [model example](enrich-y
 ### Managing nested documents in Mongoose
 
 {% hint style="info" %}
-
 For a better user experience, you can [Flatten nested fields](../../how-tos/setup/flatten-nested-fields-mongodb.md).
-
 {% endhint %}
 
 Lumber introspects your data structure recursively, so _**nested fields**_ (object in object) are detected any level deep. Your **sub-documents** (array of nested fields) are detected as well.
 
 {% hint style="warning" %}
-
 Conflicting data types will result in the generation of a [mixed](https://mongoosejs.com/docs/schematypes.html#mixed) type field.
-
 {% endhint %}
 
 The following model...
@@ -178,11 +172,9 @@ By default **all** tables/collections in your database are analyzed by Lumber to
 Validation allows you to keep control over your data's quality and integrity.
 
 {% hint style="info" %}
-
 If your existing app already has validation conditions, you may - or may not - want to reproduce the same validation conditions in your admin backend's models.&#x20;
 
 If so, you'll have to do it **manually**, using the below examples.
-
 {% endhint %}
 
 Depending on your database type, your models will have been generated in _Sequelize_ (for SQL databases) or _Mongoose_ (for Mongo databases).
@@ -392,13 +384,11 @@ module.exports = (mongoose, Mongoose) => {
 ```
 
 {% hint style="warning" %}
-
 As mentioned in [their documentation](https://mongoosejs.com/docs/middleware.html#notes)
 
 _Pre and post `save()` hooks are **not** executed on `update()`, `findOneAndUpdate()`, etc._
 
 This would only work if you specifically call `save` in your update method.
-
 {% endhint %}
   </Tab>
 </Tabs>

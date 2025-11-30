@@ -48,9 +48,7 @@ This directory contains the `hubspot-companies.js` file where the serializer for
 Companies information are obtained by making a [get all companies](https://developers.hubspot.com/docs/methods/companies/get-all-companies) call to the Hubspot API.
 
 {% hint style="info" %}
-
 The Hubspot API key is defined in the `.env` file and requested through the expression `process.env.HUBSPOT_API`.
-
 {% endhint %}
 
 ```javascript

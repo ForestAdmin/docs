@@ -8,9 +8,7 @@ description: "Force user session logout after inactivity"
 Auto Logout allows organizations to force your users session logout after a few minutes of inactivity.
 
 {% hint style="info" %}
-
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
-
 {% endhint %}
 
 ## Available Timeout Options
@@ -49,7 +47,5 @@ To configure Auto Logout settings:
 </Steps>
 
 {% hint style="warning" %}
-
 Users will be automatically logged out after the configured period of inactivity. Ensure the timeout period balances security requirements with user productivity.
-
 {% endhint %}

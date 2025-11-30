@@ -12,8 +12,6 @@ To bridge that gap, Forest Admin allows adding, moving, removing, and overriding
 
 ## Minimal example
 
-<CodeGroup>
-
 ```javascript Node.js
 collection
   // Create a new field
@@ -74,5 +72,3 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
     .remove_field('firstName', 'lastName')
 end
 ```
-
-</CodeGroup>

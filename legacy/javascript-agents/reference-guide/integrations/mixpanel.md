@@ -83,7 +83,5 @@ You will then be able to see the Mixpanel events on a record, a `Customer` in ou
 ![](</images/legacy/javascript-agents/image (68).png>)
 
 {% hint style="info" %}
-
 You'll need to install the [Mixpanel Data Export](https://www.npmjs.com/package/mixpanel-data-export) package to run the Mixpanel integration
-
 {% endhint %}

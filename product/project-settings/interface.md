@@ -6,9 +6,7 @@ description: "Customize your Forest Admin interface with white-label branding an
 The Interface tab provides white-label customization capabilities to align Forest Admin with your company's brand identity.
 
 {% hint style="info" %}
-
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
-
 {% endhint %}
 
 ## Accessing Interface Settings
@@ -58,9 +56,7 @@ Instead of accessing your Forest Admin instance through the default `app.foresta
 5. Access your Forest Admin instance via your custom domain
 
 {% hint style="info" %}
-
 SSL certificates are automatically provisioned for custom domains to ensure secure connections.
-
 {% endhint %}
 
 ## Benefits of White-Label Customization

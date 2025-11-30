@@ -14,9 +14,7 @@ Forest Admin provides you with:
 ![The Admin Backend is a Rails Engine mounted on your application](/images/legacy/javascript-agents/how-it-works-3.jpg)
 
 {% hint style="info" %}
-
 For a more in-depth explanation of Forest Admin's architecture (the Node.JS agent version), please read the [following article](https://medium.com/forest-admin/a-deep-dive-into-forest-admins-architecture-and-its-benefits-for-the-developers-who-trust-it-1d49212fb4b).
-
 {% endhint %}
 
 ## The Admin Backend
@@ -35,9 +33,7 @@ When logging into the **Forest Admin UI** in your browser, you will connect to:
 2. The **Admin Backend** to retrieve your **data** and populate the Forest Admin UI with it.
 
 {% hint style="warning" %}
-
 As your data transits directly from the Admin Backend hosted on your end and the user browser, **it never transits through our servers**.
-
 {% endhint %}
 
 ### Rails//
@@ -54,15 +50,12 @@ The connection to both servers to the **Admin Backend** and the **Forest Admin S
 ![](/images/legacy/javascript-agents/how-it-works-6.jpg)
 
 {% hint style="warning" %}
-
 `FOREST_ENV_SECRET` is provided by Forest Admin and ensures your **Admin Backend** interacts with the relevant environment configuration on our end\*\*.\*\*
 
 `FOREST_AUTH_SECRET` is chosen freely by you and is never disclosed to anyone\*\*.\*\*
-
 {% endhint %}
 
 {% hint style="info" %}
-
 The JWT Data Token contains all the details of the requesting user. On any authenticated request to your Admin Backend, you can access them with the variable `req.user`.
 
 ```javascript
@@ -79,8 +72,6 @@ The JWT Data Token contains all the details of the requesting user. On any authe
   "exp": 1571123309
 }
 ```
-
-
 {% endhint %}
 
 ### **No 3rd-party Tracking**

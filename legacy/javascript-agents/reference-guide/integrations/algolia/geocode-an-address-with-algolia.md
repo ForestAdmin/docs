@@ -95,7 +95,5 @@ collection('events', {
 ```
 
 {% hint style="info" %}
-
 The field `Location setter` should use the [address edit widget](https://docs.forestadmin.com/user-guide/collections/customize-your-fields/edit-widgets#address) to enable address autocomplete.
-
 {% endhint %}

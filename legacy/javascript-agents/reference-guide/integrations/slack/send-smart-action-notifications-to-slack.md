@@ -47,9 +47,7 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR_WORKSPACE_ID/YOUR_CHANNE
 ```
 
 {% hint style="warning" %}
-
 This Incoming Webhook URL contains a secret key, please make sure it does not appear in your code.
-
 {% endhint %}
 
 ### Create the Smart Action and initialize the Incoming Webhook
@@ -200,16 +198,12 @@ module.exports = router;
 ```
 
 {% hint style="info" %}
-
 To learn more about composing messages using the Slack API, please visit the
 
 - Slack Interactive messages [guide](https://api.slack.com/messaging/interactivity)
 - Slack Block Kit [visual builder](https://api.slack.com/tools/block-kit-builder)
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 To learn more about error handling of Slack Interactive Webhooks, please visit the Slack [changelog](https://api.slack.com/changelog/2016-05-17-changes-to-errors-for-incoming-webhooks).
-
 {% endhint %}

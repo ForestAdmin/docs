@@ -43,9 +43,7 @@ feature/remove-tooltip  preprod                 2022-08-19T08:08:47.678Z
 ```
 
 {% hint style="info" %}
-
 `IS CURRENT` indicates your currently selected branch: your project's UI will locally be displayed according to this branch's layout settings.
-
 {% endhint %}
 
 ### Creating a new branch
@@ -58,11 +56,9 @@ $ forest branch feature/new-ops-feature --origin production
 ```
 
 {% hint style="warning" %}
-
 There is no specific constraint on branch names, though kebab-case is generally used.
 
 However, keep in mind that your branch _name_ must be **unique** in the project.
-
 {% endhint %}
 
 Note that your project must be deployed remotely before you can start using branches:
@@ -85,7 +81,5 @@ $ forest branch -d hotfix/fix-dropdown-issue
 ```
 
 {% hint style="info" %}
-
 You will be prompted for confirmation before deleting a branch. To skip that confirmation, use the `--force` option.
-
 {% endhint %}

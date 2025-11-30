@@ -6,9 +6,7 @@ description: "Connect Forest Admin to your ActiveRecord models with support for 
 The ActiveRecord datasource enables importing collections from all model classes extending `ActiveRecord::Base`. It automatically respects your ActiveRecord relationships and configurations.
 
 {% hint style="warning" %}
-
 ActiveRecord datasource is only available for Ruby. For Node.js, check the [Sequelize datasource](/product/integration/data-sources/sequelize) or [SQL datasource](/product/integration/data-sources/sql).
-
 {% endhint %}
 
 ## Basic usage
@@ -50,9 +48,7 @@ ForestAdminDatasourceActiveRecord::Datasource.new(
 This allows authorized users to create Live Query charts, analytics, and segments that execute custom SQL directly against your database.
 
 {% hint style="warning" %}
-
 Live Queries execute raw SQL. Ensure proper access controls and review queries before deploying to production.
-
 {% endhint %}
 
 ## Multi-database configuration

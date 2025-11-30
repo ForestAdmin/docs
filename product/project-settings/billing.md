@@ -23,9 +23,7 @@ View your current Forest Admin plan information, including:
 - **Activated features** - List of features available on your plan
 
 {% hint style="info" %}
-
 The monthly fee is calculated based on your current number of users. Adding or removing users will affect your next invoice.
-
 {% endhint %}
 
 ## Managing Your Plan
@@ -57,9 +55,7 @@ Update your payment information to ensure uninterrupted service:
 - Tax information (if applicable)
 
 {% hint style="warning" %}
-
 Keep your payment information up to date to avoid service interruptions. Failed payments may result in restricted access to your Forest Admin project.
-
 {% endhint %}
 
 ## Need Help?

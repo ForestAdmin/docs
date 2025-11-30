@@ -41,9 +41,7 @@ Forest Admin provides native actions out-of-the-box:
 These work automatically with your data structure and require no configuration.
 
 {% hint style="info" %}
-
 The **Assign to** action is part of Forest Admin's [Dispatcher](/product/collaborate/inbox-dispatcher) feature for task management.
-
 {% endhint %}
 
 ## Custom actions
@@ -122,9 +120,7 @@ After creating a code-based action in your codebase, you need to make it visible
 5. **Configure permissions** for each role
 
 {% hint style="info" %}
-
 Actions are only visible if they are marked as "visible" in the UI and the user's role has "trigger" permission.
-
 {% endhint %}
 
 ## What actions enable

@@ -6,9 +6,7 @@ description: "Connect Forest Admin to your existing Sequelize models with suppor
 The Sequelize datasource allows importing collections from a Sequelize instance, preserving your ORM configuration including scopes, hooks, associations, and validations.
 
 {% hint style="warning" %}
-
 Sequelize datasource is only available for Node.js. For Ruby, check the [ActiveRecord datasource](/product/integration/data-sources/active-record).
-
 {% endhint %}
 
 ## Basic usage
@@ -59,7 +57,5 @@ agent.addDataSource(
 This allows authorized users to create Live Query charts, analytics, and segments that execute custom SQL directly against your database.
 
 {% hint style="warning" %}
-
 Live Queries execute raw SQL. Ensure proper access controls and review queries before deploying to production.
-
 {% endhint %}

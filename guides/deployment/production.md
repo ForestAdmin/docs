@@ -43,12 +43,10 @@ RAILS_ENV=production # For Ruby
 ```
 
 {% hint style="warning" %}
-
 **Never commit secrets to version control.** Use your platform's secret management:
 - Heroku: Config Vars
 - AWS: Secrets Manager or Parameter Store
 - Vercel/Railway: Environment Variables dashboard
-
 {% endhint %}
 
 ### Create Production Environment in Forest Admin
@@ -59,9 +57,7 @@ RAILS_ENV=production # For Ruby
 4. Note the new `FOREST_ENV_SECRET` for production
 
 {% hint style="info" %}
-
 Production and development environments have separate secrets. This allows you to test changes in development before deploying to production.
-
 {% endhint %}
 
 ## Step 2: Agent Configuration

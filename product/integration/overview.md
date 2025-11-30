@@ -9,7 +9,6 @@ The **Integration** layer is the foundation of Forest Admin. It determines what 
 
 Forest Admin loads data through **datasources** - connections to your databases, APIs, or any system that stores data. The agent introspects your datasources to automatically discover tables, collections, and their relationships.
 
-<CodeGroup>
 ```javascript Node.js
 const agent = createAgent(options);
 
@@ -39,7 +38,6 @@ agent.add_datasource(
 # - Identifies relationships (foreign keys)
 # - Creates collections for each table
 ```
-</CodeGroup>
 
 ### What gets loaded
 
@@ -67,7 +65,6 @@ Once introspection is complete, Forest Admin automatically:
 
 Connect multiple databases or APIs in the same agent:
 
-<CodeGroup>
 ```javascript Node.js
 // Primary PostgreSQL database
 agent.addDataSource(
@@ -95,16 +92,13 @@ agent.add_datasource(
   name: 'analytics'
 )
 ```
-</CodeGroup>
 
 {% hint style="warning" %}
-
 **Looking to enrich a single record?**
 
 If you want to add computed fields or fetch external data to enrich individual records (not load entire collections), use **Smart Fields** instead of adding a datasource.
 
 [Learn how to enrich data with Smart Fields →](/product/process/fields/smart-fields/overview)
-
 {% endhint %}
 
 [Learn more about multi-datasources →](/product/integration/data-sources/multi-datasources)

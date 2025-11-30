@@ -8,9 +8,7 @@ Sooner or later, you will need to perform actions on your data that are specific
 On our Live Demo example, our `companies` collection has many examples of Smart Action. The simplest one is `Mark as live`.
 
 {% hint style="info" %}
-
 If you're looking for information on native actions (CRUD), check out [this page](../).
-
 {% endhint %}
 
 ### Creating a Smart action
@@ -57,15 +55,11 @@ end
 ```
 
 {% hint style="warning" %}
-
 You must make sure that all your Smart Actions controllers extend from the `ForestLiana::SmartActionsController`. This is mandatory to ensure that all features built on top of Smart Actions work as expected (authentication, permissions, approval workflows,...)
-
 {% endhint %}
 
 {% hint style="info" %}
-
 You may have to [add CORS headers](../../../how-tos/setup/configuring-cors-headers.md) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:3000_).
-
 {% endhint %}
 
 #### What's happening under the hood?
@@ -73,9 +67,7 @@ You may have to [add CORS headers](../../../how-tos/setup/configuring-cors-heade
 When you trigger the Smart Action from the UI, your browser will make an API call: `POST /forest/actions/mark-as-live`.
 
 {% hint style="info" %}
-
 If you want to customize the API call, check the list of [available options](https://docs.forestadmin.com/documentation/reference-guide/actions/create-and-manage-smart-actions#available-smart-action-options).
-
 {% endhint %}
 
 The payload of the HTTP request is based on a [JSON API](http://jsonapi.org) document.\
@@ -98,9 +90,7 @@ Other properties of `data.attributes` are used to manage the _select all_ behavi
 ```
 
 {% hint style="warning" %}
-
 Should you want not to use the `RecordsGetter` and use request attributes directly instead, be very careful about edge cases (related data view, etc).
-
 {% endhint %}
 
 ### Available Smart Action options
@@ -152,9 +142,7 @@ req.user content example
 You can find important information in the body of the request.
 
 {% hint style="info" %}
-
 This is particularly useful to find the context in which an action was performed via a relationship.
-
 {% endhint %}
 
 ```javascript
@@ -395,9 +383,7 @@ render json: {
 On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
 
 {% hint style="warning" %}
-
 Don’t forget to expose the `Content-Disposition` header in the CORS configuration (as shown in the code below) to be able to customize the filename to download.
-
 {% endhint %}
 
 ```ruby
@@ -533,9 +519,7 @@ It is possible using the `redirectTo` property.\
 The redirection works both for **internal** (`*.forestadmin.com` pages) and **external** links.
 
 {% hint style="info" %}
-
 **External** links will open in a new tab.
-
 {% endhint %}
 
 Here's a working example for both cases:
@@ -633,9 +617,7 @@ All past approval requests - made by you or other approvers - in the History tab
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 15.59.47 (2).png>)
 
 {% hint style="info" %}
-
 You can export your approval requests history from this tab using the top right button **(2)**.
-
 {% endhint %}
 
 You can get more details on a specific action by clicking on it:

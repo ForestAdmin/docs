@@ -4,9 +4,7 @@ title: Install Forest Admin on a remote machine
 In this short tutorial, we'll cover how to install Forest Admin on a remote environment instead of locally.
 
 {% hint style="warning" %}
-
 This is **not** the recommended way of using Forest Admin.
-
 {% endhint %}
 
 When you install Forest Admin, on the last step you are asked to run some commands:
@@ -22,15 +20,11 @@ The recommended way of installing Forest Admin is to run those commands **locall
 2. Run those commands **on that remote server** instead of locally.
 
 {% hint style="warning" %}
-
 All remote environments must use **HTTPS** (port 443) for security reasons. Choosing to install this way will require that you set up SSL certificates on your server yourself.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Remember that the database credentials provided on the previous should reflect where the command will be run (i.e: the host and port might be different).
-
 {% endhint %}
 
 ### Using Docker
@@ -48,13 +42,9 @@ The recommended way of installing Forest Admin is to run those commands **locall
 2. Run those commands **on that remote server** instead of locally.
 
 {% hint style="warning" %}
-
 All remote environments must use **HTTPS** (port 443) for security reasons. Choosing to install this way will require that you set up SSL certificates on your server yourself.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Remember that the database credentials provided on the previous should reflect where the command will be run (i.e: the host and port might be different).
-
 {% endhint %}

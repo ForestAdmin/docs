@@ -10,10 +10,8 @@ Forest Admin provides extensive customization options for your collections, allo
 Both features offer unique capabilities to developers, from augmenting existing behaviors to completely redefining how collection operations are executed.
 
 {% hint style="info" %}
-
 These two features are almost identical, but they are executed at very different stages of the customizations.
 This means that Collection Hooks will be executed even if you choose to use Collection Override.
-
 {% endhint %}
 
 ## Collection Hooks
@@ -45,17 +43,13 @@ To declare a Hook on a Collection, the following information is required:
 - A callback, that will receive a context matching the provided hook position and hook definition.
 
 {% hint style="warning" %}
-
 A single Collection can have multiple Hooks with the same position and the same type. They will run in their declaration order.
 Collection Hooks are only called when the Collection function is contacted by the UI. This means that any usage of the Forest Admin query interface will not trigger them.
-
 {% endhint %}
 
 ### Basic use cases
 
 In the following example, we want to prevent a set of users from updating any records of the `Transactions` table. We want to check if the user email is allowed to update a record via an external API call.
-
-<CodeGroup>
 
 ```javascript Node.js
 transaction.addHook('Before', 'Update', async context => {
@@ -123,11 +117,7 @@ agent.customize_collection("Transactions").add_hook(
 )
 ```
 
-</CodeGroup>
-
 Another good example would be the following: Each time a new `User` is created in the database, I want to send him an email.
-
-<CodeGroup>
 
 ```javascript Node.js
 user.addHook('After', 'Create', async (context, responseBuilder) => {
@@ -191,16 +181,12 @@ agent.customize_collection("User").add_hook(
 )
 ```
 
-</CodeGroup>
-
 ## Collection Overrides
 
 Collection Overrides provide the ability to completely replace the default behavior of CUD operations. This powerful feature allows for custom implementations of `create`, `update`, and `delete` operations, offering unparalleled control over data handling.
 
 {% hint style="info" %}
-
 Collection Overrides provide a powerful means to completely replace the default behavior of CUD operations (`create`, `update`, `delete`) for your Collections. This feature should be used with caution, as it directly affects the core operations on your data.
-
 {% endhint %}
 
 ### Features
@@ -232,12 +218,8 @@ Overrides are declared similarly to hooks but are aimed at replacing an entire o
 #### Custom Create Operation
 
 {% hint style="warning" %}
-
 Unknown properties in returned records will be removed (Node.js).
-
 {% endhint %}
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.overrideCreate(async context => {
@@ -266,11 +248,7 @@ async def create_handle(context: CreateOverrideCustomizationContext)
 collection.override_create(create_handle)
 ```
 
-</CodeGroup>
-
 #### Custom Update Operation
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.overrideUpdate(async context => {
@@ -302,11 +280,7 @@ async def update_handle(context: UpdateOverrideCustomizationContext)
 collection.override_update(update_handle)
 ```
 
-</CodeGroup>
-
 #### Custom Delete Operation
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.overrideDelete(async context => {
@@ -335,18 +309,12 @@ async def delete_handle(context: DeleteOverrideCustomizationContext)
 collection.override_delete(delete_handle)
 ```
 
-</CodeGroup>
-
 {% hint style="info" %}
-
 In Python examples, you can use async functions, sync functions, or lambda functions as handlers.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Overrides take precedence over the default operation. Ensure your custom handlers properly manage all necessary logic for the operation, as the default behavior will not be executed.
-
 {% endhint %}
 
 ### Basic Use Cases
@@ -354,8 +322,6 @@ Overrides take precedence over the default operation. Ensure your custom handler
 #### Create over API
 
 You might want to create the record with your custom API:
-
-<CodeGroup>
 
 ```javascript Node.js
 const { MissingFieldError } = require('@forestadmin/datasource-toolkit');
@@ -397,13 +363,9 @@ def create_handle(context: CreateOverrideCustomizationContext)
 collection.override_create(create_handle)
 ```
 
-</CodeGroup>
-
 #### Modify data before update
 
 You might want to modify payload data before update your record:
-
-<CodeGroup>
 
 ```javascript Node.js
 product.overrideUpdate(async context => {
@@ -458,8 +420,6 @@ async def update_handle(context: UpdateOverrideCustomizationContext)
 
 collection.override_update(update_handle)
 ```
-
-</CodeGroup>
 
 ## Platform-Specific Guides
 

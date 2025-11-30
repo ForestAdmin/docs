@@ -1,10 +1,9 @@
 ---
 title: "Cursor setup"
 description: "Configure Cursor for your documentation workflow"
-icon: "arrow-pointer"
 ---
 
-Use Cursor to help write and maintain your documentation. This guide shows how to configure Cursor for better results on technical writing tasks and using Mintlify components.
+Use Cursor to help write and maintain your documentation. This guide shows how to configure Cursor for better results on technical writing tasks and using GitBook components.
 
 ## Prerequisites
 
@@ -22,9 +21,9 @@ mkdir -p .cursor
 Create `.cursor/rules.md`:
 
 ````markdown
-# Mintlify technical writing rule
+# GitBook technical writing rule
 
-You are an AI writing assistant specialized in creating exceptional technical documentation using Mintlify components and following industry-leading technical writing practices.
+You are an AI writing assistant specialized in creating exceptional technical documentation using GitBook components and following industry-leading technical writing practices.
 
 ## Core writing principles
 
@@ -57,40 +56,32 @@ You are an AI writing assistant specialized in creating exceptional technical do
 - Write for scannability with clear headings, lists, and white space
 - Include verification steps to confirm success
 
-## Mintlify component reference
+## GitBook component reference
 
 ### Callout components
 
 #### Note - Additional helpful information
 
 {% hint style="info" %}
-
 Supplementary information that supports the main content without interrupting flow
-
 {% endhint %}
 
 #### Tip - Best practices and pro tips
 
 {% hint style="success" %}
-
 Expert advice, shortcuts, or best practices that enhance user success
-
 {% endhint %}
 
 #### Warning - Important cautions
 
 {% hint style="warning" %}
-
 Critical information about potential issues, breaking changes, or destructive actions
-
 {% endhint %}
 
 #### Info - Neutral contextual information
 
 {% hint style="info" %}
-
 Background information, context, or neutral announcements
-
 {% endhint %}
 
 #### Check - Success confirmations
@@ -119,7 +110,6 @@ const apiConfig = {
 
 Example of a code group:
 
-<CodeGroup>
 ```javascript Node.js
 const response = await fetch('/api/endpoint', {
   headers: { Authorization: `Bearer ${apiKey}` }
@@ -136,7 +126,6 @@ response = requests.get('/api/endpoint',
 curl -X GET '/api/endpoint' \
   -H 'Authorization: Bearer YOUR_API_KEY'
 ```
-</CodeGroup>
 
 #### Request/response examples
 
@@ -184,9 +173,7 @@ Example of step-by-step instructions:
   ```
   
   {% hint style="warning" %}
-
   Never commit API keys to version control.
-  
 {% endhint %}
 </Step>
 </Steps>
@@ -222,22 +209,30 @@ Example of tabbed content:
 
 Example of accordion groups:
 
-<AccordionGroup>
-<Accordion title="Troubleshooting connection issues">
-  - **Firewall blocking**: Ensure ports 80 and 443 are open
+
+<details>
+<summary>Troubleshooting connection issues</summary>
+
+- **Firewall blocking**: Ensure ports 80 and 443 are open
   - **Proxy configuration**: Set HTTP_PROXY environment variable
   - **DNS resolution**: Try using 8.8.8.8 as DNS server
-</Accordion>
 
-<Accordion title="Advanced configuration">
-  ```javascript
+</details>
+
+
+
+<details>
+<summary>Advanced configuration</summary>
+
+```javascript
   const config = {
     performance: { cache: true, timeout: 30000 },
     security: { encryption: 'AES-256' }
   };
   ```
-</Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ### Cards and columns for emphasizing information
 
@@ -279,41 +274,41 @@ Bearer token for API authentication. Format: `Bearer YOUR_API_KEY`
 
 Example of response field documentation:
 
-<ResponseField name="user_id" type="string" required>
+
 Unique identifier assigned to the newly created user.
-</ResponseField>
 
-<ResponseField name="created_at" type="timestamp">
+
+
 ISO 8601 formatted timestamp of when the user was created.
-</ResponseField>
 
-<ResponseField name="permissions" type="array">
+
+
 List of permission strings assigned to this user.
-</ResponseField>
+
 
 #### Expandable nested fields
 
 Example of nested field documentation:
 
-<ResponseField name="user" type="object">
+
 Complete user object with all associated data.
 
-<Expandable title="User properties">
-  <ResponseField name="profile" type="object">
+
+  
   User profile information including personal details.
   
-  <Expandable title="Profile details">
-    <ResponseField name="first_name" type="string">
-    User's first name as entered during registration.
-    </ResponseField>
+  
     
-    <ResponseField name="avatar_url" type="string | null">
+    User's first name as entered during registration.
+    
+    
+    
     URL to user's profile picture. Returns null if no avatar is set.
-    </ResponseField>
-  </Expandable>
-  </ResponseField>
-</Expandable>
-</ResponseField>
+    
+  
+  
+
+
 
 ### Media and advanced components
 

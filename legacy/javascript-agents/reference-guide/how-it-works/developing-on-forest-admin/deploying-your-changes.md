@@ -14,15 +14,11 @@ This would be the case if you chose "Staging" as the origin of your branch when 
 `deploy` means applying your branch's changes to your reference environment definitively.&#x20;
 
 {% hint style="info" %}
-
 The **reference** environment is the one at the very end of your development flow: it is the one with your production data and it is the one that will be updated when you use the `deploy` command.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 As all your environments' layouts depend on your **reference** environment, the `deploy` command will apply the layout changes to all your project environments. Deploy with care as such action **cannot be reverted**.
-
 {% endhint %}
 
 To achieve this, you'll be using Forest CLI's [deploy](forest-cli-commands/deploy.md) command from an environment **that has your reference environment as its origin**:
@@ -36,15 +32,11 @@ The end result is the following:
 <img src="/images/legacy/javascript-agents/deploying_your_changes_2.jpg" alt="" />
 
 {% hint style="warning" %}
-
 If you want to deploy from an environment whose origin is not your reference environment, you'll need to use the [set-origin](forest-cli-commands/set-origin.md) environment first so you can make it its origin.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Don't forget to **deploy your backend changes** as well (if any), as showcased on [this flowchart](./#development-workflow).
-
 {% endhint %}
 
 ### Testing your changes on a remote (i.e "staging"): `push`
@@ -60,9 +52,7 @@ forest push
 Note that you'll be pushing your **current** branch. To select another branch, use [switch](forest-cli-commands/switch.md). If the origin of your branch is not the remote you want (ie: staging) change it with [set-origin](forest-cli-commands/set-origin.md)
 
 {% hint style="info" %}
-
 As your company grows, so does your development flow: you may want a more complex architecture where you have more than one layer of test environments before production (i.e preprod). This is definitely possible using Forest CLI and the right environment settings, see [here](../environments.md#change-environment-origin).
-
 {% endhint %}
 
 ####

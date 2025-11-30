@@ -8,9 +8,7 @@ Sooner or later, you will need to perform actions on your data that are specific
 On our Live Demo example, our `companies` collection has many examples of Smart Action. The simplest one is `Mark as live`.
 
 {% hint style="info" %}
-
 If you're looking for information on native actions (CRUD), check out [this page](../).
-
 {% endhint %}
 
 ### Creating a Smart action
@@ -72,9 +70,7 @@ The `req.user` object contains information about the user who triggered the acti
 You can find important information in the body of the request.
 
 {% hint style="info" %}
-
 This is particularly useful to find the context in which an action was performed via a relationship.
-
 {% endhint %}
 
 ```javascript
@@ -526,9 +522,7 @@ Collection.register(CustomerForest, Customer)
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.52.05 (2).png>)
 
 {% hint style="info" %}
-
 Want to upload your files to Amazon S3? Check out this this [Woodshop tutorial](https://docs.forestadmin.com/woodshop/how-tos/upload-files-to-s3).
-
 {% endhint %}
   </Tab>
 </Tabs>
@@ -687,9 +681,7 @@ It is possible using the `redirectTo` property.\
 The redirection works both for **internal** (`*.forestadmin.com` pages) and **external** links.
 
 {% hint style="info" %}
-
 **External** links will open in a new tab.
-
 {% endhint %}
 
 Here's a working example for both cases:
@@ -832,9 +824,7 @@ All past approval requests - made by you or other approvers - in the History tab
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 15.59.47 (2).png>)
 
 {% hint style="info" %}
-
 You can export your approval requests history from this tab using the top right button **(2)**.
-
 {% endhint %}
 
 You can get more details on a specific action by clicking on it:

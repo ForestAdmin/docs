@@ -8,9 +8,7 @@ description: >-
 Depending on how you've installed Ruby on Rails on your system, you could encounter a permissions error **EACCES** similar to the following output.
 
 {% hint style="info" %}
-
 &#x20;In this case, I got the error on a EC2 instance running on Ubuntu 10.04 with Node v8.10.0 and NPM v.3.5.2. But you can have this similar problem on another system and node version.
-
 {% endhint %}
 
 ```bash

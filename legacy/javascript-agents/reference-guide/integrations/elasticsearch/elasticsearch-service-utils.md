@@ -265,9 +265,7 @@ module.exports = ElasticsearchHelper;
 ```
 
 {% hint style="info" %}
-
 You need to add Elasticsearch Node.js client to your project`npm install @elastic/elasticsearch`
-
 {% endhint %}
 
 ## Creating utils to convert Express query filters to Elasticsearch one
@@ -616,7 +614,5 @@ exports.FIELD_DEFINITIONS = FIELD_DEFINITIONS;
 ```
 
 {% hint style="warning" %}
-
 We expose utils to parse filters through **forest-express-sequelize** since version **7.6.0**
-
 {% endhint %}

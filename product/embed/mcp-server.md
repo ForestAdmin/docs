@@ -18,7 +18,6 @@ The Model Context Protocol (MCP) is an open standard for connecting AI assistant
 
 ## Installation
 
-<CodeGroup>
 ```bash npm
 npm install @forestadmin/mcp-server
 ```
@@ -26,7 +25,6 @@ npm install @forestadmin/mcp-server
 ```bash yarn
 yarn add @forestadmin/mcp-server
 ```
-</CodeGroup>
 
 ## Configuration
 
@@ -92,9 +90,7 @@ The MCP server:
 - Never exposes sensitive data without proper access
 
 {% hint style="warning" %}
-
 Only provide MCP server access to trusted AI tools and users. The server can perform any operation that the authenticated user can perform.
-
 {% endhint %}
 
 ## Related Features

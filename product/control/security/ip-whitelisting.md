@@ -8,9 +8,7 @@ description: "Control which IP addresses can access your admin panel"
 IP Whitelisting enables administrators to control which IP addresses can access your admin panel. This feature restricts panel access to approved IP addresses only.
 
 {% hint style="info" %}
-
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
-
 {% endhint %}
 
 ## How It Works
@@ -40,7 +38,5 @@ To configure IP Whitelisting:
 </Steps>
 
 {% hint style="warning" %}
-
 Once IP Whitelisting is enabled and enforced, users connecting from IP addresses not on the whitelist will be unable to access the admin panel. Ensure all necessary IP addresses are added before enforcement.
-
 {% endhint %}

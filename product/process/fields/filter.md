@@ -3,9 +3,7 @@ title: Override filtering behavior
 ---
 
 {% hint style="info" %}
-
 This is an advanced feature that involves understanding condition trees, filtering operators, and operator equivalence. Use this when you need to customize how fields are filtered beyond the default behavior.
-
 {% endhint %}
 
 Forest Admin allows making any field filterable.
@@ -21,8 +19,6 @@ Both can be done by using the `replaceFieldOperator` (or `replace_field_operator
 You can provide a handler that converts a `ConditionTree` to one or more others `ConditionTree`.
 
 This example tells Forest Admin "When a user filters by first name, I want to filter by last name instead".
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldOperator('firstName', 'Contains', value => {
@@ -49,8 +45,6 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 end
 ```
 
-</CodeGroup>
-
 ### Emulation
 
 You can also use the `emulateFieldOperator``emulate_field_operator` method. This allows you to define filtering behavior for fields that are not filterable by default.
@@ -60,8 +54,6 @@ Under the hood, it will work by fetching all records from the datasource and fil
 **You should think twice before using emulation**, as it will have terrible performance on large collections.
 
 For more information about operator equivalence, refer to the Forest Admin documentation on filtering.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.emulateFieldOperator('aField', 'LongerThan', (recordFieldValue, value) => {
@@ -78,5 +70,3 @@ collection.emulateFieldOperator('aField', 'LongerThan', (recordFieldValue, value
   end
 end
 ```
-
-</CodeGroup>

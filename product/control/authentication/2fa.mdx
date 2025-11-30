@@ -13,23 +13,13 @@ Two-Factor Authentication (2FA) adds an additional security layer beyond usernam
 
 ## Why Enable 2FA?
 
-<CardGroup cols={2}>
-  <Card title="Prevent Account Takeover" icon="user-shield">
-    Protect against password theft, phishing, and credential stuffing attacks
-  </Card>
 
-  <Card title="Compliance Requirements" icon="file-shield">
-    Meet security requirements for GDPR, HIPAA, SOC 2, and other frameworks
-  </Card>
 
-  <Card title="Protect Sensitive Data" icon="database">
-    Add extra protection for admin panels accessing customer or financial data
-  </Card>
+  
 
-  <Card title="Audit Trail" icon="clock-rotate-left">
-    Track 2FA events in audit logs for security monitoring
-  </Card>
-</CardGroup>
+  
+
+  
 
 ## Supported 2FA Methods
 
@@ -37,31 +27,17 @@ Two-Factor Authentication (2FA) adds an additional security layer beyond usernam
 
 Time-based One-Time Password (TOTP) apps generate 6-digit codes that change every 30 seconds:
 
-<CardGroup cols={2}>
-  <Card title="Google Authenticator" icon="google">
-    Free app for iOS and Android
-  </Card>
 
-  <Card title="Microsoft Authenticator" icon="microsoft">
-    Supports backup and cloud sync
-  </Card>
 
-  <Card title="Authy" icon="mobile">
-    Multi-device support with encrypted backups
-  </Card>
+  
 
-  <Card title="1Password" icon="key">
-    Password manager with built-in TOTP
-  </Card>
+  
 
-  <Card title="Bitwarden" icon="lock">
-    Open-source with TOTP support
-  </Card>
+  
 
-  <Card title="LastPass Authenticator" icon="shield">
-    One-tap push notifications
-  </Card>
-</CardGroup>
+  
+
+  
 
 ### Backup Codes
 
@@ -373,41 +349,21 @@ If a user loses access to their authenticator and backup codes:
 
 ### Recommended Configuration
 
-<CardGroup cols={2}>
-  <Card title="For SSO Users" icon="building">
-    Enforce MFA at the IdP level
 
-    Disable Forest Admin 2FA for SSO users to avoid double-prompting
-  </Card>
 
-  <Card title="For Password Users" icon="user">
-    Require Forest Admin 2FA
-
-    These users don't benefit from IdP security
-  </Card>
-</CardGroup>
+  
 
 ## Security Best Practices
 
 ### For Users
 
-<CardGroup cols={2}>
-  <Card title="Use Secure Authenticator" icon="mobile-screen">
-    Choose reputable authenticator apps with backup/sync features
-  </Card>
 
-  <Card title="Backup Your Codes" icon="floppy-disk">
-    Store backup codes in a password manager or secure location
-  </Card>
 
-  <Card title="Don't Share Codes" icon="user-xmark">
-    Never share your 2FA codes with anyone, including IT or admins
-  </Card>
+  
 
-  <Card title="Update When Changing Devices" icon="mobile-retro">
-    Transfer or re-setup 2FA before wiping old device
-  </Card>
-</CardGroup>
+  
+
+  
 
 ### For Administrators
 
@@ -465,9 +421,11 @@ If a user loses access to their authenticator and backup codes:
 
 ### Code Not Working
 
-<AccordionGroup>
-  <Accordion title="Time Sync Issues">
-    **Problem**: Authenticator app time is out of sync
+
+<details>
+<summary>Time Sync Issues</summary>
+
+**Problem**: Authenticator app time is out of sync
 
     **Symptoms**: Code is always rejected, even when entered correctly
 
@@ -478,26 +436,37 @@ If a user loses access to their authenticator and backup codes:
 
     **For Google Authenticator**:
     - Go to Settings > Time correction for codes > Sync now
-  </Accordion>
 
-  <Accordion title="Wrong Code Entered">
-    **Problem**: Entering an old or incorrect code
+</details>
+
+
+  
+<details>
+<summary>Wrong Code Entered</summary>
+
+**Problem**: Entering an old or incorrect code
 
     **Solution**:
     - Wait for the code to refresh in your app
     - Ensure you're using the correct account (if you have multiple)
     - Check for typos (0 vs O, 1 vs l)
-  </Accordion>
 
-  <Accordion title="Authenticator App Deleted">
-    **Problem**: Removed app or factory reset phone without backing up
+</details>
+
+
+  
+<details>
+<summary>Authenticator App Deleted</summary>
+
+**Problem**: Removed app or factory reset phone without backing up
 
     **Solution**:
     - Use a backup code if you have one
     - Contact your admin for 2FA reset
     - Admin must verify your identity before resetting
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ### Can't Scan QR Code
 
@@ -566,20 +535,22 @@ If a user loses access to their authenticator and backup codes:
 
 ## Next Steps
 
-<CardGroup cols={2}>
-  <Card title="SSO Setup" icon="key" href="/product/control/authentication/sso">
-    Combine 2FA with Single Sign-On for enhanced security
-  </Card>
+### [SSO Setup](/product/control/authentication/sso)
 
-  <Card title="IP Whitelisting" icon="globe" href="/product/control/security/ip-whitelisting">
-    Add network-level security restrictions
-  </Card>
+Combine 2FA with Single Sign-On for enhanced security
 
-  <Card title="Session Management" icon="clock" href="/product/control/security/session-management">
-    Configure session timeouts and policies
-  </Card>
 
-  <Card title="Audit Logs" icon="list" href="/product/control/audit">
-    Monitor 2FA events and failed login attempts
-  </Card>
-</CardGroup>
+  ### [IP Whitelisting](/product/control/security/ip-whitelisting)
+
+Add network-level security restrictions
+
+
+  ### [Session Management](/product/control/security/session-management)
+
+Configure session timeouts and policies
+
+
+  ### [Audit Logs](/product/control/audit)
+
+Monitor 2FA events and failed login attempts
+

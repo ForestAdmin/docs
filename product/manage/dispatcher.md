@@ -37,9 +37,7 @@ Dispatcher configuration is available in your project settings. You can define:
 - **Content moderation**: Balance content review tasks across moderators
 
 {% hint style="info" %}
-
 The Dispatcher feature is part of Forest Admin's collaboration tools. Contact your account manager to enable this feature.
-
 {% endhint %}
 
 ## Related features

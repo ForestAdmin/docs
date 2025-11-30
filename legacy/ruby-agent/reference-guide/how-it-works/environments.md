@@ -18,23 +18,17 @@ Click "Deploy to production" on the top banner or in the _Environments_ tab of y
 On the first step, you need to input your admin backend's URL. This is the URL of the server onto which you have deployed (or will soon deploy) your admin backend's code base:
 
 {% hint style="info" %}
-
 If you need help deploying your admin backend's codebase, here are 2 step-by-step guides showing how it can be done [on Heroku](../../how-tos/setup/deploy-to-production-on-heroku.md) or [on a standard ubuntu server](broken-reference).
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/image (323).png>)
 
 {% hint style="warning" %}
-
 Note that for **security reasons**, your admin backend must use the **HTTPS** protocol.
-
 {% endhint %}
 
 {% hint style="info" %}
-
 The URL must not end with a trailing `/`.
-
 {% endhint %}
 
 #### Connect to your database
@@ -44,9 +38,7 @@ On the next step, you need to fill out your Production database credentials:
 ![](</images/legacy/javascript-agents/image (324).png>)
 
 {% hint style="info" %}
-
 Your **database credentials** never leave your browser and are solely used to generate environment variables on the next step, so they are **never exposed**.
-
 {% endhint %}
 
 #### Set your environment variables
@@ -70,9 +62,7 @@ Then from the _Environments_ tab, click on "Add a new environment" **(2)**.
 ![](</images/legacy/javascript-agents/image (406).png>)
 
 {% hint style="info" %}
-
 You can choose to deploy to a remote (staging) environment **before** going to production (see below), it's up to you.
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/image (407).png>)
@@ -96,9 +86,7 @@ You need a separate database for this new environment: if you're creating a _Sta
 ![](</images/legacy/javascript-agents/image (410).png>)
 
 {% hint style="info" %}
-
 Your **database credentials** never leave your browser and are solely used to generate environment variables on the next step, so they are **never exposed**.
-
 {% endhint %}
 
 #### Set your environment variables
@@ -118,9 +106,7 @@ To do so, click on the environment you wish to change the origin of and from its
 ![](/images/legacy/javascript-agents/environment-settings-details-set-origin.png)
 
 {% hint style="warning" %}
-
 All child environment will be refreshed based on the new architectures.
-
 {% endhint %}
 
 ### Set an environment as production
@@ -128,9 +114,7 @@ All child environment will be refreshed based on the new architectures.
 A standard project usually has a production and at least a staging environment, but you may be using other remote environments. At some point you may feel the need to set another environment as your production environment (a.k.a reference).
 
 {% hint style="info" %}
-
 To set as production an environment it should have as origin the actual reference.
-
 {% endhint %}
 
 To do so, click on the environment you wish to set as production and from its details page, click "Set as production".
@@ -138,9 +122,7 @@ To do so, click on the environment you wish to set as production and from its de
 ![](</images/legacy/javascript-agents/screenshot 2021-12-09 at 11.15.17.png>)
 
 {% hint style="warning" %}
-
 The actual reference will take the new production as origin. All children layout will be refreshed. Any layout change that is not applicable will be ignored.
-
 {% endhint %}
 
 ### Delete an environment

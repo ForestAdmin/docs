@@ -22,7 +22,5 @@ mongoose.set('debug', true);
 ```
 
 {% hint style="info" %}
-
 This can be useful to understand how queries are executed to display your collections or relationships.
-
 {% endhint %}

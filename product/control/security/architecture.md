@@ -52,9 +52,7 @@ When users access the Forest Admin UI, their browser establishes two separate co
 - Your `FOREST_AUTH_SECRET`
 
 {% hint style="info" %}
-
 This architecture ensures your sensitive information remains protected within your infrastructure at all times.
-
 {% endhint %}
 
 ### No Third-Party Tracking
@@ -66,9 +64,7 @@ Forest Admin guarantees data privacy across all plan levels:
 - **Optional tracking control:** Organizations on the **Pro plan** can disable third-party vendors that might track activity metadata from browsers
 
 {% hint style="success" %}
-
 **Pro plan feature:** Disable all third-party tracking scripts in your Forest Admin project settings to ensure complete privacy for your team's activity.
-
 {% endhint %}
 
 ## Security Measures
@@ -91,16 +87,12 @@ Authenticates requests between your Agent and Forest Admin servers.
 - Unique per environment (development, staging, production)
 - Should be stored as an environment variable
 
-<CodeGroup>
 ```bash .env
 FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
 ```
-</CodeGroup>
 
 {% hint style="warning" %}
-
 Never commit `FOREST_ENV_SECRET` to version control. Always use environment variables or secret management tools.
-
 {% endhint %}
 
 #### FOREST_AUTH_SECRET
@@ -118,7 +110,6 @@ Authenticates requests between user browsers and your Agent (Self-Hosted and On-
 - Unique per environment
 - Used only in Self-Hosted and On-Premise architectures
 
-<CodeGroup>
 ```bash Generate a secure secret
 # Using Node.js
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -130,12 +121,9 @@ openssl rand -hex 32
 ```bash .env
 FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 ```
-</CodeGroup>
 
 {% hint style="info" %}
-
 **Cloud architecture:** `FOREST_AUTH_SECRET` is not needed because authentication is handled by Forest Admin servers. Your data still flows directly from your Agent to browsers without passing through Forest Admin.
-
 {% endhint %}
 
 ### JWT Token Structure
@@ -157,7 +145,6 @@ Both tokens are JSON Web Tokens (JWT) containing user context:
 - Dynamic filtering based on user context
 - Integration with your internal systems
 
-<CodeGroup>
 ```javascript Node.js - Access user context
 agent.customizeCollection('orders', collection => {
   collection.addHook('Before', 'List', async (context) => {
@@ -193,7 +180,6 @@ def filter_by_user(context):
     if role != 'admin':
         context.filter = {'user_email': email}
 ```
-</CodeGroup>
 
 ### IP Whitelisting
 
@@ -229,9 +215,7 @@ You maintain **complete control** over your Agent deployment:
 - Use TLS/SSL for all connections
 
 {% hint style="success" %}
-
 **Best practice:** Deploy your Agent behind a VPN or firewall to add an additional layer of security. Even if an attacker obtains valid credentials, they would still need network access to reach your Agent.
-
 {% endhint %}
 
 ### HTTPS/TLS Encryption
@@ -243,9 +227,7 @@ All communication is encrypted:
 - **Agent ↔ Forest Admin:** HTTPS with TLS 1.2+
 
 {% hint style="warning" %}
-
 Always deploy your Agent with HTTPS enabled in production. Never use HTTP for sensitive data.
-
 {% endhint %}
 
 ## Compliance Standards
@@ -284,15 +266,12 @@ Security practices aligned with ISO 27001 standards:
 - Continuous improvement
 
 {% hint style="info" %}
-
 **Your responsibility:** While Forest Admin provides a secure platform, you are responsible for configuring security controls, managing access, and ensuring compliance with your specific regulatory requirements.
-
 {% endhint %}
 
 ## Security Best Practices
 
 {% hint style="success" %}
-
 **Recommended security practices:**
 
 1. **Environment secrets:**
@@ -324,7 +303,6 @@ Security practices aligned with ISO 27001 standards:
    - Monitor security advisories
    - Test updates in staging first
    - Have a rollback plan
-
 {% endhint %}
 
 ## Security Features Roadmap

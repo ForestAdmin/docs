@@ -8,9 +8,7 @@ description: "Control which records users can see with dynamic data filtering"
 A scope functions as "a filter which applies to a collection and all its segments." Scopes enable dynamic data filtering based on the current user, allowing organizations to control which data different users can access throughout the application.
 
 {% hint style="warning" %}
-
 **Scope Limitations**: Scopes apply to the entire application except for global Smart Actions, API & SQL charts, and Collaboration & Activities sections.
-
 {% endhint %}
 
 ## Setup Process

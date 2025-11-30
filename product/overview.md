@@ -28,41 +28,59 @@ Forest Admin follows a 4-layer architecture that enables you to build and operat
 
 ## Quick Navigation
 
-<AccordionGroup>
-  <Accordion title="Layer 1: Integration - Connect Your Data" icon="database">
-    - **Setup**: Get started with Node.js, Ruby, or Python agents
+
+<details>
+<summary>Layer 1: Integration - Connect Your Data</summary>
+
+- **Setup**: Get started with Node.js, Ruby, or Python agents
     - **Architectures**: Choose between cloud and self-hosted
     - **Data Sources**: Connect SQL, MongoDB, REST APIs, and custom sources
     - **Relationships**: Define and manage data relationships
-  </Accordion>
 
-  <Accordion title="Layer 2: Control - Secure Access" icon="lock">
-    - **Roles & Permissions**: Define who can access what
+</details>
+
+
+  
+<details>
+<summary>Layer 2: Control - Secure Access</summary>
+
+- **Roles & Permissions**: Define who can access what
     - **Teams**: Organize users into teams
     - **Scopes**: Filter data visibility per user
     - **Authentication**: SSO, 2FA, SCIM integration
     - **Security**: IP whitelisting and audit logs
-  </Accordion>
 
-  <Accordion title="Layer 3: Process - Business Logic" icon="code">
-    - **Actions**: Create custom operations for your data
+</details>
+
+
+  
+<details>
+<summary>Layer 3: Process - Business Logic</summary>
+
+- **Actions**: Create custom operations for your data
     - **Fields**: Compute and display custom fields
     - **Segments**: Create filtered views of your data
     - **Workflows**: Automate multi-step processes
     - **Hooks**: Intercept and modify requests
     - **Plugins**: Extend functionality with reusable components
     - **Aggregations**: Compute complex statistics
-  </Accordion>
 
-  <Accordion title="Layer 4: Build - Configure UI" icon="paintbrush">
-    - **Layout Editor**: Customize table and detail views
+</details>
+
+
+  
+<details>
+<summary>Layer 4: Build - Configure UI</summary>
+
+- **Layout Editor**: Customize table and detail views
     - **Workspaces**: Create dedicated interfaces for different teams
     - **Collection Configuration**: Customize collections
     - **Fields & Widgets**: Choose display and edit widgets
     - **Custom Views**: Build completely custom interfaces
     - **Branding**: Apply your brand colors and logo
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ## Getting Started
 

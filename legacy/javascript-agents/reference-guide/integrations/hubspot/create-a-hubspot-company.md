@@ -88,9 +88,7 @@ This directory contains the `companies.js` file where the smart action logic is 
 In this logic a Hubspot company instance is created through a /post create company call to the Hubspot API.
 
 {% hint style="info" %}
-
 The Hubspot API key is defined in the `.env` file and requested through the expression `process.env.HUBSPOT_API`.
-
 {% endhint %}
 
 ```javascript

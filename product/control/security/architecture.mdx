@@ -87,11 +87,9 @@ Authenticates requests between your Agent and Forest Admin servers.
 - Unique per environment (development, staging, production)
 - Should be stored as an environment variable
 
-<CodeGroup>
 ```bash .env
 FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
 ```
-</CodeGroup>
 
 <Warning>
 Never commit `FOREST_ENV_SECRET` to version control. Always use environment variables or secret management tools.
@@ -112,7 +110,6 @@ Authenticates requests between user browsers and your Agent (Self-Hosted and On-
 - Unique per environment
 - Used only in Self-Hosted and On-Premise architectures
 
-<CodeGroup>
 ```bash Generate a secure secret
 # Using Node.js
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -124,7 +121,6 @@ openssl rand -hex 32
 ```bash .env
 FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 ```
-</CodeGroup>
 
 <Info>
 **Cloud architecture:** `FOREST_AUTH_SECRET` is not needed because authentication is handled by Forest Admin servers. Your data still flows directly from your Agent to browsers without passing through Forest Admin.
@@ -149,7 +145,6 @@ Both tokens are JSON Web Tokens (JWT) containing user context:
 - Dynamic filtering based on user context
 - Integration with your internal systems
 
-<CodeGroup>
 ```javascript Node.js - Access user context
 agent.customizeCollection('orders', collection => {
   collection.addHook('Before', 'List', async (context) => {
@@ -185,7 +180,6 @@ def filter_by_user(context):
     if role != 'admin':
         context.filter = {'user_email': email}
 ```
-</CodeGroup>
 
 ### IP Whitelisting
 

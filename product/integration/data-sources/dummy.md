@@ -6,9 +6,7 @@ description: "In-memory test datasource for development, testing, and demonstrat
 The Dummy datasource is an in-memory test datasource for **testing and learning Forest Admin agent functionality only**. It is not intended for production use.
 
 {% hint style="warning" %}
-
 This datasource is strictly for development, testing, and learning purposes. All data is stored in memory and resets on application restart.
-
 {% endhint %}
 
 ## Basic usage

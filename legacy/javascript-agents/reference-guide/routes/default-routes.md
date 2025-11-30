@@ -71,9 +71,7 @@ router.put('/companies/:recordId', permissionMiddlewareCreator.update(), (reques
 ```
 
 {% hint style="info" %}
-
 Note that the **update** of `belongsTo` fields is managed by [another route](default-routes.md#relationship-routes).
-
 {% endhint %}
 
 ### Delete a record

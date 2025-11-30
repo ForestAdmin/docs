@@ -31,9 +31,7 @@ Rate limits protect the API infrastructure by:
 Enterprise customers may have higher limits based on their plan. Contact your account manager for details.
 
 {% hint style="info" %}
-
 Rate limits are subject to change. Check the response headers for current limits.
-
 {% endhint %}
 
 ## Rate Limit Headers

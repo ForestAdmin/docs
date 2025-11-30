@@ -31,7 +31,5 @@ In the following pages, we'll cover all available Forest CLI commands in details
 Some additional commands might be added in the future. In the meantime, those should be largely sufficient to manage your development workflow.
 
 {% hint style="info" %}
-
 Be aware that almost all commands take the `FOREST_ENV_SECRET` env variable, provided on the command or inside your _.env_ file, to know on which environment the command is run.
-
 {% endhint %}

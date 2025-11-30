@@ -23,7 +23,6 @@ Fields are configurable using the following properties:
 
 ## Basic form example
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 agent.customizeCollection('customers', collection => {
   collection.addAction('Charge credit card', {
@@ -90,7 +89,6 @@ forest_agent.customize_collection('customers') do |collection|
   )
 end
 ```
-</CodeGroup>
 
 ## Field types
 
@@ -188,7 +186,6 @@ Make forms reactive by using functions instead of static values. Functions recei
 
 Make a field required based on another field's value:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -222,13 +219,11 @@ form: [
   }
 ]
 ```
-</CodeGroup>
 
 ### Conditional visibility
 
 Show or hide fields based on conditions:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -260,13 +255,11 @@ form: [
   }
 ]
 ```
-</CodeGroup>
 
 ### Default values from record data
 
 Pre-fill form with data from the selected record:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -294,13 +287,11 @@ form: [
   }
 ]
 ```
-</CodeGroup>
 
 ### Dynamic enum values
 
 Change dropdown options based on context:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -351,13 +342,11 @@ form: [
   }
 ]
 ```
-</CodeGroup>
 
 ### Dynamic collection references
 
 Change the target collection dynamically:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -391,7 +380,6 @@ form: [
   }
 ]
 ```
-</CodeGroup>
 
 ## Widgets
 
@@ -511,7 +499,6 @@ Rich text editor with formatting options.
 
 Create wizard-like forms by conditionally showing sections:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -571,13 +558,11 @@ form: [
   }
 ]
 ```
-</CodeGroup>
 
 ### Read-only fields for context
 
 Show record data as read-only context:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -615,13 +600,11 @@ form: [
   }
 ]
 ```
-</CodeGroup>
 
 ### Validation with required fields
 
 Combine conditions for complex validation:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 {
   type: 'String',
@@ -645,13 +628,11 @@ Combine conditions for complex validation:
   }
 }
 ```
-</CodeGroup>
 
 ## Accessing form values
 
 In the execute handler, access form values from the context:
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 execute: async (context, resultBuilder) => {
   // Access by label
@@ -684,5 +665,4 @@ execute: ->(context, result_builder) {
   description = context.form_values['Description']
 }
 ```
-</CodeGroup>
 

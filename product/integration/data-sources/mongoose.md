@@ -6,9 +6,7 @@ description: "Connect to MongoDB using Mongoose ODM with flexible data transform
 The Mongoose datasource connects to MongoDB through Mongoose models, automatically importing your collections into Forest Admin with support for nested objects, arrays, and relationships.
 
 {% hint style="warning" %}
-
 Mongoose datasource is only available for Node.js. For Ruby, check the [Mongoid datasource](/product/integration/data-sources/mongoid).
-
 {% endhint %}
 
 ## Basic usage

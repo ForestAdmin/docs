@@ -18,9 +18,7 @@ The self-hosted architecture gives you full control over your data and code by h
 5. **All data** stays within your infrastructure
 
 {% hint style="info" %}
-
 **Key benefit**: This architecture follows our privacy by design motto. Your data never leaves your infrastructure.
-
 {% endhint %}
 
 ## Components
@@ -50,9 +48,7 @@ Standalone deployment runs the Forest Admin agent as a completely separate servi
 This architecture provides a cleaner separation of concerns. Your application code stays focused on your business logic, while Forest Admin responsibilities are isolated in their own service. The two services communicate through well-defined boundaries, making your overall system architecture simpler to understand and maintain. This is particularly beneficial as your team grows—developers working on the application don't need to think about admin panel concerns, and vice versa.
 
 {% hint style="info" %}
-
 **Note**: Standalone deployment is currently available for Node.js only. If you need standalone deployment with Ruby, please [contact our sales team](https://www.forestadmin.com/contact).
-
 {% endhint %}
 
 <img src="/assets/deployment-standalone.svg" alt="Standalone Deployment Architecture" />
@@ -70,9 +66,7 @@ This architecture provides a cleaner separation of concerns. Your application co
 | **Isolation** | Low isolation | High isolation |
 
 {% hint style="info" %}
-
 **Recommendation**: We recommend **standalone deployment** for cleaner architecture and better separation of concerns. Use **in-app** if you need to reuse your ORM models or existing business logic.
-
 {% endhint %}
 
 ## Privacy by design

@@ -7,9 +7,7 @@ description: >-
   ensure a smooth upgrade.​
 ---
 {% hint style="info" %}
-
 Please follow the recommended procedure to upgrade your agent version by following [this note](../push-your-new-version-to-production.md).
-
 {% endhint %}
 
 This upgrade unlocks the following features:
@@ -22,15 +20,11 @@ This upgrade unlocks the following features:
 ## Upgrading to v8
 
 {% hint style="warning" %}
-
 Before upgrading to v8, consider the below [**breaking changes**](#breaking-changes).
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
-
 {% endhint %}
 
 To upgrade to v8, run the following and then update your project as shown in the [_Breaking Changes_](#breaking-changes) section below.
@@ -48,9 +42,7 @@ npm install "forest-express-mongoose@^8.0.0"
 ```
 
 {% hint style="info" %}
-
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.
-
 {% endhint %}
 
 ## Breaking changes
@@ -64,9 +56,7 @@ If you don't have any restriction on headers within your CORS configuration, not
 If you have configured a header whitelist (`allowedHeaders` in express for instance) in your CORS configuration, you need to **add this new header to the whitelist**, otherwise browsers won't trigger request anymore due to CORS policy:
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```javascript
@@ -98,9 +88,7 @@ Until now, once you had submitted a file for upload, the file name wasn't persis
 **If you use a regex to parse data** before sending it for upload (like we originally suggested in this [Woodshop tutorial](https://docs.forestadmin.com/woodshop/how-tos/upload-files-to-s3#directory-services)), there is a breaking change: you need to use the output of the `parseDataUri` method.
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```javascript
@@ -145,9 +133,7 @@ All occurrences of calls to `RecordsGetter`, `RecordCounter`, `RecordsExporter`,
 Note that `RecordSerializer` was not modified, and can be used to serialize and deserialize models.
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```javascript
@@ -203,9 +189,7 @@ router.post(
 #### Smart actions
 
 {% hint style="warning" %}
-
 The `values` endpoint is no longer supported. Hooks now replaces the `values` endpoint since they are now available for single, bulk & global smart action types.
-
 {% endhint %}
 
 _1st change:_
@@ -213,9 +197,7 @@ _1st change:_
 The Smart action `change` hook method name is no longer the `fieldName`. You are now required to declare the `hook` name as a property inside the `field`.
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```javascript
@@ -266,9 +248,7 @@ _2nd change:_
 The signature of `hooks` functions has changed. `fields` is now an array. You must change the way you access fields.
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```javascript
@@ -318,9 +298,7 @@ _3rd change:_
 The signature of `hooks` functions has changed. In order to support hooks for **global** and **bulk** smart actions, `record` is no longer sent to the hook. You must change the way you get the record information. This change also prevents unnecessary computation in case you don't need to access the record(s) inside the hooks.
 
 {% hint style="warning" %}
-
 Before
-
 {% endhint %}
 
 ```javascript

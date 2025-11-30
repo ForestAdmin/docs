@@ -62,9 +62,7 @@ collection.addAction('Archive selected', {
 - `context.getRecordIds()` - Get array of record IDs
 
 {% hint style="warning" %}
-
 Handle failures gracefully in bulk actions. Decide whether to stop on first error or continue processing remaining records.
-
 {% endhint %}
 
 ### Global scope
@@ -114,7 +112,6 @@ const email = context.formValues['email'];
 
 Get data from the records the action is running on:
 
-<CodeGroup>
 ```javascript Single action
 const user = await context.getRecord(['id', 'email', 'name']);
 console.log(user.id, user.email, user.name);
@@ -130,7 +127,6 @@ const users = await context.getRecords(['id', 'email']);
 const ids = await context.getRecordIds();
 // Returns array of IDs: [1, 2, 3, ...]
 ```
-</CodeGroup>
 
 ### Current user
 
@@ -184,7 +180,6 @@ if (context.hasFieldChanged('Status')) {
 
 ### Example: Access record data
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Display customer info', {
   scope: 'Single',
@@ -229,11 +224,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Example: Update selected records
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Mark as live', {
   scope: 'Single',
@@ -263,11 +256,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Example: Bulk processing with error handling
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Send notifications', {
   scope: 'Bulk',
@@ -332,11 +323,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Example: Use user context
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Assign to me', {
   scope: 'Single',
@@ -370,11 +359,9 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 
 ### Example: Global action with filters
 
-<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Export filtered data', {
   scope: 'Global',
@@ -414,5 +401,4 @@ collection.add_action(
   end
 )
 ```
-</CodeGroup>
 

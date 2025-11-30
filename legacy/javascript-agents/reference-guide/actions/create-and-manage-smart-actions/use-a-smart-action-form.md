@@ -168,9 +168,7 @@ On our Live Demo example, we’ve defined 4 input fields on the Smart Action `Up
 Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
 
 {% hint style="info" %}
-
 The 2nd parameter of the `SmartAction` method is not required. If you don't fill it, the name of your smartAction will be the name of your method that wrap it.
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.34.41.png>)
@@ -190,24 +188,18 @@ Here is the list of available options to customize your input form.
 | hook        | string           | (optional) Specify the change hook. If specified the corresponding hook is called when the input change                                                                                                                                                                                   |
 | widget      | string           | (optional) The following widgets are available to your smart action fields (`text area`, `date`, `boolean`, `file,` `dateonly`)                                                                                                                                                           |
 {% hint style="warning" %}
-
 The `widget` property is only partially supported.
 If you want to use a custom widget via a Smart Action Hook, you'll need to use the syntax mentioned in the next section.
-
 {% endhint %}
 
 ## Use components to better layout your form
 
 {% hint style="info" %}
-
 This feature is only available from **version 9.4.0** (`forest-express-sequelize` and `forest-express-mongoose`) / **version 9.4.0** (`forest-rails`) .
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 you must define your layout in a `load` hook at minima, and repeat it in each `change` hook.
-
 {% endhint %}
 
 This feature is useful when dealing with long/complex forms, with many fields. It will let you organize them and add useful information to guide the end user.
@@ -509,9 +501,7 @@ collection('customers', {
 ### Change your form's data based on previous field values
 
 {% hint style="info" %}
-
 This feature is only available from **version 8.0.0** (`forest-express-sequelize` and `forest-express-mongoose`) / **version 7.0.0** (`forest-rails`) .
-
 {% endhint %}
 
 Here's a typical example: Selecting a **City** within a list of cities from the **Country** you just selected. Then selecting a **Zip code** within a list of zip codes located in the **City** you just selected.
@@ -668,20 +658,16 @@ The `hooks` property receives a _context_ object containing:
 - the `changedField` is the current field who trigger the hook (only for change hook)
 
 {% hint style="info" %}
-
 `fields` **must** be returned. Note that `fields` is an array containing existing fields with properties described in [this section](./#handling-input-values).
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 If you want to use a widget inside of a hook, you'll need to use the following syntax on your field:
 
 - For a `text area`, use `{ widgetEdit: 'text area editor', parameters: {} }`
 - For a `boolean`, use `{ widgetEdit: 'boolean editor', parameters: {} }`
 - For a `date` or a `dateonly`, use `{ widgetEdit: 'date editor', parameters: {} }`
 - For a `file`, use `{ widgetEdit: 'file picker', parameters: {} }`
-
 {% endhint %}
 
 To dynamically change a property within a `load` or `change` [hook](use-a-smart-action-form.md#making-a-form-dynamic-with-hooks), just set it! For instance, setting a new _description_ for the field `city`:
@@ -710,9 +696,7 @@ def send_invoice_load(fields, request, *args, **kwargs):
 ### Add/remove fields dynamically
 
 {% hint style="info" %}
-
 This feature is only available from [**version 8.0.0**](../../../how-tos/maintain/upgrade-notes-sql-mongodb/upgrade-to-v8.md) (`forest-express-sequelize` and `forest-express-mongoose`) / [**version 7.0.0**](../../../how-tos/maintain/upgrade-notes-sql-mongodb/upgrade-to-v7.md) (`forest-rails`).
-
 {% endhint %}
 
 You can add a `field` dynamically inside the `fields` array, like so:

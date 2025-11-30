@@ -6,9 +6,7 @@ description: "Connect directly to MongoDB without an ORM using automatic schema 
 The MongoDB datasource connects directly to MongoDB without requiring Mongoose or another ORM. It automatically introspects your collections by sampling documents to infer the schema.
 
 {% hint style="warning" %}
-
 MongoDB datasource is only available for Node.js. For Ruby, check the [Mongoid datasource](/product/integration/data-sources/mongoid).
-
 {% endhint %}
 
 ## Basic usage
@@ -42,9 +40,7 @@ createMongoDataSource({
 ```
 
 {% hint style="info" %}
-
 Setting sample sizes too high may slow agent startup times.
-
 {% endhint %}
 
 ## Filtering collections

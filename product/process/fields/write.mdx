@@ -24,8 +24,6 @@ Can be achieved without any code [in the field settings](https://docs.forestadmi
 
 In the following example, editing or creating a `fullName` will update both `firstName` and `lastName` fields of the record.
 
-<CodeGroup>
-
 ```javascript Node.js
 collection.replaceFieldWriting('fullName', value => {
   const [firstName, lastName] = value.split(' ');
@@ -46,15 +44,11 @@ collection.replaceFieldWriting('fullName', value => {
 end
 ```
 
-</CodeGroup>
-
 ### Having specific behavior only for updates
 
 You can have different behavior for `creations` and `updates`.
 
 In this example, each time the `firstName` field is edited, we also want to update a timestamp field.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('firstName', async (value, context) => {
@@ -92,8 +86,6 @@ collection.replaceFieldWriting('firstName', async (value, context) => {
 end
 ```
 
-</CodeGroup>
-
 ### Changing fields in related records
 
 <Info>
@@ -106,8 +98,6 @@ In this simple example, we have two collections that are linked together:
 - The `Portfolios` collection has a `title`
 
 When the user updates his `job` field we want also to update the `title` of the portfolio by the `job` name.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('job', (job, { action }) => {
@@ -127,15 +117,11 @@ end
 
 ```
 
-</CodeGroup>
-
 <Info>
 If the relationships do not exist it will create them with the given field values.
 </Info>
 
 You can also provide another `portfolioId` to update the relationships and their fields:
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('job', (job, { action }) => {
@@ -155,12 +141,8 @@ collection.replaceFieldWriting('job', (job, { action }) => {
 end
 ```
 
-</CodeGroup>
-
 Of course, you can chain the relationships. For example, if a portfolio has a `one-to-one` relationship
 with the `formats` collection, you can update it by writing the right path.
-
-<CodeGroup>
 
 ```javascript Node.js
 collection.replaceFieldWriting('job', (job, { action }) => {
@@ -182,5 +164,3 @@ collection.replaceFieldWriting('job', (job, { action }) => {
   end
 end
 ```
-
-</CodeGroup>

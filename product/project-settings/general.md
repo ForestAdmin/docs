@@ -35,9 +35,7 @@ The locale controls how numbers and dates display throughout Forest Admin. Avail
 | **English (US)** | 29,567.13 | 03/20/21 |
 
 {% hint style="info" %}
-
 The **Auto** setting provides the best experience for international teams, as each user sees formats matching their browser preferences.
-
 {% endhint %}
 
 ## Ownership Transfer
@@ -45,9 +43,7 @@ The **Auto** setting provides the best experience for international teams, as ea
 Transfer the ownership of your project to another user when needed. The new owner will have full administrative access to the project.
 
 {% hint style="warning" %}
-
 Only the current project owner can transfer ownership. This action should be performed carefully as it grants full control to the new owner.
-
 {% endhint %}
 
 ## Project Deletion
@@ -55,7 +51,5 @@ Only the current project owner can transfer ownership. This action should be per
 You can permanently remove your project from this tab.
 
 {% hint style="warning" %}
-
 **Deleting your project cannot be undone.** All configurations, layouts, and settings will be permanently lost.
-
 {% endhint %}

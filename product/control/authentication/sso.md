@@ -8,9 +8,7 @@ description: "Enable Single Sign-On with SAML 2.0 to authenticate users through 
 Single Sign-On (SSO) allows users to access Forest Admin using their existing corporate credentials through your identity provider (IdP). This centralizes authentication, improves security, and provides a better user experience.
 
 {% hint style="info" %}
-
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
-
 {% endhint %}
 
 ## Benefits of SSO
@@ -288,9 +286,7 @@ Automatically create users when they first log in via SSO:
 </Steps>
 
 {% hint style="info" %}
-
 **Role Mapping**: If you map roles from your IdP, ensure the role names match exactly (case-sensitive). Otherwise, the default role is assigned.
-
 {% endhint %}
 
 ### Manual Provisioning
@@ -311,9 +307,7 @@ Automatically sync users from your IdP. See [SCIM Documentation](/product/contro
 Once SSO is configured and tested, you can enforce SSO-only authentication:
 
 {% hint style="warning" %}
-
 **Emergency Access**: Always keep at least one admin account with password authentication enabled. This ensures you can access Forest Admin if SSO has issues.
-
 {% endhint %}
 
 <Steps>
@@ -374,9 +368,11 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
 
 ### SAML Configuration Issues
 
-<AccordionGroup>
-  <Accordion title="Error: Invalid SAML Response">
-    **Possible Causes**:
+
+<details>
+<summary>Error: Invalid SAML Response</summary>
+
+**Possible Causes**:
     - Clock skew between Forest Admin and IdP (check time sync)
     - Invalid signature (check certificate)
     - Wrong ACS URL configured in IdP
@@ -385,10 +381,15 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
     1. Verify ACS URL in IdP matches Forest Admin
     2. Ensure IdP certificate is valid and not expired
     3. Check IdP and Forest Admin server times are synchronized
-  </Accordion>
 
-  <Accordion title="Error: User Email Not Found">
-    **Possible Causes**:
+</details>
+
+
+  
+<details>
+<summary>Error: User Email Not Found</summary>
+
+**Possible Causes**:
     - Email in SAML assertion doesn't match Forest Admin user
     - JIT provisioning is disabled
     - Email attribute not mapped correctly
@@ -397,10 +398,15 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
     1. Check email in SAML assertion (use browser dev tools)
     2. Verify user exists with exact email match
     3. Enable JIT provisioning or create user manually
-  </Accordion>
 
-  <Accordion title="User Can't Access After Login">
-    **Possible Causes**:
+</details>
+
+
+  
+<details>
+<summary>User Can't Access After Login</summary>
+
+**Possible Causes**:
     - User created but has no role assigned
     - User's role has no permissions
     - Scope filters exclude all data for user
@@ -409,10 +415,15 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
     1. Verify user has appropriate role
     2. Check role permissions
     3. Review scope configuration
-  </Accordion>
 
-  <Accordion title="Redirect Loop">
-    **Possible Causes**:
+</details>
+
+
+  
+<details>
+<summary>Redirect Loop</summary>
+
+**Possible Causes**:
     - Multiple SSO configurations conflict
     - IdP misconfigured
     - Browser cookies/cache issues
@@ -421,8 +432,9 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
     1. Clear browser cookies and cache
     2. Verify only one SSO configuration is active
     3. Check IdP logs for errors
-  </Accordion>
-</AccordionGroup>
+
+</details>
+
 
 ### Certificate Issues
 

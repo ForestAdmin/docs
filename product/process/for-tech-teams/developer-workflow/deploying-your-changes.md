@@ -24,22 +24,16 @@ The result is the following:
 ![End Situation](https://docs.forestadmin.com/assets/dev-workflow-end-situation.png)
 
 {% hint style="info" %}
-
 As all your environments' layouts depend on your **reference** environment, the `deploy` command will apply the layout changes to all your project environments.
 In the example above, your layout changes are also applied to the Remote Environment, as it is based on Production.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Deploy with care as such action cannot be reverted.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 Don't forget to **deploy your backend changes** (if any) before the `deploy` command, as showcased on [this flowchart](/product/process/for-tech-teams/developer-workflow/development-workflow).
-
 {% endhint %}
 
 ## Testing your changes on a Remote Environment: `push`
@@ -53,18 +47,14 @@ forest push
 ```
 
 {% hint style="warning" %}
-
 Pushing your changes from your local Branch will automatically **delete** it.
-
 {% endhint %}
 
 Note that you'll be pushing your **current** Branch. To select another Branch, use [switch](/product/reference/cli/switch).
 If the origin of your Branch is not the Remote you want (ie: staging) change it with [set-origin](/product/reference/cli/set-origin)
 
 {% hint style="info" %}
-
 As your company grows, so does your development flow. You may need a more complex hierarchy between environments where you have more than one layer of test environments before production (test, staging, qa, preprod,...). This is possible using the Forest Admin CLI and the right Environment settings, see [Environments](/product/process/for-tech-teams/developer-workflow/environments#change-environment-origin).
-
 {% endhint %}
 
 ![Push](https://docs.forestadmin.com/assets/dev-workflow-push.png)

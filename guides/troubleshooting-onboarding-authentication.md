@@ -28,7 +28,6 @@ If this fails, check your firewall rules, proxy settings, or network security gr
 
 The `FOREST_ENV_SECRET` environment variable must match the secret provided in your Forest Admin project settings. A mismatch will prevent authentication.
 
-<CodeGroup>
 ```javascript Node.js
 // Check your agent initialization
 createAgent({
@@ -46,7 +45,6 @@ ForestAdminAgent::Agent.new do |config|
   # ...
 end
 ```
-</CodeGroup>
 
 ### Review agent logs
 
@@ -81,7 +79,6 @@ Double-check your `DATABASE_URL` environment variable. Common issues include:
 - Invalid credentials
 - Missing or incorrect SSL parameters
 
-<CodeGroup>
 ```bash PostgreSQL
 # Test connection manually
 psql "postgresql://username:password@host:5432/database"
@@ -102,7 +99,6 @@ mysql -h host -P 3306 -u username -p database --ssl-mode=REQUIRED
 # Test connection manually
 mongosh "mongodb+srv://username:password@cluster.mongodb.net/database"
 ```
-</CodeGroup>
 
 ### Check network access
 
@@ -126,7 +122,6 @@ nc -zv database-host 27017 # MongoDB
 
 The database user must have appropriate permissions:
 
-<CodeGroup>
 ```sql PostgreSQL
 -- Check user permissions
 \du username
@@ -144,7 +139,6 @@ SHOW GRANTS FOR 'username'@'%';
 -- Grant necessary permissions
 GRANT SELECT, INSERT, UPDATE, DELETE ON database.* TO 'username'@'%';
 ```
-</CodeGroup>
 
 ## Authentication token expired
 
@@ -168,7 +162,6 @@ Your session token will be refreshed automatically.
 
 The agent automatically detects schema changes, but you can force a refresh:
 
-<CodeGroup>
 ```javascript Node.js
 // Add this temporarily to force schema regeneration
 createAgent({
@@ -184,7 +177,6 @@ createAgent({
 # Schema is auto-detected on startup
 # Restart your agent to force refresh
 ```
-</CodeGroup>
 
 Then restart your agent:
 
@@ -203,7 +195,6 @@ pm2 restart your-app-name
 
 If using direct database connections (not ORM), ensure your database user has permission to read schema metadata:
 
-<CodeGroup>
 ```sql PostgreSQL
 -- Grant schema introspection permissions
 GRANT USAGE ON SCHEMA information_schema TO username;
@@ -214,7 +205,6 @@ GRANT SELECT ON ALL TABLES IN SCHEMA information_schema TO username;
 -- Grant schema introspection permissions
 GRANT SELECT ON information_schema.* TO 'username'@'%';
 ```
-</CodeGroup>
 
 ## Environment not appearing
 
@@ -231,9 +221,7 @@ Each environment needs its own `FOREST_ENV_SECRET`:
 5. Restart your agent
 
 {% hint style="warning" %}
-
 Never reuse the same `FOREST_ENV_SECRET` across multiple environments. Each environment must have its unique secret.
-
 {% endhint %}
 
 ## CORS errors in browser console
@@ -265,7 +253,6 @@ Ensure your agent URL is correctly configured in Forest Admin project settings:
 
 If your database requires SSL but has a self-signed certificate:
 
-<CodeGroup>
 ```javascript Node.js
 
 createSqlDataSource({
@@ -285,12 +272,9 @@ production:
   # For self-signed certificates (not recommended for production)
   sslrootcert: /path/to/ca-certificate.crt
 ```
-</CodeGroup>
 
 {% hint style="warning" %}
-
 Disabling certificate verification (`rejectUnauthorized: false`) is not recommended for production. Use proper SSL certificates whenever possible.
-
 {% endhint %}
 
 ### For outbound connections to Forest Admin
@@ -318,7 +302,5 @@ If you're still experiencing problems after trying these solutions:
    - Your Forest Admin project ID
 
 {% hint style="info" %}
-
 When contacting support, provide as much context as possible, including error messages, logs, and your configuration (without sensitive credentials).
-
 {% endhint %}

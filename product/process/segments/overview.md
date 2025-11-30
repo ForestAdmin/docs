@@ -47,16 +47,12 @@ For instance, in our [Live Demo example](https://app.forestadmin.com/livedemo), 
 ### Example
 
 {% hint style="info" %}
-
 In the following example, we are making queries using the Forest Admin Query Interface.
 
 As Forest Admin does not impose any restriction on the handler, you are free to call external APIs or query your database directly instead.
-
 {% endhint %}
 
 The only requirement when implementing a Smart Segment from your agent is to return a valid `ConditionTree`.
-
-<CodeGroup>
 
 ```javascript Node.js
 agent.customizeCollection('products', collection =>
@@ -94,5 +90,3 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   end
 end
 ```
-
-</CodeGroup>

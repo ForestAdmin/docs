@@ -6,9 +6,7 @@ description: "Connect Forest Admin to MongoDB using Mongoid models with flexible
 The Mongoid datasource imports collections from a Mongoid instance into Forest Admin, with configurable strategies for handling deeply nested embedded documents.
 
 {% hint style="warning" %}
-
 Mongoid datasource is only available for Ruby. For Node.js, check the [Mongoose datasource](/product/integration/data-sources/mongoose) or [MongoDB datasource](/product/integration/data-sources/mongodb).
-
 {% endhint %}
 
 ## Basic usage

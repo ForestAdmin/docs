@@ -18,15 +18,11 @@ OPTIONS
 ```
 
 {% hint style="warning" %}
-
 `forest init` is not meant to help you create a new project. If you don't have an existing project yet, please refer to [this guide](../../../../getting-started/setup-guide.md).
-
 {% endhint %}
 
 {% hint style="info" %}
-
 `forest init` should be run from your project's root directory
-
 {% endhint %}
 
 #### Login
@@ -42,7 +38,6 @@ If you have **1** project only in your Forest Admin account, this step will be a
 If you have **2** projects or more, you'll be asked to choose one: it should **match the project from your current directory!**
 
 {% hint style="warning" %}
-
 `forest init` requires your project to run on the latest version of Forest Admin:
 
 ```
@@ -53,7 +48,6 @@ $ forest init
 ```
 
 If you're seeing the above message, please refer to this [migration guide](../../../../how-tos/maintain/migrate-to-the-new-development-workflow.md).
-
 {% endhint %}
 
 #### Endpoint selection
@@ -76,9 +70,7 @@ At this point, your **development environment** will be **created**! 🎉
 </Check>
 
 {% hint style="info" %}
-
 Note that your new development environment is identified by the `FOREST_ENV_SECRET` in your `.env` file. If you had no such file, it will have been automatically created.
-
 {% endhint %}
 
 #### (Optional) Connecting your database

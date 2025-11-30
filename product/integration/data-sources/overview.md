@@ -9,7 +9,6 @@ Forest Admin connects to your data through datasources. You can add one or multi
 
 Add a datasource to your agent with `addDataSource()`:
 
-<CodeGroup>
 ```javascript Node.js
 
 
@@ -27,7 +26,6 @@ ForestAdminAgent::Agent.new do |config|
   config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
 end
 ```
-</CodeGroup>
 
 Your data is now exposed within Forest Admin, allowing you to browse, search, edit, and manage your records through a fully functional admin panel.
 
@@ -35,7 +33,6 @@ Your data is now exposed within Forest Admin, allowing you to browse, search, ed
 
 You can connect multiple datasources to create a unified admin panel across different databases, APIs, or systems:
 
-<CodeGroup>
 ```javascript Node.js
 const agent = createAgent(options);
 
@@ -67,7 +64,6 @@ ForestAdminAgent::Agent.new do |config|
   config.add_custom_data_source(api_config)
 end
 ```
-</CodeGroup>
 
 All collections from all datasources will appear in your Forest Admin interface, giving you a unified view across your entire data landscape.
 
@@ -75,7 +71,6 @@ All collections from all datasources will appear in your Forest Admin interface,
 
 You can define relationships between collections from different datasources:
 
-<CodeGroup>
 ```javascript Node.js
 agent.customizeCollection('orders', collection => {
   collection.addManyToOneRelation('user', 'analytics_users', {
@@ -91,7 +86,6 @@ agent.customize_collection('orders') do |collection|
   )
 end
 ```
-</CodeGroup>
 
 This allows you to navigate between related data even when it lives in different databases or systems.
 
@@ -116,9 +110,7 @@ Built by the Forest Admin community for specific use cases:
 - **[Elasticsearch](/product/integration/data-sources/community-datasources/elasticsearch)** - Query Elasticsearch indices
 
 {% hint style="info" %}
-
 Want to contribute your own datasource? Check out [Forest Admin experimental](/guides/forestadmin-experimental) to publish your community datasource.
-
 {% endhint %}
 
 ### Custom datasources

@@ -68,9 +68,7 @@ end
 ```
 
 {% hint style="info" %}
-
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
-
 {% endhint %}
 
 ### Searching, Sorting and Filtering on a Smart Field
@@ -103,9 +101,7 @@ end
 #### Filtering
 
 {% hint style="warning" %}
-
 This feature is only available on agents version **6.7+** (version **6.2+** for Rails).
-
 {% endhint %}
 
 To perform a filter on a Smart Field, you need to write the filter query logic, which is specific to your use case.
@@ -146,12 +142,10 @@ end
 #### Sorting
 
 {% hint style="warning" %}
-
 **Sorting** on a Smart Field is not _natively supported_ in Forest Admin. However you can check out those guides:
 
 - [Sort by Smart field](smart-field-examples/sort-by-smart-field.md)
 - [Sort by Smart field that includes value from a belongsTo relationship](smart-field-examples/sort-by-smart-field-that-includes-value-from-a-belongsto-relationship.md)
-
 {% endhint %}
 
 ### Available Field Options
@@ -169,9 +163,7 @@ Here are the list of available options to customize your Smart Field:
 | isRequired  | boolean          | (optional) If true, your Smart Field will be set as required in the browser. Default is false.                                 |
 
 {% hint style="info" %}
-
 You can define a widget for a smart field from the [settings of your collection](https://docs.forestadmin.com/user-guide/collections/customize-your-fields).
-
 {% endhint %}
 
 ### Building Performant Smart Fields

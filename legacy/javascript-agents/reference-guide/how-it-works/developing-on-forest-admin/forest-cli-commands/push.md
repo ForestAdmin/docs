@@ -25,9 +25,7 @@ It is paramount to understand this command before using it:
 Pushing a branch to a remote means applying your latest layout changes to your origin environment. In the above figure, your layout changes (Δ) will be moved from `my-branch` to `Staging`.
 
 {% hint style="warning" %}
-
 Pushing your changes from your local branch will automatically **delete** it.
-
 {% endhint %}
 
 To push layout changes to your origin:
@@ -44,9 +42,7 @@ $ forest push
 ```
 
 {% hint style="info" %}
-
 To skip that confirmation, use the `--force` option.
-
 {% endhint %}
 
 ### Push from the UI
@@ -60,16 +56,12 @@ To push your latest layout changes from a remote environment, you may use the **
 ### Difference between forest push and forest deploy
 
 {% hint style="warning" %}
-
 Don't confuse `forest push` and `forest deploy`
-
 {% endhint %}
 
 - `forest push` applies the latest layout changes of that branch or environment to a non-reference environment
 - `forest deploy` applies your latest layout changes **definitively** to your reference environment (i.e production)
 
 {% hint style="info" %}
-
 You cannot `push` to production, because anything added on Production should be definitive. Therefore you can only `deploy` to Production.
-
 {% endhint %}

@@ -75,99 +75,99 @@ Retrieve a paginated list of activity logs with optional filtering.
 
 #### Response
 
-<ResponseField name="data" type="array">
+
   Array of activity log objects
 
-  <Expandable title="Activity Log Object">
-    <ResponseField name="id" type="string">
+  
+    
       Unique identifier for the activity log
-    </ResponseField>
+    
 
-    <ResponseField name="type" type="string">
+    
       Resource type (always `activity_logs`)
-    </ResponseField>
+    
 
-    <ResponseField name="attributes" type="object">
-      <Expandable title="Attributes">
-        <ResponseField name="action" type="string">
+    
+      
+        
           Type of action performed: `create`, `read`, `update`, `delete`, `export`, `custom_action`
-        </ResponseField>
+        
 
-        <ResponseField name="collection" type="string">
+        
           Name of the collection affected
-        </ResponseField>
+        
 
-        <ResponseField name="record_id" type="string">
+        
           ID of the record affected (if applicable)
-        </ResponseField>
+        
 
-        <ResponseField name="user" type="object">
-          <Expandable title="User Object">
-            <ResponseField name="id" type="string">
+        
+          
+            
               User ID
-            </ResponseField>
+            
 
-            <ResponseField name="email" type="string">
+            
               User email address
-            </ResponseField>
+            
 
-            <ResponseField name="name" type="string">
+            
               User full name
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
+            
+          
+        
 
-        <ResponseField name="changes" type="object">
+        
           Object containing the changes made (for update actions)
 
-          <Expandable title="Changes Object">
-            <ResponseField name="before" type="object">
+          
+            
               Field values before the change
-            </ResponseField>
+            
 
-            <ResponseField name="after" type="object">
+            
               Field values after the change
-            </ResponseField>
-          </Expandable>
-        </ResponseField>
+            
+          
+        
 
-        <ResponseField name="created_at" type="string">
+        
           ISO 8601 timestamp when the action occurred
-        </ResponseField>
+        
 
-        <ResponseField name="ip_address" type="string">
+        
           IP address from which the action was performed
-        </ResponseField>
+        
 
-        <ResponseField name="user_agent" type="string">
+        
           Browser/client user agent string
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-  </Expandable>
-</ResponseField>
+        
+      
+    
+  
 
-<ResponseField name="meta" type="object">
+
+
   Pagination metadata
 
-  <Expandable title="Meta Object">
-    <ResponseField name="page" type="integer">
+  
+    
       Current page number
-    </ResponseField>
+    
 
-    <ResponseField name="limit" type="integer">
+    
       Results per page
-    </ResponseField>
+    
 
-    <ResponseField name="total" type="integer">
+    
       Total number of results
-    </ResponseField>
+    
 
-    <ResponseField name="total_pages" type="integer">
+    
       Total number of pages
-    </ResponseField>
-  </Expandable>
-</ResponseField>
+    
+  
+
 
 <RequestExample>
 
@@ -346,9 +346,9 @@ Retrieve a specific activity log by ID.
 
 #### Response
 
-<ResponseField name="data" type="object">
+
   Single activity log object with the same structure as the list endpoint
-</ResponseField>
+
 
 <RequestExample>
 

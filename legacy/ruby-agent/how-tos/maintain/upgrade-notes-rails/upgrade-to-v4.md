@@ -7,25 +7,17 @@ description: >-
   ensure a smooth update.​
 ---
 {% hint style="warning" %}
-
-
 Please be aware that while Forest Admin make every effort to ensure that our platform updates are broadly compatible and offer detailed instructions for upgrading, Forest Admin cannot guarantee that custom code developed by the developers will always be compatible with new versions of our software. This includes any custom modifications or extensions to core functionalities, such as method overrides or custom integrations. It is the responsibility of the developers to review and test their custom code to ensure compatibility with each new version. Our team provides comprehensive upgrade guides to assist in this process, but these cannot encompass the unique customizations that may be present in each customer's environment. Therefore, Forest Admin strongly recommend establishing a thorough testing protocol for your specific customizations to safeguard against potential issues during the upgrade process.
-
-
 {% endhint %}
 
 ## Upgrading to v4
 
 {% hint style="warning" %}
-
 Before upgrading to v4, consider the below **breaking changes**.
-
 {% endhint %}
 
 {% hint style="warning" %}
-
 As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
-
 {% endhint %}
 
 To upgrade to v4, **update the version in your Gemfile**, then run:
@@ -35,9 +27,7 @@ bundle install
 ```
 
 {% hint style="info" %}
-
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent version 3 is the fastest way to restore your admin panel.
-
 {% endhint %}
 
 ## Breaking changes
@@ -47,9 +37,7 @@ In case of a regression introduced in Production after the upgrade, a rollback t
 The information format of the _session token_ have changed in v4.
 
 {% hint style="info" %}
-
 You could be impacted if you use the _user session_ in Smart Action controllers or Smart Routes
-
 {% endhint %}
 
 **Calling `forest_user` in v3**
@@ -107,9 +95,7 @@ Consequently, the user information is now accessible as described below:
 The **query parameters** sent for **filtering** purposes have changed in v4.
 
 {% hint style="info" %}
-
 You could be impacted if you have custom filter implementations.
-
 {% endhint %}
 
 Below are a few example of the new filter conditions format you can access using`params[:filters]`:
@@ -144,9 +130,7 @@ Below are a few example of the new filter conditions format you can access using
 A consequence of the new session token format is:
 
 {% hint style="warning" %}
-
 Once an agent v4 deployed, **all users of your project will be automatically logged out** and be forced to re-authenticate to generate a newly formatted token. ​
-
 {% endhint %}
 
 ### Changelogs

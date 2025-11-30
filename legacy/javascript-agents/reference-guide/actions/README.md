@@ -23,17 +23,13 @@ Those actions come out-of-the-box. We've covered them in details _from a route p
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 12.31.54.png>)
 
 {% hint style="info" %}
-
 Some actions are only available when 1+ record(s) are selected. This depends on [their type](./#triggering-different-types-of-actions).
-
 {% endhint %}
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 12.36.29.png>)
 
 {% hint style="warning" %}
-
 Native actions' **permissions** are set from the Roles section of the [Project settings](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles).
-
 {% endhint %}
 
 #### Smart Actions
@@ -41,9 +37,7 @@ Native actions' **permissions** are set from the Roles section of the [Project s
 Smart actions are your own business-related actions, built with your own code. You'll learn how to use them in the [following page](create-and-manage-smart-actions/#what-is-a-smart-action).
 
 {% hint style="info" %}
-
 Smart actions can be triggered from the _Actions_ button or directly from a [Summary view](https://docs.forestadmin.com/user-guide/getting-started/master-your-ui/build-a-summary-view).
-
 {% endhint %}
 
 ### Triggering different types of actions

@@ -1,7 +1,6 @@
 ---
 title: "Reusable snippets"
 description: "Reusable, custom snippets to keep content in sync"
-icon: "recycle"
 ---
 
 
@@ -12,12 +11,10 @@ icon: "recycle"
 **Pre-condition**: You must create your snippet file in the `snippets` directory.
 
 {% hint style="info" %}
-
   Any page in the `snippets` directory will be treated as a snippet and will not
   be rendered into a standalone page. If you want to create a standalone page
   from the snippet, import the snippet into another file and call it as a
   component.
-
 {% endhint %}
 
 ### Default export
@@ -32,10 +29,8 @@ day is {word}.
 ```
 
 {% hint style="warning" %}
-
   The content that you want to reuse must be inside the `snippets` directory in
   order for the import to work.
-
 {% endhint %}
 
 2. Import the snippet into your destination file.
@@ -91,10 +86,8 @@ export const MyComponent = ({ title }) => (
 ```
 
 {% hint style="warning" %}
-
   MDX does not compile inside the body of an arrow function. Stick to HTML
   syntax when you can or use a default export if you need to use MDX.
-
 {% endhint %}
 
 2. Import the snippet into your destination file and pass in the props

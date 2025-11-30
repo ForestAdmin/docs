@@ -20,7 +20,5 @@ OPTIONS
 The layout of your branch will be refresh based on the new origin.
 
 {% hint style="info" %}
-
 Your current layout changes will be applied - if relevant - on top of your new origin.
-
 {% endhint %}

@@ -15,19 +15,32 @@ Welcome to Forest Admin! This section will help you get up and running quickly, 
 
 ## What you'll learn
 
-<AccordionGroup>
-  <Accordion title="Introduction to Forest Admin" icon="lightbulb">
-    Understand the core concepts, architecture, and how Forest Admin works with your existing data sources.
-  </Accordion>
 
-  <Accordion title="Quick Start Guides" icon="rocket">
-    Choose between cloud or self-hosted deployment and get your admin panel running in minutes.
-  </Accordion>
+<details>
+<summary>Introduction to Forest Admin</summary>
 
-  <Accordion title="Project Administration" icon="shield">
-    Learn how to manage users, configure permissions, and administer your Forest Admin project.
-  </Accordion>
-</AccordionGroup>
+Understand the core concepts, architecture, and how Forest Admin works with your existing data sources.
+
+</details>
+
+
+  
+<details>
+<summary>Quick Start Guides</summary>
+
+Choose between cloud or self-hosted deployment and get your admin panel running in minutes.
+
+</details>
+
+
+  
+<details>
+<summary>Project Administration</summary>
+
+Learn how to manage users, configure permissions, and administer your Forest Admin project.
+
+</details>
+
 
 ## Next Steps
 

@@ -4,9 +4,7 @@ title: Development workflow
 Forest Admin lets you get started easily, but soon you'll be wondering how to set up a clean workflow to control every step of your development process.
 
 {% hint style="info" %}
-
 The following workflow requires that you have generated your project and pushed it to Production. If it's not the case, check out our [quick start](setup-guide.md).
-
 {% endhint %}
 
 Here's our **recommended development workflow**:
@@ -24,9 +22,7 @@ For further details on the package, check out [this page](https://www.npmjs.com/
 ### Step 2: Set up your development environment
 
 {% hint style="warning" %}
-
 This step is **not necessary** if you are the creator of the project, as your development environment is already generated.
-
 {% endhint %}
 
 To get started with forest-cli, simply run the following command in your project's folder:
@@ -71,7 +67,5 @@ forest deploy
 That's it! Your new feature is now available in production 🎉
 
 {% hint style="info" %}
-
 Want to add a testing phase before you deploy to production? Check out how to [create a staging environment](../reference-guide/how-it-works/environments.md#creating-a-remote-environment) and how to [push changes](../reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/push.md) onto it.
-
 {% endhint %}

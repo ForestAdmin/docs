@@ -35,8 +35,6 @@ It is the default mode for all binary fields that are used as either a primary o
 
 If you want to use the hexadecimal mode for another field, use the `replaceFieldBinaryMode` / `replace_field_binary_mode` method:
 
-<CodeGroup>
-
 ```javascript Node.js
 agent.customizeCollection('people', collection =>
   collection.replaceFieldBinaryMode('avatar', 'hex'),
@@ -49,8 +47,6 @@ agent.customizeCollection('people', collection =>
 end
 ```
 
-</CodeGroup>
-
 ## Using the data-URI mode
 
 The data-URI mode is suitable for all data that you would save in a file (images, PDFs, ...).
@@ -58,8 +54,6 @@ The data-URI mode is suitable for all data that you would save in a file (images
 When using that mode, you will be able to use both the [File Viewer](https://docs.forestadmin.com/user-guide/collections/customize-your-fields/display-widgets#file-viewer) and the [File Picker](https://docs.forestadmin.com/user-guide/collections/customize-your-fields/edit-widgets#file-picker) widgets in the UI to respectively preview and upload files.
 
 If the automatic detection based on the field type is not working for you, you can force the `datauri` mode using the `replaceFieldBinaryMode``replace_field_binary_mode` method as so:
-
-<CodeGroup>
 
 ```javascript Node.js
 agent.customizeCollection('people', collection =>
@@ -72,5 +66,3 @@ agent.customizeCollection('people', collection =>
   collection.replace_field_binary_mode('avatar', 'datauri')
 end
 ```
-
-</CodeGroup>

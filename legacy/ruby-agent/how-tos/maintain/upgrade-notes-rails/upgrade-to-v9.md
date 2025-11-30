@@ -7,11 +7,7 @@ description: >-
   ensure a smooth update.​
 ---
 {% hint style="warning" %}
-
-
 Please be aware that while Forest Admin make every effort to ensure that our platform updates are broadly compatible and offer detailed instructions for upgrading, Forest Admin cannot guarantee that custom code developed by the developers will always be compatible with new versions of our software. This includes any custom modifications or extensions to core functionalities, such as method overrides or custom integrations. It is the responsibility of the developers to review and test their custom code to ensure compatibility with each new version. Our team provides comprehensive upgrade guides to assist in this process, but these cannot encompass the unique customizations that may be present in each customer's environment. Therefore, Forest Admin strongly recommend establishing a thorough testing protocol for your specific customizations to safeguard against potential issues during the upgrade process.
-
-
 {% endhint %}
 
 This upgrade unlocks the following feature:
@@ -21,9 +17,7 @@ This upgrade unlocks the following feature:
 ## Upgrading to v9
 
 {% hint style="warning" %}
-
 As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
-
 {% endhint %}
 
 To upgrade to v9, first update your project according to the [_Breaking Changes_](../upgrade-notes-rails/upgrade-to-v9.md#breaking-changes) section below.&#x20;
@@ -37,9 +31,7 @@ bundle install
 ```
 
 {% hint style="info" %}
-
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent version 8 is the fastest way to restore your admin panel.
-
 {% endhint %}
 
 ## Breaking changes
@@ -55,7 +47,5 @@ You can now navigate between related records through the related link.
 ![](/images/legacy/javascript-agents/polymorphic-association-2.png)
 
 {% hint style="warning" %}
-
 The `<record>_type` and `<record>_id` fields are no longer returned by the API. As a result, if you have set up a segment, scope, smart action or any others features that uses these fields, they will no longer work.
-
 {% endhint %}
