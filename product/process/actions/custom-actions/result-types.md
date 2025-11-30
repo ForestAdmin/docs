@@ -1,510 +1,754 @@
----
-title: Result types
-description: Return different types of feedback from your actions
----
+Actions can be configured to achieve different results in the GUI.
 
-Actions can return different types of results to provide feedback to users. Use the result builder to control what happens after an action executes.
+Most actions will simply perform work and display the default notification, however, other behaviors are possible:
+
+- [Displaying a notification with a custom message](#custom-notifications)
+- [Displaying HTML content in a side panel](#html-result)
+- [Generating a file download](#file-generation)
+- [Redirecting the user to another page](#redirections)
+- [Calling a webhook from the user's browser](#webhooks) (for instance to trigger a login in a third-party application)
+  {{#nodejs,python,php}}
+- [Setting up response headers](#response-headers)
+  {{/nodejs,python,php}}
+- [Invalidating related data](./related-data-invalidation.md)
 
 ## Default behavior
 
-If you don't return anything and no exception is thrown, Forest Admin displays a generic success notification.
+The default behavior, when no exception is thrown in the handler is to display a generic notification.
+
+<img src="../../assets/actions-default-success-result.png" width="300">
 
 ```javascript
-execute: async (context, resultBuilder) => {
-  // Perform your logic
-  // No return = generic success message
-}
+agent.customizeCollection('companies', collection =>
+  collection.addAction('Mark as live', {
+    scope: 'Single',
+    execute: async context => {
+      // Not using the resultBuilder here will display the generic success
+      // notification (as long as no exception is thrown)
+    },
+  }),
+);
 ```
 
-## Success notification
+```php
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
 
-Display a custom success message.
-
-```javascript Node.js / Cloud
-return resultBuilder.success('Company is now live!');
+$forestAgent->customizeCollection(
+    'Company',
+    function (CollectionCustomizer $builder) {
+        $builder->addAction(
+            'Mark as live',
+            new BaseAction(
+                scope: ActionScope::SINGLE,
+                execute: function(ActionContextSingle $context) {
+                    // Not using the resultBuilder here will display the generic success notification.
+                    // (as long as no exception is thrown)
+                }
+            )
+        );
+   }
+);
 ```
 
-```ruby Ruby
-result_builder.success(message: 'Company is now live!')
+```ruby
+include ForestAdminDatasourceCustomizer::Decorators::Action::Types
+include ForestAdminDatasourceCustomizer::Decorators::Action::Context
+
+@create_agent.customize_collection('company') do |collection|
+  collection.add_action(
+    'Mark as live',
+    BaseAction.new(scope: ActionScope::SINGLE) do |context|
+      # Not using the resultBuilder here will display the generic success notification.
+      # (as long as no exception is thrown)
+    end
+  )
+end
+
 ```
 
-## Error notification
+```python
+from typing import Union
+from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
+from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
+from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
 
-Display an error message when something goes wrong.
+import requests
 
-```javascript Node.js / Cloud
-if (!isValid) {
-  return resultBuilder.error('The company was already live!');
-}
+
+async def execute(
+    context: ActionContextSingle, result_builder: ResultBuilder
+) -> Union[None, ActionResult]:
+    # Not using the resultBuilder here will display the generic success notification.
+    # (as long as no exception is thrown)
+
+
+agent.customize_collection("Company").add_action("Mark as live", {
+    "scope": "Single",
+    "execute": execute,
+})
 ```
 
-```ruby Ruby
-if !is_valid
-  result_builder.error(message: 'The company was already live!')
+## Custom notifications
+
+When customizing the notification message, you can use the {{#nodejs}}`resultBuilder`{{/nodejs}}{{#php}}`ResultBuilder`{{/php}}{{#ruby}}`ForestAdminDatasourceCustomizer::Decorators::Action::ResultBuilder`{{/ruby}} to generate different types of responses.
+
+<img src="../../assets/actions-custom-success-result.png" width="300">
+<img src="../../assets/actions-custom-error-result.png" width="300">
+
+```javascript
+agent.customizeCollection('companies', collection =>
+  collection.addAction('Mark as live', {
+    scope: 'Single',
+    execute: async (context, resultBuilder) => {
+      const isLive = false; // Company is not live
+
+      if (!isLive) {
+        // The success method will display a success notification.
+        return resultBuilder.success('Company is now live!');
+      } else {
+        // The error method will display an error notification.
+        return resultBuilder.error('The company was already live!');
+      }
+    },
+  }),
+);
+```
+
+```php
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+
+$forestAgent->customizeCollection(
+    'Company',
+    function (CollectionCustomizer $builder) {
+        $builder->addAction(
+            'Mark as live',
+            new BaseAction(
+                scope: ActionScope::SINGLE,
+                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
+                    if (/* ... Company is not live ... */) {
+                        return $resultBuilder->success('Company is now live!');
+                    } else {
+                        return $resultBuilder->error('The company was already live!');
+                    }
+                }
+            )
+        );
+    }
+);
+```
+
+```ruby
+include ForestAdminDatasourceCustomizer::Decorators::Action::Types
+include ForestAdminDatasourceCustomizer::Decorators::Action::Context
+
+@create_agent.customize_collection('company') do |collection|
+  collection.add_action(
+    'Mark as live',
+    BaseAction.new(scope: ActionScope::SINGLE) do |_context, result_builder|
+      if # Company is not live
+        result_builder.success(message: 'Company is now live!')
+      else
+        result_builder.error(message: 'The company was already live!')
+      end
+    end
+  )
 end
 ```
 
-{% hint style="info" %}
-Always handle errors gracefully and return meaningful error messages to help users understand what went wrong.
-{% endhint %}
+```python
+from typing import Union
+from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
+from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
+from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+
+
+async def execute(
+    context: ActionContextSingle, result_builder: ResultBuilder
+) -> Union[None, ActionResult]:
+    is_not_live_company = # Company is not live
+    if is_not_live_company:
+        return result_builder.success("Company is now live!")
+    else:
+        return result_builder.error("The company was already live!")
+
+agent.customize_collection("Company").add_action("Mark as live", {
+    "scope": "Single",
+    "execute": execute,
+})
+```
 
 ## HTML result
 
-Return rich formatted content displayed in a side panel. Perfect for showing detailed operation results.
+You can also return an HTML page to give more feedback to the user who triggered the Action.
 
-```javascript Node.js / Cloud
-return resultBuilder.success('Charge successful', {
-  html: `
-    <p class="c-clr-1-4 l-mt l-mb">
-      $${amount} USD has been successfully charged.
-    </p>
-    <strong class="c-form__label--read c-clr-1-2">Credit card</strong>
-    <p class="c-clr-1-4 l-mb">**** **** **** ${last4}</p>
-    <strong class="c-form__label--read c-clr-1-2">Transaction ID</strong>
-    <p class="c-clr-1-4 l-mb">${transactionId}</p>
-  `,
-});
+![](../../assets/actions-html-result-success.png)
+
+```javascript
+agent.customizeCollection('companies', collection =>
+  collection.addAction('Charge credit card', {
+    scope: 'Single',
+    execute: async (context, resultBuilder) => {
+      /* ... charge the credit card ... */
+      const wasCharged = true; // the credit card was successfully charged
+
+      if (wasCharged) {
+        return resultBuilder.success('Success', {
+          html: `
+            <p class="c-clr-1-4 l-mt l-mb">
+              \$${record.amount / 100} USD has been successfuly charged.
+            </p>
+            <strong class="c-form__label--read c-clr-1-2">Credit card</strong>
+            <p class="c-clr-1-4 l-mb">**** **** **** ${record.source.last4}</p>
+          `,
+        });
+      } else {
+        return resultBuilder.error('An error occured', {
+          html: `
+            <p class="c-clr-1-4 l-mt l-mb">
+              \$${record.amount / 100} USD has not been charged.
+            </p>
+            <strong class="c-form__label--read c-clr-1-2">Credit card</strong>
+            <p class="c-clr-1-4 l-mb">**** **** **** ${record.source.last4}</p>
+            <strong class="c-form__label--read c-clr-1-2">Reason</strong>
+            <p class="c-clr-1-4 l-mb">
+              You can not charge this credit card. The card is marked as blocked
+            </p>
+          `,
+        });
+      }
+    },
+  }),
+);
 ```
 
-```ruby Ruby
-result_builder.success(
-  message: 'Charge successful',
-  options: {
-    html: "<p class='c-clr-1-4 l-mt l-mb'>$#{amount} USD has been successfully charged.</p>
-      <strong class='c-form__label--read c-clr-1-2'>Credit card</strong>
-      <p class='c-clr-1-4 l-mb'>**** **** **** #{last4}</p>
-      <strong class='c-form__label--read c-clr-1-2'>Transaction ID</strong>
-      <p class='c-clr-1-4 l-mb'>#{transaction_id}</p>"
-  }
-)
+```php
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+
+$forestAgent->customizeCollection(
+    'Company',
+    function (CollectionCustomizer $builder) {
+    	$builder->addAction(
+    	    'Mark as live',
+    	    new BaseAction(
+    	    	scope: ActionScope::SINGLE,
+    	    	execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
+    	    	    /* ... charge the credit card ... */
+    	    	    $record = $context->getRecord(['amount', 'source:last4']);
+    	    	    if (/* ... the credit card was successfully charged ... */) {
+    	    	        return $responseBuilder->success(
+    	    	            'Success',
+    	    	            [
+    	    	                'html' => '<p class="c-clr-1-4 l-mt l-mb">'. $record['amount'] / 100 .' USD has been successfuly charged.</p>
+    	    	                    <strong class="c-form__label--read c-clr-1-2">Credit card</strong>
+    	    	                    <p class="c-clr-1-4 l-mb">**** **** **** '. $record['source']['last4'] .'</p>'
+    	    	            ]
+    	    	        );
+    	    	    } else {
+    	    	        return $responseBuilder->error(
+    	    	            'An error occured',
+    	    	            [
+    	    	                'html' => '<p class="c-clr-1-4 l-mt l-mb">'. $record['amount'] / 100 .' USD has not been charged.</p>
+    	    	                     <strong class="c-form__label--read c-clr-1-2">Credit card</strong>
+    	    	                     <p class="c-clr-1-4 l-mb">**** **** **** '. $record['source']['last4'] .'</p>
+    	    	                     <strong class="c-form__label--read c-clr-1-2">Reason</strong>
+    	    	                     <p class="c-clr-1-4 l-mb">You can not charge this credit card. The card is marked as blocked</p>'
+    	    	            ]
+    	    	        );
+    	    	    }
+    	    	}
+    	    )
+    	);
+    }
+);
 ```
 
-### HTML with error
+```ruby
+include ForestAdminDatasourceCustomizer::Decorators::Action::Types
+include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
-You can also return HTML content with an error:
-
-```javascript Node.js / Cloud
-return resultBuilder.error('Charge failed', {
-  html: `
-    <p class="c-clr-1-4 l-mt l-mb">
-      $${amount} USD has not been charged.
-    </p>
-    <strong class="c-form__label--read c-clr-1-2">Reason</strong>
-    <p class="c-clr-1-4 l-mb">
-      The credit card is marked as blocked.
-    </p>
-  `,
-});
+@create_agent.customize_collection('company') do |collection|
+  collection.add_action(
+    'Charge credit card',
+    BaseAction.new(scope: ActionScope::SINGLE) do |context, result_builder|
+      # ... charge the credit card ...
+      record = context.get_record(['amount', 'source:last4'])
+      if credit_card_successfully_charged
+        result_builder.success(
+          message: 'Success',
+          options: {
+            html: "<p class='c-clr-1-4 l-mt l-mb'>#{record['amount'] / 100} USD has been successfully charged.</p>
+              <strong class='c-form__label--read c-clr-1-2'>Credit card</strong>
+              <p class='c-clr-1-4 l-mb'>**** **** **** #{record['source']['last4']}</p>"
+          }
+        )
+      else
+        result_builder.error(
+          message: 'An error occured',
+          options: {
+            html: "<p class='c-clr-1-4 l-mt l-mb'>#{record['amount'] / 100} USD has not been charged.</p>
+              <strong class='c-form__label--read c-clr-1-2'>Credit card</strong>
+              <p class='c-clr-1-4 l-mb'>**** **** **** #{record['source']['last4']}</p>
+              <strong class='c-form__label--read c-clr-1-2'>Reason</strong>
+              <p class='c-clr-1-4 l-mb'>You can not charge this credit card. The card is marked as blocked</p>"
+          }
+        )
+      end
+    end
+  )
+end
 ```
 
-```ruby Ruby
-result_builder.error(
-  'Charge failed',
-  html: "<p class='c-clr-1-4 l-mt l-mb'>$#{amount} USD has not been charged.</p>
-    <strong class='c-form__label--read c-clr-1-2'>Reason</strong>
-    <p class='c-clr-1-4 l-mb'>The credit card is marked as blocked.</p>"
-)
+```python
+from typing import Union
+from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
+from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
+from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+
+async def execute(
+    context: ActionContextSingle, result_builder: ResultBuilder
+) -> Union[None, ActionResult]:
+    # ... charge the credit card ...
+    record = context.get_record(['amount', 'source:last4'])
+    if credit_card_successfully_charged:
+        return result_builder.success(
+            '<p class="c-clr-1-4 l-mt l-mb">{record["amount"] / 100}  USD has been '
+            + 'successfully charged.</p>'
+            + '<strong class="c-form__label--read c-clr-1-2">Credit card</strong>'
+            + '<p class="c-clr-1-4 l-mb">**** **** **** {record["source"]["last4"]} '
+            + '</p>',
+            {"type": "html"}
+        )
+    else:
+        return result_builder.error(
+            '<p class="c-clr-1-4 l-mt l-mb">{record["amount"] / 100} USD has not '
+            + 'been charged.</p>'
+            + '<strong class="c-form__label--read c-clr-1-2">Credit card</strong>'
+            + '<p class="c-clr-1-4 l-mb">**** **** **** {$record["source"]["last4"]}'
+            + '</p>'
+            + '<strong class="c-form__label--read c-clr-1-2">Reason</strong>'
+            + '<p class="c-clr-1-4 l-mb">You can not charge this credit card. The '
+            + 'card is marked as blocked</p>',
+            {"type": "html"}
+        )
+
+agent.customize_collection("Company").add_action("Charge credit card", {
+    "scope": "Single",
+    "execute": execute,
+})
 ```
 
-## File download
-
-Generate and download files (PDFs, CSVs, Excel, etc.).
+## File generation
 
 {% hint style="warning" %}
-Actions that generate files must set `generateFile: true` in their configuration. This flag prevents using other result types (notifications, HTML) in the same action.
+Because of technical limitations, Smart Actions that generate files should be flagged as such with the `generateFile` option.
+
+This will cause the GUI to download the output of the action, but will also prevent from being able to use the `resultBuilder` to display notifications, errors, or HTML content.
 {% endhint %}
 
-```javascript Node.js / Cloud
-collection.addAction('Download report', {
+Smart actions can be used to generate or download files.
+
+The example code below will trigger a file download (with the file named `filename.txt`, containing `StringThatWillBeInTheFile` using `text/plain` mime-type).
+
+```javascript
+collection.addAction('Download a file', {
   scope: 'Global',
-  generateFile: true,  // Required for file downloads
-  execute: async (context, resultBuilder) => {
-    // From a string
-    return resultBuilder.file(
-      'Report content here',
-      'report.txt',
-      'text/plain'
-    );
-
-    // From a Buffer
-    const buffer = Buffer.from('Report content');
-    return resultBuilder.file(buffer, 'report.txt', 'text/plain');
-
-    // From a stream
-    const stream = fs.createReadStream('path/to/file.pdf');
-    return resultBuilder.file(stream, 'report.pdf', 'application/pdf');
-  },
-});
-```
-
-```ruby Ruby
-collection.add_action(
-  'Download report',
-  BaseAction.new(
-    scope: ActionScope::GLOBAL,
-    is_generate_file: true
-  ) do |_context, result_builder|
-    file = File.open('report.pdf', 'r')
-    content = file.read
-    file.close
-
-    result_builder.file(
-      content: content,
-      name: 'report.pdf',
-      mime_type: 'application/pdf'
-    )
-  end
-)
-```
-
-### Common MIME types
-
-| File type | MIME type |
-|-----------|-----------|
-| PDF | `application/pdf` |
-| CSV | `text/csv` |
-| Excel (xlsx) | `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` |
-| Excel (xls) | `application/vnd.ms-excel` |
-| JSON | `application/json` |
-| ZIP | `application/zip` |
-| Plain text | `text/plain` |
-| HTML | `text/html` |
-
-### Example: Generate CSV
-
-```javascript Node.js / Cloud
-collection.addAction('Export to CSV', {
-  scope: 'Bulk',
+  // This option is required to trigger the file download.
   generateFile: true,
+
   execute: async (context, resultBuilder) => {
-    const records = await context.getRecords(['id', 'name', 'email']);
+    const random = Math.random();
 
-    // Generate CSV content
-    const header = 'ID,Name,Email\n';
-    const rows = records.map(r => `${r.id},"${r.name}","${r.email}"`).join('\n');
-    const csv = header + rows;
-
-    return resultBuilder.file(csv, 'export.csv', 'text/csv');
+    if (random < 0.33) {
+      // Files can be generated from JavaScript strings.
+      return resultBuilder.file(
+        'StringThatWillBeInTheFile',
+        'filename.txt',
+        'text/plain',
+      );
+    } else if (random < 0.66) {
+      // Or from a Buffer.
+      const buffer = Buffer.from('StringThatWillBeInTheFile');
+      return resultBuilder.file(buffer, 'filename.txt', 'text/plain');
+    } else {
+      // Or from a stream.
+      const stream = fs.createReadStream('path/to/file');
+      return resultBuilder.file(stream, 'filename.txt', 'text/plain');
+    }
   },
 });
 ```
 
-```ruby Ruby
-collection.add_action(
-  'Export to CSV',
-  BaseAction.new(
-    scope: ActionScope::BULK,
-    is_generate_file: true
-  ) do |context, result_builder|
-    records = context.get_records(['id', 'name', 'email'])
+```php
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
 
-    # Generate CSV content
-    header = "ID,Name,Email\n"
-    rows = records.map { |r| "#{r['id']},\"#{r['name']}\",\"#{r['email']}\"" }.join("\n")
-    csv = header + rows
+$forestAgent->customizeCollection(
+    'Company',
+    function (CollectionCustomizer $builder) {
+        $builder->addAction(
+            'Download a file',
+            new BaseAction(
+                scope: ActionScope::GLOBAL,
+                isGenerateFile: true,
+                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
+                    $myfile = fopen('filename.txt', 'w');
+                    fwrite($myfile, 'StringThatWillBeInTheFile');
+                    fclose($myfile);
 
-    result_builder.file(content: csv, name: 'export.csv', mime_type: 'text/csv')
-  end
-)
-```
-
-### Example: Generate PDF
-
-```javascript Node.js / Cloud
-collection.addAction('Generate invoice', {
-  scope: 'Single',
-  generateFile: true,
-  execute: async (context, resultBuilder) => {
-    const order = await context.getRecord(['id', 'total', 'customer:name']);
-
-    // Generate PDF (using a library like pdfkit)
-    const pdf = await generateInvoicePDF(order);
-
-    return resultBuilder.file(
-      pdf,
-      `invoice-${order.id}.pdf`,
-      'application/pdf'
-    );
-  },
-});
-```
-
-```ruby Ruby
-collection.add_action(
-  'Generate invoice',
-  BaseAction.new(
-    scope: ActionScope::SINGLE,
-    is_generate_file: true
-  ) do |context, result_builder|
-    order = context.get_record(['id', 'total', 'customer:name'])
-
-    # Generate PDF (using a library like prawn)
-    pdf = generate_invoice_pdf(order)
-
-    result_builder.file(
-      content: pdf,
-      name: "invoice-#{order['id']}.pdf",
-      mime_type: 'application/pdf'
-    )
-  end
-)
-```
-
-## Redirect
-
-Redirect users to another page after the action executes. Works for both internal Forest Admin pages and external URLs.
-
-### Internal redirect
-
-Redirect to another page within Forest Admin:
-
-```javascript Node.js / Cloud
-return resultBuilder.redirectTo(
-  '/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity'
+                    return $resultBuilder->file('filename.txt', 'filename.txt', 'text/plain');
+                }
+            )
+        );
+    }
 );
 ```
 
-```ruby Ruby
-result_builder.redirect_to(
-  '/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity'
-)
+```ruby
+include ForestAdminDatasourceCustomizer::Decorators::Action::Types
+include ForestAdminDatasourceCustomizer::Decorators::Action::Context
+
+@create_agent.customize_collection('company') do |collection|
+  collection.add_action(
+    'Download a file',
+    BaseAction.new(scope: ActionScope::GLOBAL, is_generate_file: true) do |_context, result_builder|
+      my_file = File.open('filename.txt', 'w')
+      my_file.write('StringThatWillBeInTheFile')
+      my_file.close
+
+      result_builder.file(content: 'filename.txt', name: 'filename.txt', mime_type: 'text/plain')
+    end
+  )
+end
 ```
 
-### External redirect
+```python
+from typing import Union
+from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
+from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
+from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
 
-Redirect to an external URL:
 
-```javascript Node.js / Cloud
-return resultBuilder.redirectTo(
-  'https://www.example.com/tracking?id=ZW924750388GB'
+async def execute(
+    context: ActionContextSingle, result_builder: ResultBuilder
+) -> Union[None, ActionResult]:
+    return result_builder.file(
+        io.BytesIO("StringThatWillBeInTheFile"
+    ).encode("utf-8"), "filename.txt", "text/plain")
+
+agent.customize_collection("Company").add_action("Download a file", {
+    "scope": "Single",
+    "generate_file": True,
+    "execute": execute,
+})
+```
+
+## Redirections
+
+To streamline your operation workflow, it could make sense to redirect to another page after an Action has successfully been executed.
+
+It is possible using the `redirectTo` function.
+
+The redirection works both for internal (`\*.forestadmin.com` pages) and external links.
+
+{% tabs %} {% tab title="Internal link" %}
+
+```javascript
+agent.customizeCollection('companies', collection =>
+  collection.addAction('Mark as live', {
+    scope: 'Single',
+    execute: async (context, resultBuilder) => {
+      return resultBuilder.redirectTo(
+        '/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity',
+      );
+    },
+  }),
 );
 ```
 
-```ruby Ruby
-result_builder.redirect_to(
-  'https://www.example.com/tracking?id=ZW924750388GB'
-)
+```php
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+
+$forestAgent->customizeCollection(
+    'Company',
+    function (CollectionCustomizer $builder) {
+        $builder->addAction(
+            'Mark as live',
+            new BaseAction(
+                scope: ActionScope::SINGLE,
+                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
+                    return $resultBuilder->redirectTo('/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity');
+                }
+            )
+        );
+    }
+);
 ```
 
-### Example: Redirect to created record
-
-```javascript Node.js / Cloud
-collection.addAction('Create and view', {
-  scope: 'Global',
-  execute: async (context, resultBuilder) => {
-    // Create a new record
-    const newRecord = await createRecord(context.formValues);
-
-    // Redirect to the new record's detail page
-    return resultBuilder.redirectTo(
-      `/MyProject/Production/data/companies/index/record/companies/${newRecord.id}/details`
-    );
-  },
-});
+```ruby
+include ForestAdminDatasourceCustomizer::Decorators::Action::Types
+include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 ```
 
-```ruby Ruby
-collection.add_action(
-  'Create and view',
-  BaseAction.new(scope: ActionScope::GLOBAL) do |context, result_builder|
-    # Create a new record
-    new_record = create_record(context.form_values)
+```python
+from typing import Union
+from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
+from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
 
-    # Redirect to the new record's detail page
-    result_builder.redirect_to(
-      "/MyProject/Production/data/companies/index/record/companies/#{new_record['id']}/details"
+async def execute(
+    context: ActionContextSingle, result_builder: ResultBuilder
+) -> Union[None, ActionResult]:
+    return result_builder.redirect(
+        "/MyProject/MyEnvironment/MyTeam/data/20/index/record/20/108/activity"
     )
-  end
-)
+
+agent.customize_collection("Company").add_action("Mark as live", {
+    "scope": "Single",
+    "execute": execute,
+})
 ```
 
-## Webhook
+{% endtab %} {% tab title="External link" %}
 
-Trigger an HTTP callback from the user's browser. Useful for logging into third-party applications or triggering operations on the user's behalf.
+```javascript
+agent.customizeCollection('companies', collection =>
+  collection.addAction('Mark as live', {
+    scope: 'Single',
+    execute: async (context, resultBuilder) => {
+      return resultBuilder.redirectTo(
+        'https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB',
+      );
+    },
+  }),
+);
+```
+
+```php
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+
+$forestAgent->customizeCollection(
+    'Company',
+    function (CollectionCustomizer $builder) {
+        $builder->addAction(
+            'Mark as live',
+            new BaseAction(
+                scope: ActionScope::SINGLE,
+                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
+                    return $resultBuilder->redirectTo('https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB');
+                }
+            )
+        );
+    }
+);
+```
+
+```python
+from typing import Union
+from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
+from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
+from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+
+
+async def execute(
+    context: ActionContextSingle, result_builder: ResultBuilder
+) -> Union[None, ActionResult]:
+    return result_builder.redirect(
+        "https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB"
+    )
+
+agent.customize_collection("Company").add_action("Mark as live", {
+    "scope": "Single",
+    "execute": execute,
+})
+```
+
+{% endtab %} {% endtabs %}
+
+## Webhooks
+
+After an action you can set up an HTTP (or HTTPS) callback - a webhook - to forward information to other applications.
+
+Note that the webhook will be triggered from the user's browser, so it will be subject to CORS restrictions.
+
+Its intended use is often to perform a login on a third-party application or to trigger a background job on the current user's behalf.
+
+```javascript
+agent.customizeCollection('companies', collection =>
+  collection.addAction('Mark as live', {
+    scope: 'Single',
+    execute: async (context, resultBuilder) => {
+      return resultBuilder.webhook(
+        'http://my-company-name', // Webhook URL.
+        'POST', // Webhook method (typically a POST).
+        {}, // Webhook headers if needed.
+        { adminToken: 'your-admin-token' }, // Webhook body (only JSON is supported).
+      );
+    },
+  }),
+);
+```
+
+```php
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+
+$forestAgent->customizeCollection(
+    'Company',
+    function (CollectionCustomizer $builder) {
+        $builder->addAction(
+            'Mark as live',
+            new BaseAction(
+                scope: ActionScope::SINGLE,
+                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
+                    return $resultBuilder->webhook(
+                        'http://my-company-name', // The url of the company providing the service.
+                        'POST', // The method you would like to use (typically a POST).
+                        [], // You can add some headers if needed.
+                        ['adminToken' => 'your-admin-token'], // A body to send to the url.
+                    );
+                }
+            )
+        );
+    }
+);
+```
+
+```ruby
+include ForestAdminDatasourceCustomizer::Decorators::Action::Types
+include ForestAdminDatasourceCustomizer::Decorators::Action::Context
+
+@create_agent.customize_collection('company') do |collection|
+  collection.add_action(
+    'Mark as live',
+    BaseAction.new(scope: ActionScope::SINGLE) do |_context, result_builder|
+      result_builder.webhook(
+        url: 'http://my-company-name', # The url of the company providing the service.
+        method: 'POST', # The method you would like to use (typically a POST).
+        headers: {}, # You can add some headers if needed.
+        body: { adminToken: 'your-admin-token' } # A body to send to the url.
+      )
+    end
+  )
+end
+```
+
+```python
+from typing import Union
+from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
+from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
+from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
+
+
+async def execute(
+    context: ActionContextSingle, result_builder: ResultBuilder
+) -> Union[None, ActionResult]:
+    return result_builder.webhook(
+        "http://my-company-name",  # The url of the company providing the service.
+        "POST",  # The method you would like to use (typically a POST).
+        {},  # You can add some headers if needed.
+        {"adminToken": "your-admin-token"}  # A body to send to the url.
+    )
+
+agent.customize_collection("Company").add_action("Mark as live", {
+    "scope": "Single",
+    "execute": execute,
+})
+```
+
+{{#nodejs,python}}
 
 {% hint style="warning" %}
-Webhooks are triggered from the user's browser and are subject to CORS restrictions. Make sure the target server accepts requests from Forest Admin domains.
+Please note that the webhook function and the setHeader function operate independently and do not modify the same HTTP call. Webhook headers will be sent along with the webhook call, while setHeaders will modify directly the Action response headers.
 {% endhint %}
 
-```javascript Node.js / Cloud
-return resultBuilder.webhook(
-  'https://api.example.com/callback',  // URL
-  'POST',                                // Method
-  { Authorization: 'Bearer token' },     // Headers
-  { userId: 123, action: 'approve' }     // Body (JSON)
+## Response headers
+
+Sometimes you may want to setup custom response headers after action execution, the {{#nodejs,php}}`setHeader`{{/nodejs,php}}{{#python}}`set_header`{{/python}} function is here to reach out this goal.
+
+Before executing any end function described above, you should be able to add headers to the action response like the exemple below.
+
+```javascript
+agent.customizeCollection('companies', collection =>
+  collection.addAction('Mark as live', {
+    scope: 'Single',
+    execute: async (context, resultBuilder) => {
+      return resultBuilder
+        .setHeader('myHeaderName', 'myHeaderValue')
+        .redirectTo(
+          'https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB',
+        );
+    },
+  }),
 );
 ```
 
-```ruby Ruby
-result_builder.webhook(
-  url: 'https://api.example.com/callback',
-  method: 'POST',
-  headers: { 'Authorization' => 'Bearer token' },
-  body: { userId: 123, action: 'approve' }
-)
+```php
+use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\BaseAction;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Context\ActionContextSingle;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\ResultBuilder;
+use ForestAdmin\AgentPHP\DatasourceCustomizer\Decorators\Actions\Types\ActionScope;
+
+$forestAgent->customizeCollection(
+    'Company',
+    function (CollectionCustomizer $builder) {
+        $builder->addAction(
+            'Mark as live',
+            new BaseAction(
+                scope: ActionScope::SINGLE,
+                execute: function(ActionContextSingle $context, ResultBuilder $resultBuilder) {
+                    return $resultBuilder->setHeader('myHeaderName', 'myHeaderValue')
+                    	->redirectTo(
+                    		'https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB'
+                    	);
+                }
+            )
+        );
+   }
+);
 ```
 
-### Example: Single sign-on
+```python
+from forestadmin.datasource_toolkit.decorators.action.context.single import ActionContextSingle
+from forestadmin.datasource_toolkit.decorators.action.result_builder import ResultBuilder
+from forestadmin.datasource_toolkit.interfaces.actions import ActionResult
 
-```javascript Node.js / Cloud
-collection.addAction('Login to external tool', {
-  scope: 'Single',
-  execute: async (context, resultBuilder) => {
-    const user = await context.getRecord(['email', 'externalId']);
 
-    // Generate a temporary token
-    const token = await generateSSOToken(user.externalId);
-
-    // Trigger login in the user's browser
-    return resultBuilder.webhook(
-      'https://external-tool.com/sso/login',
-      'POST',
-      {},
-      { token, email: user.email }
-    );
-  },
-});
-```
-
-```ruby Ruby
-collection.add_action(
-  'Login to external tool',
-  BaseAction.new(scope: ActionScope::SINGLE) do |context, result_builder|
-    user = context.get_record(['email', 'externalId'])
-
-    # Generate a temporary token
-    token = generate_sso_token(user['externalId'])
-
-    # Trigger login in the user's browser
-    result_builder.webhook(
-      url: 'https://external-tool.com/sso/login',
-      method: 'POST',
-      headers: {},
-      body: { token: token, email: user['email'] }
+async def execute(
+    context: ActionContextSingle, result_builder: ResultBuilder
+) -> Union[None, ActionResult]:
+    return result_builder.set_header("myHeaderName", "myHeaderValue").redirect(
+        "https://www.royalmail.com/portal/rm/track?trackNumber=ZW924750388GB"
     )
-  end
-)
+
+agent.customize_collection("companies").add_action("Mark as live", {
+    "scope": "Single",
+    "execute": execute
+})
 ```
 
-### Example: Trigger background job
-
-```javascript Node.js / Cloud
-collection.addAction('Process data', {
-  scope: 'Bulk',
-  execute: async (context, resultBuilder) => {
-    const ids = await context.getRecordIds();
-
-    // Trigger a background job with user context
-    return resultBuilder.webhook(
-      'https://api.mycompany.com/jobs/process',
-      'POST',
-      { 'X-API-Key': process.env.API_KEY },
-      {
-        recordIds: ids,
-        userId: context.caller.id,
-        triggeredAt: new Date().toISOString()
-      }
-    );
-  },
-});
-```
-
-```ruby Ruby
-collection.add_action(
-  'Process data',
-  BaseAction.new(scope: ActionScope::BULK) do |context, result_builder|
-    ids = context.get_record_ids
-
-    # Trigger a background job with user context
-    result_builder.webhook(
-      url: 'https://api.mycompany.com/jobs/process',
-      method: 'POST',
-      headers: { 'X-API-Key' => ENV['API_KEY'] },
-      body: {
-        recordIds: ids,
-        userId: context.caller.id,
-        triggeredAt: Time.now.iso8601
-      }
-    )
-  end
-)
-```
-
-## Combining results with operations
-
-### Success with HTML details
-
-```javascript Node.js / Cloud
-execute: async (context, resultBuilder) => {
-  const result = await performComplexOperation();
-
-  if (result.success) {
-    return resultBuilder.success('Operation completed', {
-      html: `
-        <h3>Summary</h3>
-        <p>Processed ${result.count} items</p>
-        <ul>
-          ${result.items.map(i => `<li>${i}</li>`).join('')}
-        </ul>
-      `,
-    });
-  } else {
-    return resultBuilder.error('Operation failed', {
-      html: `<p>Error: ${result.error}</p>`,
-    });
-  }
-}
-```
-
-```ruby Ruby
-execute: ->(context, result_builder) {
-  result = perform_complex_operation
-
-  if result[:success]
-    result_builder.success(
-      'Operation completed',
-      html: "<h3>Summary</h3>
-        <p>Processed #{result[:count]} items</p>
-        <ul>#{result[:items].map { |i| "<li>#{i}</li>" }.join}</ul>"
-    )
-  else
-    result_builder.error(
-      'Operation failed',
-      html: "<p>Error: #{result[:error]}</p>"
-    )
-  end
-}
-```
-
-### Conditional redirect
-
-```javascript Node.js / Cloud
-execute: async (context, resultBuilder) => {
-  const order = await context.getRecord(['status', 'id']);
-
-  if (order.status === 'pending') {
-    // Update and redirect to details
-    await updateOrder(order.id, { status: 'approved' });
-    return resultBuilder.redirectTo(`/orders/${order.id}`);
-  } else {
-    // Already processed
-    return resultBuilder.error('Order was already processed');
-  }
-}
-```
-
-```ruby Ruby
-execute: ->(context, result_builder) {
-  order = context.get_record(['status', 'id'])
-
-  if order['status'] == 'pending'
-    # Update and redirect to details
-    update_order(order['id'], { status: 'approved' })
-    result_builder.redirect_to("/orders/#{order['id']}")
-  else
-    # Already processed
-    result_builder.error('Order was already processed')
-  end
-}
-```
-
+{{/nodejs,python}}

@@ -1,84 +1,128 @@
----
-title: Environments & Configuration Management
----
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers, DevOps
+Once your project successfully installed, a local **Development** environment is created for you, with a temporary `pre-deploy-to-production` branch (more on _branches_ later).
 
-## Description
+Your first objective should be to deploy to **Production**.
 
-Manage multiple environments (development, staging, production) for your Forest Admin setup.
+### Deploying to Production
 
-## Sources to migrate
+Forest Admin is meant to help you manage your operations: this can only happen if your team operates on your Production data. To do so, you need to **create your Production Environment**.
 
-- `developer-guide-agent-v2/sources/deployment/using-branches.md`
-- `documentation-user-guide/project-settings/environments-tab.md`
-- Environment management documentation
+Click "Deploy to production" on the top banner or in the "Environments" tab of your Project settings.
 
-## Content outline
+![](../assets/environment-deploy-to-production.png)
 
-1. **Environments Overview**
-   - What are environments
-   - Development, Staging, Production
-   - Environment isolation
-   - Use cases
+#### Deploy your Agent
 
-2. **Creating Environments**
-   - UI-based creation
-   - CLI creation
-   - Environment settings
-   - Naming conventions
+In the first step, you need to input your Agent's URL. This is the URL of the server onto which you have deployed (or will soon deploy) your Agent's codebase:
 
-3. **Environment Configuration**
-   - Environment variables
-   - Database connections (per environment)
-   - API keys
-   - Secrets management
+{% hint style="info" %}
+If you need help deploying your Agent's codebase, here are step-by-step guides showing how it can be done [on AWS](./cloud/deploy-on-aws.md), [on Heroku](cloud/deploy-on-heroku.md), [on Google Cloud Platform](cloud/deploy-on-gcp.md) or [on a standard Ubuntu server](cloud/deploy-on-ubuntu.md).
+{% endhint %}
 
-4. **Environment Variables**
-   - FOREST_ENV_SECRET (unique per environment)
-   - FOREST_AUTH_SECRET
-   - DATABASE_URL
-   - Custom variables
+![](../assets/environment-deploy-step-1.png)
 
-5. **Branches & Environments**
-   - Branch per environment
-   - Origin branches
-   - Branch inheritance
-   - Merging changes
+{% hint style="warning" %}
+Note that for security reasons, your agent must use the **HTTPS** protocol.
+{% endhint %}
 
-6. **Workflow**
-   - Development → Staging → Production
-   - Testing in staging
-   - Promoting changes
-   - Rollback strategies
+{% hint style="info" %}
+The URL must not end with a trailing `/`.
+{% endhint %}
 
-7. **Layout Sync**
-   - Layout per environment
-   - Syncing layouts
-   - Layout versioning
-   - Conflict resolution
+#### Connect to your database
 
-8. **Best Practices**
-   - Mirror production in staging
-   - Environment parity
-   - Configuration management
-   - Secrets security
-   - Testing procedures
+In the next step, you need to fill out your Production database credentials:
 
-9. **Troubleshooting**
-   - Wrong environment
-   - Configuration mismatch
-   - Sync issues
+![](../assets/environment-deploy-step-2.png)
 
-## Migration notes
+{% hint style="info" %}
+Your **database credentials** never leave your browser and are solely used to generate environment variables on the next step, so they are **never exposed**.
+{% endhint %}
 
-- HIGH priority - essential for teams
-- Clear workflow diagrams
-- Step-by-step guides
+#### Set your environment variables
 
-## Related pages
+The final step requires that you add environment variables to your server. Follow the on-screen instructions:
 
-- [Development Workflow](/guides/deployment/development-workflow)
-- [Reference > CLI > Branch](/reference/cli/branch)
-- [Process > Developer Workflow > Environments](/product/process/for-tech-teams/developer-workflow/environments-and-branches)
+![](../assets/environment-deploy-step-3.png)
+
+Once your server is successfully detected and running with the indicated environment variables, a "Finish" button will appear. Click on it to finalize the creation of your Production Environment.
+
+### Creating a Remote Environment
+
+Now that your admin panel is live in production, you might want to add an extra step for testing purposes. Forest Admin allows you to create Remote Environments (for test, qa, staging, pre-production,... purposes).
+
+To create a new Remote Environment, go to your Project settings **(1)**:
+
+![](../assets/environment-project-settings.png)
+
+Then from the "Environments" Tab, click on "Add a new environment" **(2)**.
+
+![](../assets/environment-add-new.png)
+
+{% hint style="info" %}
+You can choose to deploy to a Remote Environment **before** going to production (see below), it's up to you.
+{% endhint %}
+
+![](../assets/environment-deploy-to.png)
+
+#### Choose your Environment name
+
+You'll first be asked to input the name of the Remote Environment you wish to create:
+
+![](../assets/environment-remote-step-1.png)
+
+#### Enter your Agent's URL for that Environment
+
+Deploy your Agent server in this specific environment, then input its URL:
+
+![](../assets/environment-remote-step-2.png)
+
+#### Connect to your database
+
+You need a separate database for this new environment: if you're creating a _Staging_, then it must be your _staging_ data, so your _staging_ database.
+
+![](../assets/environment-remote-step-3.png)
+
+{% hint style="info" %}
+Your **database credentials** never leave your browser and are solely used to generate environment variables on the next step, so they are **never exposed**.
+{% endhint %}
+
+#### Set your environment variables
+
+The final step requires that you add environment variables to your server. Follow the on-screen instructions:
+
+![](../assets/environment-remote-step-4.png)
+
+Once your server is successfully detected and running with the indicated environment variables, a **Finish** button will appear. Click on it to finalize the creation of your new Remote Environment.
+
+### Change Environment origin
+
+You can change the origins of your Environments to create complex workflows, for instance, `dev > staging > preprod > production`.
+All the layouts of an environment will be generated based on its parent's layout.
+
+To do so, click on the Environment you wish to change the origin of, and from its details page, select the desired origin in the "Set Origin" section.
+
+![](../assets/environment-set-origin.png)
+
+{% hint style="warning" %}
+All child Environments will be refreshed based on the new hierarchy.
+{% endhint %}
+
+### Set an Environment as Production
+
+A standard project usually has a production and at least a staging Environment, but you may be using other Remote Environments. At some point, you may feel the need to set another Environment as your Production Environment (also known as "reference").
+
+{% hint style="info" %}
+To set as production an Environment it should have the actual reference as origin.
+{% endhint %}
+
+To do so, click on the Environment you wish to set as production, and from its details page, click "Set as production".
+
+![](../assets/environment-set-as-production.png)
+
+{% hint style="warning" %}
+The actual reference will take the new production as the origin. All children layouts will be refreshed. Any layout change that is not applicable will be ignored.
+{% endhint %}
+
+### Delete an Environment
+
+You may also delete an Environment. **Be very careful** as there is no going back!
