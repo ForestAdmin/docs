@@ -20,11 +20,10 @@ You can retrieve the SQL query of a `Live query chart` by clicking on the `Cog` 
 
 The next step will be to create a new [API chart](../../../../agent-customization/charts/README.md) using the SQL query you retrieved in the previous step.
 
-<details>
-<summary><strong>agent.addChart('appointments', async (context, resultBuilder) => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.addChart('appointments', async (context, resultBuilder) => {" %}
 ```javascript
-  const rows = await context.dataSource.getCollection('appointments').nativeDriver
+const rows = await context.dataSource.getCollection('appointments').nativeDriver
     .rawQuery(`
       SELECT current.count AS value, previous.count AS previous
       FROM (
@@ -40,14 +39,11 @@ The next step will be to create a new [API chart](../../../../agent-customizatio
   return resultBuilder.value(rows[0].value, rows[0].previous);
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.customize
       @create_agent.add_chart('appointments') do |_context, result_builder|
         rows = ActiveRecord::Base.connection.execute("
@@ -68,8 +64,8 @@ The next step will be to create a new [API chart](../../../../agent-customizatio
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Step 3: Retrieve the URL of the generated chart
 

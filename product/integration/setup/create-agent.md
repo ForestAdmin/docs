@@ -1,6 +1,5 @@
-<details>
-<summary><strong>const { createAgent } = require('@forestadmin/agent');</strong></summary>
-
+{% tabs %}
+{% tab title="const { createAgent } = require('@forestadmin/agent');" %}
 ```javascript
 const agent = createAgent({
   // Mandatory options (those will be provided during onboarding)
@@ -21,14 +20,11 @@ const agent = createAgent({
   maxBodySize: ...,
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
-
+{% tab title="ForestAdminRails.configure do |config|" %}
 ```ruby
-  # Mandatory options (those will be provided during onboarding)
+# Mandatory options (those will be provided during onboarding)
   config.auth_secret = 'YOUR_AUTH_SECRET'
   config.env_secret = 'YOUR_ENV_SECRET'
   config.is_production = false
@@ -42,8 +38,8 @@ const agent = createAgent({
   config.schema_path = ...
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {{/ruby}}
 
@@ -132,32 +128,27 @@ You may want to have control of the logger which is used by Forest Admin.
 
 This configuration key allows to format and route logs to a logging service, instead of printing them in stdout.
 
-<details>
-<summary><strong>createAgent({</strong></summary>
-
+{% tabs %}
+{% tab title="createAgent({" %}
 ```javascript
-  // ...
+// ...
   loggerLevel: 'Info', // Valid values are 'Debug', 'Info', 'Warn' and 'Error'
   logger: (logLevel, message) => {
     console.error(logLevel, message);
   },
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
-
+{% tab title="ForestAdminRails.configure do |config|" %}
 ```ruby
-  # ...
+# ...
   config.logger_level = 'Info' # Valid values are 'Debug', 'Info', 'Warn' and 'Error'
   config.logger = -> (log_level, message) { puts "#{log_level}: #{message}" }
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ### {{#nodejs}}`permissionsCacheDurationInSeconds`{{/nodejs}}{{#ruby}}`permissions_cache_duration_in_seconds`{{/ruby}} (number, defaults to 15 minutes)
@@ -168,27 +159,23 @@ Those permissions are enforced both in the frontend, and in your agent.
 
 This configuration variable allows to customize how often the agent should ask the server to provide the permissions table.
 
-<details>
-<summary><strong>createAgent({</strong></summary>
-
+{% tabs %}
+{% tab title="createAgent({" %}
 ```javascript
-  // ...
+// ...
   permissionsCacheDurationInSeconds: 15 * 60,
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
-
+{% tab title="ForestAdminRails.configure do |config|" %}
 ```ruby
-  # ...
+# ...
   config.permission_expiration = 15 * 60
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### `prefix` (string, default to empty string)
 
@@ -212,27 +199,23 @@ This is done so that customers using reverse proxies can implement their routing
 
 <!-- markdown-link-check-enable -->
 
-<details>
-<summary><strong>createAgent({</strong></summary>
-
+{% tabs %}
+{% tab title="createAgent({" %}
 ```javascript
-  // ...
+// ...
   prefix: 'api',
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
-
+{% tab title="ForestAdminRails.configure do |config|" %}
 ```ruby
-  # ...
+# ...
   config.prefix = 'api'
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### {{#nodejs}}`schemaPath`{{/nodejs}}{{#ruby}}`schema_path`{{/ruby}} (string, defaults to '.forestadmin-schema.json')
 
@@ -245,27 +228,23 @@ This allows to:
 - Work around read only folders (for instance, if developing using a read only docker volume).
 - Have flexibility when using custom builds in production (code minification, ...)
 
-<details>
-<summary><strong>createAgent({</strong></summary>
-
+{% tabs %}
+{% tab title="createAgent({" %}
 ```javascript
-  // ...
+// ...
   schemaPath: '/volumes/fa-agent-configuration/schema.json',
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>ForestAdminRails.configure do |config|</strong></summary>
-
+{% tab title="ForestAdminRails.configure do |config|" %}
 ```ruby
-  # ...
+# ...
   config.schema_path = '/volumes/fa-agent-configuration/schema.json'
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {{#nodejs}}
 

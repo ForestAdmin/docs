@@ -17,9 +17,8 @@ Using them always starts with the same step: use the {{#nodejs}}`customizeCollec
 {{#nodejs,ruby}}It takes two arguments: the collection name and a callback function.{{/nodejs,ruby}}
 
 
-<details>
-<summary><strong>const { createAgent } = require('@forestadmin/agent');</strong></summary>
-
+{% tabs %}
+{% tab title="const { createAgent } = require('@forestadmin/agent');" %}
 ```javascript
 createAgent()
   // Add your data source.
@@ -36,14 +35,11 @@ createAgent()
     // ...
   });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.setup!
       database_configuration = Rails.configuration.database_configuration
       datasource = ForestAdminDatasourceActiveRecord::Datasource.new(database_configuration[Rails.env])
@@ -63,8 +59,8 @@ createAgent()
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {{#nodejs}}

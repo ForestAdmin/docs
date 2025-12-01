@@ -47,11 +47,10 @@ Fields are configurable using the following properties:
 | {{#ruby}}`enum_values`{{/ruby}} | array of strings | Change the list of possible values of the field when type is . |
 {{/ruby}}
 
-<details>
-<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customer', collection => {" %}
 ```javascript
-  collection.addAction('Charge credit card', {
+collection.addAction('Charge credit card', {
     scope: 'Single',
     form: [
       {
@@ -75,12 +74,9 @@ Fields are configurable using the following properties:
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -107,10 +103,9 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
     end
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## References to records
@@ -126,11 +121,10 @@ Note that the value will be stored in an array as the target collection may be u
 When not using a composite primary key, the array can be assumed to contain a single value.
 {% endhint %}
 
-<details>
-<summary><strong>agent.customizeCollection('ticket', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('ticket', collection => {" %}
 ```javascript
-  collection.addAction('Assign ticket', {
+collection.addAction('Assign ticket', {
     scope: 'Single',
     form: [
       {
@@ -149,12 +143,9 @@ When not using a composite primary key, the array can be assumed to contain a si
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -179,7 +170,7 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

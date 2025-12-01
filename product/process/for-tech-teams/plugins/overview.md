@@ -38,20 +38,16 @@ Each Plugin is defined differently depending on your platform:
 - **Ruby**: A `class` that implements the `Plugin abstract class` and can perform customizations at either Agent level, Collection level, or both.
 - **Python**: A `class` that implements the `Plugin interface` with an `async method` and can perform customizations at either Agent level, Collection level, or both.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 export async function removeTimestamps(dataSource, collection, options) {
   // ... call customization methods here
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
   def run(datasource, collection, options)
@@ -59,8 +55,8 @@ class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ### Plugin parameters
@@ -103,9 +99,8 @@ Three parameters are provided to your plugin:
 
 Here's a simple plugin that removes timestamp fields from collections:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 export async function removeTimestamps(dataSource, collection) {
   // Allow the plugin to be used both on the dataSource or on individual collections
@@ -118,12 +113,9 @@ export async function removeTimestamps(dataSource, collection) {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
   def run(datasource, collection, options)
@@ -138,8 +130,8 @@ class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Making your Plugin act differently depending on the Collection
@@ -148,9 +140,8 @@ When making a Plugin, you may want it to generalize to many different Collection
 
 This can be achieved by adopting different behavior depending on the `schema` of the Collection being targeted.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 export async function removeTimestamps(dataSource, collection, options) {
   for (const currentCollection of dataSource.collections) {
@@ -164,12 +155,9 @@ export async function removeTimestamps(dataSource, collection, options) {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
   def run(datasource, _collection, _options)
@@ -185,8 +173,8 @@ class RemoveTimestamps < ForestAdminDatasourceCustomizer::Plugins::Plugin
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Platform-Specific Guides

@@ -112,9 +112,8 @@ curl -X GET \
   -H 'Content-Type: application/json'
 ```
 
-<details>
-<summary><strong>JavaScript</strong></summary>
-
+{% tabs %}
+{% tab title="JavaScript" %}
 ```javascript
 const axios = require('axios');
 
@@ -130,12 +129,9 @@ const response = await axios.get(
 
 console.log(response.data);
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 require 'net/http'
 require 'json'
@@ -152,8 +148,8 @@ end
 
 puts JSON.parse(response.body)
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 </RequestExample>
 
@@ -267,9 +263,8 @@ curl -X POST \
   }'
 ```
 
-<details>
-<summary><strong>JavaScript</strong></summary>
-
+{% tabs %}
+{% tab title="JavaScript" %}
 ```javascript
 const axios = require('axios');
 
@@ -289,12 +284,9 @@ const response = await axios.post(
 
 console.log(response.data);
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 require 'net/http'
 require 'json'
@@ -315,8 +307,8 @@ end
 
 puts JSON.parse(response.body)
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 </RequestExample>
 

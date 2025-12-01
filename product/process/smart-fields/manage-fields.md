@@ -11,9 +11,8 @@ You can import fields from [single record relationships](../relationships/single
 
 The imported fields will behave as if they were on that collection.
 
-<details>
-<summary><strong>// Assuming the following structure:</strong></summary>
-
+{% tabs %}
+{% tab title="// Assuming the following structure:" %}
 ```javascript
 // User    { id, firstName, lastName, addressId }
 // Address { id, streetName, streetNumber, city, countryId }
@@ -23,12 +22,9 @@ userCollection
   .importField('city', { path: 'address:city', readonly: true })
   .importField('country', { path: 'address:country:name', readonly: true });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong># Assuming the following structure:</strong></summary>
-
+{% tab title="# Assuming the following structure:" %}
 ```ruby
 # User    { id, firstName, lastName, addressId }
 # Address { id, streetName, streetNumber, city, countryId }
@@ -38,8 +34,8 @@ userCollection
             .import_field('country', { path: 'address:country:name', readonly: true })
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {% hint style="info" %}
@@ -50,24 +46,20 @@ Note that when using `readonly: false`, the referenced record fields can be edit
 
 Renaming and removing fields or relations can be done simply by calling the {{#nodejs}}`renameField`{{/nodejs}}{{#ruby}}`rename_field`{{/ruby}} and {{#nodejs}}`removeField`{{/nodejs}}{{#ruby}}`remove_field`{{/ruby}} methods.
 
-<details>
-<summary><strong>collection.renameField('account_v3_uuid_new', 'account').removeField('password');</strong></summary>
-
+{% tabs %}
+{% tab title="collection.renameField('account_v3_uuid_new', 'account').removeField('password');" %}
 ```javascript
+
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('user') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('user') do |collection|" %}
 ```ruby
-  collection.rename_field('account_v3_uuid_new', 'account').remove_field('password')
+collection.rename_field('account_v3_uuid_new', 'account').remove_field('password')
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {% hint style="warning" %}

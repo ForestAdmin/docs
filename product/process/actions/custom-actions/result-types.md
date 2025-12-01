@@ -18,11 +18,10 @@ The default behavior, when no exception is thrown in the handler is to display a
 
 <img src="../../assets/actions-default-success-result.png" width="300">
 
-<details>
-<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('companies', collection =>" %}
 ```javascript
-  collection.addAction('Mark as live', {
+collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async context => {
       // Not using the resultBuilder here will display the generic success
@@ -31,12 +30,9 @@ The default behavior, when no exception is thrown in the handler is to display a
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -49,10 +45,9 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
     end
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Custom notifications
@@ -62,11 +57,10 @@ When customizing the notification message, you can use the {{#nodejs}}`resultBui
 <img src="../../assets/actions-custom-success-result.png" width="300">
 <img src="../../assets/actions-custom-error-result.png" width="300">
 
-<details>
-<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('companies', collection =>" %}
 ```javascript
-  collection.addAction('Mark as live', {
+collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
       const isLive = false; // Company is not live
@@ -82,12 +76,9 @@ When customizing the notification message, you can use the {{#nodejs}}`resultBui
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -104,8 +95,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## HTML result
@@ -114,11 +105,10 @@ You can also return an HTML page to give more feedback to the user who triggered
 
 ![](../../assets/actions-html-result-success.png)
 
-<details>
-<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('companies', collection =>" %}
 ```javascript
-  collection.addAction('Charge credit card', {
+collection.addAction('Charge credit card', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
       /* ... charge the credit card ... */
@@ -153,12 +143,9 @@ You can also return an HTML page to give more feedback to the user who triggered
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -193,8 +180,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## File generation
@@ -209,11 +196,10 @@ Smart actions can be used to generate or download files.
 
 The example code below will trigger a file download (with the file named `filename.txt`, containing `StringThatWillBeInTheFile` using `text/plain` mime-type).
 
-<details>
-<summary><strong>collection.addAction('Download a file', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection.addAction('Download a file', {" %}
 ```javascript
-  scope: 'Global',
+scope: 'Global',
   // This option is required to trigger the file download.
   generateFile: true,
 
@@ -239,12 +225,9 @@ The example code below will trigger a file download (with the file named `filena
   },
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -261,8 +244,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Redirections
@@ -275,11 +258,10 @@ The redirection works both for internal (`\*.forestadmin.com` pages) and externa
 
 {% tabs %} {% tab title="Internal link" %}
 
-<details>
-<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('companies', collection =>" %}
 ```javascript
-  collection.addAction('Mark as live', {
+collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
       return resultBuilder.redirectTo(
@@ -289,23 +271,19 @@ The redirection works both for internal (`\*.forestadmin.com` pages) and externa
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('companies', collection =>" %}
 ```javascript
-  collection.addAction('Mark as live', {
+collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async (context, resultBuilder) => {
       return resultBuilder.redirectTo(
@@ -346,12 +324,9 @@ Its intended use is often to perform a login on a third-party application or to 
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -369,8 +344,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {{#nodejs}}

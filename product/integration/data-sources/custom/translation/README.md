@@ -76,20 +76,16 @@ class MyDataSource extends BaseDataSource {
 module.exports = MyDataSource;
 ```
 
-<details>
-<summary><strong>const MyDataSource = require('./datasource');</strong></summary>
-
+{% tabs %}
+{% tab title="const MyDataSource = require('./datasource');" %}
 ```javascript
 const myDataSourceFactory = async () => new MyDataSource();
 
 const agent = createAgent(options).addDataSource(myDataSourceFactory);
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>require 'net/http'</strong></summary>
-
+{% tab title="require 'net/http'" %}
 ```ruby
 require 'json'
 require 'uri'
@@ -149,8 +145,8 @@ module App
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ```ruby
 module App

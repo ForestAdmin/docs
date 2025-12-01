@@ -19,9 +19,8 @@ The new system is completely different: it is based on primary keys and foreign 
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>// Many to one relationships</strong></summary>
-
+{% tabs %}
+{% tab title="// Many to one relationships" %}
 ```javascript
 collection('order', {
   fields: [
@@ -47,12 +46,9 @@ router.get('/address/:id/relationships/orders', (req, res) => {
 
 // ... other routes
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong># Model</strong></summary>
-
+{% tab title="# Model" %}
 ```ruby
 class Forest::Product
   include ForestLiana::Collection
@@ -82,12 +78,11 @@ class Forest::ProductsController < ForestLiana::ApplicationController
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>// Create the relationship</strong></summary>
-
+{% tabs %}
+{% tab title="// Create the relationship" %}
 ```javascript
 agent.customizeCollection('order', orders => {
   orders.addManyToOneRelation('deliveryAddress', 'address', {
@@ -102,14 +97,11 @@ agent.customizeCollection('address', addresses => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.setup!
       @create_agent.customize_collection('Product') do |collection|
         collection.add_many_to_one_relation('buyers', 'Customer', { foreign_key: 'country_id' })
@@ -122,8 +114,8 @@ agent.customizeCollection('address', addresses => {
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}
 
@@ -144,11 +136,10 @@ This will be much faster and will not require `In` filter operators to be implem
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>collection('order', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection('order', {" %}
 ```javascript
-  fields: [
+fields: [
     {
       field: 'delivery_address',
       type: 'String',
@@ -174,14 +165,11 @@ This will be much faster and will not require `In` filter operators to be implem
   end
 end
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('order', orders => {</strong></summary>
-
+{% tab title="agent.customizeCollection('order', orders => {" %}
 ```javascript
-  // Create a computed field that will contain the address ID (the foreign key)
+// Create a computed field that will contain the address ID (the foreign key)
   orders.addField('deliveryAddressId', {
     columnType: 'Number',
     dependencies: ['id'],
@@ -203,8 +191,8 @@ end
   });
 });
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 <details>
 <summary><strong>module ForestAdminRails</strong></summary>

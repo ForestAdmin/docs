@@ -10,11 +10,10 @@ In the example below, the “Add new transaction” action is accessible from th
 
 ![](../../assets/actions-refresh-related.png)
 
-<details>
-<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('companies', collection =>" %}
 ```javascript
-  // This Action can be triggered from the Summary View
+// This Action can be triggered from the Summary View
   // (see the top arrow of the screenshot above)
   collection.addAction('Add new transaction', {
     scope: 'Single',
@@ -30,12 +29,9 @@ In the example below, the “Add new transaction” action is accessible from th
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -52,9 +48,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
     end
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

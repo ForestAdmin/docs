@@ -36,80 +36,67 @@ Unknown properties in returned records will be removed.
 {% endhint %}
 {{/nodejs}}
 
-<details>
-<summary><strong>collection.overrideCreate(async context => {</strong></summary>
-
+{% tabs %}
+{% tab title="collection.overrideCreate(async context => {" %}
 ```javascript
-  // Custom logic to handle creation
+// Custom logic to handle creation
   // context.data contains the data intended for creation
   // Return an array of created records
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>collection.override_create do |context|</strong></summary>
-
+{% tab title="collection.override_create do |context|" %}
 ```ruby
-  # Custom logic to handle creation
+# Custom logic to handle creation
   # context.data contains the data intended for creation
   # Return an array of created records
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>collection.overrideUpdate(async context => {</strong></summary>
-
+{% tabs %}
+{% tab title="collection.overrideUpdate(async context => {" %}
 ```javascript
-  // Custom logic to handle update
+// Custom logic to handle update
   // context.filter to determine which records are targeted
   // context.patch contains the data for update
   // Perform update operation
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>collection.override_update do |context|</strong></summary>
-
+{% tab title="collection.override_update do |context|" %}
 ```ruby
-  # Custom logic to handle update
+# Custom logic to handle update
   # context.filter to determine which records are targeted
   # context.patch contains the data for update
   # Perform update operation
 end
-
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>collection.overrideDelete(async context => {</strong></summary>
-
+{% tabs %}
+{% tab title="collection.overrideDelete(async context => {" %}
 ```javascript
-  // Custom logic to handle deletion
+// Custom logic to handle deletion
   // context.filter to determine which records are targeted
   // Perform deletion operation
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>collection.override_delete do |context|</strong></summary>
-
+{% tab title="collection.override_delete do |context|" %}
 ```ruby
-  # Custom logic to handle deletion
+# Custom logic to handle deletion
   # context.filter to determine which records are targeted
   # Perform deletion operation
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {% hint style="warning" %}
@@ -122,9 +109,8 @@ Overrides take precedence over the default operation. Ensure your custom handler
 
 You might want to create the record with your custom API:
 
-<details>
-<summary><strong>const { MissingFieldError } = require('@forestadmin/datasource-toolkit');</strong></summary>
-
+{% tabs %}
+{% tab title="const { MissingFieldError } = require('@forestadmin/datasource-toolkit');" %}
 ```javascript
 product.overrideCreate(async context => {
   const { data } = context;
@@ -144,25 +130,21 @@ product.overrideCreate(async context => {
   return products;
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>product.override_create do |context|</strong></summary>
-
+{% tab title="product.override_create do |context|" %}
 ```ruby
-  response = HTTParty.post("https://my-product-api.com/products", body: context.data)
+response = HTTParty.post("https://my-product-api.com/products", body: context.data)
   response.parsed_response
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>product.overrideUpdate(async context => {</strong></summary>
-
+{% tabs %}
+{% tab title="product.overrideUpdate(async context => {" %}
 ```javascript
-  const { patch } = context;
+const { patch } = context;
 
   // Execute data modification and validation only if one of name or slug was edited
   if (patch.name || patch.slug) {
@@ -179,14 +161,11 @@ end
   await context.collection.update(context.filter, context.patch);
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>product.override_update do |context|</strong></summary>
-
+{% tab title="product.override_update do |context|" %}
 ```ruby
-  # Execute data modification and validation only if one of name or slug was edited
+# Execute data modification and validation only if one of name or slug was edited
   if context.patch.key?('name') || context.patch.key?('slug')
     name = context.patch['name'] || context.patch['slug'].split("-")[0]
     uuid = HTTParty.get('https://my-product-api.com/slug', body: { name: name }).parsed_response
@@ -198,8 +177,8 @@ end
   context.collection.update(context.filter, context.patch)
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {{/nodejs,ruby}}

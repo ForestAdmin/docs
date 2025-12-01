@@ -12,11 +12,10 @@ On the other hand, `many-to-one` and `one-to-one` relationships require the impl
 
 If a structure declaration contains the following statement
 
-<details>
-<summary><strong>class MovieCollection extends BaseCollection {</strong></summary>
-
+{% tabs %}
+{% tab title="class MovieCollection extends BaseCollection {" %}
 ```javascript
-  constructor() {
+constructor() {
     super('movies', null);
 
     // [...]
@@ -30,14 +29,11 @@ If a structure declaration contains the following statement
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module App</strong></summary>
-
+{% tab title="module App" %}
 ```ruby
-  module Collections
+module Collections
     class Movie < ForestAdminDatasourceToolkit::Collection
       include ForestAdminDatasourceToolkit::Schema
       include ForestAdminDatasourceToolkit::Components::Query:: ConditionTree
@@ -56,14 +52,12 @@ If a structure declaration contains the following statement
     end
   end
 end
-
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>// The following call is using both fields from the "movies" and "people" collection</strong></summary>
-
+{% tabs %}
+{% tab title="// The following call is using both fields from the "movies" and "people" collection" %}
 ```javascript
 await dataSource.getCollection('movies').list(
   caller,
@@ -80,14 +74,11 @@ await dataSource.getCollection('movies').list(
   ['id', 'title', 'director:firstName', 'director:lastName']
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>datasource.collection('Movie').list(</strong></summary>
-
+{% tab title="datasource.collection('Movie').list(" %}
 ```ruby
-  caller,
+caller,
   ForestAdminDatasourceToolkit::Components::Query::Filter.new(
     condition_tree: ForestAdminDatasourceToolkit::Components::Query::ConditionTree::ConditionTreeBranch.new(
       aggregator: 'and',
@@ -115,8 +106,8 @@ await dataSource.getCollection('movies').list(
   )
 )
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 should return
 

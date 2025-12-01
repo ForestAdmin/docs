@@ -28,9 +28,8 @@ If this fails, check your firewall rules, proxy settings, or network security gr
 
 The `FOREST_ENV_SECRET` environment variable must match the secret provided in your Forest Admin project settings. A mismatch will prevent authentication.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 // Check your agent initialization
 createAgent({
@@ -39,12 +38,9 @@ createAgent({
   // ...
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 # Check your agent initialization
 ForestAdminAgent::Agent.new do |config|
@@ -53,8 +49,8 @@ ForestAdminAgent::Agent.new do |config|
   # ...
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### Review agent logs
 
@@ -172,9 +168,8 @@ Your session token will be refreshed automatically.
 
 The agent automatically detects schema changes, but you can force a refresh:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 // Add this temporarily to force schema regeneration
 createAgent({
@@ -185,18 +180,15 @@ createAgent({
   // Schema will be regenerated on startup
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 # Schema is auto-detected on startup
 # Restart your agent to force refresh
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 Then restart your agent:
 
@@ -273,9 +265,8 @@ Ensure your agent URL is correctly configured in Forest Admin project settings:
 
 If your database requires SSL but has a self-signed certificate:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 createSqlDataSource({
   uri: 'postgresql://user:pass@host:5432/db',
@@ -284,12 +275,9 @@ createSqlDataSource({
   ssl: { rejectUnauthorized: false }
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 # In your database.yml or connection configuration
 production:
@@ -299,8 +287,8 @@ production:
   # For self-signed certificates (not recommended for production)
   sslrootcert: /path/to/ca-certificate.crt
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% hint style="warning" %}
 Disabling certificate verification (`rejectUnauthorized: false`) is not recommended for production. Use proper SSL certificates whenever possible.

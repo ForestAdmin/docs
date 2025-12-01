@@ -23,9 +23,8 @@ Implementing this strategy requires completing three main phases:
 
 ### Minimal example
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 class MyCollection extends BaseCollection {
   constructor(dataSource) {
@@ -41,12 +40,9 @@ class MyCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def initialize(datasource)
@@ -62,8 +58,8 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Structure Declaration
 
@@ -71,9 +67,8 @@ end
 
 Define fields with types, validation, and default values:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 
@@ -107,12 +102,9 @@ class MovieCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MovieCollection < ForestAdminDatasourceToolkit::Collection
   include ForestAdminDatasourceToolkit::Schema
@@ -147,8 +139,8 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### Typing
 
@@ -177,9 +169,8 @@ The validation API mirrors the condition tree structure but excludes a "field" e
 
 Data sources using the query translation strategy require careful implementation for relationships.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 
@@ -207,12 +198,9 @@ class MovieCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MovieCollection < ForestAdminDatasourceToolkit::Collection
   def initialize(datasource)
@@ -235,8 +223,8 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Capabilities Declaration
 
@@ -282,9 +270,8 @@ To unlock GUI filtering:
 
 Enables pagination widget to display total page count. Requires implementing the `aggregate` method:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 class MyCollection extends BaseCollection {
   constructor() {
@@ -292,12 +279,9 @@ class MyCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def initialize
@@ -306,12 +290,11 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 class MyCollection extends BaseCollection {
   constructor() {
@@ -319,12 +302,9 @@ class MyCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def initialize
@@ -333,12 +313,11 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 class MyCollection extends BaseCollection {
   constructor() {
@@ -347,12 +326,9 @@ class MyCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def initialize
@@ -362,8 +338,8 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### Field-level capabilities
 
@@ -371,31 +347,26 @@ end
 
 Mark fields as read-only:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 this.addField('id', {
   isReadOnly: true,
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 add_field('id', {
   is_read_only: true
 })
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 this.addField('id', {
   filterOperators: new Set([
@@ -404,41 +375,34 @@ this.addField('id', {
   ]),
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 add_field('id', {
   filter_operators: ['Equal']
 })
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 this.addField('id', {
   isSortable: true,
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 add_field('id', {
   is_sortable: true
 })
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Read implementation
 
@@ -448,9 +412,8 @@ Emulation enables rapid development by allowing features to be tested in Node.js
 
 ### Basic list implementation
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 const axios = require('axios');
@@ -471,12 +434,9 @@ class MyCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   def list(caller, filter, projection)
@@ -496,36 +456,31 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 async aggregate(caller, filter, aggregation, limit) {
   const records = await this.list(caller, filter, aggregation.projection);
   return aggregation.apply(records, caller.timezone, limit);
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 def aggregate(caller, filter, aggregation, limit = nil)
   records = list(caller, filter, aggregation.projection)
   aggregation.apply(records, caller.timezone, limit)
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 async aggregate(caller, filter, aggregation, limit) {
   if (aggregation.operation === 'Count' && aggregation.groups.length === 0) {
@@ -534,12 +489,9 @@ async aggregate(caller, filter, aggregation, limit) {
   // Handle general case
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 def aggregate(caller, filter, aggregation, limit = nil)
   # Optimize count-only queries
@@ -549,8 +501,8 @@ def aggregate(caller, filter, aggregation, limit = nil)
   # Handle general aggregation case
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Write implementation
 
@@ -558,9 +510,8 @@ Making your records editable is achieved by implementing the `create`, `update` 
 
 **Important:** The three write methods accept filter parameters, but unlike the `list` method, pagination support is unnecessary.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const { BaseCollection } = require('@forestadmin/datasource-toolkit');
 const axios = require('axios'); // client for the target API
@@ -600,12 +551,9 @@ class MyCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MyCollection < ForestAdminDatasourceToolkit::Collection
   include ForestAdminDatasourceToolkit::Schema
@@ -638,8 +586,8 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### Method details
 
@@ -671,9 +619,8 @@ When a `many-to-one` relationship exists, the collection must accept references 
 
 #### Structure declaration example
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 class MovieCollection extends BaseCollection {
   constructor() {
@@ -688,12 +635,9 @@ class MovieCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 class MovieCollection < ForestAdminDatasourceToolkit::Collection
   def initialize(datasource)
@@ -707,12 +651,11 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 await dataSource.getCollection('movies').list(
   caller,
@@ -729,12 +672,9 @@ await dataSource.getCollection('movies').list(
   ['id', 'title', 'director:firstName', 'director:lastName']
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 datasource.collection('Movie').list(
   caller,
@@ -763,8 +703,8 @@ datasource.collection('Movie').list(
   )
 )
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 #### Expected response structure
 

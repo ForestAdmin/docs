@@ -92,11 +92,10 @@ agent.customizeCollection('people', collection => {
 
 In this example, we use the `searchExtended` condition to toggle between case-sensitive and insensitive searches.
 
-<details>
-<summary><strong>agent.customizeCollection('people', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('people', collection => {" %}
 ```javascript
-  collection.replaceSearch((searchString, extendedMode) => {
+collection.replaceSearch((searchString, extendedMode) => {
     const operator = extendedMode ? 'Contains' : 'IContains';
 
     return {
@@ -109,12 +108,9 @@ In this example, we use the `searchExtended` condition to toggle between case-se
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
-
+{% tab title="include ForestAdminDatasourceToolkit::Components::Query::ConditionTree" %}
 ```ruby
 @create_agent.customize_collection('people') do |collection|
   collection.replace_search do |search_string, extended_search|
@@ -130,12 +126,11 @@ In this example, we use the `searchExtended` condition to toggle between case-se
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>const productReferenceRegexp = /^[a-f]{16}$/i;</strong></summary>
-
+{% tabs %}
+{% tab title="const productReferenceRegexp = /^[a-f]{16}$/i;" %}
 ```javascript
 const barCodeRegexp = /^[0-9]{10}$/i;
 
@@ -164,12 +159,9 @@ agent.customizeCollection('products', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
-
+{% tab title="include ForestAdminDatasourceToolkit::Components::Query::ConditionTree" %}
 ```ruby
 @create_agent.customize_collection('product') do |collection|
   product_reference_regexp = /^[a-f]{16}$/i
@@ -202,14 +194,12 @@ agent.customizeCollection('products', collection => {
     }
   end
 end
-
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>const algoliasearch = require('algoliasearch');</strong></summary>
-
+{% tabs %}
+{% tab title="const algoliasearch = require('algoliasearch');" %}
 ```javascript
 const client = algoliasearch('APPLICATION_ID', 'WRITE_API_KEY');
 const index = client.initIndex('indexName');
@@ -225,12 +215,9 @@ agent.customizeCollection('products', collection =>
   });
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>require 'algolia'</strong></summary>
-
+{% tab title="require 'algolia'" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -254,8 +241,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ### Disable the search
@@ -264,24 +251,20 @@ By default, the search bar is displayed when at least one field supports the ope
 
 You can remove the search bar by disabling the search on a collection:
 
-<details>
-<summary><strong>agent.customizeCollection('Products', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('Products', collection => {" %}
 ```javascript
-  collection.disableSearch();
+collection.disableSearch();
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('product') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('product') do |collection|" %}
 ```ruby
-  collection.disable_search
+collection.disable_search
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

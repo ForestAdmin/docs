@@ -23,9 +23,8 @@ Fields are configurable using the following properties:
 
 ## Basic form example
 
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 agent.customizeCollection('customers', collection => {
   collection.addAction('Charge credit card', {
@@ -60,12 +59,9 @@ agent.customizeCollection('customers', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 forest_agent.customize_collection('customers') do |collection|
   collection.add_action(
@@ -97,8 +93,8 @@ forest_agent.customize_collection('customers') do |collection|
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Field types
 
@@ -196,9 +192,8 @@ Make forms reactive by using functions instead of static values. Functions recei
 
 Make a field required based on another field's value:
 
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 form: [
   {
@@ -215,12 +210,9 @@ form: [
   },
 ]
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 form: [
   {
@@ -237,12 +229,11 @@ form: [
   }
 ]
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 form: [
   {
@@ -258,12 +249,9 @@ form: [
   },
 ]
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 form: [
   {
@@ -279,12 +267,11 @@ form: [
   }
 ]
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 form: [
   {
@@ -298,12 +285,9 @@ form: [
   },
 ]
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 form: [
   {
@@ -317,12 +301,11 @@ form: [
   }
 ]
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 form: [
   {
@@ -345,12 +328,9 @@ form: [
   },
 ]
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 form: [
   {
@@ -378,12 +358,11 @@ form: [
   }
 ]
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 form: [
   {
@@ -400,12 +379,9 @@ form: [
   },
 ]
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 form: [
   {
@@ -422,8 +398,8 @@ form: [
   }
 ]
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Widgets
 
@@ -543,9 +519,8 @@ Rich text editor with formatting options.
 
 Create wizard-like forms by conditionally showing sections:
 
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 form: [
   {
@@ -575,12 +550,9 @@ form: [
   },
 ]
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 form: [
   {
@@ -610,12 +582,11 @@ form: [
   }
 ]
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 form: [
   {
@@ -634,12 +605,9 @@ form: [
   },
 ]
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 form: [
   {
@@ -658,12 +626,11 @@ form: [
   }
 ]
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 {
   type: 'String',
@@ -675,12 +642,9 @@ form: [
   },
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 {
   type: FieldType::STRING,
@@ -692,12 +656,11 @@ form: [
   }
 }
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 execute: async (context, resultBuilder) => {
   // Access by label
@@ -713,12 +676,9 @@ execute: async (context, resultBuilder) => {
   const { Amount, Description } = context.formValues;
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 execute: ->(context, result_builder) {
   # Access by label
@@ -735,6 +695,6 @@ execute: ->(context, result_builder) {
   description = context.form_values['Description']
 }
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 

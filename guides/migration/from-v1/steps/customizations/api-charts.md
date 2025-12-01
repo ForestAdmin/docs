@@ -35,11 +35,10 @@ Migrating should be straightforward: the only differences are that:
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>router.post('/stats/mrr', (req, res) => {</strong></summary>
-
+{% tabs %}
+{% tab title="router.post('/stats/mrr', (req, res) => {" %}
 ```javascript
-  // Load data
+// Load data
   const from = moment.utc('2018-03-01').unix();
   const to = moment.utc('2018-03-31').unix();
   const charges = await stripe.charges.list({ created: { gte: from, lte: to } });
@@ -51,14 +50,11 @@ Migrating should be straightforward: the only differences are that:
   res.send(json);
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>def mrr</strong></summary>
-
+{% tab title="def mrr" %}
 ```ruby
-    mrr = 0
+mrr = 0
 
     Stripe.api_key = 'sk_AABBCCDD11223344'
     Stripe::Charge.list.list({ limit: 3 }).each do |charge|
@@ -69,14 +65,13 @@ Migrating should be straightforward: the only differences are that:
     render json: serialize_model(stat)
   end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.addChart('monthlyRecuringRevenue', async (context, resultBuilder) => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.addChart('monthlyRecuringRevenue', async (context, resultBuilder) => {" %}
 ```javascript
-  // Load data
+// Load data
   const from = moment.utc('2018-03-01').unix();
   const to = moment.utc('2018-03-31').unix();
   const charges = await stripe.charges.list({ created: { gte: from, lte: to } });
@@ -87,14 +82,11 @@ Migrating should be straightforward: the only differences are that:
   return resultBuilder.value(mrr);
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.customize
       @create_agent.add_chart('monthlyRecuringRevenue') do |_context, result_builder|
         mrr = 0
@@ -109,7 +101,7 @@ Migrating should be straightforward: the only differences are that:
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}

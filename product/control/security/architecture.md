@@ -145,9 +145,8 @@ Both tokens are JSON Web Tokens (JWT) containing user context:
 - Dynamic filtering based on user context
 - Integration with your internal systems
 
-<details>
-<summary><strong>Node.js - Access user context</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js - Access user context" %}
 ```javascript
 agent.customizeCollection('orders', collection => {
   collection.addHook('Before', 'List', async (context) => {
@@ -160,12 +159,9 @@ agent.customizeCollection('orders', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby - Access user context</strong></summary>
-
+{% tab title="Ruby - Access user context" %}
 ```ruby
 collection.add_hook(:Before, :List) do |context|
   email = context.caller.email
@@ -177,8 +173,8 @@ collection.add_hook(:Before, :List) do |context|
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ### IP Whitelisting

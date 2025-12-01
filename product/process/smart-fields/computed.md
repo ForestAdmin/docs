@@ -21,9 +21,8 @@ When creating a new field you will need to provide:
 
 This example adds a `user.displayName` field, which is computed by concatenating the first and last names.
 
-<details>
-<summary><strong>// "user" Collection has the following structure: { id, firstName, lastName }</strong></summary>
-
+{% tabs %}
+{% tab title="// "user" Collection has the following structure: { id, firstName, lastName }" %}
 ```javascript
 agent.customizeCollection('user', collection => {
   collection.addField('displayName', {
@@ -42,12 +41,9 @@ agent.customizeCollection('user', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
 ```ruby
 # User Collection has the following structure: { id, firstName, lastName }
 @create_agent.customize_collection('user') do |collection|
@@ -66,12 +62,11 @@ agent.customizeCollection('user', collection => {
   )
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>// "user" Collection has the following structure: { id, firstName, lastName }</strong></summary>
-
+{% tabs %}
+{% tab title="// "user" Collection has the following structure: { id, firstName, lastName }" %}
 ```javascript
 agent.customizeCollection('user', collection => {
   collection
@@ -91,12 +86,9 @@ agent.customizeCollection('user', collection => {
     });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
 ```ruby
 # User Collection has the following structure: { id, firstName, lastName }
 @create_agent.customize_collection('user') do |collection|
@@ -120,14 +112,12 @@ agent.customizeCollection('user', collection => {
       )
     )
 end
-
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>// Structure:</strong></summary>
-
+{% tabs %}
+{% tab title="// Structure:" %}
 ```javascript
 // User    { id, addressId, firstName, lastName }
 // Address { id, city }
@@ -146,12 +136,9 @@ agent.customizeCollection('user', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
 ```ruby
 # Structure:
 # User    { id, addressId, firstName, lastName }
@@ -170,12 +157,11 @@ agent.customizeCollection('user', collection => {
   )
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>// Structure</strong></summary>
-
+{% tabs %}
+{% tab title="// Structure" %}
 ```javascript
 // User  { id }
 // Order { id, customer_id, amount }
@@ -209,12 +195,9 @@ agent.customizeCollection('user', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
@@ -245,8 +228,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ### Adding a field fetching data from an API
@@ -271,9 +254,8 @@ The API we're using is fictional, and the structure of the response is:
 }
 ```
 
-<details>
-<summary><strong>const emailVerificationClient = require('@sendchimplio/client');</strong></summary>
-
+{% tabs %}
+{% tab title="const emailVerificationClient = require('@sendchimplio/client');" %}
 ```javascript
 emailVerificationClient.setApiKey(process.env.SENDCHIMPLIO_API_KEY);
 
@@ -297,12 +279,9 @@ agent.customizeCollection('user', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
@@ -332,8 +311,8 @@ client.api_key = 'MY_FAKE_API_KEY'
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Performance

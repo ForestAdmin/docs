@@ -24,9 +24,8 @@ Can be achieved without any code [in the field settings](https://docs.forestadmi
 
 In the following example, editing or creating a `fullName` will update both `firstName` and `lastName` fields of the record.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.replaceFieldWriting('fullName', value => {
   const [firstName, lastName] = value.split(' ');
@@ -34,12 +33,9 @@ collection.replaceFieldWriting('fullName', value => {
   return { firstName, lastName };
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('fullName') do |value|
@@ -51,8 +47,8 @@ collection.replaceFieldWriting('fullName', value => {
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### Having specific behavior only for updates
 
@@ -60,9 +56,8 @@ You can have different behavior for `creations` and `updates`.
 
 In this example, each time the `firstName` field is edited, we also want to update a timestamp field.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.replaceFieldWriting('firstName', async (value, context) => {
   switch (context.action) {
@@ -77,12 +72,9 @@ collection.replaceFieldWriting('firstName', async (value, context) => {
   }
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('firstName') do |value, context|
@@ -103,8 +95,8 @@ collection.replaceFieldWriting('firstName', async (value, context) => {
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### Changing fields in related records
 
@@ -119,20 +111,16 @@ In this simple example, we have two collections that are linked together:
 
 When the user updates his `job` field we want also to update the `title` of the portfolio by the `job` name.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolio: { title: job } };
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
@@ -142,10 +130,9 @@ collection.replaceFieldWriting('job', (job, { action }) => {
     }
   end
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% hint style="info" %}
 If the relationships do not exist it will create them with the given field values.
@@ -153,20 +140,16 @@ If the relationships do not exist it will create them with the given field value
 
 You can also provide another `portfolioId` to update the relationships and their fields:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolioId: 8, portfolio: { title: job } };
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
@@ -178,23 +161,19 @@ collection.replaceFieldWriting('job', (job, { action }) => {
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolioId: 8, portfolio: { title: job, format: { name: 'pdf' } } };
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_writing('job') do |value, _context|
@@ -209,5 +188,5 @@ collection.replaceFieldWriting('job', (job, { action }) => {
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}

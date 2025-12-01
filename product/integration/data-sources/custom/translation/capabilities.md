@@ -61,11 +61,10 @@ Enabling this feature allows the pagination widget to display the total number o
 
 Once enabled, your collections must implement the [`aggregate` method](../../getting-started/queries/aggregations.md).
 
-<details>
-<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
-
+{% tabs %}
+{% tab title="class MyCollection extends BaseCollection {" %}
 ```javascript
-  constructor() {
+constructor() {
     // [...]
 
     // If you have implemented the aggregate method
@@ -73,14 +72,11 @@ Once enabled, your collections must implement the [`aggregate` method](../../get
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module App</strong></summary>
-
+{% tab title="module App" %}
 ```ruby
-  module Collections
+module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
         # [...]
@@ -88,8 +84,8 @@ Once enabled, your collections must implement the [`aggregate` method](../../get
         # If you have implemented the aggregate method
         enable_count
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Search
@@ -105,11 +101,10 @@ Enabling this feature allows you to either:
 
 This is relevant mostly for data sources that target data sources that have native full-text search capabilities (ElasticSearch, ...)
 
-<details>
-<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
-
+{% tabs %}
+{% tab title="class MyCollection extends BaseCollection {" %}
 ```javascript
-  constructor() {
+constructor() {
     // [...]
 
     // If you want to implement search yourself
@@ -117,14 +112,11 @@ This is relevant mostly for data sources that target data sources that have nati
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module App</strong></summary>
-
+{% tab title="module App" %}
 ```ruby
-  module Collections
+module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
         # [...]
@@ -132,8 +124,8 @@ This is relevant mostly for data sources that target data sources that have nati
         # If you want to implement search yourself
         enable_search
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Segments
@@ -148,11 +140,10 @@ Defining segments from your data sources can be relevant in 3 situations:
 - The underlying data source has a concept that maps to Forest Admin segments (i.e. ["scopes" in Sequelize](https://sequelize.org/master/manual/scopes.html))
 - Your data source is used in multiple Forest Admin projects, and the segment should be shared across all deployments (i.e. segments coming from a third-party SaaS)
 
-<details>
-<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
-
+{% tabs %}
+{% tab title="class MyCollection extends BaseCollection {" %}
 ```javascript
-  constructor() {
+constructor() {
     // [...]
 
     // If you want to implement segments at the data source level
@@ -163,14 +154,11 @@ Defining segments from your data sources can be relevant in 3 situations:
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module App</strong></summary>
-
+{% tab title="module App" %}
 ```ruby
-  module Collections
+module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
         # [...]
@@ -181,8 +169,8 @@ Defining segments from your data sources can be relevant in 3 situations:
         # From now on, all methods that take a filter as parameter *MUST* not ignore
         # its segment field.
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 # Field level capabilities
@@ -191,11 +179,10 @@ Defining segments from your data sources can be relevant in 3 situations:
 
 Fields may or may not be writable. To make a readonly use the {{#nodejs}}`isReadOnly`{{/nodejs}}{{#ruby}}`is_read_only`{{/ruby}} flag.
 
-<details>
-<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
-
+{% tabs %}
+{% tab title="class MyCollection extends BaseCollection {" %}
 ```javascript
-  constructor() {
+constructor() {
     // [...]
 
     this.addField('id', {
@@ -205,14 +192,11 @@ Fields may or may not be writable. To make a readonly use the {{#nodejs}}`isRead
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module App</strong></summary>
-
+{% tab title="module App" %}
 ```ruby
-  module Collections
+module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
         # [...]
@@ -222,8 +206,8 @@ Fields may or may not be writable. To make a readonly use the {{#nodejs}}`isRead
             is_read_only: true,
         })
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Filtering operators
@@ -232,11 +216,10 @@ When declaring a field, the {{#nodejs}}`filterOperators`{{/nodejs}}{{#ruby}}`fil
 
 Operators which are not explicitly enabled in that declaration won't be available.
 
-<details>
-<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
-
+{% tabs %}
+{% tab title="class MyCollection extends BaseCollection {" %}
 ```javascript
-  constructor() {
+constructor() {
     // [...]
 
     this.addField('id', {
@@ -249,14 +232,11 @@ Operators which are not explicitly enabled in that declaration won't be availabl
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module App</strong></summary>
-
+{% tab title="module App" %}
 ```ruby
-  module Collections
+module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
         # [...]
@@ -268,14 +248,13 @@ Operators which are not explicitly enabled in that declaration won't be availabl
         })
       end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>class MyCollection extends BaseCollection {</strong></summary>
-
+{% tabs %}
+{% tab title="class MyCollection extends BaseCollection {" %}
 ```javascript
-  constructor() {
+constructor() {
     // [...]
 
     this.addField('id', {
@@ -285,14 +264,11 @@ Operators which are not explicitly enabled in that declaration won't be availabl
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module App</strong></summary>
-
+{% tab title="module App" %}
 ```ruby
-  module Collections
+module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       def initialize
         # [...]
@@ -303,7 +279,7 @@ Operators which are not explicitly enabled in that declaration won't be availabl
         })
       end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

@@ -29,11 +29,10 @@ Operation substitution can be used for two motives:
 - Performance: provide a more efficient way to perform a given filtering operation
 - Capabilities: enable filtering on a computed field or other non-filterable fields
 
-<details>
-<summary><strong>collection.replaceFieldOperator('fullName', 'Equal', (value, context) => {</strong></summary>
-
+{% tabs %}
+{% tab title="collection.replaceFieldOperator('fullName', 'Equal', (value, context) => {" %}
 ```javascript
-  const [firstName, ...lastNames] = value.split(' ');
+const [firstName, ...lastNames] = value.split(' ');
 
   return {
     aggregator: 'And',
@@ -44,12 +43,9 @@ Operation substitution can be used for two motives:
   };
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
-
+{% tab title="include ForestAdminDatasourceToolkit::Components::Query::ConditionTree" %}
 ```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.replace_field_operator('fullName', Operators::EQUAL) do |value|
@@ -65,8 +61,8 @@ Operation substitution can be used for two motives:
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Operators to support to enable the search
@@ -90,21 +86,17 @@ This emulation forces the Agent to retrieve all the Collection records and compu
 As a consequence, filtering emulation performance cost is **linear** with the number of records in the Collection, so **activate it sparingly and with great care**.
 {% endhint %}
 
-<details>
-<summary><strong>// Add support for all operators</strong></summary>
-
+{% tabs %}
+{% tab title="// Add support for all operators" %}
 ```javascript
 collection.emulateFieldFiltering('fullName');
 
 // Add support for a single operator
 collection.emulateFieldOperator('fullName', 'Equal');
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
-
+{% tab title="include ForestAdminDatasourceToolkit::Components::Query::ConditionTree" %}
 ```ruby
 @create_agent.customize_collection('customer') do |collection|
   # Add support for all operators
@@ -114,7 +106,7 @@ collection.emulateFieldOperator('fullName', 'Equal');
   collection.emulate_field_operator('fullName', Operators::EQUAL)
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

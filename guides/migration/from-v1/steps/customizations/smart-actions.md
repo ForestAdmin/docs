@@ -58,11 +58,10 @@ Most notably, you will need to pass:
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>collection('companies', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection('companies', {" %}
 ```javascript
-  actions: [
+actions: [
     {
       name: 'Mark as Live',
       type: 'bulk',
@@ -72,39 +71,32 @@ Most notably, you will need to pass:
   ],
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>class Forest::Company</strong></summary>
-
+{% tab title="class Forest::Company" %}
 ```ruby
-  include ForestLiana::Collection
+include ForestLiana::Collection
 
   collection :Company
 
   action 'Mark as Live', type: 'bulk', download: false, endpoint: '/forest/actions/mark-as-live'
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('companies', companies => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('companies', companies => {" %}
 ```javascript
-  companies.addAction('Mark as Live', {
+companies.addAction('Mark as Live', {
     scope: 'Bulk',
     execute: async (context, resultBuilder) => {},
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action
 
@@ -123,8 +115,8 @@ module ForestAdminRails
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}
 
@@ -142,11 +134,10 @@ You can simply copy the field's definition from the legacy agent to the new agen
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>collection('customers', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection('customers', {" %}
 ```javascript
-  actions: [
+actions: [
     {
       name: 'Charge credit card',
       type: 'single',
@@ -162,14 +153,11 @@ You can simply copy the field's definition from the legacy agent to the new agen
   ],
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>class Forest::Company</strong></summary>
-
+{% tab title="class Forest::Company" %}
 ```ruby
-  include ForestLiana::Collection
+include ForestLiana::Collection
 
   collection :Company
 
@@ -183,14 +171,13 @@ You can simply copy the field's definition from the legacy agent to the new agen
   ]
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customers', companies => {" %}
 ```javascript
-  companies.addAction('Charge credit card', {
+companies.addAction('Charge credit card', {
     // [...]
     form: [
       {
@@ -203,14 +190,11 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
     def self.customize
@@ -236,8 +220,8 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}
 
@@ -266,11 +250,10 @@ When porting the route handler to the new agent, you will need to:
   {{/ruby}}
   {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>router.post(</strong></summary>
-
+{% tabs %}
+{% tab title="router.post(" %}
 ```javascript
-  '/actions/mark-as-live',
+'/actions/mark-as-live',
   permissionMiddlewareCreator.smartAction(),
   (req, res) => {
     const recordsGetter = new RecordsGetter(companies, request.user, request.query);
@@ -299,14 +282,11 @@ When porting the route handler to the new agent, you will need to:
   end
 end
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('companies', companies => {</strong></summary>
-
+{% tab title="agent.customizeCollection('companies', companies => {" %}
 ```javascript
-  companies.addAction('Mark as Live', {
+companies.addAction('Mark as Live', {
     // ...
     execute: async (context, resultBuilder) => {
       const companyIds = await context.getRecordIds();
@@ -317,14 +297,13 @@ end
   });
 });
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tabs %}
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.customize
       include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -379,14 +358,11 @@ Here is an example of a load hook where the default value of a field is set to 5
   ],
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>class Forest::Customer</strong></summary>
-
+{% tab title="class Forest::Customer" %}
 ```ruby
-  include ForestLiana::Collection
+include ForestLiana::Collection
 
   collection :Customer
 
@@ -407,14 +383,13 @@ Here is an example of a load hook where the default value of a field is set to 5
   }
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customers', companies => {" %}
 ```javascript
-  companies.addAction('Charge credit card', {
+companies.addAction('Charge credit card', {
     scope: 'Single',
     form: [
       {
@@ -430,14 +405,11 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.customize
       include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -462,8 +434,8 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}
 
@@ -471,11 +443,10 @@ And another for a change hook which makes a field required if the value of anoth
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>collection('customers', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection('customers', {" %}
 ```javascript
-  actions: [
+actions: [
     {
       name: 'Charge credit card',
       type: 'single',
@@ -501,14 +472,11 @@ And another for a change hook which makes a field required if the value of anoth
   ],
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>class Forest::Customer</strong></summary>
-
+{% tab title="class Forest::Customer" %}
 ```ruby
-  include ForestLiana::Collection
+include ForestLiana::Collection
 
   collection :Customer
 
@@ -538,14 +506,13 @@ And another for a change hook which makes a field required if the value of anoth
   }
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customers', companies => {" %}
 ```javascript
-  companies.addAction('Charge credit card', {
+companies.addAction('Charge credit card', {
     scope: 'Single',
     form: [
       { field: 'amount', type: 'Number' },
@@ -558,14 +525,11 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.customize
       include ForestAdminDatasourceCustomizer::Decorators::Action::Types
       include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -595,7 +559,7 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}

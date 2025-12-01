@@ -8,9 +8,8 @@ In a one-to-many relationship, one record from a Collection is attached to multi
 
 Think about countries and towns: a country has multiple towns, and each town belongs to a country.
 
-<details>
-<summary><strong>// Link 'countries' to 'towns'</strong></summary>
-
+{% tabs %}
+{% tab title="// Link 'countries' to 'towns'" %}
 ```javascript
 agent.customizeCollection('countries', collection => {
   collection.addOneToManyRelation('myTowns', 'towns', {
@@ -19,14 +18,11 @@ agent.customizeCollection('countries', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('country') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('country') do |collection|" %}
 ```ruby
-  collection.add_one_to_many_relation(
+collection.add_one_to_many_relation(
     'myTown',
     'town',
     {
@@ -36,8 +32,8 @@ agent.customizeCollection('countries', collection => {
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Many-to-Many relations
@@ -49,9 +45,8 @@ This allows multiple records from one Collection to be attached to multiple reco
 For instance, on a movie recommendation website, each user can rate many movies, and each movie can be rated by many users.
 The 3 Collections that are used are `users` (the "origin" Collection), `ratings` (the "through" Collection), and `movies` (the "foreign" Collection).
 
-<details>
-<summary><strong>// Create one side of the relation ...</strong></summary>
-
+{% tabs %}
+{% tab title="// Create one side of the relation ..." %}
 ```javascript
 agent.customizeCollection('users', collection => {
   collection.addManyToManyRelation('ratedMovies', 'movies', 'ratings', {
@@ -70,14 +65,11 @@ agent.customizeCollection('movies', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('user') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('user') do |collection|" %}
 ```ruby
-  collection.add_many_to_many_relation(
+collection.add_many_to_many_relation(
     'ratedMovies',
     'movie',
     'rating',
@@ -104,8 +96,8 @@ agent.customizeCollection('movies', collection => {
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## External relations
@@ -116,11 +108,10 @@ External relations allow to define Collections which will only be available thro
 Note that external relations do not support pagination.
 {% endhint %}
 
-<details>
-<summary><strong>const states = [</strong></summary>
-
+{% tabs %}
+{% tab title="const states = [" %}
 ```javascript
-  { code: 'AK', name: 'Alaska', zip: [99501, 99950], closeTo: [] },
+{ code: 'AK', name: 'Alaska', zip: [99501, 99950], closeTo: [] },
   { code: 'AL', name: 'Alabama', zip: [35004, 36925], closeTo: ['TE', 'MI', 'GE'] },
   { code: 'AR', name: 'Arkansas', zip: [71601, 72959], closeTo: ['OK', 'TX', 'LO'] },
   { code: 'AZ', name: 'Arizona', zip: [85001, 86556], closeTo: ['NM', 'CO', 'NE'] },
@@ -150,14 +141,11 @@ agent.customizeCollection('address', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('address') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('address') do |collection|" %}
 ```ruby
-  states = [
+states = [
     { 'code' => 'AK', 'name' => 'Alaska', 'zip' => [99501, 99950], 'closeTo' => [] },
     { 'code' => 'AL', 'name' => 'Alabama', 'zip' => [35004, 36925], 'closeTo' => ['TE', 'MI', 'GE'] },
     { 'code' => 'AR', 'name' => 'Arkansas', 'zip' => [71601, 72959], 'closeTo' => ['OK', 'TX', 'LO'] },
@@ -188,9 +176,8 @@ agent.customizeCollection('address', collection => {
     }
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

@@ -15,25 +15,21 @@ Forest Admin allows adding validation rules to native and custom fields in your 
 
 ## Examples
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.addFieldValidation('firstName', 'LongerThan', 2);
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('user') do |collection|
   collection.add_field_validation('firstName', 'LongerThan', 2)
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 Validation is performed on a best-effort basis and should **not be relied on exclusively** to ensure data integrity.
 

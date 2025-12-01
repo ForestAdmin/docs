@@ -68,9 +68,8 @@ curl -H "Authorization: Bearer fa_your_api_token_here" \
 
 **JavaScript (Node.js):**
 
-<details>
-<summary><strong>const axios = require('axios');</strong></summary>
-
+{% tabs %}
+{% tab title="const axios = require('axios');" %}
 ```javascript
 const apiToken = process.env.FOREST_API_TOKEN;
 
@@ -84,12 +83,9 @@ const response = await axios.get(
   }
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>require 'net/http'</strong></summary>
-
+{% tab title="require 'net/http'" %}
 ```ruby
 require 'json'
 
@@ -104,8 +100,8 @@ response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
   http.request(request)
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Token Security
 

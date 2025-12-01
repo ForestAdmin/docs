@@ -35,11 +35,10 @@ In this example, we migrate a segment that returns the 5 bestsellers of a produc
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>collection('products', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection('products', {" %}
 ```javascript
-  segments: [
+segments: [
     {
       name: 'Bestsellers',
       where: async product => {
@@ -62,14 +61,11 @@ In this example, we migrate a segment that returns the 5 bestsellers of a produc
   ],
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>class Forest::Product</strong></summary>
-
+{% tab title="class Forest::Product" %}
 ```ruby
-  include ForestLiana::Collection
+include ForestLiana::Collection
 
   collection :Product
 
@@ -88,14 +84,13 @@ In this example, we migrate a segment that returns the 5 bestsellers of a produc
     end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('products', products => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('products', products => {" %}
 ```javascript
-  products.addSegment('Bestsellers', async () => {
+products.addSegment('Bestsellers', async () => {
     const query = `
       SELECT products.id, COUNT(orders.*)
       FROM products
@@ -113,14 +108,11 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.setup!
       @create_agent.customize_collection('product') do |collection|
         collection.add_segment('best_sellers') do |context|
@@ -144,7 +136,7 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}

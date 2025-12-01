@@ -35,11 +35,10 @@ This item doesn't have specific options.
 
 Example:
 
-<details>
-<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customer', collection => {" %}
 ```javascript
-  collection.addAction("What's your name", {
+collection.addAction("What's your name", {
     scope: 'Single',
     form: [
       { type: 'String', label: 'firstName' },
@@ -52,12 +51,9 @@ Example:
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -85,10 +81,9 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
     end
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ![Example](../../assets/action-form-layout-separator.png)
@@ -103,11 +98,10 @@ end
 Example:
 
 
-<details>
-<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customer', collection => {" %}
 ```javascript
-  collection.addAction('Boring form', {
+collection.addAction('Boring form', {
     scope: 'Global',
     form: [
       {
@@ -145,12 +139,9 @@ Example:
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -197,10 +188,9 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
     end
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ![Example](../../assets/action-form-layout-htmlblock.png)
 
@@ -216,11 +206,10 @@ end
 Example:
 
 
-<details>
-<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customer', collection => {" %}
 ```javascript
-  collection.addAction('Personal form', {
+collection.addAction('Personal form', {
     scope: 'Global',
     form: [
       {
@@ -247,12 +236,9 @@ Example:
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -287,10 +273,9 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
     end
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ![Example](../../assets/action-form-layout-row.png)
 
@@ -318,11 +303,10 @@ Please note this list of limitations:
 Example:
 
 
-<details>
-<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customer', collection => {" %}
 ```javascript
-  collection.addAction('Create user with address', {
+collection.addAction('Create user with address', {
     scope: 'Global',
     form: [
       {
@@ -364,12 +348,9 @@ Example:
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Types</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -416,9 +397,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
     end
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ![page 1](../../assets/action-form-layout-pages-1.png) ![page 2](../../assets/action-form-layout-pages-2.png)

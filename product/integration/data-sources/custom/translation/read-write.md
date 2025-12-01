@@ -2,9 +2,8 @@ Making your records editable is achieved by implementing the `create`, `update` 
 
 The 3 methods take a [filter](../../getting-started/queries/filters.md) as a parameter but note that, unlike the `list` method, there is no need to support paging.
 
-<details>
-<summary><strong>const { BaseCollection } = require('@forestadmin/datasource-toolkit');</strong></summary>
-
+{% tabs %}
+{% tab title="const { BaseCollection } = require('@forestadmin/datasource-toolkit');" %}
 ```javascript
 const axios = require('axios'); // client for the target API
 
@@ -43,14 +42,11 @@ class MyCollection extends BaseCollection {
   }
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module App</strong></summary>
-
+{% tab title="module App" %}
 ```ruby
-  module Collections
+module Collections
     class MyCollection < ForestAdminDatasourceToolkit::Collection
       include ForestAdminDatasourceToolkit::Schema
       include ForestAdminDatasourceToolkit::Components::Query
@@ -121,5 +117,5 @@ class MyCollection extends BaseCollection {
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}

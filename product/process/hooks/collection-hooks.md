@@ -35,11 +35,10 @@ Collection Hooks are only called when the Collection function is contacted by th
 
 In the following example, we want to prevent a set of users from updating any records of the `Transactions` table. We want to check if the user email is allowed to update a record via an external API call.
 
-<details>
-<summary><strong>transaction.addHook('Before', 'Update', async context => {</strong></summary>
-
+{% tabs %}
+{% tab title="transaction.addHook('Before', 'Update', async context => {" %}
 ```javascript
-  // context.caller contains information about the current user, the defined
+// context.caller contains information about the current user, the defined
   // timezone, etc.
   // In this case, context.caller.email is the email used in Forest Admin by the user
   // that initiated the call
@@ -51,14 +50,11 @@ In the following example, we want to prevent a set of users from updating any re
   }
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('transactions') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('transactions') do |collection|" %}
 ```ruby
-  collection.add_hook('Before', 'Update') do |context|
+collection.add_hook('Before', 'Update') do |context|
     # context.caller contains information about the current user, the defined timezone, etc.
     # In this case, context.caller.email is the email used in Forest Admin by the user that initiated the call
     is_allowed = my_function_to_check_user_is_allowed(context.caller.email)
@@ -70,14 +66,13 @@ In the following example, we want to prevent a set of users from updating any re
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>user.addHook('After', 'Create', async (context, responseBuilder) => {</strong></summary>
-
+{% tabs %}
+{% tab title="user.addHook('After', 'Create', async (context, responseBuilder) => {" %}
 ```javascript
-  // The result of the create function always return an array of records
+// The result of the create function always return an array of records
   const userEmail = context.records[0]?.email;
   await MyEmailSender.sendEmail({
     from: 'erlich@bachman.com',
@@ -86,14 +81,11 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('user') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('user') do |collection|" %}
 ```ruby
-  collection.add_hook('After', 'Create') do |context|
+collection.add_hook('After', 'Create') do |context|
     # The result of the create function always return a record
     email = context.record['email']
     MyEmailSender.send_email(
@@ -104,7 +96,7 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

@@ -35,27 +35,23 @@ It is the default mode for all binary fields that are used as either a primary o
 
 If you want to use the hexadecimal mode for another field, use the `replaceFieldBinaryMode` / `replace_field_binary_mode` method:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 agent.customizeCollection('people', collection =>
   collection.replaceFieldBinaryMode('avatar', 'hex'),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('people') do |collection|
   collection.replace_field_binary_mode('avatar', 'hex')
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Using the data-URI mode
 
@@ -65,24 +61,20 @@ When using that mode, you will be able to use both the [File Viewer](https://doc
 
 If the automatic detection based on the field type is not working for you, you can force the `datauri` mode using the `replaceFieldBinaryMode``replace_field_binary_mode` method as so:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 agent.customizeCollection('people', collection =>
   collection.replaceFieldBinaryMode('avatar', 'datauri'),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('User') do |collection|
   collection.replace_field_binary_mode('avatar', 'datauri')
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}

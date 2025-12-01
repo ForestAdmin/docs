@@ -18,24 +18,20 @@ Many-to-One relations are by far the most common type of relation: many records 
 
 Think about countries and towns: a town belongs to a single country, but each country can have multiple towns.
 
-<details>
-<summary><strong>agent.customizeCollection('towns', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('towns', collection =>" %}
 ```javascript
-  collection.addManyToOneRelation('country', 'countries', {
+collection.addManyToOneRelation('country', 'countries', {
     foreignKey: 'country_id',
     foreignKeyTarget: 'id', // Optional (uses `country` primary key by default)
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('town') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('town') do |collection|" %}
 ```ruby
-  collection.add_many_to_one_relation(
+collection.add_many_to_one_relation(
     'country',
     'Country',
     {
@@ -45,8 +41,8 @@ Think about countries and towns: a town belongs to a single country, but each co
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## One-to-One relations
@@ -61,9 +57,8 @@ Take note that the inverse of a `one-to-one` is a `many-to-one`.
 This may seem counter-intuitive: the side of the relation which should be configured as `many-to-one` is the one that carries the foreign key.
 {% endhint %}
 
-<details>
-<summary><strong>// Configure one side of the relation ...</strong></summary>
-
+{% tabs %}
+{% tab title="// Configure one side of the relation ..." %}
 ```javascript
 agent.customizeCollection('mayors', collection => {
   collection.addOneToOneRelation('city', 'cities', {
@@ -81,14 +76,11 @@ agent.customizeCollection('cities', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('mayor') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('mayor') do |collection|" %}
 ```ruby
-  collection.add_one_to_one_relation(
+collection.add_one_to_one_relation(
     'city',
     'City',
     {
@@ -110,7 +102,7 @@ agent.customizeCollection('cities', collection => {
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

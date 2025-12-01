@@ -31,11 +31,10 @@ Custom permissions would better be implemented by using the [Roles](https://docs
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>router.delete(</strong></summary>
-
+{% tabs %}
+{% tab title="router.delete(" %}
 ```javascript
-  '/companies/:recordId',
+'/companies/:recordId',
   permissionMiddlewareCreator.delete(),
   (request, response, next) => {
     const { params, query, user } = request;
@@ -51,14 +50,11 @@ Custom permissions would better be implemented by using the [Roles](https://docs
   },
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestLiana</strong></summary>
-
+{% tab title="module ForestLiana" %}
 ```ruby
-  class BooksController < ForestLiana::ApplicationController
+class BooksController < ForestLiana::ApplicationController
     def destroy
       Book.find(params[:id]).destroy
 
@@ -67,14 +63,13 @@ Custom permissions would better be implemented by using the [Roles](https://docs
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customers', companies => {" %}
 ```javascript
-  // Add a hook to the "customers" collection
+// Add a hook to the "customers" collection
   companies.addHook('Before', 'Delete', async context => {
     if (context.caller.email !== 'sandro.munda@forestadmin.com')
       context.throwForbiddenError(
@@ -83,14 +78,11 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.customize
       @create_agent.customize_collection('Book') do |collection|
         collection.add_hook('Before', 'Delete') do |context|
@@ -105,8 +97,8 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}
 
@@ -146,11 +138,10 @@ router.put('/companies/:id', permissionMiddlewareCreator.update(), handler);
 - Define a new route into your `routes.rb` file.
 - Add a new method to your controller.
 
-<details>
-<summary><strong>module ForestLiana</strong></summary>
-
+{% tabs %}
+{% tab title="module ForestLiana" %}
 ```ruby
-  class CompaniesController < ForestLiana::ApplicationController
+class CompaniesController < ForestLiana::ApplicationController
     def create
       if params[:name] && params[:name].match?(/^Forest/)
         head :bad_request, content_type: 'application/json'
@@ -169,24 +160,20 @@ router.put('/companies/:id', permissionMiddlewareCreator.update(), handler);
   end
 end
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('companies', companies => {</strong></summary>
-
+{% tab title="agent.customizeCollection('companies', companies => {" %}
 ```javascript
-  companies.addFieldValidation('name', 'Match', /^Forest/);
+companies.addFieldValidation('name', 'Match', /^Forest/);
 });
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tabs %}
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
     def self.customize
@@ -231,14 +218,11 @@ router.post(
   },
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestLiana</strong></summary>
-
+{% tab title="module ForestLiana" %}
 ```ruby
-  class CustomersController < ForestLiana::ApplicationController
+class CustomersController < ForestLiana::ApplicationController
     def create
       begin
         superagent.post('https://my-company/create-card').set(
@@ -251,14 +235,13 @@ router.post(
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('customers', companies => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customers', companies => {" %}
 ```javascript
-  // Add a hook to the "customers" collection
+// Add a hook to the "customers" collection
   companies.addHook('Before', 'Create', async context => {
     await superagent
       .post('https://my-company/create-card')
@@ -267,14 +250,11 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     def self.customize
       @create_agent.customize_collection('Customer') do |collection|
         collection.add_hook('Before', 'Create') do |context|
@@ -287,8 +267,8 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {{#nodejs,ruby}}
 {% endtab %} {% endtabs %}

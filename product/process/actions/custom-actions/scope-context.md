@@ -37,11 +37,10 @@ It is the bridge between all the data that your agent has access to and the acti
 
 We can simply use the {{#nodejs}}`getRecord(fieldNames)`{{/nodejs}}{{#ruby}}`get_record(field_names)`{{/ruby}} method to get any column from the selected record or a relation.
 
-<details>
-<summary><strong>agent.customizeCollection('customers', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customers', collection =>" %}
 ```javascript
-  collection.addAction('Call me John in the server logs', {
+collection.addAction('Call me John in the server logs', {
     scope: 'Single',
     execute: async context => {
       // use getRecords() for Bulk and Global Actions
@@ -56,12 +55,9 @@ We can simply use the {{#nodejs}}`getRecord(fieldNames)`{{/nodejs}}{{#ruby}}`get
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Context</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Context" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -79,8 +75,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Example 2: Updating a field of the selected record
@@ -89,11 +85,10 @@ For simple queries, use {{#nodejs,ruby}}`context.collection`{{/nodejs,ruby}} and
 
 Those are instances of objects from the [Forest Admin Query Interface](../../datasources/getting-started/README.md).
 
-<details>
-<summary><strong>agent.customizeCollection('companies', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('companies', collection =>" %}
 ```javascript
-  collection.addAction('Mark as live', {
+collection.addAction('Mark as live', {
     scope: 'Single',
     execute: async context => {
       await context.collection.update(context.filter, { live: true });
@@ -101,12 +96,9 @@ Those are instances of objects from the [Forest Admin Query Interface](../../dat
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Context</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Context" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -118,10 +110,9 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
     end
   )
 end
-
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Example 3: Coding any business logic
@@ -130,9 +121,8 @@ Forest Admin does not impose any restriction on the handler: you are free to wri
 
 You are free to call external APIs, query your database, or perform any work in action handlers.
 
-<details>
-<summary><strong>import axios from 'axios';</strong></summary>
-
+{% tabs %}
+{% tab title="import axios from 'axios';" %}
 ```javascript
 agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as live', {
@@ -146,12 +136,9 @@ agent.customizeCollection('companies', collection =>
   }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action::Context</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Context" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -164,7 +151,7 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Types
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

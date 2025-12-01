@@ -20,9 +20,8 @@ You can provide a handler that converts a `ConditionTree` to one or more others 
 
 This example tells Forest Admin "When a user filters by first name, I want to filter by last name instead".
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.replaceFieldOperator('firstName', 'Contains', value => {
   // Return a condition tree that makes sense for your use-case.
@@ -33,12 +32,9 @@ collection.replaceFieldOperator('firstName', 'Contains', value => {
   };
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -52,8 +48,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### Emulation
 
@@ -65,9 +61,8 @@ Under the hood, it will work by fetching all records from the datasource and fil
 
 For more information about operator equivalence, refer to the Forest Admin documentation on filtering.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.emulateFieldOperator('aField', 'LongerThan', (recordFieldValue, value) => {
   // recordFieldValue is the value of the field on the record
@@ -75,12 +70,9 @@ collection.emulateFieldOperator('aField', 'LongerThan', (recordFieldValue, value
   return typeof recordFieldValue === 'string' && recordFieldValue.length > value;
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('user') do |collection|
   collection.emulate_field_operator('aField', 'LongerThan') do |record_field_value, value|
@@ -88,5 +80,5 @@ collection.emulateFieldOperator('aField', 'LongerThan', (recordFieldValue, value
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}

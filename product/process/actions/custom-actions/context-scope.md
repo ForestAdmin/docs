@@ -180,9 +180,8 @@ if (context.hasFieldChanged('Status')) {
 
 ### Example: Access record data
 
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 collection.addAction('Display customer info', {
   scope: 'Single',
@@ -205,12 +204,9 @@ collection.addAction('Display customer info', {
   },
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 collection.add_action(
   'Display customer info',
@@ -232,12 +228,11 @@ collection.add_action(
   end
 )
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 collection.addAction('Mark as live', {
   scope: 'Single',
@@ -252,12 +247,9 @@ collection.addAction('Mark as live', {
   },
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 collection.add_action(
   'Mark as live',
@@ -272,12 +264,11 @@ collection.add_action(
   end
 )
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 collection.addAction('Send notifications', {
   scope: 'Bulk',
@@ -311,12 +302,9 @@ collection.addAction('Send notifications', {
   },
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 collection.add_action(
   'Send notifications',
@@ -347,12 +335,11 @@ collection.add_action(
   end
 )
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 collection.addAction('Assign to me', {
   scope: 'Single',
@@ -369,12 +356,9 @@ collection.addAction('Assign to me', {
   },
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 collection.add_action(
   'Assign to me',
@@ -391,12 +375,11 @@ collection.add_action(
   end
 )
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js / Cloud</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js / Cloud" %}
 ```javascript
 collection.addAction('Export filtered data', {
   scope: 'Global',
@@ -415,12 +398,9 @@ collection.addAction('Export filtered data', {
   },
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 collection.add_action(
   'Export filtered data',
@@ -441,6 +421,6 @@ collection.add_action(
   end
 )
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 

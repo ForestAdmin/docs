@@ -8,11 +8,10 @@ Time-based charts are very similar to distribution charts, the only differences 
   {{/nodejs}}
 
 
-<details>
-<summary><strong>agent.addChart('transactionVolume', async (context, resultBuilder) => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.addChart('transactionVolume', async (context, resultBuilder) => {" %}
 ```javascript
-  // [...]
+// [...]
 
   return resultBuilder.timeBased('Month', [
     { date: new Date('2017-02-01'), value: 636 },
@@ -32,14 +31,11 @@ Time-based charts are very similar to distribution charts, the only differences 
   ]);
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.add_chart('transactionVolume') do |_context, result_builder|</strong></summary>
-
+{% tab title="@create_agent.add_chart('transactionVolume') do |_context, result_builder|" %}
 ```ruby
-  result_builder.time_based(
+result_builder.time_based(
     'Month',
     [
         { date: '2017-02-01', value: 636 },
@@ -50,8 +46,8 @@ Time-based charts are very similar to distribution charts, the only differences 
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 <details>
 <summary><strong>agent.addChart('newUsersByProject', async (context, resultBuilder) => {</strong></summary>

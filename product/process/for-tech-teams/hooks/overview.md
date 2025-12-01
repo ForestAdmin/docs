@@ -51,9 +51,8 @@ Collection Hooks are only called when the Collection function is contacted by th
 
 In the following example, we want to prevent a set of users from updating any records of the `Transactions` table. We want to check if the user email is allowed to update a record via an external API call.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 transaction.addHook('Before', 'Update', async context => {
   // context.caller contains information about the current user, the defined
@@ -68,12 +67,9 @@ transaction.addHook('Before', 'Update', async context => {
   }
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('transactions') do |collection|
   collection.add_hook('Before', 'Update') do |context|
@@ -88,12 +84,11 @@ transaction.addHook('Before', 'Update', async context => {
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 user.addHook('After', 'Create', async (context, responseBuilder) => {
   // The result of the create function always return an array of records
@@ -105,12 +100,9 @@ user.addHook('After', 'Create', async (context, responseBuilder) => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('user') do |collection|
   collection.add_hook('After', 'Create') do |context|
@@ -124,8 +116,8 @@ user.addHook('After', 'Create', async (context, responseBuilder) => {
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Collection Overrides
@@ -168,9 +160,8 @@ Overrides are declared similarly to hooks but are aimed at replacing an entire o
 Unknown properties in returned records will be removed (Node.js).
 {% endhint %}
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.overrideCreate(async context => {
   // Custom logic to handle creation
@@ -178,12 +169,9 @@ collection.overrideCreate(async context => {
   // Return an array of created records
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 collection.override_create do |context|
   # Custom logic to handle creation
@@ -191,12 +179,11 @@ collection.override_create do |context|
   # Return an array of created records
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.overrideUpdate(async context => {
   // Custom logic to handle update
@@ -205,12 +192,9 @@ collection.overrideUpdate(async context => {
   // Perform update operation
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 collection.override_update do |context|
   # Custom logic to handle update
@@ -219,12 +203,11 @@ collection.override_update do |context|
   # Perform update operation
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 collection.overrideDelete(async context => {
   // Custom logic to handle deletion
@@ -232,12 +215,9 @@ collection.overrideDelete(async context => {
   // Perform deletion operation
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 collection.override_delete do |context|
   # Custom logic to handle deletion
@@ -245,8 +225,8 @@ collection.override_delete do |context|
   # Perform deletion operation
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {% hint style="info" %}
@@ -263,9 +243,8 @@ Overrides take precedence over the default operation. Ensure your custom handler
 
 You might want to create the record with your custom API:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const { MissingFieldError } = require('@forestadmin/datasource-toolkit');
 
@@ -287,24 +266,20 @@ product.overrideCreate(async context => {
   return products;
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 product.override_create do |context|
   response = HTTParty.post("https://my-product-api.com/products", body: context.data)
   response.parsed_response
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 product.overrideUpdate(async context => {
   const { patch } = context;
@@ -324,12 +299,9 @@ product.overrideUpdate(async context => {
   await context.collection.update(context.filter, context.patch);
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 product.override_update do |context|
   # Execute data modification and validation only if one of name or slug was edited
@@ -344,8 +316,8 @@ product.override_update do |context|
   context.collection.update(context.filter, context.patch)
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Platform-Specific Guides

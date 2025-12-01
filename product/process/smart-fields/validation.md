@@ -15,21 +15,17 @@ However, you may want to enforce stricter restrictions than the ones which are i
 
 The list of operators (`Present`, `LongerThan`, ...) which can be used when adding validators is the same as the [filter operators](../../datasources/getting-started/queries/filters.md#operators).
 
-<details>
-<summary><strong>collection</strong></summary>
-
+{% tabs %}
+{% tab title="collection" %}
 ```javascript
-  .addFieldValidation('firstName', 'Present')
+.addFieldValidation('firstName', 'Present')
   .addFieldValidation('firstName', 'LongerThan', 2)
   .addFieldValidation('firstName', 'ShorterThan', 13)
   .addFieldValidation('firstName', 'Match', /^[a-z]+$/i);
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceToolkit::Components::Query::ConditionTree</strong></summary>
-
+{% tab title="include ForestAdminDatasourceToolkit::Components::Query::ConditionTree" %}
 ```ruby
 @create_agent.customize_collection('customer') do |collection|
   collection.add_field_validation('firstName', Operators::PRESENT)
@@ -38,8 +34,8 @@ The list of operators (`Present`, `LongerThan`, ...) which can be used when addi
     .add_field_validation('firstName', Operators::MATCH, /^[a-z]+$/)
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {{#nodejs}}

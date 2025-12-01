@@ -9,9 +9,8 @@ The **Integration** layer is the foundation of Forest Admin. It determines what 
 
 Forest Admin loads data through **datasources** - connections to your databases, APIs, or any system that stores data. The agent introspects your datasources to automatically discover tables, collections, and their relationships.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const agent = createAgent(options);
 
@@ -26,12 +25,9 @@ agent.addDataSource(
 // - Identifies relationships (foreign keys)
 // - Creates collections for each table
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 agent = Forestadmin::Agent.new(options)
 
@@ -46,8 +42,8 @@ agent.add_datasource(
 # - Identifies relationships (foreign keys)
 # - Creates collections for each table
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### What gets loaded
 
@@ -75,9 +71,8 @@ Once introspection is complete, Forest Admin automatically:
 
 Connect multiple databases or APIs in the same agent:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 // Primary PostgreSQL database
 agent.addDataSource(
@@ -91,12 +86,9 @@ agent.addDataSource(
   { name: 'analytics' }
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 # Primary PostgreSQL database
 agent.add_datasource(
@@ -110,8 +102,8 @@ agent.add_datasource(
   name: 'analytics'
 )
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% hint style="warning" %}
 **Looking to enrich a single record?**

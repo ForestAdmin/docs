@@ -23,9 +23,8 @@ When creating a new field you will need to provide:
 
 This example adds a `user.displayName` field, which is computed by concatenating the first and last names.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 // "user" Collection has the following structure: { id, firstName, lastName }
 agent.customizeCollection('user', collection => {
@@ -45,12 +44,9 @@ agent.customizeCollection('user', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
@@ -71,12 +67,11 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
   )
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 // "user" Collection has the following structure: { id, firstName, lastName }
 agent.customizeCollection('user', collection => {
@@ -97,12 +92,9 @@ agent.customizeCollection('user', collection => {
     });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
@@ -128,14 +120,12 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
       )
     )
 end
-
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 // Structure:
 // User    { id, addressId, firstName, lastName }
@@ -155,12 +145,9 @@ agent.customizeCollection('user', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
@@ -181,12 +168,11 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
   )
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 // Structure
 // User  { id }
@@ -221,12 +207,9 @@ agent.customizeCollection('user', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query
@@ -258,8 +241,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ### Adding a field fetching data from an API
 
@@ -283,9 +266,8 @@ The API we're using is fictional, and the structure of the response is:
 }
 ```
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const emailVerificationClient = require('@sendchimplio/client');
 emailVerificationClient.setApiKey(process.env.SENDCHIMPLIO_API_KEY);
@@ -310,12 +292,9 @@ agent.customizeCollection('user', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query
@@ -346,8 +325,8 @@ client.api_key = 'MY_FAKE_API_KEY'
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 ## Performance
 

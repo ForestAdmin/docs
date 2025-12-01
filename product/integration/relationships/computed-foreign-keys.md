@@ -16,11 +16,10 @@ We have 2 Collections: `Customers` and `Messages`, linked together by a `one-to-
 
 We want to create a `ManyToOne` relationship with the last message sent by a given customer.
 
-<details>
-<summary><strong>agent.customizeCollection('customers', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customers', collection => {" %}
 ```javascript
-  // Create foreign key
+// Create foreign key
   collection.addField('lastMessageId', {
     columnType: 'Number',
     dependencies: ['id'],
@@ -66,12 +65,9 @@ We want to create a `ManyToOne` relationship with the last message sent by a giv
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
@@ -111,8 +107,8 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   .add_many_to_one_relation('lastMessage', 'message', { foreign_key: 'lastMessageId' })
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Connecting collections without having a shared identifier
@@ -121,11 +117,10 @@ You have 2 Collections and both contain users: one comes from your database, and
 
 There is no common id between them that can be used to tell Forest Admin how to link them together, however, both Collections have `firstName`, `lastName`, and `birthDate` fields, which taken together, are unique enough.
 
-<details>
-<summary><strong>agent</strong></summary>
-
+{% tabs %}
+{% tab title="agent" %}
 ```javascript
-  .customizeCollection('databaseUsers', createFilterableIdentityField)
+.customizeCollection('databaseUsers', createFilterableIdentityField)
   .customizeCollection('crmUsers', createFilterableIdentityField)
   .customizeCollection('databaseUsers', createRelationship)
   .customizeCollection('crmUsers', createInverseRelationship);
@@ -172,12 +167,9 @@ function createInverseRelationship(crmUsers) {
   });
 }
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Computed</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -241,7 +233,7 @@ end
 @create_agent.customize_collection('database_users', &method(:create_relationship))
 @create_agent.customize_collection('crm_users', &method(:create_inverse_relationship))
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

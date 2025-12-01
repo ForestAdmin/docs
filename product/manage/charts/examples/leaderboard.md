@@ -2,11 +2,10 @@
 
 Leaderboard Charts display a list of records sorted by their value in descending order.
 
-<details>
-<summary><strong>agent.addChart('companiesLive', async (context, resultBuilder) => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.addChart('companiesLive', async (context, resultBuilder) => {" %}
 ```javascript
-  // [...]
+// [...]
 
   return resultBuilder.leaderboard({
     Bonanza: 5835694,
@@ -17,14 +16,11 @@ Leaderboard Charts display a list of records sorted by their value in descending
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.add_chart('companiesLive') do |_context, result_builder|</strong></summary>
-
+{% tab title="@create_agent.add_chart('companiesLive') do |_context, result_builder|" %}
 ```ruby
-  result_builder.leaderboard({
+result_builder.leaderboard({
     Bonanza: 5835694,
     TalkSpace: 4179218,
     Tesco: 3959931,
@@ -33,7 +29,7 @@ Leaderboard Charts display a list of records sorted by their value in descending
   })
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

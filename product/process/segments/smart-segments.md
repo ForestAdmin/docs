@@ -28,11 +28,10 @@ As Forest Admin does not impose any restriction on the handler, you are free to 
 
 The only requirement when implementing a Segment from your agent is to return a valid `ConditionTree`{{#nodejs}} (see [Understanding Filters](../datasources/getting-started/queries/filters.md)){{/nodejs}}.
 
-<details>
-<summary><strong>agent.customizeCollection('products', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('products', collection =>" %}
 ```javascript
-  collection.addSegment('mostPurchased', async context => {
+collection.addSegment('mostPurchased', async context => {
     // Query the ids of the 10 most ordered products.
     const rows = await context.dataSource
       .getCollection('orders')
@@ -43,12 +42,9 @@ The only requirement when implementing a Segment from your agent is to return a 
   });
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceToolkit::Components::Query</strong></summary>
-
+{% tab title="include ForestAdminDatasourceToolkit::Components::Query" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -68,7 +64,7 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

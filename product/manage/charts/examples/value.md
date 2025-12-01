@@ -4,9 +4,8 @@ Value Charts display a single numerical value.
 
 They can be added to a Dashboard using the `addChart` method on the `agent` object
 
-<details>
-<summary><strong>// Add a chart to the Dashboard page</strong></summary>
-
+{% tabs %}
+{% tab title="// Add a chart to the Dashboard page" %}
 ```javascript
 agent.addChart('monthlyRecuringRevenue', async (context, resultBuilder) => {
   // Request the sum of the "amount" field of all the records in "payments"
@@ -23,12 +22,9 @@ agent.addChart('monthlyRecuringRevenue', async (context, resultBuilder) => {
   return resultBuilder.value(rows[0].value);
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceToolkit::Components::Query</strong></summary>
-
+{% tab title="include ForestAdminDatasourceToolkit::Components::Query" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -40,12 +36,11 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   result_builder.value(result[0]['value'])
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>// Add a chart to the Analytics page of the "customers" Collection</strong></summary>
-
+{% tabs %}
+{% tab title="// Add a chart to the Analytics page of the "customers" Collection" %}
 ```javascript
 agent.customizeCollection('customers', collection => {
   collection.addChart('monthlyRecuringRevenue', async (context, resultBuilder) => {
@@ -71,12 +66,9 @@ agent.customizeCollection('customers', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceToolkit::Components::Query</strong></summary>
-
+{% tab title="include ForestAdminDatasourceToolkit::Components::Query" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
@@ -98,29 +90,25 @@ include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.addChart('appointments', async (context, resultBuilder) => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.addChart('appointments', async (context, resultBuilder) => {" %}
 ```javascript
-  // [...]
+// [...]
 
   return resultBuilder.value(784, 760);
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.add_chart('appointments') do |_context, result_builder|</strong></summary>
-
+{% tab title="@create_agent.add_chart('appointments') do |_context, result_builder|" %}
 ```ruby
-  result_builder.value(784, 760)
+result_builder.value(784, 760)
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

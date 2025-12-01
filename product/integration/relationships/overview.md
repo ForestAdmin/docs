@@ -10,11 +10,10 @@ However, you may want to create additional intra and cross data source relations
 
 ## Minimal example
 
-<details>
-<summary><strong>agent.customizeCollection('towns', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('towns', collection =>" %}
 ```javascript
-  collection
+collection
     // Towns belong to 1 country
     .addManyToOneRelation('country', 'countries', { foreignKey: 'country_id' })
 
@@ -42,14 +41,11 @@ However, you may want to create additional intra and cross data source relations
     }),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('town') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('town') do |collection|" %}
 ```ruby
-  collection
+collection
     # Towns belong to 1 country
     .add_many_to_one_relation('country', 'Country', { foreign_key: 'country_id' })
 
@@ -73,7 +69,7 @@ However, you may want to create additional intra and cross data source relations
     })
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

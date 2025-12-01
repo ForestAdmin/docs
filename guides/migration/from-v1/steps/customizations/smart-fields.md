@@ -70,11 +70,10 @@ Note that when displaying a list of records, the new agent will only make one ca
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>collection('users', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection('users', {" %}
 ```javascript
-  fields: [
+fields: [
     {
       field: 'full_address',
       type: 'String',
@@ -87,14 +86,11 @@ Note that when displaying a list of records, the new agent will only make one ca
   ],
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>class Forest::User</strong></summary>
-
+{% tab title="class Forest::User" %}
 ```ruby
-  collection :User
+collection :User
 
   field :full_address, type: 'String' do
     addr = GeoWebService.get_address(user.address_id)
@@ -102,14 +98,13 @@ Note that when displaying a list of records, the new agent will only make one ca
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('users', users => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('users', users => {" %}
 ```javascript
-  users.addField('full_address', {
+users.addField('full_address', {
     columnType: 'String',
     dependencies: ['address_id'],
     getValues: users =>
@@ -121,14 +116,11 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Computed
 
     def self.customize
@@ -146,8 +138,8 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}
 
@@ -159,11 +151,10 @@ This part is very similar to the legacy agent. The API change is because this fu
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>collection('users', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection('users', {" %}
 ```javascript
-  fields: [
+fields: [
     {
       field: 'full_address',
       type: 'String',
@@ -184,14 +175,11 @@ This part is very similar to the legacy agent. The API change is because this fu
   ],
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>class Forest::User</strong></summary>
-
+{% tab title="class Forest::User" %}
 ```ruby
-  collection :User
+collection :User
 
   set_full_address = lambda do |address_params, full_address|
     full_address = full_address.split("\n")
@@ -208,14 +196,13 @@ This part is very similar to the legacy agent. The API change is because this fu
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('users', users => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('users', users => {" %}
 ```javascript
-  users
+users
     .addField('full_address', { /* ... same as before ... */ })
     .replaceFieldWriting('full_address', (value) => {
       const address = await geoWebService.getAddress(customer.address_id);
@@ -231,14 +218,11 @@ end
     });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Computed
 
     def self.customize
@@ -260,8 +244,8 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}
 
@@ -289,11 +273,10 @@ At the cost of performance, you can tell the agent to [emulate](../../../../agen
 
 {% tabs %} {% tab title="Before" %}
 
-<details>
-<summary><strong>collection('users', {</strong></summary>
-
+{% tabs %}
+{% tab title="collection('users', {" %}
 ```javascript
-  fields: [
+fields: [
     {
       field: 'full_address',
       type: 'String',
@@ -312,14 +295,11 @@ At the cost of performance, you can tell the agent to [emulate](../../../../agen
   ],
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>class Forest::User</strong></summary>
-
+{% tab title="class Forest::User" %}
 ```ruby
-  collection :User
+collection :User
 
   def filter_fullname(operator, value)
     case operator
@@ -335,14 +315,13 @@ At the cost of performance, you can tell the agent to [emulate](../../../../agen
   end
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('users', users => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('users', users => {" %}
 ```javascript
-  users
+users
     .addField('full_address', {
       /* ... same as before ... */
     })
@@ -365,14 +344,11 @@ end
     .emulateFieldFiltering('full_address');
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>module ForestAdminRails</strong></summary>
-
+{% tab title="module ForestAdminRails" %}
 ```ruby
-  class CreateAgent
+class CreateAgent
     include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
     def self.customize
@@ -399,7 +375,7 @@ end
   end
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 {% endtab %} {% endtabs %}

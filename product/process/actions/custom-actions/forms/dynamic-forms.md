@@ -65,11 +65,10 @@ And finally, those two extra properties are available and can only be used as fu
 
 In this example we make a field required only if the user enters a value greater than 1000 in another field.
 
-<details>
-<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customer', collection => {" %}
 ```javascript
-  collection.addAction('Charge credit card', {
+collection.addAction('Charge credit card', {
     scope: 'Single',
     form: [
       {
@@ -95,12 +94,9 @@ In this example we make a field required only if the user enters a value greater
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -132,8 +128,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Example 2: Conditional field display based on record data
@@ -142,11 +138,10 @@ Unlike the previous example, this one will only display the field if the record 
 
 It is still a dynamic field, but this time, the condition does not depend on the form values but on the record data.
 
-<details>
-<summary><strong>agent.customizeCollection('product', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('product', collection => {" %}
 ```javascript
-  collection.addAction('Leave a review', {
+collection.addAction('Leave a review', {
     scope: 'Single',
     form: [
       { label: 'Rating', type: 'Enum', enumValues: ['1', '2', '3', '4', '5'] },
@@ -167,12 +162,9 @@ It is still a dynamic field, but this time, the condition does not depend on the
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -204,8 +196,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Example 3: Conditional enum values based on both record data and form values
@@ -218,11 +210,10 @@ The first field displays different denominations that can be used to address the
 
 The second field displays different levels of loudness depending on if the customer is Morgan Freeman, as to ensure that we never speak `Very Loudly` at him, for the sake of politeness.
 
-<details>
-<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customer', collection => {" %}
 ```javascript
-  collection.addAction('Tell me a greeting', {
+collection.addAction('Tell me a greeting', {
     scope: 'Single',
     form: [
       {
@@ -273,12 +264,9 @@ The second field displays different levels of loudness depending on if the custo
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -342,14 +330,13 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('customer', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('customer', collection => {" %}
 ```javascript
-  collection.addAction('Create banking identity', {
+collection.addAction('Create banking identity', {
     scope: 'Single',
     form: [
       {
@@ -376,12 +363,9 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -411,14 +395,13 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('order', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('order', collection => {" %}
 ```javascript
-  collection.addAction('Change order price', {
+collection.addAction('Change order price', {
     scope: 'Single',
     form: [
       {
@@ -435,12 +418,9 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -463,14 +443,13 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
+{% endtab %}
+{% endtabs %}
 
-</details>
-
-<details>
-<summary><strong>agent.customizeCollection('order', collection => {</strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('order', collection => {" %}
 ```javascript
-  collection.addAction('Change order price', {
+collection.addAction('Change order price', {
     scope: 'Single',
     form: [
       {
@@ -490,12 +469,9 @@ end
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>include ForestAdminDatasourceCustomizer::Decorators::Action</strong></summary>
-
+{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -519,8 +495,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action::Context
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 {{#nodejs}}

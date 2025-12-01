@@ -6,29 +6,25 @@ By using the {{#nodejs}}`replaceFieldSorting`{{/nodejs}}{{#ruby}}`replace_field_
 
 You can also provide replacement sort clauses. In this example, we're telling Forest Admin "When a user sorts by full name, I want to sort by the last name, and then by the first name".
 
-<details>
-<summary><strong>collection.replaceFieldSorting('fullName', [</strong></summary>
-
+{% tabs %}
+{% tab title="collection.replaceFieldSorting('fullName', [" %}
 ```javascript
-  { field: 'lastName', ascending: true },
+{ field: 'lastName', ascending: true },
   { field: 'firstName', ascending: true },
 ]);
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('customer') do |collection|" %}
 ```ruby
-  collection.replace_field_sorting('fullName', [
+collection.replace_field_sorting('fullName', [
     { field: 'lastName', ascending: true },
     { field: 'firstName', ascending: true },
   ])
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 <details>
 <summary><strong>// Sorting by creationDate ascending <=> Sorting by id descending</strong></summary>
@@ -39,11 +35,10 @@ collection.replaceFieldSorting('creationDate', [{ field: 'id', ascending: false 
 
 </details>
 
-<details>
-<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
-
+{% tabs %}
+{% tab title="@create_agent.customize_collection('customer') do |collection|" %}
 ```ruby
-  collection.replace_field_sorting('creationDate', [{ field: 'id', ascending: false }])
+collection.replace_field_sorting('creationDate', [{ field: 'id', ascending: false }])
 end
 
 ```
@@ -66,17 +61,14 @@ As a consequence, sorting emulation performance cost is **linear** with the numb
 
 ```javascript
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('customer') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('customer') do |collection|" %}
 ```ruby
-  collection.emulate_field_sorting('fullName')
+collection.emulate_field_sorting('fullName')
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 

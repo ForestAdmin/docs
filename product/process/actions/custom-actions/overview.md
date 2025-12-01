@@ -10,82 +10,77 @@ To create an Action, you will first need to declare it in your code for a specif
 
 The action behavior is implemented in the `execute` function.
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
-  collection.addAction('Mark as live', {
-    scope: 'Single',
-    description: 'Mark the company as live',
-    submitButtonLabel: 'Turn on',
-    execute: async context => {
-      // Implement your controller here.
+collection.addAction('Mark as live', {
+  scope: 'Single',
+  description: 'Mark the company as live',
+  submitButtonLabel: 'Turn on',
+  execute: async context => {
+    // Implement your controller here.
+  },
+  form: [
+    {
+      type: 'Layout',
+      component: 'Page',
+      nextButtonLabel: 'Go to address',
+      elements: [
+        { type: 'Date', label: 'Live date', id: 'LiveDate' },
+        { type: 'DateOnly', label: 'Exist since', id: 'CreationDate' },
+        { type: 'Layout', component: 'Separator' },
+        {
+          type: 'Layout',
+          component: 'Row',
+          fields: [
+            { type: 'Boolean', label: 'Credit Card ?', id: 'WithCreditCard' },
+            {
+              type: 'String',
+              if: ctx => ctx.formValues?.WithCreditCard == true,
+              label: 'Number',
+              id: 'CreditCardNumber',
+            },
+          ],
+        },
+      ],
     },
-    form: [
-      {
-        type: 'Layout',
-        component: 'Page',
-        nextButtonLabel: 'Go to address',
-        elements: [
-          { type: 'Date', label: 'Live date', id: 'LiveDate' },
-          { type: 'DateOnly', label: 'Exist since', id: 'CreationDate' },
-          { type: 'Layout', component: 'Separator' },
-          {
-            type: 'Layout',
-            component: 'Row',
-            fields: [
-              { type: 'Boolean', label: 'Credit Card ?', id: 'WithCreditCard' },
-              {
-                type: 'String',
-                if: ctx => ctx.formValues?.WithCreditCard == true,
-                label: 'Number',
-                id: 'CreditCardNumber',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        type: 'Layout',
-        component: 'Page',
-        previousButtonLabel: 'Go back to general information',
-        elements: [
-          {
-            type: 'Layout',
-            component: 'HtmlBlock',
-            content:
-              async context => `If the company headquarter didn't change continue.<br/>
-                    Otherwise set the new address. <br/>
-                    <strong>The current address of the company is ${await context.getRecord(
-                      ['fullAddress'],
-                    ).fullAddress}.
-                    `,
-          },
-          {
-            type: 'Layout',
-            component: 'Row',
-            fields: [
-              { type: 'Number', label: 'StreetNumber' },
-              { type: 'String', label: 'StreetName' },
-            ],
-          },
-          { type: 'Layout', component: 'Separator' },
-          { type: 'String', label: 'PostalCode' },
-          { type: 'Number', label: 'City' },
-          { type: 'Layout', component: 'Separator' },
-          { type: 'String', label: 'Country' },
-        ],
-      },
-    ],
-  }),
-);
+    {
+      type: 'Layout',
+      component: 'Page',
+      previousButtonLabel: 'Go back to general information',
+      elements: [
+        {
+          type: 'Layout',
+          component: 'HtmlBlock',
+          content:
+            async context => `If the company headquarter didn't change continue.<br/>
+                  Otherwise set the new address. <br/>
+                  <strong>The current address of the company is ${await context.getRecord(
+                    ['fullAddress'],
+                  ).fullAddress}.
+                  `,
+        },
+        {
+          type: 'Layout',
+          component: 'Row',
+          fields: [
+            { type: 'Number', label: 'StreetNumber' },
+            { type: 'String', label: 'StreetName' },
+          ],
+        },
+        { type: 'Layout', component: 'Separator' },
+        { type: 'String', label: 'PostalCode' },
+        { type: 'Number', label: 'City' },
+        { type: 'Layout', component: 'Separator' },
+        { type: 'String', label: 'Country' },
+      ],
+    },
+  ],
+});
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action
 
@@ -147,9 +142,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Action
   )
 end
 ```
-
-</details>
-
+{% endtab %}
+{% endtabs %}
 
 | Property                                                                                           | Usage       | Description                                                                                                                                                                                                                |
 | -------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

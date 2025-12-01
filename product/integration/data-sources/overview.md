@@ -9,9 +9,8 @@ Forest Admin connects to your data through datasources. You can add one or multi
 
 Add a datasource to your agent with `addDataSource()`:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const agent = createAgent(options);
 
@@ -19,12 +18,9 @@ agent.addDataSource(
   createSqlDataSource('postgresql://user:pass@localhost:5432/mydb')
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 require 'forest_admin_agent'
 
@@ -32,8 +28,8 @@ ForestAdminAgent::Agent.new do |config|
   config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 Your data is now exposed within Forest Admin, allowing you to browse, search, edit, and manage your records through a fully functional admin panel.
 
@@ -41,9 +37,8 @@ Your data is now exposed within Forest Admin, allowing you to browse, search, ed
 
 You can connect multiple datasources to create a unified admin panel across different databases, APIs, or systems:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 const agent = createAgent(options);
 
@@ -62,12 +57,9 @@ agent.addDataSource(
   createCustomDataSource(apiConfig)
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 ForestAdminAgent::Agent.new do |config|
   # Primary PostgreSQL database
@@ -80,8 +72,8 @@ ForestAdminAgent::Agent.new do |config|
   config.add_custom_data_source(api_config)
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 All collections from all datasources will appear in your Forest Admin interface, giving you a unified view across your entire data landscape.
 
@@ -89,9 +81,8 @@ All collections from all datasources will appear in your Forest Admin interface,
 
 You can define relationships between collections from different datasources:
 
-<details>
-<summary><strong>Node.js</strong></summary>
-
+{% tabs %}
+{% tab title="Node.js" %}
 ```javascript
 agent.customizeCollection('orders', collection => {
   collection.addManyToOneRelation('user', 'analytics_users', {
@@ -99,12 +90,9 @@ agent.customizeCollection('orders', collection => {
   });
 });
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>Ruby</strong></summary>
-
+{% tab title="Ruby" %}
 ```ruby
 agent.customize_collection('orders') do |collection|
   collection.add_many_to_one_relation('user', 'analytics_users',
@@ -112,8 +100,8 @@ agent.customize_collection('orders') do |collection|
   )
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 This allows you to navigate between related data even when it lives in different databases or systems.
 

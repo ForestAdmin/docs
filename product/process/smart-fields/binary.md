@@ -31,25 +31,21 @@ It is the default mode for all binary fields that are used as either a primary o
 
 If you want to use the hexadecimal mode for another field, use the {{#nodejs}}`replaceFieldBinaryMode`{{/nodejs}}{{#ruby}}`replace_field_binary_mode`{{/ruby}} method:
 
-<details>
-<summary><strong>agent.customizeCollection('people', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('people', collection =>" %}
 ```javascript
-  collection.replaceFieldBinaryMode('avatar', 'hex'),
+collection.replaceFieldBinaryMode('avatar', 'hex'),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('people') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('people') do |collection|" %}
 ```ruby
-  collection.replace_field_binary_mode('avatar', 'hex')
+collection.replace_field_binary_mode('avatar', 'hex')
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
 ## Using the data-URI mode
@@ -60,24 +56,20 @@ When using that mode, you will be able to use both the [File Viewer](https://doc
 
 If the automatic detection based on the field type is not working for you, you can force the `datauri` mode using the {{#nodejs}}`replaceFieldBinaryMode`{{/nodejs}}{{#ruby}}`replace_field_binary_mode`{{/ruby}} method as so:
 
-<details>
-<summary><strong>agent.customizeCollection('people', collection =></strong></summary>
-
+{% tabs %}
+{% tab title="agent.customizeCollection('people', collection =>" %}
 ```javascript
-  collection.replaceFieldBinaryMode('avatar', 'datauri'),
+collection.replaceFieldBinaryMode('avatar', 'datauri'),
 );
 ```
+{% endtab %}
 
-</details>
-
-<details>
-<summary><strong>@create_agent.customize_collection('User') do |collection|</strong></summary>
-
+{% tab title="@create_agent.customize_collection('User') do |collection|" %}
 ```ruby
-  collection.replace_field_binary_mode('avatar', 'datauri')
+collection.replace_field_binary_mode('avatar', 'datauri')
 end
 ```
-
-</details>
+{% endtab %}
+{% endtabs %}
 
 
