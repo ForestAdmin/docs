@@ -340,7 +340,7 @@ The above code will produce the following form:
 The color picker widget allows to select a color.
 
 {% tabs %}
-{% tab title="organization.addAction('Customize UI', {" %}
+{% tab title="JavaScript" %}
 ```typescript
 scope: 'Single',
   form: [
@@ -549,7 +549,7 @@ The above code will produce the following form:
 The date picker widget allows to input a date in a form
 
 {% tabs %}
-{% tab title="agent.customizeCollection('order', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Set shipping date', {
     scope: 'Single',
@@ -849,7 +849,7 @@ end
 The file picker allows to upload files
 
 {% tabs %}
-{% tab title="import { File } from '@forestadmin/datasource-toolkit';" %}
+{% tab title="JavaScript" %}
 ```typescript
 import fs from 'fs/promises';
 import path from 'path';
@@ -1739,7 +1739,7 @@ The above code will produce the following form (once the user entered two tags):
 The time picker widget allows to select a time
 
 {% tabs %}
-{% tab title="agent.customizeCollection('store', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('set opening and closing time', {
     scope: 'Single',
@@ -1806,7 +1806,7 @@ time picker does not support additional options
 The user dropdown widget allows to input a user or list of users from the project
 
 {% tabs %}
-{% tab title="agent.customizeCollection('Ticket', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Assign to the record', {
     scope: 'Single',

@@ -66,7 +66,7 @@ And finally, those two extra properties are available and can only be used as fu
 In this example we make a field required only if the user enters a value greater than 1000 in another field.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Charge credit card', {
     scope: 'Single',
@@ -96,7 +96,7 @@ collection.addAction('Charge credit card', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -139,7 +139,7 @@ Unlike the previous example, this one will only display the field if the record 
 It is still a dynamic field, but this time, the condition does not depend on the form values but on the record data.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Leave a review', {
     scope: 'Single',
@@ -164,7 +164,7 @@ collection.addAction('Leave a review', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -211,7 +211,7 @@ The first field displays different denominations that can be used to address the
 The second field displays different levels of loudness depending on if the customer is Morgan Freeman, as to ensure that we never speak `Very Loudly` at him, for the sake of politeness.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Tell me a greeting', {
     scope: 'Single',
@@ -266,7 +266,7 @@ collection.addAction('Tell me a greeting', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -334,7 +334,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Create banking identity', {
     scope: 'Single',
@@ -365,7 +365,7 @@ collection.addAction('Create banking identity', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -399,7 +399,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('order', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Change order price', {
     scope: 'Single',
@@ -420,7 +420,7 @@ collection.addAction('Change order price', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
@@ -447,7 +447,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('order', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Change order price', {
     scope: 'Single',
@@ -471,7 +471,7 @@ collection.addAction('Change order price', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context

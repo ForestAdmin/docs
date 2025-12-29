@@ -36,7 +36,7 @@ This item doesn't have specific options.
 Example:
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction("What's your name", {
     scope: 'Single',
@@ -53,7 +53,7 @@ collection.addAction("What's your name", {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -99,7 +99,7 @@ Example:
 
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Boring form', {
     scope: 'Global',
@@ -141,7 +141,7 @@ collection.addAction('Boring form', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -207,7 +207,7 @@ Example:
 
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Personal form', {
     scope: 'Global',
@@ -238,7 +238,7 @@ collection.addAction('Personal form', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -304,7 +304,7 @@ Example:
 
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Create user with address', {
     scope: 'Global',
@@ -350,7 +350,7 @@ collection.addAction('Create user with address', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 

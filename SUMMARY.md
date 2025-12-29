@@ -105,9 +105,6 @@
 
 ## Product
 
-* Overview
-  * [Forest Admin Product](product/overview.md)
-
 * Process
   * Actions
     * [Actions](product/process/actions/overview.md)

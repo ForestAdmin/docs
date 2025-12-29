@@ -6,20 +6,16 @@ For example, you might want to specify a reason if you want to block a user acco
 
 # Field configuration
 
-{{#nodejs}}
-
 {% hint style='info' %}
 More information about the `ActionField` type can be found on our [API Reference](https://forestadmin.github.io/agent-nodejs/types/_forestadmin_datasource_toolkit.ActionField.html).
 {% endhint %}
-
-{{/nodejs}}
 
 ## Properties
 
 Fields are configurable using the following properties:
 
-{{#nodejs}}
-
+{% tabs %}
+{% tab title="JavaScript" %}
 | Property       | Usage                              | Expected value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Description                                                                                                                              |
 | -------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `type`         | **required**                       | `Boolean`, `Date`, `Dateonly`, `Enum`, `Json`, `Number`, `NumberList`, `EnumList`, `String`, `StringList`, `File`, `FileList` and [`Collection`](#references-to-records)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Set the [type of the field](https://forestadmin.github.io/agent-nodejs/interfaces/_forestadmin_datasource_toolkit.ActionFieldBase.html). |
@@ -31,24 +27,24 @@ Fields are configurable using the following properties:
 | `isReadOnly`   | _optional_                         | boolean                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Make the field read-only (default false).                                                                                                |
 | `enumValues`   | **required** when `type` is `Enum` | array of strings                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Change the list of possible values of the field when type is `Enum`.                                                                     |
 | `widget`       | _optional_                         | `null`, [`AddressAutocomplete`](./forms-widgets.md#address-autocomplete-widget), [`Checkbox`](./forms-widgets.md#checkbox-widget), [`CheckboxGroup`](./forms-widgets.md#checkbox-group-widget) , [`ColorPicker`](./forms-widgets.md#color-picker-widget), [`CurrencyInput`](./forms-widgets.md#currency-input-widget),[`DatePicker`](./forms-widgets.md#datepicker-widget), [`Dropdown`](./forms-widgets.md#dropdown-widget), [`FilePicker`](./forms-widgets.md#file-picker-widget), [`JsonEditor`](./forms-widgets.md#json-editor-widget), [`NumberInput`](./forms-widgets.md#number-input-widget), [`NumberInputList`](./forms-widgets.md#number-input-list-widget), [`RadioGroup`](./forms-widgets.md#radio-group-widget), [`RichText`](./forms-widgets.md#rich-text-widget), [`TextArea`](./forms-widgets.md#text-area-widget), [`TextInput`](./forms-widgets.md#text-input-widget), [`TextInputList`](./forms-widgets.md#text-input-list-widget), [`TimePicker`](./forms-widgets.md#time-picker-widget), [`UserDropdown`](./forms-widgets.md#user-dropdown-widget) | Set the widget to use for the field. More info on the [dedicated page](./forms-widgets.md).                                              |
+{% endtab %}
 
-{{/nodejs}}
-
-{{#ruby}}
+{% tab title="Ruby" %}
 | Property | Expected value | Description |
 | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `type` | {{#ruby}}`FieldType::{BOOLEAN`, `DATE`, `DATE_ONLY`, `ENUM`, `JSON`, `NUMBER`, `STRING`, `NUMBER_LIST`, `ENUM_LIST`, `STRING_LIST`, `LIST`, `FILE_LIST` and [`COLLECTION`](#references-to-records)`}`{{/ruby}} | Set the type of the field. |
+| `type` | `FieldType::{BOOLEAN`, `DATE`, `DATE_ONLY`, `ENUM`, `JSON`, `NUMBER`, `STRING`, `NUMBER_LIST`, `ENUM_LIST`, `STRING_LIST`, `LIST`, `FILE_LIST` and [`COLLECTION`](#references-to-records)`}` | Set the type of the field. |
 | `label` | string | Set the label of the field. |
 | `id` | string | Set the id of the field. The is used internally and to access values from the context. If not set the label will be used. |
 | `description` | string | Set the description of the field. |
-| {{#ruby}}`is_required`{{/ruby}} | boolean | Make the field required (default false). |
-| {{#ruby}}`is_read_only`{{/ruby}} | boolean | Make the field read-only (default false). |
-| {{#ruby}}`default_value`{{/ruby}} | any | Set the default value of the field. |
-| {{#ruby}}`enum_values`{{/ruby}} | array of strings | Change the list of possible values of the field when type is . |
-{{/ruby}}
+| `is_required` | boolean | Make the field required (default false). |
+| `is_read_only` | boolean | Make the field read-only (default false). |
+| `default_value` | any | Set the default value of the field. |
+| `enum_values` | array of strings | Change the list of possible values of the field when type is . |
+{% endtab %}
+{% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Charge credit card', {
     scope: 'Single',
@@ -76,7 +72,7 @@ collection.addAction('Charge credit card', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 
@@ -122,7 +118,7 @@ When not using a composite primary key, the array can be assumed to contain a si
 {% endhint %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('ticket', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Assign ticket', {
     scope: 'Single',
@@ -145,7 +141,7 @@ collection.addAction('Assign ticket', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Context
 

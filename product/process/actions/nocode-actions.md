@@ -30,7 +30,7 @@ No-code actions work seamlessly with popular automation platforms:
 2. Copy the webhook URL
 3. In Forest Admin, create an action with "Call an API"
 4. Paste the webhook URL
-5. Make receives the payload and continues your workflow
+5. Make receives the payload and triggers the workflow
 
 </details>
 
@@ -41,7 +41,7 @@ No-code actions work seamlessly with popular automation platforms:
 2. Copy the webhook URL
 3. In Forest Admin, create an action with "Call an API"
 4. Paste the webhook URL
-5. n8n processes the data through your workflow
+5. n8n receives the payload and triggers the workflow
 
 </details>
 
@@ -52,7 +52,7 @@ No-code actions work seamlessly with popular automation platforms:
 2. Copy the webhook URL
 3. In Forest Admin, create an action with "Call an API"
 4. Paste the webhook URL
-5. Zapier triggers your Zap
+5. Zapier receives the payload and triggers the workflow
 
 </details>
 
