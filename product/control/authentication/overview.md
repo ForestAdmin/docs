@@ -30,13 +30,6 @@ To configure authentication, security, and other organization-level settings:
 
 Single Sign-On allows your team to authenticate using your organization's existing identity provider, centralizing access control and improving security.
 
-### Benefits
-
-- **Centralized authentication** - Users sign in once to access all corporate applications
-- **Enhanced security** - Leverage your IdP's security policies and MFA requirements
-- **Simplified management** - User access is controlled from your identity provider
-- **Audit trail** - Track authentication events through your IdP
-
 ### Supported providers
 
 
@@ -47,24 +40,9 @@ Single Sign-On allows your team to authenticate using your organization's existi
   * [OneLogin](/product/control/authentication/sso-onelogin.md) - Set up SSO with OneLogin identity platform
 
 
-### How SSO works
-
-1. User attempts to access Forest Admin
-2. Forest Admin redirects to your identity provider
-3. User authenticates with your IdP (using corporate credentials)
-4. IdP sends authentication confirmation to Forest Admin
-5. User gains access to Forest Admin with appropriate permissions
-
 ## SCIM provisioning
 
 SCIM (System for Cross-domain Identity Management) automatically provisions and deprovisions users from your identity provider to Forest Admin.
-
-### Benefits
-
-- **Automatic user management** - New employees are automatically added to Forest Admin
-- **Immediate deprovisioning** - Users are removed when they leave your organization
-- **Reduced overhead** - No manual user management required
-- **Compliance** - Ensures access is always synchronized with your IdP
 
 ### Prerequisites
 
@@ -78,16 +56,3 @@ Before configuring SCIM:
   * [Okta SCIM](/product/control/authentication/scim-okta.md) - Automatic user provisioning with Okta
   * [OneLogin SCIM](/product/control/authentication/scim-onelogin.md) - Automatic user provisioning with OneLogin
   * [Okta Manual Setup](/product/control/authentication/scim-okta-manual.md) - Manual SCIM configuration for Okta
-
-
-### What SCIM syncs
-
-- **User creation** - New users are automatically added to Forest Admin
-- **User updates** - Name and email changes are synchronized
-- **User deactivation** - Removed or deactivated users lose Forest Admin access
-- **Group membership** - User assignments to teams (when supported)
-
-## Need help?
-
-- [Community Forum](https://community.forestadmin.com) - Ask authentication questions
-- [Contact Support](https://www.forestadmin.com/contact) - Get help configuring SSO or SCIM

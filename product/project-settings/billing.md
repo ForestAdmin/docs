@@ -57,9 +57,3 @@ Update your payment information to ensure uninterrupted service:
 {% hint style="warning" %}
 Keep your payment information up to date to avoid service interruptions. Failed payments may result in restricted access to your Forest Admin project.
 {% endhint %}
-
-## Need help?
-
-For billing questions or to discuss custom enterprise plans:
-- [Contact Sales](https://www.forestadmin.com/contact) - Discuss plan options and pricing
-- [Support](mailto:support@forestadmin.com) - Get help with billing issues

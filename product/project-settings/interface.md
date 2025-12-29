@@ -58,15 +58,3 @@ Instead of accessing your Forest Admin instance through the default `app.foresta
 {% hint style="info" %}
 SSL certificates are automatically provisioned for custom domains to ensure secure connections.
 {% endhint %}
-
-## Benefits of white-label customization
-
-- **Brand Consistency** - Maintain your company's visual identity across all tools
-- **Professional Appearance** - Present a polished interface to internal teams
-- **Custom URLs** - Use memorable, company-specific domain names
-- **Client Portals** - Create branded experiences for external users or partners
-
-## Related pages
-
-- [Teams](/product/control/teams) - Create different layouts for different user groups
-- [General Settings](/product/project-settings/general) - Configure project name and basic settings
