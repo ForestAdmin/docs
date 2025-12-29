@@ -1,7 +1,7 @@
 ---
-title: Smart Segments
+title: Smart segments
 ---
-### What is a Smart Segment?
+### What is a smart Segment?
 
 A **Segment** is a subset of a collection: it's basically a saved filter of your collection.
 
@@ -9,7 +9,7 @@ Segments are designed for those who want to _systematically_ visualize data acco
 
 A **Smart Segments** is useful when you want to use a complex filter, which you'll add as code in your backend.
 
-### Creating a Smart Segment
+### Creating a smart Segment
 
 Sometimes, segment filters are complicated and closely tied to your business. Forest Admin allows you to code how the segment is computed.
 

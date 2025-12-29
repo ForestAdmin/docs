@@ -1,5 +1,5 @@
 ---
-title: "Create Your Own Datasource"
+title: "Create your own datasource"
 description: "Learn how to build and share a custom datasource with the Forest Admin community"
 ---
 
@@ -9,22 +9,22 @@ description: "Learn how to build and share a custom datasource with the Forest A
 
 Learn how to create your own custom datasource and share it with the Forest Admin community.
 
-## Why Create a Datasource?
+## Why create a datasource?
 
 - Connect to proprietary systems
 - Integrate with specific APIs
 - Share integrations with the community
 - Build reusable components
 
-## Getting Started
+## Getting started
 
 TODO: Add guide on creating a datasource from scratch
 
-## Datasource Interface
+## Datasource interface
 
 TODO: Document the datasource interface to implement
 
-## Publishing to the Community
+## Publishing to the community
 
 TODO: Add guide on sharing your datasource
 - GitHub repository setup
@@ -36,7 +36,7 @@ TODO: Add guide on sharing your datasource
 
 TODO: Link to example community datasources
 
-## Best Practices
+## Best practices
 
 TODO: Add best practices for building datasources
 - Error handling

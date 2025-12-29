@@ -36,11 +36,11 @@ agent.add_datasource(
   Forestadmin::Datasource::ActiveRecord.new
 )
 
-# Forest Admin automatically:
-# - Discovers all tables
-# - Detects column types
-# - Identifies relationships (foreign keys)
-# - Creates collections for each table
+# Forest Admin automatically: 
+# - discovers all tables
+# - detects column types
+# - identifies relationships (foreign keys)
+# - creates collections for each table
 ```
 {% endtab %}
 {% endtabs %}
@@ -67,7 +67,7 @@ Once introspection is complete, Forest Admin automatically:
 4. **Creates collections** - each table/collection becomes a collection in the UI
 5. **Enables CRUD operations** - browse, create, edit, delete records
 
-## Loading more data: multi-datasources
+## Loading more data: Multi-datasources
 
 Connect multiple databases or APIs in the same agent:
 

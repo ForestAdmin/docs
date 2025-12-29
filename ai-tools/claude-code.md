@@ -1,5 +1,5 @@
 ---
-title: "Claude Code setup"
+title: "Claude code setup"
 description: "Configure Claude Code for your documentation workflow"
 ---
 
@@ -21,12 +21,12 @@ Claude Code is Anthropic's official CLI tool. This guide will help you set up Cl
 3. (Optional) Add the `CLAUDE.md` file below to your project.
 4. Run `claude` to start.
 
-## Create `CLAUDE.md`
+## Create `claude.md`
 
 Create a `CLAUDE.md` file at the root of your documentation repository to train Claude Code on your specific documentation standards:
 
 ````markdown
-# GitBook documentation
+# Gitbook documentation
 
 ## Working relationship
 - You can push back on ideas-this can lead to better documentation. Cite sources and explain your reasoning when you do so

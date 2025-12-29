@@ -1,9 +1,9 @@
-## Cross-Origin Resource Sharing (CORS)
+## Cross-origin resource sharing (CORS)
 
 This is the most common issue you can encounter while setting up the Forest Admin Agent.
 Opening the Developer Console of your browser will help to detect this kind of issue. As Forest Admin provides a complete middleware, please make sure:
 
-- That the Forest Admin Agent is mounted before any other middleware{{#nodejs}} (Especially in a NestJS context, as the Nest App Factory allows configuring CORS on creation, and it can interfere with the `@forestadmin/agent` package){{/nodejs}}.
+- That the Forest Admin Agent is mounted before any other middleware (Especially in a NestJS context, as the Nest App Factory allows configuring CORS on creation, and it can interfere with the `@forestadmin/agent` package).
 - That your server is up and running. This can be easily checked by using the `/forest` endpoint.
 
 ## Invalid permissions
@@ -31,6 +31,6 @@ proxy_buffering off;
 
 Finally, when your local server is started, you should be automatically redirected to a satisfaction form. Rate us so we can improve, then go to your newly created admin panel
 
-#### ❓ Don't you see an answer to your problem?
+#### ❓ don't you see an answer to your problem?
 
 Describe it on our [Developer Community Forum](https://community.forestadmin.com) and we will answer quickly.

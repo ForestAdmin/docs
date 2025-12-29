@@ -1,5 +1,5 @@
 ---
-title: "Two-Factor Authentication Enforcement"
+title: "Two-factor authentication enforcement"
 description: "Enforce 2FA for specific environments"
 ---
 
@@ -11,11 +11,11 @@ Two-Factor Authentication (2FA) enforcement allows organizations to enforce a se
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
 {% endhint %}
 
-## How 2FA Enforcement Works
+## How 2FA enforcement works
 
 While 2FA is available platform-wide in Forest Admin, the Security tab allows you to make 2FA mandatory before users can access specific environments.
 
-## Third-Party Login Providers
+## Third-party login providers
 
 {% hint style="warning" %}
 For users who log in through third-party providers, ensure that 2FA is enabled on that provider to maintain security parity.

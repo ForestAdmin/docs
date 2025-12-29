@@ -1,5 +1,5 @@
 ---
-title: Upload several files with the File Picker
+title: Upload several files with the file picker
 ---
 **Smart action**
 

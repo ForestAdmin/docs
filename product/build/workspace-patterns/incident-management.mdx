@@ -1,5 +1,5 @@
 ---
-title: Incident Management Workspace Pattern
+title: Incident management workspace pattern
 ---
 > **Status:** TODO - Priority: LOW
 >

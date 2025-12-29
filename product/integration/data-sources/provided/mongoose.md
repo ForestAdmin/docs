@@ -53,7 +53,7 @@ As models in Mongoose can be deeply nested, that may not be what you want:
 - Nested references will not be displayed as relations.
 - JSON editors will be displayed for nested data.
 
-### Understanding `flattenMode`
+### Understanding `flattenmode`
 
 |                         | Description                                                                                                                                                 |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -122,12 +122,12 @@ const dataSource = createMongooseDataSource(mongoose.connection, {
 });
 ```
 
-## Data Navigation
+## Data navigation
 
 When customizing your agent, you will need to navigate through your data efficiently.
 This section explains how to structure paths based on different field types.
 
-### Separator Behavior
+### Separator behavior
 
 There are two different separators depending on the field type:
 

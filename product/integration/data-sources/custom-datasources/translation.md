@@ -61,7 +61,7 @@ end
 {% endtab %}
 {% endtabs %}
 
-## Structure Declaration
+## Structure declaration
 
 ### Columns
 
@@ -226,7 +226,7 @@ end
 {% endtab %}
 {% endtabs %}
 
-## Capabilities Declaration
+## Capabilities declaration
 
 Data source implementers don't need to translate every possible query type. Forest Admin ensures only supported query features are available by having collections declare capabilities on construction.
 

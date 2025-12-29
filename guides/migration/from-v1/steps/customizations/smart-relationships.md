@@ -58,7 +58,7 @@ class Forest::Product
   has_many :buyers, type: ['String'], reference: 'Customer.id'
 end
 
-# routes.rb
+# Routes.rb
 namespace :forest do
   get '/Product/:product_id/buyers' => 'orders#buyers'
 end

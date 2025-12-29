@@ -93,7 +93,7 @@ agent.customizeCollection('people', collection => {
 In this example, we use the `searchExtended` condition to toggle between case-sensitive and insensitive searches.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('people', collection => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.replaceSearch((searchString, extendedMode) => {
     const operator = extendedMode ? 'Contains' : 'IContains';
@@ -110,7 +110,7 @@ collection.replaceSearch((searchString, extendedMode) => {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceToolkit::Components::Query::ConditionTree" %}
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('people') do |collection|
   collection.replace_search do |search_string, extended_search|
@@ -130,7 +130,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="const productReferenceRegexp = /^[a-f]{16}$/i;" %}
+{% tab title="JavaScript" %}
 ```javascript
 const barCodeRegexp = /^[0-9]{10}$/i;
 
@@ -161,7 +161,7 @@ agent.customizeCollection('products', collection => {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceToolkit::Components::Query::ConditionTree" %}
+{% tab title="Ruby" %}
 ```ruby
 @create_agent.customize_collection('product') do |collection|
   product_reference_regexp = /^[a-f]{16}$/i
@@ -199,7 +199,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="const algoliasearch = require('algoliasearch');" %}
+{% tab title="JavaScript" %}
 ```javascript
 const client = algoliasearch('APPLICATION_ID', 'WRITE_API_KEY');
 const index = client.initIndex('indexName');

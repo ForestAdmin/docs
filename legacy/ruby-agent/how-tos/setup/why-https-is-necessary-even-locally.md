@@ -17,7 +17,7 @@ As shown in the architecture schema, the front-end of Forest Admin is in HTTPS. 
 
 This ensures that data transmitted between the front-end and the agent is encrypted and secure.
 
-### Setting Up a HTTPS Address: Step-by-Step Guide
+### Setting up a HTTPS address: Step-by-step guide
 
 If your app URL is in HTTP, you can use a tunneling software to access it through HTTPS. This enables Forest Admin to establish a secure connection with your app. Follow these steps to set up a HTTPS address:
 

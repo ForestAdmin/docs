@@ -74,7 +74,7 @@ To create a blockquote, add a `>` in front of a paragraph.
 > The Witch bade her clean the pots and kettles and sweep the floor and keep the fire fed with wood.
 ```
 
-### LaTeX
+### Latex
 
 GitBook supports [LaTeX](https://www.latex-project.org) through the Latex component.
 

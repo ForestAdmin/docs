@@ -46,7 +46,7 @@ If you attempt to run GitBook on a port that's already in use, it will use the n
 Port 3000 is already in use. Trying 3001 instead.
 ```
 
-## GitBook versions
+## Gitbook versions
 
 Please note that each CLI release is associated with a specific version of GitBook. If your local preview does not align with the production version, please update the CLI:
 

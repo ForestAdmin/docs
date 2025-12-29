@@ -1,5 +1,5 @@
 ---
-title: Send Smart Action notifications to Slack
+title: Send smart action notifications to Slack
 ---
 This example shows you how to integrate [Slack incoming webhooks](https://api.slack.com/messaging/webhooks) to receive notifications in your workspace when a Smart Action e.g `"Reject application"` is triggered.
 
@@ -32,7 +32,7 @@ https://hooks.slack.com/services/YOUR_WORKSPACE_ID/YOUR_CHANNEL_ID/YOUR_SECRET_T
 
 ## Set up the webhook from your admin backend
 
-### Install the [node.js Slack SDK](https://slack.dev/node-slack-sdk)
+### Install the [node.js Slack sdk](https: //slack.dev/node-slack-sdk)
 
 From your project's directory, simply run&#x20;
 
@@ -40,7 +40,7 @@ From your project's directory, simply run&#x20;
 $ npm install --save @slack/webhook
 ```
 
-### Add the Incoming Webhook URL to your .env
+### Add the incoming webhook URL to your .env
 
 ```bash
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR_WORKSPACE_ID/YOUR_CHANNEL_ID/YOUR_SECRET_TOKEN
@@ -50,9 +50,9 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR_WORKSPACE_ID/YOUR_CHANNE
 This Incoming Webhook URL contains a secret key, please make sure it does not appear in your code.
 {% endhint %}
 
-### Create the Smart Action and initialize the Incoming Webhook
+### Create the smart action and initialize the incoming webhook
 
-#### Smart Action declaration
+#### Smart action declaration
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -93,7 +93,7 @@ collection('companies', {
 });
 ```
 
-#### Smart Action logic
+#### Smart action logic
 
 ```javascript
 const express = require('express');

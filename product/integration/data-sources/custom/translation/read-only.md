@@ -5,7 +5,7 @@ Emulation comes to the rescue: all features that need to be implemented when mak
 This enables you to be up and running in minutes and then optimize your code as you go.
 
 {% tabs %}
-{% tab title="const { BaseCollection } = require('@forestadmin/datasource-toolkit');" %}
+{% tab title="JavaScript" %}
 ```javascript
 const axios = require('axios');
 
@@ -44,7 +44,7 @@ class MyCollection extends BaseCollection {
 ```
 {% endtab %}
 
-{% tab title="require 'httparty'" %}
+{% tab title="Ruby" %}
 ```ruby
 module App
   module Collections
@@ -104,7 +104,7 @@ The `aggregate` method is used by Forest Admin both to count records and to extr
 If the API/Database you are targeting has an efficient API that is made for counting records, you may want to handle this case first.
 
 {% tabs %}
-{% tab title="const { BaseCollection } = require('@forestadmin/datasource-toolkit');" %}
+{% tab title="JavaScript" %}
 ```javascript
 const axios = require('axios');
 
@@ -137,7 +137,7 @@ const axios = require('axios');
 ```
 {% endtab %}
 
-{% tab title="require 'httparty'" %}
+{% tab title="Ruby" %}
 ```ruby
 module App
   module Collections

@@ -1,5 +1,5 @@
 ---
-title: Collection Configuration
+title: Collection configuration
 ---
 > **Status:** TODO - Priority: HIGH
 >

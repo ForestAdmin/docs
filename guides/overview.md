@@ -11,7 +11,7 @@ Practical guides to help you deploy, migrate, integrate, and optimize your Fores
   * [Integrations](/guides/integrations/overview.md) - Integrate with Stripe, payment providers, and third-party services
 
 
-## Deployment Guides
+## Deployment guides
 
 
 <details>
@@ -38,7 +38,7 @@ Set up and manage multiple environments:
 </details>
 
 
-## Migration Guides
+## Migration guides
 
 
 <details>
@@ -54,7 +54,7 @@ Complete migration path from Forest Admin v1 to the latest version:
 </details>
 
 
-## Best Practices
+## Best practices
 
 
 <details>
@@ -94,7 +94,7 @@ Complete migration path from Forest Admin v1 to the latest version:
 </details>
 
 
-## Integration Guides
+## Integration guides
 
 
 <details>
@@ -120,14 +120,14 @@ Complete migration path from Forest Admin v1 to the latest version:
 </details>
 
 
-## Getting Started with Guides
+## Getting started with guides
 
 1. **Deploying to Production?** Start with [Deployment Overview](/guides/deployment/overview)
 2. **Upgrading from v1?** Check out [Migration Guide](/guides/migration/overview)
 3. **Optimizing Performance?** Read [Performance Best Practices](/guides/best-practices/performance)
 4. **Integrating Services?** Explore [Integrations](/guides/integrations/overview)
 
-## Additional Resources
+## Additional resources
 
 - [Community Forums](https://community.forestadmin.com) - Ask questions and share knowledge
 - [GitHub](https://github.com/ForestAdmin) - Browse source code and examples

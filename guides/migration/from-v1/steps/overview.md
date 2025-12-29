@@ -43,9 +43,9 @@ You can find it in you `config/secrets.yml` file.
 {% endhint %}
 
 ```bash
-# uninstall the old agent
+# Uninstall the old agent
 bundle remove forest_liana
-# remove the old configuration files
+# Remove the old configuration files
 rm -f config/initializers/forest_liana.rb
 rm -f config/secrets.yml
 ```
@@ -55,7 +55,7 @@ rm -f config/secrets.yml
 Remove the 'ForestLiana' route from your `config/routes.rb` file.
 
 ```ruby
-# remove this line
+# Remove this line
 mount ForestLiana::Engine => '/forest'
 ```
 

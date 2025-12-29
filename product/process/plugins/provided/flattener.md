@@ -12,7 +12,7 @@ npm install @forestadmin/plugin-flattener
 
 Three methods are available to flatten your data model: `flattenColumn`, `flattenJsonColumn` and `flattenRelation`.
 
-### `flattenColumn`
+### `flattencolumn`
 
 This method allows you to flatten deeply nested columns of your models.
 
@@ -43,7 +43,7 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
-### `flattenJsonColumn`
+### `flattenjsoncolumn`
 
 {% hint style="warning" %}
 Please note that this plugin is meant for SQL data sources with primitive JSON columns.
@@ -79,7 +79,7 @@ agent.customizeCollection('customer', collection => {
 });
 ```
 
-### `flattenRelation`
+### `flattenrelation`
 
 This method allows you to import fields from a given [one-to-one](../../../agent-customization/relationships/single-record.md#one-to-one-relations) or [many-to-one](../../../agent-customization/relationships/single-record.md#many-to-one-relations) relations.
 

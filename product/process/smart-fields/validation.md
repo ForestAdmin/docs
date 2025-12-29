@@ -48,7 +48,7 @@ If you need to implement custom validators or validation over multiple fields yo
 
 {{#nodejs}}
 
-## Make Field Optional
+## Make field optional
 
 If the introspection marks a field as required, and you would like to make it optional, you can use the `setFieldNullable` function on your collection.
 

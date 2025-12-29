@@ -1,5 +1,5 @@
 ---
-title: Schema Updates
+title: Schema updates
 ---
 > **Status:** TODO - Priority: HIGH
 >

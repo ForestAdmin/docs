@@ -1,5 +1,5 @@
 ---
-title: Approval Workflows
+title: Approval workflows
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

@@ -1,5 +1,5 @@
 ---
-title: Customer Success Workspace Pattern
+title: Customer success workspace pattern
 ---
 > **Status:** TODO - Priority: LOW
 >

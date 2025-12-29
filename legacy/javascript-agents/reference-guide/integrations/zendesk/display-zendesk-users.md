@@ -3,7 +3,7 @@ title: Display Zendesk users
 ---
 This section shows you how to create a smart collection to list the users of your Zendesk account.
 
-### Declare the Smart Collection Zendesk Users&#x20;
+### Declare the smart collection Zendesk users&#x20;
 
 Zendesk API allows to access different data:
 
@@ -139,7 +139,7 @@ collection('zendesk_users', {
 Some fields are available for filtering or sorting using the Zendesk API. To allow this on the Forest UI, simply add the keywords `isFilterable` and `isSortable` in your field definition.
 {% endhint %}
 
-### Implement the Smart Collection route
+### Implement the smart collection route
 
 In the file `routes/zendesk-users.js`, we’ve created a new route to implement the API behind the Smart Collection.
 
@@ -171,7 +171,7 @@ router.get(
 );
 ```
 
-### Implement the get Route
+### Implement the get route
 
 The section above help you display the list of all Zendesk users. But you'll need to implement also the logic to display the information of a specific user.
 

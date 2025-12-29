@@ -19,7 +19,7 @@ Notes provide a way to document actions, decisions, and context for specific rec
 
 ## Endpoints
 
-### GET /api/v1/collections/:collection/records/:record_id/notes
+### GET /api/v1/collections/: Collection/records/: Record_id/notes
 
 Retrieve all notes for a specific record.
 
@@ -39,7 +39,7 @@ Retrieve all notes for a specific record.
   **Example:** `123`, `user_456`
 </ParamField>
 
-#### Query Parameters
+#### Query parameters
 
 <ParamField query="page" type="integer" default="1">
   Page number for pagination (starts at 1)
@@ -207,7 +207,7 @@ puts JSON.parse(response.body)
 
 </ResponseExample>
 
-### POST /api/v1/collections/:collection/records/:record_id/notes
+### POST /api/v1/collections/: Collection/records/: Record_id/notes
 
 Create a new note for a specific record.
 
@@ -227,7 +227,7 @@ Create a new note for a specific record.
   **Example:** `123`, `user_456`
 </ParamField>
 
-#### Request Body
+#### Request body
 
 <ParamField body="content" type="string" required>
   The note content (max 10,000 characters)
@@ -350,7 +350,7 @@ puts JSON.parse(response.body)
 
 </ResponseExample>
 
-### GET /api/v1/notes/:id
+### GET /api/v1/notes/: Id
 
 Retrieve a specific note by ID.
 
@@ -426,7 +426,7 @@ console.log(response.data);
 
 </ResponseExample>
 
-### PUT /api/v1/notes/:id
+### PUT /api/v1/notes/: Id
 
 Update an existing note.
 
@@ -438,7 +438,7 @@ Update an existing note.
   The unique identifier of the note
 </ParamField>
 
-#### Request Body
+#### Request body
 
 <ParamField body="content" type="string" required>
   The updated note content (max 10,000 characters)
@@ -528,7 +528,7 @@ console.log(response.data);
 
 </ResponseExample>
 
-### DELETE /api/v1/notes/:id
+### DELETE /api/v1/notes/: Id
 
 Delete a note.
 
@@ -593,9 +593,9 @@ console.log(response.data);
 
 </ResponseExample>
 
-## Use Cases
+## Use cases
 
-### Automated Note Creation from Webhooks
+### Automated note creation from webhooks
 
 Create notes automatically when external events occur:
 
@@ -619,7 +619,7 @@ app.post('/webhooks/support', async (req, res) => {
 });
 ```
 
-### Sync Notes from External Systems
+### Sync notes from external systems
 
 Import notes from other collaboration tools:
 
@@ -643,7 +643,7 @@ async function syncSlackMessages(customerId, slackThreadId) {
 }
 ```
 
-### Bulk Note Operations
+### Bulk note operations
 
 Add context to multiple records:
 
@@ -672,7 +672,7 @@ await notifyAffectedCustomers(
 );
 ```
 
-### Audit Trail Creation
+### Audit trail creation
 
 Document important actions:
 
@@ -698,7 +698,7 @@ await createAuditNote('user_123', 'Password Reset', {
 });
 ```
 
-### Integration with CRM Systems
+### Integration with CRM systems
 
 Sync CRM activities as notes:
 
@@ -729,9 +729,9 @@ Assigned to: @${activity.assignedTo}`;
 }
 ```
 
-## Best Practices
+## Best practices
 
-### 1. Use Meaningful Content
+### 1. use meaningful content
 
 Write clear, actionable notes:
 
@@ -747,7 +747,7 @@ await createNote({
 });
 ```
 
-### 2. Structure Notes with Markdown
+### 2. structure notes with markdown
 
 Use Markdown for better readability:
 
@@ -769,7 +769,7 @@ Action items:
 await createNote({ content: note });
 ```
 
-### 3. Batch Operations Wisely
+### 3. batch operations wisely
 
 Group related notes, but avoid overwhelming the API:
 
@@ -793,7 +793,7 @@ async function addNotesToBatch(records, message) {
 }
 ```
 
-### 4. Handle Mentions Properly
+### 4. handle mentions properly
 
 Extract and include mentions correctly:
 
@@ -812,7 +812,7 @@ await createNote({
 });
 ```
 
-### 5. Error Handling and Retries
+### 5. error handling and retries
 
 Implement robust error handling:
 
@@ -841,7 +841,7 @@ async function createNoteWithRetry(recordId, content, maxRetries = 3) {
 }
 ```
 
-## Rate Limits
+## Rate limits
 
 Notes API is subject to standard rate limits:
 
@@ -851,7 +851,7 @@ Notes API is subject to standard rate limits:
 
 See [Rate Limits](/reference/api/rate-limits) for detailed information on handling rate limits.
 
-## Character Limits
+## Character limits
 
 - **Note content:** 10,000 characters maximum
 - **Markdown:** Fully supported within character limit
@@ -866,7 +866,7 @@ Note permissions follow your Forest Admin role configuration:
 - **Update:** Can only edit own notes or admin role
 - **Delete:** Can only delete own notes or admin role
 
-## Related Resources
+## Related resources
 
 
   * [Authentication](/reference/api/authentication.md) - Learn about API authentication

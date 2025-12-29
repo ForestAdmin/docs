@@ -12,7 +12,7 @@ Once configured, they can be used in
 Note that, for performance reasons when sorting a Table View on customizer-defined relations, Forest Admin will always sort on the primary key of the related collection.
 {% endhint %}
 
-## Many-to-One relations
+## Many-to-one relations
 
 Many-to-One relations are by far the most common type of relation: many records from a Collection are attached to another Collection record.
 
@@ -45,7 +45,7 @@ end
 {% endtabs %}
 
 
-## One-to-One relations
+## One-to-one relations
 
 In a one-to-one relation, there is a one-to-one mapping between records in 2 Collections. The relation can be unset for some records, but no record from the first Collection can be linked to more than one record in the other Collection.
 

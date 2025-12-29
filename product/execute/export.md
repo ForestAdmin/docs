@@ -1,5 +1,5 @@
 ---
-title: Export Data
+title: Export data
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

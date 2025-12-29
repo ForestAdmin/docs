@@ -1,5 +1,5 @@
 ---
-title: Google Workspace SSO
+title: Google workspace SSO
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

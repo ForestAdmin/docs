@@ -1,5 +1,5 @@
 ---
-title: Advanced Relationship Patterns
+title: Advanced relationship patterns
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

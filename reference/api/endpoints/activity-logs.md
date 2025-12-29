@@ -1,9 +1,9 @@
 ---
-title: Activity Logs API
+title: Activity logs API
 description: Access and export user activity logs for audit and compliance
 ---
 
-# Activity Logs API
+# Activity logs API
 
 The Activity Logs API allows you to programmatically access user activity records from Forest Admin. This is essential for compliance, security monitoring, and building custom audit dashboards.
 
@@ -27,7 +27,7 @@ Retrieve a paginated list of activity logs with optional filtering.
   Bearer token for API authentication. Format: `Bearer YOUR_API_TOKEN`
 </ParamField>
 
-#### Query Parameters
+#### Query parameters
 
 <ParamField query="start_date" type="string">
   Filter logs from this date (ISO 8601 format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:mm:ss.sssZ`)
@@ -281,7 +281,7 @@ puts JSON.parse(response.body)
 
 </ResponseExample>
 
-### GET /api/v1/activity-logs/:id
+### GET /api/v1/activity-logs/: Id
 
 Retrieve a specific activity log by ID.
 
@@ -370,9 +370,9 @@ console.log(response.data);
 
 </ResponseExample>
 
-## Use Cases
+## Use cases
 
-### Compliance and Audit
+### Compliance and audit
 
 Export activity logs for regulatory compliance:
 
@@ -390,7 +390,7 @@ const logs = await fetch(
 );
 ```
 
-### Security Monitoring
+### Security monitoring
 
 Monitor suspicious activity patterns:
 
@@ -410,7 +410,7 @@ if (data.data.length > 10) {
 }
 ```
 
-### User Activity Tracking
+### User activity tracking
 
 Track specific user actions:
 
@@ -424,7 +424,7 @@ const userLogs = await fetch(
 );
 ```
 
-### Data Warehouse Integration
+### Data warehouse integration
 
 Sync activity logs to your data warehouse:
 
@@ -452,9 +452,9 @@ async function syncToWarehouse() {
 }
 ```
 
-## Best Practices
+## Best practices
 
-### 1. Use Date Filters
+### 1. use date filters
 
 Always filter by date range to reduce data transfer:
 
@@ -469,7 +469,7 @@ const logs = await getActivityLogs({
 const logs = await getActivityLogs();
 ```
 
-### 2. Implement Pagination
+### 2. implement pagination
 
 Process large result sets in chunks:
 
@@ -496,7 +496,7 @@ async function getAllLogs(startDate, endDate) {
 }
 ```
 
-### 3. Cache Results
+### 3. cache results
 
 Cache frequently accessed data:
 
@@ -519,7 +519,7 @@ async function getCachedLogs(params) {
 }
 ```
 
-### 4. Handle Rate Limits
+### 4. handle rate limits
 
 Implement retry logic with exponential backoff:
 
@@ -542,7 +542,7 @@ async function getActivityLogsWithRetry(params, maxRetries = 3) {
 }
 ```
 
-### 5. Filter by Collection
+### 5. filter by collection
 
 Request only the collections you need:
 
@@ -555,7 +555,7 @@ const allLogs = await getActivityLogs();
 const userLogs = allLogs.filter(log => log.collection === 'users');
 ```
 
-## Rate Limits
+## Rate limits
 
 Activity Logs API is subject to standard rate limits:
 
@@ -565,7 +565,7 @@ Activity Logs API is subject to standard rate limits:
 
 See [Rate Limits](/reference/api/rate-limits) for detailed information on handling rate limits.
 
-## Related Resources
+## Related resources
 
 
   * [Authentication](/reference/api/authentication.md) - Learn about API authentication

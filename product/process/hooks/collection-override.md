@@ -6,7 +6,7 @@ Forest Admin allows customizing at a very low level the behavior of any given Co
 Collection Overrides provide a powerful means to completely replace the default behavior of CUD operations (`create`, `update`, `delete`) for your Collections. This feature should be used with caution, as it directly affects the core operations on your data.
 {% endhint %}
 
-## How it Works
+## How it works
 
 In addition to the standard Collection functions:
 
@@ -22,11 +22,11 @@ To define an Override for a Collection, you must specify:
 
 The custom handler function will receive a context object containing relevant information for the operation, allowing for comprehensive control over the behavior of these CUD operations.
 
-## Setting Up Overrides
+## Setting up overrides
 
 Overrides are declared similarly to hooks but are aimed at replacing an entire operation rather than augmenting its execution. However this can also be used to enrich the default behavior. Here's how to set up overrides in your Collection:
 
-### Custom Create Operation
+### Custom create operation
 
 To replace the default create operation, use {{#nodejs}}`overrideCreate`{{/nodejs}}{{#ruby}}`override_create`{{/ruby}} with your custom handler:
 
@@ -37,7 +37,7 @@ Unknown properties in returned records will be removed.
 {{/nodejs}}
 
 {% tabs %}
-{% tab title="collection.overrideCreate(async context => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 // Custom logic to handle creation
   // context.data contains the data intended for creation
@@ -46,7 +46,7 @@ Unknown properties in returned records will be removed.
 ```
 {% endtab %}
 
-{% tab title="collection.override_create do |context|" %}
+{% tab title="Ruby" %}
 ```ruby
 # Custom logic to handle creation
   # context.data contains the data intended for creation
@@ -57,7 +57,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="collection.overrideUpdate(async context => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 // Custom logic to handle update
   // context.filter to determine which records are targeted
@@ -67,7 +67,7 @@ end
 ```
 {% endtab %}
 
-{% tab title="collection.override_update do |context|" %}
+{% tab title="Ruby" %}
 ```ruby
 # Custom logic to handle update
   # context.filter to determine which records are targeted
@@ -79,7 +79,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="collection.overrideDelete(async context => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 // Custom logic to handle deletion
   // context.filter to determine which records are targeted
@@ -103,7 +103,7 @@ end
 Overrides take precedence over the default operation. Ensure your custom handlers properly manage all necessary logic for the operation, as the default behavior will not be executed.
 {% endhint %}
 
-## Basic Use Cases
+## Basic use cases
 
 ### Create over API
 

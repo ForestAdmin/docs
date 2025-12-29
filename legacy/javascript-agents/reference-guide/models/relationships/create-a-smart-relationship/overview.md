@@ -1,11 +1,11 @@
 ---
-title: Create a Smart relationship
+title: Create a smart relationship
 ---
-### What is a Smart Relationship?
+### What is a smart relationship?
 
 Sometimes, you want to create a virtual relationship between two set of data that does not exist in your database. A concrete example could be creating a relationship between two collections available in two different databases. Creating a Smart Relationship allows you to customize with code how your collections are linked together.
 
-### Create a BelongsTo Smart Relationship
+### Create a belongsto smart relationship
 
 On the Live Demo example, we have an **order** which `belongsTo` a **customer** which `belongsTo` a **delivery address**. We’ve created here a BelongsTo Smart Relationship that acts like a shortcut between the **order** and the **delivery address**.
 
@@ -81,7 +81,7 @@ collection('Order', {
   </Tab>
 </Tabs>
 
-### Create a HasMany Smart Relationship
+### Create a hasmany smart relationship
 
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/products/:product_id/relationships/buyers`.
 

@@ -1,5 +1,5 @@
 ---
-title: Activity Tracking
+title: Activity tracking
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

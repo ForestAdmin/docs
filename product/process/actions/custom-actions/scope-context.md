@@ -38,7 +38,7 @@ It is the bridge between all the data that your agent has access to and the acti
 We can simply use the {{#nodejs}}`getRecord(fieldNames)`{{/nodejs}}{{#ruby}}`get_record(field_names)`{{/ruby}} method to get any column from the selected record or a relation.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customers', collection =>" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Call me John in the server logs', {
     scope: 'Single',
@@ -57,7 +57,7 @@ collection.addAction('Call me John in the server logs', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Context" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -86,7 +86,7 @@ For simple queries, use {{#nodejs,ruby}}`context.collection`{{/nodejs,ruby}} and
 Those are instances of objects from the [Forest Admin Query Interface](../../datasources/getting-started/README.md).
 
 {% tabs %}
-{% tab title="agent.customizeCollection('companies', collection =>" %}
+{% tab title="JavaScript" %}
 ```javascript
 collection.addAction('Mark as live', {
     scope: 'Single',
@@ -98,7 +98,7 @@ collection.addAction('Mark as live', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Context" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -122,7 +122,7 @@ Forest Admin does not impose any restriction on the handler: you are free to wri
 You are free to call external APIs, query your database, or perform any work in action handlers.
 
 {% tabs %}
-{% tab title="import axios from 'axios';" %}
+{% tab title="JavaScript" %}
 ```javascript
 agent.customizeCollection('companies', collection =>
   collection.addAction('Mark as live', {
@@ -138,7 +138,7 @@ agent.customizeCollection('companies', collection =>
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Context" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 

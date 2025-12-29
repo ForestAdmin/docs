@@ -1,4 +1,4 @@
 ---
-title: 'Create Plant'
+title: 'Create plant'
 openapi: 'POST /plants'
 ---

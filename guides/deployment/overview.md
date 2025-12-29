@@ -1,5 +1,5 @@
 ---
-title: Deployment Guide
+title: Deployment guide
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

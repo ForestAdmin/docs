@@ -8,7 +8,7 @@ Segments are designed for those who want to _systematically_ visualize data acco
 
 ![Segment example](/assets/segment-example.png)
 
-## Creating Segments in the UI
+## Creating segments in the UI
 
 Segments can be configured directly from the interface, without the need to write any code.
 
@@ -25,7 +25,7 @@ To create a simple segment:
 
 By default, newly created segments remain disabled until you activate them. You can also reorder segments through the Layout Editor to match your workflow sequence.
 
-### SQL Query segments
+### SQL query segments
 
 For databases that support SQL, Forest Admin allows you to create segments using SQL queries. This enables more sophisticated filtering by joining multiple tables or using complex logic.
 
@@ -34,7 +34,7 @@ For databases that support SQL, Forest Admin allows you to create segments using
 - The returned column must be the primary key field
 - This approach is useful for complex filter logic that spans multiple tables
 
-## Smart Segments (Advanced)
+## Smart segments (advanced)
 
 For complex business logic that changes dynamically, you can code Smart Segments directly in your agent. This is particularly useful when:
 

@@ -1,13 +1,13 @@
 ---
-title: Smart Views
+title: Smart views
 ---
-## What is a Smart View?&#x20;
+## What is a smart view?&#x20;
 
 Smart Views lets you code your view using JS, HTML, and CSS. They are taking data visualization to the next level. Ditch the table view and display your orders on a Map, your events in a Calendar, your movies, pictures and profiles in a Gallery. All of that with the easiness of Forest Admin.
 
 ![](</images/legacy/javascript-agents/image (280).png>)
 
-## Creating a Smart View
+## Creating a smart view
 
 Forest Admin provides an online editor to inject your Smart View code. The editor is available on the collection’s settings, then in the “Smart views” tab.
 
@@ -42,7 +42,7 @@ For each record, you will access its attributes through the `forest-attribute` p
 \{\{/each\}\}
 ```
 
-### Accessing belongsTo relationships
+### Accessing belongsto relationships
 
 Accessing a `belongsTo` relationship works in exactly the same way as accessing a simple field. Forest triggers automatically an API call to retrieve the data from your Admin API only if it’s necessary.
 
@@ -54,7 +54,7 @@ On the `Shipping` Smart View (in the collection named `Order`) defined on our Li
 \{\{/each\}\}
 ```
 
-### Accessing hasMany relationships
+### Accessing hasmany relationships
 
 Accessing a `hasMany` relationship works in exactly the same way as accessing a simple field.. Forest triggers automatically an API call to retrieve the data from your Admin API only if it’s necessary.
 
@@ -149,7 +149,7 @@ The `deleteRecords` action lets you delete one or multiple records. A pop-up wil
 \{\{/each\}\}
 ```
 
-### Triggering a Smart Action
+### Triggering a smart action
 
 {% hint style="warning" %}
 Please note that the smart action triggering in the context of the smart view editor can be broken as you might not have access to all the required information. We advise you to test the smart action execution from the smart view applied to the collection view.
@@ -157,7 +157,7 @@ Please note that the smart action triggering in the context of the smart view ed
 
 Here’s how to trigger your [Smart Actions](../actions/create-and-manage-smart-actions/#what-is-a-smart-action) directly from your Smart Views.&#x20;
 
-### template.hbs
+### Template.hbs
 
 ```markup
 <Button::BetaButton
@@ -167,7 +167,7 @@ Here’s how to trigger your [Smart Actions](../actions/create-and-manage-smart-
 />
 ```
 
-### component.js
+### Component.js
 
 ```javascript
 
@@ -205,7 +205,7 @@ function triggerSmartAction(
 
 Here is an example of how to trigger the smart action with the values passed from the code, you only need to do it if you **don't** want to use the built-in [smart action form](../actions/create-and-manage-smart-actions/use-a-smart-action-form.md)
 
-### template.hbs
+### Template.hbs
 
 ```markup
 <Button::BetaButton
@@ -215,7 +215,7 @@ Here is an example of how to trigger the smart action with the values passed fro
 />
 ```
 
-### component.js
+### Component.js
 
 ```javascript
 
@@ -271,7 +271,7 @@ Forest Admin automatically injects into your Smart View some actions to trigger 
 | `deleteRecords(records)`                             | Delete one or multiple records.                                         |
 | `triggerSmartAction(collection, actionName, record)` | Trigger a Smart Action defined on the specified collection on a record. |
 
-## Applying a Smart View
+## Applying a smart view
 
 To apply a Smart view you created, turn on the Layout Editor mode **(1)**, click on the table button **(2)** and drag & drop your Smart View's name in first position inside the dropdown **(3)**:
 

@@ -1,5 +1,5 @@
 ---
-title: AWS SSO / IAM Identity Center
+title: AWS SSO / IAM identity center
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

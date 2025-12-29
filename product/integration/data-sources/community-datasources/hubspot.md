@@ -12,8 +12,6 @@ The Hubspot datasource connects to your Hubspot CRM through the HubSpot API, all
 ## Basic usage
 
 ```javascript
-
-
 const agent = createAgent(options);
 
 agent.addDataSource(
@@ -155,7 +153,7 @@ If you exceed rate limits, the datasource will queue requests and retry automati
 - **No real-time sync** - Data is fetched on-demand, not cached
 - **Association complexity** - Complex multi-level associations may not work
 
-## HubSpot API token scopes
+## Hubspot API token scopes
 
 Your Private App token needs these scopes:
 

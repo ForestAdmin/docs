@@ -1,13 +1,13 @@
 ---
-title: "Agent API Reference"
+title: "Agent API reference"
 description: "Complete API reference for the Forest Admin Node.js Agent"
 ---
 
 Complete API reference for `@forestadmin/agent` (Node.js/TypeScript).
 
-## Agent Class
+## Agent class
 
-### createAgent(options)
+### Createagent(options)
 
 Create and configure a Forest Admin agent.
 
@@ -40,7 +40,7 @@ const agent = createAgent({
 
 ---
 
-### agent.addDataSource(factory, options?)
+### Agent.adddatasource(factory, options?)
 
 Add a datasource to the agent.
 
@@ -72,7 +72,7 @@ agent.addDataSource(
 
 ---
 
-### agent.customizeCollection(name, callback)
+### Agent.customizecollection(name, callback)
 
 Customize a specific collection with the provided callback.
 
@@ -99,7 +99,7 @@ agent.customizeCollection('users', collection => {
 
 ---
 
-### agent.addChart(name, definition)
+### Agent.addchart(name, definition)
 
 Create a datasource-level API chart.
 
@@ -123,7 +123,7 @@ agent.addChart('overview', (context, resultBuilder) => {
 
 ---
 
-### agent.removeCollection(...names)
+### Agent.removecollection(...names)
 
 Remove collections from the exported schema (they remain usable within the agent).
 
@@ -139,7 +139,7 @@ agent.removeCollection('internalLogs', 'debugData');
 
 ---
 
-### agent.use(plugin, options?)
+### Agent.use(plugin, options?)
 
 Load a plugin across all collections.
 
@@ -159,7 +159,7 @@ agent.use(advancedExportPlugin, { format: 'xlsx' });
 
 ---
 
-### agent.start()
+### Agent.start()
 
 Start the agent and connect to Forest Admin servers.
 
@@ -176,7 +176,7 @@ console.log('Agent started successfully');
 
 ---
 
-### agent.stop()
+### Agent.stop()
 
 Stop the agent and close all connections.
 
@@ -186,7 +186,7 @@ await agent.stop(): Promise<void>;
 
 ---
 
-### agent.updateTypesOnFileSystem(typingsPath, typingsMaxDepth)
+### Agent.updatetypesonfilesystem(typingspath, typingsmaxdepth)
 
 Update the TypeScript typings file generated from your datasources.
 
@@ -205,13 +205,13 @@ await agent.updateTypesOnFileSystem('./typings.ts', 5);
 
 ---
 
-## Collection Customizer
+## Collection customizer
 
 Methods available when customizing a collection through `agent.customizeCollection()`.
 
 ## Actions
 
-### collection.addAction(name, definition)
+### Collection.addaction(name, definition)
 
 Add a Smart Action to the collection.
 
@@ -335,7 +335,7 @@ collection.addAction('Export to PDF', {
 
 ## Fields
 
-### collection.addField(name, definition)
+### Collection.addfield(name, definition)
 
 Add a computed field to the collection.
 
@@ -397,7 +397,7 @@ collection.addField('revenueThisYear', {
 
 ---
 
-### collection.importField(name, options)
+### Collection.importfield(name, options)
 
 Import a field from a related collection.
 
@@ -420,7 +420,7 @@ collection.importField('authorName', {
 
 ---
 
-### collection.renameField(currentName, newName)
+### Collection.renamefield(currentname, newname)
 
 Rename a field in the exported schema.
 
@@ -439,7 +439,7 @@ collection.renameField('created_at', 'createdAt');
 
 ---
 
-### collection.removeField(...names)
+### Collection.removefield(...names)
 
 Remove fields from the exported schema (they remain usable within the agent).
 
@@ -455,7 +455,7 @@ collection.removeField('password', 'internalNotes', 'debugData');
 
 ---
 
-### collection.addFieldValidation(name, operator, value?)
+### Collection.addfieldvalidation(name, operator, value?)
 
 Add a validation rule to a field.
 
@@ -483,7 +483,7 @@ collection
 
 ---
 
-### collection.setFieldNullable(name)
+### Collection.setfieldnullable(name)
 
 Mark a field as optional (nullable).
 
@@ -503,7 +503,7 @@ collection.setFieldNullable('middleName');
 
 ---
 
-### collection.replaceFieldWriting(name, definition)
+### Collection.replacefieldwriting(name, definition)
 
 Replace the write behavior of a field.
 
@@ -526,7 +526,7 @@ collection.replaceFieldWriting('fullName', fullName => {
 
 ---
 
-### collection.replaceFieldBinaryMode(name, mode)
+### Collection.replacefieldbinarymode(name, mode)
 
 Choose how binary data should be transported to the GUI.
 
@@ -552,7 +552,7 @@ collection.replaceFieldBinaryMode('uuid', 'hex');
 
 ## Relationships
 
-### collection.addManyToOneRelation(name, foreignCollection, options)
+### Collection.addmanytoonerelation(name, foreigncollection, options)
 
 Add a many-to-one relationship.
 
@@ -578,7 +578,7 @@ books.addManyToOneRelation('author', 'persons', {
 
 ---
 
-### collection.addOneToManyRelation(name, foreignCollection, options)
+### Collection.addonetomanyrelation(name, foreigncollection, options)
 
 Add a one-to-many relationship.
 
@@ -604,7 +604,7 @@ persons.addOneToManyRelation('writtenBooks', 'books', {
 
 ---
 
-### collection.addOneToOneRelation(name, foreignCollection, options)
+### Collection.addonetoonerelation(name, foreigncollection, options)
 
 Add a one-to-one relationship.
 
@@ -630,7 +630,7 @@ persons.addOneToOneRelation('profile', 'profiles', {
 
 ---
 
-### collection.addManyToManyRelation(name, foreignCollection, throughCollection, options)
+### Collection.addmanytomanyrelation(name, foreigncollection, throughcollection, options)
 
 Add a many-to-many relationship.
 
@@ -660,7 +660,7 @@ students.addManyToManyRelation('enrolledCourses', 'courses', 'student_courses', 
 
 ---
 
-### collection.addExternalRelation(name, definition)
+### Collection.addexternalrelation(name, definition)
 
 Add a virtual collection into the related data of a record.
 
@@ -686,7 +686,7 @@ collection.addExternalRelation('relatedProducts', {
 
 ## Segments
 
-### collection.addSegment(name, definition)
+### Collection.addsegment(name, definition)
 
 Add a segment (saved filter) to the collection.
 
@@ -726,7 +726,7 @@ collection.addSegment('Active this month', async (context) => {
 
 ## Hooks
 
-### collection.addHook(position, type, handler)
+### Collection.addhook(position, type, handler)
 
 Add a hook to execute code before or after operations.
 
@@ -769,7 +769,7 @@ collection.addHook('After', 'Update', async (context) => {
 
 ## Search
 
-### collection.replaceSearch(definition)
+### Collection.replacesearch(definition)
 
 Replace the default search behavior.
 
@@ -797,7 +797,7 @@ collection.replaceSearch(async (searchString) => {
 
 ---
 
-### collection.disableSearch()
+### Collection.disablesearch()
 
 Disable search functionality on the collection.
 
@@ -809,7 +809,7 @@ collection.disableSearch(): CollectionCustomizer;
 
 ## Sorting
 
-### collection.emulateFieldSorting(name)
+### Collection.emulatefieldsorting(name)
 
 Enable in-memory sorting on a field.
 
@@ -825,7 +825,7 @@ collection.emulateFieldSorting('fullName');
 
 ---
 
-### collection.replaceFieldSorting(name, equivalentSort)
+### Collection.replacefieldsorting(name, equivalentsort)
 
 Replace sorting implementation for a field.
 
@@ -847,7 +847,7 @@ collection.replaceFieldSorting('fullName', [
 
 ---
 
-### collection.disableFieldSorting(name)
+### Collection.disablefieldsorting(name)
 
 Disable sorting on a specific field.
 
@@ -859,7 +859,7 @@ collection.disableFieldSorting(name: string): CollectionCustomizer;
 
 ## Filtering
 
-### collection.emulateFieldFiltering(name)
+### Collection.emulatefieldfiltering(name)
 
 Enable in-memory filtering on all operators for a field.
 
@@ -869,7 +869,7 @@ collection.emulateFieldFiltering(name: string): CollectionCustomizer;
 
 ---
 
-### collection.emulateFieldOperator(name, operator)
+### Collection.emulatefieldoperator(name, operator)
 
 Enable in-memory filtering for a specific operator on a field.
 
@@ -888,7 +888,7 @@ collection.emulateFieldOperator('fullName', 'Contains');
 
 ---
 
-### collection.replaceFieldOperator(name, operator, replacer)
+### Collection.replacefieldoperator(name, operator, replacer)
 
 Replace the implementation of a filter operator.
 
@@ -918,7 +918,7 @@ collection.replaceFieldOperator('fullName', 'Contains', (value) => {
 
 ## Charts
 
-### collection.addChart(name, definition)
+### Collection.addchart(name, definition)
 
 Add a chart to the collection.
 
@@ -958,9 +958,9 @@ collection.addChart('signupsOverTime', async (context, resultBuilder) => {
 
 ---
 
-## Collection Overrides
+## Collection overrides
 
-### collection.overrideCreate(handler)
+### Collection.overridecreate(handler)
 
 Replace the default create operation.
 
@@ -985,7 +985,7 @@ collection.overrideCreate(async (context) => {
 
 ---
 
-### collection.overrideUpdate(handler)
+### Collection.overrideupdate(handler)
 
 Replace the default update operation.
 
@@ -1008,7 +1008,7 @@ collection.overrideUpdate(async (context) => {
 
 ---
 
-### collection.overrideDelete(handler)
+### Collection.overridedelete(handler)
 
 Replace the default delete operation.
 
@@ -1031,9 +1031,9 @@ collection.overrideDelete(async (context) => {
 
 ---
 
-## Other Methods
+## Other methods
 
-### collection.disableCount()
+### Collection.disablecount()
 
 Disable count in list view pagination for improved performance.
 
@@ -1043,7 +1043,7 @@ collection.disableCount(): CollectionCustomizer;
 
 ---
 
-### collection.use(plugin, options?)
+### Collection.use(plugin, options?)
 
 Load a plugin on a specific collection.
 
@@ -1066,11 +1066,11 @@ collection.use(createFileField, {
 
 ---
 
-## Chart Result Builders
+## Chart result builders
 
 When creating charts with `collection.addChart()` or `agent.addChart()`, the result builder provides methods to format chart data.
 
-### resultBuilder.value(value, previousValue?)
+### Resultbuilder.value(value, previousvalue?)
 
 Create a Value chart (single number).
 
@@ -1084,7 +1084,7 @@ collection.addChart('totalRevenue', async (context, resultBuilder) => {
 
 ---
 
-### resultBuilder.distribution(obj)
+### Resultbuilder.distribution(obj)
 
 Create a Distribution/Pie chart.
 
@@ -1100,7 +1100,7 @@ collection.addChart('usersByPlan', async (context, resultBuilder) => {
 
 ---
 
-### resultBuilder.timeBased(timeRange, values)
+### Resultbuilder.timebased(timerange, values)
 
 Create a Time-based/Line chart.
 
@@ -1118,7 +1118,7 @@ collection.addChart('signupsOverTime', async (context, resultBuilder) => {
 
 ---
 
-### resultBuilder.multipleTimeBased(timeRange, dates, lines)
+### Resultbuilder.multipletimebased(timerange, dates, lines)
 
 Create a Multi-line Time-based chart.
 
@@ -1135,7 +1135,7 @@ collection.addChart('comparison', async (context, resultBuilder) => {
 
 ---
 
-### resultBuilder.percentage(value)
+### Resultbuilder.percentage(value)
 
 Create a Percentage chart.
 
@@ -1148,7 +1148,7 @@ collection.addChart('completionRate', async (context, resultBuilder) => {
 
 ---
 
-### resultBuilder.objective(value, objective)
+### Resultbuilder.objective(value, objective)
 
 Create an Objective chart (progress toward goal).
 
@@ -1162,7 +1162,7 @@ collection.addChart('salesGoal', async (context, resultBuilder) => {
 
 ---
 
-### resultBuilder.leaderboard(obj)
+### Resultbuilder.leaderboard(obj)
 
 Create a Leaderboard chart (sorted distribution).
 
@@ -1179,7 +1179,7 @@ collection.addChart('topSellers', async (context, resultBuilder) => {
 
 ---
 
-### resultBuilder.smart(data)
+### Resultbuilder.smart(data)
 
 Create a Smart chart (custom format).
 
@@ -1195,11 +1195,11 @@ collection.addChart('custom', async (context, resultBuilder) => {
 
 ---
 
-## Form Field Types
+## Form field types
 
 When defining action forms, you can use various field types with different widgets.
 
-### Basic Field Types
+### Basic field types
 
 ```typescript
 collection.addAction('Example', {
@@ -1258,7 +1258,7 @@ collection.addAction('Example', {
 
 ---
 
-### Enum Fields
+### Enum fields
 
 ```typescript
 {
@@ -1271,7 +1271,7 @@ collection.addAction('Example', {
 
 ---
 
-### Collection Fields
+### Collection fields
 
 Pick a record from another collection:
 
@@ -1285,7 +1285,7 @@ Pick a record from another collection:
 
 ---
 
-### Dropdown Widget
+### Dropdown widget
 
 ```typescript
 {
@@ -1304,7 +1304,7 @@ Pick a record from another collection:
 
 ---
 
-### Dynamic Dropdown
+### Dynamic dropdown
 
 ```typescript
 {
@@ -1324,7 +1324,7 @@ Pick a record from another collection:
 
 ---
 
-### Conditional Fields
+### Conditional fields
 
 Show/hide fields based on other field values:
 
@@ -1350,7 +1350,7 @@ form: [
 
 ---
 
-### Dynamic Field Values
+### Dynamic field values
 
 ```typescript
 {
@@ -1366,7 +1366,7 @@ form: [
 
 ---
 
-### Read-Only Fields
+### Read-only fields
 
 ```typescript
 {
@@ -1382,11 +1382,11 @@ form: [
 
 ---
 
-## ConditionTree Utilities
+## Conditiontree utilities
 
 Build complex filter conditions programmatically.
 
-### ConditionTreeLeaf
+### Conditiontreeleaf
 
 Simple condition on a single field:
 
@@ -1398,7 +1398,7 @@ const condition = new ConditionTreeLeaf('status', 'Equal', 'active');
 
 ---
 
-### ConditionTreeBranch
+### Conditiontreebranch
 
 Combine multiple conditions with AND/OR:
 
@@ -1412,7 +1412,7 @@ const condition = new ConditionTreeBranch('And', [
 
 ---
 
-### ConditionTree Factory
+### Conditiontree factory
 
 ```typescript
 
@@ -1438,7 +1438,7 @@ const union = ConditionTreeFactory.union([
 
 ---
 
-### Available Operators
+### Available operators
 
 **Comparison:**
 - `'Equal'`, `'NotEqual'`
@@ -1461,7 +1461,7 @@ const union = ConditionTreeFactory.union([
 
 ---
 
-## Related Types
+## Related types
 
 ### Caller
 

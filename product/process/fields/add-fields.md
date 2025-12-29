@@ -50,7 +50,7 @@ agent.customizeCollection('user', collection => {
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
-# User Collection has the following structure: { id, firstName, lastName }
+# User collection has the following structure: { id, firstname, lastname }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
     'displayName',
@@ -98,7 +98,7 @@ agent.customizeCollection('user', collection => {
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
-# User Collection has the following structure: { id, firstName, lastName }
+# User collection has the following structure: { id, firstname, lastname }
 @create_agent.customize_collection('user') do |collection|
   collection
     # Create a first field which is computed by concatenating the first and last names
@@ -151,8 +151,8 @@ agent.customizeCollection('user', collection => {
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Computed
 
-# Structure:
-# User    { id, addressId, firstName, lastName }
+# Structure: 
+# User { id, addressid, firstname, lastname }
 # Address { id, city }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
@@ -215,8 +215,8 @@ include ForestAdminDatasourceCustomizer::Decorators::Computed
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
-# Structure:
-# User  { id }
+# Structure: 
+# User { id }
 # Order { id, customer_id, amount }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
@@ -306,7 +306,7 @@ include Fake::EmailVerificationClient
 client = EmailVerificationClient.new
 client.api_key = 'MY_FAKE_API_KEY'
 
-# "User" Collection has the following structure: { id, email }
+# "user" collection has the following structure: { id, email }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
     'emailDeliverable',

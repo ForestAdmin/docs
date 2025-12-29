@@ -1,5 +1,5 @@
 ---
-title: Deploy Your Admin Backend With Aws
+title: Deploy your Admin backend with aws
 
 description: >-
   This tutorial is designed to assist you with a step-by-step guide to deploy the admin backend to Amazon Web Services, using EC2, ELB, ACM and Route53.
@@ -7,7 +7,7 @@ description: >-
 
 First, please ensure you have an AWS account. You can sign up [here](https://aws.amazon.com/).
 
-### 1. Launch an EC2 Instance:
+### 1. launch an EC2 instance: 
 
 - Navigate to the EC2 dashboard and click on `Launch Instance`.
 - Choose an Amazon Machine Image (AMI) such as `Amazon Linux 2023 AMI`.
@@ -25,13 +25,13 @@ First, please ensure you have an AWS account. You can sign up [here](https://aws
 
 - Review and launch the instance.
 
-### 2. Connect to the EC2 instance:
+### 2. connect to the EC2 instance: 
 
 - Navigate to your EC2 instance and click on `Connect`.
 - Leave the default parameters and click on `Connect` again.
 - Your are now connected to your instance.
 
-### 3. Set up your instance:
+### 3. set up your instance: 
 
 {% hint style="info" %}
 The command lines in this step demonstrate how to install a Ruby on Rails agent. If you are running Forest Admin on another agent, please adapt the following to your specific stack.
@@ -78,7 +78,7 @@ npm install
 npm run start:watch
 ```
 
-### 4. Adjust security group rules:
+### 4. adjust security group rules: 
 
 - Navigate to your EC2 instance's security group.
 - Click on `Edit inbound rules`.
@@ -86,7 +86,7 @@ npm run start:watch
 
 ![](/images/legacy/javascript-agents/deploy-on-aws-inbound-rules.png)
 
-### 5. Create a target group:
+### 5. create a target group: 
 
 - In the AWS Management Console, navigate to the EC2 service.
 - Under "Target Groups", click `Create Target Groups`.
@@ -97,14 +97,14 @@ npm run start:watch
 - On the next step, select instance and click on `Include as pending below`.
 - Finally create the target group.
 
-### 6. Request a certificate using AWS Certificate Manager (ACM):
+### 6. request a certificate using AWS certificate manager (ACM): 
 
 - Navigate to ACM and click on `Request a certificate`.
 - Enter your domain name and validate the domain ownership using DNS validation.
 - After viewing the new created certificate, click on `Create records in Route 53`.
 - Wait for the certificate to be validated (this can take some time < 1mn).
 
-### 7. Set up an Application Load Balancer (ALB):
+### 7. set up an application load balancer (ALB): 
 
 - In the AWS Management Console, navigate to the EC2 service.
 - Under "Load Balancers", click `Create Load Balancer`.
@@ -124,12 +124,12 @@ npm run start:watch
 
 - After creating the ALB copy the `DNS name`.
 
-### 8. Add CNAME to Route53:
+### 8. add CNAME to route53: 
 
 - Navigate to Route53 and choose your hosted zone (domain).
 - Create a `CNAME` record with the domain name filled in the certificate and the `DNS name` of the ALB.
 
-### 9. Finalize:
+### 9. finalize: 
 
 Check your domain. You should be able to access your Forest Admin panel environment hosted on AWS. 🎉
 

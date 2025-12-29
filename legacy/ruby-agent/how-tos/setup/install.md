@@ -39,7 +39,7 @@ Requirements: Your Rails app must be version 4 or above.
 
 You are asked to provide the URL of your application that runs locally. When you follow the steps and integrate the gems, you should automatically be redirected to your admin panel!
 
-#### Install Forest Admin using an existing  app&#x20;
+#### Install Forest Admin using an existing app&#x20;
 
 Requirements:&#x20;
 
@@ -80,7 +80,7 @@ It is possible to skip the authentication in the browser and use directly the CL
 
 Then, you will be able to create and connect your admin backend, with the following options.
 
-### NPM / Yarn
+### NPM / yarn
 | Option | Description |
 | ------------------------ | ------------------------------------------------ |
 | `-c, --connection-url` | The database credentials with a connection URL. |

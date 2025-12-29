@@ -1,5 +1,5 @@
 ---
-title: Aggregations - Overview
+title: Aggregations - overview
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

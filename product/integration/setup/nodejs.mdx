@@ -1,5 +1,5 @@
 ---
-title: Node.js Setup Guide
+title: Node.js setup guide
 ---
 > **Status:** TODO - Priority: HIGH
 >

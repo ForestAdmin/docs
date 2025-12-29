@@ -1,5 +1,5 @@
 ---
-title: Charts - Overview
+title: Charts - overview
 ---
 > **Status:** TODO - Priority: HIGH
 >

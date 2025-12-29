@@ -1,5 +1,5 @@
 ---
-title: "SCIM Integration with OneLogin"
+title: "SCIM integration with OneLogin"
 description: "Automate user management by integrating OneLogin's SCIM provisioning with Forest Admin"
 ---
 
@@ -11,7 +11,7 @@ This feature may not be available on all plans. Check the [pricing page](https:/
 Enabling SCIM disables Forest Admin user editing. All user management must be done through OneLogin.
 </Warning>
 
-## Supported Features
+## Supported features
 
 The OneLogin SCIM integration enables:
 - User provisioning from OneLogin to Forest Admin
@@ -19,39 +19,39 @@ The OneLogin SCIM integration enables:
 - Deleting users when removed from the Forest Admin app in OneLogin
 - SCIM Groups for team assignment
 
-## Configuration Steps
+## Configuration steps
 
-### 1. Adding the Forest Admin App
+### 1. adding the Forest Admin app
 
 Navigate to OneLogin's Application tab, select "Add App," then search for and select "SCIM Provisioner with SAML (SCIM v2 Core)."
 
-### 2. Authentication Setup
+### 2. authentication setup
 
 Name your app, then enable User provisioning in Forest Admin project settings. This generates a token to paste into OneLogin.
 
-### 3. SCIM Base URL
+### 3. SCIM base URL
 
 Add this endpoint: `https://api.forestadmin.com/scim`
 
-### 4. JSON Template Configuration
+### 4. JSON template configuration
 
 The SCIM template includes user schemas with custom Forest Admin parameters for permissionLevel, role, tags, and teams.
 
-### 5. Custom Parameters
+### 5. custom parameters
 
 - **permissionLevel**: Must match existing Forest Admin permission level exactly
 - **role**: Must match existing project role exactly
 - **teams**: Comma-separated team names (e.g., "Operators,Support")
 - **tags**: Key/value pairs separated by semicolons (e.g., "regions:France,Italie;job:developer")
 
-### 6. Mapping Rules
+### 6. mapping rules
 
 Create rules to automatically provide mandatory parameters (role, permissionLevel) and optional tags.
 
-### 7. Custom User Attributes
+### 7. custom user attributes
 
 Add custom fields in the Users tab under "Custom User Fields" to base mapping rules on.
 
-### 8. SCIM Groups Management
+### 8. SCIM groups management
 
 Refresh entitlements to fetch OneLogin roles, then create mapping rules between OneLogin roles and Forest Admin teams.

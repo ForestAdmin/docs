@@ -1,5 +1,5 @@
 ---
-title: set-origin
+title: Set-origin
 ---
 The `forest set-origin` command enables you change the origin of a branch.
 

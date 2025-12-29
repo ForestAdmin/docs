@@ -5,7 +5,7 @@ description: Configure Single Sign-On with OneLogin
 
 This guide covers setting up Single Sign-On (SSO) with OneLogin for Forest Admin authentication.
 
-## Accessing Organization Settings
+## Accessing organization settings
 
 To configure SSO or SCIM:
 
@@ -19,17 +19,17 @@ To configure SSO or SCIM:
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
 {% endhint %}
 
-## Configuration Steps
+## Configuration steps
 
-### Step 1: Add Application
+### Step 1: Add application
 
 Access your OneLogin admin dashboard and select "Add app".
 
-### Step 2: Select Connector
+### Step 2: Select connector
 
 Choose "SAML Custom Connector (Advanced)" and complete the setup wizard.
 
-### Step 3: Configure Parameters
+### Step 3: Configure parameters
 
 Enter required parameters in the Configuration section:
 
@@ -41,15 +41,15 @@ Enter required parameters in the Configuration section:
 | SAML nameID format | Email (must match Forest Admin account email) |
 | Audience (EntityID) | `forestadmin-OrganizationName` |
 
-### Step 4: Upload Metadata
+### Step 4: Upload metadata
 
 Navigate to the SSO section and copy the Issuer URL. In Forest Admin, select "XML file upload or XML file endpoint" and paste the Issuer URL as the Metadata XML endpoint.
 
-### Step 5: Test Configuration
+### Step 5: Test configuration
 
 Test before enabling organization-wide.
 
-## IDP-Initiated Login
+## Idp-initiated login
 
 For IDP-initiated login setup, the optional RelayState parameter should be: `{"organizationName": "<OrganizationName>", "destinationUrl": "organization.projects"}`
 

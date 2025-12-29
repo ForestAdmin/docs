@@ -1,5 +1,5 @@
 ---
-title: forest switch
+title: Forest switch
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

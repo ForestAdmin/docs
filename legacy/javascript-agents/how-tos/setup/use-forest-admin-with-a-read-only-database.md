@@ -9,7 +9,7 @@ If you only want _some_ fields to be read-only, check out [this section](https:/
 
 To set up Forest Admin with a read-only database, follow those steps:
 
-### Step 1: set all your collections as read-only
+### Step 1: Set all your collections as read-only
 
 A collection can be set as read-only from its settings, accessible using the Layout Editor mode:
 
@@ -19,7 +19,7 @@ You must **disable all permissions** there, as described in [this section](https
 Repeat this for each of your collections.
 {% endhint %}
 
-### Step 2 (optional): interact with your data using Smart Actions
+### Step 2 (optional): Interact with your data using smart actions
 
 At this point, your Forest interface allows you only to browse your data and not interact with it.
 

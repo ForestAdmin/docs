@@ -1,13 +1,13 @@
 ---
-title: Forest Admin Documentation
+title: Forest Admin documentation
 description: Build powerful admin panels on top of your data
 ---
 
-# Forest Admin Documentation
+# Forest Admin documentation
 
 Build powerful admin panels on top of your data
 
-## Quick Start
+## Quick start
 
 Choose your deployment option:
 
@@ -21,7 +21,7 @@ Choose your deployment option:
 * [Data Sources](/product/integration/data-sources/overview.md) - Connect your data
 * [Roles & Permissions](/product/control/roles-permissions.md) - Access control
 
-## Learning Paths
+## Learning paths
 
 * [Developer Guide](/guides/learning-paths/developer.md)
 * [Operations Guide](/guides/learning-paths/operations.md)

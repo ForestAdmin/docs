@@ -1,5 +1,5 @@
 ---
-title: "Placeholder Page"
+title: "Placeholder page"
 description: "This is a placeholder page for the Home section"
 ---
 > **Status:** TODO - Priority: HIGH

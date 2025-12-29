@@ -36,7 +36,7 @@ In this example, we migrate a segment that returns the 5 bestsellers of a produc
 {% tabs %} {% tab title="Before" %}
 
 {% tabs %}
-{% tab title="collection('products', {" %}
+{% tab title="JavaScript" %}
 ```javascript
 segments: [
     {
@@ -63,7 +63,7 @@ segments: [
 ```
 {% endtab %}
 
-{% tab title="class Forest::Product" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestLiana::Collection
 
@@ -88,7 +88,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('products', products => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 products.addSegment('Bestsellers', async () => {
     const query = `
@@ -110,7 +110,7 @@ products.addSegment('Bestsellers', async () => {
 ```
 {% endtab %}
 
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     def self.setup!

@@ -1,5 +1,5 @@
 ---
-title: init
+title: Init
 ---
 The `forest init` command provides an all-in-one initialization command that will:
 
@@ -73,7 +73,7 @@ At this point, your **development environment** will be **created**! 🎉
 Note that your new development environment is identified by the `FOREST_ENV_SECRET` in your `.env` file. If you had no such file, it will have been automatically created.
 {% endhint %}
 
-#### (Optional) Connecting your database
+#### (optional) connecting your database
 
 To work properly in your local environment, your Forest Admin project needs to be connected to the corresponding database (which could be local or remote, it's your choice.)
 

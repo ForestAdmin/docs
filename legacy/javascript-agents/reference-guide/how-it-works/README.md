@@ -10,7 +10,7 @@ Forest Admin provides you with:
   - if you chose an existing app as a datasource (Rails, , , Express/Sequelize, Express/Mongoose), your Admin Backend will be generated **within your app**.
 - A user interface to access and manage your data from your browser. This **Forest Admin User Interface** is built and managed through resources hosted on Forest Admin's servers.
 
-### SQL/Mongodb
+### Sql/mongodb
 ![The Admin Backend is a Node.JS REST API hosted on your servers](/images/legacy/javascript-agents/how-it-works-2.jpg)
 
 ### Node.js
@@ -20,7 +20,7 @@ Forest Admin provides you with:
 For a more in-depth explanation of Forest Admin's architecture (the Node.JS agent version), please read the [following article](https://medium.com/forest-admin/a-deep-dive-into-forest-admins-architecture-and-its-benefits-for-the-developers-who-trust-it-1d49212fb4b).
 {% endhint %}
 
-## The Admin Backend
+## The Admin backend
 
 The Admin Backend is generated upon install and **hosted on your end**.
 
@@ -28,7 +28,7 @@ It includes an API allowing to **translate calls made from the Forest Admin UI i
 
 It also provides the Forest Admin servers with the information needed to build the User Interface (the **Forest Admin Schema**). This information includes table names, column names and types, and relationships. It is sent when you run your Admin Backend [within a file called `forestadmin-schema.json`](../models/#the-forestadmin-schema-json-file).
 
-## Data Privacy
+## Data privacy
 
 When logging into the **Forest Admin UI** in your browser, you will connect to:
 
@@ -39,7 +39,7 @@ When logging into the **Forest Admin UI** in your browser, you will connect to:
 As your data transits directly from the Admin Backend hosted on your end and the user browser, **it never transits through our servers**.
 {% endhint %}
 
-### SQL/Mongodb
+### Sql/mongodb
 ![](/images/legacy/javascript-agents/how-it-works-4.jpg)
 
 ### Node.js
@@ -52,7 +52,7 @@ The connection to both servers to the **Admin Backend** and the **Forest Admin S
 1. `FOREST_ENV_SECRET` to authenticate all requests made to the **Forest Admin Servers**
 2. `FOREST_AUTH_SECRET` to authenticate all requests made to the **Admin Backend**
 
-### SQL/Mongodb
+### Sql/mongodb
 ![](/images/legacy/javascript-agents/how-it-works-5.jpg)
 
 ### Node.js
@@ -83,21 +83,21 @@ The JWT Data Token contains all the details of the requesting user. On any authe
 ```
 {% endhint %}
 
-### **No 3rd-party Tracking**
+### **no 3rd-party tracking**
 
 The **Forest Admin UI** has an option to completely disable any 3rd-party provider that could track data available from your browser to guarantee the respect of data privacy.
 
-### SQL/Mongodb
+### Sql/mongodb
 ![](/images/legacy/javascript-agents/how-it-works-7.jpg)
 
 ### Node.js
 ![](/images/legacy/javascript-agents/how-it-works-8.jpg)
 
-### IP Whitelisting
+### IP whitelisting
 
 The [IP whitelisting](../../how-tos/setup/forest-admin-ip-white-listing-forest-cloud.md) feature allows you to create a list of trusted IP addresses or IP ranges from which your admin users can both access to the **Forest Admin UI** and interact with your **Admin Backend**.
 
-### SQL/Mongodb
+### Sql/mongodb
 ![](/images/legacy/javascript-agents/how-it-works-9.jpg)
 
 ### Node.js

@@ -1,5 +1,5 @@
 ---
-title: environments:create
+title: Environments: Create
 ---
 ## Creating a test environment
 

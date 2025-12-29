@@ -1,5 +1,5 @@
 ---
-title: Collaborate Tools
+title: Collaborate tools
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

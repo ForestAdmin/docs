@@ -1,3 +1,7 @@
+{% hint style="info" %}
+**Node.js only** - This page covers autocompletion and typing setup for the Node.js agent.
+{% endhint %}
+
 Since the Forest Admin agent is fully written in TypeScript, every function has autocompletion capabilities.
 The agent can generate typing files based on your models.
 

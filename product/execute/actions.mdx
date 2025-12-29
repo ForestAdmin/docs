@@ -1,5 +1,5 @@
 ---
-title: Executing Actions
+title: Executing actions
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

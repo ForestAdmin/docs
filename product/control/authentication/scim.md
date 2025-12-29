@@ -1,5 +1,5 @@
 ---
-title: "SCIM User Provisioning"
+title: "SCIM user provisioning"
 description: "Automate user lifecycle management with SCIM (System for Cross-domain Identity Management) integration with your identity provider"
 ---
 
@@ -11,7 +11,7 @@ SCIM (System for Cross-domain Identity Management) is an open standard for autom
 This feature may not be available on all plans and requires SSO to be configured first. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
 {% endhint %}
 
-## Why Use SCIM?
+## Why use SCIM?
 
 
   * [Automated Provisioning](#) - New employees automatically get Forest Admin access when added to your IdP
@@ -23,7 +23,7 @@ This feature may not be available on all plans and requires SSO to be configured
   * [Reduced Admin Overhead](#) - Eliminate manual user management and reduce IT workload
 
 
-## How SCIM Works
+## How SCIM works
 
 SCIM enables bidirectional communication between your IdP and Forest Admin:
 
@@ -61,7 +61,7 @@ SCIM enables bidirectional communication between your IdP and Forest Admin:
          │                                       │
 ```
 
-### User Lifecycle Events
+### User lifecycle events
 
 SCIM handles the complete user lifecycle:
 
@@ -124,7 +124,7 @@ SCIM handles the complete user lifecycle:
   </Tab>
 </Tabs>
 
-## Supported Identity Providers
+## Supported identity providers
 
 Forest Admin supports SCIM 2.0 with these major IdPs:
 
@@ -142,7 +142,7 @@ Forest Admin supports SCIM 2.0 with these major IdPs:
   * [Custom SCIM 2.0](#) - Any SCIM 2.0 compliant identity provider
 
 
-## Setting Up SCIM
+## Setting up SCIM
 
 ### Prerequisites
 
@@ -152,7 +152,7 @@ Before configuring SCIM:
 - Admin access to your identity provider
 - Admin access to Forest Admin
 
-### Configuration Steps
+### Configuration steps
 
 <Steps>
   <Step title="Enable SCIM in Forest Admin">
@@ -203,7 +203,7 @@ Before configuring SCIM:
   </Step>
 </Steps>
 
-## Provider-Specific Setup
+## Provider-specific setup
 
 ### Okta
 
@@ -313,9 +313,9 @@ Before configuring SCIM:
   </Step>
 </Steps>
 
-## Attribute Mapping
+## Attribute mapping
 
-### Standard User Attributes
+### Standard user attributes
 
 Map IdP user attributes to Forest Admin fields:
 
@@ -344,7 +344,7 @@ Map IdP user attributes to Forest Admin fields:
   </Tab>
 </Tabs>
 
-### Custom Attribute Mapping
+### Custom attribute mapping
 
 Configure custom attributes for advanced use cases:
 
@@ -372,9 +372,9 @@ Configure custom attributes for advanced use cases:
 }
 ```
 
-## Group/Team Synchronization
+## Group/team synchronization
 
-### Mapping IdP Groups to Teams
+### Mapping idp groups to teams
 
 Automatically assign users to Forest Admin teams based on their IdP group membership:
 
@@ -408,7 +408,7 @@ Automatically assign users to Forest Admin teams based on their IdP group member
   </Step>
 </Steps>
 
-### Dynamic Team Assignment
+### Dynamic team assignment
 
 Users are automatically added/removed from teams based on group membership:
 
@@ -429,9 +429,9 @@ Users are automatically added/removed from teams based on group membership:
 }
 ```
 
-## Role Assignment with SCIM
+## Role assignment with SCIM
 
-### Automatic Role Assignment
+### Automatic role assignment
 
 Assign Forest Admin roles based on IdP attributes:
 
@@ -489,7 +489,7 @@ Assign Forest Admin roles based on IdP attributes:
   </Tab>
 </Tabs>
 
-### Default Role Fallback
+### Default role fallback
 
 Configure a default role for users without mapped attributes:
 
@@ -500,9 +500,9 @@ Configure a default role for users without mapped attributes:
 }
 ```
 
-## Monitoring SCIM Sync
+## Monitoring SCIM sync
 
-### Sync Status
+### Sync status
 
 Monitor SCIM provisioning status:
 
@@ -529,7 +529,7 @@ Monitor SCIM provisioning status:
   </Step>
 </Steps>
 
-### IdP-Side Monitoring
+### Idp-side monitoring
 
 Check provisioning status in your IdP:
 
@@ -560,7 +560,7 @@ Check provisioning status in your IdP:
 
 ## Troubleshooting
 
-### SCIM Connection Issues
+### SCIM connection issues
 
 
 <details>
@@ -638,7 +638,7 @@ Check provisioning status in your IdP:
 </details>
 
 
-### Attribute Mapping Issues
+### Attribute mapping issues
 
 **Problem**: User attributes not syncing correctly
 
@@ -651,7 +651,7 @@ Check provisioning status in your IdP:
 
 **Debug**: Check SCIM logs to see actual JSON payload sent by IdP
 
-### Group/Team Sync Issues
+### Group/team sync issues
 
 **Problem**: Users not assigned to correct teams
 
@@ -667,9 +667,9 @@ Check provisioning status in your IdP:
 3. Verify user's group membership in IdP
 4. Wait for or trigger sync
 
-## Security Best Practices
+## Security best practices
 
-### SCIM Token Management
+### SCIM token management
 
 
   * [Secure Storage](#) - Store SCIM Bearer Token securely in your IdP's credential store
@@ -681,7 +681,7 @@ Check provisioning status in your IdP:
   * [Monitor Usage](#) - Review SCIM logs for unauthorized API calls
 
 
-### Access Controls
+### Access controls
 
 1. **Principle of Least Privilege**: Default role should be minimal (e.g., Viewer)
 2. **Role Validation**: Verify role mappings assign appropriate permissions
@@ -689,16 +689,16 @@ Check provisioning status in your IdP:
 4. **Audit Provisioning**: Review SCIM sync logs regularly
 5. **Test Deprovisioning**: Verify disabled users lose access immediately
 
-### Compliance Considerations
+### Compliance considerations
 
 - **SOC 2**: SCIM automates user lifecycle management (CC6.3)
 - **GDPR**: Prompt deprovisioning helps with data access controls
 - **HIPAA**: Automated access removal reduces unauthorized PHI access
 - **Audit Trail**: SCIM events logged in Forest Admin audit logs
 
-## Best Practices
+## Best practices
 
-### Initial Rollout
+### Initial rollout
 
 <Steps>
   <Step title="Start Small">
@@ -726,7 +726,7 @@ Check provisioning status in your IdP:
   </Step>
 </Steps>
 
-### Ongoing Management
+### Ongoing management
 
 1. **Monitor Sync Status**: Check SCIM logs weekly for errors
 2. **Review Mappings**: Verify role/team mappings quarterly
@@ -734,7 +734,7 @@ Check provisioning status in your IdP:
 4. **Update Documentation**: Keep SCIM configuration documented
 5. **Test Periodically**: Quarterly test of full user lifecycle
 
-## Next Steps
+## Next steps
 
 
   * [SSO Setup](/product/control/authentication/sso.md) - Configure SSO before enabling SCIM

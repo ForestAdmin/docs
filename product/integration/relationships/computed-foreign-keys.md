@@ -173,8 +173,8 @@ function createInverseRelationship(crmUsers) {
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
-# Concatenate firstname, lastname and birthData to make a unique identifier
-# and ensure that the new field is filterable
+# Concatenate firstname, lastname and birthdata to make a unique identifier
+# And ensure that the new field is filterable
 def create_filterable_identity_field(collection)
   # Create foreign key on the collection from the database
   collection.add_field(
@@ -204,7 +204,7 @@ def create_filterable_identity_field(collection)
   end
 end
 
-# Create relationship between databaseUsers and crmUsers
+# Create relationship between databaseusers and crmusers
 def create_relationship(collection)
   collection.add_one_to_one_relation(
     'userFromCrm',
@@ -216,7 +216,7 @@ def create_relationship(collection)
   )
 end
 
-# Create relationship between crmUsers and databaseUsers
+# Create relationship between crmusers and databaseusers
 def create_inverse_relationship(collection)
   collection.add_many_to_one_relation(
     'userFromDatabase',

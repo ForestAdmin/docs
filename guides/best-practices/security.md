@@ -1,5 +1,5 @@
 ---
-title: Security Best Practices
+title: Security best practices
 ---
 > **Status:** TODO - Priority: HIGH
 >

@@ -11,7 +11,7 @@ In SQL, a view is a virtual table based on the result-set of an SQL statement. V
 Forest Admin natively supports SQL views. If you have already implemented views, simply add [the associated models](https://docs.forestadmin.com/documentation/reference-guide/models/enrich-your-models#declaring-a-new-model) to display them on your interface.
 {% endhint %}
 
-## Creating the SQL View
+## Creating the SQL view
 
 To create a view, we use `CREATE VIEW` statement.&#x20;
 

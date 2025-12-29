@@ -1,5 +1,5 @@
 ---
-title: Layout Maintenance
+title: Layout maintenance
 ---
 > **Status:** TODO - Priority: LOW
 >

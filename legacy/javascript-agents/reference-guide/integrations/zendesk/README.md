@@ -11,9 +11,9 @@ We are going to use [Smart Collections](../../smart-collections/), [Smart Relati
 The full implementation of this integration is available [here](https://github.com/existenz31/forest-zendesk) on GitHub.
 </Check>
 
-### Live Demo
+### Live demo
 
-### Build your basic Admin Panel with Forest Admin
+### Build your basic Admin panel with Forest Admin
 
 Let's start with a basic admin panel on top of a SQL database that has a table `Users` that holds an email address field.
 

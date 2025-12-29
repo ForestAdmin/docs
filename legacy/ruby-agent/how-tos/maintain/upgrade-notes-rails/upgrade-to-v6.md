@@ -82,7 +82,7 @@ rails dev:cache
 You can either enable caching or setup a static clientId as shown in the next step.
 {% endhint %}
 
-#### Setup a static clientId
+#### Setup a static clientid
 
 {% hint style="warning" %}
 This is required if you're running multiple instances of your agent (with a load balancer for exemple) or if you don't want to enable caching on your environment.
@@ -106,7 +106,7 @@ Lastly, add the following:
 ForestLiana.forest_client_id = Rails.application.secrets.forest_client_id
 ```
 
-## Important Notice
+## Important notice
 
 ### Changelogs
 

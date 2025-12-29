@@ -1,5 +1,5 @@
 ---
-title: "Quickstart: Self-Hosted"
+title: "Quickstart: Self-hosted"
 description: "Deploy the Forest Admin agent in your own infrastructure in 10 minutes"
 ---
 
@@ -128,7 +128,7 @@ Forest Admin integrates with popular Node.js frameworks: **Express**, **Fastify*
 
 ```bash
 npm start
-# or
+# Or
 npm run dev
 ```
 
@@ -191,109 +191,6 @@ After an optional review, you can immediately access the Forest Admin UI to mana
   * [Follow a Learning Path](/guides/learning-paths.md) - Structured learning journey tailored to your role
   * [Customize your UI](/product/build/layout-editor.md) - Use the layout editor to customize your admin panel
   * [Add business logic](/product/process/actions/overview.md) - Create Smart Actions for custom workflows
-
-
-## Troubleshooting
-
-
-<details>
-<summary>Agent not starting</summary>
-
-**Check that your agent is properly started:**
-
-    1. **Is your agent running?** Check the terminal for startup messages
-    2. **Check for errors** in the console output
-    3. **Verify environment variables** - ensure `.env` file is loaded
-    4. **Check port conflicts** - ensure the port is available:
-       - Node.js standalone/in-app: port `3310`
-       - Rails: port `3000` (or your configured port)
-
-    **Quick healthcheck test:**
-
-    **Node.js:**
-    ```bash
-    curl http://localhost:3310/forest
-    ```
-    Should return: `{"meta":{"name":"@forestadmin/agent",...}}`
-
-    **Ruby:**
-    ```bash
-    curl http://localhost:3000/forest
-    ```
-    Should return Forest Admin metadata
-
-</details>
-
-
-<details>
-<summary>Cannot connect from Forest Admin UI</summary>
-
-**Connection troubleshooting checklist:**
-
-    1. ✅ **Is your agent running?** Check the terminal for the "agent is now running" message
-    2. ✅ **Can you reach the healthcheck?**
-       - Node.js: Visit `http://localhost:3310/forest` in your browser
-       - Ruby: Visit `http://localhost:3000/forest` in your browser
-    3. ✅ **Do you see network calls?** Open browser DevTools (F12) → Network tab, look for calls to your agent URL
-    4. ✅ **Browser extensions blocking requests?** Some ad blockers or privacy extensions block network calls
-    5. ✅ **Try incognito/private mode** - Brave and some browsers block local network calls by default
-
-    **For production deployments:**
-    - Ensure your agent is publicly accessible (or via VPN)
-    - Check firewall rules allow inbound connections
-    - Verify SSL certificates if using HTTPS
-    - Check CORS configuration if applicable
-
-</details>
-
-
-<details>
-<summary>No tables showing up</summary>
-
-**Solution:** Make sure your database connection is working.
-
-    1. Check your `DATABASE_URL` environment variable is correct
-    2. Verify database credentials and permissions
-    3. Check the agent logs for database connection errors
-    4. Ensure the database user has read permissions on tables
-
-    **Test your database connection:**
-
-    **Node.js:**
-    ```bash
-    # Quick connection test
-    node -e "const { Client } = require('pg'); const client = new Client(process.env.DATABASE_URL); client.connect().then(() => console.log('✅ Connected!')).catch(err => console.error('❌ Error:', err.message))"
-    ```
-
-    **Ruby:**
-    ```bash
-    rails dbconsole
-    # Should connect to your database
-    ```
-
-</details>
-
-
-<details>
-<summary>Deploy to production</summary>
-
-**Deploy your agent to production:**
-
-    For detailed deployment guides, see:
-    - [Production Deployment Guide](/guides/deployment/production)
-    - [Deploy to AWS](/guides/deployment/platforms/aws)
-    - [Deploy to Heroku](/guides/deployment/platforms/heroku)
-
-    **Quick checklist:**
-    1. Deploy your agent to your hosting platform
-    2. Set environment variables (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`)
-    3. Set `NODE_ENV=production` (Node.js) or `RAILS_ENV=production` (Ruby)
-    4. Ensure your production database is accessible from your agent
-    5. Configure your agent URL in Forest Admin UI
-
-    **Learn more:** [Self-Hosted Architecture](/product/integration/architectures/self-hosted)
-
-</details>
 
 
 ## Need help?

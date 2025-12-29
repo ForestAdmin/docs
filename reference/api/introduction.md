@@ -1,9 +1,9 @@
 ---
-title: Forest Admin Public API
+title: Forest Admin public API
 description: REST API for programmatic access to Forest Admin
 ---
 
-# Forest Admin Public API
+# Forest Admin public API
 
 The Forest Admin Public API provides programmatic access to Forest Admin data and features, enabling you to integrate Forest Admin with external tools and build custom workflows.
 
@@ -35,7 +35,7 @@ curl -H "Authorization: Bearer YOUR_API_TOKEN" \
   https://api.forestadmin.com/api/v1/activity-logs
 ```
 
-## Available Endpoints
+## Available endpoints
 
 
   * [Activity Logs](/reference/api/endpoints/activity-logs.md) - Track user actions and export audit trails
@@ -43,9 +43,9 @@ curl -H "Authorization: Bearer YOUR_API_TOKEN" \
   * [Notes](/reference/api/endpoints/notes.md) - Manage collaboration notes programmatically
 
 
-## Key Features
+## Key features
 
-### Activity Logs
+### Activity logs
 
 Export and analyze user activity for compliance and security monitoring:
 
@@ -54,7 +54,7 @@ Export and analyze user activity for compliance and security monitoring:
 - Export for data warehousing
 - Build custom audit dashboards
 
-### Admin Logs
+### Admin logs
 
 Monitor and audit administrative operations:
 
@@ -72,7 +72,7 @@ Integrate collaboration features with external systems:
 - Build custom notification systems
 - Enhance team workflows
 
-## Rate Limits
+## Rate limits
 
 The Public API implements rate limiting to ensure service stability. See [Rate Limits](/reference/api/rate-limits) for details on:
 
@@ -81,16 +81,16 @@ The Public API implements rate limiting to ensure service stability. See [Rate L
 - Handling rate limit errors
 - Best practices
 
-## Getting Started
+## Getting started
 
 1. **Request API Access** - Contact Forest Admin to enable API access for your project
 2. **Generate API Token** - Create an API token in your project settings
 3. **Make Your First Request** - Use the authentication token to access endpoints
 4. **Review Rate Limits** - Understand usage limits and best practices
 
-## Use Cases
+## Use cases
 
-### Compliance & Audit
+### Compliance & audit
 
 Export activity logs to your data warehouse for compliance reporting and long-term retention:
 
@@ -99,7 +99,7 @@ curl -H "Authorization: Bearer YOUR_API_TOKEN" \
   "https://api.forestadmin.com/api/v1/activity-logs?start_date=2024-01-01&end_date=2024-01-31"
 ```
 
-### Security Monitoring
+### Security monitoring
 
 Build custom dashboards to monitor user activity and detect anomalies:
 
@@ -108,7 +108,7 @@ Build custom dashboards to monitor user activity and detect anomalies:
 - Alert on suspicious activity
 - Analyze access patterns
 
-### Integration with External Tools
+### Integration with external tools
 
 Connect Forest Admin with your existing tools:
 
@@ -126,7 +126,7 @@ Automate workflows based on Forest Admin activity:
 - Generate automated reports
 - Build custom notification systems
 
-## API Status
+## API status
 
 {% hint style="info" %}
 **API Access Required**
@@ -143,7 +143,7 @@ For questions or issues with the Public API:
 - 📧 [Support](mailto:support@forestadmin.com)
 - 🎫 Enterprise: Contact your account manager
 
-## Next Steps
+## Next steps
 
 
   * [Authentication](/reference/api/authentication.md) - Learn how to authenticate API requests

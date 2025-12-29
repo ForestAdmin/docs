@@ -5,7 +5,7 @@
   * [Forest Admin Documentation](index.md)
   * [Placeholder Page](home/placeholder.md)
 
-## Get Started
+## Get started
 
 * First Steps
   * [Introduction to Forest Admin](get-started/intro-to-forest-admin.md)

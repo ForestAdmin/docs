@@ -3,12 +3,12 @@ title: Table of contents
 ---
 * [Forest Admin](README.md)
 
-## Getting Started
+## Getting started
 
 * [Quick start](getting-started/setup-guide.md)
 * [Development workflow](getting-started/development-workflow.md)
 
-## Reference Guide
+## Reference guide
 
 * [How it works](reference-guide/how-it-works/README.md)
   * [Environments](reference-guide/how-it-works/environments.md)

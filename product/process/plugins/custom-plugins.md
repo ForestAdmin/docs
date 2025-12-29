@@ -50,7 +50,7 @@ end
 {{/ruby}}
 
 
-## Making your Plugin act differently depending on the Collection
+## Making your plugin act differently depending on the collection
 
 When making a Plugin, you may want it to generalize to many different Collections.
 

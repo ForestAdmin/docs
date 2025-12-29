@@ -1,5 +1,5 @@
 ---
-title: Create a Gallery view
+title: Create a gallery view
 ---
 ![](</images/legacy/javascript-agents/image (256).png>)
 

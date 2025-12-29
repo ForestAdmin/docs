@@ -53,7 +53,7 @@ At this point, your **Development Environment** will be **created**! 🎉
 Note that your new Development Environment is identified by the `FOREST_ENV_SECRET` in your `.env` file. If you do not have such file, it will be generated automatically during the command execution.
 {% endhint %}
 
-#### (Optional) Connecting your database
+#### (optional) connecting your database
 
 To work properly in your local environment, your Forest Admin Project needs to be connected to the corresponding database (which could be local or remote, it's your choice).
 

@@ -1,10 +1,10 @@
-## What is a Smart View?
+## What is a smart view?
 
 Smart Views let you code your List Views using JS, HTML, and CSS. They are taking data visualization to the next level. Ditch the Table View and display your orders on a Map, your events in a Calendar, your movies, pictures and profiles in a Gallery. All of that with the easiness of Forest Admin.
 
 ![](../../assets/smart-view-map.png)
 
-## Creating a Smart View
+## Creating a smart view
 
 Forest Admin provides an online editor to inject your Smart View code. The editor is available on the collection’s settings, then in the “Smart Views” tab.
 
@@ -49,7 +49,7 @@ For each record, you will access its attributes through the `forest-attribute` p
 {{/each}}
 ```
 
-### Accessing belongsTo relationships
+### Accessing belongsto relationships
 
 Accessing a `belongsTo` relationship works in exactly the same way as accessing a simple field. Forest triggers automatically an API call to retrieve the data from your Admin API only if it’s necessary.
 
@@ -65,7 +65,7 @@ On the `Shipping` Smart View (in the Collection named `Order`) defined on our Li
 {{/each}}
 ```
 
-### Accessing hasMany relationships
+### Accessing hasmany relationships
 
 Accessing a `hasMany` relationship works in exactly the same way as accessing a simple field.. Forest triggers automatically an API call to retrieve the data from your Admin API only if it’s necessary.
 
@@ -176,7 +176,7 @@ The `deleteRecords` action lets you delete one or multiple records. A pop-up wil
 
 {% endcode %}
 
-### Triggering an Action
+### Triggering an action
 
 {% hint style="warning" %}
 Please note that the Action triggering in the context of the Smart View editor can be broken as you might not have access to all the required information. We advise you to test the Action execution from the Smart View applied to the Collection view.
@@ -297,7 +297,7 @@ export default class extends Component {
 {% endtab %}
 {% endtabs %}
 
-## Applying a Smart View
+## Applying a smart view
 
 To apply a Smart View you created, turn on the Layout Editor mode **(1)**, click on the table button **(2)** and drag & drop your Smart View's name in first position inside the dropdown **(3)**:
 

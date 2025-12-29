@@ -1,5 +1,5 @@
 ---
-title: Create a Map view
+title: Create a map view
 ---
 The example below shows how to display a map view:
 

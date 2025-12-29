@@ -1,5 +1,5 @@
 ---
-title: "Migration Step 2: Datasources"
+title: "Migration step 2: Datasources"
 ---
 > **Status:** TODO - Priority: HIGH
 >

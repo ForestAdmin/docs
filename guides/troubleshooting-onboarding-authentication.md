@@ -1,5 +1,5 @@
 ---
-title: "Troubleshooting Onboarding & Authentication"
+title: "Troubleshooting onboarding & authentication"
 description: "Common issues and solutions when setting up Forest Admin or connecting your agent"
 ---
 

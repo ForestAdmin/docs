@@ -77,7 +77,7 @@ module.exports = MyDataSource;
 ```
 
 {% tabs %}
-{% tab title="const MyDataSource = require('./datasource');" %}
+{% tab title="JavaScript" %}
 ```javascript
 const myDataSourceFactory = async () => new MyDataSource();
 
@@ -85,7 +85,7 @@ const agent = createAgent(options).addDataSource(myDataSourceFactory);
 ```
 {% endtab %}
 
-{% tab title="require 'net/http'" %}
+{% tab title="Ruby" %}
 ```ruby
 require 'json'
 require 'uri'

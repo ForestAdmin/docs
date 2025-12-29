@@ -10,7 +10,7 @@ Segments can be configured from the interface, without the need to write any cod
 
 This is documented in the [User Guide](https://docs.forestadmin.com/user-guide/collections/segments).
 
-# From your Agent
+# From your agent
 
 Sometimes, Segment filters are complicated and closely tied to your business. Forest Admin allows you to code how the Segment is computed.
 

@@ -23,12 +23,12 @@ ForestLiana.auth_secret = Rails.application.secrets.forest_auth_secret
 
 # ...
 
-# in the [] you may add the precise list of all models you want to see in Forest
+# In the [] you may add the precise list of all models you want to see in Forest
 ForestLiana.included_models = ['Customer'];
 
-# or second possibility below :
+# Or second possibility below: 
 
-# in the [] you may add the precise list of all models you do not want to see in Forest
+# In the [] you may add the precise list of all models you do not want to see in Forest
 ForestLiana.excluded_models = ['Document', 'Transaction'];
 ```
 

@@ -9,7 +9,7 @@ In our example, we want to Approve or Reject products to moderate content on our
 
 ## How it works
 
-### Smart View definition
+### Smart view definition
 
 Learn more about [Smart Views](./README.md).
 

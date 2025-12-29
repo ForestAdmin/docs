@@ -13,7 +13,7 @@ OPTIONS
   --help                         Display usage information.
 ```
 
-### Pushing to a Remote Environment
+### Pushing to a remote environment
 
 It is paramount to understand this command before using it:
 

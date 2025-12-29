@@ -3,7 +3,7 @@
   * [How Forest Admin Works](get-started/how-it-works.md)
 
 
-## Get Started
+## Get started
 
 * First Steps
   * [Introduction to Forest Admin](get-started/intro-to-forest-admin.md)
@@ -30,7 +30,6 @@
       * [MongoDB Datasource](product/integration/data-sources/provided/mongodb.md)
       * [ActiveRecord Datasource](product/integration/data-sources/provided/active-record.md)
       * [Mongoid Datasource](product/integration/data-sources/provided/mongoid.md)
-      * [Django Datasource](product/integration/data-sources/provided/django.md)
     * Community Datasources
       * [Hubspot](product/integration/data-sources/community-datasources/hubspot.md)
       * [Elasticsearch](product/integration/data-sources/community-datasources/elasticsearch.md)
@@ -70,7 +69,6 @@
     * [Autocompletion & Typings](product/integration/setup/autocompletion.md)
     * [Troubleshooting Setup](product/integration/setup/troubleshooting.md)
     * [.forestadmin-schema.json Reference](reference/schema/forestadmin-schema.md)
-    * [Schema Reference](reference/technical/schema.md)
     * [Security & Privacy](reference/technical/security.md)
     * [Data Model](reference/technical/typing.md)
     * [Relationships Model](reference/technical/relationships.md)

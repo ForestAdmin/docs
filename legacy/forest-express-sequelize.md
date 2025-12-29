@@ -1,5 +1,5 @@
 ---
-title: forest-express-sequelize (Deprecated)
+title: Forest-express-sequelize (deprecated)
 description: Legacy documentation for forest-express-sequelize v9
 ---
 
@@ -17,7 +17,7 @@ description: Legacy documentation for forest-express-sequelize v9
 
 **Migration Path:** Migrate to [`@forestadmin/agent`](/product/integration/setup/nodejs) v1 with `@forestadmin/datasource-sequelize`
 
-## Why Migrate?
+## Why migrate?
 
 The new agent architecture provides:
 - **Better Performance:** Faster query execution and optimized data loading
@@ -26,19 +26,19 @@ The new agent architecture provides:
 - **Active Support:** Regular updates, security patches, and new features
 - **Modern API:** Cleaner and more intuitive API design
 
-## Migration Guide
+## Migration guide
 
 Follow our step-by-step migration guide to upgrade from `forest-express-sequelize` to `@forestadmin/agent`:
 
 * [Migration Guide](/guides/migration/from-v1/overview.md) - Complete guide to migrate from Agent v1 to Agent v2
 
-## Legacy Documentation
+## Legacy documentation
 
 For reference purposes, the complete v1 documentation is still available:
 
 * [Agent v1 Documentation](/legacy/agent-v1/README.md) - Access the full forest-express-sequelize v9 documentation
 
-## Need Help?
+## Need help?
 
 **Questions about migration?**
 - Read our [Migration Guide](/guides/migration/from-v1/overview)

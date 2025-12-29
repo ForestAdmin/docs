@@ -1,13 +1,13 @@
 ---
-title: "Security & Privacy Architecture"
+title: "Security & privacy architecture"
 description: "Understand how Forest Admin protects your data with privacy-first architecture and robust security measures"
 ---
 
 Forest Admin is built with security and privacy at its core. Your data never transits through Forest Admin servers, and you maintain complete control over your infrastructure and access policies.
 
-## Data Privacy
+## Data privacy
 
-### Private by Design
+### Private by design
 
 Forest Admin implements a **privacy-first architecture** where your sensitive data flows directly between your Agent and user browsers, never passing through Forest Admin servers.
 
@@ -55,7 +55,7 @@ When users access the Forest Admin UI, their browser establishes two separate co
 This architecture ensures your sensitive information remains protected within your infrastructure at all times.
 {% endhint %}
 
-### No Third-Party Tracking
+### No third-party tracking
 
 Forest Admin guarantees data privacy across all plan levels:
 
@@ -67,9 +67,9 @@ Forest Admin guarantees data privacy across all plan levels:
 **Pro plan feature:** Disable all third-party tracking scripts in your Forest Admin project settings to ensure complete privacy for your team's activity.
 {% endhint %}
 
-## Security Measures
+## Security measures
 
-### Token-Based Authentication
+### Token-based authentication
 
 Forest Admin uses a **dual-token authentication system** to secure both UI access and Agent communication.
 
@@ -114,7 +114,7 @@ Authenticates requests between user browsers and your Agent (Self-Hosted and On-
 # Using Node.js
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-# Using OpenSSL
+# Using openssl
 openssl rand -hex 32
 ```
 
@@ -126,7 +126,7 @@ FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 **Cloud architecture:** `FOREST_AUTH_SECRET` is not needed because authentication is handled by Forest Admin servers. Your data still flows directly from your Agent to browsers without passing through Forest Admin.
 {% endhint %}
 
-### JWT Token Structure
+### JWT token structure
 
 Both tokens are JSON Web Tokens (JWT) containing user context:
 
@@ -177,7 +177,7 @@ end
 {% endtabs %}
 
 
-### IP Whitelisting
+### IP whitelisting
 
 Organizations can restrict access by creating trusted IP address lists, controlling both UI access and Agent interactions.
 
@@ -194,7 +194,7 @@ Organizations can restrict access by creating trusted IP address lists, controll
 
 For detailed configuration, see [IP Whitelisting](/product/control/security/ip-whitelisting).
 
-### Infrastructure Flexibility
+### Infrastructure flexibility
 
 You maintain **complete control** over your Agent deployment:
 
@@ -214,7 +214,7 @@ You maintain **complete control** over your Agent deployment:
 **Best practice:** Deploy your Agent behind a VPN or firewall to add an additional layer of security. Even if an attacker obtains valid credentials, they would still need network access to reach your Agent.
 {% endhint %}
 
-### HTTPS/TLS Encryption
+### HTTPS/TLS encryption
 
 All communication is encrypted:
 
@@ -226,18 +226,18 @@ All communication is encrypted:
 Always deploy your Agent with HTTPS enabled in production. Never use HTTP for sensitive data.
 {% endhint %}
 
-## Compliance Standards
+## Compliance standards
 
 Forest Admin works with organizations meeting industry certifications and compliance standards:
 
-### SOC 2 (Type II)
+### SOC 2 (type II)
 
 Forest Admin maintains SOC 2 Type II compliance, ensuring:
 - Security controls are in place
 - Data is handled securely
 - Regular audits are performed
 
-### GDPR Compliance
+### GDPR compliance
 
 Forest Admin helps you maintain GDPR compliance:
 - Data privacy by design (no data transit through Forest Admin)
@@ -265,7 +265,7 @@ Security practices aligned with ISO 27001 standards:
 **Your responsibility:** While Forest Admin provides a secure platform, you are responsible for configuring security controls, managing access, and ensuring compliance with your specific regulatory requirements.
 {% endhint %}
 
-## Security Best Practices
+## Security best practices
 
 {% hint style="success" %}
 **Recommended security practices:**
@@ -301,9 +301,9 @@ Security practices aligned with ISO 27001 standards:
    - Have a rollback plan
 {% endhint %}
 
-## Security Features Roadmap
+## Security features roadmap
 
-### Current Features
+### Current features
 
 ✅ Dual-token authentication
 ✅ Direct data flow (no Forest Admin transit)
@@ -312,14 +312,14 @@ Security practices aligned with ISO 27001 standards:
 ✅ Audit logging
 ✅ 2FA enforcement
 
-### Planned Features
+### Planned features
 
 🔄 Enhanced audit logs with data change tracking
 🔄 Advanced encryption options
 🔄 Integration with enterprise SSO/SAML providers
 🔄 Custom authentication hooks
 
-## Related Pages
+## Related pages
 
 - [IP Whitelisting](/product/control/security/ip-whitelisting) - Configure IP-based access control
 - [2FA Enforcement](/product/control/security/2fa-enforcement) - Require two-factor authentication

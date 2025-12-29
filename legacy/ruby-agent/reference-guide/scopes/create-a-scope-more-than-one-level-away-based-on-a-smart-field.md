@@ -1,5 +1,5 @@
 ---
-title: Create a scope more than one level away based on a Smart field
+title: Create a scope more than one level away based on a smart field
 ---
 **Context:** As a user I want to create a scope on a table that does not have the tag column in the table.
 
@@ -9,7 +9,7 @@ As a user I want to create a scope on related tables more than one level away
 
 The objective is to implement scopes on all tables, filtering on`companies` to make sure that companies can only see their own data. In this example, `companies` has many `departments`, `departments` has many `users`. The company id is not in `users` table but in the `departments` table. We want to scope `users` according to a company value.
 
-### **Step 1: Create a smart field and the filter for the `users` table**
+### **step 1: Create a smart field and the filter for the `users` table**
 
 ### Rails
 
@@ -38,7 +38,7 @@ class Forest::Customer
 end
 ```
 
-### **Step 2: Configure the scope in the UI**
+### **step 2: Configure the scope in the UI**
 
 In project settings:
 

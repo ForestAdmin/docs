@@ -1,5 +1,5 @@
 ---
-title: "MCP Servers"
+title: "MCP servers"
 description: "Connect external tools and APIs to Forest Admin using the Model Context Protocol"
 ---
 

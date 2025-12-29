@@ -1,15 +1,15 @@
 ---
-title: "Customize Your Agent"
+title: "Customize your agent"
 description: "Learn how to extend and customize your Forest Admin agent"
 ---
 
 > **Status:** TODO - Content ready to migrate
 
-## Module Overview
+## Module overview
 
 In this module, you'll learn how to customize the Forest Admin agent to match your business logic and data requirements.
 
-## What You'll Learn
+## What you'll learn
 
 - **Smart Actions** - Create custom workflows and business operations
 - **Smart Fields** - Add computed fields and derived data
@@ -18,7 +18,7 @@ In this module, you'll learn how to customize the Forest Admin agent to match yo
 - **Plugins** - Extend functionality with reusable plugins
 - **Aggregations** - Build custom analytics and summaries
 
-## Topics Covered
+## Topics covered
 
 
   * [Coming Soon](#) - Content is being migrated
@@ -30,7 +30,7 @@ In this module, you'll learn how to customize the Forest Admin agent to match yo
 - Basic knowledge of JavaScript (Node.js) or Ruby
 - A working Forest Admin project
 
-## Related Documentation
+## Related documentation
 
 - [Smart Actions Reference](/product/process/actions/overview)
 - [Smart Fields Reference](/product/process/fields/overview)

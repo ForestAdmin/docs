@@ -1,15 +1,15 @@
 ---
-title: "Customize Your UI"
+title: "Customize your UI"
 description: "Master the Forest Admin UI customization tools"
 ---
 
 > **Status:** TODO - Content ready to migrate
 
-## Module Overview
+## Module overview
 
 In this module, you'll learn how to design and customize the Forest Admin user interface to create intuitive admin panels.
 
-## What You'll Learn
+## What you'll learn
 
 - **Layout Editor** - Design custom collection layouts
 - **Workspaces** - Create dedicated views for different workflows
@@ -18,7 +18,7 @@ In this module, you'll learn how to design and customize the Forest Admin user i
 - **Branding** - Customize colors, logos, and themes
 - **Search & Filters** - Configure advanced search capabilities
 
-## Topics Covered
+## Topics covered
 
 
   * [Coming Soon](#) - Content is being migrated
@@ -30,7 +30,7 @@ In this module, you'll learn how to design and customize the Forest Admin user i
 - Basic understanding of UI/UX principles
 - Familiarity with the Forest Admin interface
 
-## Related Documentation
+## Related documentation
 
 - [Layout Editor Reference](/product/build/layout-editor)
 - [Workspaces Reference](/product/build/workspaces)

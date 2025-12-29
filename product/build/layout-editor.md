@@ -1,5 +1,5 @@
 ---
-title: Layout Editor
+title: Layout editor
 ---
 > **Status:** TODO - Priority: HIGH
 >

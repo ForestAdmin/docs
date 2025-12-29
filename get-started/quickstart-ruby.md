@@ -1,6 +1,6 @@
 {{#ruby}}
 
-## Into your Gemfile file, add the following lines:
+## Into your gemfile file, add the following lines: 
 
 ```bash
 gem "forest_admin_rails", ">= 1.0.0"

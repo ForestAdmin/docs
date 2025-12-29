@@ -1,5 +1,5 @@
 ---
-title: Migration Guides
+title: Migration guides
 description: Step-by-step guides to migrate from Agent v1 to Agent v2
 ---
 
@@ -7,7 +7,7 @@ description: Step-by-step guides to migrate from Agent v1 to Agent v2
 >
 > Most teams complete migration in 1-2 days. You can run v1 and v2 in parallel with zero downtime.
 
-## Choose Your Migration Path
+## Choose your migration path
 
 Select your current agent to see the specific migration guide:
 
@@ -20,9 +20,9 @@ Select your current agent to see the specific migration guide:
 
 
 
-## Migration Overview
+## Migration overview
 
-### General Process
+### General process
 
 All migrations follow a similar process:
 
@@ -37,35 +37,35 @@ All migrations follow a similar process:
 5. **Switch traffic** to v2
 6. **Remove v1** packages
 
-### Zero-Downtime Migration
+### Zero-downtime migration
 
 You can run v1 and v2 simultaneously:
 
 ```bash
-# Terminal 1 - Run v1 on port 3000
+# Terminal 1 - run v1 on port 3000
 npm run start:v1
 
-# Terminal 2 - Run v2 on port 3001
+# Terminal 2 - run v2 on port 3001
 npm run start:v2
 ```
 
 Then switch your Forest Admin environment to point to the v2 agent when ready.
 
-## Migration by Component
+## Migration by component
 
 ### Datasources
 
 * [Migrate Datasources](/guides/migration/from-v1/steps/datasources.md) - Learn how to migrate your database connections to the new datasource system
 
-### Smart Actions
+### Smart actions
 
 * [Migrate Smart Actions](/guides/migration/from-v1/steps/smart-actions.md) - Convert your Smart Actions to the new Agent v2 API
 
-### Smart Fields
+### Smart fields
 
 Coming soon - Guide for migrating Smart Fields
 
-### Smart Segments
+### Smart segments
 
 Coming soon - Guide for migrating Smart Segments
 
@@ -73,9 +73,9 @@ Coming soon - Guide for migrating Smart Segments
 
 Coming soon - Guide for migrating Hooks
 
-## Common Migration Patterns
+## Common migration patterns
 
-### Pattern 1: Simple CRUD Application
+### Pattern 1: Simple CRUD application
 
 **Complexity:** Low
 **Time:** 2-4 hours
@@ -91,7 +91,7 @@ Applications with:
 3. Test basic functionality
 4. Deploy
 
-### Pattern 2: Custom Business Logic
+### Pattern 2: Custom business logic
 
 **Complexity:** Medium
 **Time:** 1-2 days
@@ -109,7 +109,7 @@ Applications with:
 5. Test thoroughly
 6. Deploy
 
-### Pattern 3: Complex Integrations
+### Pattern 3: Complex integrations
 
 **Complexity:** High
 **Time:** 3-5 days
@@ -128,11 +128,11 @@ Applications with:
 5. Test each component
 6. Gradual rollout
 
-## Migration Checklist
+## Migration checklist
 
 Use this checklist to track your migration progress:
 
-### Pre-Migration
+### Pre-migration
 - [ ] Read the migration guide for your agent
 - [ ] Review your current customizations (Smart Actions, Fields, Segments)
 - [ ] Backup your project
@@ -171,7 +171,7 @@ Use this checklist to track your migration progress:
 - [ ] Monitor for issues
 - [ ] Remove v1 code
 
-## Getting Help
+## Getting help
 
 ### Resources
 
@@ -179,7 +179,7 @@ Use this checklist to track your migration progress:
 - **[Agent v2 API Reference](/reference/agent-api/overview)** - New API documentation
 - **[Examples Repository](https://github.com/ForestAdmin)** - Code examples
 
-### Support Channels
+### Support channels
 
 
 
@@ -189,7 +189,7 @@ Use this checklist to track your migration progress:
 
 
 
-## Migration Timeline
+## Migration timeline
 
 We recommend the following timeline:
 
@@ -201,15 +201,15 @@ We recommend the following timeline:
 | **Week 4** | Deploy to staging, final testing |
 | **Week 5** | Deploy to production, monitor |
 
-## FAQs
+## Faqs
 
-### Do I need to migrate everything at once?
+### Do i need to migrate everything at once?
 No! You can migrate incrementally. Run v1 and v2 in parallel and switch when ready.
 
 ### Will my UI break during migration?
 No. Your Forest Admin UI configuration is preserved. The agent change is transparent to end-users.
 
-### Can I revert if something goes wrong?
+### Can i revert if something goes wrong?
 Yes! Keep v1 running until you're confident with v2. You can switch back instantly.
 
 ### What about my data?

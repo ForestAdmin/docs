@@ -1,6 +1,6 @@
 The goal of this tutorial is to help developers deploy their admin backend to an Ubuntu server.
 
-### Connect to your Ubuntu server using SSH
+### Connect to your ubuntu server using SSH
 
 Before starting anything, you have to make sure you're able to connect to your server using SSH.
 
@@ -33,7 +33,7 @@ There are many ways to copy the code of your admin backend to a remote server. F
 We **strongly advise** versioning the code of your admin backend using **git** and hosting it to a **private repository** on Github, Bitbucket, Gitlab, or other providers.
 {% endhint %}
 
-#### rsync
+#### Rsync
 
 > **rsync** is a utility for efficiently transferring and synchronizing files across computer systems, by checking the timestamp and size of files. It is _commonly_ found on Unix-like systems and functions as both a file synchronization and file transfer program.
 >
@@ -92,7 +92,7 @@ ubuntu@ip-172-31-83-152:~/QuickStart$
 {% endtab %}
 {% endtabs %}
 
-#### git
+#### Git
 
 First, you need to initialize a git repository for the code of your admin backend. From the directory of your admin backend, simply run:
 
@@ -371,7 +371,7 @@ Congrats, your admin backend is now running on production. But we strongly advis
 
 The admin backend is by default listening on port **3310**. Be sure you authorized the inbound traffic on this port or set up a web server (like NGINX) as a [Reverse Proxy Server](#optional-set-up-nginx-as-a-reverse-proxy-server) to use the port **80.**
 
-### Manage Application with PM2
+### Manage application with PM2
 
 > PM2 is a Production Runtime and Process Manager for Node.js applications with a built-in Load Balancer. It allows you to keep applications alive forever, to reload them without downtime and facilitate common Devops tasks. source: [npmjs/pm2](https://www.npmjs.com/package/pm2)​
 
@@ -387,7 +387,7 @@ sudo npm install pm2 -g
 pm2 start bin/www
 ```
 
-### (Optional) Set Up Nginx as a Reverse Proxy Server
+### (optional) set up nginx as a reverse proxy server
 
 Now that your admin backend is running and listening on localhost:3310, we will set up the Nginx web server as a reserve proxy to allow your admin panel's users access it.
 

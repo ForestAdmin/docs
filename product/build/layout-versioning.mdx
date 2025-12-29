@@ -1,5 +1,5 @@
 ---
-title: Layout Versioning
+title: Layout versioning
 ---
 > **Status:** TODO - Priority: LOW
 >

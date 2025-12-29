@@ -1,5 +1,5 @@
 ---
-title: Search Configuration
+title: Search configuration
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

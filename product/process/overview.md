@@ -18,7 +18,7 @@ Using them always starts with the same step: use the {{#nodejs}}`customizeCollec
 
 
 {% tabs %}
-{% tab title="const { createAgent } = require('@forestadmin/agent');" %}
+{% tab title="JavaScript" %}
 ```javascript
 createAgent()
   // Add your data source.
@@ -37,7 +37,7 @@ createAgent()
 ```
 {% endtab %}
 
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     def self.setup!
@@ -98,7 +98,7 @@ createAgent()
 
 {{#nodejs}}
 
-# Auto-completion & Typings & Best practices
+# Auto-completion & typings & best practices
 
 You may refer to [this section](../getting-started/install/autocompletion-and-typings.md) to activate auto-completion and typings.
 

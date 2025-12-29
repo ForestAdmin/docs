@@ -1,5 +1,5 @@
 ---
-title: "TypeScript Autocompletion"
+title: "TypeScript autocompletion"
 description: "Enable TypeScript autocompletion and type safety for your Forest Admin Node.js agent"
 ---
 
@@ -9,24 +9,22 @@ description: "Enable TypeScript autocompletion and type safety for your Forest A
 
 The Forest Admin Node.js agent, built entirely in TypeScript, provides comprehensive autocompletion capabilities for collection names, field names, and handler parameters.
 
-## Generating a Typing File
+## Generating a typing file
 
 The agent can generate a typing file based on your data models. This file is auto-generated and should not be manually edited.
 
-### Configuration Options
+### Configuration options
 
 Two configuration options control typing file generation:
 
 - **`typingsPath`**: Specifies the location where the typing file will be created
 - **`typingsMaxDepth`**: Controls the maximum introspection depth for relationships
 
-## TypeScript Usage
+## TypeScript usage
 
 In TypeScript projects, import and template the generated schema:
 
 ```typescript
-
-
 await createAgent<Schema>({
   // ...
   typingsPath: './typings.ts',
@@ -39,11 +37,11 @@ await createAgent<Schema>({
 
 The `customizeCollection` method and handler parameters receive strong typing through the Schema template.
 
-## JavaScript Usage
+## JavaScript usage
 
 JavaScript developers can leverage JSDoc syntax to maintain autocomplete capabilities:
 
-### Main Agent File
+### Main agent file
 
 ```javascript
 const { createAgent } = require('@forestadmin/agent');
@@ -62,7 +60,7 @@ const agent = createAgent({
 });
 ```
 
-### Customization Files
+### Customization files
 
 In separate customization files, JSDoc type annotations preserve autocompletion:
 

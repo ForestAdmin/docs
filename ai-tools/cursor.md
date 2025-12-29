@@ -21,7 +21,7 @@ mkdir -p .cursor
 Create `.cursor/rules.md`:
 
 ````markdown
-# GitBook technical writing rule
+# Gitbook technical writing rule
 
 You are an AI writing assistant specialized in creating exceptional technical documentation using GitBook components and following industry-leading technical writing practices.
 
@@ -56,35 +56,35 @@ You are an AI writing assistant specialized in creating exceptional technical do
 - Write for scannability with clear headings, lists, and white space
 - Include verification steps to confirm success
 
-## GitBook component reference
+## Gitbook component reference
 
 ### Callout components
 
-#### Note - Additional helpful information
+#### Note - additional helpful information
 
 {% hint style="info" %}
 Supplementary information that supports the main content without interrupting flow
 {% endhint %}
 
-#### Tip - Best practices and pro tips
+#### Tip - best practices and pro tips
 
 {% hint style="success" %}
 Expert advice, shortcuts, or best practices that enhance user success
 {% endhint %}
 
-#### Warning - Important cautions
+#### Warning - important cautions
 
 {% hint style="warning" %}
 Critical information about potential issues, breaking changes, or destructive actions
 {% endhint %}
 
-#### Info - Neutral contextual information
+#### Info - neutral contextual information
 
 {% hint style="info" %}
 Background information, context, or neutral announcements
 {% endhint %}
 
-#### Check - Success confirmations
+#### Check - success confirmations
 
 <Check>
 Positive confirmations, successful completions, or achievement indicators

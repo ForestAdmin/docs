@@ -1,5 +1,5 @@
 ---
-title: Create records from a Smart collection
+title: Create records from a smart collection
 ---
 **Context**: As a user I want to be able to add new records to a number of collections based on the input made in a smart collection creation form
 

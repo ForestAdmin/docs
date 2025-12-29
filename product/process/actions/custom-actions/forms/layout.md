@@ -88,7 +88,7 @@ end
 
 ![Example](../../assets/action-form-layout-separator.png)
 
-# HTML Block element
+# HTML block element
 
 | Name      | Usage        | Expected value                                                                                        | Description                       |
 | --------- | ------------ | ----------------------------------------------------------------------------------------------------- | --------------------------------- |

@@ -1,5 +1,5 @@
 ---
-title: SSO Provider Guides
+title: SSO provider guides
 ---
 > **Status:** TODO - Priority: MEDIUM
 >
@@ -9,9 +9,9 @@ title: SSO Provider Guides
 
 Provider-specific guides for configuring Single Sign-On with Forest Admin.
 
-## Supported Providers
+## Supported providers
 
-### Major Identity Providers
+### Major identity providers
 
 - **[Azure AD / Entra ID](/product/control/authentication/sso-providers/azure)** - Microsoft's identity platform
 - **[Okta](/product/control/authentication/sso-providers/okta)** - Leading enterprise identity provider
@@ -27,7 +27,7 @@ Provider-specific guides for configuring Single Sign-On with Forest Admin.
   - JumpCloud
   - Custom SAML IdP
 
-## Choosing a Provider
+## Choosing a provider
 
 If your organization already uses an identity provider, use that one. If you're choosing a provider:
 
@@ -36,7 +36,7 @@ If your organization already uses an identity provider, use that one. If you're 
 - **Google Workspace** - Best for Google-centric organizations
 - **AWS SSO** - Best for AWS-heavy infrastructure
 
-## Setup Process Overview
+## Setup process overview
 
 All providers follow a similar process:
 
@@ -64,7 +64,7 @@ All providers follow a similar process:
    - Enable SSO-only login
    - Disable password authentication
 
-## Getting Help
+## Getting help
 
 - Review provider-specific guides
 - Check [Generic SAML guide](/product/control/authentication/sso-providers/generic-saml) for troubleshooting

@@ -22,7 +22,7 @@ When creating a new field you will need to provide:
 This example adds a `user.displayName` field, which is computed by concatenating the first and last names.
 
 {% tabs %}
-{% tab title="// "user" Collection has the following structure: { id, firstName, lastName }" %}
+{% tab title="JavaScript" %}
 ```javascript
 agent.customizeCollection('user', collection => {
   collection.addField('displayName', {
@@ -43,9 +43,9 @@ agent.customizeCollection('user', collection => {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
+{% tab title="Ruby" %}
 ```ruby
-# User Collection has the following structure: { id, firstName, lastName }
+# User collection has the following structure: { id, firstname, lastname }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
     'displayName',
@@ -66,7 +66,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="// "user" Collection has the following structure: { id, firstName, lastName }" %}
+{% tab title="JavaScript" %}
 ```javascript
 agent.customizeCollection('user', collection => {
   collection
@@ -88,9 +88,9 @@ agent.customizeCollection('user', collection => {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
+{% tab title="Ruby" %}
 ```ruby
-# User Collection has the following structure: { id, firstName, lastName }
+# User collection has the following structure: { id, firstname, lastname }
 @create_agent.customize_collection('user') do |collection|
   collection
     # Create a first field which is computed by concatenating the first and last names
@@ -117,7 +117,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="// Structure:" %}
+{% tab title="JavaScript" %}
 ```javascript
 // User    { id, addressId, firstName, lastName }
 // Address { id, city }
@@ -138,10 +138,10 @@ agent.customizeCollection('user', collection => {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
+{% tab title="Ruby" %}
 ```ruby
-# Structure:
-# User    { id, addressId, firstName, lastName }
+# Structure: 
+# User { id, addressid, firstname, lastname }
 # Address { id, city }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
@@ -197,13 +197,13 @@ agent.customizeCollection('user', collection => {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
 
-# Structure:
-# User  { id }
+# Structure: 
+# User { id }
 # Order { id, customer_id, amount }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
@@ -281,7 +281,7 @@ agent.customizeCollection('user', collection => {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Computed" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceToolkit::Components::Query
 include ForestAdminDatasourceToolkit::Components::Query::ConditionTree
@@ -292,7 +292,7 @@ include Fake::EmailVerificationClient
 client = EmailVerificationClient.new
 client.api_key = 'MY_FAKE_API_KEY'
 
-# "User" Collection has the following structure: { id, email }
+# "user" collection has the following structure: { id, email }
 @create_agent.customize_collection('user') do |collection|
   collection.add_field(
     'emailDeliverable',

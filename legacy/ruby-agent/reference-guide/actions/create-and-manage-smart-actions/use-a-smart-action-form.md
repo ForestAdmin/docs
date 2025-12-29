@@ -1,9 +1,9 @@
 ---
-title: Use a Smart Action Form
+title: Use a smart action form
 ---
 We've just introduced Smart actions: they're great because you can execute virtually any business logic. However, there is one big part missing: how do you let your users provide more information or have interaction when they trigger the Smart action? In short, you need to open a **Smart Action Form**.
 
-## Opening a **Smart Action Form**
+## Opening a **smart action form**
 
 Very often, you will need to ask user inputs before triggering the logic behind a Smart Action.\
 For example, you might want to specify a reason if you want to block a user account. Or set the amount to charge a user’s credit card.

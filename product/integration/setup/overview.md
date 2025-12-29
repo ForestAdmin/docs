@@ -1,5 +1,5 @@
 ---
-title: Setup Guides - Overview
+title: Setup guides - overview
 ---
 > **Status:** TODO - Priority: HIGH
 >
@@ -9,14 +9,14 @@ title: Setup Guides - Overview
 
 Choose your framework and follow the setup guide to connect Forest Admin to your application.
 
-## Framework Priority
+## Framework priority
 
 We recommend the following priority order:
 
 1. **[Node.js](/product/integration/setup/nodejs)** ← PRIORITY 1 (Most features, best support)
 2. **[Ruby](/product/integration/setup/ruby)** ← PRIORITY 2 (Mature, Rails integration)
 
-## Quick Setup Summary
+## Quick setup summary
 
 ### Node.js (@forestadmin/agent)
 ```bash
@@ -40,7 +40,7 @@ gem install forest_liana
 - SQLAlchemy/Django ORM
 - Growing feature set
 
-## What You'll Learn
+## What you'll learn
 
 Each setup guide covers:
 1. Installation
@@ -50,7 +50,7 @@ Each setup guide covers:
 5. Running locally
 6. First deployment
 
-## Related Pages
+## Related pages
 
 - [Node.js Setup](/product/integration/setup/nodejs)
 - [Ruby Setup](/product/integration/setup/ruby)

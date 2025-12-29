@@ -1,5 +1,5 @@
 ---
-title: Assist - AI-Powered Assistant
+title: Assist - ai-powered assistant
 ---
 > **Status:** TODO - Priority: LOW (ROADMAP)
 >

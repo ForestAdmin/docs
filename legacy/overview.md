@@ -1,5 +1,5 @@
 ---
-title: Legacy Documentation
+title: Legacy documentation
 description: Documentation for deprecated versions of Forest Admin - Agent v1.
 ---
 > **⚠️ DEPRECATION NOTICE**
@@ -8,9 +8,9 @@ description: Documentation for deprecated versions of Forest Admin - Agent v1.
 >
 > **We strongly recommend migrating to the latest version.**
 
-## Deprecated Agents
+## Deprecated agents
 
-### forest-express-sequelize
+### Forest-express-sequelize
 
 **Package:** `forest-express-sequelize` v9
 
@@ -24,7 +24,7 @@ description: Documentation for deprecated versions of Forest Admin - Agent v1.
 
 ---
 
-### forest-express-mongoose
+### Forest-express-mongoose
 
 **Package:** `forest-express-mongoose` v9
 
@@ -38,7 +38,7 @@ description: Documentation for deprecated versions of Forest Admin - Agent v1.
 
 ---
 
-### forest-rails
+### Forest-rails
 
 **Package:** `forest_liana` (Ruby on Rails)
 
@@ -52,7 +52,7 @@ description: Documentation for deprecated versions of Forest Admin - Agent v1.
 
 ---
 
-### Python Agent v1
+### Python agent v1
 
 **Package:** `django-forestadmin` v1
 
@@ -64,9 +64,9 @@ description: Documentation for deprecated versions of Forest Admin - Agent v1.
 
 ---
 
-## Why Migrate?
+## Why migrate?
 
-### Agent v2 Improvements
+### Agent v2 improvements
 
 **Better Performance:**
 - Faster query execution
@@ -91,7 +91,7 @@ description: Documentation for deprecated versions of Forest Admin - Agent v1.
 - Modern authentication
 - Better permission system
 
-### Migration Support
+### Migration support
 
 We provide:
 - ✅ Detailed migration guides
@@ -103,21 +103,21 @@ We provide:
 
 ---
 
-## Accessing Legacy Docs
+## Accessing legacy docs
 
-### Agent v1 Documentation
+### Agent v1 documentation
 - [Agent v1 Full Documentation](/legacy/agent-v1/README)
 - Contains complete v1 reference (174 pages)
 - Use for reference only, not for new projects
 
-### PHP Documentation
+### PHP documentation
 - [PHP Agent Documentation](/legacy/php/README)
 - End-of-life notice and migration path
 - Minimal reference docs
 
 ---
 
-## Need Help?
+## Need help?
 
 **Migrating from v1 or PHP?**
 - Read our [Migration Guide](/guides/migration/from-v1/overview)

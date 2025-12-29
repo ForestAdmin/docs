@@ -1,5 +1,5 @@
 ---
-title: "Features Overview"
+title: "Features overview"
 description: "Discover what you can build with Forest Admin - organized in 4 foundational layers"
 ---
 
@@ -100,7 +100,7 @@ Connect any data, wherever it lives.
 | Multiple Sources | Connect multiple databases in one admin panel | Data Source |
 | [Architectures](/product/integration/architectures/self-hosted) | Cloud, Self-Hosted, or On-Premise deployment | Deployment |
 
-## Real-World Examples
+## Real-world examples
 
 See how teams use Forest Admin in production.
 
@@ -138,7 +138,7 @@ See how teams use Forest Admin in production.
     **Impact:** Reduced manual reconciliation time by 90%
 
 
-## Ready to Get Started?
+## Ready to get started?
 
 Choose your deployment option and start building in minutes.
 

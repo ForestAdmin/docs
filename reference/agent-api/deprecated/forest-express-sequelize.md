@@ -1,11 +1,11 @@
 ---
-title: forest-express-sequelize Reference (LEGACY)
+title: Forest-express-sequelize reference (LEGACY)
 ---
 > **Status:** LEGACY - DO NOT USE FOR NEW PROJECTS
 >
 > **Audience:** Legacy users (migration reference only)
 
-## ⚠️ Legacy Notice
+## ⚠️ legacy notice
 
 **forest-express-sequelize is legacy and will reach End of Life on [Date].**
 
@@ -13,17 +13,17 @@ title: forest-express-sequelize Reference (LEGACY)
 
 ---
 
-## Legacy Documentation
+## Legacy documentation
 
 This page provides reference for existing implementations only. **Do not use for new projects.**
 
-### Installation (Legacy)
+### Installation (legacy)
 
 ```bash
 npm install forest-express-sequelize --save
 ```
 
-### Basic Setup (Legacy)
+### Basic setup (legacy)
 
 ```javascript
 const express = require('express');
@@ -42,7 +42,7 @@ app.use(Liana.init({
 app.listen(3000);
 ```
 
-### Smart Actions (Legacy)
+### Smart actions (legacy)
 
 **Forest/routes/users.js:**
 ```javascript
@@ -84,7 +84,7 @@ collection('users', {
 });
 ```
 
-### Smart Fields (Legacy)
+### Smart fields (legacy)
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -100,7 +100,7 @@ collection('users', {
 });
 ```
 
-### Smart Segments (Legacy)
+### Smart segments (legacy)
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -113,7 +113,7 @@ collection('users', {
 });
 ```
 
-### Smart Relationships (Legacy)
+### Smart relationships (legacy)
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -140,7 +140,7 @@ collection('users', {
 
 ## Migration to @forestadmin/agent
 
-### Key Differences
+### Key differences
 
 | forest-express-sequelize | @forestadmin/agent |
 |-------------------------|-------------------|
@@ -150,7 +150,7 @@ collection('users', {
 | Smart Fields in collection config | `collection.addField()` |
 | `res.send({ success: '...' })` | `resultBuilder.success('...')` |
 
-### Migration Example
+### Migration example
 
 **Before (forest-express-sequelize):**
 ```javascript
@@ -194,7 +194,7 @@ agent.customizeCollection('users', collection =>
 
 ---
 
-## Complete Migration Guide
+## Complete migration guide
 
 **Follow these steps to migrate:**
 
@@ -212,7 +212,7 @@ agent.customizeCollection('users', collection =>
 - v1 documentation archive
 - Migration guides
 
-## Related Pages
+## Related pages
 
 - **[Migration Guide](/guides/migration/from-v1/overview)** ← START HERE
 - [Node.js Agent API](/reference/agent-api/nodejs) - New agent reference

@@ -1,5 +1,5 @@
 ---
-title: BelongsToMany edition through smart collection
+title: Belongstomany edition through smart collection
 ---
 **Context:** _A customer success team has to onboard “experts”, and those “experts” can have multiple “skills”, modelled via a belongsToMany relationship between “experts” and “skills” tables through an “experts_skills” table; the skills table has \~200 records and experts usually have between 5 to 30 of them._
 
@@ -87,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
 };
 ```
 
-### Step 1: create a smart collection 'other skills'
+### Step 1: Create a smart collection 'other skills'
 
 As we already have the skills assigned to an expert as related data when viewing an expert, we'd like to see the skills that have not been assigned and could be by the user.
 
@@ -106,7 +106,7 @@ collection('otherSkills', {
 });
 ```
 
-### Step 2: declare a smart relationship between experts and otherSkills
+### Step 2: Declare a smart relationship between experts and otherskills
 
 In order to display records from the collection `otherSkills` as related data of an expert, we need to declare a smart relationship between these collections. This is done in the file `experts.js` of the `forest` folder.
 
@@ -126,7 +126,7 @@ collection('experts', {
 });
 ```
 
-### Step 3: implement the logic to retrieve records from the smart relationship
+### Step 3: Implement the logic to retrieve records from the smart relationship
 
 We want to display as related data the `skills` that are not already assigned to an `expert` so we can add them. Therefore when implementing the route called to retrieve records from the collection `otherSkills` through the smart relationship, we need to add this logic. This is done in the file `experts.js` of the `routes` folder.
 
@@ -203,7 +203,7 @@ router.get(
 module.exports = router;
 ```
 
-### Step 4: create the smart action to add skills to an expert
+### Step 4: Create the smart action to add skills to an expert
 
 Next step is to declare a smart action that will allow a user to select several records of the `otherSkills` smart collection and associate them to an `expert`. This action is declared in the file `other-skills.js` of the `forest` folder.
 

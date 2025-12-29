@@ -1,5 +1,5 @@
 ---
-title: Fraud Detection Workspace Pattern
+title: Fraud detection workspace pattern
 ---
 > **Status:** TODO - Priority: LOW
 >

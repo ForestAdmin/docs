@@ -1,4 +1,4 @@
-# Data Privacy
+# Data privacy
 
 ## Private by design
 
@@ -13,7 +13,7 @@ As your data is transmitted directly from the Agent hosted on your end and the u
 
 ![](../assets/security-privacy-architecture.png)
 
-## **No third-party vendor tracking**
+## **no third-party vendor tracking**
 
 {% hint style="success" %}
 Whatever your project plan (free or paying plan), Forest Admin guarantees the respect of data privacy.
@@ -67,7 +67,7 @@ The JWT Data Token contains all the details of the requesting user. On any authe
 
 {% endcode %}
 
-## IP Whitelisting
+## IP whitelisting
 
 The [IP whitelisting](https://docs.forestadmin.com/user-guide/project-settings/security-tab#ip-whitelisting) feature allows you to create a list of trusted IP addresses or IP ranges from which your admin users can both access to the **Forest Admin UI** and interact with your **Agent**.
 

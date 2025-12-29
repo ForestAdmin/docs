@@ -1,5 +1,5 @@
 ---
-title: Populate a postgreSQL database on Heroku
+title: Populate a postgresql database on Heroku
 
 description: >-
   Learn how to populate a remote postgreSQL database on Heroku from an existing

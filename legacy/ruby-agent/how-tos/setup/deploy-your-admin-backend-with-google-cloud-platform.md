@@ -1,15 +1,15 @@
 ---
-title: Deploy your admin backend to Google Cloud Platform
+title: Deploy your admin backend to Google cloud platform
 ---
 This tutorial is designed to assist you with a step-by-step guide to deploy the Lumber-generated admin backend to Google Cloud Platform, using Google's App Engine.&#x20;
 
 If you don’t have a Google Cloud Platform account yet, [sign up here](https://cloud.google.com/free). Then, [create a billing account](https://cloud.google.com/billing/docs/how-to/manage-billing-account#create_a_new_billing_account) if you haven't already. You will need it to be able to use App Engine.
 
-### **Install the Google Cloud SDK CLI**
+### **install the Google cloud SDK CLI**
 
 You first need to install the [Cloud SDK CLI](https://cloud.google.com/sdk/docs/downloads-interactive) as you will need it to execute the commands listed below.
 
-### Create a new project on your Google Cloud Platform
+### Create a new project on your Google cloud platform
 
 To create a new project, run the following command in your terminal:
 
@@ -25,7 +25,7 @@ To check if your project has been successfully created, run
 gcloud projects describe [YOUR_PROJECT_ID]
 ```
 
-### Create an app within your Project using App Engine
+### Create an app within your project using app engine
 
 The next step is to initialize App Engine for your newly created project. This will create an app attached to the project.
 

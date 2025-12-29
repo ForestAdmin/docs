@@ -23,7 +23,7 @@ Forest Admin provides you with:
 For a more in-depth explanation of Forest Admin's architecture (the Node.JS agent version), please read the [following article](https://medium.com/forest-admin/a-deep-dive-into-forest-admins-architecture-and-its-benefits-for-the-developers-who-trust-it-1d49212fb4b).
 {% endhint %}
 
-## The Admin Backend
+## The Admin backend
 
 The Admin Backend is generated upon install and **hosted on your end**.
 
@@ -31,7 +31,7 @@ It includes an API allowing to **translate calls made from the Forest Admin UI i
 
 It also provides the Forest Admin servers with the information needed to build the User Interface (the **Forest Admin Schema**). This information includes table names, column names and types, and relationships. It is sent when you run your Admin Backend [within a file called `forestadmin-schema.json`](../models/#the-forestadmin-schema-json-file).
 
-## Data Privacy
+## Data privacy
 
 When logging into the **Forest Admin UI** in your browser, you will connect to:
 
@@ -92,21 +92,21 @@ The JWT Data Token contains all the details of the requesting user. On any authe
 ```
 {% endhint %}
 
-### **No 3rd-party Tracking**
+### **no 3rd-party tracking**
 
 The **Forest Admin UI** has an option to completely disable any 3rd-party provider that could track data available from your browser to guarantee the respect of data privacy.
 
-### SQL/Mongodb
+### Sql/mongodb
 ![](/images/legacy/javascript-agents/how-it-works-7.jpg)
 
 ### Node.js
 ![](/images/legacy/javascript-agents/how-it-works-8.jpg)
 
-### IP Whitelisting
+### IP whitelisting
 
 The [IP whitelisting](../../how-tos/setup/forest-admin-ip-white-listing-forest-cloud.md) feature allows you to create a list of trusted IP addresses or IP ranges from which your admin users can both access to the **Forest Admin UI** and interact with your **Admin Backend**.
 
-### SQL/Mongodb
+### Sql/mongodb
 ![](/images/legacy/javascript-agents/how-it-works-9.jpg)
 
 ### Node.js

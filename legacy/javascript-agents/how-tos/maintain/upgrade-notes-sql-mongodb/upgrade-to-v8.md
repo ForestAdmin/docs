@@ -81,7 +81,7 @@ const corsConfig = {
 };
 ```
 
-#### File Upload
+#### File upload
 
 Until now, once you had submitted a file for upload, the file name wasn't persisted. We have now made so that it is possible to save and display it.
 

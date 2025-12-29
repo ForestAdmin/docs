@@ -25,15 +25,15 @@ Below are some simple snippets showing you how to add relationships. However, sh
 - [ActiveRecord's documentation](https://sequelize.org/master/manual/assocs.html) on adding relationships in your models (SQL)
 - [Mongoid's documentation](https://mongoosejs.com/docs/guide.html) on adding relationships in your models (Mongodb)
 
-### Adding a `hasMany` relationship
+### Adding a `hasmany` relationship
 
 In our [Live demo](https://app.forestadmin.com/Live%20Demo/Production/Operations/data/806052/index), a **customer** can have multiple **orders**. In that case, we have to use a `hasMany` relationship.
 
-### Adding a `hasOne` relationship
+### Adding a `hasone` relationship
 
 In case of a one-to-one relationship between 2 collections, the opposite of a `belongsTo` relationship is a `hasOne` relationship. Taking the same example as before, the opposite of "an **address** `belongsTo` a **customer**" is simply "a **customer**`hasOne` **address"**.
 
-### Adding a `belongsTo` relationship
+### Adding a `belongsto` relationship
 
 On our Live Demo example, the Address model has a foreignKey customer_id that points to the Customer. In other words, an **address**`belongsTo` a **customer**.
 

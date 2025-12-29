@@ -1,13 +1,13 @@
 ---
 title: Interact with your Elasticsearch data
 ---
-### Creating the Smart Collection
+### Creating the smart collection
 
 Let's take a simple example from Kibana, we will use [a set of fictitious accounts with randomly generated data.](https://download.elastic.co/demos/kibana/gettingstarted/accounts.zip) You can easily import the data using Kibana Home page section **Ingest your data**.
 
 When it's done we can start looking at how to play with those data in Forest Admin.
 
-### forest-express-sequelize
+### Forest-express-sequelize
 First, we declare the `bank-accounts` collection in the `forest/` directory. In this Smart Collection, all fields are related to document mapping attributes except the field `id` that is computed using the document `_id`.&#x20;
 
 You can check out the list of [available field options](https://docs.forestadmin.com/documentation/reference-guide/fields/create-and-manage-smart-fields#available-field-options) if you need them.
@@ -259,7 +259,7 @@ Now we are able to see all the bank accounts on Forest Admin, it’s time to imp
 
 #### Delete a list a single record
 
-### forest-express-sequelize
+### Forest-express-sequelize
 
 ```javascript
 // Imports and ElasticsearchHelper base definition ...
@@ -282,7 +282,7 @@ module.exports = router;
 
 #### Delete a list of records
 
-### forest-express-sequelize
+### Forest-express-sequelize
 
 ```javascript
 // Imports and ElasticsearchHelper base definition ...
@@ -314,7 +314,7 @@ module.exports = router;
 
 To create a record we have to catch the POST API call.&#x20;
 
-### forest-express-sequelize
+### Forest-express-sequelize
 
 ```javascript
 // Imports and ElasticsearchHelper base definition ...

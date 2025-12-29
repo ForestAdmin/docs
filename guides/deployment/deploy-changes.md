@@ -6,7 +6,7 @@ Imagine this is your current situation:
 
 This would be the case if you chose "Staging" as the origin of your branch when you first created it. You have then made **layout changes (Δ)** over it.
 
-### Applying your changes to your Production Environment: `deploy`
+### Applying your changes to your production environment: `deploy`
 
 `deploy` means applying your branch's changes to your reference environment definitively. To achieve this, you'll be using Forest Admin CLI's [deploy](forest-cli-commands/deploy.md) command:
 
@@ -31,7 +31,7 @@ Deploy with care as such action cannot be reverted.
 Don't forget to **deploy your backend changes** (if any) before the `deploy` command, as showcased on [this flowchart](./development-workflow.md#development-workflow).
 {% endhint %}
 
-### Testing your changes on a Remote Environment: `push`
+### Testing your changes on a remote environment: `push`
 
 Let’s say that before the deployment to Production, you want to test and validate your charges on a staging environment.
 
@@ -54,7 +54,7 @@ As your company grows, so does your development flow. You may need a more comple
 
 ![](../assets/dev-workflow-push.png)
 
-#### Deploying the layout of a Remote Environment
+#### Deploying the layout of a remote environment
 
 Once you have tested your new layout on "Remote 1", you can't deploy your Branch layout to "Production", as your Branch has been deleted by the action of pushing it to "Remote 1".
 
@@ -62,7 +62,7 @@ To deploy it from this Environment, simply **click on "Deploy to production"** i
 
 ![](../assets/dev-workflow-deploy-remote.png)
 
-#### Making changes directly from a Remote Environment
+#### Making changes directly from a remote environment
 
 Imagine you have pushed a Branch layout changes onto a Remote Environment, but notice a slight change is still required in the layout. You can apply the final touches using the Layout Editor from the Remote Environment. It will be applied on top of your Branch layout changes; any changes you make on that Remote Environment will also be deployed when you decide to run `forest deploy`.
 

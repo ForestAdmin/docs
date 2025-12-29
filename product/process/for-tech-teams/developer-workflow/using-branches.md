@@ -1,5 +1,5 @@
 ---
-title: Using Branches
+title: Using branches
 description: Version control for your Forest Admin layouts
 ---
 
@@ -15,7 +15,7 @@ A **layout** is all the configuration that **define your user interface (UI)**. 
 
 The [Forest Admin CLI](/product/reference/cli/overview) will help you manage layouts across environments.
 
-## What is a Branch?
+## What is a branch?
 
 A Branch is a fork (i.e. copy) of the layout of the Environment it is attached to.
 A Branch can only be created in your own Development Environment.
@@ -26,7 +26,7 @@ The **origin** of a branch is either specified using the `--origin` option or se
 
 Once you've created a Branch, your layout will look exactly like the layout of its origin Environment.
 
-## How do Branches work?
+## How do branches work?
 
 Any **layout change** you make on your current Branch using the [Layout Editor](https://docs.forestadmin.com/user-guide/getting-started/master-your-ui/using-the-layout-editor-mode) will be **saved on your current Branch** and will not affect its origin Environment.
 
@@ -44,7 +44,7 @@ This also means that any changes made to the origin of your Branch will instantl
 For those familiar with git's _rebase_, this means you will **never have to** **rebase** your Branch on its origin, as it is done automatically.
 {% endhint %}
 
-## How do you create a Branch?
+## How do you create a branch?
 
 To create a branch, you'll need to use [Forest Admin CLI](/product/reference/cli/overview). Make sure you've created your local Development Environment using the [init](/product/reference/cli/init) command. Then, to create a Branch named `my-branch` based on your `production` Environment, simply run:
 
@@ -58,7 +58,7 @@ Using kebab-case is recommended. However, if you prefer to use spaces in your Br
 
 To learn more about the `branch` command, please visit the [CLI reference](/product/reference/cli/branch).
 
-## Checking your Branch information
+## Checking your branch information
 
 On your interface, you can check at all times what is your current Branch and how many layout changes were made on it.
 These information appear in the top banner of your admin panel. The "branches pushed" information is only relevant for Remote Environments: it shows how many Branches were already pushed onto it.

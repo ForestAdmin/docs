@@ -3,19 +3,19 @@ title: "Authenticate with Forest Admin"
 description: "Learn how to authenticate and manage access to your Forest Admin organization"
 ---
 
-## Authentication Methods
+## Authentication methods
 
 Forest Admin supports multiple authentication methods to access your admin panel:
 
-### Email and Password
+### Email and password
 
 The default authentication method. Users create an account with their email address and password to access Forest Admin.
 
-### Google Sign-In
+### Google sign-in
 
 Users can authenticate using their Google account for faster access without managing separate credentials.
 
-## Accessing Organization Settings
+## Accessing organization settings
 
 To configure authentication, security, and other organization-level settings:
 
@@ -26,7 +26,7 @@ To configure authentication, security, and other organization-level settings:
    - **Security** - Manage IP whitelisting, 2FA enforcement, session timeouts
    - **SCIM** - Set up automatic user provisioning
 
-## Single Sign-On (SSO)
+## Single sign-on (SSO)
 
 Single Sign-On allows your team to authenticate using your organization's existing identity provider, centralizing access control and improving security.
 
@@ -37,7 +37,7 @@ Single Sign-On allows your team to authenticate using your organization's existi
 - **Simplified management** - User access is controlled from your identity provider
 - **Audit trail** - Track authentication events through your IdP
 
-### Supported Providers
+### Supported providers
 
 
   * [Google Workspace](/product/control/authentication/sso-google.md) - Configure SSO with Google Workspace for your organization
@@ -47,7 +47,7 @@ Single Sign-On allows your team to authenticate using your organization's existi
   * [OneLogin](/product/control/authentication/sso-onelogin.md) - Set up SSO with OneLogin identity platform
 
 
-### How SSO Works
+### How SSO works
 
 1. User attempts to access Forest Admin
 2. Forest Admin redirects to your identity provider
@@ -55,7 +55,7 @@ Single Sign-On allows your team to authenticate using your organization's existi
 4. IdP sends authentication confirmation to Forest Admin
 5. User gains access to Forest Admin with appropriate permissions
 
-## SCIM Provisioning
+## SCIM provisioning
 
 SCIM (System for Cross-domain Identity Management) automatically provisions and deprovisions users from your identity provider to Forest Admin.
 
@@ -72,7 +72,7 @@ Before configuring SCIM:
 - SSO must be enabled and configured for your organization
 - You must have admin access to both Forest Admin and your identity provider
 
-### Supported Providers
+### Supported providers
 
 
   * [Okta SCIM](/product/control/authentication/scim-okta.md) - Automatic user provisioning with Okta
@@ -80,14 +80,14 @@ Before configuring SCIM:
   * [Okta Manual Setup](/product/control/authentication/scim-okta-manual.md) - Manual SCIM configuration for Okta
 
 
-### What SCIM Syncs
+### What SCIM syncs
 
 - **User creation** - New users are automatically added to Forest Admin
 - **User updates** - Name and email changes are synchronized
 - **User deactivation** - Removed or deactivated users lose Forest Admin access
 - **Group membership** - User assignments to teams (when supported)
 
-## Need Help?
+## Need help?
 
 - [Community Forum](https://community.forestadmin.com) - Ask authentication questions
 - [Contact Support](https://www.forestadmin.com/contact) - Get help configuring SSO or SCIM

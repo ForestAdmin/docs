@@ -5,7 +5,7 @@ Context: as a user, I want to be able to sort a collection based on a smart fiel
 
 We have a `customers` collection with a field `firstname` and field `lastname`. We create a smart field `fullname` that is a concatenation of the two fields.
 
-#### **Smart field definition**
+#### **smart field definition**
 
 In order to make the field sortable, you need to add the `isSortable` attribute.
 
@@ -22,7 +22,7 @@ In order to make the field sortable, you need to add the `isSortable` attribute.
     },
 ```
 
-#### **Route definition**
+#### **route definition**
 
 At the level of the route, you need to catch the query and redirect the sort field from one that does not exist in the database (`fullname`) to the relevant one (`firstname`)
 

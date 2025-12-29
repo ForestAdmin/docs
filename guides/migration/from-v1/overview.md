@@ -2,7 +2,7 @@ You may want to migrate from a legacy agent to this new agent. This guide will h
 
 The new agent is built with a different architecture and breaks API retro compatibility with the legacy agents in many ways. However, as this new agent provides a more efficient API to let builders focus on their operational needs, we encourage you to migrate to speed up your future admin panel evolutions.
 
-# Am I using a legacy agent?
+# Am i using a legacy agent?
 
 {{#nodejs}}
 You are using a legacy agent if you are using either the [forest-express-sequelize](https://github.com/ForestAdmin/forest-express-sequelize) or the [forest-express-mongoose](https://github.com/ForestAdmin/forest-express-mongoose) packages.

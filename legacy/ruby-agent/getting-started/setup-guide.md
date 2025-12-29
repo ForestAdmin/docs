@@ -31,7 +31,7 @@ However, your business logic likely requires more features. What if you need to.
 
 It's possible with **smart actions** :point_down:
 
-### Step 2: Create a Smart Action
+### Step 2: Create a smart action
 
 Let's say you want to let your customer support team to easily refund orders, you can quickly create a smart action.
 
@@ -80,7 +80,7 @@ You must make sure that all your Smart Actions controllers extend from the `Fore
 You may have to [add CORS headers](../how-tos/setup/configuring-cors-headers.md) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:8000_).
 {% endhint %}
 
-### Step 3: Deploy to Production
+### Step 3: Deploy to production
 
 Now that you have a fully functional admin panel, the next logical step is to **make it live**, with your live (production) data. Click on **Deploy to Production** and follow the flow.
 

@@ -6,7 +6,7 @@ Forest Admin is a low-code internal tool solution that scales with your project.
 
 Forest Admin has a unique hybrid architecture - only the frontend is managed on Forest Admin servers, which gives you the flexibility of a SaaS tool without compromising on data security.
 
-# Quick Start
+# Quick start
 
 Forest Admin offers a lot of flexibility in terms of installation. The following guide provides a way to start using Forest Admin in minutes.{{#nodejs}} If you want to dive deeper into the installation process of the product, we got you covered [here](./install/README.md).{{/nodejs}}
 
@@ -42,7 +42,7 @@ Go to [https://app.forestadmin.com/signup](https://app.forestadmin.com/signup), 
 
 {{#nodejs}}
 
-## Create a new JavaScript (Or TypeScript) project
+## Create a new JavaScript (or TypeScript) project
 
 Let's create a new folder and initiate a new JavaScript project.
 

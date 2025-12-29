@@ -1,5 +1,5 @@
 ---
-title: Hooks - Overview
+title: Hooks - overview
 ---
 
 Forest Admin provides extensive customization options for your collections, allowing you to tailor CRUD operations, implement business logic, and enhance data integrity through two powerful features:
@@ -14,7 +14,7 @@ These two features are almost identical, but they are executed at very different
 This means that Collection Hooks will be executed even if you choose to use Collection Override.
 {% endhint %}
 
-## Collection Hooks
+## Collection hooks
 
 Collection Hooks allow you to execute custom code before or after CRUD operations, giving you the ability to enforce business rules, or integrate with external services seamlessly.
 
@@ -120,7 +120,7 @@ end
 {% endtabs %}
 
 
-## Collection Overrides
+## Collection overrides
 
 Collection Overrides provide the ability to completely replace the default behavior of CUD operations. This powerful feature allows for custom implementations of `create`, `update`, and `delete` operations, offering unparalleled control over data handling.
 
@@ -134,7 +134,7 @@ Collection Overrides provide a powerful means to completely replace the default 
 - **Custom Operation Logic**: Implement entirely custom workflows or integrate external services directly into your CUD operations.
 - **Full Operation Context**: Receive detailed low level context about the operation, enabling complex logic and integrations.
 
-### How it Works
+### How it works
 
 In addition to the standard Collection functions:
 
@@ -150,11 +150,11 @@ To define an Override for a Collection, you must specify:
 
 The custom handler function will receive a context object containing relevant information for the operation, allowing for comprehensive control over the behavior of these CUD operations.
 
-### Setting Up Overrides
+### Setting up overrides
 
 Overrides are declared similarly to hooks but are aimed at replacing an entire operation rather than augmenting its execution. However this can also be used to enrich the default behavior.
 
-#### Custom Create Operation
+#### Custom create operation
 
 {% hint style="warning" %}
 Unknown properties in returned records will be removed (Node.js).
@@ -237,7 +237,7 @@ In Python examples, you can use async functions, sync functions, or lambda funct
 Overrides take precedence over the default operation. Ensure your custom handlers properly manage all necessary logic for the operation, as the default behavior will not be executed.
 {% endhint %}
 
-### Basic Use Cases
+### Basic use cases
 
 #### Create over API
 
@@ -320,7 +320,7 @@ end
 {% endtabs %}
 
 
-## Platform-Specific Guides
+## Platform-specific guides
 
 For detailed implementation guides specific to your platform:
 

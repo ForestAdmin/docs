@@ -1,7 +1,7 @@
 ---
-title: Smart Collections
+title: Smart collections
 ---
-### What is a Smart Collection?
+### What is a smart collection?
 
 A Smart Collection is a Forest Collection based on your API implementation. It allows you to reconcile fields of data coming from different or external sources in a single tabular view (by default), without having to physically store them into your database.
 
@@ -15,7 +15,7 @@ In the following example, we have created a **Smart Collection** called `custome
 
 **For an example of advanced customization and featuring an Amazon S3 integration,** you can see [here](examples/amazon-s3-integration-example.md) how we've stored in our live demo the companies' legal documents on Amazon S3 and how we've implemented a **Smart Collection** to access and manipulate them.
 
-### Creating a Smart Collection
+### Creating a smart collection
 
 <Tabs>
   <Tab title="SQL (Sequelize)">

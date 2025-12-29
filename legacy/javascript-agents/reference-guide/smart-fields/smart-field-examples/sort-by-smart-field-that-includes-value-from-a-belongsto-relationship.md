@@ -1,5 +1,5 @@
 ---
-title: Sort by smart field that includes value from a belongsTo relationship
+title: Sort by smart field that includes value from a belongsto relationship
 ---
 **Context**: As a user I want to be able to sort records based on a smart field where the smart field includes data from the current record's parent.
 

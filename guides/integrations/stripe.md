@@ -1,5 +1,5 @@
 ---
-title: Stripe Integration
+title: Stripe integration
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

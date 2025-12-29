@@ -1,5 +1,5 @@
 ---
-title: 'Global Settings'
+title: 'Global settings'
 description: 'GitBook gives you complete control over the look and feel of your documentation using the docs.json file'
 ---
 

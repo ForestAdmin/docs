@@ -1,4 +1,4 @@
-## Standalone vs In-app installation
+## Standalone vs in-app installation
 
 The Forest Admin agent can run as a Standalone server (You can see it in action in the [quick start](../quick-start.md)), but can also be "attached" to an existing Node.js application server (That we usually call "In-app").
 

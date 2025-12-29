@@ -1,15 +1,15 @@
 ---
-title: "Cloud Architecture"
+title: "Cloud architecture"
 description: "Get started in 5 minutes with fully-managed Forest Admin Cloud - no infrastructure required"
 ---
 
 The Cloud architecture is Forest Admin's fully-managed solution where everything is hosted for you. Connect your database and start building your admin panel in minutes without any infrastructure setup.
 
-## Architecture Overview
+## Architecture overview
 
 <img src="/assets/architecture-cloud.svg" alt="Cloud Architecture Diagram" />
 
-### How it Works
+### How it works
 
 1. **Your users** access the Forest Admin UI hosted at `app.forestadmin.com`
 2. **Forest Admin Cloud** hosts both the agent and UI
@@ -43,7 +43,7 @@ Cloud mode has a simplified environment workflow:
 
 For full developer workflow with staging environments and branch management, use [Self-Hosted architecture](/product/integration/architectures/self-hosted).
 
-### Database Must Be Network Accessible
+### Database must be network accessible
 
 Your database must accept connections from Forest Admin's IP address:
 
@@ -58,7 +58,7 @@ Required: Allow inbound connections from Forest Admin
 **Forest Admin Cloud IP to whitelist**: `35.180.175.97`
 </Info>
 
-### Data Queries Through Forest Admin
+### Data queries through Forest Admin
 
 Unlike self-hosted where your agent queries your database directly, Cloud mode queries go through Forest Admin's servers:
 
@@ -72,7 +72,7 @@ This means:
 - Data in transit goes through Forest Admin
 - Subject to Forest Admin's availability
 
-## Frequently Asked Questions
+## Frequently asked questions
 
 
 <details>

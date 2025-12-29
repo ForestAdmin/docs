@@ -1,5 +1,5 @@
 ---
-title: forest init
+title: Forest init
 ---
 > **Status:** TODO - Priority: HIGH
 >

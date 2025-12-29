@@ -1,5 +1,5 @@
 ---
-title: Create a Shipping view
+title: Create a shipping view
 ---
 ![](</images/legacy/javascript-agents/image (254).png>)
 

@@ -1,5 +1,5 @@
 ---
-title: Dwolla Service
+title: Dwolla service
 ---
 This service wraps the [Dwolla SDK ](https://developers.dwolla.com/sdks-tools#sdks--tools)and provides the following implementation:
 

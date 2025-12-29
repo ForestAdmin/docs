@@ -13,7 +13,7 @@ On the other hand, `many-to-one` and `one-to-one` relationships require the impl
 If a structure declaration contains the following statement
 
 {% tabs %}
-{% tab title="class MovieCollection extends BaseCollection {" %}
+{% tab title="JavaScript" %}
 ```javascript
 constructor() {
     super('movies', null);
@@ -31,7 +31,7 @@ constructor() {
 ```
 {% endtab %}
 
-{% tab title="module App" %}
+{% tab title="Ruby" %}
 ```ruby
 module Collections
     class Movie < ForestAdminDatasourceToolkit::Collection
@@ -57,7 +57,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="// The following call is using both fields from the "movies" and "people" collection" %}
+{% tab title="JavaScript" %}
 ```javascript
 await dataSource.getCollection('movies').list(
   caller,
@@ -76,7 +76,7 @@ await dataSource.getCollection('movies').list(
 ```
 {% endtab %}
 
-{% tab title="datasource.collection('Movie').list(" %}
+{% tab title="Ruby" %}
 ```ruby
 caller,
   ForestAdminDatasourceToolkit::Components::Query::Filter.new(

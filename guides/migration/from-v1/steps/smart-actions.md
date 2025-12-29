@@ -1,5 +1,5 @@
 ---
-title: "Migration Step 3: Smart Actions"
+title: "Migration step 3: Smart actions"
 ---
 > **Status:** TODO - Priority: HIGH
 >

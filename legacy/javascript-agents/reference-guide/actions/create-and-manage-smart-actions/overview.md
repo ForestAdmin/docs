@@ -1,7 +1,7 @@
 ---
-title: Create and manage Smart Actions
+title: Create and manage smart actions
 ---
-### What is a Smart Action?
+### What is a smart action?
 
 Sooner or later, you will need to perform actions on your data that are specific to your business. Moderating comments, generating an invoice, logging into a customer’s account or banning a user are exactly the kind of important tasks to unlock in order to manage your day-to-day operations.
 
@@ -11,7 +11,7 @@ On our Live Demo example, our `companies` collection has many examples of Smart 
 If you're looking for information on native actions (CRUD), check out [this page](../).
 {% endhint %}
 
-### Creating a Smart action
+### Creating a smart action
 
 In order to create a Smart action, you will first need to **declare it in your code** for a specific collection. Here we declare a _Mark as Live_ Smart action for the `companies` collection.
 
@@ -46,7 +46,7 @@ collection('companies', {
 
 Once you have declared the action, you can implement the logic by creating a route for the action. The route should be a POST request to `/forest/actions/<action-name>`.
 
-#### req.user
+#### Req.user
 
 The `req.user` object contains information about the user who triggered the action:
 
@@ -65,7 +65,7 @@ The `req.user` object contains information about the user who triggered the acti
 }
 ```
 
-#### req.body
+#### Req.body
 
 You can find important information in the body of the request.
 
@@ -777,7 +777,7 @@ module.exports = router;
   </Tab>
 </Tabs>
 
-### Enable/Disable a Smart Action according to the state of a record
+### Enable/disable a smart action according to the state of a record
 
 Sometimes, your Smart Action only makes sense depending on the state of your records. On our Live Demo, it does not make any sense to enable the `Mark as Live` Smart Action on the `companies` collection if the company is already live, right?
 
@@ -795,7 +795,7 @@ When using Forest Admin collaboratively with clear roles defined it becomes rele
 
 ![](/images/legacy/javascript-agents/project-settings-roles-permissions.png)
 
-### Require approval for a Smart action
+### Require approval for a smart action
 
 Critical actions for your business may need approval before being processed.
 

@@ -3,7 +3,7 @@ title: Override a route
 ---
 Overriding a route allows you to change or completely replace a Forest Admin's route behavior.
 
-### Changing Forest Admin's behavior
+### Changing Forest admin's behavior
 
 To achieve this, use existing snippets of [default routes](default-routes.md) and modify them according to your needs.
 
@@ -53,7 +53,7 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Replacing Forest Admin's behavior
+### Replacing Forest admin's behavior
 
 To achieve this, simply remove the `next()` statement of any route:
 

@@ -7,9 +7,9 @@ The only consideration that you need to take into account for this step is that 
 To help you create the new app, you can install the [Forest CLI](../../../deployment/forest-cli-commands/README.md) and use the command below
 
 ```bash
-# for SQL project
+# For SQL project
 forest projects:bundle:sql "aFolderName"
-# or for No SQL project
+# Or for no SQL project
 forest projects:bundle:nosql "aFolderName"
 ```
 

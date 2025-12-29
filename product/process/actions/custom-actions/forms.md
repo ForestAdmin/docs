@@ -128,7 +128,7 @@ Checkbox for true/false values.
 { type: 'Boolean', label: 'Send confirmation email' }
 ```
 
-### Date and Dateonly
+### Date and dateonly
 
 Date picker for dates with or without time.
 
@@ -165,7 +165,7 @@ Reference to a record from another collection.
 
 The value will be the primary key of the selected record (as an array for composite keys).
 
-### File and FileList
+### File and filelist
 
 File upload fields.
 
@@ -405,7 +405,7 @@ form: [
 
 Widgets customize the UI appearance of fields. Here are the most common ones:
 
-### TextArea
+### Textarea
 
 Multi-line text input.
 
@@ -426,7 +426,7 @@ Alternative to Enum for dropdown selection.
 }
 ```
 
-### RadioGroup
+### Radiogroup
 
 Radio buttons for single selection.
 
@@ -439,7 +439,7 @@ Radio buttons for single selection.
 }
 ```
 
-### CheckboxGroup
+### Checkboxgroup
 
 Checkboxes for multiple selection.
 
@@ -452,7 +452,7 @@ Checkboxes for multiple selection.
 }
 ```
 
-### DatePicker
+### Datepicker
 
 Calendar widget for date selection.
 
@@ -460,7 +460,7 @@ Calendar widget for date selection.
 { type: 'Date', label: 'Appointment', widget: 'DatePicker' }
 ```
 
-### ColorPicker
+### Colorpicker
 
 Color selection widget.
 
@@ -468,7 +468,7 @@ Color selection widget.
 { type: 'String', label: 'Brand color', widget: 'ColorPicker' }
 ```
 
-### FilePicker
+### Filepicker
 
 File upload with preview.
 
@@ -476,7 +476,7 @@ File upload with preview.
 { type: 'File', label: 'Profile picture', widget: 'FilePicker' }
 ```
 
-### JsonEditor
+### Jsoneditor
 
 JSON editor with syntax highlighting.
 
@@ -484,7 +484,7 @@ JSON editor with syntax highlighting.
 { type: 'Json', label: 'Configuration', widget: 'JsonEditor' }
 ```
 
-### UserDropdown
+### Userdropdown
 
 Dropdown pre-filled with Forest Admin users.
 
@@ -492,7 +492,7 @@ Dropdown pre-filled with Forest Admin users.
 { type: 'String', label: 'Assigned to', widget: 'UserDropdown' }
 ```
 
-### CurrencyInput
+### Currencyinput
 
 Number input with currency formatting.
 
@@ -505,7 +505,7 @@ Number input with currency formatting.
 }
 ```
 
-### RichText
+### Richtext
 
 Rich text editor with formatting options.
 

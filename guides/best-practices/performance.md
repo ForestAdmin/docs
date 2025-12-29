@@ -1,5 +1,5 @@
 ---
-title: Performance Best Practices
+title: Performance best practices
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

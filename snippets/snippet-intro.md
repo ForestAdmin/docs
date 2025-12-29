@@ -1,5 +1,5 @@
 ---
-title: Snippet Intro
+title: Snippet intro
 ---
 
 One of the core principles of software development is DRY (Don't Repeat

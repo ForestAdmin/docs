@@ -1,5 +1,5 @@
 ---
-title: Send an SMS with Twilio and Zapier
+title: Send an SMS with twilio and zapier
 ---
 This example shows you how to create a Smart Action `"Send SMS"` that triggers a [Zapier webhook](https://zapier.com/zapbook/webhook/) to send an SMS message with Twilio.
 
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
 };
 ```
 
-### **Directory: /forest**
+### **directory: /forest**
 
 This directory contains the `users.js` file where the Smart Action `Send SMS`is declared.
 
@@ -60,7 +60,7 @@ collection('users', {
 });
 ```
 
-### **Directory: /routes**
+### **directory: /routes**
 
 This directory contains the `users.js` file where the implementation of the route is handled. The `POST /forest/actions/send-sms` API call is triggered when you click on the Smart Action in the Forest UI. The route implementation retrieves all the necessary data and triggers another API call directly to a [Zapier hook](https://zapier.com/zapbook/webhook/).
 

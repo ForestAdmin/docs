@@ -22,7 +22,7 @@ agent.mountOnStandaloneServer(
 );
 ```
 
-## ForestAdmin schema
+## Forestadmin schema
 
 This step-by-step guide implies a build and release phase in a further step. To initiate a proper release, we need to change the ForestAdmin
 schema file from `.forestadmin-schema.json` to `forestadmin-schema.json` (simply remove the dot). Otherwise, this mandatory file will not be taken into account during release.
@@ -36,7 +36,7 @@ const agent = createAgent<Schema>({
 });
 ```
 
-# Create a new AppService app on Azure
+# Create a new appservice app on Azure
 
 ## Create the application
 

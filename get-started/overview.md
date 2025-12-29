@@ -1,5 +1,5 @@
 ---
-title: Get Started with Forest Admin
+title: Get started with Forest Admin
 description: Everything you need to start building powerful admin panels on top of your data.
 ---
 Welcome to Forest Admin! This section will help you get up and running quickly, whether you're using our cloud solution or self-hosting.
@@ -37,7 +37,7 @@ Learn how to manage users, configure permissions, and administer your Forest Adm
 </details>
 
 
-## Next Steps
+## Next steps
 
 Once you've completed the setup, explore the **Product** section to learn how to:
 - Connect to your data sources (Integration)

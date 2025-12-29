@@ -1,5 +1,5 @@
 ---
-title: Forest Admin CLI - Overview
+title: Forest Admin CLI - overview
 ---
 > **Status:** TODO - Priority: HIGH
 >

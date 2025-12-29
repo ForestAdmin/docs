@@ -60,7 +60,7 @@ Field Widgets empower your [Actions Forms](./forms-static.md) providing various 
 The address autocomplete widget allows to input an address as a text value, autocompleted by the Google Maps API.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Update address', {
     scope: 'Single',
@@ -80,7 +80,7 @@ collection.addAction('Update address', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -149,7 +149,7 @@ And once the user starts typing:
 The checkbox widget allows to activate or deactivate a boolean value.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Refresh price', {
     scope: 'Single',
@@ -170,7 +170,7 @@ collection.addAction('Refresh price', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -249,7 +249,7 @@ To ensure having only 2 states, you need to:
 The checkbox group widget allows to select multiple values from a list of options.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Leave a review', {
     scope: 'Single',
@@ -273,7 +273,7 @@ collection.addAction('Leave a review', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -366,7 +366,7 @@ scope: 'Single',
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -444,7 +444,7 @@ The above code will produce the following form:
 The currency input widget allows to input a currency value.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Change price', {
     scope: 'Single',
@@ -470,7 +470,7 @@ collection.addAction('Change price', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -544,7 +544,7 @@ The above code will produce the following form:
 
 {{/ruby}}
 
-## DatePicker widget
+## Datepicker widget
 
 The date picker widget allows to input a date in a form
 
@@ -572,7 +572,7 @@ collection.addAction('Set shipping date', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -657,7 +657,7 @@ const shippingDate = new Date(context.formValues['Shipping date']))
 The dropdown widget allows to select a value from a list of options.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Leave a review', {
     scope: 'Single',
@@ -686,7 +686,7 @@ collection.addAction('Leave a review', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -733,7 +733,7 @@ Note: when a search is performed, only the field on which it is performed will h
 {% endhint %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Add more products', {
     execute: async (context, resultBuilder) => {
@@ -771,7 +771,7 @@ collection.addAction('Add more products', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -926,7 +926,7 @@ export default async (collection: UserCustomizer) => {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1031,7 +1031,7 @@ The above code will produce the following form:
 The JSON editor widget display a rich editor with syntax highlighting for JSON.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Set properties', {
     scope: 'Single',
@@ -1051,7 +1051,7 @@ collection.addAction('Set properties', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1090,7 +1090,7 @@ This widget does not have any options.
 The number input widget allows to input a number value.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Change price', {
     scope: 'Single',
@@ -1114,7 +1114,7 @@ collection.addAction('Change price', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1187,7 +1187,7 @@ The above code will produce the following form:
 The number input list widget allows to input a list of number values.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Change step values', {
     scope: 'Single',
@@ -1211,7 +1211,7 @@ collection.addAction('Change step values', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1290,7 +1290,7 @@ The above code will produce the following form (once the user entered two step v
 The radio group widget allows to select a value from a list of options.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Leave a review', {
     scope: 'Single',
@@ -1314,7 +1314,7 @@ collection.addAction('Leave a review', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1385,7 +1385,7 @@ Using the `options` function, you can dynamically change the list of options bas
 The rich text widget allows to input a formatted text value.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Leave a review', {
     scope: 'Single',
@@ -1406,7 +1406,7 @@ collection.addAction('Leave a review', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1470,7 +1470,7 @@ The above code will produce the following form:
 The text area widget allows to input a multiline string value.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Leave a review', {
     scope: 'Single',
@@ -1492,7 +1492,7 @@ collection.addAction('Leave a review', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1559,7 +1559,7 @@ The above code will produce the following form:
 The text input widget allows to input a string value.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customer', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Send notification', {
     scope: 'Single',
@@ -1579,7 +1579,7 @@ collection.addAction('Send notification', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1642,7 +1642,7 @@ The above code will produce the following form:
 The text input list widget allows to input a list of string values.
 
 {% tabs %}
-{% tab title="agent.customizeCollection('product', collection => {" %}
+{% tab title="JavaScript" %}
 ```typescript
 collection.addAction('Add tags', {
     scope: 'Single',
@@ -1666,7 +1666,7 @@ collection.addAction('Add tags', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1763,7 +1763,7 @@ collection.addAction('set opening and closing time', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 
@@ -1832,7 +1832,7 @@ collection.addAction('Assign to the record', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action::Types
 

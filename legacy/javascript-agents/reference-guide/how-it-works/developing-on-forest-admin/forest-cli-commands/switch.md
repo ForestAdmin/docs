@@ -1,5 +1,5 @@
 ---
-title: switch
+title: Switch
 ---
 The `forest switch` command allows you to **set your current branch** to the selected branch:
 

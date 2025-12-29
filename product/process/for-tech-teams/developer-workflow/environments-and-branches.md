@@ -1,5 +1,5 @@
 ---
-title: Environments & Branches
+title: Environments & branches
 description: Overview of environments and branches for Forest Admin development workflow
 ---
 
@@ -13,7 +13,7 @@ Your Forest Admin panel is composed of two parts:
 
 This separation requires specific tools and workflows to manage both effectively.
 
-## Development Workflow
+## Development workflow
 
 
   * [Development Workflow](/product/process/for-tech-teams/developer-workflow/development-workflow.md) - Understand the complete development workflow with Forest Admin
@@ -22,7 +22,7 @@ This separation requires specific tools and workflows to manage both effectively
   * [Deploying Changes](/product/process/for-tech-teams/developer-workflow/deploying-your-changes.md) - Deploy your layout changes to Remote and Production
 
 
-## Key Concepts
+## Key concepts
 
 ### Environments
 
@@ -55,7 +55,7 @@ A **layout** is the complete UI configuration including:
 - Charts and dashboards
 - Permissions and roles
 
-## CLI Commands
+## CLI commands
 
 
   * [forest branch](/product/reference/cli/branch.md) - Create a new branch
@@ -63,7 +63,7 @@ A **layout** is the complete UI configuration including:
   * [forest push](/product/reference/cli/push.md) - Push to remote environment
 
 
-## Related Topics
+## Related topics
 
 
   * [Schema Updates](/product/process/for-tech-teams/developer-workflow/schema-updates.md) - Learn how to update your data schema

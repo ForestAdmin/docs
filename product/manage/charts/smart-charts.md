@@ -29,7 +29,7 @@ Note that, when defining a chart from your agent:
 - The type of chart defined in your agent must match your selection when adding it to a dashboard or record.
 - The name of the chart must be URL-safe.
 
-## Relation to Smart Charts
+## Relation to smart charts
 
 [Smart Charts](../../frontend-customization/smart-charts/README.md) allow the implementation of any charts types that are not supported natively (density maps, cohorts, ...).
 

@@ -1,5 +1,5 @@
 ---
-title: Smart hasMany relationship in mongoDB
+title: Smart hasmany relationship in mongodb
 ---
 **Context**: As a user I want to display records that have a belongsTo relationship to another record as related data of this record.
 

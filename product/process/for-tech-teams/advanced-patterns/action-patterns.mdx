@@ -1,5 +1,5 @@
 ---
-title: Advanced Action Patterns
+title: Advanced action patterns
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

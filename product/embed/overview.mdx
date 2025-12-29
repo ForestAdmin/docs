@@ -1,5 +1,5 @@
 ---
-title: Embed - Overview
+title: Embed - overview
 ---
 > **Status:** TODO - Priority: LOW (ROADMAP)
 >
@@ -9,7 +9,7 @@ title: Embed - Overview
 
 Embed Forest Admin functionality into your own applications (ROADMAP feature).
 
-## The 4-Layer Architecture
+## The 4-layer architecture
 
 1. **INTEGRATION** - Connect your data
 2. **CONTROL** - Manage access and security
@@ -17,7 +17,7 @@ Embed Forest Admin functionality into your own applications (ROADMAP feature).
 4. **OPERATIONS** (You are here) - Execute daily tasks
    - Build | Execute | Collaborate | Manage | **Embed**
 
-## What is Embed?
+## What is embed?
 
 Embed allows you to integrate Forest Admin capabilities directly into your own applications:
 - Embed collections/views
@@ -26,7 +26,7 @@ Embed allows you to integrate Forest Admin capabilities directly into your own a
 - White-label interface
 - Customer-facing admin panels
 
-## Use Cases
+## Use cases
 
 - Customer portals
 - Partner dashboards
@@ -36,7 +36,7 @@ Embed allows you to integrate Forest Admin capabilities directly into your own a
 
 ## Features
 
-### Embeddable Components
+### Embeddable components
 - Collection views
 - Detail views
 - Charts
@@ -44,7 +44,7 @@ Embed allows you to integrate Forest Admin capabilities directly into your own a
 - Actions
 - Search
 
-### Assist (AI-powered)
+### Assist (ai-powered)
 - **[Assist](/product/embed/assist)** - AI assistant for data operations
 - Natural language queries
 - Automated insights
@@ -77,7 +77,7 @@ This is a ROADMAP feature. Check with Forest Admin for:
 - Feature timeline
 - Pricing
 
-## Related Pages
+## Related pages
 
 - [Assist](/product/embed/assist)
 - [Build > Branding](/product/build/branding)

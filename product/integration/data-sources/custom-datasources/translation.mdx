@@ -55,7 +55,7 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
-## Structure Declaration
+## Structure declaration
 
 ### Columns
 
@@ -208,7 +208,7 @@ class MovieCollection < ForestAdminDatasourceToolkit::Collection
 end
 ```
 
-## Capabilities Declaration
+## Capabilities declaration
 
 Data source implementers don't need to translate every possible query type. Forest Admin ensures only supported query features are available by having collections declare capabilities on construction.
 
@@ -433,7 +433,7 @@ def aggregate(caller, filter, aggregation, limit = nil)
 end
 ```
 
-### Optimization: count queries
+### Optimization: Count queries
 
 Handle count operations separately if your API supports efficient counting:
 

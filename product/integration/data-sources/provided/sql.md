@@ -128,7 +128,7 @@ const agent = createAgent(options).addDataSource(
 );
 ```
 
-## Example Display soft deleted reccords on all collections
+## Example display soft deleted reccords on all collections
 
 ```javascript
 const { createAgent } = require('@forestadmin/agent');

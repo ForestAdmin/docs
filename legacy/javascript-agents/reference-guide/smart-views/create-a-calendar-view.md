@@ -1,5 +1,5 @@
 ---
-title: Create a Calendar view
+title: Create a calendar view
 ---
 The example below shows how to display a calendar view:
 

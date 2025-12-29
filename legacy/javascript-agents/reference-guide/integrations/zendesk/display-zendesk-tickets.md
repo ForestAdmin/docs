@@ -3,7 +3,7 @@ title: Display Zendesk tickets
 ---
 This section shows you how to create a smart collection to list the tickets of your Zendesk account.
 
-### Declare the Smart Collection Zendesk Tickets&#x20;
+### Declare the smart collection Zendesk tickets&#x20;
 
 First, we need to declare the smart collection in your project based on the API documentation. As an example, here the smart collection definition for Users:
 
@@ -86,7 +86,7 @@ collection('zendesk_tickets', {
 Some fields are available for filtering or sorting using the Zendesk API. To allow this on the Forest UI, simply add the keywords `isFilterable` and `isSortable` in your field definition.
 {% endhint %}
 
-### Implement the Smart Collection route
+### Implement the smart collection route
 
 In the file `routes/zendesk-tickets.js`, we’ve created a new route to implement the API behind the Smart Collection.
 
@@ -118,7 +118,7 @@ router.get(
 );
 ```
 
-### Implement the get Route
+### Implement the get route
 
 The section above help you display the list of all Zendesk tickets. But you'll need to implement also the logic to display the information of a specific ticket.
 

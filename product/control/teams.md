@@ -18,11 +18,11 @@ When combined with scopes, teams enable row-level security where users only see 
 
 Teams are managed in **Project Settings → Teams**.
 
-## Create a Team
+## Create a team
 
 To establish a new team, navigate to the Teams tab within your project settings and select "+ New team". When creating a team, you have the option to "optionally copy another team's layout".
 
-## Team Layout Management
+## Team layout management
 
 A team's layout encompasses all visible UI aspects that can be customized per team:
 
@@ -40,7 +40,7 @@ To apply an existing team's configuration to another team, access the team's set
 This action is irreversible, so review carefully before proceeding.
 {% endhint %}
 
-## Delete a Team
+## Delete a team
 
 To remove a team, go to its settings page, scroll beneath the user list, and click "Delete this team". You'll be asked to retype the team name as a confirmation step.
 
@@ -48,7 +48,7 @@ To remove a team, go to its settings page, scroll beneath the user list, and cli
 This is a permanent action that cannot be undone.
 {% endhint %}
 
-## Advanced Use Cases
+## Advanced use cases
 
 Teams unlock powerful use cases for different organizational needs:
 

@@ -1,5 +1,5 @@
 ---
-title: Escalation Workflows
+title: Escalation workflows
 ---
 > **Status:** TODO - Priority: LOW
 >

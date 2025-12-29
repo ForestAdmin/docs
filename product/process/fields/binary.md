@@ -53,7 +53,7 @@ end
 {% endtab %}
 {% endtabs %}
 
-## Using the data-URI mode
+## Using the data-uri mode
 
 The data-URI mode is suitable for all data that you would save in a file (images, PDFs, ...).
 

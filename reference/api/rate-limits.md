@@ -1,13 +1,13 @@
 ---
-title: API Rate Limits
+title: API rate limits
 description: Understand and work within Forest Admin API rate limits
 ---
 
-# API Rate Limits
+# API rate limits
 
 The Forest Admin Public API implements rate limiting to ensure service stability and fair usage across all customers. This guide explains rate limits, how to work with them, and best practices for building reliable integrations.
 
-## Rate Limit Overview
+## Rate limit overview
 
 Rate limits protect the API infrastructure by:
 
@@ -16,9 +16,9 @@ Rate limits protect the API infrastructure by:
 - **Encouraging efficiency** - Promoting optimized API usage
 - **Fair resource allocation** - Distributing capacity equitably
 
-## Current Rate Limits
+## Current rate limits
 
-### Standard Limits
+### Standard limits
 
 | Time Window | Limit | Applies To |
 |-------------|-------|------------|
@@ -26,7 +26,7 @@ Rate limits protect the API infrastructure by:
 | Per hour | 1,000 requests | Per API token |
 | Per day | 10,000 requests | Per API token |
 
-### Enterprise Limits
+### Enterprise limits
 
 Enterprise customers may have higher limits based on their plan. Contact your account manager for details.
 
@@ -34,7 +34,7 @@ Enterprise customers may have higher limits based on their plan. Contact your ac
 Rate limits are subject to change. Check the response headers for current limits.
 {% endhint %}
 
-## Rate Limit Headers
+## Rate limit headers
 
 Every API response includes headers with rate limit information:
 
@@ -44,7 +44,7 @@ X-RateLimit-Remaining: 45
 X-RateLimit-Reset: 1640995200
 ```
 
-### Header Definitions
+### Header definitions
 
 **`X-RateLimit-Limit`**
 - Maximum requests allowed in current time window
@@ -58,7 +58,7 @@ X-RateLimit-Reset: 1640995200
 - Unix timestamp when the rate limit resets
 - Example: `1640995200` (January 1, 2022, 00:00:00 UTC)
 
-### Reading Headers
+### Reading headers
 
 **JavaScript:**
 
@@ -79,7 +79,7 @@ console.log(`Resets at: ${new Date(reset * 1000).toISOString()}`);
 **Python:**
 
 
-## 429 Too Many Requests
+## 429 too many requests
 
 When you exceed the rate limit, the API returns a `429 Too Many Requests` error:
 
@@ -103,7 +103,7 @@ X-RateLimit-Reset: 1640995260
 Retry-After: 60
 ```
 
-### Retry-After Header
+### Retry-after header
 
 The `Retry-After` header indicates how long to wait before retrying:
 
@@ -111,9 +111,9 @@ The `Retry-After` header indicates how long to wait before retrying:
 - Always respect this value
 - Do not retry before this time
 
-## Handling Rate Limits
+## Handling rate limits
 
-### Strategy 1: Check Headers Proactively
+### Strategy 1: Check headers proactively
 
 Monitor rate limit headers and slow down before hitting the limit:
 
@@ -137,7 +137,7 @@ async function makeRateLimitedRequest(url) {
 }
 ```
 
-### Strategy 2: Exponential Backoff
+### Strategy 2: Exponential backoff
 
 Implement exponential backoff for 429 errors:
 
@@ -168,7 +168,7 @@ function sleep(ms) {
 }
 ```
 
-### Strategy 3: Request Queue
+### Strategy 3: Request queue
 
 Use a queue to control request rate:
 
@@ -218,14 +218,14 @@ for (const id of recordIds) {
 }
 ```
 
-### Strategy 4: Token Bucket
+### Strategy 4: Token bucket
 
 Implement a token bucket algorithm:
 
 
-## Best Practices
+## Best practices
 
-### 1. Respect Rate Limits
+### 1. respect rate limits
 
 Always check and respect rate limit headers:
 
@@ -242,7 +242,7 @@ Always check and respect rate limit headers:
 - Use multiple tokens to circumvent limits
 ```
 
-### 2. Implement Caching
+### 2. implement caching
 
 Cache responses to reduce API calls:
 
@@ -270,7 +270,7 @@ async function getCachedData(endpoint) {
 }
 ```
 
-### 3. Batch Operations
+### 3. batch operations
 
 Group related requests when possible:
 
@@ -284,7 +284,7 @@ for (const id of userIds) {
 const users = await getUsers({ ids: userIds }); // 1 request
 ```
 
-### 4. Use Pagination Efficiently
+### 4. use pagination efficiently
 
 Request only the data you need:
 
@@ -300,7 +300,7 @@ const recentLogs = await getActivityLogs({
 });
 ```
 
-### 5. Monitor Usage
+### 5. monitor usage
 
 Track your API usage to identify optimization opportunities:
 
@@ -345,7 +345,7 @@ try {
 }
 ```
 
-### 6. Schedule Heavy Operations
+### 6. schedule heavy operations
 
 Run intensive operations during off-peak hours:
 
@@ -364,9 +364,9 @@ if (isOffPeak()) {
 }
 ```
 
-## Increasing Rate Limits
+## Increasing rate limits
 
-### Enterprise Plans
+### Enterprise plans
 
 Enterprise customers can request higher rate limits:
 
@@ -375,7 +375,7 @@ Enterprise customers can request higher rate limits:
 3. **Provide expected request volume**
 4. **Discuss SLA requirements**
 
-### Custom Limits
+### Custom limits
 
 For specific high-volume use cases, custom limits may be available:
 
@@ -386,7 +386,7 @@ For specific high-volume use cases, custom limits may be available:
 
 **Contact:** [enterprise@forestadmin.com](mailto:enterprise@forestadmin.com)
 
-## Complete Example
+## Complete example
 
 Full implementation with rate limiting, retries, and monitoring:
 
@@ -506,7 +506,7 @@ for (let page = 1; page <= 10; page++) {
 console.log('Stats:', client.getStats());
 ```
 
-## Next Steps
+## Next steps
 
 
   * [Authentication](/reference/api/authentication.md) - Learn about API authentication

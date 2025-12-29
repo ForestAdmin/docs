@@ -1,5 +1,5 @@
 ---
-title: Add many existing records at the same time (hasMany-belongsTo relationship)
+title: Add many existing records at the same time (hasmany-belongsto relationship)
 
 description: >-
   This example shows how to associate multiple existing records at once to a
@@ -102,7 +102,7 @@ collection('organizations', {
 });
 ```
 
-### **Directory: /routes**
+### **directory: /routes**
 
 When the user validates the action, this route is called. We will use the **selection** to retrieve all companies' ids and then updates all companies `organizationId` field to create the associations.\
 \

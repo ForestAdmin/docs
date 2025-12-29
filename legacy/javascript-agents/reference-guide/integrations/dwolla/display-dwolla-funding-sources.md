@@ -1,7 +1,7 @@
 ---
 title: Display Dwolla funding sources
 ---
-## 1. Define the smart collection
+## 1. define the smart collection
 
 Filterable fields are flagged using `isFilterable: true`. You will need to enable this option using the collection settings in the [Layout Editor](https://docs.forestadmin.com/user-guide/getting-started/master-your-ui/using-the-layout-editor-mode).&#x20;
 
@@ -79,7 +79,7 @@ collection('dwollaFundingSources', {
 });
 ```
 
-## 2. Implement the route
+## 2. implement the route
 
 This route use the Dwolla service described in [another section](dwolla-service.md).
 

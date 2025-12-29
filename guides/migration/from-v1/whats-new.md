@@ -12,7 +12,7 @@ In the ecosystem of the time, the design of our Agent was sound.
 
 In the meantime, JavaScript’s ecosystem has substantially evolved, and although we could’ve introduced changes in our API at every turn, this would have greatly disturbed our customers’ daily operations.
 
-## Agnostic to web frameworks and ORMs
+## Agnostic to web frameworks and orms
 
 This new Agent no longer cares about either the web framework or the ORM in use – it natively integrates with [Express](../install/expose/using-express.md), [Fastify](../install/expose/using-fastify.md), [Nest.js](../install/expose/using-nest.md), and [Koa](../install/expose/using-koa.md).
 

@@ -59,7 +59,7 @@ const schema = mongoose.Schema({
 module.exports = mongoose.model('users', schema, 'users');
 ```
 
-### **Directory: /forest**
+### **directory: /forest**
 
 This directory contains the `users.js` file where the Smart Action `Impersonate`is declared.
 
@@ -93,7 +93,7 @@ collection('users', {
 });
 ```
 
-### **Directory: /routes**
+### **directory: /routes**
 
 This directory contains the `users.js` file where the implementation of the route is handled. The `POST /forest/actions/impersonate` API call is triggered when you click on the Smart Action in the Forest UI.&#x20;
 

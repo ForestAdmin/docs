@@ -2,14 +2,14 @@ Relationships that point to multiple records are displayed in the frontend in th
 
 ![Explorer Tab](../../assets/relationships-multiple-explorer.png)
 
-## One-to-Many relations
+## One-to-many relations
 
 In a one-to-many relationship, one record from a Collection is attached to multiple records of another Collection.
 
 Think about countries and towns: a country has multiple towns, and each town belongs to a country.
 
 {% tabs %}
-{% tab title="// Link 'countries' to 'towns'" %}
+{% tab title="JavaScript" %}
 ```javascript
 agent.customizeCollection('countries', collection => {
   collection.addOneToManyRelation('myTowns', 'towns', {
@@ -20,7 +20,7 @@ agent.customizeCollection('countries', collection => {
 ```
 {% endtab %}
 
-{% tab title="@create_agent.customize_collection('country') do |collection|" %}
+{% tab title="Ruby" %}
 ```ruby
 collection.add_one_to_many_relation(
     'myTown',
@@ -36,7 +36,7 @@ end
 {% endtabs %}
 
 
-## Many-to-Many relations
+## Many-to-many relations
 
 In a many-to-many relation, 3 Collections are used instead of 2 to build the relation.
 
@@ -46,7 +46,7 @@ For instance, on a movie recommendation website, each user can rate many movies,
 The 3 Collections that are used are `users` (the "origin" Collection), `ratings` (the "through" Collection), and `movies` (the "foreign" Collection).
 
 {% tabs %}
-{% tab title="// Create one side of the relation ..." %}
+{% tab title="JavaScript" %}
 ```javascript
 agent.customizeCollection('users', collection => {
   collection.addManyToManyRelation('ratedMovies', 'movies', 'ratings', {
@@ -67,7 +67,7 @@ agent.customizeCollection('movies', collection => {
 ```
 {% endtab %}
 
-{% tab title="@create_agent.customize_collection('user') do |collection|" %}
+{% tab title="Ruby" %}
 ```ruby
 collection.add_many_to_many_relation(
     'ratedMovies',
@@ -109,7 +109,7 @@ Note that external relations do not support pagination.
 {% endhint %}
 
 {% tabs %}
-{% tab title="const states = [" %}
+{% tab title="JavaScript" %}
 ```javascript
 { code: 'AK', name: 'Alaska', zip: [99501, 99950], closeTo: [] },
   { code: 'AL', name: 'Alabama', zip: [35004, 36925], closeTo: ['TE', 'MI', 'GE'] },
@@ -143,7 +143,7 @@ agent.customizeCollection('address', collection => {
 ```
 {% endtab %}
 
-{% tab title="@create_agent.customize_collection('address') do |collection|" %}
+{% tab title="Ruby" %}
 ```ruby
 states = [
     { 'code' => 'AK', 'name' => 'Alaska', 'zip' => [99501, 99950], 'closeTo' => [] },

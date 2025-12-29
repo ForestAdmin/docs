@@ -1,5 +1,5 @@
 ---
-title: .forestadmin-schema.json Reference
+title: .forestadmin-schema.json reference
 description: Reference for the .forestadmin-schema.json file
 ---
 
@@ -28,7 +28,7 @@ As a consequence, in Remote and Production Environments, the `.forestadmin-schem
 
 Versioning the`.forestadmin-schema.json` file will also help you visualize your admin panel configuration changes.
 
-## Related Pages
+## Related pages
 
 - [Data Types](/product/integration/data-types) - Field type reference
 - [Relationships](/product/integration/relationships-schema) - Defining relationships between collections

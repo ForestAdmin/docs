@@ -1,5 +1,5 @@
 ---
-title: forest deploy
+title: Forest deploy
 ---
 > **Status:** TODO - Priority: HIGH
 >

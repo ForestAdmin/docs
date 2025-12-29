@@ -1,5 +1,5 @@
 ---
-title: Smart Action Intents
+title: Smart action intents
 ---
 ### What are smart action intents ?
 
@@ -30,7 +30,7 @@ Here is an example of all of these parameters combined:
 
 `https://app.forestadmin.com/aProject/anEnvironment/aTeam/data/aCollection/index?actionIntent=anActionName&actionIntentIds=[1,2]&actionIntentParams={"firstParam":"firstValue","secondParam":"secondValue"}`
 
-### How to use actionIntentParams
+### How to use actionintentparams
 
 {% hint style="warning" %}
  `actionIntentParams` should be a valid JSON object 
@@ -115,7 +115,7 @@ collection('aCollection', {
   </Tab>
 </Tabs>
 
-### How to use actionIntentIds
+### How to use actionintentids
 
 {% hint style="warning" %}
  `actionIntentIds` should be a valid JSON array, or a single id. It is also worth noting that for global action, any provided ids will be skipped. Also, action of type single should be having a single id provided, and bulk action should be passed having many provided

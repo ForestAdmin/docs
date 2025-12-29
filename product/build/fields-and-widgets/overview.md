@@ -1,5 +1,5 @@
 ---
-title: Fields & Widgets - Overview
+title: Fields & widgets - overview
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

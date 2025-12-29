@@ -15,11 +15,11 @@ To make Forest Admin work in an Express project, you basically need three things
 - Models, to work with your database using JavaScript
 - Initialization of the `forest-express-[mongoose/sequelize]` package to start Forest Admin in your project.
 
-## Initialize ForestAdmin
+## Initialize forestadmin
 
 Let's walkthrough the following snippet to understand how to initialize Forest Admin in an Express project:
 
-### forest-express-sequelize
+### Forest-express-sequelize
 
 ```javascript
 const forest = require('forest-express-sequelize');
@@ -37,7 +37,7 @@ forest.init({
 });
 ```
 
-### forest-express-mongoose
+### Forest-express-mongoose
 
 ```javascript
 const forest = require('forest-express-mongoose');
@@ -57,7 +57,7 @@ forest.init({
 
 As you can see at line 11, Forest Admin initialization basically **returns a middleware**, used to intercept every calls starting with `/forest/*` . This is the reserved path used by Forest Admin to communicate with your project. This simple piece of code unlocks everything that is needed to benefit from Forest Admin features.
 
-## Configure ForestAdmin
+## Configure forestadmin
 
 To initialize the middleware, here are the requirements (refer to the [code snippet above](express-packages.md#initialise-forestadmin)):&#x20;
 

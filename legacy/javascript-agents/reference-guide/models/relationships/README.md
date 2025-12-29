@@ -25,7 +25,7 @@ Below are some simple snippets showing you how to add relationships. However, sh
 - [Sequelize's documentation](https://sequelize.org/master/manual/assocs.html) on adding relationships in your models (SQL)
 - [Mongoose's documentation](https://mongoosejs.com/docs/guide.html) on adding relationships in your models (Mongodb)
 
-### Adding a `hasMany` relationship
+### Adding a `hasmany` relationship
 
 In our [Live demo](https://app.forestadmin.com/Live%20Demo/Production/Operations/data/806052/index), a **customer** can have multiple **orders**. In that case, we have to use a `hasMany` relationship.
 
@@ -73,7 +73,7 @@ Once you've added your relationship(s) in your model(s), they will only be taken
 
 ![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LR7SWfEwsNtj_ZiSkSA%2F-Linf3OXMqwbdmu1bCUF%2F-LinfZ7RFMnv-1sEZZoZ%2FCapture%20d%E2%80%99e%CC%81cran%202019-07-02%20a%CC%80%2019.13.59.png?alt=media&token=b18bbf1c-3d3e-40c0-9c5b-746d3aa43096)
 
-### Adding a `hasOne` relationship
+### Adding a `hasone` relationship
 
 In case of a one-to-one relationship between 2 collections, the opposite of a `belongsTo` relationship is a `hasOne` relationship. Taking the same example as before, the opposite of "an **address** `belongsTo` a **customer**" is simply "a **customer**`hasOne` **address"**.
 
@@ -115,7 +115,7 @@ module.exports = (mongoose, Mongoose) => {
 Don't forget to **restart your server** for your newly added relationships to be taken into account.
 {% endhint %}
 
-### Adding a `belongsTo` relationship
+### Adding a `belongsto` relationship
 
 On our Live Demo example, the Address model has a foreignKey customer_id that points to the Customer. In other words, an **address**`belongsTo` a **customer**.
 
@@ -187,7 +187,7 @@ Address.associate = (models) => {
 This is explained in [Sequelize's documentation](https://sequelize.org/master/manual/associations.html#target-keys).
 {% endhint %}
 
-### Adding a `belongsToMany` relationship (SQL only)
+### Adding a `belongstomany` relationship (SQL only)
 
 `belongsToMany` association is often used to set up a many-to-many relationship with another model. For this example, we will consider the models `Projects` and `Users`. A user can be part of many projects, and one project has many users. The junction table that will keep track of the associations will be called `userProjects`, which will contain the foreign keys projectId and userId.
 

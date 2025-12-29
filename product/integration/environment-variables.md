@@ -1,11 +1,32 @@
 ---
-title: "Environment Variables"
+title: "Environment variables"
 description: "Configure your Forest Admin agent with required environment variables"
 ---
 
 Environment variables are used to configure your Forest Admin agent securely, keeping sensitive information separate from your codebase.
 
-## Required Variables
+## Required variables
+
+{% tabs %}
+{% tab title="Node.js" %}
+```javascript
+const agent = createAgent({
+  envSecret: process.env.FOREST_ENV_SECRET,
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  isProduction: process.env.NODE_ENV === 'production'
+});
+```
+{% endtab %}
+
+{% tab title="Ruby" %}
+```ruby
+agent = ForestAdminAgent::Agent.new do |config|
+  config.env_secret = ENV['FOREST_ENV_SECRET']
+  config.auth_secret = ENV['FOREST_AUTH_SECRET']
+end
+```
+{% endtab %}
+{% endtabs %}
 
 ### FOREST_ENV_SECRET
 
@@ -56,7 +77,7 @@ FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 # Generate a random 32-character string
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-# Or use OpenSSL
+# Or use openssl
 openssl rand -hex 32
 ```
 
@@ -72,27 +93,6 @@ NODE_ENV=production  # Options: development, production, test
 - `production`: Optimized performance, minimal logging
 - `development`: Detailed logging, development mode
 - `test`: Testing mode
-
-{% tabs %}
-{% tab title="Node.js" %}
-```javascript
-const agent = createAgent({
-  envSecret: process.env.FOREST_ENV_SECRET,
-  authSecret: process.env.FOREST_AUTH_SECRET,
-  isProduction: process.env.NODE_ENV === 'production'
-});
-```
-{% endtab %}
-
-{% tab title="Ruby" %}
-```ruby
-agent = ForestAdminAgent::Agent.new do |config|
-  config.env_secret = ENV['FOREST_ENV_SECRET']
-  config.auth_secret = ENV['FOREST_AUTH_SECRET']
-end
-```
-{% endtab %}
-{% endtabs %}
 
 {% hint style="warning" %}
 **Security reminder:** These environment variables contain sensitive secrets that authenticate your agent with Forest Admin. Never commit them to version control, share them publicly, or reuse them across different environments (development, staging, production). Always use separate secrets for each environment and store them securely using environment variables or secret management tools.

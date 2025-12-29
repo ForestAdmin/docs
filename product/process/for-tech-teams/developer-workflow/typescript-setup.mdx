@@ -1,5 +1,5 @@
 ---
-title: TypeScript Setup & Autocompletion
+title: TypeScript setup & autocompletion
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

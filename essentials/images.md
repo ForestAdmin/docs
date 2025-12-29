@@ -10,7 +10,7 @@ description: 'Add image, video, and other HTML elements'
 
 ## Image
 
-### Using Markdown
+### Using markdown
 
 The [markdown syntax](https://www.markdownguide.org/basic-syntax/#images) lets you add images using the following code
 
@@ -47,7 +47,7 @@ To get more customizability with images, you can also use [embeds](/writing-cont
 GitBook supports [HTML tags in Markdown](https://www.markdownguide.org/basic-syntax/#html). This is helpful if you prefer HTML tags to Markdown syntax, and lets you create documentation with infinite flexibility.
 {% endhint %}
 
-### iFrames
+### Iframes
 
 Loads another HTML page within the document. Most commonly used for embedding videos.
 

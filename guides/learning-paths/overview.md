@@ -1,5 +1,5 @@
 ---
-title: "Learning Paths"
+title: "Learning paths"
 description: "Choose your learning journey with Forest Admin"
 ---
 
@@ -7,7 +7,7 @@ description: "Choose your learning journey with Forest Admin"
 
 Now that you've completed the quickstart, choose a learning path tailored to your role.
 
-## Choose Your Path
+## Choose your path
 
 
   * [Developer Path](/guides/learning-paths/developer.md) - Learn to customize the agent, add business logic, and integrate external services
@@ -17,7 +17,7 @@ Now that you've completed the quickstart, choose a learning path tailored to you
   * [Product/Business Path](/guides/learning-paths/business.md) - Understand capabilities, design workspaces, and measure team performance
 
 
-## How Learning Paths Work
+## How learning paths work
 
 Each path is a **structured journey** that guides you through relevant guides in a logical order. You'll learn by doing, with hands-on examples and real-world use cases.
 
@@ -27,7 +27,7 @@ Each path is a **structured journey** that guides you through relevant guides in
 - Practical examples and use cases
 - Clear next steps after each milestone
 
-## Not Sure Which Path to Choose?
+## Not sure which path to choose?
 
 - **Developers** → Building features, writing code, customizing the agent
 - **Operations** → Using the UI daily, managing data, creating workflows

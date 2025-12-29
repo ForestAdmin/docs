@@ -1,5 +1,5 @@
 ---
-title: Development Workflow
+title: Development workflow
 description: Overview of the development workflow for Forest Admin
 ---
 

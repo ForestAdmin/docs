@@ -10,7 +10,7 @@ These two features are almost identical, but they are executed at very different
 This means that Collection Hooks will be executed even if you choose to use Collection Override.
 {% endhint %}
 
-# Collection Hooks
+# Collection hooks
 
 Collection Hooks allow you to execute custom code before or after CRUD operations, giving you the ability to enforce business rules, or integrate with external services seamlessly.
 
@@ -24,7 +24,7 @@ Collection Hooks allow you to execute custom code before or after CRUD operation
 
 Dive deeper into Collection Hooks, understand how to implement them, and explore advanced use cases to make the most out of your collections.
 
-# Collection Overrides
+# Collection overrides
 
 Collection Overrides provide the ability to completely replace the default behavior of CUD operations. This powerful feature allows for custom implementations of `create`, `update`, and `delete` operations, offering unparalleled control over data handling.
 

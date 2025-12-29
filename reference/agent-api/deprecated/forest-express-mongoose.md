@@ -1,11 +1,11 @@
 ---
-title: forest-express-mongoose Reference (LEGACY)
+title: Forest-express-mongoose reference (LEGACY)
 ---
 > **Status:** LEGACY - DO NOT USE FOR NEW PROJECTS
 >
 > **Audience:** Legacy users (migration reference only)
 
-## ⚠️ Legacy Notice
+## ⚠️ legacy notice
 
 **forest-express-mongoose is legacy and will reach End of Life on [Date].**
 
@@ -13,17 +13,17 @@ title: forest-express-mongoose Reference (LEGACY)
 
 ---
 
-## Legacy Documentation
+## Legacy documentation
 
 This page provides reference for existing implementations only. **Do not use for new projects.**
 
-### Installation (Legacy)
+### Installation (legacy)
 
 ```bash
 npm install forest-express-mongoose --save
 ```
 
-### Basic Setup (Legacy)
+### Basic setup (legacy)
 
 ```javascript
 const express = require('express');
@@ -44,7 +44,7 @@ app.use(Liana.init({
 app.listen(3000);
 ```
 
-### Smart Actions (Legacy)
+### Smart actions (legacy)
 
 **Forest/routes/users.js:**
 ```javascript
@@ -86,7 +86,7 @@ collection('users', {
 });
 ```
 
-### Smart Fields (Legacy)
+### Smart fields (legacy)
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -108,7 +108,7 @@ collection('users', {
 });
 ```
 
-### Smart Segments (Legacy)
+### Smart segments (legacy)
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -126,7 +126,7 @@ collection('users', {
 });
 ```
 
-### Smart Relationships (Legacy)
+### Smart relationships (legacy)
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -147,7 +147,7 @@ collection('users', {
 });
 ```
 
-### Mongoose Integration (Legacy)
+### Mongoose integration (legacy)
 
 **Model Definition:**
 ```javascript
@@ -173,7 +173,7 @@ module.exports = mongoose.model('User', userSchema);
 
 ## Migration to @forestadmin/agent
 
-### Key Differences
+### Key differences
 
 | forest-express-mongoose | @forestadmin/agent |
 |------------------------|-------------------|
@@ -184,7 +184,7 @@ module.exports = mongoose.model('User', userSchema);
 | Mongoose queries | Similar, but in new API |
 | `res.send({ success: '...' })` | `resultBuilder.success('...')` |
 
-### Migration Example
+### Migration example
 
 **Before (forest-express-mongoose):**
 ```javascript
@@ -249,7 +249,7 @@ agent.customizeCollection('users', collection => {
 
 ---
 
-## Complete Migration Guide
+## Complete migration guide
 
 **Follow these steps to migrate:**
 
@@ -261,14 +261,14 @@ agent.customizeCollection('users', collection => {
 
 ---
 
-## Mongoose-Specific Considerations
+## Mongoose-specific considerations
 
-### Schema Definition
+### Schema definition
 - Mongoose schemas work the same with new agent
 - Virtual fields can become Smart Fields
 - Model methods can be used in Smart Fields
 
-### Query Syntax
+### Query syntax
 - MongoDB queries remain similar
 - Can use Mongoose or native MongoDB driver
 - Better async/await support in new agent
@@ -286,7 +286,7 @@ agent.customizeCollection('users', collection => {
 - v1 documentation archive
 - Migration guides
 
-## Related Pages
+## Related pages
 
 - **[Migration Guide](/guides/migration/from-v1/overview)** ← START HERE
 - [Node.js Agent API](/reference/agent-api/nodejs) - New agent reference

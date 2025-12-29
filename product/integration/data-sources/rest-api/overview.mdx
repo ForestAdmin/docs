@@ -1,5 +1,5 @@
 ---
-title: REST API Data Sources
+title: REST API data sources
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

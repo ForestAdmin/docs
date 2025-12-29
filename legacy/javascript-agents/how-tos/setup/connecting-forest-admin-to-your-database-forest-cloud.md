@@ -1,5 +1,5 @@
 ---
-title: Connecting Forest Admin to Your Database (Forest Cloud)
+title: Connecting Forest Admin to your database (Forest cloud)
 ---
 ### Introduction
 

@@ -1,5 +1,5 @@
 ---
-title: Plugins - Overview
+title: Plugins - overview
 ---
 
 When customizing your Agent behavior, it is quite common to have to perform the same tasks on multiple Fields and Collections.
@@ -134,7 +134,7 @@ end
 {% endtabs %}
 
 
-## Making your Plugin act differently depending on the Collection
+## Making your plugin act differently depending on the collection
 
 When making a Plugin, you may want it to generalize to many different Collections.
 
@@ -177,7 +177,7 @@ end
 {% endtabs %}
 
 
-## Platform-Specific Guides
+## Platform-specific guides
 
 For more detailed information specific to your platform:
 

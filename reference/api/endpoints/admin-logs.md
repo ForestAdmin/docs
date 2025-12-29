@@ -1,9 +1,9 @@
 ---
-title: Admin Logs API
+title: Admin logs API
 description: Monitor and audit administrative operations in Forest Admin
 ---
 
-# Admin Logs API
+# Admin logs API
 
 The Admin Logs API provides access to administrative operation records, enabling you to track configuration changes, permission updates, and other admin panel activities for security and compliance purposes.
 
@@ -27,7 +27,7 @@ Retrieve a paginated list of admin logs with optional filtering.
   Bearer token for API authentication. Format: `Bearer YOUR_API_TOKEN`
 </ParamField>
 
-#### Query Parameters
+#### Query parameters
 
 <ParamField query="start_date" type="string">
   Filter logs from this date (ISO 8601 format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:mm:ss.sssZ`)
@@ -313,7 +313,7 @@ puts JSON.parse(response.body)
 
 </ResponseExample>
 
-### GET /api/v1/admin-logs/:id
+### GET /api/v1/admin-logs/: Id
 
 Retrieve a specific admin log by ID.
 
@@ -406,9 +406,9 @@ console.log(response.data);
 
 </ResponseExample>
 
-## Use Cases
+## Use cases
 
-### Security Auditing
+### Security auditing
 
 Monitor critical permission changes:
 
@@ -429,7 +429,7 @@ if (data.data.some(log => log.attributes.operation_type === 'permission_update')
 }
 ```
 
-### Compliance Reporting
+### Compliance reporting
 
 Generate compliance reports for administrative activities:
 
@@ -451,7 +451,7 @@ const logs = await response.json();
 generateComplianceReport(logs.data, 'Q1 2024');
 ```
 
-### Team Activity Monitoring
+### Team activity monitoring
 
 Track team management operations:
 
@@ -478,7 +478,7 @@ console.log(`Team additions: ${additions.length}`);
 console.log(`Team removals: ${removals.length}`);
 ```
 
-### Configuration Change Tracking
+### Configuration change tracking
 
 Monitor and rollback configuration changes:
 
@@ -506,7 +506,7 @@ if (layoutChange) {
 }
 ```
 
-### Integration Change Monitoring
+### Integration change monitoring
 
 Track API key and webhook changes:
 
@@ -531,9 +531,9 @@ if (apiKeyChanges.length > 0) {
 }
 ```
 
-## Best Practices
+## Best practices
 
-### 1. Monitor Critical Operations
+### 1. monitor critical operations
 
 Focus on high-severity operations:
 
@@ -552,7 +552,7 @@ criticalLogs.forEach(log => {
 });
 ```
 
-### 2. Regular Compliance Exports
+### 2. regular compliance exports
 
 Schedule regular exports for compliance:
 
@@ -577,7 +577,7 @@ async function dailyComplianceExport() {
 schedule.daily('00:00', dailyComplianceExport);
 ```
 
-### 3. Detect Anomalies
+### 3. detect anomalies
 
 Implement anomaly detection:
 
@@ -600,7 +600,7 @@ async function detectAnomalies() {
 }
 ```
 
-### 4. Track Environment Changes
+### 4. track environment changes
 
 Separate production from other environments:
 
@@ -619,7 +619,7 @@ productionLogs.forEach(log => {
 });
 ```
 
-### 5. Document Change History
+### 5. document change history
 
 Maintain detailed change documentation:
 
@@ -645,7 +645,7 @@ async function documentChanges(startDate, endDate) {
 }
 ```
 
-## Rate Limits
+## Rate limits
 
 Admin Logs API is subject to standard rate limits:
 
@@ -655,7 +655,7 @@ Admin Logs API is subject to standard rate limits:
 
 See [Rate Limits](/reference/api/rate-limits) for detailed information on handling rate limits.
 
-## Related Resources
+## Related resources
 
 
   * [Authentication](/reference/api/authentication.md) - Learn about API authentication

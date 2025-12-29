@@ -1,5 +1,5 @@
 ---
-title: Releases Support
+title: Releases support
 
 description: In order to give more visibility to our developers community, about agent usability and support in the future, you will find, in this page, the important lifecycle dates per agent stack and versions.
 ---

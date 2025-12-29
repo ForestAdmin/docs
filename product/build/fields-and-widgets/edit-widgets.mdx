@@ -1,5 +1,5 @@
 ---
-title: Edit Widgets Catalog
+title: Edit widgets catalog
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

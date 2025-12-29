@@ -1,5 +1,5 @@
 ---
-title: Execute Tools
+title: Execute tools
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

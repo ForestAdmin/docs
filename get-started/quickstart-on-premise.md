@@ -1,9 +1,9 @@
 ---
-title: "Quickstart: On-Premise"
+title: "Quickstart: On-premise"
 description: "Deploy Forest Admin in a fully air-gapped environment"
 ---
 
-## On-Premise Deployment
+## On-premise deployment
 
 On-Premise deployment provides complete control and isolation by running all Forest Admin components (agent, backend, and UI) within your infrastructure.
 
@@ -29,7 +29,7 @@ graph TD
     style Servers fill:#e8f9f5,stroke:#00B392,stroke-width:3px,color:#1a1a1a
 ```
 
-## Enterprise Feature
+## Enterprise feature
 
 On-Premise deployment is an **enterprise feature** that requires:
 
@@ -42,7 +42,7 @@ On-Premise deployment is an **enterprise feature** that requires:
 **Not available for self-service installation.** On-Premise deployment requires coordination with Forest Admin's team to ensure proper setup and licensing.
 {% endhint %}
 
-## What You Get
+## What you get
 
 With On-Premise deployment:
 
@@ -52,13 +52,13 @@ With On-Premise deployment:
 - ✅ **Custom deployment** - Tailored to your infrastructure
 - ✅ **Dedicated support** - Enterprise-level assistance
 
-## Next Steps
+## Next steps
 
 To deploy Forest Admin On-Premise:
 
 * [Book a Demo](https://www.forestadmin.com/demo) - Schedule a call to see On-Premise in action and discuss your requirements with our enterprise team
 
-## Alternative Options
+## Alternative options
 
 If On-Premise seems like overkill for your needs, consider:
 

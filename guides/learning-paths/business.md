@@ -5,11 +5,11 @@ description: "Tackle complex scenarios and advanced Forest Admin configurations"
 
 > **Status:** TODO - Content ready to migrate
 
-## Module Overview
+## Module overview
 
 In this module, you'll learn how to handle advanced use cases, including NoSQL databases, complex integrations, and special deployment scenarios.
 
-## What You'll Learn
+## What you'll learn
 
 - **NoSQL Databases** - Work with MongoDB and other NoSQL systems
 - **MongoDB Integration** - Advanced MongoDB patterns and optimization
@@ -19,7 +19,7 @@ In this module, you'll learn how to handle advanced use cases, including NoSQL d
 - **Performance Optimization** - Scale Forest Admin for large datasets
 - **Security Hardening** - Advanced security configurations
 
-## Topics Covered
+## Topics covered
 
 
   * [Coming Soon](#) - Content is being migrated
@@ -31,7 +31,7 @@ In this module, you'll learn how to handle advanced use cases, including NoSQL d
 - Strong understanding of databases and APIs
 - Experience with Forest Admin basics
 
-## Related Documentation
+## Related documentation
 
 - [MongoDB Data Source](/product/integration/data-sources/mongodb)
 - [Custom Data Sources](/product/integration/data-sources/custom)

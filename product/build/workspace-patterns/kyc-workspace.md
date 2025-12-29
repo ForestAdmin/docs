@@ -1,5 +1,5 @@
 ---
-title: KYC Workspace Pattern
+title: KYC workspace pattern
 ---
 > **Status:** TODO - Priority: LOW
 >

@@ -8,7 +8,7 @@ The SQL datasource connects directly to SQL databases with automatic schema intr
 ## Basic usage
 
 {% tabs %}
-{% tab title="const agent = createAgent(options);" %}
+{% tab title="JavaScript" %}
 ```javascript
 agent.addDataSource(
   createSqlDataSource({
@@ -19,7 +19,7 @@ agent.addDataSource(
 ```
 {% endtab %}
 
-{% tab title="require 'forest_admin_agent'" %}
+{% tab title="Ruby" %}
 ```ruby
 ForestAdminAgent::Agent.new do |config|
   config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
@@ -227,7 +227,7 @@ const dataSource = createSqlDataSource({
 - Separate introspection and runtime credentials
 - Version control your schema
 
-## Live Query support
+## Live query support
 
 Enable SQL-based reporting by setting a connection identifier:
 

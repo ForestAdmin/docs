@@ -1,5 +1,5 @@
 ---
-title: deploy
+title: Deploy
 ---
 The `forest deploy` command enables you to apply some layout changes to your [reference](../using-branches.md#what-is-a-branch) environment.
 

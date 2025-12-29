@@ -1,5 +1,5 @@
 ---
-title: login
+title: Login
 ---
 The `forest login` command allows you to authenticate using:
 

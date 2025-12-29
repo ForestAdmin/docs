@@ -338,7 +338,7 @@ curl -H "Content-Type: application/json" \
 
 Then assign the `client_id` value from the response (it's a JWT) to a `FOREST_CLIENT_ID` variable in your **.env** file.
 
-## Important Notice
+## Important notice
 
 ### Changelogs
 

@@ -18,7 +18,7 @@ At Forest Admin, we advise you to start your migration in your development envir
 5. Push your commit to Production/Staging/Test
 6. Pull code in your server; install, build and restart
 
-## Upgrade without development environment (Not recommended)
+## Upgrade without development environment (not recommended)
 
 If you only have one single remote environment and not bothered by the possibility that it can remain down for a period of time you can upgrade your agent version directly on it.
 

@@ -1,13 +1,13 @@
 ---
-title: "Ruby Agent API Reference"
+title: "Ruby agent API reference"
 description: "Complete API reference for the Forest Admin Ruby Agent"
 ---
 
 Complete API reference for Forest Admin Ruby agent packages.
 
-## Agent Setup
+## Agent setup
 
-### Creating an Agent
+### Creating an agent
 
 The Ruby agent is designed for Rails applications and automatically introspects your data models.
 
@@ -15,7 +15,7 @@ The Ruby agent is designed for Rails applications and automatically introspects 
 # Gemfile
 gem 'forest_admin_agent'
 gem 'forest_admin_datasource_active_record' # For ActiveRecord
-# or
+# Or
 gem 'forest_admin_datasource_mongoid' # For Mongoid
 ```
 
@@ -29,7 +29,7 @@ rails generate forest_admin:install
 **Configuration:**
 
 ```ruby
-# config/initializers/forest_admin.rb
+# Config/initializers/forest_admin.rb
 require 'forest_admin_agent'
 
 ForestAdmin.agent = ForestAdminAgent::Agent.new do |options|
@@ -59,9 +59,9 @@ ForestAdmin.agent.start
 
 ---
 
-## Customizing Collections
+## Customizing collections
 
-### agent.customize_collection(name, &block)
+### Agent.customize_collection(name, &block)
 
 Customize a specific collection with the provided block.
 
@@ -88,7 +88,7 @@ end
 
 ## Datasources
 
-### agent.add_datasource(datasource, options = {})
+### Agent.add_datasource(datasource, options = {})
 
 Add a datasource to the agent.
 
@@ -120,7 +120,7 @@ ForestAdmin.agent.add_datasource(
 
 ## Actions
 
-### collection.add_action(name, definition)
+### Collection.add_action(name, definition)
 
 Add a Smart Action to the collection.
 
@@ -227,7 +227,7 @@ collection.add_action('Export to CSV', {
 
 ## Fields
 
-### collection.add_field(name, definition)
+### Collection.add_field(name, definition)
 
 Add a computed field to the collection.
 
@@ -277,7 +277,7 @@ collection.add_field('revenue_this_year', {
 
 ---
 
-### collection.import_field(name, options)
+### Collection.import_field(name, options)
 
 Import a field from a related collection.
 
@@ -298,7 +298,7 @@ collection.import_field('author_name', {
 
 ---
 
-### collection.rename_field(current_name, new_name)
+### Collection.rename_field(current_name, new_name)
 
 Rename a field in the exported schema.
 
@@ -308,7 +308,7 @@ collection.rename_field('created_at', 'createdAt')
 
 ---
 
-### collection.remove_field(*names)
+### Collection.remove_field(*names)
 
 Remove fields from the exported schema.
 
@@ -318,7 +318,7 @@ collection.remove_field('password', 'internal_notes', 'debug_data')
 
 ---
 
-### collection.replace_field_writing(name, definition)
+### Collection.replace_field_writing(name, definition)
 
 Replace the write behavior of a field.
 
@@ -334,7 +334,7 @@ collection.replace_field_writing('full_name', ->(full_name) {
 
 ## Segments
 
-### collection.add_segment(name, definition)
+### Collection.add_segment(name, definition)
 
 Add a segment (saved filter) to the collection.
 
@@ -388,12 +388,12 @@ collection.add_segment('VIP customers', ->(context) {
 
 ## Relationships
 
-### collection.add_many_to_one_relation(name, foreign_collection, options)
+### Collection.add_many_to_one_relation(name, foreign_collection, options)
 
 Add a many-to-one relationship.
 
 ```ruby
-# books.author_id → persons.id
+# Books.author_id → persons.id
 collection.add_many_to_one_relation('author', 'Person', {
   foreign_key: 'author_id'
 })
@@ -408,12 +408,12 @@ collection.add_many_to_one_relation('author', 'Person', {
 
 ---
 
-### collection.add_one_to_many_relation(name, foreign_collection, options)
+### Collection.add_one_to_many_relation(name, foreign_collection, options)
 
 Add a one-to-many relationship.
 
 ```ruby
-# persons.id ← books.author_id
+# Persons.id ← books.author_id
 collection.add_one_to_many_relation('written_books', 'Book', {
   origin_key: 'author_id'
 })
@@ -428,12 +428,12 @@ collection.add_one_to_many_relation('written_books', 'Book', {
 
 ---
 
-### collection.add_one_to_one_relation(name, foreign_collection, options)
+### Collection.add_one_to_one_relation(name, foreign_collection, options)
 
 Add a one-to-one relationship.
 
 ```ruby
-# persons.id ← profiles.person_id (unique)
+# Persons.id ← profiles.person_id (unique)
 collection.add_one_to_one_relation('profile', 'Profile', {
   origin_key: 'person_id'
 })
@@ -441,12 +441,12 @@ collection.add_one_to_one_relation('profile', 'Profile', {
 
 ---
 
-### collection.add_many_to_many_relation(name, foreign_collection, through_collection, options)
+### Collection.add_many_to_many_relation(name, foreign_collection, through_collection, options)
 
 Add a many-to-many relationship.
 
 ```ruby
-# students ↔ student_courses ↔ courses
+# Students ↔ student_courses ↔ courses
 collection.add_many_to_many_relation('enrolled_courses', 'Course', 'StudentCourse', {
   origin_key: 'student_id',
   foreign_key: 'course_id'
@@ -466,7 +466,7 @@ collection.add_many_to_many_relation('enrolled_courses', 'Course', 'StudentCours
 
 ## Hooks
 
-### collection.add_hook(position, type, handler)
+### Collection.add_hook(position, type, handler)
 
 Add a hook to execute code before or after operations.
 
@@ -513,7 +513,7 @@ collection.add_hook('After', 'Update', ->(context) {
 
 ## Charts
 
-### collection.add_chart(name, definition)
+### Collection.add_chart(name, definition)
 
 Add a chart to the collection.
 
@@ -581,9 +581,9 @@ collection.add_chart('top_sellers', ->(context, result_builder) {
 
 ---
 
-## Search & Sorting
+## Search & sorting
 
-### collection.replace_search(definition)
+### Collection.replace_search(definition)
 
 Replace the default search behavior.
 
@@ -602,7 +602,7 @@ collection.replace_search(->(search_string) {
 
 ---
 
-### collection.disable_search
+### Collection.disable_search
 
 Disable search functionality on the collection.
 
@@ -612,7 +612,7 @@ collection.disable_search
 
 ---
 
-### collection.replace_field_sorting(name, equivalent_sort)
+### Collection.replace_field_sorting(name, equivalent_sort)
 
 Replace sorting implementation for a field.
 
@@ -625,7 +625,7 @@ collection.replace_field_sorting('full_name', [
 
 ---
 
-## Form Field Types
+## Form field types
 
 When defining action forms, you can use various field types.
 
@@ -709,10 +709,10 @@ form: [
 
 ---
 
-## Complete Example
+## Complete example
 
 ```ruby
-# config/initializers/forest_admin.rb
+# Config/initializers/forest_admin.rb
 require 'forest_admin_agent'
 
 ForestAdmin.agent = ForestAdminAgent::Agent.new do |options|
@@ -726,7 +726,7 @@ ForestAdmin.agent.add_datasource(
   ForestAdminDatasourceActiveRecord::Datasource.new
 )
 
-# Customize User collection
+# Customize user collection
 ForestAdmin.agent.customize_collection('User') do |collection|
   # Add computed field
   collection.add_field('full_name', {
@@ -794,7 +794,7 @@ ForestAdmin.agent.start
 
 ---
 
-## Available Operators
+## Available operators
 
 **Comparison:**
 - `'Equal'`, `'NotEqual'`
@@ -815,7 +815,7 @@ ForestAdmin.agent.start
 
 ---
 
-## Context Objects
+## Context objects
 
 ### Caller
 
@@ -833,7 +833,7 @@ context.caller.timezone    # User timezone
 
 ---
 
-## Related Documentation
+## Related documentation
 
 - [Ruby Setup Guide](/product/integration/setup/ruby)
 - [Actions Guide](/product/process/actions/overview)

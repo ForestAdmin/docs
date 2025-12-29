@@ -32,7 +32,7 @@ For the purpose of this example let's say we have an `activity-logs` index in El
 }
 ```
 
-## Creating the Smart Collection with related data
+## Creating the smart collection with related data
 
 First, we declare the `activity-logs` collection in the `forest/` directory.
 

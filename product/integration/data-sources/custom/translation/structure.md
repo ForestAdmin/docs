@@ -9,7 +9,7 @@ Creating a custom data source always starts with declaring the structure of the 
 ## Examples
 
 {% tabs %}
-{% tab title="const { BaseCollection } = require('@forestadmin/datasource-toolkit');" %}
+{% tab title="JavaScript" %}
 ```javascript
 class MovieCollection extends BaseCollection {
   constructor() {
@@ -43,7 +43,7 @@ class MovieCollection extends BaseCollection {
 ```
 {% endtab %}
 
-{% tab title="module App" %}
+{% tab title="Ruby" %}
 ```ruby
 module Collections
     class Movie < ForestAdminDatasourceToolkit::Collection
@@ -122,7 +122,7 @@ This will work out of the box for data sources using the "local-cache" strategy,
 ## Examples
 
 {% tabs %}
-{% tab title="const { BaseCollection } = require('@forestadmin/datasource-toolkit');" %}
+{% tab title="JavaScript" %}
 ```javascript
 class MovieCollection extends BaseCollection {
   constructor() {
@@ -150,7 +150,7 @@ class MovieCollection extends BaseCollection {
 ```
 {% endtab %}
 
-{% tab title="module App" %}
+{% tab title="Ruby" %}
 ```ruby
 module Collections
     class Movie < ForestAdminDatasourceToolkit::Collection

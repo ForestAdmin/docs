@@ -1,5 +1,5 @@
 ---
-title: Action UI Configuration
+title: Action UI configuration
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

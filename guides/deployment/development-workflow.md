@@ -1,5 +1,5 @@
 ---
-title: Development Workflow
+title: Development workflow
 ---
 > **Status:** TODO - Priority: HIGH
 >

@@ -1,7 +1,7 @@
 ---
 title: Elasticsearch service/utils
 ---
-## Connecting to Elasticsearch with a Custom Service
+## Connecting to Elasticsearch with a custom service
 
 This service wraps the [Elasticsearch Node.js client](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html) and provides the following implementation:
 

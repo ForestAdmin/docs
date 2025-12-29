@@ -1,5 +1,5 @@
 ---
-title: Notes & Comments
+title: Notes & comments
 ---
 > **Status:** TODO - Priority: LOW
 >

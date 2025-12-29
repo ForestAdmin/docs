@@ -1,11 +1,11 @@
 ---
-title: "Self-Hosted Architecture"
+title: "Self-hosted architecture"
 description: "Deploy Forest Admin agent in your infrastructure while Forest Admin hosts the UI - the most popular deployment option"
 ---
 
 The self-hosted architecture gives you full control over your data and code by hosting the Forest Admin agent in your own infrastructure. This is the **most popular deployment option** for production applications.
 
-## Architecture Overview
+## Architecture overview
 
 <img src="/assets/architecture-self-hosted.svg" alt="Self-Hosted Architecture Diagram" />
 

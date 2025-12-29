@@ -1,9 +1,9 @@
 ---
-title: MCP Server
+title: MCP server
 description: Integrate Forest Admin with AI tools using the Model Context Protocol
 ---
 
-# MCP Server
+# MCP server
 
 Forest Admin provides a Model Context Protocol (MCP) server that allows AI assistants and tools to interact with your admin panel programmatically.
 
@@ -45,11 +45,11 @@ Configure the MCP server in your AI tool's settings:
 }
 ```
 
-## Available Tools
+## Available tools
 
 The MCP server exposes the following capabilities:
 
-### Data Access
+### Data access
 - **Browse collections**: View available collections and their schemas
 - **Query records**: Search and filter records across collections
 - **Read relationships**: Access related data through relationships
@@ -64,16 +64,16 @@ The MCP server exposes the following capabilities:
 - **Business rules**: Access validation rules and constraints
 - **User permissions**: Check what operations are allowed
 
-## Use Cases
+## Use cases
 
-### AI-Assisted Operations
+### Ai-assisted operations
 Use Claude or other AI assistants to:
 - Answer questions about your data
 - Generate reports and insights
 - Automate routine tasks
 - Perform data analysis
 
-### Example Prompts
+### Example prompts
 
 > "Show me all pending orders from the last 24 hours"
 
@@ -93,14 +93,14 @@ The MCP server:
 Only provide MCP server access to trusted AI tools and users. The server can perform any operation that the authenticated user can perform.
 {% endhint %}
 
-## Related Features
+## Related features
 
 
   * [MCP Integration](/product/integration/integrations/mcp-servers.md) - Configure MCP servers in Forest Admin
   * [AI Assist](/product/embed/assist.md) - Learn about Forest Admin's built-in AI features
 
 
-## Learn More
+## Learn more
 
 - [MCP Protocol Specification](https://modelcontextprotocol.io)
 - [Claude Desktop MCP Guide](https://www.anthropic.com/claude)

@@ -143,7 +143,7 @@ If your project uses an older MongoDB version, **you should not upgrade to v4**.
 
 The way the agent implements the resources filtering changed and this new implementation uses features that does not exist in MongoDB versions older than 3.2.
 
-#### Smart Field search implementation
+#### Smart field search implementation
 
 The Smart Field search implementation has changed:
 
@@ -192,7 +192,7 @@ reference: 'Address';
 reference: 'Address._id';
 ```
 
-## Important Notice
+## Important notice
 
 ### Agent logout
 

@@ -1,5 +1,5 @@
 ---
-title: Third-Party Integrations
+title: Third-party integrations
 ---
 > **Status:** TODO - Priority: LOW
 >

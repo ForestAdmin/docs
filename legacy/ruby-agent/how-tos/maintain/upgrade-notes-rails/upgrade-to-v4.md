@@ -123,7 +123,7 @@ Below are a few example of the new filter conditions format you can access using
 }
 ```
 
-## Important Notice
+## Important notice
 
 ### Agent logout
 

@@ -1,5 +1,5 @@
 ---
-title: "Vibe Coding a Datasource"
+title: "Vibe coding a datasource"
 description: "Build a custom datasource quickly with AI-assisted development"
 ---
 
@@ -9,7 +9,7 @@ description: "Build a custom datasource quickly with AI-assisted development"
 
 Learn how to rapidly build a custom Forest Admin datasource using AI-assisted coding tools and modern development practices.
 
-## What is Vibe Coding?
+## What is vibe coding?
 
 Vibe coding combines AI assistance, rapid prototyping, and iterative development to build datasources quickly while maintaining quality.
 
@@ -20,11 +20,11 @@ TODO: List prerequisites
 - TypeScript/JavaScript knowledge
 - API integration experience
 
-## Quick Start with AI
+## Quick start with AI
 
 TODO: Add guide on using AI tools to build datasources
 
-## Step-by-Step Tutorial
+## Step-by-step tutorial
 
 TODO: Add practical tutorial
 1. Define your data structure
@@ -33,11 +33,11 @@ TODO: Add practical tutorial
 4. Add relationships
 5. Test and iterate
 
-## AI Prompts Library
+## AI prompts library
 
 TODO: Add useful AI prompts for common datasource tasks
 
-## Best Practices
+## Best practices
 
 TODO: Add best practices
 - Start simple, iterate quickly
@@ -45,6 +45,6 @@ TODO: Add best practices
 - Use type safety
 - Document your code
 
-## Community Examples
+## Community examples
 
 TODO: Link to community examples built with this approach

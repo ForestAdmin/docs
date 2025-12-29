@@ -4,7 +4,7 @@ A join is used to combine rows from two or more tables, based on a related colum
 
 In Forest Admin, relations are defined as fields and are traversable in only one direction.
 
-## Join Types
+## Join types
 
 Four join types are available: `ManyToOne`, `ManyToMany`, `OneToMany`, and `OneToOne`.
 

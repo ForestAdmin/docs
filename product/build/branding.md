@@ -1,5 +1,5 @@
 ---
-title: Branding & Customization
+title: Branding & customization
 ---
 > **Status:** TODO - Priority: LOW
 >

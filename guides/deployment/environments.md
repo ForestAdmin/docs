@@ -2,7 +2,7 @@ Once your project successfully installed, a local **Development** environment is
 
 Your first objective should be to deploy to **Production**.
 
-### Deploying to Production
+### Deploying to production
 
 Forest Admin is meant to help you manage your operations: this can only happen if your team operates on your Production data. To do so, you need to **create your Production Environment**.
 
@@ -10,7 +10,7 @@ Click "Deploy to production" on the top banner or in the "Environments" tab of y
 
 ![](../assets/environment-deploy-to-production.png)
 
-#### Deploy your Agent
+#### Deploy your agent
 
 In the first step, you need to input your Agent's URL. This is the URL of the server onto which you have deployed (or will soon deploy) your Agent's codebase:
 
@@ -46,7 +46,7 @@ The final step requires that you add environment variables to your server. Follo
 
 Once your server is successfully detected and running with the indicated environment variables, a "Finish" button will appear. Click on it to finalize the creation of your Production Environment.
 
-### Creating a Remote Environment
+### Creating a remote environment
 
 Now that your admin panel is live in production, you might want to add an extra step for testing purposes. Forest Admin allows you to create Remote Environments (for test, qa, staging, pre-production,... purposes).
 
@@ -64,13 +64,13 @@ You can choose to deploy to a Remote Environment **before** going to production 
 
 ![](../assets/environment-deploy-to.png)
 
-#### Choose your Environment name
+#### Choose your environment name
 
 You'll first be asked to input the name of the Remote Environment you wish to create:
 
 ![](../assets/environment-remote-step-1.png)
 
-#### Enter your Agent's URL for that Environment
+#### Enter your agent's URL for that environment
 
 Deploy your Agent server in this specific environment, then input its URL:
 
@@ -94,7 +94,7 @@ The final step requires that you add environment variables to your server. Follo
 
 Once your server is successfully detected and running with the indicated environment variables, a **Finish** button will appear. Click on it to finalize the creation of your new Remote Environment.
 
-### Change Environment origin
+### Change environment origin
 
 You can change the origins of your Environments to create complex workflows, for instance, `dev > staging > preprod > production`.
 All the layouts of an environment will be generated based on its parent's layout.
@@ -107,7 +107,7 @@ To do so, click on the Environment you wish to change the origin of, and from it
 All child Environments will be refreshed based on the new hierarchy.
 {% endhint %}
 
-### Set an Environment as Production
+### Set an environment as production
 
 A standard project usually has a production and at least a staging Environment, but you may be using other Remote Environments. At some point, you may feel the need to set another Environment as your Production Environment (also known as "reference").
 
@@ -123,6 +123,6 @@ To do so, click on the Environment you wish to set as production, and from its d
 The actual reference will take the new production as the origin. All children layouts will be refreshed. Any layout change that is not applicable will be ignored.
 {% endhint %}
 
-### Delete an Environment
+### Delete an environment
 
 You may also delete an Environment. **Be very careful** as there is no going back!

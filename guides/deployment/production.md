@@ -1,5 +1,5 @@
 ---
-title: "Production Deployment"
+title: "Production deployment"
 description: "Deploy Forest Admin to production - general guide and best practices"
 ---
 
@@ -23,14 +23,14 @@ Deploying Forest Admin to production requires:
 - Production database ready
 - Hosting platform chosen
 
-## Step 1: Environment Configuration
+## Step 1: Environment configuration
 
-### Set Production Environment Variables
+### Set production environment variables
 
 Ensure all required environment variables are set in your production environment:
 
 ```bash
-# Forest Admin Configuration
+# Forest Admin configuration
 FOREST_ENV_SECRET=your_production_env_secret
 FOREST_AUTH_SECRET=your_production_auth_secret
 
@@ -49,7 +49,7 @@ RAILS_ENV=production # For Ruby
 - Vercel/Railway: Environment Variables dashboard
 {% endhint %}
 
-### Create Production Environment in Forest Admin
+### Create production environment in Forest Admin
 
 1. Go to [app.forestadmin.com](https://app.forestadmin.com)
 2. Navigate to your project settings
@@ -60,9 +60,9 @@ RAILS_ENV=production # For Ruby
 Production and development environments have separate secrets. This allows you to test changes in development before deploying to production.
 {% endhint %}
 
-## Step 2: Agent Configuration
+## Step 2: Agent configuration
 
-### Production vs Development
+### Production vs development
 
 Update your agent configuration for production:
 
@@ -86,7 +86,7 @@ Update your agent configuration for production:
   </Tab>
 </Tabs>
 
-### Performance Optimization
+### Performance optimization
 
 For production, consider:
 
@@ -107,9 +107,9 @@ agent.customizeCollection('users', collection => {
 });
 ```
 
-## Step 3: Database Access
+## Step 3: Database access
 
-### Security Checklist
+### Security checklist
 
 - ✅ Use read-only database user when possible
 - ✅ Restrict database access by IP (whitelist production server)
@@ -117,7 +117,7 @@ agent.customizeCollection('users', collection => {
 - ✅ Rotate database credentials regularly
 - ✅ Use connection pooling
 
-### Database Connection String
+### Database connection string
 
 Ensure your production `DATABASE_URL` includes SSL:
 
@@ -132,9 +132,9 @@ DATABASE_URL=mysql://user:password@host:3306/db?ssl=true
 DATABASE_URL=mongodb://user:password@host:27017/db?ssl=true
 ```
 
-## Step 4: SSL/TLS Configuration
+## Step 4: SSL/TLS configuration
 
-### HTTPS is Required
+### HTTPS is required
 
 Forest Admin UI requires HTTPS in production. Ensure your agent is accessible via HTTPS:
 
@@ -142,7 +142,7 @@ Forest Admin UI requires HTTPS in production. Ensure your agent is accessible vi
 - Use a reverse proxy (Nginx, Caddy) with Let's Encrypt
 - Use a load balancer with SSL termination (AWS ALB, Google Cloud Load Balancer)
 
-### Agent URL Configuration
+### Agent URL configuration
 
 After deployment, configure your production agent URL in Forest Admin:
 
@@ -151,9 +151,9 @@ After deployment, configure your production agent URL in Forest Admin:
 3. Select your **Production** environment
 4. Set Agent URL: `https://your-agent.yourcompany.com`
 
-## Step 5: Monitoring & Logging
+## Step 5: Monitoring & logging
 
-### Health Checks
+### Health checks
 
 Ensure your agent has a health check endpoint:
 
@@ -194,7 +194,7 @@ Enable structured logging in production:
 
 ## Step 6: Deployment
 
-### Choose Your Platform
+### Choose your platform
 
 See platform-specific guides:
 
@@ -204,7 +204,7 @@ See platform-specific guides:
   * [Vercel](/guides/deployment/platforms/vercel.md) - Deploy serverless to Vercel
 
 
-### General Deployment Checklist
+### General deployment checklist
 
 Before deploying:
 
@@ -235,7 +235,7 @@ After deploying:
 3. SSL certificate is valid
 4. DNS points to correct server
 
-### Forest Admin UI shows "Agent unreachable"
+### Forest Admin UI shows "agent unreachable"
 
 **Check:**
 1. Agent URL configured correctly in Forest Admin
@@ -251,7 +251,7 @@ After deploying:
 3. Caching for expensive operations
 4. Monitoring database query performance
 
-## Best Practices
+## Best practices
 
 ### Security
 
@@ -277,14 +277,14 @@ After deploying:
 - Set up alerting
 - Keep agent updated
 
-## Next Steps
+## Next steps
 
 
   * [Development Workflow](/guides/deployment/development-workflow.md) - Set up staging, branches, and CI/CD
   * [Environments](/guides/deployment/environments.md) - Manage multiple environments
 
 
-## Need Help?
+## Need help?
 
 - **Community**: [community.forestadmin.com](https://community.forestadmin.com)
 - **Support**: [support@forestadmin.com](mailto:support@forestadmin.com)

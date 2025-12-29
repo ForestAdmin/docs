@@ -1,5 +1,5 @@
 ---
-title: Smart Views
+title: Smart views
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

@@ -82,12 +82,12 @@ const agent = createAgent(options).addDataSource(
 );
 ```
 
-## Data Navigation
+## Data navigation
 
 When customizing your agent, you will need to navigate through your data efficiently.
 This section explains how to structure paths based on different field types.
 
-### Separator Behavior
+### Separator behavior
 
 There are two different separators depending on the field type:
 

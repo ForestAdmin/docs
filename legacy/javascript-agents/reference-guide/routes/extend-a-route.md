@@ -138,7 +138,7 @@ router.put('/orders/:orderId', permissionMiddlewareCreator.update(), (req, res, 
 module.exports = router;
 ```
 
-### Adding logic after Forest Admin's default behavior
+### Adding logic after Forest admin's default behavior
 
 At some point, you may want to trigger your remote logic **after** Forest Admin's logic.
 

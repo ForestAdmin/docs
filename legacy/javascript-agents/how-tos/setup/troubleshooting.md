@@ -1,7 +1,7 @@
 ---
 title: Troubleshooting
 ---
-#### ❓ Don't you see an answer to your problem? Describe it on our [Developer Community Forum](https://community.forestadmin.com/) and we will answer quickly.
+#### ❓ don't you see an answer to your problem? describe it on our [developer community forum](https: //community.forestadmin.com/) and we will answer quickly.
 
 ## Error messages
 
@@ -37,7 +37,7 @@ I suspect a problem on DB, but I cannot find any details or logs about this even
 
 ✅ Such an issue has been solved on our community forum. [Check it out](https://community.forestadmin.com/t/new-postgres-db-cant-reach-forest-admin-panel/1378).
 
-#### npm
+#### Npm
 
 🙋🏼‍♀️ When installing via npm, everything worked well up to the “npm start” command when I received an error.
 

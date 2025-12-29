@@ -1,5 +1,5 @@
 ---
-title: Authentication, Filtering & Sorting
+title: Authentication, filtering & sorting
 ---
 ## Get authenticated to the Zendesk API
 
@@ -19,7 +19,7 @@ function getToken() {
 }
 ```
 
-## Filtering and Sorting using the API
+## Filtering and sorting using the API
 
 Zendesk API allows you to filter and sort the tickets/users, plus paginate the result.
 

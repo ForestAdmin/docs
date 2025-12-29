@@ -59,7 +59,7 @@ If you have access to Roles (Project settings > Roles) as designed below...\
 then you are using the new Role system.
 {% endhint %}
 
-### Approval Workflow
+### Approval workflow
 
 {% hint style="warning" %}
 This new major version makes the configuration, described below, mandatory to ensure that actions are not triggered directly and approvals requests are properly created for the reviewers.

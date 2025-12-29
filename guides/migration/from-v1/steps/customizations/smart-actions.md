@@ -44,7 +44,7 @@ You can find the full documentation of action customization [here](../../../../a
 
 # Steps
 
-## Step 1: Calling {{#nodejs}}`addAction`{{/nodejs}}{{#ruby}}`add_action`{{/ruby}} for the appropriate collection
+## Step 1: Calling {{#nodejs}}`addaction`{{/nodejs}}{{#ruby}}`add_action`{{/ruby}} for the appropriate collection
 
 Start by calling the {{#nodejs}}`addAction`{{/nodejs}}{{#ruby}}`add_action`{{/ruby}} function on the appropriate collection and passing the appropriate parameters.
 
@@ -59,7 +59,7 @@ Most notably, you will need to pass:
 {% tabs %} {% tab title="Before" %}
 
 {% tabs %}
-{% tab title="collection('companies', {" %}
+{% tab title="JavaScript" %}
 ```javascript
 actions: [
     {
@@ -73,7 +73,7 @@ actions: [
 ```
 {% endtab %}
 
-{% tab title="class Forest::Company" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestLiana::Collection
 
@@ -86,7 +86,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('companies', companies => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 companies.addAction('Mark as Live', {
     scope: 'Bulk',
@@ -96,7 +96,7 @@ companies.addAction('Mark as Live', {
 ```
 {% endtab %}
 
-{% tab title="include ForestAdminDatasourceCustomizer::Decorators::Action::Types" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestAdminDatasourceCustomizer::Decorators::Action
 
@@ -135,7 +135,7 @@ You can simply copy the field's definition from the legacy agent to the new agen
 {% tabs %} {% tab title="Before" %}
 
 {% tabs %}
-{% tab title="collection('customers', {" %}
+{% tab title="JavaScript" %}
 ```javascript
 actions: [
     {
@@ -155,7 +155,7 @@ actions: [
 ```
 {% endtab %}
 
-{% tab title="class Forest::Company" %}
+{% tab title="Ruby" %}
 ```ruby
 include ForestLiana::Collection
 
@@ -175,7 +175,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customers', companies => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 companies.addAction('Charge credit card', {
     // [...]
@@ -192,7 +192,7 @@ companies.addAction('Charge credit card', {
 ```
 {% endtab %}
 
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Action::Types
@@ -284,7 +284,7 @@ end
 ```
 {% endtab %}
 
-{% tab title="agent.customizeCollection('companies', companies => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 companies.addAction('Mark as Live', {
     // ...
@@ -301,7 +301,7 @@ companies.addAction('Mark as Live', {
 {% endtabs %}
 
 {% tabs %}
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     def self.customize
@@ -327,7 +327,7 @@ end
 
 {% endtab %} {% endtabs %}
 
-## Step 4: Porting Smart Action hooks
+## Step 4: Porting smart action hooks
 
 Load hooks and change hooks have been replaced on the new agent by the possibility to use callbacks in the form definition.
 
@@ -387,7 +387,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customers', companies => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 companies.addAction('Charge credit card', {
     scope: 'Single',
@@ -407,7 +407,7 @@ companies.addAction('Charge credit card', {
 ```
 {% endtab %}
 
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     def self.customize
@@ -444,7 +444,7 @@ And another for a change hook which makes a field required if the value of anoth
 {% tabs %} {% tab title="Before" %}
 
 {% tabs %}
-{% tab title="collection('customers', {" %}
+{% tab title="JavaScript" %}
 ```javascript
 actions: [
     {
@@ -510,7 +510,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('customers', companies => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 companies.addAction('Charge credit card', {
     scope: 'Single',
@@ -527,7 +527,7 @@ companies.addAction('Charge credit card', {
 ```
 {% endtab %}
 
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     def self.customize

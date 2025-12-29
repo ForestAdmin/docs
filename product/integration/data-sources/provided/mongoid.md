@@ -31,7 +31,7 @@ Embedded documents (embeds_one, embeds_many) will not be treated as separate col
 Relations between embedded documents and their parent will not be visible as structured relationships.
 Forest Admin will use a JSON editor to display and modify embedded fields, rather than providing dedicated collections for them.
 
-### Understanding `flattenMode`
+### Understanding `flattenmode`
 
 |                         | Description                                                                                                                                                                                                                                                       |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -135,12 +135,12 @@ datasource = ForestAdminDatasourceMongoid::Datasource.new(
 {% endtab %}
 {% endtabs %}
 
-## Data Navigation
+## Data navigation
 
 When customizing your agent, you need a consistent way to navigate through your data.
 This section explains how to structure paths based on different field types.
 
-### Separator Behavior
+### Separator behavior
 
 Forest Admin uses two different separators depending on the field type:
 

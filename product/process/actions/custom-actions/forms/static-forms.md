@@ -4,7 +4,7 @@ For example, you might want to specify a reason if you want to block a user acco
 
 ![Action Form displayed on Forest Admin](../../assets/actions-forms-charge-cc.png)
 
-# Field Configuration
+# Field configuration
 
 {{#nodejs}}
 

@@ -1,7 +1,7 @@
 ---
-title: Create an API-based Chart
+title: Create an api-based chart
 ---
-### Creating an API-based Chart
+### Creating an api-based chart
 
 Sometimes, charts data are complicated and closely tied to your business. Forest Admin allows you to code how the chart is computed. Choose **API** as the data source when configuring your chart.
 
@@ -9,7 +9,7 @@ Sometimes, charts data are complicated and closely tied to your business. Forest
 
 Forest Admin will make the HTTP call to Smart Chart URL when retrieving the chart values for the rendering.
 
-### Value API-based Chart
+### Value api-based chart
 
 On our Live Demo, we have a `MRR` value chart which computes our Monthly Recurring Revenue. This chart queries the Stripe API to get all charges made in the current month (in March for this example).
 
@@ -114,7 +114,7 @@ When serializing the data, we use the `serialize_model()` method. Check the `val
 { value: <number> }
 ```
 
-### Repartition API-based Chart
+### Repartition api-based chart
 
 On our Live Demo, we have a `Charges` repartition chart which shows a repartition chart distributed by credit card country. This chart queries the Stripe API to get all charges made in the current month (in March for this example) and check the credit card country.
 
@@ -262,7 +262,7 @@ When serializing the data, we use the `serialize_model()` method. Check the `val
 }
 ```
 
-### Time-based API-based Chart
+### Time-based api-based chart
 
 On our Live Demo, we have a `Charges` time-based chart which shows the number of charges per day. This chart queries the Stripe API to get all charges made in the current month (in March for this example) and group data by day.
 
@@ -399,7 +399,7 @@ When serializing the data, we use the `serialize_model()` method. Check the `val
 }
 ```
 
-### Objective API-based Chart
+### Objective api-based chart
 
 Creating an Objective Smart Chart means you'll be fetching your data from an external API endpoint:
 

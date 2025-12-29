@@ -48,7 +48,7 @@ This means that if two agents are running at the same time, with the same config
 
 # Examples
 
-## Example 1: Using an SQLite file
+## Example 1: Using an sqlite file
 
 The simplest way to use a persistent cache is to use an SQLite file.
 
@@ -69,7 +69,7 @@ const myCustomDataSource = createReplicaDataSource({
 });
 ```
 
-## Example 2: Using a Postgres database
+## Example 2: Using a postgres database
 
 You may also want to use a SaSS database to store the replica.
 

@@ -5,9 +5,9 @@ description: "How Forest Admin ensures complete security and control over who ca
 
 Forest Admin provides enterprise-grade security and access control to protect your data and ensure compliance. Control gives you complete visibility and management over who can access what, who can do what, and tracks everything that happens in your admin panel.
 
-## How Forest Admin Secures Your Operations
+## How Forest Admin secures your operations
 
-### 1. Roles
+### 1. roles
 
 **Roles ensure that no one accesses the wrong data or performs unauthorized actions.**
 
@@ -19,7 +19,7 @@ Roles define what users can do with your data. With granular permissions, you co
 
 ---
 
-### 2. Permissions
+### 2. permissions
 
 **Permissions ensure that only authorized users can edit your admin panel configuration and settings.**
 
@@ -31,7 +31,7 @@ Beyond data access, Forest Admin provides permissions to control who can modify 
 
 ---
 
-### 3. Scopes
+### 3. scopes
 
 **Scopes filter data based on user context, ensuring users only see records they're authorized to access.**
 
@@ -43,7 +43,7 @@ Scopes provide row-level security by automatically filtering which records users
 
 ---
 
-### 4. Teams
+### 4. teams
 
 **Teams create dedicated workspaces for different groups, controlling what is displayed to each team.**
 
@@ -55,7 +55,7 @@ Teams organize users into logical groups that mirror your organizational structu
 
 ---
 
-### 5. Audit Logs
+### 5. audit logs
 
 **Everything is logged - track who did what, when, and from where for complete accountability.**
 
@@ -72,7 +72,7 @@ Forest Admin automatically captures every action with complete context, creating
 
 ---
 
-### 6. Authentication
+### 6. authentication
 
 **Secure user access with enterprise-grade authentication and identity management.**
 
@@ -88,7 +88,7 @@ Integrate Forest Admin with your existing identity infrastructure. Support for S
 
 ---
 
-### 7. Security
+### 7. security
 
 **Additional security layers for enterprise compliance and protection.**
 
@@ -103,7 +103,7 @@ Beyond authentication and access control, Forest Admin provides advanced securit
 
 ---
 
-## Need Help?
+## Need help?
 
 - [Community Forum](https://community.forestadmin.com) - Security questions and best practices
 - [Security Documentation](/product/control/security) - Detailed security guides

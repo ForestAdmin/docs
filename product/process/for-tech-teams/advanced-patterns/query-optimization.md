@@ -1,5 +1,5 @@
 ---
-title: Query Optimization Patterns
+title: Query optimization patterns
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

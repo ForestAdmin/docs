@@ -59,7 +59,7 @@ end
 If you altered the default DELETE behavior by overriding or extending it, you'll have to do so as well with the new BULK DELETE route.
 {% endhint %}
 
-## Important Notice
+## Important notice
 
 ### Changelogs
 

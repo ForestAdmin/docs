@@ -1,24 +1,24 @@
 ---
-title: Legacy Agents - Overview
+title: Legacy agents - overview
 ---
 > **Status:** LEGACY
 >
 > **Audience:** Legacy users migrating to new agents
 
-## ⚠️ Legacy Notice
+## ⚠️ legacy notice
 
 The following agents are **legacy** and no longer maintained:
 
 - **forest-express-sequelize** (Node.js + Sequelize)
 - **forest-express-mongoose** (Node.js + Mongoose)
 
-### End of Life
+### End of life
 
 - **Support ends:** [Date TBD]
 - **Security updates:** Critical issues only
 - **New features:** None
 
-### Why Legacy?
+### Why legacy?
 
 These agents have been replaced by **@forestadmin/agent** which provides:
 - ✅ Better performance
@@ -27,24 +27,24 @@ These agents have been replaced by **@forestadmin/agent** which provides:
 - ✅ Multi-datasource support
 - ✅ Active development & support
 
-## Migration Required
+## Migration required
 
 **You should migrate to @forestadmin/agent as soon as possible.**
 
-### Migration Resources
+### Migration resources
 
 - **[Complete Migration Guide](/guides/migration/from-v1/overview)**
 - **[Step-by-step Instructions](/guides/migration/from-v1/steps/datasources)**
 - **[Node.js Setup](/product/integration/setup/nodejs)**
 
-### Migration Support
+### Migration support
 
 - 📖 Documentation: Full migration guide available
 - 💬 Community Forum: [link]
 - 📧 Support: support@forestadmin.com
 - 🎫 Enterprise: Dedicated migration assistance available
 
-## Legacy Documentation
+## Legacy documentation
 
 Reference documentation for legacy agents is maintained for migration purposes only:
 
@@ -53,7 +53,7 @@ Reference documentation for legacy agents is maintained for migration purposes o
 
 ⚠️ **Do not use for new projects!**
 
-## Comparison: Old vs New
+## Comparison: Old vs new
 
 | Feature | Legacy Agents | @forestadmin/agent |
 |---------|-------------------|-------------------|
@@ -66,7 +66,7 @@ Reference documentation for legacy agents is maintained for migration purposes o
 | Security Updates | ⚠️ Critical only | ✅ Regular |
 | Support | ❌ Legacy | ✅ Full support |
 
-## Breaking Changes
+## Breaking changes
 
 Key differences when migrating:
 
@@ -85,14 +85,14 @@ See [Migration Guide](/guides/migration/from-v1/overview) for complete details.
 - **[Date]:** End of support
 - **Action Required:** Migrate before EOL
 
-## Getting Help
+## Getting help
 
-### Migration Questions
+### Migration questions
 - 📖 [Migration Guide](/guides/migration/from-v1/overview)
 - 💬 Community Forum
 - 📧 support@forestadmin.com
 
-### Enterprise Support
+### Enterprise support
 Enterprise customers can request dedicated migration assistance.
 
 ---

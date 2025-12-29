@@ -1,5 +1,5 @@
 {% tabs %}
-{% tab title="const { createAgent } = require('@forestadmin/agent');" %}
+{% tab title="JavaScript" %}
 ```javascript
 const agent = createAgent({
   // Mandatory options (those will be provided during onboarding)
@@ -22,7 +22,7 @@ const agent = createAgent({
 ```
 {% endtab %}
 
-{% tab title="ForestAdminRails.configure do |config|" %}
+{% tab title="Ruby" %}
 ```ruby
 # Mandatory options (those will be provided during onboarding)
   config.auth_secret = 'YOUR_AUTH_SECRET'
@@ -41,15 +41,13 @@ end
 {% endtab %}
 {% endtabs %}
 
-{{/ruby}}
-
 ## Mandatory variables
 
 All mandatory variables are provided as environment variables during onboarding.
 
 Your agent cannot be started without them, and no default values are provided.
 
-### {{#nodejs}}`authSecret`{{/nodejs}}{{#ruby}}`auth_secret`{{/ruby}} (string, no default)
+### {{#nodejs}}`authsecret`{{/nodejs}}{{#ruby}}`auth_secret`{{/ruby}} (string, no default)
 
 This variable contains a random secret token which is used to sign authentication tokens used in request between your users and your agent.
 
@@ -57,7 +55,7 @@ It is generated during onboarding, but never leaves your browser, and is not sav
 
 Never share it to anybody, as that would allow attackers to impersonate your users on your agent!
 
-### {{#nodejs}}`envSecret`{{/nodejs}}{{#ruby}}`env_secret`{{/ruby}} (string, no default)
+### {{#nodejs}}`envsecret`{{/nodejs}}{{#ruby}}`env_secret`{{/ruby}} (string, no default)
 
 This variable contains a random secret token which is used to authenticate requests between your agent and our servers.
 
@@ -65,7 +63,7 @@ Unlike the {{#nodejs}}`authSecret`{{/nodejs}}{{#ruby}}`auth_secret`{{/ruby}}, it
 
 Never share it publicly, as it would allow attackers to impersonate your agent with our servers. That would not cause any data leak, but opens the possibility for attackers to cause denial of service.
 
-### {{#nodejs}}`isProduction`{{/nodejs}}{{#ruby}}`is_production`{{/ruby}} (boolean, no default)
+### {{#nodejs}}`isproduction`{{/nodejs}}{{#ruby}}`is_production`{{/ruby}} (boolean, no default)
 
 In development mode the agent has a few extra behaviors (when using {{#nodejs}}`isProduction: false`{{/nodejs}}){{#ruby}}`is_production = false`{{/ruby}})
 
@@ -75,7 +73,7 @@ In development mode the agent has a few extra behaviors (when using {{#nodejs}}`
 
 ## Optional variables
 
-### {{#nodejs}}`customizeErrorMessage`{{/nodejs}}{{#ruby}}`customize_error_message`{{/ruby}} (function, defaults to {{#nodejs}}null{{/nodejs}}{{#ruby}}nil{{/ruby}})
+### {{#nodejs}}`customizeerrormessage`{{/nodejs}}{{#ruby}}`customize_error_message`{{/ruby}} (function, defaults to {{#nodejs}}null{{/nodejs}}{{#ruby}}nil{{/ruby}})
 
 When unexpected errors are raised in the agent code during a request, the error will be logged (using {{#nodejs,ruby}}`options.logger`{{/nodejs,ruby}}), but in the admin-panel, the final user will get a default message 'Unexpected error'.
 
@@ -106,7 +104,7 @@ createAgent({
 ```
 
 
-### {{#nodejs}}`forestServerUrl`{{/nodejs}}{{#ruby}}`forest_server_url`{{/ruby}} (string, defaults to 'https://api.forestadmin.com') <!-- markdown-link-check-disable-line -->
+### {{#nodejs}}`forestserverurl`{{/nodejs}}{{#ruby}}`forest_server_url`{{/ruby}} (string, defaults to 'https: //api.forestadmin.com') <!-- markdown-link-check-disable-line -->
 
 This variable should be used only for customers using [the self-hosted version of Forest Admin](https://www.forestadmin.com/self-hosted).
 
@@ -120,7 +118,7 @@ createAgent({
 ```
 
 
-### `logger` (function) and {{#nodejs,ruby}}`loggerLevel`{{/nodejs,ruby}} (string, defaults to {{#nodejs,ruby}}'Info'{{/nodejs,ruby}})
+### `logger` (function) and {{#nodejs,ruby}}`loggerlevel`{{/nodejs,ruby}} (string, defaults to {{#nodejs,ruby}}'info'{{/nodejs,ruby}})
 
 {{#nodejs}}Forest Admin encourages customers to use [In-app installations](./README.md#standalone-vs-in-app-installation).{{/nodejs}}
 
@@ -129,7 +127,7 @@ You may want to have control of the logger which is used by Forest Admin.
 This configuration key allows to format and route logs to a logging service, instead of printing them in stdout.
 
 {% tabs %}
-{% tab title="createAgent({" %}
+{% tab title="JavaScript" %}
 ```javascript
 // ...
   loggerLevel: 'Info', // Valid values are 'Debug', 'Info', 'Warn' and 'Error'
@@ -140,7 +138,7 @@ This configuration key allows to format and route logs to a logging service, ins
 ```
 {% endtab %}
 
-{% tab title="ForestAdminRails.configure do |config|" %}
+{% tab title="Ruby" %}
 ```ruby
 # ...
   config.logger_level = 'Info' # Valid values are 'Debug', 'Info', 'Warn' and 'Error'
@@ -151,7 +149,7 @@ end
 {% endtabs %}
 
 
-### {{#nodejs}}`permissionsCacheDurationInSeconds`{{/nodejs}}{{#ruby}}`permissions_cache_duration_in_seconds`{{/ruby}} (number, defaults to 15 minutes)
+### {{#nodejs}}`permissionscachedurationinseconds`{{/nodejs}}{{#ruby}}`permissions_cache_duration_in_seconds`{{/ruby}} (number, defaults to 15 minutes)
 
 Forest Admin administrators can [restrict operations which final users can perform](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users).
 
@@ -160,7 +158,7 @@ Those permissions are enforced both in the frontend, and in your agent.
 This configuration variable allows to customize how often the agent should ask the server to provide the permissions table.
 
 {% tabs %}
-{% tab title="createAgent({" %}
+{% tab title="JavaScript" %}
 ```javascript
 // ...
   permissionsCacheDurationInSeconds: 15 * 60,
@@ -168,7 +166,7 @@ This configuration variable allows to customize how often the agent should ask t
 ```
 {% endtab %}
 
-{% tab title="ForestAdminRails.configure do |config|" %}
+{% tab title="Ruby" %}
 ```ruby
 # ...
   config.permission_expiration = 15 * 60
@@ -200,7 +198,7 @@ This is done so that customers using reverse proxies can implement their routing
 <!-- markdown-link-check-enable -->
 
 {% tabs %}
-{% tab title="createAgent({" %}
+{% tab title="JavaScript" %}
 ```javascript
 // ...
   prefix: 'api',
@@ -208,7 +206,7 @@ This is done so that customers using reverse proxies can implement their routing
 ```
 {% endtab %}
 
-{% tab title="ForestAdminRails.configure do |config|" %}
+{% tab title="Ruby" %}
 ```ruby
 # ...
   config.prefix = 'api'
@@ -217,7 +215,7 @@ end
 {% endtab %}
 {% endtabs %}
 
-### {{#nodejs}}`schemaPath`{{/nodejs}}{{#ruby}}`schema_path`{{/ruby}} (string, defaults to '.forestadmin-schema.json')
+### {{#nodejs}}`schemapath`{{/nodejs}}{{#ruby}}`schema_path`{{/ruby}} (string, defaults to '.forestadmin-schema.json')
 
 This variable allows to choose where the `.forestadmin-schema.json` file should be written in development, and read from in production.
 
@@ -229,7 +227,7 @@ This allows to:
 - Have flexibility when using custom builds in production (code minification, ...)
 
 {% tabs %}
-{% tab title="createAgent({" %}
+{% tab title="JavaScript" %}
 ```javascript
 // ...
   schemaPath: '/volumes/fa-agent-configuration/schema.json',
@@ -237,7 +235,7 @@ This allows to:
 ```
 {% endtab %}
 
-{% tab title="ForestAdminRails.configure do |config|" %}
+{% tab title="Ruby" %}
 ```ruby
 # ...
   config.schema_path = '/volumes/fa-agent-configuration/schema.json'
@@ -248,7 +246,7 @@ end
 
 {{#nodejs}}
 
-### `typingsPath` (string, defaults to null), `typingsMaxDepth` (number, defaults to 3)
+### `typingspath` (string, defaults to null), `typingsmaxdepth` (number, defaults to 3)
 
 This variable allows to choose where the [typing file](./autocompletion-and-typings.md) should be written in development.
 
@@ -263,7 +261,7 @@ createAgent<Schema>({
 });
 ```
 
-### `maxBodySize` (string default to '50mb')
+### `maxbodysize` (string default to '50mb')
 
 This variable allows to increase the request body limit size.
 

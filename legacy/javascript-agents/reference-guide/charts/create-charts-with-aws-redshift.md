@@ -1,5 +1,5 @@
 ---
-title: Create Charts with AWS Redshift
+title: Create charts with AWS redshift
 ---
 This example shows you how to create a graph based on AWS Redshift.&#x20;
 
@@ -14,7 +14,7 @@ We'll create 2 charts:
 1. Number of users (_single value chart_)
 2. Top 5 buyers (_leaderboard chart_)
 
-## Connect to a Redshift Database
+## Connect to a redshift database
 
 Install the [NodeJS package](https://www.npmjs.com/package/node-redshift) for your Forest Admin project
 
@@ -42,7 +42,7 @@ const redshiftClient = new Redshift(clientCredentials);
 Configure your database credentials in your env variables
 {% endhint %}
 
-## Create the Single Value Chart
+## Create the single value chart
 
 Step 1 - Create a Single Value Smart Chart in the Forest Admin Project Dashboard.
 
@@ -77,7 +77,7 @@ router.post('/stats/nb-users', Liana.ensureAuthenticated, async (request, respon
 });
 ```
 
-## Create the Leaderboard Chart
+## Create the leaderboard chart
 
 Step 1 - Create a Leaderboard Smart Chart in the Forest Admin Project Dashboard.
 

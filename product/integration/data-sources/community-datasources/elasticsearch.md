@@ -12,8 +12,6 @@ The Elasticsearch datasource connects to Elasticsearch indices, allowing you to 
 ## Basic usage
 
 ```javascript
-
-
 const agent = createAgent(options);
 
 agent.addDataSource(

@@ -1,11 +1,11 @@
 ---
-title: "Environment Variables"
+title: "Environment variables"
 description: "Configure your Forest Admin agent with required environment variables"
 ---
 
 Environment variables are used to configure your Forest Admin agent securely, keeping sensitive information separate from your codebase.
 
-## Required Variables
+## Required variables
 
 ### FOREST_ENV_SECRET
 
@@ -56,7 +56,7 @@ FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 # Generate a random 32-character string
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-# Or use OpenSSL
+# Or use openssl
 openssl rand -hex 32
 ```
 

@@ -1,5 +1,5 @@
 ---
-title: Chart Patterns & Examples
+title: Chart patterns & examples
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

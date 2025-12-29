@@ -1,13 +1,13 @@
 ---
-title: API Authentication
+title: API authentication
 description: Learn how to authenticate requests to the Forest Admin Public API
 ---
 
-# API Authentication
+# API authentication
 
 All requests to the Forest Admin Public API require authentication using API tokens. This guide explains how to create, manage, and use API tokens securely.
 
-## Authentication Overview
+## Authentication overview
 
 Forest Admin uses **Bearer token authentication** for API requests. Each token:
 
@@ -16,16 +16,16 @@ Forest Admin uses **Bearer token authentication** for API requests. Each token:
 - Should be treated as sensitive credentials
 - Can be revoked at any time
 
-## Creating API Tokens
+## Creating API tokens
 
-### Step 1: Access Project Settings
+### Step 1: Access project settings
 
 1. Log in to your Forest Admin account
 2. Navigate to your project
 3. Go to **Project Settings** > **API Access**
 4. Click **Generate New Token**
 
-### Step 2: Configure Token
+### Step 2: Configure token
 
 When creating a token, you can configure:
 
@@ -43,13 +43,13 @@ Scopes: Activity Logs, Admin Logs
 Expiration: 1 year
 ```
 
-### Step 3: Save Token
+### Step 3: Save token
 
 {% hint style="warning" %}
 **Important:** Copy and save your token immediately. For security reasons, you won't be able to see it again. If you lose the token, you'll need to generate a new one.
 {% endhint %}
 
-## Using API Tokens
+## Using API tokens
 
 Include your API token in the `Authorization` header of all requests using the Bearer scheme:
 
@@ -57,7 +57,7 @@ Include your API token in the `Authorization` header of all requests using the B
 Authorization: Bearer YOUR_API_TOKEN
 ```
 
-### Example Requests
+### Example requests
 
 **cURL:**
 
@@ -69,7 +69,7 @@ curl -H "Authorization: Bearer fa_your_api_token_here" \
 **JavaScript (Node.js):**
 
 {% tabs %}
-{% tab title="const axios = require('axios');" %}
+{% tab title="JavaScript" %}
 ```javascript
 const apiToken = process.env.FOREST_API_TOKEN;
 
@@ -85,7 +85,7 @@ const response = await axios.get(
 ```
 {% endtab %}
 
-{% tab title="require 'net/http'" %}
+{% tab title="Ruby" %}
 ```ruby
 require 'json'
 
@@ -103,9 +103,9 @@ end
 {% endtab %}
 {% endtabs %}
 
-## Token Security
+## Token security
 
-### Storing Tokens Securely
+### Storing tokens securely
 
 {% hint style="success" %}
 **Best Practice:** Store API tokens in environment variables or secure secrets management systems, never in code or version control.
@@ -126,7 +126,7 @@ FOREST_API_TOKEN=fa_your_api_token_here
 - HashiCorp Vault
 - 1Password Secrets Automation
 
-### What NOT to Do
+### What NOT to do
 
 ❌ **Never commit tokens to version control:**
 
@@ -151,7 +151,7 @@ const apiToken = 'fa_live_12345678...';
 console.log('Using token:', apiToken);
 ```
 
-### Secure Practices
+### Secure practices
 
 ✅ **Use environment variables:**
 
@@ -172,9 +172,9 @@ Schedule: Every 90 days
 Process: Generate new → Update integrations → Revoke old
 ```
 
-## Token Permissions
+## Token permissions
 
-### Permission Levels
+### Permission levels
 
 **Read-Only:**
 - View activity logs
@@ -187,7 +187,7 @@ Process: Generate new → Update integrations → Revoke old
 - Create and update notes
 - Perform write operations (where available)
 
-### Scope Limitations
+### Scope limitations
 
 Limit token access to only the endpoints needed:
 
@@ -207,9 +207,9 @@ Permissions: Read-only
 Use case: Compliance reporting
 ```
 
-## Token Management
+## Token management
 
-### Listing Active Tokens
+### Listing active tokens
 
 View all active tokens in **Project Settings** > **API Access**:
 
@@ -219,7 +219,7 @@ View all active tokens in **Project Settings** > **API Access**:
 - Expiration date
 - Scopes
 
-### Rotating Tokens
+### Rotating tokens
 
 Regular token rotation improves security:
 
@@ -233,7 +233,7 @@ Regular token rotation improves security:
 - Development: Every 180 days
 - Testing: As needed
 
-### Revoking Tokens
+### Revoking tokens
 
 Immediately revoke a token if:
 
@@ -252,9 +252,9 @@ Immediately revoke a token if:
 Revoking a token immediately stops all integrations using it. Ensure you update integrations before revoking.
 {% endhint %}
 
-## Authentication Errors
+## Authentication errors
 
-### 401 Unauthorized
+### 401 unauthorized
 
 **Cause:** Missing, invalid, or expired token
 
@@ -273,7 +273,7 @@ Revoking a token immediately stops all integrations using it. Ensure you update 
 - Ensure token format is correct (`Bearer <token>`)
 - Regenerate token if necessary
 
-### 403 Forbidden
+### 403 forbidden
 
 **Cause:** Token lacks required permissions
 
@@ -291,7 +291,7 @@ Revoking a token immediately stops all integrations using it. Ensure you update 
 - Generate new token with appropriate scopes
 - Verify endpoint matches token permissions
 
-### Token Expired
+### Token expired
 
 **Cause:** Token past expiration date
 
@@ -309,9 +309,9 @@ Revoking a token immediately stops all integrations using it. Ensure you update 
 - Update integration configuration
 - Consider longer expiration or no expiration for stable integrations
 
-## Best Practices
+## Best practices
 
-### 1. One Token Per Integration
+### 1. one token per integration
 
 Create separate tokens for each integration:
 
@@ -325,7 +325,7 @@ Create separate tokens for each integration:
 - master-token (read-write, all scopes)
 ```
 
-### 2. Principle of Least Privilege
+### 2. principle of least privilege
 
 Grant minimum necessary permissions:
 
@@ -343,7 +343,7 @@ const masterToken = {
 };
 ```
 
-### 3. Monitor Token Usage
+### 3. monitor token usage
 
 Track token activity in **Project Settings** > **API Access**:
 
@@ -352,7 +352,7 @@ Track token activity in **Project Settings** > **API Access**:
 - Error rates
 - Unusual patterns
 
-### 4. Implement Error Handling
+### 4. implement error handling
 
 Handle authentication errors gracefully:
 
@@ -377,7 +377,7 @@ async function makeAuthenticatedRequest(url) {
 }
 ```
 
-### 5. Audit Token Access
+### 5. audit token access
 
 Regular security reviews:
 
@@ -386,7 +386,7 @@ Regular security reviews:
 - Update token names to reflect current usage
 - Document token purpose and owner
 
-## Next Steps
+## Next steps
 
 
   * [Rate Limits](/reference/api/rate-limits.md) - Understand API usage limits

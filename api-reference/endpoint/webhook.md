@@ -1,4 +1,4 @@
 ---
-title: 'New Plant'
+title: 'New plant'
 openapi: 'WEBHOOK /plant/webhook'
 ---

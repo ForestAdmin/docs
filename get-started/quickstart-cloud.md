@@ -90,44 +90,6 @@ You can now:
   * [Set permissions](/product/control/roles-permissions.md) - Configure roles and access control
 
 
-## Troubleshooting
-
-
-<details>
-<summary>Connection failed - Database not accessible</summary>
-
-**Solution:** Your database needs to be accessible from the internet.
-
-    Options:
-    - Whitelist Forest Admin IP: **35.180.175.97**
-    - Use Cloud SQL/RDS with public access
-    - Set up SSH tunneling (see Step 2)
-
-</details>
-
-
-<details>
-<summary>No tables showing up</summary>
-
-**Solution:** Make sure your database user has read permissions on the tables you want to access.
-
-    Check your database permissions and refresh the schema in Forest Admin settings.
-
-</details>
-
-
-<details>
-<summary>I want to use a local database</summary>
-
-**Start with your production database first.**
-
-    With Cloud deployment, you connect your production database initially. Once set up, you can create a development environment that connects to your local database.
-
-    Learn more: [Managing Environments](/product/manage/environments)
-
-</details>
-
-
 ## Need help?
 
 - **Documentation**: [Cloud Architecture](/product/integration/architectures/cloud)

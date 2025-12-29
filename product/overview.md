@@ -1,10 +1,10 @@
 ---
-title: Forest Admin Product
+title: Forest Admin product
 description: Build, configure, and operate powerful admin panels tailored to your business needs.
 ---
 Forest Admin follows a 4-layer architecture that enables you to build and operate admin panels efficiently. This section covers all product capabilities organized by these layers and operational categories.
 
-## The 4-Layer Architecture
+## The 4-layer architecture
 
 
   * [Integration](/product/integration/overview.md) - Connect to any data source - SQL, NoSQL, REST APIs, or custom sources
@@ -13,7 +13,7 @@ Forest Admin follows a 4-layer architecture that enables you to build and operat
   * [Build](/product/build/overview.md) - Configure and customize your admin panel's UI and layout
 
 
-## The 5 Operations Categories
+## The 5 operations categories
 
 
   * [Execute](/product/execute/overview.md) - Browse data, run actions, execute workflows, and export records
@@ -22,7 +22,7 @@ Forest Admin follows a 4-layer architecture that enables you to build and operat
   * [Embed](/product/embed/overview.md) - Integrate Forest Admin into your applications
 
 
-## Quick Navigation
+## Quick navigation
 
 
 <details>
@@ -75,7 +75,7 @@ Forest Admin follows a 4-layer architecture that enables you to build and operat
 </details>
 
 
-## Getting Started
+## Getting started
 
 New to Forest Admin? We recommend following this path:
 

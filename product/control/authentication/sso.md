@@ -1,5 +1,5 @@
 ---
-title: "Single Sign-On (SSO)"
+title: "Single sign-on (SSO)"
 description: "Enable Single Sign-On with SAML 2.0 to authenticate users through your existing identity provider"
 ---
 
@@ -23,7 +23,7 @@ This feature may not be available on all plans. Check the [pricing page](https:/
   * [Instant Offboarding](#) - Disabling a user in your IdP immediately revokes Forest Admin access
 
 
-## Supported Identity Providers
+## Supported identity providers
 
 Forest Admin supports any SAML 2.0-compliant identity provider:
 
@@ -45,7 +45,7 @@ Forest Admin supports any SAML 2.0-compliant identity provider:
   * [Generic SAML](/product/control/authentication/sso-providers/generic-saml.md) - Any SAML 2.0-compliant IdP
 
 
-## How SSO Works
+## How SSO works
 
 SSO with Forest Admin uses the SAML 2.0 protocol:
 
@@ -75,7 +75,7 @@ SSO with Forest Admin uses the SAML 2.0 protocol:
      │                       │                         │
 ```
 
-### SAML Flow Explained
+### SAML flow explained
 
 <Steps>
   <Step title="User Access">
@@ -103,7 +103,7 @@ SSO with Forest Admin uses the SAML 2.0 protocol:
   </Step>
 </Steps>
 
-## Setting Up SSO
+## Setting up SSO
 
 ### Prerequisites
 
@@ -113,7 +113,7 @@ Before configuring SSO, ensure you have:
 - Admin access to your identity provider
 - User email addresses in both systems match
 
-### Configuration Steps
+### Configuration steps
 
 <Steps>
   <Step title="Enable SSO in Forest Admin">
@@ -166,17 +166,17 @@ Before configuring SSO, ensure you have:
   </Step>
 </Steps>
 
-## Attribute Mapping
+## Attribute mapping
 
 SAML assertions contain user information that Forest Admin maps to user profiles:
 
-### Required Attributes
+### Required attributes
 
 | SAML Attribute | Forest Admin Field | Description |
 |----------------|-------------------|-------------|
 | `email` or `NameID` | Email | User's email address (must match) |
 
-### Optional Attributes
+### Optional attributes
 
 | SAML Attribute | Forest Admin Field | Use Case |
 |----------------|-------------------|----------|
@@ -186,7 +186,7 @@ SAML assertions contain user information that Forest Admin maps to user profiles
 | `teams` | Teams | Auto-assign team memberships |
 | `department` | Tags | Custom user metadata |
 
-### Attribute Configuration Example
+### Attribute configuration example
 
 <Tabs>
   <Tab title="Google Workspace">
@@ -253,9 +253,9 @@ SAML assertions contain user information that Forest Admin maps to user profiles
   </Tab>
 </Tabs>
 
-## User Provisioning
+## User provisioning
 
-### Just-in-Time (JIT) Provisioning
+### Just-in-time (JIT) provisioning
 
 Automatically create users when they first log in via SSO:
 
@@ -285,7 +285,7 @@ Automatically create users when they first log in via SSO:
 **Role Mapping**: If you map roles from your IdP, ensure the role names match exactly (case-sensitive). Otherwise, the default role is assigned.
 {% endhint %}
 
-### Manual Provisioning
+### Manual provisioning
 
 Pre-create users before they can log in:
 
@@ -294,7 +294,7 @@ Pre-create users before they can log in:
 3. User logs in via SSO
 4. Forest Admin matches by email and grants access
 
-### SCIM Provisioning
+### SCIM provisioning
 
 Automatically sync users from your IdP. See [SCIM Documentation](/product/control/authentication/scim) for setup.
 
@@ -326,7 +326,7 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
   </Step>
 </Steps>
 
-### Enforcement Options
+### Enforcement options
 
 <Tabs>
   <Tab title="Strict Enforcement">
@@ -362,7 +362,7 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
 
 ## Troubleshooting
 
-### SAML Configuration Issues
+### SAML configuration issues
 
 
 <details>
@@ -429,7 +429,7 @@ Once SSO is configured and tested, you can enforce SSO-only authentication:
 </details>
 
 
-### Certificate Issues
+### Certificate issues
 
 **Certificate Expired**:
 ```
@@ -451,7 +451,7 @@ Error: Signature verification failed
 2. Verify certificate in SAML response matches IdP metadata
 3. Check for multiple certificates (use the correct one)
 
-### Testing Tools
+### Testing tools
 
 Use SAML debugging tools to diagnose issues:
 
@@ -465,9 +465,9 @@ Use SAML debugging tools to diagnose issues:
   * [Forest Admin Logs](#) - Review Forest Admin audit logs for SSO authentication events
 
 
-## Security Best Practices
+## Security best practices
 
-### Certificate Management
+### Certificate management
 
 
   * [Use SHA-256](#) - Configure your IdP to sign assertions with SHA-256 (not SHA-1)
@@ -479,7 +479,7 @@ Use SAML debugging tools to diagnose issues:
   * [Secure Metadata](#) - Protect IdP metadata and private keys
 
 
-### Access Control
+### Access control
 
 1. **Limit IdP Access**: Only authorize users who need Forest Admin access
 2. **Use Groups**: Assign Forest Admin access to IdP groups, not individual users
@@ -494,9 +494,9 @@ Use SAML debugging tools to diagnose issues:
 - **Review Access**: Regularly review who has accessed Forest Admin via SSO
 - **Test Regularly**: Periodically test SSO with different user accounts
 
-## Advanced Configuration
+## Advanced configuration
 
-### Multiple IdPs
+### Multiple idps
 
 Support users from different identity providers:
 
@@ -511,7 +511,7 @@ Internal users → Google Workspace SSO
 2. Use email domain routing to direct users to correct IdP
 3. Map each IdP to appropriate teams/roles
 
-### Custom Attribute Mapping
+### Custom attribute mapping
 
 Map custom SAML attributes to Forest Admin user fields:
 
@@ -529,7 +529,7 @@ Map custom SAML attributes to Forest Admin user fields:
 }
 ```
 
-### IdP-Initiated vs SP-Initiated SSO
+### Idp-initiated vs sp-initiated SSO
 
 <Tabs>
   <Tab title="SP-Initiated (Recommended)">
@@ -555,7 +555,7 @@ Map custom SAML attributes to Forest Admin user fields:
   </Tab>
 </Tabs>
 
-## Compliance Considerations
+## Compliance considerations
 
 ### GDPR
 
@@ -575,7 +575,7 @@ Map custom SAML attributes to Forest Admin user fields:
 - Implement role-based access through IdP groups
 - Regular access reviews and recertification
 
-## Next Steps
+## Next steps
 
 
   * [SCIM Provisioning](/product/control/authentication/scim.md) - Automate user provisioning from your IdP

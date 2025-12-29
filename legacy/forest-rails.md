@@ -1,5 +1,5 @@
 ---
-title: forest-rails (Deprecated)
+title: Forest-rails (deprecated)
 description: Legacy documentation for forest_liana (Ruby on Rails agent v1)
 ---
 
@@ -17,7 +17,7 @@ description: Legacy documentation for forest_liana (Ruby on Rails agent v1)
 
 **Migration Path:** Migrate to [`agent_ruby`](/product/integration/setup/ruby)
 
-## Why Migrate?
+## Why migrate?
 
 The new Ruby agent provides:
 - **Better Performance:** Faster query execution and optimized data loading
@@ -26,19 +26,19 @@ The new Ruby agent provides:
 - **Modern API:** Cleaner and more intuitive API design
 - **Better Error Handling:** Improved debugging and error messages
 
-## Migration Guide
+## Migration guide
 
 Follow our step-by-step migration guide to upgrade from `forest_liana` to `agent_ruby`:
 
 * [Migration Guide](/guides/migration/from-v1/overview.md) - Complete guide to migrate from Agent v1 to Agent v2
 
-## Legacy Documentation
+## Legacy documentation
 
 For reference purposes, the complete v1 documentation is still available:
 
 * [Agent v1 Documentation](/legacy/agent-v1/README.md) - Access the full forest_liana documentation
 
-## Need Help?
+## Need help?
 
 **Questions about migration?**
 - Read our [Migration Guide](/guides/migration/from-v1/overview)

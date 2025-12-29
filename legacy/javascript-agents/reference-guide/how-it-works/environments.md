@@ -5,7 +5,7 @@ After you install for the first time, a local **development** environment is cre
 
 Your first objective should be to deploy to **production**.
 
-### Deploying to Production
+### Deploying to production
 
 Forest Admin is meant to help you manage your operations: this can only happen if you work with your Production data! To do so, you need to **create your Production environment**.
 

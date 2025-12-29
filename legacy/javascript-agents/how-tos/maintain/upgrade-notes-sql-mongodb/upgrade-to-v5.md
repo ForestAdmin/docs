@@ -36,7 +36,7 @@ In case of a regression introduced in Production after the upgrade, a rollback t
 
 ## Breaking changes
 
-### Smart Actions defined with custom routes
+### Smart actions defined with custom routes
 
 If your Forest Admin configuration contains Smart Actions using POST or PUT method with a custom `endpoint`, you'll have to adapt your Smart Action code.
 
@@ -186,7 +186,7 @@ router.post(
 module.exports = router;
 ```
 
-## Important Notice
+## Important notice
 
 ### Changelogs
 

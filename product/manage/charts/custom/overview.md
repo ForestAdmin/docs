@@ -1,4 +1,4 @@
-# Create a Smart Chart
+# Create a smart chart
 
 By using the finite list of predefined Charts (Single, Distribution, Time-based, etc.), you are constrained by how that data is displayed.
 
@@ -8,7 +8,7 @@ With **Smart Charts**, you can code exactly which data you want and how you want
 You need to be on a [Forest Admin Pro plan](https://www.forestadmin.com/pricing) to have access to this feature.
 {% endhint %}
 
-### Creating a Smart Chart
+### Creating a smart chart
 
 To create a Chart and access the Smart Chart Editor, click on the **Edit Smart Chart** button:
 

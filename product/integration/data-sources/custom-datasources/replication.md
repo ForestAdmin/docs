@@ -81,7 +81,7 @@ Forest Admin will automatically detect when the schema of the tables in the cach
 
 **Important:** No locking mechanism currently exists for concurrent writes when multiple agent instances share the same cache configuration.
 
-### SQLite file example
+### Sqlite file example
 
 ```javascript Node.js
 const myCustomDataSource = createReplicaDataSource({
@@ -201,14 +201,14 @@ The request provides:
 - `getPreviousDeltaState()`: Fetches delta state asynchronously, useful when mixing push and pull strategies
 - `cache`: Interface for reading from the cache
 
-### onChange payload structure
+### Onchange payload structure
 
 The payload includes:
 - `nextDeltaState` (optional): Updated delta state for recovery on agent restart
 - `newOrUpdatedEntries`: Array of created/updated records with collection and record data
 - `deletedEntries`: Array of deleted records (full record not required)
 
-### Example: CouchDB change feed
+### Example: Couchdb change feed
 
 Using the nano library to subscribe to CouchDB's changes stream:
 
@@ -238,7 +238,7 @@ const myCustomDataSource = createReplicaDataSource({
 });
 ```
 
-### Example: webhook implementation
+### Example: Webhook implementation
 
 Using Express to receive webhooks on a separate port:
 

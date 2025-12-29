@@ -1,7 +1,7 @@
 ---
-title: Smart Fields
+title: Smart fields
 ---
-### What is a Smart Field?
+### What is a smart field?
 
 A field that displays a computed value in your collection.
 
@@ -9,7 +9,7 @@ A field that displays a computed value in your collection.
 
 A Smart Field is a column that displays processed-on-the-fly data. It can be as simple as concatenating attributes to make them human friendly, or more complex (e.g. total of orders).
 
-### Creating a Smart Field
+### Creating a smart field
 
 ### Rails
 On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` collection.
@@ -41,7 +41,7 @@ class Forest::Customer
 end
 ```
 
-### Updating a Smart Field
+### Updating a smart field
 
 ### Rails
 By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the set method should always return the object it’s working on**. In the example hereunder, the `user_params` is returned is returned including only the modified data.
@@ -71,7 +71,7 @@ end
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
 {% endhint %}
 
-### Searching, Sorting and Filtering on a Smart Field
+### Searching, sorting and filtering on a smart field
 
 To perform a search on a Smart Field, you also need to write the logic to “unzip” the data, then the search query which is specific to your zipping. In the example hereunder, the `firstname` and `lastname` are searched separately after having been unzipped.
 
@@ -148,7 +148,7 @@ end
 - [Sort by Smart field that includes value from a belongsTo relationship](smart-field-examples/sort-by-smart-field-that-includes-value-from-a-belongsto-relationship.md)
 {% endhint %}
 
-### Available Field Options
+### Available field options
 
 Here are the list of available options to customize your Smart Field:
 
@@ -166,7 +166,7 @@ Here are the list of available options to customize your Smart Field:
 You can define a widget for a smart field from the [settings of your collection](https://docs.forestadmin.com/user-guide/collections/customize-your-fields).
 {% endhint %}
 
-### Building Performant Smart Fields
+### Building performant smart fields
 
 To optimize your smart field performance, we recommend using a mechanism of batching and caching data requests.
 

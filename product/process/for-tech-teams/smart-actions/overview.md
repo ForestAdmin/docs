@@ -1,5 +1,5 @@
 ---
-title: Smart Actions - Overview
+title: Smart actions - overview
 ---
 > **Status:** TODO - Priority: HIGH
 >

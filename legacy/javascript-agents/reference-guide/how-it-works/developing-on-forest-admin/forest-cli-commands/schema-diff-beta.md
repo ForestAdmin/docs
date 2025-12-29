@@ -1,5 +1,5 @@
 ---
-title: schema:diff \[beta]
+title: Schema: Diff \[beta]
 
 description: >-
   This page explains how to update your schema and avoid issues when pushing
@@ -17,7 +17,7 @@ In order to run it, there are a few steps to follow, as shown below.&#x20;
 
 ## Instructions
 
-### Step 1: obtain environments' IDs
+### Step 1: Obtain environments' IDs
 
 To compare two schemas, you will obviously need the IDs of the two environments you want to compare. To retrieve these IDs, run the following command:
 
@@ -33,7 +33,7 @@ We have chosen `project-2`
 
 <img src="/images/legacy/javascript-agents/envs.png" alt="" />
 
-### Step 2: compare schemas
+### Step 2: Compare schemas
 
 Once you have retrieved the environment IDs, `schema:diff` takes both as parameters – so you can use the following command to compare the schemas:
 
@@ -47,7 +47,7 @@ For example, if you want to compare environments with IDs 367 and 368, you would
 forest schema:diff 367 368
 ```
 
-### Step 3: interpret results
+### Step 3: Interpret results
 
 If the schemas are different, you will see a list of the differences between the two schemas. If the schemas are identical, you will see a message indicating that the schemas are the same.
 
@@ -71,6 +71,6 @@ forest schema:diff --help
 
 This being a Beta version, we will continue to improve this solution as time goes on – and also as we receive relevant feedback that can better guide us to meet our customers' needs.
 
-### Wizard/Prompt
+### Wizard/prompt
 
 In the next iteration, we plan to add a wizard or prompt to the `schema:diff` command. This will make it easier for customers to select the right environment without having to retrieve the environment list first.

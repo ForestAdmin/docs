@@ -1,5 +1,5 @@
 ---
-title: "Forest Admin experimental: community driven content"
+title: "Forest Admin experimental: Community driven content"
 description: "Contribute datasources, plugins, and tools to the Forest Admin community"
 ---
 

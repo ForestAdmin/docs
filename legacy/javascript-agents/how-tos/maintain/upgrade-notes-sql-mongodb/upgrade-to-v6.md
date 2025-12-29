@@ -96,7 +96,7 @@ router.post('/actions/mark-as-live', permissionMiddlewareCreator.smartAction(), 
 If you altered the default DELETE behavior by overriding or extending it, you'll have to do so as well with the new [BULK DELETE route](../../../reference-guide/routes/default-routes.md#delete-a-list-of-records).
 {% endhint %}
 
-## Important Notice
+## Important notice
 
 ### Changelogs
 

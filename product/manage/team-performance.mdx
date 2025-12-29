@@ -1,5 +1,5 @@
 ---
-title: Team Performance
+title: Team performance
 ---
 > **Status:** TODO - Priority: LOW
 >

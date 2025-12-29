@@ -1,5 +1,5 @@
 ---
-title: Legacy Agents Overview
+title: Legacy agents overview
 description: Overview of deprecated Forest Admin agents and why you should migrate
 ---
 
@@ -9,37 +9,37 @@ description: Overview of deprecated Forest Admin agents and why you should migra
 >
 > **We strongly recommend migrating to Agent v2 immediately.**
 
-## Deprecated Agents
+## Deprecated agents
 
 The following agents are no longer supported and will not receive security updates or bug fixes:
 
-### JavaScript Agents
+### JavaScript agents
 - **forest-express-sequelize** v9 - Node.js agent with Sequelize ORM
 - **forest-express-mongoose** v9 - Node.js agent with Mongoose ODM
 
-### Ruby Agent
+### Ruby agent
 - **forest_liana** (forest-rails) - Ruby on Rails agent v1
 
-### Python Agent
+### Python agent
 - **django-forestadmin** v1 - Python Django agent (End-of-Life soon)
 
-## Why You Must Migrate Now
+## Why you must migrate now
 
-### Security & Maintenance
+### Security & maintenance
 - ❌ **No security patches** - Your application is vulnerable to security issues
 - ❌ **No bug fixes** - Issues will not be resolved
 - ❌ **No support** - Our team cannot help with v1 issues
 - ❌ **Technical debt** - The gap between v1 and v2 grows every day
 
-### Agent v2 Benefits
+### Agent v2 benefits
 
-#### Better Performance
+#### Better performance
 - **3x faster query execution** - Optimized query engine
 - **Reduced memory footprint** - More efficient resource usage
 - **Lazy loading** - Load data only when needed
 - **Query optimization** - Automatic query batching and caching
 
-#### Modern Features
+#### Modern features
 - ✅ **Native TypeScript support** (Node.js) - Full type safety and autocomplete
 - ✅ **Better plugin system** - Easier customization and extension
 - ✅ **Cross-datasource relationships** - Join data from multiple sources
@@ -47,20 +47,20 @@ The following agents are no longer supported and will not receive security updat
 - ✅ **Cloud deployment support** - Deploy with Forest Admin Cloud
 - ✅ **Better hooks system** - More control over data operations
 
-#### Developer Experience
+#### Developer experience
 - **Cleaner API** - More intuitive and consistent
 - **Better documentation** - Comprehensive guides and examples
 - **Active development** - Regular updates and new features
 - **Modern tooling** - Works with latest frameworks and tools
 - **Better testing** - Easier to test your customizations
 
-#### Business Impact
+#### Business impact
 - **Faster time to market** - Build features faster
 - **Lower maintenance costs** - Less time fixing bugs
 - **Better user experience** - Faster and more reliable
 - **Future-proof** - Ready for upcoming features
 
-## Migration Effort
+## Migration effort
 
 | Agent | Estimated Time | Complexity | Breaking Changes |
 |-------|---------------|------------|------------------|
@@ -71,21 +71,21 @@ The following agents are no longer supported and will not receive security updat
 
 **Note:** These estimates are for typical projects. Complex customizations may require more time.
 
-## What Changes in v2?
+## What changes in v2?
 
-### Core Concepts (Same)
+### Core concepts (same)
 ✅ Collections, fields, and relationships work the same way
 ✅ Smart Actions, Smart Fields, Smart Segments stay conceptual similar
 ✅ Permissions and roles configuration unchanged in UI
 ✅ Your Forest Admin UI configuration is preserved
 
-### API Changes (Different)
+### API changes (different)
 - **Package names** - New package structure (`@forestadmin/agent`, `@forestadmin/datasource-*`)
 - **Initialization** - New agent setup with datasource composition
 - **Customization API** - New methods for Smart Actions, Fields, etc.
 - **Hooks** - New hook system with better typing
 
-### Migration Path
+### Migration path
 
 1. **Install new agent** - Add v2 packages alongside v1
 2. **Copy datasource connection** - Reuse your database connection
@@ -96,7 +96,7 @@ The following agents are no longer supported and will not receive security updat
 
 **The good news:** You can migrate incrementally without downtime!
 
-## Migration Support
+## Migration support
 
 We're here to help you migrate:
 
@@ -106,13 +106,13 @@ We're here to help you migrate:
 - 💬 **Community support** - Ask questions in our community
 - 📧 **Email support** - Contact support@forestadmin.com
 
-### We Help You
+### We help you
 - ✅ Review your migration plan
 - ✅ Answer technical questions
 - ✅ Debug migration issues
 - ✅ Provide code examples
 
-## Start Migration Today
+## Start migration today
 
 Don't wait! The longer you stay on v1, the harder migration becomes.
 
@@ -125,9 +125,9 @@ Don't wait! The longer you stay on v1, the harder migration becomes.
 
 
 
-## FAQs
+## Faqs
 
-### Can I run v1 and v2 in parallel?
+### Can i run v1 and v2 in parallel?
 Yes! This is the recommended approach. You can run both agents on different ports during migration.
 
 ### Will my UI configuration be preserved?
@@ -136,10 +136,10 @@ Yes! All your layout, permissions, and settings are preserved.
 ### How long does migration take?
 Most teams complete migration in 1-2 days for simple projects, up to 1 week for complex ones.
 
-### What if I have many Smart Actions?
+### What if i have many smart actions?
 Migrate them one by one. The new API is similar but more powerful.
 
-### Do I need to change my database?
+### Do i need to change my database?
 No! Your database structure stays the same.
 
 ### Is there a migration tool?

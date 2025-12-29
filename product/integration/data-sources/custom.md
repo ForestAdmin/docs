@@ -1,5 +1,5 @@
 ---
-title: Custom Datasources
+title: Custom datasources
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

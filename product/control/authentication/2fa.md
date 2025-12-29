@@ -1,5 +1,5 @@
 ---
-title: "Two-Factor Authentication (2FA)"
+title: "Two-factor authentication (2FA)"
 description: "Enable and enforce two-factor authentication to add an extra layer of security to user accounts"
 ---
 
@@ -11,7 +11,7 @@ Two-Factor Authentication (2FA) adds an additional security layer beyond usernam
 **Recommended for All Users**: 2FA significantly reduces the risk of unauthorized access, even if passwords are compromised.
 {% endhint %}
 
-## Why Enable 2FA?
+## Why enable 2FA?
 
 
   * [Prevent Account Takeover](#) - Protect against password theft, phishing, and credential stuffing attacks
@@ -23,9 +23,9 @@ Two-Factor Authentication (2FA) adds an additional security layer beyond usernam
   * [Audit Trail](#) - Track 2FA events in audit logs for security monitoring
 
 
-## Supported 2FA Methods
+## Supported 2FA methods
 
-### Authenticator Apps (Recommended)
+### Authenticator apps (recommended)
 
 Time-based One-Time Password (TOTP) apps generate 6-digit codes that change every 30 seconds:
 
@@ -43,7 +43,7 @@ Time-based One-Time Password (TOTP) apps generate 6-digit codes that change ever
   * [LastPass Authenticator](#) - One-tap push notifications
 
 
-### Backup Codes
+### Backup codes
 
 Recovery codes that can be used if you lose access to your authenticator app:
 
@@ -56,9 +56,9 @@ Recovery codes that can be used if you lose access to your authenticator app:
 **Save Your Backup Codes**: Without backup codes or access to your authenticator, you'll be locked out if your device is lost.
 {% endhint %}
 
-## Enabling 2FA (For Users)
+## Enabling 2FA (for users)
 
-### Setup Process
+### Setup process
 
 <Steps>
   <Step title="Access Account Settings">
@@ -92,7 +92,7 @@ Recovery codes that can be used if you lose access to your authenticator app:
   </Step>
 </Steps>
 
-### Manual Setup Key
+### Manual setup key
 
 If you can't scan the QR code, use the manual setup key:
 
@@ -102,9 +102,9 @@ Account: your-email@example.com
 Type: Time-based
 ```
 
-## Using 2FA to Log In
+## Using 2FA to log in
 
-### Login Flow
+### Login flow
 
 <Steps>
   <Step title="Enter Credentials">
@@ -124,7 +124,7 @@ Type: Time-based
   </Step>
 </Steps>
 
-### Using Backup Codes
+### Using backup codes
 
 If you don't have access to your authenticator app:
 
@@ -142,7 +142,7 @@ If you don't have access to your authenticator app:
   </Step>
 </Steps>
 
-### Trusted Devices
+### Trusted devices
 
 Mark devices as trusted to skip 2FA for 30 days:
 
@@ -154,11 +154,11 @@ Mark devices as trusted to skip 2FA for 30 days:
 **Public Computers**: Never mark public or shared computers as trusted.
 {% endhint %}
 
-## Enforcing 2FA (For Admins)
+## Enforcing 2FA (for admins)
 
 Administrators can require 2FA for all users or specific roles.
 
-### Project-Wide Enforcement
+### Project-wide enforcement
 
 Require 2FA for everyone:
 
@@ -187,7 +187,7 @@ Require 2FA for everyone:
   </Step>
 </Steps>
 
-### Role-Based Enforcement
+### Role-based enforcement
 
 Require 2FA only for specific roles:
 
@@ -226,7 +226,7 @@ Allow specific users to bypass 2FA requirement:
 
 ## Managing 2FA
 
-### Regenerating Backup Codes
+### Regenerating backup codes
 
 If you've used all your backup codes or lost them:
 
@@ -248,7 +248,7 @@ If you've used all your backup codes or lost them:
   </Step>
 </Steps>
 
-### Resetting Your Own 2FA
+### Resetting your own 2FA
 
 If you need to switch authenticator apps or devices:
 
@@ -266,7 +266,7 @@ If you need to switch authenticator apps or devices:
   </Step>
 </Steps>
 
-### Admin: Resetting User's 2FA
+### Admin: Resetting user's 2FA
 
 If a user loses access to their authenticator and backup codes:
 
@@ -302,7 +302,7 @@ If a user loses access to their authenticator and backup codes:
 
 ## 2FA + SSO
 
-### How They Work Together
+### How they work together
 
 2FA and SSO can be used simultaneously for defense in depth:
 
@@ -351,7 +351,7 @@ If a user loses access to their authenticator and backup codes:
   </Tab>
 </Tabs>
 
-### Recommended Configuration
+### Recommended configuration
 
 
   * [For SSO Users](#) - Enforce MFA at the IdP level
@@ -363,9 +363,9 @@ If a user loses access to their authenticator and backup codes:
     These users don't benefit from IdP security
 
 
-## Security Best Practices
+## Security best practices
 
-### For Users
+### For users
 
 
   * [Use Secure Authenticator](#) - Choose reputable authenticator apps with backup/sync features
@@ -377,7 +377,7 @@ If a user loses access to their authenticator and backup codes:
   * [Update When Changing Devices](#) - Transfer or re-setup 2FA before wiping old device
 
 
-### For Administrators
+### For administrators
 
 1. **Enforce 2FA Universally**: All users with access to sensitive data should use 2FA
 2. **Document Reset Process**: Have a clear, secure process for handling 2FA resets
@@ -386,7 +386,7 @@ If a user loses access to their authenticator and backup codes:
 5. **Audit 2FA Events**: Review audit logs for failed 2FA attempts
 6. **Emergency Access**: Maintain one admin account with password + 2FA for emergencies
 
-### Security Checklist
+### Security checklist
 
 - [ ] 2FA enabled for all admin accounts
 - [ ] 2FA required for users accessing sensitive data
@@ -395,7 +395,7 @@ If a user loses access to their authenticator and backup codes:
 - [ ] Regular audits of 2FA usage and exemptions
 - [ ] Monitoring for suspicious 2FA activity
 
-## Compliance Requirements
+## Compliance requirements
 
 ### GDPR
 
@@ -431,7 +431,7 @@ If a user loses access to their authenticator and backup codes:
 
 ## Troubleshooting
 
-### Code Not Working
+### Code not working
 
 
 <details>
@@ -478,7 +478,7 @@ If a user loses access to their authenticator and backup codes:
 </details>
 
 
-### Can't Scan QR Code
+### Can't scan QR code
 
 **Solutions**:
 
@@ -487,7 +487,7 @@ If a user loses access to their authenticator and backup codes:
 3. **Check Camera Permissions**: Ensure authenticator app has camera access
 4. **Screenshot**: Take a screenshot (secure it afterwards) and scan from photos
 
-### Lost Backup Codes
+### Lost backup codes
 
 **If you still have authenticator access**:
 1. Log in with your authenticator code
@@ -500,7 +500,7 @@ If a user loses access to their authenticator and backup codes:
 3. Admin can reset your 2FA
 4. Set up 2FA again immediately
 
-### Can't Log In After 2FA Enforcement
+### Can't log in after 2FA enforcement
 
 **Problem**: 2FA was enforced but user hasn't set it up
 
@@ -513,7 +513,7 @@ If a user loses access to their authenticator and backup codes:
 - Admin can temporarily exempt user from 2FA requirement
 - User can then log in and set up 2FA properly
 
-## Best Practices by Industry
+## Best practices by industry
 
 ### Healthcare (HIPAA)
 
@@ -522,28 +522,28 @@ If a user loses access to their authenticator and backup codes:
 - **Monitoring**: Alert on failed 2FA attempts
 - **Documentation**: Log all 2FA resets with justification
 
-### Financial Services
+### Financial services
 
 - **Require**: 2FA for all employees
 - **Method**: Hardware tokens or authenticator apps
 - **No Exceptions**: Even executives must use 2FA
 - **Audit**: Quarterly review of 2FA compliance
 
-### E-Commerce / Retail
+### E-commerce / retail
 
 - **Require**: 2FA for admins and finance team
 - **Optional**: For customer service with read-only access
 - **Balance**: Security vs. operational efficiency
 - **Review**: Monthly check of 2FA exceptions
 
-### SaaS / Tech
+### Saas / tech
 
 - **Require**: 2FA for all internal employees
 - **Customer Admins**: Enforce or strongly recommend
 - **Grace Period**: 7 days for new users
 - **Integration**: Prefer IdP-based MFA with SSO
 
-## Next Steps
+## Next steps
 
 
   * [SSO Setup](/product/control/authentication/sso.md) - Combine 2FA with Single Sign-On for enhanced security

@@ -1,5 +1,5 @@
 ---
-title: "SCIM Integration with Okta"
+title: "SCIM integration with Okta"
 description: "Automate user management by integrating Okta's SCIM provisioning with Forest Admin"
 ---
 
@@ -7,7 +7,7 @@ description: "Automate user management by integrating Okta's SCIM provisioning w
 This feature may not be available on all plans. You need administrator access to the Forest Admin project. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
 </Info>
 
-## Supported Features
+## Supported features
 
 The Okta SCIM integration enables:
 - User provisioning from Okta to Forest Admin
@@ -16,9 +16,9 @@ The Okta SCIM integration enables:
 - SCIM Groups for team assignment
 - Read-only `userName` (email format) and name fields post-creation
 
-## Setup Process
+## Setup process
 
-### Step 1: Add Forest Admin App
+### Step 1: Add Forest Admin app
 
 Navigate to Okta Applications tab, browse the app catalog, and select Forest Admin. Assign a descriptive label.
 
@@ -26,7 +26,7 @@ Navigate to Okta Applications tab, browse the app catalog, and select Forest Adm
 
 Enable the User provisioning feature in Forest Admin project settings. This generates an API token to paste into Okta's Integration tab.
 
-### Step 3: Configure Mapping Rules
+### Step 3: Configure mapping rules
 
 Create rules for mandatory fields: `teams`, `role`, `permissionLevel`, and optional `tags`. Values must match existing Forest Admin configurations. Ensure mapping direction flows from Okta to Forest Admin.
 
@@ -36,11 +36,11 @@ Create rules for mandatory fields: `teams`, `role`, `permissionLevel`, and optio
 - `teams`: Team names for user assignment
 - `tags`: Optional key/value pairs for user tagging
 
-### Step 4: Manage Groups
+### Step 4: Manage groups
 
 In Okta's Directory section, create groups matching Forest Admin teams. Use the "Push groups" tab to link Okta groups with Forest Admin teams. Optionally disable group renaming to prevent Okta from overwriting team names.
 
-## Custom Attributes
+## Custom attributes
 
 Add custom user attributes via Directory > Profile Editor for enhanced mapping flexibility.
 

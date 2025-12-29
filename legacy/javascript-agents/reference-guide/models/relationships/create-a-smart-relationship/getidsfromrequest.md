@@ -1,5 +1,5 @@
 ---
-title: GetIdsFromRequest
+title: Getidsfromrequest
 ---
 In recent versions of our agents, you may have noticed a new helper, which is `getIdsFromRequest`. This helper comes alongside the ['Select All' feature](https://docs.forestadmin.com/documentation/how-tos/maintain/upgrade-notes-sql-mongodb/upgrade-to-v6#select-all-feature), allowing you to trigger a Smart Action on more records than those displayed in the UI.
 
@@ -11,7 +11,7 @@ Let's take an example to illustrate what we want to achieve:
 
 In this case, with have a HasMany Smart Relationship between `owners` and `articles` called `Liked articles`. As you can see, we are about to trigger the `Unlike` Smart Action on every article the owner liked that corresponds to the filter and the search we configured.
 
-### What is the getIdsFromRequest about?
+### What is the getidsfromrequest about?
 
 This helper simply takes a query as a parameter (containing your filters, your search, and some other configuration) and then returns the ids corresponding to this query. In other words, based on what the user selects ('select all', 'select current page', ...) this helper is able to return the exact ids the user wants to operate on. With these ids, your will then be able to perform operations related to your smart actions.
 
@@ -26,7 +26,7 @@ Only the two first cases need to be handled, because the last two cases consist 
 
 In conjunction with the previous 4 cases, we also need to handle the filters and the search set up before executing the smart action.
 
-### Code Snippet
+### Code snippet
 
 Please find in the following snippet every of the requirement listed above fulfilled to make the Smart Action work with the Select All feature.
 

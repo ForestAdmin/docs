@@ -1,5 +1,5 @@
 ---
-title: Ruby Setup Guide
+title: Ruby setup guide
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

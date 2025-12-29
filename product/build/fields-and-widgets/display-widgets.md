@@ -1,5 +1,5 @@
 ---
-title: Display Widgets Catalog
+title: Display widgets catalog
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

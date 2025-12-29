@@ -1,5 +1,5 @@
 ---
-title: Browsing & Searching Data
+title: Browsing & searching data
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

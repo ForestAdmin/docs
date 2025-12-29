@@ -1,5 +1,5 @@
 ---
-title: "On-Premise Architecture"
+title: "On-premise architecture"
 description: "Full control with UI, backend, and agent hosted in your infrastructure - enterprise deployment option"
 ---
 

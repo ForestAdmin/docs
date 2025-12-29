@@ -7,7 +7,7 @@ This example shows you how to create a smart collection to list the customers of
 
 {/* markdown-link-check-enable */}
 
-## 1. Define the smart collection
+## 1. define the smart collection
 
 Filterable fields are flagged using `isFilterable: true`. You will need to enable this option using the collection settings in the [Layout Editor](https://docs.forestadmin.com/user-guide/getting-started/master-your-ui/using-the-layout-editor-mode).&#x20;
 
@@ -80,7 +80,7 @@ collection('dwollaCustomers', {
 });
 ```
 
-## 2. Implement the route
+## 2. implement the route
 
 The Customers routes implement the Get List and Get One, plus the [smart relationships (HasMany)](https://docs.forestadmin.com/documentation/reference-guide/relationships/create-a-smart-relationship#creating-a-hasmany-smart-relationship):
 

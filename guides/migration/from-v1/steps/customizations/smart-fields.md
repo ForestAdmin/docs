@@ -71,7 +71,7 @@ Note that when displaying a list of records, the new agent will only make one ca
 {% tabs %} {% tab title="Before" %}
 
 {% tabs %}
-{% tab title="collection('users', {" %}
+{% tab title="JavaScript" %}
 ```javascript
 fields: [
     {
@@ -88,7 +88,7 @@ fields: [
 ```
 {% endtab %}
 
-{% tab title="class Forest::User" %}
+{% tab title="Ruby" %}
 ```ruby
 collection :User
 
@@ -102,7 +102,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('users', users => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 users.addField('full_address', {
     columnType: 'String',
@@ -118,7 +118,7 @@ users.addField('full_address', {
 ```
 {% endtab %}
 
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Computed
@@ -152,7 +152,7 @@ This part is very similar to the legacy agent. The API change is because this fu
 {% tabs %} {% tab title="Before" %}
 
 {% tabs %}
-{% tab title="collection('users', {" %}
+{% tab title="JavaScript" %}
 ```javascript
 fields: [
     {
@@ -177,7 +177,7 @@ fields: [
 ```
 {% endtab %}
 
-{% tab title="class Forest::User" %}
+{% tab title="Ruby" %}
 ```ruby
 collection :User
 
@@ -200,7 +200,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('users', users => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 users
     .addField('full_address', { /* ... same as before ... */ })
@@ -220,7 +220,7 @@ users
 ```
 {% endtab %}
 
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     include ForestAdminDatasourceCustomizer::Decorators::Computed
@@ -274,7 +274,7 @@ At the cost of performance, you can tell the agent to [emulate](../../../../agen
 {% tabs %} {% tab title="Before" %}
 
 {% tabs %}
-{% tab title="collection('users', {" %}
+{% tab title="JavaScript" %}
 ```javascript
 fields: [
     {
@@ -297,7 +297,7 @@ fields: [
 ```
 {% endtab %}
 
-{% tab title="class Forest::User" %}
+{% tab title="Ruby" %}
 ```ruby
 collection :User
 
@@ -319,7 +319,7 @@ end
 {% endtabs %}
 
 {% tabs %}
-{% tab title="agent.customizeCollection('users', users => {" %}
+{% tab title="JavaScript" %}
 ```javascript
 users
     .addField('full_address', {
@@ -346,7 +346,7 @@ users
 ```
 {% endtab %}
 
-{% tab title="module ForestAdminRails" %}
+{% tab title="Ruby" %}
 ```ruby
 class CreateAgent
     include ForestAdminDatasourceToolkit::Components::Query::ConditionTree

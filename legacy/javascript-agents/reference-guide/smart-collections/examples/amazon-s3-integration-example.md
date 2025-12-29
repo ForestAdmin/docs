@@ -1,7 +1,7 @@
 ---
-title: Create a Smart Collection with Amazon S3
+title: Create a smart collection with amazon S3
 ---
-### Creating the Smart Collection
+### Creating the smart collection
 
 On our Live Demo, we’ve stored the `Legal Documents` of a `Company` on Amazon S3. In the following example, we show you how to create the Smart Collection to see and manipulate them in your Forest admin.
 

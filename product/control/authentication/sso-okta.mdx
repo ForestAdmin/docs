@@ -3,7 +3,7 @@ title: SSO with Okta
 description: Configure Single Sign-On with Okta
 ---
 
-## Accessing Organization Settings
+## Accessing organization settings
 
 To configure SSO or SCIM:
 
@@ -17,13 +17,13 @@ To configure SSO or SCIM:
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
 </Warning>
 
-## Configuration Steps
+## Configuration steps
 
-### Step 1: Create Application
+### Step 1: Create application
 
 In your Okta admin dashboard, click Create a new app integration and select SAML 2.0 and follow the wizard.
 
-### Step 2: Obtain Metadata
+### Step 2: Obtain metadata
 
 Navigate to the Sign On tab in your newly created Okta application, locate the Metadata details section, and copy the Metadata URL.
 
@@ -35,7 +35,7 @@ In Forest Admin, choose the "XML file upload or XML file endpoint" option and pa
 
 You can perform some tests before enabling it for your whole company.
 
-## Required Configuration Settings
+## Required configuration settings
 
 | Setting | Value |
 |---------|-------|
@@ -49,7 +49,7 @@ You can perform some tests before enabling it for your whole company.
 Check the "Use this for Recipient URL and Destination URL" option for the ACS URL.
 </Info>
 
-## Optional Setting
+## Optional setting
 
 **Default RelayState**: `{"organizationName": "<OrganizationName>", "destinationUrl": "organization.projects"}` (only needed for IDP-initiated login)
 

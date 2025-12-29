@@ -1,5 +1,5 @@
 ---
-title: Executing Workflows
+title: Executing workflows
 ---
 > **Status:** TODO - Priority: MEDIUM (ROADMAP)
 >

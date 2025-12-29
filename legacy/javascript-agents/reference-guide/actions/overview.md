@@ -7,7 +7,7 @@ Visualizing data is great, but at some point you're going to want to interact wi
 
 An action is a button that triggers server-side logic through an API call. Without a single line of code, Forest Admin natively supports all common actions required on an admin interface such as CRUD (Create, Read, Update, Delete), sort, search, data export, and more.
 
-### Native actions vs Smart Actions
+### Native actions vs smart actions
 
 In Forest Admin, all the available actions can fall into 2 categories.
 
@@ -32,7 +32,7 @@ Some actions are only available when 1+ record(s) are selected. This depends on 
 Native actions' **permissions** are set from the Roles section of the [Project settings](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles).
 {% endhint %}
 
-#### Smart Actions
+#### Smart actions
 
 Smart actions are your own business-related actions, built with your own code. You'll learn how to use them in the [following page](create-and-manage-smart-actions/#what-is-a-smart-action).
 

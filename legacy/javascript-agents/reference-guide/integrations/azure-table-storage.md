@@ -1,5 +1,5 @@
 ---
-title: Azure Table Storage
+title: Azure table storage
 ---
 <Check>
 This How to is based on the [Medium article](https://avarnon.medium.com/exposing-azure-table-storage-through-forest-admin-2d601752f9b1) by [Andrew Varnon](https://avarnon.medium.com/)
@@ -7,7 +7,7 @@ This How to is based on the [Medium article](https://avarnon.medium.com/exposing
 
 The implementation is done using a [Smart Collection](https://docs.forestadmin.com/documentation/reference-guide/collections/create-a-smart-collection) and a CRUD service that will wrap the [Azure Table Storage API](https://docs.microsoft.com/en-us/rest/api/storageservices/table-service-rest-api).
 
-### The Table Storage Definition
+### The table storage definition
 
 You can use the new [Azure Data Explorer](https://azure.microsoft.com/en-us/services/data-explorer/) to create and populate a Table Storage in your [Azure Storage account](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview).&#x20;
 
@@ -27,7 +27,7 @@ In our example, we are going to use the Table Customers with the fields:
 npm install @azure/data-tables --save
 ```
 
-### Smart Collection definition
+### Smart collection definition
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -67,7 +67,7 @@ collection('customers', {
 });
 ```
 
-### The Azure Data Tables Service Wrapper
+### The Azure data tables service wrapper
 
 ```javascript
 const { TableClient } = require('@azure/data-tables');

@@ -1,5 +1,5 @@
 ---
-title: Inbox & Notifications
+title: Inbox & notifications
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

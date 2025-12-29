@@ -1,5 +1,5 @@
 ---
-title: Pagination Configuration
+title: Pagination configuration
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

@@ -5,7 +5,7 @@ description: Configure Single Sign-On with Google
 
 Forest Admin supports Google Single Sign-On (SSO) for organization authentication, enabling users to log in using their Google accounts.
 
-## Accessing Organization Settings
+## Accessing organization settings
 
 To configure SSO or SCIM:
 
@@ -19,17 +19,17 @@ To configure SSO or SCIM:
 This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
 {% endhint %}
 
-## Configuration Steps
+## Configuration steps
 
-### Step 1: Access Google Admin Console
+### Step 1: Access Google Admin console
 
 Navigate to your Google account and log into the Admin console, then proceed to **Apps → Web and mobile apps**.
 
-### Step 2: Create Custom SAML Application
+### Step 2: Create custom SAML application
 
 Select **Add App → Add custom SAML app** and follow the configuration wizard.
 
-### Step 3: Configure Service Provider Details
+### Step 3: Configure service provider details
 
 Enter the following information in the Service Provider Details window:
 
@@ -45,6 +45,6 @@ If you encounter issues, verify:
 - Certificate expiration dates remain valid
 - The Name ID (primary email) configured on your Identity Provider matches the email address used in Forest Admin accounts
 
-## Additional Resources
+## Additional resources
 
 Reference the [Google documentation on custom SAML applications](https://support.google.com/a/answer/6087519?hl=en) for comprehensive setup guidance.

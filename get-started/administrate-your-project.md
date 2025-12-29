@@ -1,5 +1,5 @@
 ---
-title: Administrate Your Forest Admin Project
+title: Administrate your Forest Admin project
 ---
 > **Status:** TODO - Priority: MEDIUM
 >

@@ -3,7 +3,7 @@ title: "Quickstart"
 description: "Get your admin panel running in 5 minutes"
 ---
 
-## How Forest Admin Works
+## How Forest Admin works
 
 Forest Admin works through an **agent**—a lightweight backend application that sits between your data and the Forest Admin UI.
 
@@ -17,7 +17,7 @@ Forest Admin works through an **agent**—a lightweight backend application that
 **Important:** The agent is the only component that accesses your data. Forest Admin UI never connects directly to your database.
 {% endhint %}
 
-## Deployment Options
+## Deployment options
 
 To install Forest Admin, you need to decide **where to run the agent**:
 

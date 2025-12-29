@@ -1,5 +1,5 @@
 ---
-title: Create a Smart Chart
+title: Create a smart chart
 ---
 On the previous page, we learned how API-based charts allow you to fetch any dataset from a custom endpoint. But using the finite list of predefined charts (Single, Distribution, Time-based, etc.), you are still constrained by how that data is displayed. With **Smart Charts**, you can code exactly what data you want and how you want it displayed!
 
@@ -7,7 +7,7 @@ On the previous page, we learned how API-based charts allow you to fetch any dat
 You need a **Starter plan** or above to create Smart charts
 {% endhint %}
 
-### Creating a Smart Chart
+### Creating a smart chart
 
 To create a chart and access the _Smart Chart Editor_, click on the **Edit Smart Chart** button:
 
@@ -25,7 +25,7 @@ Don't forget to click on **Create Chart** (or **Save** if the chart is already c
 If you are creating a **record-specific** smart chart (in the record Analytics tab), the **`record`** object is directly accessible (either through `this.args.record` in the component or `@record` in the template).
 {% endhint %}
 
-### Creating a Table Chart
+### Creating a table chart
 
 Our first Smart Chart example will be a simple table: however you may choose to make it as complex and customized as you wish.
 
@@ -96,7 +96,7 @@ export default class extends Component {
 }
 ```
 
-### Creating a Bar Chart
+### Creating a bar chart
 
 This second example shows how you can achieve any format of charts, as you can benefit from external libraries like D3js.
 
@@ -382,7 +382,7 @@ The resulting chart can be resized to fit your use:
 
 ![](</images/legacy/javascript-agents/image (482).png>)
 
-### Creating a Cohort Chart
+### Creating a cohort chart
 
 This is another example to help you build a Cohort Chart.
 

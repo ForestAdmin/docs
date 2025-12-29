@@ -1,5 +1,5 @@
 ---
-title: Monitor your Forest's status
+title: Monitor your forest's status
 ---
 For **healthchecks**, you can query your app at:
 

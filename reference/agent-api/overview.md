@@ -1,15 +1,15 @@
 ---
-title: Agent API Overview
+title: Agent API overview
 description: Overview of Forest Admin agent APIs across different languages
 ---
 
-# Agent API Overview
+# Agent API overview
 
 Forest Admin provides agent SDKs in multiple languages to connect your backend to the Forest Admin platform. These agents expose your data models as admin interfaces with customization capabilities.
 
-## Available Agents
+## Available agents
 
-### Node.js Agent (Current)
+### Node.js agent (current)
 
 The latest Node.js agent with full TypeScript support and modern architecture.
 
@@ -24,7 +24,7 @@ The latest Node.js agent with full TypeScript support and modern architecture.
 
 * [Node.js Agent Documentation](/reference/agent-api/nodejs.md) - Complete API reference for the Node.js agent
 
-### Ruby Agent (Current)
+### Ruby agent (current)
 
 The Ruby agent for Rails applications.
 
@@ -38,7 +38,7 @@ The Ruby agent for Rails applications.
 
 * [Ruby Agent Documentation](/reference/agent-api/ruby.md) - Complete API reference for the Ruby agent
 
-## Agent Architecture
+## Agent architecture
 
 All Forest Admin agents follow a similar architecture:
 
@@ -52,7 +52,7 @@ Application Database
   Forest Admin UI
 ```
 
-### Core Concepts
+### Core concepts
 
 1. **Data Sources**: Connect to your databases (SQL, MongoDB, etc.)
 2. **Collections**: Map your models to admin interfaces
@@ -60,7 +60,7 @@ Application Database
 4. **Hooks**: Intercept and modify operations
 5. **Authentication**: Secure access with Forest Admin auth
 
-## Choosing an Agent
+## Choosing an agent
 
 | Agent | Best For | Deployment |
 |-------|----------|------------|
@@ -76,7 +76,7 @@ If you're using a legacy v1 agent, see our migration guides:
   * [Legacy Documentation](/legacy/agents-overview.md) - v1 agent documentation (deprecated)
 
 
-## Getting Started
+## Getting started
 
 <Steps>
   <Step title="Choose your agent">
@@ -100,7 +100,7 @@ If you're using a legacy v1 agent, see our migration guides:
   </Step>
 </Steps>
 
-## Next Steps
+## Next steps
 
 
   * [Node.js API](/reference/agent-api/nodejs.md) - Node.js API reference

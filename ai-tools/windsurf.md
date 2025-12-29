@@ -17,7 +17,7 @@ Create workspace rules that provide Windsurf with context about your documentati
 Create `.windsurf/rules.md` in your project root:
 
 ````markdown
-# GitBook technical writing rule
+# Gitbook technical writing rule
 
 ## Project context
 
@@ -46,7 +46,7 @@ description: "Concise description for SEO and navigation"
 ---
 ```
 
-## GitBook components
+## Gitbook components
 
 ### Callouts
 

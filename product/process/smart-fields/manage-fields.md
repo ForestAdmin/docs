@@ -26,8 +26,8 @@ userCollection
 
 {% tab title="# Assuming the following structure:" %}
 ```ruby
-# User    { id, firstName, lastName, addressId }
-# Address { id, streetName, streetNumber, city, countryId }
+# User { id, firstname, lastname, addressid }
+# Address { id, streetname, streetnumber, city, countryid }
 # Country { id, name }
 @create_agent.customize_collection('user') do |collection|
   collection.import_field('city', { path: 'address:city', readonly: true })
