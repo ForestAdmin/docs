@@ -45,6 +45,17 @@
               },
               "get-started/features-overview"
             ]
+          }
+        ]
+      },
+      {
+        "tab": "Product",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "product/overview"
+            ]
           },
           {
             "group": "Connect",
@@ -153,17 +164,6 @@
               "product/project-settings/users",
               "product/project-settings/interface",
               "product/project-settings/billing"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Product",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "product/overview"
             ]
           },
           {
