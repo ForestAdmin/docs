@@ -1,60 +1,37 @@
 ---
-title: Hooks - Overview
+title: Hooks
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+Forest Admin provides extensive customization options for your collections, allowing you to tailor CRUD operations, implement business logic, and enhance data integrity through two powerful features:
 
-Hooks let you intercept and customize behavior at key points in the Forest Admin lifecycle.
+- **Collection Hooks** — execute custom code before or after CRUD operations
+- **Collection Overrides** — completely replace the default behavior of CUD operations
 
-## Sources to migrate
+<Info>
+  These two features are almost identical, but they are executed at very different stages of the customizations.
+  This means that Collection Hooks will be executed even if you choose to use Collection Override.
+</Info>
 
-- `developer-guide-agent-v2/sources/agent-customization/hooks/`
-- `documentation-agent-v1/reference-documentation/hooks/`
+## Collection Hooks
 
-## Content outline
+Collection Hooks allow you to execute custom code before or after CRUD operations, giving you the ability to enforce business rules, or integrate with external services seamlessly.
 
-1. **What are Hooks?**
-   - Lifecycle interceptors
-   - Event-driven customization
-   - When to use hooks
+### Features
 
-2. **Hook Types**
-   - Before/After Create
-   - Before/After Update
-   - Before/After Delete
-   - Before List
-   - Authentication hooks
+- **Pre** and **Post** Operation Execution: Execute custom logic before or after a specific collection operation.
+- **Flexible Trigger Points**: Hook into any of the standard CRUD operations (`list`, `create`, `update`, `delete`, `aggregate`).
+- **Contextual Information**: Access to a rich high-level context providing details about the operation, enabling precise and informed logic execution.
 
-3. **Common Use Cases**
-   - Data validation
-   - Audit logging
-   - External API calls
-   - Data enrichment
-   - Permission checks
-   - Notifications
+## Collection Overrides
 
-4. **Platform-Specific Guides**
-   - [Node.js](/product/process/for-tech-teams/hooks/nodejs) ← PRIORITY 1
-   - [Ruby](/product/process/for-tech-teams/hooks/ruby) ← PRIORITY 2
-   - [Python](/product/process/for-tech-teams/hooks/python) ← PRIORITY 3
+Collection Overrides provide the ability to completely replace the default behavior of CUD operations. This powerful feature allows for custom implementations of `create`, `update`, and `delete` operations, offering unparalleled control over data handling.
 
-5. **Best Practices**
-   - Performance considerations
-   - Error handling
-   - Async operations
-   - Testing hooks
+### Features
 
-## Migration notes
+- **Complete Control Over CUD**: Directly replace the standard behavior of `create`, `update`, and `delete` operations with custom logic.
+- **Custom Operation Logic**: Implement entirely custom workflows or integrate external services directly into your CUD operations.
+- **Full Operation Context**: Receive detailed low-level context about the operation, enabling complex logic and integrations.
 
-- Advanced developer feature
-- Critical for customization
-- Framework-specific implementations
+## Implementation
 
-## Related pages
-
-- [Actions](/product/process/actions/overview)
-- [Control > Audit](/product/control/audit)
-- [Integration > Setup](/product/integration/setup/overview)
+See [Hooks - Node.js](/product/process/for-tech-teams/hooks/nodejs) for the complete implementation guide.

@@ -1,60 +1,43 @@
 ---
-title: Smart Segments - Overview
+title: Smart Segments
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+A Segment is a subset of a Collection: it's a saved filter of your Collection.
 
-Learn how to create segments with complex logic and custom queries across different platforms.
+Segments are designed for those who want to _systematically_ visualize data according to specific sets of filters. It allows you to save filter configurations so users don't have to do repetitive actions every day.
 
-## Sources to migrate
+## From your admin panel
 
-- `developer-guide-agent-v2/sources/agent-customization/segments/`
-- `documentation-cloud/sources/code-customization/segments/`
-- `documentation-agent-v1/reference-documentation/segments/`
+Segments can be configured from the interface, without the need to write any code.
 
-## Content outline
+See [Creating Segments](/product/process/segments/creating-segments) for the no-code approach.
 
-1. **What are Smart Segments?**
-   - Code-based segments
-   - When to use Smart Segments
-   - vs Simple Segments
+## From your Agent
 
-2. **Use Cases**
-   - Complex business logic
-   - External data conditions
-   - Multiple table joins
-   - Computed conditions
-   - Time-based logic
+Sometimes, Segment filters are complicated and closely tied to your business. Forest Admin allows you to code how the Segment is computed.
 
-3. **Implementation Patterns**
-   - Query builders
-   - Raw SQL/ORM queries
-   - Async data fetching
-   - Performance optimization
+For instance, you might implement a Segment on the `products` collection to allow admin users to see the bestsellers at a glance.
 
-4. **Platform-Specific Guides**
-   - [Node.js](/product/process/segments/smart-segments/nodejs) ← PRIORITY 1
-   - [Ruby](/product/process/segments/smart-segments/ruby) ← PRIORITY 2
-   - [Python](/product/process/segments/smart-segments/python) ← PRIORITY 3
-   - [Cloud](/product/process/segments/smart-segments/cloud) ← ROADMAP
+### Example
 
-5. **Best Practices**
-   - Query optimization
-   - Caching strategies
-   - Error handling
-   - Testing
+<Info>
+  In the following example, we are making queries using the Forest Admin Query Interface.
 
-## Migration notes
+  As Forest Admin does not impose any restriction on the handler, you are free to call external APIs or query your database directly instead.
+</Info>
 
-- Shared concepts + framework-specific implementations
-- Link to UI segment creation
-- Performance considerations important
+The only requirement when implementing a Segment from your agent is to return a valid `ConditionTree`.
 
-## Related pages
+```javascript
+agent.customizeCollection('products', collection =>
+  collection.addSegment('mostPurchased', async context => {
+    // Query the ids of the 10 most ordered products.
+    const rows = await context.dataSource
+      .getCollection('orders')
+      .aggregate({}, { operation: 'Count', groups: [{ field: 'product_id' }] }, 10);
 
-- [Segments Overview](/product/process/segments/overview)
-- [Creating Segments](/product/process/segments/creating-segments)
-- [Integration > Data Sources](/product/integration/data-sources/overview)
+    // Return a condition tree which matches those records
+    return { field: 'id', operator: 'In', value: rows.map(r => r['product_id']) };
+  });
+);
+```

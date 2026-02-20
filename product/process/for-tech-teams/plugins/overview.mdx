@@ -1,64 +1,50 @@
 ---
-title: Plugins - Overview
+title: Plugins
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers
 
-## Description
+When customizing your Agent behavior, it is quite common to have to perform the same tasks on multiple Fields and Collections.
 
-Plugins extend Forest Admin functionality with reusable, packaged customizations.
+Plugins are the answer to that need, and you are strongly encouraged to use them everywhere you notice that your customization files could benefit from code factorization.
 
-## Sources to migrate
+## Using plugins
 
-- `developer-guide-agent-v2/sources/agent-customization/plugins/`
-- Look for plugin documentation across repos
+Plugins are used by either importing a module, or installing the relevant package, and then calling the `use` method.
 
-## Content outline
+Depending on the plugin, options may be provided.
 
-1. **What are Plugins?**
-   - Reusable extensions
-   - Packaged customizations
-   - Community plugins
-   - vs Custom code
+```javascript
+import { createAgent } from '@forestadmin/agent';
+import { createFileField } from '@forestadmin/plugin-aws-s3';
+import { removeTimestamps } from './plugins/remove-timestamps';
 
-2. **Plugin Types**
-   - Field plugins
-   - Action plugins
-   - Data source plugins
-   - UI plugins
+// The .use() method can be called both on the agent and on collections.
+createAgent()
+  // Some plugins do not require options
+  .use(removeTimestamps)
 
-3. **Using Plugins**
-   - Finding plugins
-   - Installing plugins
-   - Configuring plugins
-   - Plugin marketplace
+  // Others do
+  .customizeCollection('accounts', collection =>
+    collection.use(createFileField, { fieldname: 'avatar' }),
+  );
+```
 
-4. **Creating Plugins**
-   - Plugin structure
-   - Development workflow
-   - Testing
-   - Publishing
+## Writing plugins
 
-5. **Platform-Specific Guides**
-   - [Node.js](/product/process/for-tech-teams/plugins/nodejs) ← PRIORITY 1
-   - [Ruby](/product/process/for-tech-teams/plugins/ruby) ← PRIORITY 2
-   - [Python](/product/process/for-tech-teams/plugins/python) ← PRIORITY 3
+A plugin is nothing more than an `async function` that performs customizations.
 
-6. **Best Practices**
-   - Plugin design
-   - Documentation
-   - Versioning
-   - Security
+```javascript
+export async function removeTimestamps(dataSource, collection) {
+  // Allow the plugin to be used both on the dataSource or on individual collections
+  const collections = collection ? [collection] : dataSource.collections;
 
-## Migration notes
+  // Remove fields
+  for (const currentCollection of collections) {
+    currentCollection.removeField('createdAt');
+    currentCollection.removeField('updatedAt');
+  }
+}
+```
 
-- Advanced developer feature
-- May be ROADMAP for some platforms
-- Framework-specific implementations
+## Write your own plugin
 
-## Related pages
-
-- [Actions](/product/process/actions/overview)
-- [Fields](/product/process/fields/overview)
-- [Integration > Data Sources](/product/integration/data-sources/overview)
+See [Write a Custom Plugin](/product/process/for-tech-teams/plugins/nodejs) for the complete guide.

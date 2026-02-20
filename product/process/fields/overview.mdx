@@ -1,52 +1,53 @@
 ---
 title: Fields - Overview
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** All users
 
-## Description
+Forest Admin is a platform to administrate your business operations efficiently; it provides powerful features to ease data navigation and implement high level views.
 
-Fields display and organize your data in Forest Admin. Learn about field types, configuration, and customization.
+When designing databases and APIs, the way to go is usually to push for normalization. This means ensuring there is no redundancy of data (all data is stored in only one place), and that data dependencies are logical.
 
-This page covers the concept of Fields. For implementation:
-- **Configuring Fields (UI):** [Configuring Fields](/product/process/fields/configuring-fields)
-- **Coding Smart Fields:** [Smart Fields](/product/process/fields/smart-fields/overview)
+On the other hand, graphical user interfaces usually need duplication and shortcuts to be user-friendly.
 
-## Sources to migrate
+To bridge that gap, Forest Admin allows adding, moving, removing, and overriding behaviors from fields.
 
-- `documentation-user-guide/collections/customize-your-fields.md`
-- `developer-guide-agent-v2/sources/agent-customization/fields/`
-- `documentation-cloud/sources/ui-customization/fields.md`
+## Minimal example
 
-## Content outline
+```javascript
+collection
+  // Create a new field
+  .addField('fullName', {
+    columnType: 'String',
+    dependencies: ['firstName', 'lastName'],
+    getValues: (records, context) =>
+      records.map(r => `${r.firstName} ${r.lastName}`),
+  })
 
-1. **What are Fields?**
-   - Data representation
-   - Field types (text, number, date, boolean, enum, file, JSON, etc.)
-   - Native fields vs Smart Fields
+  // Make it writable
+  .replaceFieldWriting('fullName', (value, context) => {
+    const [firstName, lastName] = value.split(' ');
 
-2. **Field Display**
-   - Table view
-   - Detail view
-   - Form view
+    return { firstName, lastName };
+  })
 
-3. **Two Ways to Work with Fields**
-   - **Configuring Fields** - UI-based configuration (for all users)
-   - **Smart Fields** - Create computed fields with code (for developers)
+  // Add validators
+  .addFieldValidation('fullName', 'Present')
+  .addFieldValidation('fullName', 'ShorterThan', 30)
+  .addFieldValidation('fullName', 'LongerThan', 2)
 
-4. **Common Use Cases**
-   - Display computed values
-   - Format data
-   - Reference external data
-   - Aggregate related data
+  // Make it filterable and sortable
+  .emulateFieldFiltering('fullName')
+  .emulateFieldSorting('fullName')
 
-5. **Next Steps**
-   - [Configuring Fields in UI](/product/process/fields/configuring-fields)
-   - [Coding Smart Fields](/product/process/fields/smart-fields/overview)
-   - [Build > Widgets Catalog](/product/build/fields-and-widgets/widgets-catalog)
+  // Remove previous fields
+  .removeField('firstName', 'lastName');
+```
 
-## Related pages
+## Next steps
 
-- [Build > Fields & Widgets](/product/build/fields-and-widgets/overview)
-- [Build > Layout Editor](/product/build/layout-editor)
+- [Computed Fields](/product/process/fields/computed)
+- [Import, Rename & Remove](/product/process/fields/import-rename-remove)
+- [Validation](/product/process/fields/validation)
+- [Writing Behavior](/product/process/fields/write)
+- [Filtering](/product/process/fields/filter)
+- [Sorting](/product/process/fields/sort)
+- [Binary Fields](/product/process/fields/binary)

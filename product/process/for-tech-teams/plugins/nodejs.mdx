@@ -1,61 +1,39 @@
 ---
-title: Plugins - Node.js
+title: Write a Custom Plugin
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Node.js developers
 
-## Description
+Each Plugin is nothing more than an `async function` that can perform customizations at either Agent level, Collection level, or both.
 
-Complete guide to using and creating plugins in Node.js with @forestadmin/agent.
+```javascript
+export async function removeTimestamps(dataSource, collection, options) {
+  // ... call customization methods here
+}
+```
 
-## Sources to migrate
+3 parameters are provided:
 
-- `developer-guide-agent-v2/sources/agent-customization/plugins/`
+| Name | Description |
+| --- | --- |
+| `dataSource` | An object that allows customizing the whole agent. It has the same interface as the `Agent` you manipulate outside of Plugins |
+| `collection` | An object that allows customizing the collection that the Plugin was called from (`null` if the Plugin was called on the Agent). It is the same object passed when you call `customizeCollection` |
+| `options` | Options that are provided to the Plugin. There is no set structure for this parameter, as each Plugin will provide specific mandatory or optional options |
 
-## Content outline
+## Making your Plugin act differently depending on the Collection
 
-1. **Using Plugins**
-   - npm installation
-   - Plugin registration
-   - Configuration
-   - Available plugins
+When making a Plugin, you may want it to generalize to many different Collections.
 
-2. **Plugin Architecture**
-   - Plugin interface
-   - Lifecycle hooks
-   - Context access
+This can be achieved by adopting different behavior depending on the `schema` of the Collection being targeted.
 
-3. **Creating Plugins**
-   - Project structure
-   - Plugin API
-   - TypeScript types
-   - Testing
+```javascript
+export async function removeTimestamps(dataSource, collection, options) {
+  for (const currentCollection of dataSource.collections) {
+    if (currentCollection.schema.fields.createdAt) {
+      currentCollection.removeField('createdAt');
+    }
 
-4. **Plugin Types**
-   - Data source plugins
-   - Field plugins
-   - Action plugins
-   - Collection plugins
-
-5. **Publishing Plugins**
-   - npm publishing
-   - Documentation
-   - Versioning
-   - Maintenance
-
-6. **Examples**
-   - Custom data source
-   - Field transformer
-   - Action template
-
-## Migration notes
-
-- Node.js PRIORITY 1
-- Most mature plugin ecosystem
-- TypeScript support
-
-## Related pages
-
-- [Overview](/product/process/for-tech-teams/plugins/overview)
-- [Integration > Setup > Node.js](/product/integration/setup/nodejs)
+    if (currentCollection.schema.fields.updatedAt) {
+      currentCollection.removeField('updatedAt');
+    }
+  }
+}
+```

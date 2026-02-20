@@ -1,0 +1,59 @@
+---
+title: Field Filtering
+---
+
+## Disabling operators
+
+<Info>
+  Disabling filtering can be made without any code in the field settings in the Forest Admin UI.
+</Info>
+
+## Substitution
+
+Operation substitution can be used for two purposes:
+
+- **Performance**: provide a more efficient way to perform a given filtering operation
+- **Capabilities**: enable filtering on a computed field or other non-filterable fields
+
+```javascript
+collection.replaceFieldOperator('fullName', 'Equal', (value, context) => {
+  const [firstName, ...lastNames] = value.split(' ');
+
+  return {
+    aggregator: 'And',
+    conditions: [
+      { field: 'firstName', operator: 'Equal', value: firstName },
+      { field: 'lastName', operator: 'Equal', value: lastNames.join(' ') },
+    ],
+  };
+});
+```
+
+## Operators to support to enable search
+
+| Column Type | Operator to support |
+| --- | --- |
+| Number | Equal |
+| Enum | Equal |
+| String | IContains OR Contains OR Equal |
+| Uuid | Equal |
+
+You can use the `replaceFieldOperator` method to unlock the operators.
+
+## Emulation
+
+Filtering emulation allows making fields filterable automatically.
+It is a convenient way to get things working quickly for collections that have a low number of records (in the thousands at most).
+
+<Warning>
+  This emulation forces the agent to retrieve all the collection records and compute the field values for each one of them.
+  As a consequence, filtering emulation performance cost is **linear** with the number of records in the collection, so **activate it sparingly and with great care**.
+</Warning>
+
+```javascript
+// Add support for all operators
+collection.emulateFieldFiltering('fullName');
+
+// Add support for a single operator
+collection.emulateFieldOperator('fullName', 'Equal');
+```

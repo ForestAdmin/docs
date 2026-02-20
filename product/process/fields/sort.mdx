@@ -1,0 +1,41 @@
+---
+title: Field Sorting
+---
+
+Depending on the data source, not all fields may be sortable, or you may want to change how the native sorting works.
+
+By using the `replaceFieldSorting` and `emulateFieldSorting` methods, you can change a single column's sorting behavior.
+
+## Substitution
+
+You can provide replacement sort clauses. In this example, we're telling Forest Admin "When a user sorts by full name, I want to sort by the last name, and then by the first name".
+
+```javascript
+collection.replaceFieldSorting('fullName', [
+  { field: 'lastName', ascending: true },
+  { field: 'firstName', ascending: true },
+]);
+```
+
+Another very common reason is performance. For instance, with auto-incrementing ids, sorting by `creationDate` is equivalent to sorting by the primary key in reverse order.
+
+Using sort substitution where needed can save you from adding many indexes to your database.
+
+```javascript
+// Sorting by creationDate ascending <=> Sorting by id descending
+collection.replaceFieldSorting('creationDate', [{ field: 'id', ascending: false }]);
+```
+
+## Emulation
+
+Sorting emulation allows making any field automatically sortable. It will sort records by lexicographical order.
+It is a convenient way to get things working quickly for collections that have a low number of records (in the thousands at most).
+
+<Warning>
+  This emulation forces the agent to retrieve all the collection records and compute the field values for each one of them.
+  As a consequence, sorting emulation performance cost is **linear** with the number of records in the collection, so **activate it sparingly and with great care**.
+</Warning>
+
+```javascript
+collection.emulateFieldSorting('fullName');
+```
