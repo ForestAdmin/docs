@@ -1,0 +1,125 @@
+---
+title: "Forest Admin experimental: community driven content"
+description: "Contribute datasources, plugins, and tools to the Forest Admin community"
+---
+
+Forest Admin experimental is the community-driven repository where developers share datasources, plugins, and integrations with the broader Forest Admin ecosystem.
+
+## What is Forest Admin experimental?
+
+[Forest Admin experimental](https://github.com/ForestAdmin/forestadmin-experimental) is a monorepo containing community-built packages that extend Forest Admin's capabilities. These packages are maintained by the community and Forest Admin team, providing specialized integrations for popular services and platforms.
+
+Unlike native datasources that are built directly into Forest Admin agents, experimental packages are:
+- **Community-driven** - Built and maintained by Forest Admin users
+- **Specialized** - Focused on specific platforms or use cases
+- **Experimental** - May have limitations or be in active development
+- **Open source** - Anyone can contribute improvements
+
+## Current community datasources
+
+The experimental repository currently includes:
+
+- **[@forestadmin-experimental/datasource-elasticsearch](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-elasticsearch)** - Connect to Elasticsearch indices
+- **[@forestadmin-experimental/datasource-hubspot-translation](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-hubspot-translation)** - Read HubSpot CRM data
+
+## Contributing your datasource
+
+If you've built a datasource for your own needs, consider sharing it with the community through Forest Admin experimental.
+
+### When to contribute
+
+Consider contributing when:
+- You've built a datasource for a popular service (Salesforce, Airtable, Notion, etc.)
+- Your datasource solves a common integration problem
+- You're willing to maintain the package and respond to issues
+- The integration would benefit other Forest Admin users
+
+### Contribution process
+
+1. **Build your datasource** - Create a working datasource using Forest Admin's datasource SDK
+2. **Test thoroughly** - Ensure it works reliably with real data
+3. **Document your code** - Add clear README with installation, configuration, and examples
+4. **Open a pull request** - Submit to [forestadmin-experimental](https://github.com/ForestAdmin/forestadmin-experimental)
+5. **Collaborate** - Work with maintainers to refine and publish
+
+### Package requirements
+
+Your datasource package should include:
+
+- **Clear README** - Installation, basic usage, configuration options
+- **TypeScript types** - Full type definitions for better DX
+- **Tests** - Unit tests covering core functionality
+- **Examples** - Working example code
+- **License** - MIT license (consistent with Forest Admin)
+
+### Repository structure
+
+```
+packages/
+  datasource-yourservice/
+    src/
+      index.ts          # Main datasource entry point
+      collection.ts     # Collection implementation
+      types.ts          # TypeScript types
+    test/
+      integration.test.ts
+    README.md
+    package.json
+```
+
+## Benefits of contributing
+
+- **Community recognition** - Your work helps other developers
+- **Collaboration** - Get feedback and improvements from the community
+- **Maintenance support** - Forest Admin team can help maintain popular packages
+- **Visibility** - Featured in Forest Admin documentation and community showcases
+
+## Getting help
+
+Have questions about contributing?
+
+- **GitHub Discussions** - Ask in [forestadmin-experimental discussions](https://github.com/ForestAdmin/forestadmin-experimental/discussions)
+- **Community forum** - Get help from other developers at [community.forestadmin.com](https://community.forestadmin.com)
+- **Contact us** - Reach out to support@forestadmin.com for guidance
+
+## Example: Elasticsearch datasource
+
+The Elasticsearch datasource is a great example of a community contribution:
+
+```typescript
+import { createElasticsearchDataSource } from '@forestadmin-experimental/datasource-elasticsearch';
+
+agent.addDataSource(
+  createElasticsearchDataSource({
+    node: 'http://localhost:9200',
+    auth: {
+      username: 'elastic',
+      password: 'password'
+    },
+    indices: [
+      {
+        name: 'products',
+        fields: {
+          id: { type: 'Number' },
+          name: { type: 'String' },
+          price: { type: 'Number' }
+        }
+      }
+    ]
+  })
+);
+```
+
+This package provides full CRUD operations, filtering, and aggregations for Elasticsearch indices—all maintained by the community.
+
+## Next steps
+
+Ready to contribute? Start by:
+
+1. Exploring the [forestadmin-experimental repository](https://github.com/ForestAdmin/forestadmin-experimental)
+2. Reading existing datasource implementations
+3. Opening a discussion about your planned contribution
+4. Building and testing your datasource locally
+5. Submitting a pull request with your contribution
+
+Your contributions help make Forest Admin more powerful for everyone.

@@ -1,0 +1,193 @@
+---
+title: Forest Admin Documentation
+description: Build powerful admin panels on top of your data - no matter where it lives.
+mode: custom
+---
+
+<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem' }}>
+  <div style={{ maxWidth: '64rem', width: '100%', margin: '0 auto' }}>
+
+    {/* Hero Section */}
+    <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+      <h1 style={{ fontSize: '3rem', fontWeight: 300, lineHeight: 1.2, marginBottom: '1rem', color: '#1a1a1a' }}>
+        Build with Forest Admin
+      </h1>
+      <p style={{ fontSize: '1.25rem', color: '#666', marginBottom: '2rem', lineHeight: 1.6 }}>
+        Build powerful admin panels on top of your data - no matter where it lives
+      </p>
+
+      {/* Search Bar */}
+      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          padding: '0.75rem 1rem',
+          background: 'white',
+          border: '1px solid #e0e0e0',
+          borderRadius: '12px',
+          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+          cursor: 'pointer'
+        }}>
+          <svg style={{ color: '#666', flexShrink: 0 }} width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+          </svg>
+          <span style={{ flex: 1, color: '#999', fontSize: '0.95rem' }}>Search documentation...</span>
+          <kbd style={{
+            padding: '0.25rem 0.5rem',
+            background: '#f5f5f5',
+            border: '1px solid #e0e0e0',
+            borderRadius: '4px',
+            fontSize: '0.875rem',
+            fontFamily: 'monospace',
+            color: '#666'
+          }}>⌘K</kbd>
+        </div>
+      </div>
+    </div>
+
+    {/* Quick Start Cards */}
+    <div style={{ marginBottom: '4rem' }}>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1a1a1a' }}>Quick Start</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <a href="/get-started/quickstart-self-hosted" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none',
+          transition: 'all 0.2s'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🚀</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>Self-Hosted</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Set up Forest Admin with Node.js or Ruby in under 10 minutes</p>
+        </a>
+        <a href="/get-started/quickstart-cloud" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none',
+          transition: 'all 0.2s'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>☁️</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>Cloud</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Connect your database and get started instantly</p>
+        </a>
+      </div>
+    </div>
+
+    {/* Main Features */}
+    <div style={{ marginBottom: '4rem' }}>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1a1a1a' }}>Documentation</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+        <a href="/get-started/intro-to-forest-admin" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📚</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>Get Started</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Learn the basics and set up your first admin panel</p>
+        </a>
+        <a href="/guides/learning-paths" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🎓</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>Learning Paths</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Structured learning journey tailored to your role</p>
+        </a>
+        <a href="/reference/agent-api/nodejs" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>💻</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>API Reference</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Complete reference for the Forest Admin agent</p>
+        </a>
+        <a href="/product/overview" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⚙️</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>Features</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Explore all Forest Admin capabilities</p>
+        </a>
+        <a href="/guides/overview" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📖</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>Guides</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Step-by-step guides for specific use cases</p>
+        </a>
+        <a href="/guides/migration/from-v1/overview" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔄</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>Migration</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Migrate from Agent v1 to v2</p>
+        </a>
+      </div>
+    </div>
+
+    {/* Community */}
+    <div style={{ marginBottom: '4rem' }}>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1a1a1a' }}>Community</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <a href="https://community.forestadmin.com" target="_blank" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>💬</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>Forum</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Ask questions and get help from the community</p>
+        </a>
+        <a href="https://github.com/ForestAdmin" target="_blank" style={{
+          display: 'block',
+          padding: '1.5rem',
+          background: 'white',
+          border: '0.5px solid #e0e0e0',
+          borderRadius: '12px',
+          textDecoration: 'none'
+        }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⭐</div>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '0.5rem', color: '#1a1a1a' }}>GitHub</h3>
+          <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.5, margin: 0 }}>Report bugs, request features, and contribute</p>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>

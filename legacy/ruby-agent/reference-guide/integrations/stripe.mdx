@@ -1,0 +1,37 @@
+---
+title: Stripe
+---
+
+# Stripe
+
+Configuring the Stripe integration for Forest allows you to have your **customer’s payments, invoices, cards and subscriptions** **(1)** alongside the corresponding customer from your application. A `Refund` Smart Action **(2,3)** is also implemented out-of-the-box.
+
+![](</images/legacy/javascript-agents/image (67).png>)
+
+### Rails
+On our Live Demo, we’ve configured the Stripe integration on the `Customer` collection. The Stripe Customer ID is already stored on the database under the field `stripe_id`.
+
+```ruby
+ForestLiana.env_secret = Rails.application.secrets.forest_env_secret
+ForestLiana.auth_secret = Rails.application.secrets.forest_auth_secret
+
+ForestLiana.integrations = {
+  stripe: {
+    api_key: ENV['STRIPE_SECRET_KEY'],
+    mapping: 'Customer.stripe_id'
+  }
+}
+```
+
+#### Available options
+
+Here are the complete list of available options to customize your Stripe integration.
+
+| Name    | Type   | Description                                                                                                                                                               |
+| ------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| api_key | string | The API Secret key of your Stripe account. Should normally starts with `sk_`.                                                                                             |
+| mapping | string | Indicates how to reconcile your Customer data from your Stripe account and your collection/field from your database. Format must be `model_name.stripe_customer_id_field` |
+
+<Info>
+A `stripe` option is also available to use the official [Node.js Stripe library](https://github.com/stripe/stripe-node) NPM package.
+</Info>

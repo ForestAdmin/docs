@@ -1,0 +1,25 @@
+---
+title: Serializing your records
+---
+
+# Serializing your records
+
+To be interpreted correctly by the ForestAdmin UI, the data must be sent from your admin backend using a particular structure.\
+\
+This structure needs to comply to the JSON API standard. The JSON API standard is used to ensure a standardized way to format JSON responses returned to clients. You can find some more information directly from their [website](https://jsonapi.org/).\
+\
+Most of the time, your admin backend will handle this for you, and you will not have to play with serialization. However you might encounter specific use cases that will require you to serialize data yourself, such as smart collections for example.‌
+
+In order to help you do so, the helper `RecordSerializer` is made available through the packages built-in your admin panel.‌
+
+### Initializing the record serializer
+
+### Example 1 - Smart collection with simple fields
+
+Let's take a look at the collection defined in the documentation's [smart collection example](./):
+
+### Example 2 - Smart collection example with an added belongsTo relationship
+
+Now let's say we want to reference the customer related to a stat instead of just displaying its `email`. We would then adapt the smart collection definition to include a field `customer` referencing the `customers` collection:
+
+

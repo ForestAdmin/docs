@@ -1,0 +1,100 @@
+---
+title: Create a record with a multiselect through a many-to-many relationship
+---
+
+# Create a record with a multiselect through a many-to-many relationship
+
+**Context:** In this case, a card has many expense categories through a many to many relationships, using a join table (card expense categories). We want to be able to create a card, selecting the categories, and creating the card expense categories at the same time.
+
+**Implementation:**
+
+We will use a [smart action](../create-and-manage-smart-actions/) form with a hook to retrieve the categories as values for the multi select.
+
+Then we implement the creation of cards and expenseCategories in the form.
+
+`forest/cards.js`
+
+
+`routes/cards.js`
+
+
+### Rails version:
+
+`lib/forest_liana/collections/card.rb`
+
+```jsx
+class Forest::Card
+    include ForestLiana::Collection
+    collection :Card
+
+    action 'Create Card',
+        type: 'global',
+        fields: [{
+            field: "name",
+            type: "String",
+            isRequired: true,
+        },
+        {
+            field: "user",
+            type: "Number",
+            reference: "User.id",
+            isRequired: true,
+        },
+        {
+            field: "company",
+            type: "Number",
+            reference: "Company.id",
+            isRequired: true,
+        },
+        {
+            field: "vendor",
+            type: "Number",
+            reference: "Vendor.id",
+            isRequired: true,
+        },
+        {
+            field: "categories",
+            type: ['Enum'],
+        }
+        ],
+        :hooks => {
+            :load => -> (context) {
+                categories = context[:fields].find{|field| field[:field] == 'categories'}
+                categories[:enums] = ExpenseCategory.all.pluck(:title)
+                return context[:fields]
+            }
+        }
+end
+```
+
+`config/routes.rb`
+
+```jsx
+Rails.application.routes.draw do
+  ...
+  namespace :forest do
+    post '/actions/create-card' => 'cards#create_card'
+  end
+  mount ForestLiana::Engine => '/forest'
+end
+```
+
+`controllers/forest/cards_controller.rb`
+
+```jsx
+class Forest::CardsController < ForestLiana::SmartActionsController
+    def create_card
+        attrs = params.dig('data', 'attributes', 'values')
+        categories_attrs = attrs['categories'];
+        attrs = { name: attrs['name'], user_id: attrs['user'], company_id: attrs['company'], vendor_id: attrs['vendor'] };
+
+        card = Card.create(attrs)
+        categories_attrs.each do|category|
+            expense_category = ExpenseCategory.find_by(title: category)
+            card_expense_category = CardExpenseCategory.create(card_id: card.id, expense_category_id: expense_category.id)
+        end
+
+        render json: { success: 'Your card has been created.' }
+    end
+end
+```

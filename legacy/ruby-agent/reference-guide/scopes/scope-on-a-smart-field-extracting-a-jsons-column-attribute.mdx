@@ -1,0 +1,18 @@
+---
+title: Scope on a smart field extracting a json's column attribute
+---
+
+# Scope on a smart field extracting a json's column attribute
+
+**Context**: As a user, I want to scope a table's records based on the value of an attribute nested within a json column.
+
+**Example**: I have a table `users` that includes a JSONB column named `contact`. The `contact` json can include a `phone`, `email` or `country` attribute. Since I want to scope my collection by `country`, I created a smart field called `country` that returns the value of the country attribute and I implemented a filter feature for this field.
+
+### Implementation
+
+The smart field definition and the filtering logic are defined as follows in the `forest/users.js` file of my admin backend.
+
+
+<Warning>
+In order to make your smart field filterable in the UI, you both need to add the `isFilterable: true` option in the field's declaration and to enable filtering on this field in the field settings in the UI.
+</Warning>

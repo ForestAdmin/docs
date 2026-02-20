@@ -1,0 +1,77 @@
+---
+title: Display Zendesk users
+---
+
+# Display Zendesk users
+
+This section shows you how to create a smart collection to list the users of your Zendesk account.
+
+### Declare the Smart Collection Zendesk Users&#x20;
+
+Zendesk API allows to access different data:
+
+- [Users](https://developer.zendesk.com/rest_api/docs/support/users)
+- [Tickets & Comments](https://developer.zendesk.com/rest_api/docs/support/tickets)
+- [Organizations](https://developer.zendesk.com/rest_api/docs/support/organizations) and [Groups](https://developer.zendesk.com/rest_api/docs/support/groups)
+
+First, we need to declare the smart collection in your project based on the API documentation. As an example, here the smart collection definition for Users:
+
+
+<Info>
+Some fields are available for filtering or sorting using the Zendesk API. To allow this on the Forest UI, simply add the keywords `isFilterable` and `isSortable` in your field definition.
+</Info>
+
+### Implement the Smart Collection route
+
+In the file `routes/zendesk-users.js`, we’ve created a new route to implement the API behind the Smart Collection.
+
+The logic here is to list all the users of your Zendesk account.
+
+<Info>
+
+- Learn more about how to [authenticate, filter and sort with the Zendesk API](https://docs.forestadmin.com/woodshop/how-tos/zendesk-integration/authentication-filtering-and-sorting).
+- Find more information about `getUsers` variable definition in [the Github repository](https://github.com/existenz31/forest-zendesk/blob/master/services/zendesk-users-service.js).
+</Info>
+
+
+### Implement the get Route
+
+The section above help you display the list of all Zendesk users. But you'll need to implement also the logic to display the information of a specific user.
+
+We just need to implement a new endpoint to get an individual user from the Zendesk API.
+
+```javascript
+async function getUser(request, response, next) {
+  return axios
+    .get(
+      `${ZENDESK_URL_PREFIX}/api/v2/users/${request.params.userId}?include=comment_count`,
+      {
+        headers: {
+          Authorization: `Basic ${getToken()}`,
+        },
+      }
+    )
+    .then(async (resp) => {
+      let record = resp.data.user;
+      // Serialize the result using the Forest Admin format
+      const recordSerializer = new RecordSerializer({ name: 'zendesk_users' });
+      const recordSerialized = await recordSerializer.serialize(record);
+      response.send(recordSerialized);
+    })
+    .catch(next);
+}
+```
+
+```javascript
+const { getUsers, getUser } = require('../services/zendesk-tickets-service');
+
+// Get a Zendesk Ticket
+router.get(
+  '/zendesk_users/:userId',
+  permissionMiddlewareCreator.details(),
+  (request, response, next) => {
+    getUser(request, response, next);
+  }
+);
+```
+

@@ -1,0 +1,29 @@
+---
+title: Display Dwolla customers
+---
+
+# Display Dwolla customers
+
+{/* markdown-link-check-disable */}
+
+This example shows you how to create a smart collection to list the customers of your [Dwolla](https://www.dwolla.com/) account.
+
+{/* markdown-link-check-enable */}
+
+## 1. Define the smart collection
+
+Filterable fields are flagged using `isFilterable: true`. You will need to enable this option using the collection settings in the [Layout Editor](https://docs.forestadmin.com/user-guide/getting-started/master-your-ui/using-the-layout-editor-mode).&#x20;
+
+Customers have `isSearchable` flag enabled: it means the search input field will be activated on the collection UI.
+
+
+## 2. Implement the route
+
+The Customers routes implement the Get List and Get One, plus the [smart relationships (HasMany)](https://docs.forestadmin.com/documentation/reference-guide/relationships/create-a-smart-relationship#creating-a-hasmany-smart-relationship):
+
+- Funding Sources
+- Transfers
+
+These routes use the Dwolla service described in [another section](https://docs.forestadmin.com/woodshop/how-tos/dwolla-integration/dwolla-servive).
+
+

@@ -1,5 +1,5 @@
 ---
-title: "SCIM user provisioning"
+title: "SCIM User Provisioning"
 description: "Automate user lifecycle management with SCIM (System for Cross-domain Identity Management) integration with your identity provider"
 ---
 
@@ -11,10 +11,27 @@ SCIM (System for Cross-domain Identity Management) is an open standard for autom
 This feature may not be available on all plans and requires SSO to be configured first. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
 </Info>
 
-## Why use SCIM?
+## Why Use SCIM?
 
+<CardGroup cols={2}>
+  <Card title="Automated Provisioning" icon="user-plus">
+    New employees automatically get Forest Admin access when added to your IdP
+  </Card>
 
-## How SCIM works
+  <Card title="Instant Offboarding" icon="user-minus">
+    Departing employees lose access immediately when disabled in your IdP
+  </Card>
+
+  <Card title="Synchronized Updates" icon="arrows-rotate">
+    User profile changes in IdP automatically sync to Forest Admin
+  </Card>
+
+  <Card title="Reduced Admin Overhead" icon="clock">
+    Eliminate manual user management and reduce IT workload
+  </Card>
+</CardGroup>
+
+## How SCIM Works
 
 SCIM enables bidirectional communication between your IdP and Forest Admin:
 
@@ -52,7 +69,7 @@ SCIM enables bidirectional communication between your IdP and Forest Admin:
          │                                       │
 ```
 
-### User lifecycle events
+### User Lifecycle Events
 
 SCIM handles the complete user lifecycle:
 
@@ -115,12 +132,37 @@ SCIM handles the complete user lifecycle:
   </Tab>
 </Tabs>
 
-## Supported identity providers
+## Supported Identity Providers
 
 Forest Admin supports SCIM 2.0 with these major IdPs:
 
+<CardGroup cols={2}>
+  <Card title="Okta" icon="circle-check">
+    Full SCIM 2.0 support with user and group provisioning
+  </Card>
 
-## Setting up SCIM
+  <Card title="Azure AD / Entra ID" icon="microsoft">
+    Enterprise Application with automatic provisioning
+  </Card>
+
+  <Card title="OneLogin" icon="fingerprint">
+    SCIM connector for user lifecycle management
+  </Card>
+
+  <Card title="Google Workspace" icon="google">
+    SCIM provisioning via third-party connectors
+  </Card>
+
+  <Card title="JumpCloud" icon="server">
+    Directory-as-a-Service with SCIM support
+  </Card>
+
+  <Card title="Custom SCIM 2.0" icon="code">
+    Any SCIM 2.0 compliant identity provider
+  </Card>
+</CardGroup>
+
+## Setting Up SCIM
 
 ### Prerequisites
 
@@ -130,7 +172,7 @@ Before configuring SCIM:
 - Admin access to your identity provider
 - Admin access to Forest Admin
 
-### Configuration steps
+### Configuration Steps
 
 <Steps>
   <Step title="Enable SCIM in Forest Admin">
@@ -181,7 +223,7 @@ Before configuring SCIM:
   </Step>
 </Steps>
 
-## Provider-specific setup
+## Provider-Specific Setup
 
 ### Okta
 
@@ -291,9 +333,9 @@ Before configuring SCIM:
   </Step>
 </Steps>
 
-## Attribute mapping
+## Attribute Mapping
 
-### Standard user attributes
+### Standard User Attributes
 
 Map IdP user attributes to Forest Admin fields:
 
@@ -322,7 +364,7 @@ Map IdP user attributes to Forest Admin fields:
   </Tab>
 </Tabs>
 
-### Custom attribute mapping
+### Custom Attribute Mapping
 
 Configure custom attributes for advanced use cases:
 
@@ -350,9 +392,9 @@ Configure custom attributes for advanced use cases:
 }
 ```
 
-## Group/team synchronization
+## Group/Team Synchronization
 
-### Mapping idp groups to teams
+### Mapping IdP Groups to Teams
 
 Automatically assign users to Forest Admin teams based on their IdP group membership:
 
@@ -386,7 +428,7 @@ Automatically assign users to Forest Admin teams based on their IdP group member
   </Step>
 </Steps>
 
-### Dynamic team assignment
+### Dynamic Team Assignment
 
 Users are automatically added/removed from teams based on group membership:
 
@@ -407,9 +449,9 @@ Users are automatically added/removed from teams based on group membership:
 }
 ```
 
-## Role assignment with SCIM
+## Role Assignment with SCIM
 
-### Automatic role assignment
+### Automatic Role Assignment
 
 Assign Forest Admin roles based on IdP attributes:
 
@@ -467,7 +509,7 @@ Assign Forest Admin roles based on IdP attributes:
   </Tab>
 </Tabs>
 
-### Default role fallback
+### Default Role Fallback
 
 Configure a default role for users without mapped attributes:
 
@@ -478,9 +520,9 @@ Configure a default role for users without mapped attributes:
 }
 ```
 
-## Monitoring SCIM sync
+## Monitoring SCIM Sync
 
-### Sync status
+### Sync Status
 
 Monitor SCIM provisioning status:
 
@@ -507,7 +549,7 @@ Monitor SCIM provisioning status:
   </Step>
 </Steps>
 
-### Idp-side monitoring
+### IdP-Side Monitoring
 
 Check provisioning status in your IdP:
 
@@ -538,13 +580,11 @@ Check provisioning status in your IdP:
 
 ## Troubleshooting
 
-### SCIM connection issues
+### SCIM Connection Issues
 
-
-<details>
-<summary>Authentication Failed</summary>
-
-**Error**: `401 Unauthorized` or `403 Forbidden`
+<AccordionGroup>
+  <Accordion title="Authentication Failed">
+    **Error**: `401 Unauthorized` or `403 Forbidden`
 
     **Causes**:
     - Invalid or expired Bearer Token
@@ -555,14 +595,10 @@ Check provisioning status in your IdP:
     1. Regenerate Bearer Token in Forest Admin
     2. Update token in IdP configuration
     3. Test connection again
+  </Accordion>
 
-</details>
-
-
-<details>
-<summary>SCIM Endpoint Not Found</summary>
-
-**Error**: `404 Not Found` or connection timeout
+  <Accordion title="SCIM Endpoint Not Found">
+    **Error**: `404 Not Found` or connection timeout
 
     **Causes**:
     - Incorrect SCIM Base URL
@@ -573,14 +609,10 @@ Check provisioning status in your IdP:
     1. Verify SCIM Base URL is exactly: `https://api.forestadmin.com/scim/v2`
     2. Ensure SCIM is enabled in Forest Admin settings
     3. Check IdP can reach Forest Admin (no firewall blocking)
+  </Accordion>
 
-</details>
-
-
-<details>
-<summary>User Creation Failed</summary>
-
-**Error**: User not created in Forest Admin
+  <Accordion title="User Creation Failed">
+    **Error**: User not created in Forest Admin
 
     **Causes**:
     - Email already exists (duplicate user)
@@ -593,14 +625,10 @@ Check provisioning status in your IdP:
     2. Verify email is valid and unique
     3. Ensure all required SCIM attributes are mapped
     4. Check role mapping configuration
+  </Accordion>
 
-</details>
-
-
-<details>
-<summary>User Not Deactivated</summary>
-
-**Error**: User disabled in IdP but still active in Forest Admin
+  <Accordion title="User Not Deactivated">
+    **Error**: User disabled in IdP but still active in Forest Admin
 
     **Causes**:
     - Deactivation not enabled in IdP provisioning
@@ -612,11 +640,10 @@ Check provisioning status in your IdP:
     2. Wait for sync cycle (or trigger manual sync)
     3. Check SCIM logs for errors
     4. Manually disable user in Forest Admin if urgent
+  </Accordion>
+</AccordionGroup>
 
-</details>
-
-
-### Attribute mapping issues
+### Attribute Mapping Issues
 
 **Problem**: User attributes not syncing correctly
 
@@ -629,7 +656,7 @@ Check provisioning status in your IdP:
 
 **Debug**: Check SCIM logs to see actual JSON payload sent by IdP
 
-### Group/team sync issues
+### Group/Team Sync Issues
 
 **Problem**: Users not assigned to correct teams
 
@@ -645,12 +672,29 @@ Check provisioning status in your IdP:
 3. Verify user's group membership in IdP
 4. Wait for or trigger sync
 
-## Security best practices
+## Security Best Practices
 
-### SCIM token management
+### SCIM Token Management
 
+<CardGroup cols={2}>
+  <Card title="Secure Storage" icon="vault">
+    Store SCIM Bearer Token securely in your IdP's credential store
+  </Card>
 
-### Access controls
+  <Card title="Rotate Regularly" icon="arrows-rotate">
+    Rotate SCIM tokens annually or per your security policy
+  </Card>
+
+  <Card title="Limit Access" icon="user-lock">
+    Only IdP admins should have access to SCIM tokens
+  </Card>
+
+  <Card title="Monitor Usage" icon="chart-line">
+    Review SCIM logs for unauthorized API calls
+  </Card>
+</CardGroup>
+
+### Access Controls
 
 1. **Principle of Least Privilege**: Default role should be minimal (e.g., Viewer)
 2. **Role Validation**: Verify role mappings assign appropriate permissions
@@ -658,16 +702,16 @@ Check provisioning status in your IdP:
 4. **Audit Provisioning**: Review SCIM sync logs regularly
 5. **Test Deprovisioning**: Verify disabled users lose access immediately
 
-### Compliance considerations
+### Compliance Considerations
 
 - **SOC 2**: SCIM automates user lifecycle management (CC6.3)
 - **GDPR**: Prompt deprovisioning helps with data access controls
 - **HIPAA**: Automated access removal reduces unauthorized PHI access
 - **Audit Trail**: SCIM events logged in Forest Admin audit logs
 
-## Best practices
+## Best Practices
 
-### Initial rollout
+### Initial Rollout
 
 <Steps>
   <Step title="Start Small">
@@ -695,7 +739,7 @@ Check provisioning status in your IdP:
   </Step>
 </Steps>
 
-### Ongoing management
+### Ongoing Management
 
 1. **Monitor Sync Status**: Check SCIM logs weekly for errors
 2. **Review Mappings**: Verify role/team mappings quarterly
@@ -703,24 +747,22 @@ Check provisioning status in your IdP:
 4. **Update Documentation**: Keep SCIM configuration documented
 5. **Test Periodically**: Quarterly test of full user lifecycle
 
-## Next steps
+## Next Steps
 
-### [SSO setup](/product/control/authentication/sso)
+<CardGroup cols={2}>
+  <Card title="SSO Setup" icon="key" href="/product/control/authentication/sso">
+    Configure SSO before enabling SCIM
+  </Card>
 
-Configure SSO before enabling SCIM
+  <Card title="Teams & Roles" icon="users" href="/product/control/teams">
+    Set up teams for SCIM group mappings
+  </Card>
 
+  <Card title="Audit Logs" icon="clock-rotate-left" href="/product/control/audit">
+    Monitor SCIM provisioning events
+  </Card>
 
-  ### [Teams & Roles](/product/control/teams)
-
-Set up teams for SCIM group mappings
-
-
-  ### [Audit Logs](/product/control/audit)
-
-Monitor SCIM provisioning events
-
-
-  ### [Scopes](/product/control/scopes-and-visibility)
-
-Configure data access for provisioned users
-
+  <Card title="Scopes" icon="filter" href="/product/control/scopes-and-visibility">
+    Configure data access for provisioned users
+  </Card>
+</CardGroup>

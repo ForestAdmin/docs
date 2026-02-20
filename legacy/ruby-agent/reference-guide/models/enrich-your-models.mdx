@@ -1,0 +1,67 @@
+---
+title: Enrich your models
+
+description: >-
+  ⚠️ This page is relevant only if you installed Forest Admin directly on a
+  database (SQL/Mongodb). If you installed in a Rails/Django/Laravel app, you
+  manage your models like you normally would.
+---
+
+# Enrich your models
+
+### Declaring a new model
+
+Whenever you have a new table/collection in your database, you will have to create file to declare it. Here is a **template example** for a `companies` table:
+
+### Declaring a new field in a model
+
+Any new field must be added **manually** within the corresponding model of your `/models` folder.
+
+### Managing nested documents in Mongoose
+
+<Info>
+For a better user experience, you can [Flatten nested fields](../../how-tos/setup/flatten-nested-fields-mongodb.md).
+</Info>
+
+Lumber introspects your data structure recursively, so _**nested fields**_ (object in object) are detected any level deep. Your **sub-documents** (array of nested fields) are detected as well.
+
+<Warning>
+Conflicting data types will result in the generation of a [mixed](https://mongoosejs.com/docs/schematypes.html#mixed) type field.
+</Warning>
+
+The following model...
+
+
+...will result in the following interface:
+
+![](/images/legacy/javascript-agents/nested-documents-field-customization-mongoose.png)
+
+### Removing a model
+
+By default **all** tables/collections in your database are analyzed by Lumber to generate your models. If you want to exclude some of them to prevent them from appearing in your Forest, check out [this how-to](../../how-tos/settings/include-exclude-models.md).
+
+### Adding validation to your models
+
+Validation allows you to keep control over your data's quality and integrity.
+
+<Info>
+If your existing app already has validation conditions, you may - or may not - want to reproduce the same validation conditions in your admin backend's models.&#x20;
+
+If so, you'll have to do it **manually**, using the below examples.
+</Info>
+
+Depending on your database type, your models will have been generated in _Sequelize_ (for SQL databases) or _Mongoose_ (for Mongo databases).
+
+###
+
+### Adding a default value to your models
+
+You can choose to add a default value for some fields in your models. As a result, the corresponding fields will be prefilled with their default value in the creation form:
+
+### Adding a hook
+
+Hooks are a powerful mechanism which allow you to automatically **trigger an event** at specific moments in your records lifecycle.&#x20;
+
+In our case, let's pretend we want to update a `update_count` field every time a record is updated:
+
+

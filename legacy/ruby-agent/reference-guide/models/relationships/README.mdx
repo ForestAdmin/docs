@@ -1,0 +1,102 @@
+---
+title: Relationships
+---
+
+# Relationships
+
+## What is a relationship?
+
+A relationship is a connection between two collections.
+
+Relationships are visible and actionable in Forest Admin:
+
+- `hasMany` **(1)**
+- `belongsTo` or `hasOne`**(2)**
+
+![](/images/legacy/javascript-agents/live-demo-collection-relationship.png)
+
+If you installed Forest Admin within a **Rails** app, then all the relationships defined in your ActiveRecord models are supported out of the box. Check the official [Rails documentation](https://guides.rubyonrails.org/association_basics.html) to create new ones.
+
+If you installed Forest Admin directly on a database, then most relationships should have been [automatically generated](./#lumber-relationship-generation-rules). However, depending on your database nature and structure, you may have to add some manually.
+
+## Adding relationships (databases only)
+
+Depending on your database type, your models will have been generated in Sequelize (for SQL databases) or Mongoose (for Mongo databases).
+
+Below are some simple snippets showing you how to add relationships. However, should you want to dig deeper, please refer to the appropriate framework's documentations:
+
+- [Sequelize's documentation](https://sequelize.org/master/manual/assocs.html) on adding relationships in your models (SQL)
+- [Mongoose's documentation](https://mongoosejs.com/docs/guide.html) on adding relationships in your models (Mongodb)
+
+### Adding a `hasMany` relationship
+
+In our [Live demo](https://app.forestadmin.com/Live%20Demo/Production/Operations/data/806052/index), a **customer** can have multiple **orders**. In that case, we have to use a `hasMany` relationship.
+
+### Adding a `hasOne` relationship
+
+In case of a one-to-one relationship between 2 collections, the opposite of a `belongsTo` relationship is a `hasOne` relationship. Taking the same example as before, the opposite of "an **address** `belongsTo` a **customer**" is simply "a **customer**`hasOne` **address"**.
+
+### Adding a `belongsTo` relationship
+
+On our Live Demo example, the Address model has a foreignKey customer_id that points to the Customer. In other words, an **address**`belongsTo` a **customer**.
+
+#### Declaring a foreign key (SQL only)
+
+It's possible that your tables are linked in an unusual way (using _names_ instead of _ids_ for instance).\
+\
+In that case, adding the above code will not suffice to add the `belongsTo` relationship. Even though we recommend you modify your database structure to stay within foreign key conventions (pointing to an id), there is a way to **specify how your tables are linked**.
+
+If the field `fk_customername` of a table **Address** points to the field `name` of a table **Customer**, add the following:
+
+javascript
+...
+UserProjects.associate = (models) => {
+  UserProjects.belongsTo(models.projects, {
+    foreignKey: {
+      name: 'projectIdKey',
+      field: 'projectId',
+    },
+    as: 'project',
+  });
+  UserProjects.belongsTo(models.users, {
+    foreignKey: {
+      name: 'userIdKey',
+      field: 'userId',
+    },
+    as: 'user',
+  });
+};
+...
+```
+
+```javascript
+...
+Users.associate = (models) => {
+  Users.belongsToMany(models.projects, {
+    through: 'userProjects',
+    foreignKey: 'userId',
+    otherKey: 'projectId',
+  });
+};
+...
+```
+
+```javascript
+...
+Projects.associate = (models) => {
+  Projects.belongsToMany(models.users, {
+    through: 'userProjects',
+    foreignKey: 'projectId',
+    otherKey: 'userId',
+  });
+};
+...
+```
+
+![](</images/legacy/javascript-agents/Screenshot 2020-03-19 at 15.29.10.png>)
+
+## Relationship generation rules
+
+Forest Admin automatically generates most relationships, according to the below rules:
+
+

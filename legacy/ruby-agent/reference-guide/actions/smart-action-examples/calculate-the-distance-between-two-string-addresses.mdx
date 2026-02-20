@@ -1,0 +1,31 @@
+---
+title: Calculate the distance between two string addresses
+---
+
+# Calculate the distance between two string addresses
+
+**Context**: As a user I want to be able to obtain the distance between two objects that have address information as a string.
+
+**Example**: I have a collection `places` that has `lineAddress1`, `addressCity` and `country` fields.
+
+In a smart action called `get distance to another place` called from a specific place, I want to be able to select another place, choosing the locomotion mode and get the distance between the two and duration of trip.
+
+### Implementation
+
+First you need to declare the action and the content of the form.
+
+`forest/places.js`
+
+
+Then you need to implement the logic of the action. Here we use the service `superagent` to handle api calls.
+
+The process has two main steps:
+
+- call to the places api to retrieve the place_id identifier corresponding to the string address of the origin and destination (that is computed as a complete address based on the separate `addressLine1`, `addressCity` and `country` fields)
+- call to the distance matrix api to retrieve the distance information based on the origin and destination's place_ids
+
+The result returned to the UI is formatted in html to enable a good display to the user.
+
+`routes/places.js`
+
+

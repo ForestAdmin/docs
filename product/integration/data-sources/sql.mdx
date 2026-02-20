@@ -7,6 +7,7 @@ The SQL datasource connects directly to SQL databases with automatic schema intr
 
 ## Basic usage
 
+<CodeGroup>
 ```javascript
 import { createAgent } from '@forestadmin/agent';
 import { createSqlDataSource } from '@forestadmin/datasource-sql';
@@ -28,6 +29,7 @@ ForestAdminAgent::Agent.new do |config|
   config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
 end
 ```
+</CodeGroup>
 
 ## Automatic schema introspection
 
@@ -51,6 +53,7 @@ Introspection is supported for PostgreSQL, MySQL, MariaDB, and Microsoft SQL Ser
 
 The connection URI format varies by database:
 
+<CodeGroup>
 ```javascript
 createSqlDataSource({
   uri: 'postgresql://user:password@host:5432/database'
@@ -74,6 +77,7 @@ createSqlDataSource({
   uri: 'sqlite://path/to/database.db'
 })
 ```
+</CodeGroup>
 
 ### SSL configuration
 
@@ -229,7 +233,7 @@ const dataSource = createSqlDataSource({
 - Separate introspection and runtime credentials
 - Version control your schema
 
-## Live query support
+## Live Query support
 
 Enable SQL-based reporting by setting a connection identifier:
 

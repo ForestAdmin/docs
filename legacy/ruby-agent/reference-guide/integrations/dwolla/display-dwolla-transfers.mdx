@@ -1,0 +1,24 @@
+---
+title: Display Dwolla transfers
+---
+
+# Display Dwolla transfers
+
+{/* markdown-link-check-disable */}
+
+This example shows you how to create a smart collection to list the transfers of your [Dwolla](https://www.dwolla.com) account.
+
+{/* markdown-link-check-enable */}
+
+## 1. Define the smart collection
+
+Filterable fields are flagged using `isFilterable: true`. You will need to enable this option using the collection settings in the [Layout Editor](https://docs.forestadmin.com/user-guide/getting-started/master-your-ui/using-the-layout-editor-mode).&#x20;
+
+Transfers have the `onlyForRelationships` enabled: it means that these 2 collections are only accessible via the Dwolla customer relationships.
+
+
+## 2. Implement the route
+
+This route use the Dwolla service described in [another section](dwolla-service.md).
+
+

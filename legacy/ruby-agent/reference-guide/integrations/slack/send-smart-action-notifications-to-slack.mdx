@@ -1,0 +1,73 @@
+---
+title: Send Smart Action notifications to Slack
+---
+
+# Send Smart Action notifications to Slack
+
+This example shows you how to integrate [Slack incoming webhooks](https://api.slack.com/messaging/webhooks) to receive notifications in your workspace when a Smart Action e.g `"Reject application"` is triggered.
+
+Demo
+
+## Create your Forest Admin slack app
+
+Follow Slack's guide to [create a new app](https://api.slack.com/messaging/webhooks) in your workspace and start sending messages using Incoming Webhooks.
+
+![](</images/legacy/javascript-agents/image (527).png>)
+
+At the end of this guide, make sure your Slack app has the following features activated:&#x20;
+
+- Incoming Webhooks
+- Interactive Components
+- Bots
+- Permissions
+
+![](</images/legacy/javascript-agents/image (506).png>)
+
+Once your Slack app has its shiny Incoming Webhook URL, you will be able to send your [message](https://api.slack.com/messages) in JSON as the body of an `application/json` POST request.
+
+```
+https://hooks.slack.com/services/YOUR_WORKSPACE_ID/YOUR_CHANNEL_ID/YOUR_SECRET_TOKEN
+```
+
+## Connect your app from a Slack channel of your choice
+
+![](</images/legacy/javascript-agents/image (485).png>)
+
+## Set up the webhook from your admin backend
+
+### Install the [node.js Slack SDK](https://slack.dev/node-slack-sdk)
+
+From your project's directory, simply run&#x20;
+
+```bash
+$ npm install --save @slack/webhook
+```
+
+### Add the Incoming Webhook URL to your .env
+
+```bash
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR_WORKSPACE_ID/YOUR_CHANNEL_ID/YOUR_SECRET_TOKEN
+```
+
+<Warning>
+This Incoming Webhook URL contains a secret key, please make sure it does not appear in your code.
+</Warning>
+
+### Create the Smart Action and initialize the Incoming Webhook
+
+#### Smart Action declaration
+
+
+#### Smart Action logic
+
+
+<Info>
+To learn more about composing messages using the Slack API, please visit the
+
+- Slack Interactive messages [guide](https://api.slack.com/messaging/interactivity)
+- Slack Block Kit [visual builder](https://api.slack.com/tools/block-kit-builder)
+</Info>
+
+<Warning>
+To learn more about error handling of Slack Interactive Webhooks, please visit the Slack [changelog](https://api.slack.com/changelog/2016-05-17-changes-to-errors-for-incoming-webhooks).
+</Warning>

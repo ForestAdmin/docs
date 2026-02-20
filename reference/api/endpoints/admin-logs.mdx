@@ -1,0 +1,71 @@
+---
+title: Admin API Logs
+---
+> **Status:** TODO - Priority: MEDIUM
+>
+> **Audience:** Developers
+
+## Description
+
+API endpoint for accessing administrative logs and system events.
+
+## Sources to migrate
+
+- `public-api-guide/admin-api-logs.md`
+
+## Content outline
+
+1. **Endpoint Overview**
+   - Purpose
+   - Use cases
+   - vs Activity Logs
+
+2. **Endpoints**
+   - `GET /api/admin-logs` - List admin logs
+   - `GET /api/admin-logs/:id` - Get log details
+
+3. **Query Parameters**
+   - Filtering
+   - Pagination
+   - Sorting
+   - Date ranges
+   - Log level
+
+4. **Response Format**
+   - Log object structure
+   - Timestamp
+   - Event type
+   - User
+   - Details
+
+5. **Log Types**
+   - Configuration changes
+   - Permission updates
+   - Integration events
+   - System events
+   - Error logs
+
+6. **Use Cases**
+   - System monitoring
+   - Audit compliance
+   - Troubleshooting
+   - Change tracking
+
+7. **Examples**
+   ```bash
+   # Fetch recent admin logs
+   curl -H "Authorization: Bearer TOKEN" \
+        https://api.forestadmin.com/api/admin-logs
+   ```
+
+## Migration notes
+
+- MEDIUM priority
+- Part of public API migration
+- Clear examples needed
+
+## Related pages
+
+- [API Introduction](/reference/api/introduction)
+- [Activity Logs API](/reference/api/endpoints/activity-logs)
+- [Control > Audit](/product/control/audit)

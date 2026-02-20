@@ -1,0 +1,33 @@
+---
+title: Custom dynamic dropdown in a form using smart collections
+---
+
+# Custom dynamic dropdown in a form using smart collections
+
+**Context**: I want my users to be able to select an input within a list computed dynamically depending on the current record.
+
+In this example I have a custom action called `report transaction` applicable to records from a `companies` model. I want to allow users to select some information coming from the `transaction` table from a dropdown. The information should be computed from transactions that belong to the current company.
+
+This cannot be handled properly with the current features of custom action forms. However, you can add an input field that points to a virtual collection. As users can perform a dynamic search on this collection, you can catch the search input and use to build the virtual collection records returned.
+
+In our example, the user needs to enter the id of the record on which the action is triggered to build the selection.
+
+### Custom action definition
+
+Within the custom action, we add a field referencing the custom collection `transactionsInfo`.
+
+`forest/companies.js`
+
+
+### Virtual collection definition
+
+The custom collection `transactionsInfo` includes an `id` field and an `info` field which includes the information we want the users to be able to select and that will be used in the custom action logic.
+
+`forest/transaction-info.js`
+
+
+### Virtual collection implementation
+
+`routes/transactions-info.js`
+
+

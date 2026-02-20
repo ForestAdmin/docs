@@ -1,0 +1,195 @@
+---
+title: Forest Admin Public API
+description: REST API for programmatic access to Forest Admin
+---
+
+# Forest Admin Public API
+
+The Forest Admin Public API provides programmatic access to Forest Admin data and features, enabling you to integrate Forest Admin with external tools and build custom workflows.
+
+## Overview
+
+The Public API is a RESTful API that allows you to:
+
+- **Access Activity Logs** - Track and export user actions for audit and compliance
+- **Manage Admin Logs** - Monitor admin panel usage and operations
+- **Work with Notes** - Read and write collaboration notes programmatically
+- **Integrate External Systems** - Connect Forest Admin with your data warehouse, monitoring tools, or custom applications
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://api.forestadmin.com
+```
+
+## Authentication
+
+All API requests require authentication using API tokens. See [Authentication](/reference/api/authentication) for details on creating and using API tokens.
+
+**Example request:**
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_TOKEN" \
+  https://api.forestadmin.com/api/v1/activity-logs
+```
+
+## Available Endpoints
+
+<CardGroup cols={2}>
+  <Card
+    title="Activity Logs"
+    icon="list-timeline"
+    href="/reference/api/endpoints/activity-logs"
+  >
+    Track user actions and export audit trails
+  </Card>
+  <Card
+    title="Admin Logs"
+    icon="shield-check"
+    href="/reference/api/endpoints/admin-logs"
+  >
+    Monitor admin panel operations
+  </Card>
+  <Card
+    title="Notes"
+    icon="note-sticky"
+    href="/reference/api/endpoints/notes"
+  >
+    Manage collaboration notes programmatically
+  </Card>
+</CardGroup>
+
+## Key Features
+
+### Activity Logs
+
+Export and analyze user activity for compliance and security monitoring:
+
+- Track all user actions (create, update, delete)
+- Filter by user, collection, or date range
+- Export for data warehousing
+- Build custom audit dashboards
+
+### Admin Logs
+
+Monitor and audit administrative operations:
+
+- Track admin panel usage
+- Security and compliance reporting
+- User access patterns
+- Operation history
+
+### Notes
+
+Integrate collaboration features with external systems:
+
+- Read and write notes programmatically
+- Sync with external collaboration tools
+- Build custom notification systems
+- Enhance team workflows
+
+## Rate Limits
+
+The Public API implements rate limiting to ensure service stability. See [Rate Limits](/reference/api/rate-limits) for details on:
+
+- Rate limit rules
+- Response headers
+- Handling rate limit errors
+- Best practices
+
+## Getting Started
+
+1. **Request API Access** - Contact Forest Admin to enable API access for your project
+2. **Generate API Token** - Create an API token in your project settings
+3. **Make Your First Request** - Use the authentication token to access endpoints
+4. **Review Rate Limits** - Understand usage limits and best practices
+
+## Use Cases
+
+### Compliance & Audit
+
+Export activity logs to your data warehouse for compliance reporting and long-term retention:
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_TOKEN" \
+  "https://api.forestadmin.com/api/v1/activity-logs?start_date=2024-01-01&end_date=2024-01-31"
+```
+
+### Security Monitoring
+
+Build custom dashboards to monitor user activity and detect anomalies:
+
+- Track failed login attempts
+- Monitor bulk operations
+- Alert on suspicious activity
+- Analyze access patterns
+
+### Integration with External Tools
+
+Connect Forest Admin with your existing tools:
+
+- Export notes to Slack or Teams
+- Sync activity logs with Datadog or Splunk
+- Integrate with your SIEM system
+- Build custom reporting dashboards
+
+### Automation
+
+Automate workflows based on Forest Admin activity:
+
+- Trigger actions based on specific events
+- Sync data with external systems
+- Generate automated reports
+- Build custom notification systems
+
+## API Status
+
+<Note>
+**API Access Required**
+
+The Forest Admin Public API is available for Enterprise plans. Contact your account manager or [reach out to us](https://www.forestadmin.com/contact) to enable API access for your project.
+</Note>
+
+## Support
+
+For questions or issues with the Public API:
+
+- 📖 [Documentation](/reference/api/authentication)
+- 💬 [Community Forum](https://community.forestadmin.com)
+- 📧 [Support](mailto:support@forestadmin.com)
+- 🎫 Enterprise: Contact your account manager
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Authentication"
+    icon="key"
+    href="/reference/api/authentication"
+  >
+    Learn how to authenticate API requests
+  </Card>
+  <Card
+    title="Rate Limits"
+    icon="gauge-high"
+    href="/reference/api/rate-limits"
+  >
+    Understand API usage limits
+  </Card>
+  <Card
+    title="Activity Logs"
+    icon="list-timeline"
+    href="/reference/api/endpoints/activity-logs"
+  >
+    Start with activity logs endpoint
+  </Card>
+  <Card
+    title="Best Practices"
+    icon="lightbulb"
+    href="/reference/api/rate-limits#best-practices"
+  >
+    API usage best practices
+  </Card>
+</CardGroup>

@@ -1,92 +1,56 @@
 ---
-title: Environments & branches
-description: Overview of environments and branches for Forest Admin development workflow
+title: Environments & Branches
 ---
+> **Status:** TODO - Priority: HIGH
+>
+> **Audience:** Developers
 
-This section covers the development workflow for Forest Admin, including how to manage environments, branches, and deploy your changes.
+## Description
 
-## Overview
+Manage development environments and branches for your Forest Admin project.
 
-Your Forest Admin panel is composed of two parts:
-- **Backend (Agent)**: Part of your codebase, versioned with Git
-- **Frontend (UI)**: Managed on Forest Admin servers, versioned with Branches
+## Sources to migrate
 
-This separation requires specific tools and workflows to manage both effectively.
+- `documentation-user-guide/project-settings/environments-tab.md`
+- `developer-guide-agent-v2/sources/deployment/using-branches.md`
+- `developer-guide-agent-v2/sources/deployment/deploying-your-changes.md`
+- `developer-guide-agent-v2/sources/deployment/development-workflow.md`
+- `developer-guide-agent-v2/sources/deployment/environments.md`
 
-## Development workflow
+## Content outline
 
-### [development workflow](/product/process/for-tech-teams/developer-workflow/development-workflow)
+1. **Environments**
+   - Development vs Production
+   - Environment creation
+   - Environment configuration
+   - Environment-specific settings
 
-Understand the complete development workflow with Forest Admin
+2. **Branches**
+   - Branch creation and management
+   - Layout version control
+   - Branch switching
+   - Conflict resolution
 
-  ### [Environments](/product/process/for-tech-teams/developer-workflow/environments)
+3. **Development Workflow**
+   - Local development → Branch → Test → Merge → Deploy
+   - Schema comparison
+   - Layout versioning
+   - Environment promotion
 
-Create and manage Development, Production, and Remote environments
+4. **Best Practices**
+   - Branch naming conventions
+   - Environment parity
+   - Testing before deployment
+   - Rollback strategies
 
-  ### [Using Branches](/product/process/for-tech-teams/developer-workflow/using-branches)
+## Migration notes
 
-Version control for your Forest Admin layouts
+- Core developer workflow content
+- Critical for team collaboration
+- Integrates with CLI commands
 
-  ### [Deploying Changes](/product/process/for-tech-teams/developer-workflow/deploying-your-changes)
+## Related pages
 
-Deploy your layout changes to Remote and Production
-
-
-## Key concepts
-
-### Environments
-
-Forest Admin supports multiple environments:
-- **Development**: Your local environment for testing
-- **Production**: Your live environment with real data
-- **Remote**: Staging, QA, or other testing environments
-
-Each environment has its own:
-- Agent URL
-- Database connection
-- Environment secret (`FOREST_ENV_SECRET`)
-- Layout configuration
-
-### Branches
-
-Branches allow you to version your UI layout changes:
-- Create a branch from any environment
-- Make layout changes without affecting the origin
-- Test changes before deploying
-- Push to Remote environments or deploy to Production
-
-### Layout
-
-A **layout** is the complete UI configuration including:
-- Collection visibility and ordering
-- Field configurations
-- Smart Actions
-- Smart Views
-- Charts and dashboards
-- Permissions and roles
-
-## CLI commands
-
-### [forest branch](/product/reference/cli/branch)
-
-Create a new branch
-
-  ### [forest deploy](/product/reference/cli/deploy)
-
-Deploy to production
-
-  ### [forest push](/product/reference/cli/push)
-
-Push to remote environment
-
-
-## Related topics
-
-### [schema updates](/product/process/for-tech-teams/developer-workflow/schema-updates)
-
-Learn how to update your data schema
-
-  ### [CLI Reference](/product/reference/cli/overview)
-
-Complete CLI command reference
-
+- [Reference > CLI](/product/reference/cli/overview)
+- [Guides > Deployment](/product/guides/deployment/overview)
+- [Schema Updates](/product/process/for-tech-teams/developer-workflow/schema-updates)

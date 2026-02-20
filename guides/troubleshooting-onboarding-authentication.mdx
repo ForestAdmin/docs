@@ -1,0 +1,319 @@
+---
+title: "Troubleshooting Onboarding & Authentication"
+description: "Common issues and solutions when setting up Forest Admin or connecting your agent"
+---
+
+This guide covers common problems you might encounter when onboarding to Forest Admin or connecting your agent to the platform.
+
+## Agent can't connect to Forest Admin UI
+
+**Symptoms**: Your agent starts successfully, but the Forest Admin UI shows "Agent not responding" or "Connection failed".
+
+### Check outbound HTTPS access
+
+Your agent needs to reach Forest Admin's servers. Verify your firewall allows outbound connections to:
+
+- `api.forestadmin.com` (port 443)
+- `app.forestadmin.com` (port 443)
+
+Test connectivity from your agent's server:
+
+```bash
+curl https://api.forestadmin.com/health
+```
+
+If this fails, check your firewall rules, proxy settings, or network security groups.
+
+### Verify environment secret
+
+The `FOREST_ENV_SECRET` environment variable must match the secret provided in your Forest Admin project settings. A mismatch will prevent authentication.
+
+<CodeGroup>
+```javascript Node.js
+// Check your agent initialization
+createAgent({
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  envSecret: process.env.FOREST_ENV_SECRET,  // Must be correct
+  // ...
+});
+```
+
+```ruby Ruby
+# Check your agent initialization
+ForestAdminAgent::Agent.new do |config|
+  config.auth_secret = ENV['FOREST_AUTH_SECRET']
+  config.env_secret = ENV['FOREST_ENV_SECRET']  # Must be correct
+  # ...
+end
+```
+</CodeGroup>
+
+### Review agent logs
+
+Check your agent logs for specific error messages:
+
+```bash
+# Heroku
+heroku logs --tail --app your-app-name
+
+# Kubernetes
+kubectl logs -f deployment/forest-admin-agent
+
+# Docker
+docker logs -f container-name
+
+# PM2
+pm2 logs
+```
+
+Look for connection errors, authentication failures, or timeout messages.
+
+## Database connection errors
+
+**Symptoms**: "Connection refused", "Timeout", or "Authentication failed" errors when your agent tries to connect to your database.
+
+### Verify connection string
+
+Double-check your `DATABASE_URL` environment variable. Common issues include:
+
+- Incorrect hostname or port
+- Wrong database name
+- Invalid credentials
+- Missing or incorrect SSL parameters
+
+<CodeGroup>
+```bash PostgreSQL
+# Test connection manually
+psql "postgresql://username:password@host:5432/database"
+
+# With SSL
+psql "postgresql://username:password@host:5432/database?sslmode=require"
+```
+
+```bash MySQL
+# Test connection manually
+mysql -h host -P 3306 -u username -p database
+
+# With SSL
+mysql -h host -P 3306 -u username -p database --ssl-mode=REQUIRED
+```
+
+```bash MongoDB
+# Test connection manually
+mongosh "mongodb+srv://username:password@cluster.mongodb.net/database"
+```
+</CodeGroup>
+
+### Check network access
+
+Ensure your agent can reach your database:
+
+1. **Firewall rules**: Database must accept connections from your agent's IP address
+2. **Security groups** (AWS): Inbound rules must allow traffic from agent
+3. **VPC configuration**: Agent and database must be in compatible network configuration
+4. **Private networks**: If using internal IPs, ensure routing is configured
+
+Test network connectivity:
+
+```bash
+# Check if database port is reachable
+nc -zv database-host 5432  # PostgreSQL
+nc -zv database-host 3306  # MySQL
+nc -zv database-host 27017 # MongoDB
+```
+
+### Verify database permissions
+
+The database user must have appropriate permissions:
+
+<CodeGroup>
+```sql PostgreSQL
+-- Check user permissions
+\du username
+
+-- Grant necessary permissions
+GRANT CONNECT ON DATABASE mydb TO username;
+GRANT USAGE ON SCHEMA public TO username;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO username;
+```
+
+```sql MySQL
+-- Check user permissions
+SHOW GRANTS FOR 'username'@'%';
+
+-- Grant necessary permissions
+GRANT SELECT, INSERT, UPDATE, DELETE ON database.* TO 'username'@'%';
+```
+</CodeGroup>
+
+## Authentication token expired
+
+**Symptoms**: "Invalid token" or "Token expired" errors when accessing Forest Admin UI.
+
+### Solution
+
+Simply log out and log back in to Forest Admin:
+
+1. Click your profile picture in the top-right corner
+2. Select "Logout"
+3. Log back in with your credentials
+
+Your session token will be refreshed automatically.
+
+## Schema not syncing
+
+**Symptoms**: Changes to your database schema don't appear in Forest Admin UI, or collections are missing.
+
+### Force schema refresh
+
+The agent automatically detects schema changes, but you can force a refresh:
+
+<CodeGroup>
+```javascript Node.js
+// Add this temporarily to force schema regeneration
+createAgent({
+  // ... your config
+  schemaPath: './my-schema.json',
+})
+.then(agent => {
+  // Schema will be regenerated on startup
+});
+```
+
+```ruby Ruby
+# Schema is auto-detected on startup
+# Restart your agent to force refresh
+```
+</CodeGroup>
+
+Then restart your agent:
+
+```bash
+# Heroku
+heroku restart --app your-app-name
+
+# Kubernetes
+kubectl rollout restart deployment/forest-admin-agent
+
+# PM2
+pm2 restart your-app-name
+```
+
+### Check introspection permissions
+
+If using direct database connections (not ORM), ensure your database user has permission to read schema metadata:
+
+<CodeGroup>
+```sql PostgreSQL
+-- Grant schema introspection permissions
+GRANT USAGE ON SCHEMA information_schema TO username;
+GRANT SELECT ON ALL TABLES IN SCHEMA information_schema TO username;
+```
+
+```sql MySQL
+-- Grant schema introspection permissions
+GRANT SELECT ON information_schema.* TO 'username'@'%';
+```
+</CodeGroup>
+
+## Environment not appearing
+
+**Symptoms**: Created a new environment in Forest Admin, but it doesn't show up in the UI or agent can't connect to it.
+
+### Generate environment credentials
+
+Each environment needs its own `FOREST_ENV_SECRET`:
+
+1. Go to Project Settings → Environments
+2. Select your environment
+3. Copy the `FOREST_ENV_SECRET`
+4. Update your environment variables
+5. Restart your agent
+
+<Warning>
+Never reuse the same `FOREST_ENV_SECRET` across multiple environments. Each environment must have its unique secret.
+</Warning>
+
+## CORS errors in browser console
+
+**Symptoms**: Browser console shows CORS errors when accessing Forest Admin UI.
+
+### Check agent URL configuration
+
+Ensure your agent URL is correctly configured in Forest Admin project settings:
+
+1. Go to Project Settings → Environments
+2. Verify the "Agent URL" matches your actual agent URL
+3. Include the protocol (`http://` or `https://`)
+4. Don't include trailing slashes
+
+**Correct examples**:
+- `https://my-agent.example.com`
+- `http://localhost:3310`
+
+**Incorrect examples**:
+- `my-agent.example.com` (missing protocol)
+- `https://my-agent.example.com/` (trailing slash)
+
+## SSL/TLS certificate errors
+
+**Symptoms**: "Certificate verify failed" or "SSL handshake failed" errors.
+
+### For database connections
+
+If your database requires SSL but has a self-signed certificate:
+
+<CodeGroup>
+```javascript Node.js
+import { createSqlDataSource } from '@forestadmin/datasource-sql';
+
+createSqlDataSource({
+  uri: 'postgresql://user:pass@host:5432/db',
+  sslMode: 'require',
+  // For self-signed certificates (not recommended for production)
+  ssl: { rejectUnauthorized: false }
+});
+```
+
+```ruby Ruby
+# In your database.yml or connection configuration
+production:
+  adapter: postgresql
+  url: <%= ENV['DATABASE_URL'] %>
+  sslmode: require
+  # For self-signed certificates (not recommended for production)
+  sslrootcert: /path/to/ca-certificate.crt
+```
+</CodeGroup>
+
+<Warning>
+Disabling certificate verification (`rejectUnauthorized: false`) is not recommended for production. Use proper SSL certificates whenever possible.
+</Warning>
+
+### For outbound connections to Forest Admin
+
+If your infrastructure uses a corporate proxy or custom certificates, you may need to configure Node.js or Ruby to trust your CA:
+
+```bash
+# Node.js - use custom CA bundle
+export NODE_EXTRA_CA_CERTS=/path/to/ca-bundle.crt
+
+# Ruby - use custom CA bundle
+export SSL_CERT_FILE=/path/to/ca-bundle.crt
+```
+
+## Still having issues?
+
+If you're still experiencing problems after trying these solutions:
+
+1. **Check our status page**: Visit [status.forestadmin.com](https://status.forestadmin.com) for any ongoing incidents
+2. **Search our community**: Browse the [Forest Admin Community](https://community.forestadmin.com) for similar issues
+3. **Contact support**: Reach out to our support team with:
+   - Your agent logs (redact sensitive information)
+   - Error messages you're seeing
+   - Steps to reproduce the issue
+   - Your Forest Admin project ID
+
+<Info>
+When contacting support, provide as much context as possible, including error messages, logs, and your configuration (without sensitive credentials).
+</Info>

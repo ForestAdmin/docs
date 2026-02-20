@@ -1,0 +1,33 @@
+---
+title: Add many existing records at the same time (hasMany-belongsTo relationship)
+
+description: >-
+  This example shows how to associate multiple existing records at once to a
+  record using a simple smart action.
+---
+
+# Add many existing records at the same time (hasMany-belongsTo relationship)
+
+![](/images/legacy/javascript-agents/bulk-add-records.gif)
+
+### Requirements
+
+- An admin backend running on `forest-express-sequelize`
+- Relationship **One-To-Many** between two collections (in this example an organization **hasMany** companies &lt;-&gt; a company **belongsTo** an organization)
+
+## How it works
+
+### Directory: **/forest**
+
+Create a new smart action in the forest file of the collection with the **hasMany relationship** (organizations in this example).
+
+This smart action will be usable on a single record (`type: 'single'`). We will create two fields in the smart action form, one will be used for the **search** on the referenced collection and the second will be used to see the **selection** made by the operator.
+
+
+### **Directory: /routes**
+
+When the user validates the action, this route is called. We will use the **selection** to retrieve all companies' ids and then updates all companies `organizationId` field to create the associations.\
+\
+_In addition, once the smart action has been successfully run, it refreshes the relationship to properly display newly added associations._
+
+

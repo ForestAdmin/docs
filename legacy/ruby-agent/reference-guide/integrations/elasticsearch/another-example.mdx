@@ -1,0 +1,22 @@
+---
+title: Another example
+---
+
+# Another example
+
+For the purpose of this example let's say we have an `activity-logs` index in Elasticsearch with the following mapping.
+
+
+## Implementing the GET (all records with a filter on related data)
+
+This is a complex use case: How to handle filters on related data. We want to be able to filter using the `user.mail` field.\
+\
+To accommodate you we already provide you a simple service [`ElasticsearchHelper`](https://docs.forestadmin.com/woodshop/how-tos/create-a-smart-collection-with-elasticsearch/elasticsearch-service-utils) that handles all the logic to connect with your Elasticsearch data.
+
+
+## Implementing the GET (all records with the search)
+
+Another way to search through related data is to implement your own search logic.
+
+
+![](</images/legacy/javascript-agents/image (483).png>)

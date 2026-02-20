@@ -1,0 +1,81 @@
+---
+title: Smart Action Intents
+---
+
+# Smart Action Intents
+
+### What are smart action intents ?
+
+Action intents allows you to redirect your operators from the outside worlds directly to a specific action, by using an url.
+
+This means that your actions can now be accessed directly using a link (saving many clicks), link for which you can specify few parameters so can pre-compute your form with custom values for instance.
+
+All of our action types are supported (Global, Bulk and Single)
+
+### Building a smart action intent
+
+Get to the index of the collection you want to share an action from, and retrieve its URl.
+
+For instance, given a project `aProject`, an environment `anEnvironment`, a team `aTeam` and a collection `aCollection`, the url should look similar to this: 
+
+`https://app.forestadmin.com/aProject/anEnvironment/aTeam/data/aCollection/index`
+
+Base on that url, you can configure the action intent with 3 parameters:
+* `actionIntent` of type string, being the name of the action you want to redirect to.
+* `actionIntentIds` of type array of string, being the IDs of the records you want to execute the action for.
+* `actionIntentParams` of type JSON object, being the params you want to send along your action intent
+
+<Warning> Please do note that `actionIntentIds` and `actionIntentParams` should be a valid JSON structure </Warning>
+
+Here is an example of all of these parameters combined:
+
+`https://app.forestadmin.com/aProject/anEnvironment/aTeam/data/aCollection/index?actionIntent=anActionName&actionIntentIds=[1,2]&actionIntentParams={"firstParam":"firstValue","secondParam":"secondValue"}`
+
+### How to use actionIntentParams
+
+<Warning> `actionIntentParams` should be a valid JSON object </Warning>
+
+Your parameters provided to the action intent will be passed to your agent over change and load hooks, allowing you to compute any value for your fields based on the provided parameters. You can access those parameters like such:
+
+### Rails
+
+```ruby
+class Forest::ACollection
+  include ForestLiana::Collection
+
+  collection :ACollection
+
+  action 'an_action',
+    type: 'single',
+    fields: [{
+      field: 'a_field',
+      type: 'String',
+      hook: 'on_value_change',
+    }],
+    :hooks => {
+      :change => {
+        'on_value_change' => -> (context) {
+          action_intent_params = context[:params][:data][:attributes][:action_intent_params];
+          
+          ...
+          
+          return context[:fields];
+        }
+      }
+      :load => -> (context, request) {
+        action_intent_params = context[:params][:data][:attributes][:action_intent_params];
+        
+        ...
+
+        return context[:fields];
+      }
+    }
+    ...
+end
+```
+
+### How to use actionIntentIds
+
+<Warning> `actionIntentIds` should be a valid JSON array, or a single id. It is also worth noting that for global action, any provided ids will be skipped. Also, action of type single should be having a single id provided, and bulk action should be passed having many provided</Warning>
+
+Ids configured in the action intent will be provided as usual within your context. Please refer to this [documentation](../../../reference-guide/actions/create-and-manage-smart-actions/README.md#creating-a-smart-action) for more details.

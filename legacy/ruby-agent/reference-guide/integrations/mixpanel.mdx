@@ -1,0 +1,36 @@
+---
+title: Mixpanel
+---
+
+# Mixpanel
+
+The Mixpanel integration allows you to fetch Mixpanel’s events and display them at a record level into Forest.
+
+### Rails
+To benefit from Mixpanel integration, you need to add the `gem 'mixpanel_client'` to your Gemfile.
+
+Then, add the following code to your initializer. In our example we will map the `Customer.email` with the data coming from Mixpanel. You may replace by your own relevant collection(s).
+
+By default, Mixpanel is sending the following fields: id, event, date, city, region, country, timezone, os, osVersion, browser, browserVersion. If you want to add other fields from Mixpanel, you have to add them in `customProperties`:
+
+```ruby
+ForestLiana.env_secret = Rails.application.secrets.forest_env_secret
+ForestLiana.auth_secret = Rails.application.secrets.forest_auth_secret
+
+ForestLiana.integrations = {
+  mixpanel: {
+    api_key: 'YOUR MIXPANEL API KEY',
+    api_secret: 'YOUR MIXPANEL SECRET KEY',
+    mapping: ['Customer.email'],
+    custom_properties: ['Campaign Source', 'plan', 'tutorial complete'],
+  }
+}
+```
+
+You will then be able to see the Mixpanel events on a record, a `Customer` in our example.
+
+![](</images/legacy/javascript-agents/image (68).png>)
+
+<Info>
+You'll need to install the [Mixpanel Data Export](https://www.npmjs.com/package/mixpanel-data-export) package to run the Mixpanel integration
+</Info>

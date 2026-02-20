@@ -1,0 +1,29 @@
+---
+title: Display extensive logs
+---
+
+# Display extensive logs
+
+For debugging purposes your might want to display extensive logs from your Admin Backend API.\
+\
+To do so, simply add the following in your code:
+
+### SQL
+
+```javascript
+...
+
+NODE_ENV=development
+```
+
+### MongoDB
+
+```javascript
+...
+
+mongoose.set('debug', true);
+```
+
+<Info>
+This can be useful to understand how queries are executed to display your collections or relationships.
+</Info>

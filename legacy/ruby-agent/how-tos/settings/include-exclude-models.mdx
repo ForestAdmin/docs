@@ -1,0 +1,47 @@
+---
+title: Include/exclude models
+---
+
+# Include/exclude models
+
+By default, all models declared in your app are analyzed by the Forest Admin agent in order to display them as collections in your admin panel.
+
+You can exclude some of them from the analysis to never send their metadata to Forest Admin. By doing this, these models will therefore never be available in your admin panel.
+
+To do so, add the following code to **either** define which models are included **or** excluded.
+
+#### Include models
+
+
+#### Exclude models
+
+
+#### Include models
+
+
+#### Exclude models
+
+
+### Rails
+
+```ruby
+ForestLiana.env_secret = Rails.application.secrets.forest_env_secret
+ForestLiana.auth_secret = Rails.application.secrets.forest_auth_secret
+
+# ...
+
+# in the [] you may add the precise list of all models you want to see in Forest
+ForestLiana.included_models = ['Customer'];
+
+# or second possibility below :
+
+# in the [] you may add the precise list of all models you do not want to see in Forest
+ForestLiana.excluded_models = ['Document', 'Transaction'];
+```
+
+### Django
+
+
+### Laravel
+
+

@@ -1,0 +1,213 @@
+---
+title: Upgrade to v4
+
+description: >-
+  The purpose of this note is to help developers to upgrade their agent from v3
+  to v4. Please read carefully and integrate the following breaking changes to
+  ensure a smooth update.​
+---
+
+# Upgrade to v4
+
+## Upgrading to v4
+
+<Warning>
+Before upgrading to v4, consider the below **breaking changes**.
+</Warning>
+
+<Warning>
+As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
+</Warning>
+
+To upgrade to v4, simply run:
+
+### SQL
+
+```javascript
+npm install forest-express-sequelize@4.0.2
+```
+
+### Mongoose
+
+```javascript
+npm install forest-express-mongoose@4.1.2
+```
+
+<Info>
+In case of a regression introduced in Production after the upgrade, a rollback to your previous agent version 3 is the fastest way to restore your admin panel.
+</Info>
+
+## Breaking changes
+
+### New JWT authentication token
+
+The information format of the _session token_ have changed in v4.
+
+<Info>
+You could be impacted if you use the _user session_ in Smart Action controllers or Smart Routes
+</Info>
+
+**Calling `req.user` in v3**
+
+```javascript
+{
+  "id": "172",
+  "type": "users",
+  "data": {
+    "email": "angelicabengtsson@doha2019.com",
+    "first_name": "Angelica",
+    "last_name": "Bengtsson",
+    "teams": ["Pole Vault"],
+  },
+  "relationships": {
+    "renderings": {
+      "data": [{
+        "type": "renderings",
+        "id": "4998",
+      }],
+    },
+  },
+  "iat": 1569913709,
+  "exp": 1571123309
+}
+```
+
+**Calling `req.user` in v4**
+
+```javascript
+{
+  "id": "172",
+  "email": "angelicabengtsson@doha2019.com",
+  "firstName": "Angelica",
+  "lastName": "Bengtsson",
+  "team": "Pole Vault",
+  "renderingId": "4998",
+  "iat": 1569913709,
+  "exp": 1571123309
+}
+```
+
+Consequently, the user information is now accessible as described below:
+
+| Property     | v3                                             | v4                     |
+| ------------ | ---------------------------------------------- | ---------------------- |
+| email        | `req.user.data.email`                          | `req.user.email`       |
+| first name   | `req.user.data.first_name`                     | `req.user.firstName`   |
+| last name    | `req.user.data.last_name`                      | `req.user.lastName`    |
+| team         | `req.user.data.teams[0]`                       | `req.user.team`        |
+| rendering id | `req.user.relationships.renderings.data[0].id` | `req.user.renderingId` |
+
+### New filters query parameters format
+
+The **query parameters** sent for **filtering** purposes have changed in v4.
+
+<Info>
+You could be impacted if you have custom filter implementations.
+</Info>
+
+Below are a few example of the new filter conditions format you can access using`req.params.filters`:
+
+```javascript
+{
+  "field": "planLimitationReachedAt",
+  "operator": "previous_year_to_date",
+  "value": null
+}
+```
+
+```javascript
+{
+  "aggregator": "and",
+  "conditions": [{
+    "field": "planLimitationReachedAt",
+    "operator": "previous_year_to_date",
+    "value": null
+  }, {
+    "field": "planLimitationStatus",
+    "operator": "equal",
+    "value": "warning"
+  }]
+}
+```
+
+### MongoDB
+
+<Info>
+This section is dedicated to breaking changes on projects using MongoDB connections.
+</Info>
+
+#### MongoDB version support
+
+The minimal version supported by the agent v4 is **MongoDB v3.2** (December 2015).
+
+<Warning>
+If your project uses an older MongoDB version, **you should not upgrade to v4**.
+</Warning>
+
+The way the agent implements the resources filtering changed and this new implementation uses features that does not exist in MongoDB versions older than 3.2.
+
+#### Smart Field search implementation
+
+The Smart Field search implementation has changed:
+
+- The function signature now has only one `search` parameter.
+- The expected value to be returned is a hash of the conditions (instead of the `query` object).
+
+See the following implementation migration example:
+
+```javascript
+ search(query, search) {
+  let names = search.split(' ');
+​
+  query._conditions.$or.push({
+    firstname: names[0],
+    lastname: names[1]
+  });
+​
+  return query;
+}
+```
+
+```javascript
+search(search) {
+  let names = search.split(' ');
+​
+  return {
+    firstname: names[0],
+    lastname: names[1]
+  };
+}
+```
+
+#### Condition operator changes
+
+For consistency reasons, `contains`, `starts with` and `ends with` operators are now **case sensitive**.
+
+#### Smart relationships reference syntax
+
+If you had a `reference` property in a [Smart relationship](../../../reference-guide/models/relationships/create-a-smart-relationship/#creating-a-belongsto-smart-relationship) you implemented, the syntax has changed:
+
+```javascript
+reference: 'Address';
+```
+
+```javascript
+reference: 'Address._id';
+```
+
+## Important Notice
+
+### Agent logout
+
+A consequence of the new session token format is:
+
+<Warning>
+Once an agent v4 deployed, **all users of your project will be automatically logged out** and be forced to re-authenticate to generate a newly formatted token. ​
+</Warning>
+
+### Changelogs
+
+This release note covers only the major changes. To learn more, please refer to the changelogs in our different repositories:
+
+- [Express-sequelize changelog](https://github.com/ForestAdmin/forest-express-sequelize/blob/master/CHANGELOG.md#release-400---2019-10-04)
+- [Express-mongoose changelog](https://github.com/ForestAdmin/forest-express-mongoose/blob/master/CHANGELOG.md#release-400---2019-10-04)

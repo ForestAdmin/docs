@@ -1,0 +1,76 @@
+---
+title: Create records from a Smart collection
+---
+
+# Create records from a Smart collection
+
+**Context**: As a user I want to be able to add new records to a number of collections based on the input made in a smart collection creation form
+
+Example: In this example I have the following data model:
+
+Property ← building ← lot → owner
+
+The smart collection called `ownerProperties` features records including:
+
+- the firstName and lastName of the owner
+- the reference of the property
+
+In my use case I want to be able to create a new lot, owner, building and property based on the input of the form.
+
+### Definition of the smart collection
+
+The smart collection is declared this way in a `forest/owner-properties.js` file.
+
+
+### Definition of the routes
+
+Below is the `routes/owner-properties.js` file that includes the logic for the `GET` and `POST` calls made on the smart collection.
+
+
+The objects that are serialized to be returned to the UI are constructed as such:
+
+```jsx
+lots {
+  dataValues: {
+    id: 1,
+    lotNumber: 1,
+    buildingIdKey: 1,
+    ownerIdKey: 1,
+    owner: owners {
+      dataValues: {
+		    id: 1,
+		    firstName: 'Pete',
+		    lastName: 'Maravich',
+		    email: 'user@example.com'
+	  },
+		...
+    building: buildings {
+      dataValues: {
+		    id: 1,
+		    name: 'Sevres',
+		    addressLine1: '80 rue de Sevres',
+		    number: 1,
+		    centralHeating: true,
+		    propertyIdKey: 1,
+				property: properties {
+			    dataValues: {
+		      id: 1,
+		      name: 'Laennec',
+		      addressCity: 'Paris',
+		      addressLine1: '102 rue de Sevres',
+		      numberOfBuildings: 6,
+		      status: null
+		    },
+			...
+    }
+  },
+...
+}
+```
+
+### Make the smart collection visible and enable the create form
+
+By default, a smart collection newly created is hidden in the UI, does not enable create, update and delete operations and all its fields are set as read only.
+
+To make the collection fully functional in the UI you need to following these steps:
+

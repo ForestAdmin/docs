@@ -1,0 +1,438 @@
+---
+title: API Authentication
+description: Learn how to authenticate requests to the Forest Admin Public API
+---
+
+# API Authentication
+
+All requests to the Forest Admin Public API require authentication using API tokens. This guide explains how to create, manage, and use API tokens securely.
+
+## Authentication Overview
+
+Forest Admin uses **Bearer token authentication** for API requests. Each token:
+
+- Is associated with a specific Forest Admin project
+- Can have different permission scopes
+- Should be treated as sensitive credentials
+- Can be revoked at any time
+
+## Creating API Tokens
+
+### Step 1: Access Project Settings
+
+1. Log in to your Forest Admin account
+2. Navigate to your project
+3. Go to **Project Settings** > **API Access**
+4. Click **Generate New Token**
+
+### Step 2: Configure Token
+
+When creating a token, you can configure:
+
+- **Token Name** - A descriptive name to identify the token's purpose
+- **Permissions** - Read-only or Read-write access
+- **Expiration** - Optional expiration date for added security
+- **Scopes** - Specific endpoints the token can access
+
+**Example configuration:**
+
+```
+Name: Data Warehouse Integration
+Permissions: Read-only
+Scopes: Activity Logs, Admin Logs
+Expiration: 1 year
+```
+
+### Step 3: Save Token
+
+<Warning>
+**Important:** Copy and save your token immediately. For security reasons, you won't be able to see it again. If you lose the token, you'll need to generate a new one.
+</Warning>
+
+## Using API Tokens
+
+Include your API token in the `Authorization` header of all requests using the Bearer scheme:
+
+```bash
+Authorization: Bearer YOUR_API_TOKEN
+```
+
+### Example Requests
+
+**cURL:**
+
+```bash
+curl -H "Authorization: Bearer fa_your_api_token_here" \
+  https://api.forestadmin.com/api/v1/activity-logs
+```
+
+**JavaScript (Node.js):**
+
+```javascript
+const axios = require('axios');
+
+const apiToken = process.env.FOREST_API_TOKEN;
+
+const response = await axios.get(
+  'https://api.forestadmin.com/api/v1/activity-logs',
+  {
+    headers: {
+      'Authorization': `Bearer ${apiToken}`,
+      'Content-Type': 'application/json'
+    }
+  }
+);
+```
+
+**Python:**
+
+```python
+import requests
+import os
+
+api_token = os.getenv('FOREST_API_TOKEN')
+
+headers = {
+    'Authorization': f'Bearer {api_token}',
+    'Content-Type': 'application/json'
+}
+
+response = requests.get(
+    'https://api.forestadmin.com/api/v1/activity-logs',
+    headers=headers
+)
+```
+
+**Ruby:**
+
+```ruby
+require 'net/http'
+require 'json'
+
+api_token = ENV['FOREST_API_TOKEN']
+uri = URI('https://api.forestadmin.com/api/v1/activity-logs')
+
+request = Net::HTTP::Get.new(uri)
+request['Authorization'] = "Bearer #{api_token}"
+request['Content-Type'] = 'application/json'
+
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(request)
+end
+```
+
+## Token Security
+
+### Storing Tokens Securely
+
+<Tip>
+**Best Practice:** Store API tokens in environment variables or secure secrets management systems, never in code or version control.
+</Tip>
+
+**Environment Variables:**
+
+```bash
+# .env file (add to .gitignore!)
+FOREST_API_TOKEN=fa_your_api_token_here
+```
+
+**Secrets Managers:**
+
+- AWS Secrets Manager
+- Google Cloud Secret Manager
+- Azure Key Vault
+- HashiCorp Vault
+- 1Password Secrets Automation
+
+### What NOT to Do
+
+❌ **Never commit tokens to version control:**
+
+```javascript
+// BAD - Don't do this!
+const apiToken = 'fa_live_12345678...';
+```
+
+❌ **Never expose tokens in client-side code:**
+
+```html
+<!-- BAD - Don't do this! -->
+<script>
+  const API_TOKEN = 'fa_live_12345678...';
+</script>
+```
+
+❌ **Never log tokens:**
+
+```javascript
+// BAD - Don't do this!
+console.log('Using token:', apiToken);
+```
+
+### Secure Practices
+
+✅ **Use environment variables:**
+
+```javascript
+const apiToken = process.env.FOREST_API_TOKEN;
+```
+
+✅ **Use secrets management:**
+
+```javascript
+const apiToken = await secretsManager.getSecret('forest-api-token');
+```
+
+✅ **Rotate tokens regularly:**
+
+```
+Schedule: Every 90 days
+Process: Generate new → Update integrations → Revoke old
+```
+
+## Token Permissions
+
+### Permission Levels
+
+**Read-Only:**
+- View activity logs
+- View admin logs
+- Read notes
+- Cannot create or modify data
+
+**Read-Write:**
+- All read permissions
+- Create and update notes
+- Perform write operations (where available)
+
+### Scope Limitations
+
+Limit token access to only the endpoints needed:
+
+| Scope | Access |
+|-------|--------|
+| `activity_logs:read` | Read activity logs |
+| `admin_logs:read` | Read admin logs |
+| `notes:read` | Read notes |
+| `notes:write` | Create and update notes |
+| `all` | Full API access |
+
+**Example: Audit-only token**
+
+```
+Scopes: activity_logs:read, admin_logs:read
+Permissions: Read-only
+Use case: Compliance reporting
+```
+
+## Token Management
+
+### Listing Active Tokens
+
+View all active tokens in **Project Settings** > **API Access**:
+
+- Token name
+- Creation date
+- Last used
+- Expiration date
+- Scopes
+
+### Rotating Tokens
+
+Regular token rotation improves security:
+
+1. Generate a new token with same permissions
+2. Update all integrations to use new token
+3. Verify all integrations working
+4. Revoke the old token
+
+**Recommended rotation schedule:**
+- Production: Every 90 days
+- Development: Every 180 days
+- Testing: As needed
+
+### Revoking Tokens
+
+Immediately revoke a token if:
+
+- It may have been compromised
+- An integration is decommissioned
+- An team member with access leaves
+- You detect suspicious activity
+
+**To revoke:**
+1. Go to **Project Settings** > **API Access**
+2. Find the token
+3. Click **Revoke**
+4. Confirm revocation
+
+<Warning>
+Revoking a token immediately stops all integrations using it. Ensure you update integrations before revoking.
+</Warning>
+
+## Authentication Errors
+
+### 401 Unauthorized
+
+**Cause:** Missing, invalid, or expired token
+
+**Response:**
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Invalid or missing API token"
+}
+```
+
+**Solutions:**
+- Verify token is included in Authorization header
+- Check token hasn't expired
+- Ensure token format is correct (`Bearer <token>`)
+- Regenerate token if necessary
+
+### 403 Forbidden
+
+**Cause:** Token lacks required permissions
+
+**Response:**
+
+```json
+{
+  "error": "Forbidden",
+  "message": "Insufficient permissions for this operation"
+}
+```
+
+**Solutions:**
+- Check token scopes include required permissions
+- Generate new token with appropriate scopes
+- Verify endpoint matches token permissions
+
+### Token Expired
+
+**Cause:** Token past expiration date
+
+**Response:**
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "API token has expired"
+}
+```
+
+**Solution:**
+- Generate a new token
+- Update integration configuration
+- Consider longer expiration or no expiration for stable integrations
+
+## Best Practices
+
+### 1. One Token Per Integration
+
+Create separate tokens for each integration:
+
+```
+✅ Good:
+- data-warehouse-sync (read-only, activity logs)
+- slack-notifications (read-write, notes)
+- compliance-export (read-only, all logs)
+
+❌ Bad:
+- master-token (read-write, all scopes)
+```
+
+### 2. Principle of Least Privilege
+
+Grant minimum necessary permissions:
+
+```javascript
+// Good - specific scopes
+const auditToken = {
+  scopes: ['activity_logs:read'],
+  permissions: 'read-only'
+};
+
+// Bad - excessive permissions
+const masterToken = {
+  scopes: ['all'],
+  permissions: 'read-write'
+};
+```
+
+### 3. Monitor Token Usage
+
+Track token activity in **Project Settings** > **API Access**:
+
+- Last used timestamp
+- Request frequency
+- Error rates
+- Unusual patterns
+
+### 4. Implement Error Handling
+
+Handle authentication errors gracefully:
+
+```javascript
+async function makeAuthenticatedRequest(url) {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        'Authorization': `Bearer ${apiToken}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      console.error('Authentication failed. Token may be invalid or expired.');
+      // Trigger token refresh workflow
+    } else if (error.response?.status === 403) {
+      console.error('Insufficient permissions for this operation.');
+    }
+    throw error;
+  }
+}
+```
+
+### 5. Audit Token Access
+
+Regular security reviews:
+
+- Review active tokens monthly
+- Revoke unused tokens
+- Update token names to reflect current usage
+- Document token purpose and owner
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Rate Limits"
+    icon="gauge-high"
+    href="/reference/api/rate-limits"
+  >
+    Understand API usage limits
+  </Card>
+  <Card
+    title="Activity Logs"
+    icon="list-timeline"
+    href="/reference/api/endpoints/activity-logs"
+  >
+    Start using the Activity Logs API
+  </Card>
+  <Card
+    title="API Introduction"
+    icon="book"
+    href="/reference/api/introduction"
+  >
+    Back to API overview
+  </Card>
+  <Card
+    title="Security"
+    icon="shield"
+    href="/product/control/security"
+  >
+    Learn about Forest Admin security
+  </Card>
+</CardGroup>

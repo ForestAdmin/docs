@@ -5,131 +5,125 @@ description: "How Forest Admin ensures complete security and control over who ca
 
 Forest Admin provides enterprise-grade security and access control to protect your data and ensure compliance. Control gives you complete visibility and management over who can access what, who can do what, and tracks everything that happens in your admin panel.
 
-## How Forest Admin secures your operations
+## How Forest Admin Secures Your Operations
 
-### 1. roles
+### 1. Roles
 
 **Roles ensure that no one accesses the wrong data or performs unauthorized actions.**
 
 Roles define what users can do with your data. With granular permissions, you control exactly which operations (view, create, update, delete) each user can perform on each collection. Roles also manage who can trigger, approve, self-approve, or request Smart Actions.
 
-### [roles & permissions](/product/control/roles-permissions)
-
-Configure roles to control data access: define who can view, create, update, delete records, and who can execute, approve, or request Smart Actions. Ensure the principle of least privilege across your organization.
-
+<Card title="Roles & Permissions" icon="user-shield" href="/product/control/roles-permissions">
+  Configure roles to control data access: define who can view, create, update, delete records, and who can execute, approve, or request Smart Actions. Ensure the principle of least privilege across your organization.
+</Card>
 
 **Example:** A Sales Rep role can view and update customers, but cannot delete records or access financial data.
 
 ---
 
-### 2. permissions
+### 2. Permissions
 
 **Permissions ensure that only authorized users can edit your admin panel configuration and settings.**
 
 Beyond data access, Forest Admin provides permissions to control who can modify the admin panel itself. Manage who can edit layouts, configure collections, update project settings, and access administrative features.
 
-### [Admin panel permissions](/product/control/roles-permissions)
-
-Control who can edit layouts, manage teams, configure project settings, and access administrative features. Keep your admin panel configuration secure and prevent unauthorized changes.
-
+<Card title="Admin Panel Permissions" icon="sliders" href="/product/control/roles-permissions">
+  Control who can edit layouts, manage teams, configure project settings, and access administrative features. Keep your admin panel configuration secure and prevent unauthorized changes.
+</Card>
 
 **Example:** Only Admin users can edit layouts and project settings, while Editors can only work with data.
 
 ---
 
-### 3. scopes
+### 3. Scopes
 
 **Scopes filter data based on user context, ensuring users only see records they're authorized to access.**
 
 Scopes provide row-level security by automatically filtering which records users can see. While roles control what actions users can perform, scopes control which specific data they can access based on their team, region, customer assignment, or any custom business logic.
 
-### [scopes & data visibility](/product/control/scopes-and-visibility)
-
-Row-level security to filter data dynamically: multi-tenant isolation, territory management, team-based filtering, and compliance with GDPR/HIPAA requirements.
-
+<Card title="Scopes & Data Visibility" icon="filter" href="/product/control/scopes-and-visibility">
+  Row-level security to filter data dynamically: multi-tenant isolation, territory management, team-based filtering, and compliance with GDPR/HIPAA requirements.
+</Card>
 
 **Example:** A sales rep in the West region can access the Customers collection (role), but only sees customers in the West region (scope).
 
 ---
 
-### 4. teams
+### 4. Teams
 
 **Teams create dedicated workspaces for different groups, controlling what is displayed to each team.**
 
 Teams organize users into logical groups that mirror your organizational structure. Each team can have custom layouts, dashboards, and data visibility, creating tailored experiences for different departments, regions, or customer segments.
 
-### [teams](/product/control/teams)
-
-Organize users with customized workspaces: custom layouts per team, dedicated dashboards, scalable permission management, and data isolation combined with scopes.
-
+<Card title="Teams" icon="users" href="/product/control/teams">
+  Organize users with customized workspaces: custom layouts per team, dedicated dashboards, scalable permission management, and data isolation combined with scopes.
+</Card>
 
 **Example:** The Sales team sees a dashboard with pipeline metrics and customer data, while the Support team sees a dashboard with ticket volumes and response times.
 
 ---
 
-### 5. audit logs
+### 5. Audit Logs
 
 **Everything is logged - track who did what, when, and from where for complete accountability.**
 
 Forest Admin automatically captures every action with complete context, creating an immutable audit trail for compliance, security monitoring, and troubleshooting. Every login, data change, action execution, and configuration update is recorded with before/after values, user details, and timestamps.
 
-### [audit logs](/product/control/audit)
-
-Complete audit trail of all activities:
+<Card title="Audit Logs" icon="clock-rotate-left" href="/product/control/audit">
+  Complete audit trail of all activities:
   - Authentication events, data operations, action executions, configuration changes
   - Before/after values for all modifications
   - User context: IP address, user agent, timestamps
   - Export as CSV or JSON for archival and SIEM integration (Splunk, Datadog, CloudWatch, ELK)
   - Essential for GDPR, HIPAA, SOC 2, and PCI DSS compliance
-
+</Card>
 
 **Example:** Track exactly who accessed a customer's personal data, when they accessed it, what they changed, and from which IP address.
 
 ---
 
-### 6. authentication
+### 6. Authentication
 
 **Secure user access with enterprise-grade authentication and identity management.**
 
 Integrate Forest Admin with your existing identity infrastructure. Support for SSO, SAML, 2FA, and SCIM provisioning ensures users authenticate securely and access is automatically managed through your Identity Provider.
 
-### [SSO & saml](/product/control/authentication/sso)
-
-Integrate with Google, Okta, Azure AD, AWS, or any SAML provider for centralized authentication
-
-  ### [Two-Factor Auth](/product/control/authentication/2fa)
-
-Require 2FA for all users or specific roles for enhanced security
-
-  ### [SCIM Provisioning](/product/control/authentication/scim)
-
-Automatically provision and deprovision users from your IdP (Okta, Azure AD)
-
+<CardGroup cols={3}>
+  <Card title="SSO & SAML" icon="key" href="/product/control/authentication/sso">
+    Integrate with Google, Okta, Azure AD, AWS, or any SAML provider for centralized authentication
+  </Card>
+  <Card title="Two-Factor Auth" icon="mobile" href="/product/control/authentication/2fa">
+    Require 2FA for all users or specific roles for enhanced security
+  </Card>
+  <Card title="SCIM Provisioning" icon="users-gear" href="/product/control/authentication/scim">
+    Automatically provision and deprovision users from your IdP (Okta, Azure AD)
+  </Card>
+</CardGroup>
 
 **Example:** When a new employee joins, they're automatically provisioned in Forest Admin via SCIM. When they leave, access is immediately revoked across all systems.
 
 ---
 
-### 7. security
+### 7. Security
 
 **Additional security layers for enterprise compliance and protection.**
 
 Beyond authentication and access control, Forest Admin provides advanced security features to meet enterprise requirements and protect your data from unauthorized access.
 
-### [IP whitelisting](/product/control/security/ip-whitelisting)
-
-Restrict access to specific IP addresses or ranges - only allow corporate VPN or office networks
-
-  ### [Session Management](/product/control/security/session-management)
-
-Configure session timeouts, idle policies, and automatic logout for enhanced security
-
+<CardGroup cols={2}>
+  <Card title="IP Whitelisting" icon="shield-check" href="/product/control/security/ip-whitelisting">
+    Restrict access to specific IP addresses or ranges - only allow corporate VPN or office networks
+  </Card>
+  <Card title="Session Management" icon="clock" href="/product/control/security/session-management">
+    Configure session timeouts, idle policies, and automatic logout for enhanced security
+  </Card>
+</CardGroup>
 
 **Example:** Restrict Forest Admin access to only corporate VPN IP ranges, automatically log users out after 30 minutes of inactivity.
 
 ---
 
-## Need help?
+## Need Help?
 
 - [Community Forum](https://community.forestadmin.com) - Security questions and best practices
 - [Security Documentation](/product/control/security) - Detailed security guides

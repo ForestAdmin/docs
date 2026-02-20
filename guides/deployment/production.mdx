@@ -1,0 +1,301 @@
+---
+title: "Production Deployment"
+description: "Deploy Forest Admin to production - general guide and best practices"
+---
+
+> **Status:** TODO - Priority: HIGH
+
+This guide covers general best practices for deploying Forest Admin to production, regardless of your hosting platform.
+
+## Overview
+
+Deploying Forest Admin to production requires:
+1. Secure environment configuration
+2. Production-ready agent setup
+3. Database access configuration
+4. SSL/TLS certificates
+5. Monitoring and logging
+
+## Prerequisites
+
+- Completed [Quickstart](/get-started/quickstart) in development
+- Working Forest Admin agent in development
+- Production database ready
+- Hosting platform chosen
+
+## Step 1: Environment Configuration
+
+### Set Production Environment Variables
+
+Ensure all required environment variables are set in your production environment:
+
+```bash
+# Forest Admin Configuration
+FOREST_ENV_SECRET=your_production_env_secret
+FOREST_AUTH_SECRET=your_production_auth_secret
+
+# Database
+DATABASE_URL=postgresql://user:password@prod-db-host:5432/prod_db
+
+# Environment
+NODE_ENV=production  # For Node.js
+RAILS_ENV=production # For Ruby
+```
+
+<Warning>
+**Never commit secrets to version control.** Use your platform's secret management:
+- Heroku: Config Vars
+- AWS: Secrets Manager or Parameter Store
+- Vercel/Railway: Environment Variables dashboard
+</Warning>
+
+### Create Production Environment in Forest Admin
+
+1. Go to [app.forestadmin.com](https://app.forestadmin.com)
+2. Navigate to your project settings
+3. Create a new **Production** environment
+4. Note the new `FOREST_ENV_SECRET` for production
+
+<Info>
+Production and development environments have separate secrets. This allows you to test changes in development before deploying to production.
+</Info>
+
+## Step 2: Agent Configuration
+
+### Production vs Development
+
+Update your agent configuration for production:
+
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    const agent = createAgent({
+      authSecret: process.env.FOREST_AUTH_SECRET,
+      envSecret: process.env.FOREST_ENV_SECRET,
+      isProduction: process.env.NODE_ENV === 'production', // ← Important!
+    });
+    ```
+  </Tab>
+
+  <Tab title="Ruby">
+    ```ruby
+    # In config/initializers/forest_liana.rb
+    ForestLiana.env_secret = ENV['FOREST_ENV_SECRET']
+    ForestLiana.auth_secret = ENV['FOREST_AUTH_SECRET']
+    ```
+  </Tab>
+</Tabs>
+
+### Performance Optimization
+
+For production, consider:
+
+```javascript
+// Enable connection pooling
+agent.addDataSource(createSqlDataSource(process.env.DATABASE_URL, {
+  pool: {
+    min: 2,
+    max: 10
+  }
+}));
+
+// Enable caching if needed
+agent.customizeCollection('users', collection => {
+  collection.replaceFieldWriting('computed_field', async (value, context) => {
+    // Cache expensive operations
+  });
+});
+```
+
+## Step 3: Database Access
+
+### Security Checklist
+
+- ✅ Use read-only database user when possible
+- ✅ Restrict database access by IP (whitelist production server)
+- ✅ Use SSL/TLS for database connections
+- ✅ Rotate database credentials regularly
+- ✅ Use connection pooling
+
+### Database Connection String
+
+Ensure your production `DATABASE_URL` includes SSL:
+
+```bash
+# PostgreSQL with SSL
+DATABASE_URL=postgresql://user:password@host:5432/db?sslmode=require
+
+# MySQL with SSL
+DATABASE_URL=mysql://user:password@host:3306/db?ssl=true
+
+# MongoDB with SSL
+DATABASE_URL=mongodb://user:password@host:27017/db?ssl=true
+```
+
+## Step 4: SSL/TLS Configuration
+
+### HTTPS is Required
+
+Forest Admin UI requires HTTPS in production. Ensure your agent is accessible via HTTPS:
+
+- Use your platform's built-in SSL (Heroku, Vercel, Railway)
+- Use a reverse proxy (Nginx, Caddy) with Let's Encrypt
+- Use a load balancer with SSL termination (AWS ALB, Google Cloud Load Balancer)
+
+### Agent URL Configuration
+
+After deployment, configure your production agent URL in Forest Admin:
+
+1. Go to [app.forestadmin.com](https://app.forestadmin.com)
+2. Navigate to Project Settings → Environments
+3. Select your **Production** environment
+4. Set Agent URL: `https://your-agent.yourcompany.com`
+
+## Step 5: Monitoring & Logging
+
+### Health Checks
+
+Ensure your agent has a health check endpoint:
+
+```javascript
+// Forest Admin provides /forest endpoint
+// Test it: curl https://your-agent.com/forest
+```
+
+Configure your platform's health checks:
+- Heroku: Automatically checks web dyno
+- AWS: Configure ALB health checks
+- Kubernetes: Add liveness and readiness probes
+
+### Logging
+
+Enable structured logging in production:
+
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    const agent = createAgent({
+      // ... config
+      logger: (level, message) => {
+        console.log(JSON.stringify({ level, message, timestamp: new Date() }));
+      }
+    });
+    ```
+  </Tab>
+
+  <Tab title="Ruby">
+    ```ruby
+    # Rails logs automatically to production.log
+    # Configure log level in config/environments/production.rb
+    config.log_level = :info
+    ```
+  </Tab>
+</Tabs>
+
+## Step 6: Deployment
+
+### Choose Your Platform
+
+See platform-specific guides:
+
+<CardGroup cols={3}>
+  <Card title="AWS" icon="aws" href="/guides/deployment/platforms/aws">
+    Deploy to AWS Lambda, ECS, or EC2
+  </Card>
+  <Card title="Heroku" icon="bolt" href="/guides/deployment/platforms/heroku">
+    One-click deployment to Heroku
+  </Card>
+  <Card title="Vercel" icon="triangle" href="/guides/deployment/platforms/vercel">
+    Deploy serverless to Vercel
+  </Card>
+</CardGroup>
+
+### General Deployment Checklist
+
+Before deploying:
+
+- [ ] All environment variables set
+- [ ] Production environment created in Forest Admin
+- [ ] Database accessible from production
+- [ ] SSL/TLS configured
+- [ ] Health checks configured
+- [ ] Logging enabled
+- [ ] Tested in staging environment
+
+After deploying:
+
+- [ ] Agent accessible via HTTPS
+- [ ] Health check returns 200 OK
+- [ ] Forest Admin UI connects successfully
+- [ ] All collections visible
+- [ ] CRUD operations work
+- [ ] Smart Actions execute correctly
+
+## Troubleshooting
+
+### Agent not accessible
+
+**Check:**
+1. Agent is running (`curl https://your-agent.com/forest`)
+2. Firewall rules allow inbound HTTPS
+3. SSL certificate is valid
+4. DNS points to correct server
+
+### Forest Admin UI shows "Agent unreachable"
+
+**Check:**
+1. Agent URL configured correctly in Forest Admin
+2. `FOREST_ENV_SECRET` matches production environment
+3. Agent accessible from Forest Admin IPs
+4. CORS configured if using custom domain
+
+### Performance issues
+
+**Check:**
+1. Database connection pooling enabled
+2. Indexes on frequently queried columns
+3. Caching for expensive operations
+4. Monitoring database query performance
+
+## Best Practices
+
+### Security
+
+- Use separate `FOREST_ENV_SECRET` for each environment
+- Rotate secrets regularly
+- Use read-only database users when possible
+- Enable audit logs in Forest Admin
+- Restrict access by IP if possible
+
+### Performance
+
+- Enable database connection pooling
+- Use caching for expensive computations
+- Add database indexes
+- Monitor agent performance
+- Scale horizontally if needed
+
+### Reliability
+
+- Set up health checks
+- Enable auto-restart on crash
+- Monitor error rates
+- Set up alerting
+- Keep agent updated
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Development Workflow" href="/guides/deployment/development-workflow">
+    Set up staging, branches, and CI/CD
+  </Card>
+  <Card title="Environments" href="/guides/deployment/environments">
+    Manage multiple environments
+  </Card>
+</CardGroup>
+
+## Need Help?
+
+- **Community**: [community.forestadmin.com](https://community.forestadmin.com)
+- **Support**: [support@forestadmin.com](mailto:support@forestadmin.com)
+- **Architecture Guide**: [Self-Hosted Architecture](/product/integration/architectures/self-hosted)

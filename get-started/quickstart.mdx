@@ -1,0 +1,100 @@
+---
+title: "Quickstart"
+description: "Get your admin panel running in 5 minutes"
+---
+
+## How Forest Admin Works
+
+Forest Admin works through an **agent**—a lightweight backend application that sits between your data and the Forest Admin UI.
+
+**What the agent does:**
+- Connects to your databases and APIs
+- Handles authentication and permissions
+- Executes your business logic (Smart Actions, Smart Fields)
+- Translates Forest Admin UI requests into database queries
+
+<Info>
+**Important:** The agent is the only component that accesses your data. Forest Admin UI never connects directly to your database.
+</Info>
+
+## Deployment Options
+
+To install Forest Admin, you need to decide **where to run the agent**:
+
+|  | **Cloud** | **Self-Hosted** | **On-Premise** |
+|---|---|---|---|
+| **Architecture** | ![Cloud](/assets/architecture-cloud.svg) | ![Self-Hosted](/assets/architecture-self-hosted.svg) | ![On-Premise](/assets/architecture-on-premise.svg) |
+| **What** | We host the agent | You host the agent | You host everything |
+| **Best for** | Quick POC, startups | Private networks, compliance | Air-gapped, maximum security |
+| **Requirements** | Internet-accessible DB | Node.js 18+ or Ruby 3+ | Enterprise license |
+
+## Which deployment is right for you?
+
+Answer these questions to find your best option:
+
+<AccordionGroup>
+  <Accordion title="Is your database accessible from the internet?" icon="globe">
+    **Yes** → Consider **Cloud** (easiest setup)
+
+    **No** → Go to next question ↓
+  </Accordion>
+
+  <Accordion title="Do you need air-gapped deployment (zero external connections)?" icon="shield-halved">
+    **Yes** → You need **On-Premise**
+
+    **No** → Go to next question ↓
+  </Accordion>
+
+  <Accordion title="Do you have strict compliance requirements (HIPAA, SOC2, data residency)?" icon="file-shield">
+    **Yes** → Choose **Self-Hosted** or **On-Premise**
+
+    **No** → Go to next question ↓
+  </Accordion>
+
+  <Accordion title="Do you want to manage infrastructure yourself?" icon="server">
+    **No, I want it managed** → Choose **Cloud**
+
+    **Yes, I can manage it** → Choose **Self-Hosted**
+  </Accordion>
+</AccordionGroup>
+
+<Info>
+**Need help choosing?**
+- [Contact sales](mailto:sales@forestadmin.com) to discuss your specific requirements
+</Info>
+
+## Choose your deployment method
+
+<CardGroup cols={3}>
+  <Card
+    title="Cloud"
+    icon="cloud"
+    href="/get-started/quickstart-cloud"
+  >
+    Perfect for quick evaluation and standard use cases
+  </Card>
+
+  <Card
+    title="Self-hosted"
+    icon="server"
+    href="/get-started/quickstart-self-hosted"
+  >
+    Ideal for private networks and compliance needs
+  </Card>
+
+  <Card
+    title="On-premise"
+    icon="building"
+    href="/get-started/quickstart-on-premise"
+  >
+    Full control and air-gapped deployment
+  </Card>
+</CardGroup>
+
+<Info>
+Need guidance? Our team is here to help you choose the right deployment option for your needs. [Contact us](mailto:sales@forestadmin.com)
+</Info>
+
+---
+
+**Need help?** [Join our community](https://community.forestadmin.com) or [contact sales](mailto:sales@forestadmin.com)

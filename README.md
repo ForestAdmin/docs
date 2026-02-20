@@ -1,46 +1,43 @@
-# Forest Admin documentation
+# Mintlify Starter Kit
 
-Build powerful admin panels on top of your data in minutes.
+Use the starter kit to get your docs deployed and ready to customize.
 
-## Welcome
+Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
 
-Forest Admin is an admin panel builder that connects to your existing databases and APIs. Get a fully-functional admin interface without spending months building internal tools.
+- Guide pages
+- Navigation
+- Customizations
+- API reference pages
+- Use of popular components
 
-## Getting started
+**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
 
-Choose your deployment option:
+## Development
 
-* **[Introduction to Forest Admin](get-started/intro-to-forest-admin.md)** - Learn what Forest Admin can do
-* **[Quickstart: Cloud](get-started/quickstart-cloud.md)** - Get started in 60 seconds
-* **[Quickstart: Self-Hosted](get-started/quickstart-self-hosted.md)** - Full control over your data
-* **[Quickstart: On-Premise](get-started/quickstart-on-premise.md)** - Maximum security
+Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
 
-## Core features
+```
+npm i -g mint
+```
 
-* **[Custom Actions](product/process/actions/custom-actions/overview.md)** - Build custom operations with forms and business logic
-* **[Data Sources](product/integration/data-sources/overview.md)** - Connect SQL, MongoDB, REST APIs, and more
-* **[Roles & Permissions](product/control/roles-permissions.md)** - Fine-grained access control for your team
-* **[Workflows](product/process/workflows/overview.md)** - Automate your business processes
+Run the following command at the root of your documentation, where your `docs.json` is located:
 
-## Learning paths
+```
+mint dev
+```
 
-* **[Developer Guide](guides/learning-paths/developer.md)** - Build with code
-* **[Operations Guide](guides/learning-paths/operations.md)** - Configure no-code
-* **[Business Guide](guides/learning-paths/business.md)** - Manage data
+View your local preview at `http://localhost:3000`.
 
-## Reference
+## Publishing changes
 
-* **[Node.js Agent API](reference/agent-api/nodejs.md)** - Complete API reference
-* **[Ruby Agent API](reference/agent-api/ruby.md)** - Ruby implementation
-* **[CLI Commands](reference/cli/overview.md)** - Command-line tools
-* **[Public API](reference/api/introduction.md)** - REST API documentation
+Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
 
-## Resources
+## Need help?
 
-* [Community Forum](https://community.forestadmin.com) - Get help and share knowledge
-* [GitHub](https://github.com/ForestAdmin) - Explore our open-source projects
-* [Support](mailto:support@forestadmin.com) - Contact our team
+### Troubleshooting
 
----
+- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
+- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
 
-**Ready to get started?** Check out our [quickstart guides](get-started/quickstart.md) to build your first admin panel!
+### Resources
+- [Mintlify documentation](https://mintlify.com/docs)

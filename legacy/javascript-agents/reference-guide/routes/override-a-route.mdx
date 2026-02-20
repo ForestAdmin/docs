@@ -1,0 +1,372 @@
+---
+title: Override a route
+---
+
+# Override a route
+
+Overriding a route allows you to change or completely replace a Forest Admin's route behavior.
+
+### Changing Forest Admin's behavior
+
+To achieve this, use existing snippets of [default routes](default-routes.md) and modify them according to your needs.
+
+Here are a few examples:
+
+#### Use extended search by default
+
+### SQL
+
+```javascript
+const express = require('express');
+const {
+  PermissionMiddlewareCreator,
+  RecordsGetter,
+  RecordsCounter,
+} = require('forest-express-sequelize');
+const { companies } = require('../models');
+
+const router = express.Router();
+const permissionMiddlewareCreator = new PermissionMiddlewareCreator(
+  'companies'
+);
+
+//...
+
+// Get a list of Companies - Check out our documentation for more details: https://docs.forestadmin.com/documentation/reference-guide/routes/default-routes#get-a-list-of-records
+router.get(
+  '/companies',
+  permissionMiddlewareCreator.list(),
+  (request, response, next) => {
+    const { query, user } = request;
+    query.searchExtended = '1';
+
+    const recordsGetter = new RecordsGetter(companies, user, query);
+    recordsGetter
+      .getAll()
+      .then((records) => recordsGetter.serialize(records))
+      .then((recordsSerialized) => response.send(recordsSerialized))
+      .catch(next);
+  }
+);
+
+// Get a number of Companies - Check out our documentation for more details: https://docs.forestadmin.com/documentation/reference-guide/routes/default-routes#get-a-list-of-records
+router.get(
+  '/companies/count',
+  permissionMiddlewareCreator.list(),
+  (request, response, next) => {
+    const { query, user } = request;
+    query.searchExtended = '1';
+
+    const recordsCounter = new RecordsCounter(companies, user, query);
+    recordsCounter
+      .count()
+      .then((count) => response.send({ count }))
+      .catch(next);
+  }
+);
+
+//...
+```
+
+### MongoDB
+
+```javascript
+const express = require('express');
+const {
+  PermissionMiddlewareCreator,
+  RecordsGetter,
+  RecordsCounter,
+} = require('forest-express-mongoose');
+const { companies } = require('../models');
+
+const router = express.Router();
+const permissionMiddlewareCreator = new PermissionMiddlewareCreator(
+  'companies'
+);
+
+//...
+
+// Get a list of Companies - Check out our documentation for more details: https://docs.forestadmin.com/documentation/reference-guide/routes/default-routes#get-a-list-of-records
+router.get(
+  '/companies',
+  permissionMiddlewareCreator.list(),
+  (request, response, next) => {
+    const { query, user } = request;
+    query.searchExtended = '1';
+
+    const recordsGetter = new RecordsGetter(companies, user, query);
+    recordsGetter
+      .getAll()
+      .then((records) => recordsGetter.serialize(records))
+      .then((recordsSerialized) => response.send(recordsSerialized))
+      .catch(next);
+  }
+);
+
+// Get a number of Companies - Check out our documentation for more details: https://docs.forestadmin.com/documentation/reference-guide/routes/default-routes#get-a-list-of-records
+router.get(
+  '/companies/count',
+  permissionMiddlewareCreator.list(),
+  (request, response, next) => {
+    const { query, user } = request;
+    query.searchExtended = '1';
+
+    const recordsCounter = new RecordsCounter(companies, user, query);
+    recordsCounter
+      .count()
+      .then((count) => response.send({ count }))
+      .catch(next);
+  }
+);
+
+//...
+```
+
+### Rails
+
+```ruby
+if ForestLiana::UserSpace.const_defined?('CompanyController')
+  ForestLiana::UserSpace::CompanyController.class_eval do
+    alias_method :default_index, :index
+    alias_method :default_count, :count
+
+    # Get a list of Companies
+    def index
+      params['searchExtended'] = '1'
+      default_index
+    end
+
+    # Get a number of Companies
+    def count
+      params['searchExtended'] = '1'
+      default_count
+    end
+  end
+end
+```
+
+### Django
+
+
+### Laravel
+
+
+With this snippet, only the `companies` collection would use extended search by default.
+
+<Warning>
+Using extended search is less performant than default search. Use this wisely.
+</Warning>
+
+#### Protect a specific record
+
+### SQL
+
+```javascript
+router.delete(
+  '/companies/:recordId',
+  permissionMiddlewareCreator.delete(),
+  (request, response, next) => {
+    const { params, query, user } = request;
+
+    if (Number(params.recordId) === 82) {
+      response
+        .status(403)
+        .send('This record is protected, you cannot remove it.');
+      return;
+    }
+
+    const recordRemover = new RecordRemover(companies, user, query);
+    recordRemover
+      .remove(params.recordId)
+      .then(() => response.status(204).send())
+      .catch(next);
+  }
+);
+```
+
+### MongoDB
+
+```javascript
+router.delete(
+  '/companies/:recordId',
+  permissionMiddlewareCreator.delete(),
+  (request, response, next) => {
+    const { params, query, user } = request;
+
+    if (Number(params.recordId) === 82) {
+      response
+        .status(403)
+        .send('This record is protected, you cannot remove it.');
+      return;
+    }
+
+    const recordRemover = new RecordRemover(companies, user, query);
+    recordRemover
+      .remove(params.recordId)
+      .then(() => response.status(204).send())
+      .catch(next);
+  }
+);
+```
+
+### Rails
+
+```ruby
+if ForestLiana::UserSpace.const_defined?('CompanyController')
+  ForestLiana::UserSpace::CompanyController.class_eval do
+    alias_method :default_destroy, :destroy
+    def destroy
+      if params["id"] == "50"
+        render status: 403, plain: 'This record is protected, you cannot remove it.'
+      else
+        default_destroy
+      end
+    end
+  end
+end
+```
+
+### Django
+
+
+### Laravel
+
+
+### Replacing Forest Admin's behavior
+
+To achieve this, simply remove the `next()` statement of any route:
+
+### SQL
+
+```javascript
+...
+
+// Create a Company - Check out our documentation for more details: https://docs.forestadmin.com/documentation/reference-guide/routes/default-routes#create-a-record
+router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next) => {
+  // >> Add your own logic here <<
+});
+
+...
+```
+
+### MongoDB
+
+```javascript
+...
+
+// Create a Company - Check out our documentation for more details: https://docs.forestadmin.com/documentation/reference-guide/routes/default-routes#create-a-record
+router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next) => {
+  // >> Add your own logic here <<
+});
+
+...
+```
+
+### Rails
+
+```ruby
+if ForestLiana::UserSpace.const_defined?('CompanyController')
+  ForestLiana::UserSpace::CompanyController.class_eval do
+    # Create a Company
+    def create
+      # >> Add your own logic here <<
+    end
+  end
+end
+```
+
+### Django
+
+
+### Laravel
+
+
+For instance, if you have a `Users` collection, you might want to create your users via your own api:
+
+### SQL
+
+```javascript
+...
+
+const axios = require('axios');
+const { RecordSerializer } = require('forest-express-sequelize');
+const { users } = require('../models');
+
+...
+
+router.post('/users', permissionMiddlewareCreator.create(), (request, response, next) => {
+  const recordSerializer = new RecordSerializer(users);
+  const axiosRequest = {
+    url: 'https://<your-api>/users',
+    method: 'post',
+    data: request.body.data.attributes,
+  };
+
+  axios(axiosRequest)
+    .then(result => recordSerializer.serialize(result.data))
+    .then(resultSerialized => response.send(resultSerialized))
+    .catch(error => {
+      console.log('error:', error);
+      next(error);
+    });
+});
+```
+
+### MongoDB
+
+```javascript
+...
+
+const axios = require('axios');
+const { RecordSerializer } = require('forest-express-mongoose');
+const { users } = require('../models');
+
+...
+
+router.post('/users', permissionMiddlewareCreator.create(), (request, response, next) => {
+  const recordSerializer = new RecordSerializer(users);
+  const axiosRequest = {
+    url: 'https://<your-api>/users',
+    method: 'post',
+    data: request.body.data.attributes,
+  };
+
+  axios(axiosRequest)
+    .then(result => recordSerializer.serialize(result.data))
+    .then(resultSerialized => response.send(resultSerialized))
+    .catch(error => {
+      console.log('error:', error);
+      next(error);
+    });
+});
+```
+
+### Rails
+
+```ruby
+require 'net/http'
+require 'uri'
+
+if ForestLiana::UserSpace.const_defined?('UserController')
+  ForestLiana::UserSpace::UserController.class_eval do
+
+    # Create a User
+    def create
+      forest_authorize!('add', forest_user, @resource)
+      begin
+        response = Net::HTTP.post URI('https://<your-api>/users'), params.to_json, "Content-Type" => "application/json"
+        render serializer: nil, json: render_record_jsonapi(response.body)
+      rescue => errors
+        render serializer: nil, json: JSONAPI::Serializer.serialize_errors(errors), status: 400
+      end
+    end
+  end
+end
+```
+
+### Django
+
+
+### Laravel
+
+

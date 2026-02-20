@@ -1,0 +1,79 @@
+---
+title: "Introduction to Forest Admin"
+description: "Build powerful admin panels on top of your existing data—no frontend code required"
+---
+
+Forest Admin is an **admin panel builder** that connects to your existing databases and APIs. Instead of spending months building internal tools, your team gets a fully-functional admin interface in minutes.
+
+**From data to admin panel:** Connect your database → Get CRUD operations, role-based access, and workflows → Customize with business logic and branding.
+
+## What Forest Admin does
+
+<CardGroup cols={2}>
+  <Card title="For Operations Teams" icon="users">
+    Manage customers, orders, and operations without waiting on engineering. Handle support, approvals, and workflows in one place.
+  </Card>
+  <Card title="For Engineering Teams" icon="code">
+    Skip building internal tools. Connect your data sources and customize with code only when needed.
+  </Card>
+</CardGroup>
+
+**Core capabilities:**
+- **Data operations** — Browse, search, create, edit, delete records
+- **Custom business logic** — Add actions, computed fields, workflows
+- **Access control** — Roles, permissions, SSO, audit logs
+- **UI customization** — Layouts, forms, dashboards, branding
+- **Team collaboration** — Notes, approval workflows, notifications
+
+## How it works
+
+Forest Admin uses an **agent-based architecture**. An agent runs in your infrastructure (or ours) and connects to your data sources. Your team accesses the Forest Admin UI to manage data.
+
+```
+Your Database ←→ Forest Admin Agent ←→ Forest Admin UI
+                 (Node.js or Ruby)        (Web Interface)
+```
+
+**The agent handles:**
+- Database connections and queries
+- Business logic (actions, computed fields)
+- Permission enforcement
+
+**The UI provides:**
+- Data browsing and editing
+- Forms and layouts
+- Dashboards and analytics
+- User management
+
+<Info>
+**Your data never leaves your control.** The agent reads/writes directly to your database. We don't store your data.
+</Info>
+
+
+## Common use cases
+
+**Customer Support** — View profiles, process refunds, manage subscriptions, handle tickets
+
+**Operations** — Track orders, manage inventory, monitor KPIs, generate reports
+
+**Content Moderation** — Review user content, manage catalogs, schedule publications
+
+**Workflows & Approvals** — KYC/AML compliance, fraud detection, approval processes
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Quick Start" icon="bolt" href="/get-started/quickstart">
+    Get up and running in 5 minutes
+  </Card>
+  <Card title="Features Overview" icon="list" href="/get-started/features-overview">
+    Explore what you can build
+  </Card>
+  <Card title="Connect Your Data" icon="database" href="/product/integration/overview">
+    Learn how to connect data sources
+  </Card>
+</CardGroup>
+
+---
+
+**Need help?** Join our [Community Forum](https://community.forestadmin.com) or email [support@forestadmin.com](mailto:support@forestadmin.com)

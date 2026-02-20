@@ -1,0 +1,22 @@
+---
+title: Handle enums with alias labels in a smart action
+---
+
+# Handle enums with alias labels in a smart action
+
+**Context**: As a user to choose the input for a smart action field from a list of labels and I want a label to be pre-selected depending on the record's information. The labels do not correspond to the value to be updated in the database.
+
+**Example**: I have a collection `companies` that has a `status` field. The status value in the database can be `rejected` or `live`.
+
+In a smart action called update company status I want users to be able to select an alias value (i.e. `'rejeté'` for `rejected` and `'validé'` for `live`).
+
+### Implementation
+
+In order not to duplicate the matching to be made between the different values from the UI to the database and the other way around, I create a `company-status-handler` file that will allow me to handle the conversion.
+
+`services/companies-status-handler.js`
+
+
+`routes/companies.js`
+
+

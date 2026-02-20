@@ -1,0 +1,131 @@
+---
+title: Agent API Overview
+description: Overview of Forest Admin agent APIs across different languages
+---
+
+# Agent API Overview
+
+Forest Admin provides agent SDKs in multiple languages to connect your backend to the Forest Admin platform. These agents expose your data models as admin interfaces with customization capabilities.
+
+## Available Agents
+
+### Node.js Agent (Current)
+
+The latest Node.js agent with full TypeScript support and modern architecture.
+
+**Package:** `@forestadmin/agent`
+
+**Features:**
+- Full TypeScript support with type inference
+- Multi-datasource support
+- Plugin ecosystem
+- Advanced customization API
+- Cloud and self-hosted deployment
+
+<Card title="Node.js Agent Documentation" icon="node-js" href="/reference/agent-api/nodejs">
+  Complete API reference for the Node.js agent
+</Card>
+
+### Ruby Agent (Current)
+
+The Ruby agent for Rails applications.
+
+**Package:** `forest_admin_agent`
+
+**Features:**
+- ActiveRecord and Mongoid support
+- Rails integration
+- Custom actions and fields
+- Approval workflows
+
+<Card title="Ruby Agent Documentation" icon="gem" href="/reference/agent-api/ruby">
+  Complete API reference for the Ruby agent
+</Card>
+
+## Agent Architecture
+
+All Forest Admin agents follow a similar architecture:
+
+```
+Application Database
+       ↓
+  Agent SDK (Your Backend)
+       ↓
+  Forest Admin API
+       ↓
+  Forest Admin UI
+```
+
+### Core Concepts
+
+1. **Data Sources**: Connect to your databases (SQL, MongoDB, etc.)
+2. **Collections**: Map your models to admin interfaces
+3. **Customizations**: Add Smart Actions, Fields, and Segments
+4. **Hooks**: Intercept and modify operations
+5. **Authentication**: Secure access with Forest Admin auth
+
+## Choosing an Agent
+
+| Agent | Best For | Deployment |
+|-------|----------|------------|
+| **Node.js** | Modern applications, TypeScript projects | Self-hosted or Cloud |
+| **Ruby** | Rails applications | Self-hosted |
+
+## Migration from v1
+
+If you're using a legacy v1 agent, see our migration guides:
+
+<CardGroup cols={2}>
+  <Card title="Migration Guide" icon="arrow-right" href="/guides/migration/from-v1/overview">
+    Migrate from Agent v1 to v2
+  </Card>
+  <Card title="Legacy Documentation" icon="book" href="/legacy/agents-overview">
+    v1 agent documentation (deprecated)
+  </Card>
+</CardGroup>
+
+## Getting Started
+
+<Steps>
+  <Step title="Choose your agent">
+    Select the agent that matches your stack (Node.js or Ruby)
+  </Step>
+
+  <Step title="Install the package">
+    Add the agent SDK to your project
+  </Step>
+
+  <Step title="Configure data sources">
+    Connect your databases
+  </Step>
+
+  <Step title="Add customizations">
+    Create Smart Actions, Fields, and Segments
+  </Step>
+
+  <Step title="Deploy">
+    Deploy your agent (self-hosted or Cloud)
+  </Step>
+</Steps>
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card title="Node.js API" icon="code" href="/reference/agent-api/nodejs">
+    Node.js API reference
+  </Card>
+  <Card title="Ruby API" icon="code" href="/reference/agent-api/ruby">
+    Ruby API reference
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/get-started/quickstart">
+    Get started guide
+  </Card>
+</CardGroup>
+
+## Support
+
+Need help with your agent implementation?
+
+- 📚 [Documentation Portal](/get-started/intro-to-forest-admin)
+- 💬 [Community Forum](https://community.forestadmin.com)
+- 📧 [Support Email](mailto:support@forestadmin.com)

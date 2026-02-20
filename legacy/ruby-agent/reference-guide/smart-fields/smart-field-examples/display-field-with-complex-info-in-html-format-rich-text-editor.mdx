@@ -1,0 +1,17 @@
+---
+title: Display field with complex info in html format (rich text editor)
+---
+
+# Display field with complex info in html format (rich text editor)
+
+## First step: Display through html
+
+Create a smart field that will return a string containing the html formatted data (here the features name and if they are enabled or not).
+
+This smart field will be declared at the level of the account collection (as we want features status to be visible for each account). The file where the smart field should be declared is contained in a folder forest and should be `forest/accounts.js`
+
+The logic is to add for each feature a new div which includes an element containing the name and an element conditionally formatted (green or red) containing the value true of false.
+
+In order to do that you need to list the fields to iterate on to add the html elements.
+
+

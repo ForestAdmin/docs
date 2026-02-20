@@ -1,0 +1,22 @@
+---
+title: Searchable smart collection with records fetched from hubspot API
+---
+
+# Searchable smart collection with records fetched from hubspot API
+
+**Context:** Create a smart collection fetching the 10 first companies records from hubspot or the ones matching a search criteria
+
+First step is to declare the collection and the fields that should be expected to be found for this collection.
+
+
+Next step is to define the logic to retrieve the data of the smart collection in a `routes/your-model.js` file.
+
+You first need to set variables according to the context to ensure the query follows the UX (nb of records per page, index of the page you're on, search performed or not)
+
+You then need to define a serializer adapted to the format of the data that will be passed and the expected fields of the collection.
+
+Finally you need to implement the API call, serialize the data obtained, filter depending on the search performed and return the payload.
+
+NB: I used the `superagent` module for the API call
+
+

@@ -55,7 +55,7 @@ const Person = mongoose.model('persons', personSchema);
 
 The Mongoose datasource offers four transformation strategies:
 
-### `flattenmode: 'auto'`
+### `flattenMode: 'auto'`
 
 Arrays of objects and references are converted to independent collections. Other nested fields are moved to the root level.
 
@@ -65,7 +65,7 @@ createMongooseDataSource(connection, {
 })
 ```
 
-### `flattenmode: 'none'`
+### `flattenMode: 'none'`
 
 No transformations are made. Forest Admin collections use the exact same structure as your Mongoose models.
 
@@ -75,7 +75,7 @@ createMongooseDataSource(connection, {
 })
 ```
 
-### `flattenmode: 'manual'`
+### `flattenMode: 'manual'`
 
 You are in full control of which virtual collections are created and which fields are moved to the root level.
 
@@ -91,7 +91,7 @@ createMongooseDataSource(connection, {
 })
 ```
 
-### `flattenmode: 'legacy'`
+### `flattenMode: 'legacy'`
 
 Maintains backward compatibility with previous datasource versions.
 

@@ -1,0 +1,596 @@
+---
+title: API Rate Limits
+description: Understand and work within Forest Admin API rate limits
+---
+
+# API Rate Limits
+
+The Forest Admin Public API implements rate limiting to ensure service stability and fair usage across all customers. This guide explains rate limits, how to work with them, and best practices for building reliable integrations.
+
+## Rate Limit Overview
+
+Rate limits protect the API infrastructure by:
+
+- **Preventing abuse** - Limiting excessive or malicious requests
+- **Ensuring availability** - Maintaining service for all users
+- **Encouraging efficiency** - Promoting optimized API usage
+- **Fair resource allocation** - Distributing capacity equitably
+
+## Current Rate Limits
+
+### Standard Limits
+
+| Time Window | Limit | Applies To |
+|-------------|-------|------------|
+| Per minute | 60 requests | Per API token |
+| Per hour | 1,000 requests | Per API token |
+| Per day | 10,000 requests | Per API token |
+
+### Enterprise Limits
+
+Enterprise customers may have higher limits based on their plan. Contact your account manager for details.
+
+<Note>
+Rate limits are subject to change. Check the response headers for current limits.
+</Note>
+
+## Rate Limit Headers
+
+Every API response includes headers with rate limit information:
+
+```http
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 45
+X-RateLimit-Reset: 1640995200
+```
+
+### Header Definitions
+
+**`X-RateLimit-Limit`**
+- Maximum requests allowed in current time window
+- Example: `60` (60 requests per minute)
+
+**`X-RateLimit-Remaining`**
+- Requests remaining in current time window
+- Example: `45` (45 requests left)
+
+**`X-RateLimit-Reset`**
+- Unix timestamp when the rate limit resets
+- Example: `1640995200` (January 1, 2022, 00:00:00 UTC)
+
+### Reading Headers
+
+**JavaScript:**
+
+```javascript
+const response = await axios.get(
+  'https://api.forestadmin.com/api/v1/activity-logs',
+  { headers: { 'Authorization': `Bearer ${token}` } }
+);
+
+const limit = response.headers['x-ratelimit-limit'];
+const remaining = response.headers['x-ratelimit-remaining'];
+const reset = response.headers['x-ratelimit-reset'];
+
+console.log(`${remaining}/${limit} requests remaining`);
+console.log(`Resets at: ${new Date(reset * 1000).toISOString()}`);
+```
+
+**Python:**
+
+```python
+response = requests.get(
+    'https://api.forestadmin.com/api/v1/activity-logs',
+    headers={'Authorization': f'Bearer {token}'}
+)
+
+limit = response.headers.get('X-RateLimit-Limit')
+remaining = response.headers.get('X-RateLimit-Remaining')
+reset = response.headers.get('X-RateLimit-Reset')
+
+print(f'{remaining}/{limit} requests remaining')
+print(f'Resets at: {datetime.fromtimestamp(int(reset))}')
+```
+
+## 429 Too Many Requests
+
+When you exceed the rate limit, the API returns a `429 Too Many Requests` error:
+
+**Response:**
+
+```json
+{
+  "error": "Too Many Requests",
+  "message": "Rate limit exceeded. Please retry after 60 seconds.",
+  "retry_after": 60
+}
+```
+
+**Headers:**
+
+```http
+HTTP/1.1 429 Too Many Requests
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1640995260
+Retry-After: 60
+```
+
+### Retry-After Header
+
+The `Retry-After` header indicates how long to wait before retrying:
+
+- Value in seconds until you can retry
+- Always respect this value
+- Do not retry before this time
+
+## Handling Rate Limits
+
+### Strategy 1: Check Headers Proactively
+
+Monitor rate limit headers and slow down before hitting the limit:
+
+```javascript
+async function makeRateLimitedRequest(url) {
+  const response = await axios.get(url, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  const remaining = parseInt(response.headers['x-ratelimit-remaining']);
+  const reset = parseInt(response.headers['x-ratelimit-reset']);
+
+  // Slow down if close to limit
+  if (remaining < 10) {
+    const waitTime = (reset - Date.now() / 1000) * 1000;
+    console.log(`Approaching rate limit. Waiting ${waitTime}ms...`);
+    await sleep(waitTime);
+  }
+
+  return response.data;
+}
+```
+
+### Strategy 2: Exponential Backoff
+
+Implement exponential backoff for 429 errors:
+
+```javascript
+async function requestWithRetry(url, maxRetries = 3) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await axios.get(url, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    } catch (error) {
+      if (error.response?.status === 429) {
+        const retryAfter = error.response.headers['retry-after'] ||
+                          Math.pow(2, attempt) * 1000;
+
+        console.log(`Rate limited. Retrying after ${retryAfter}ms...`);
+        await sleep(retryAfter);
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw new Error('Max retries exceeded');
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+```
+
+### Strategy 3: Request Queue
+
+Use a queue to control request rate:
+
+```javascript
+class RateLimitedQueue {
+  constructor(requestsPerMinute = 60) {
+    this.queue = [];
+    this.processing = false;
+    this.interval = 60000 / requestsPerMinute; // ms between requests
+  }
+
+  async add(requestFn) {
+    return new Promise((resolve, reject) => {
+      this.queue.push({ requestFn, resolve, reject });
+      this.process();
+    });
+  }
+
+  async process() {
+    if (this.processing || this.queue.length === 0) return;
+
+    this.processing = true;
+    const { requestFn, resolve, reject } = this.queue.shift();
+
+    try {
+      const result = await requestFn();
+      resolve(result);
+    } catch (error) {
+      reject(error);
+    }
+
+    await sleep(this.interval);
+    this.processing = false;
+    this.process();
+  }
+}
+
+// Usage
+const queue = new RateLimitedQueue(60);
+
+for (const id of recordIds) {
+  queue.add(() =>
+    axios.get(`https://api.forestadmin.com/api/v1/records/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+  );
+}
+```
+
+### Strategy 4: Token Bucket
+
+Implement a token bucket algorithm:
+
+```python
+import time
+from threading import Lock
+
+class TokenBucket:
+    def __init__(self, rate, capacity):
+        self.rate = rate  # tokens per second
+        self.capacity = capacity  # maximum tokens
+        self.tokens = capacity
+        self.last_update = time.time()
+        self.lock = Lock()
+
+    def consume(self, tokens=1):
+        with self.lock:
+            now = time.time()
+            elapsed = now - self.last_update
+
+            # Add tokens based on elapsed time
+            self.tokens = min(
+                self.capacity,
+                self.tokens + elapsed * self.rate
+            )
+            self.last_update = now
+
+            if self.tokens >= tokens:
+                self.tokens -= tokens
+                return True
+            return False
+
+    def wait_for_token(self):
+        while not self.consume():
+            time.sleep(0.1)
+
+# Usage (60 requests per minute)
+bucket = TokenBucket(rate=1, capacity=60)
+
+for record_id in record_ids:
+    bucket.wait_for_token()
+    response = requests.get(
+        f'https://api.forestadmin.com/api/v1/records/{record_id}',
+        headers={'Authorization': f'Bearer {token}'}
+    )
+```
+
+## Best Practices
+
+### 1. Respect Rate Limits
+
+Always check and respect rate limit headers:
+
+```javascript
+✅ Good:
+- Monitor X-RateLimit-Remaining
+- Slow down when approaching limit
+- Respect Retry-After header
+- Implement exponential backoff
+
+❌ Bad:
+- Ignore rate limit headers
+- Retry immediately after 429
+- Use multiple tokens to circumvent limits
+```
+
+### 2. Implement Caching
+
+Cache responses to reduce API calls:
+
+```javascript
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+async function getCachedData(endpoint) {
+  const cached = cache.get(endpoint);
+
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data;
+  }
+
+  const response = await axios.get(endpoint, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  cache.set(endpoint, {
+    data: response.data,
+    timestamp: Date.now()
+  });
+
+  return response.data;
+}
+```
+
+### 3. Batch Operations
+
+Group related requests when possible:
+
+```javascript
+// Bad - Multiple individual requests
+for (const id of userIds) {
+  await getUser(id); // 100 requests for 100 users
+}
+
+// Good - Batch request
+const users = await getUsers({ ids: userIds }); // 1 request
+```
+
+### 4. Use Pagination Efficiently
+
+Request only the data you need:
+
+```javascript
+// Bad - Request all data
+const allLogs = await getAllActivityLogs(); // Could be thousands
+
+// Good - Paginate and filter
+const recentLogs = await getActivityLogs({
+  start_date: '2024-01-01',
+  limit: 100,
+  page: 1
+});
+```
+
+### 5. Monitor Usage
+
+Track your API usage to identify optimization opportunities:
+
+```javascript
+class APIMonitor {
+  constructor() {
+    this.requests = 0;
+    this.errors = 0;
+    this.rateLimits = 0;
+  }
+
+  recordRequest() {
+    this.requests++;
+  }
+
+  recordError(error) {
+    this.errors++;
+    if (error.response?.status === 429) {
+      this.rateLimits++;
+    }
+  }
+
+  getStats() {
+    return {
+      total_requests: this.requests,
+      total_errors: this.errors,
+      rate_limit_errors: this.rateLimits,
+      error_rate: (this.errors / this.requests * 100).toFixed(2) + '%'
+    };
+  }
+}
+
+const monitor = new APIMonitor();
+
+// Use in requests
+try {
+  monitor.recordRequest();
+  const response = await makeRequest();
+} catch (error) {
+  monitor.recordError(error);
+  throw error;
+}
+```
+
+### 6. Schedule Heavy Operations
+
+Run intensive operations during off-peak hours:
+
+```javascript
+// Schedule large exports for off-peak times
+const isOffPeak = () => {
+  const hour = new Date().getUTCHours();
+  return hour >= 0 && hour < 6; // 00:00-06:00 UTC
+};
+
+if (isOffPeak()) {
+  await exportLargeDataset();
+} else {
+  console.log('Scheduling for off-peak hours...');
+  scheduleForOffPeak(exportLargeDataset);
+}
+```
+
+## Increasing Rate Limits
+
+### Enterprise Plans
+
+Enterprise customers can request higher rate limits:
+
+1. **Contact your account manager**
+2. **Describe your use case**
+3. **Provide expected request volume**
+4. **Discuss SLA requirements**
+
+### Custom Limits
+
+For specific high-volume use cases, custom limits may be available:
+
+- Bulk data exports
+- Real-time integrations
+- Data warehouse syncing
+- Compliance reporting
+
+**Contact:** [enterprise@forestadmin.com](mailto:enterprise@forestadmin.com)
+
+## Complete Example
+
+Full implementation with rate limiting, retries, and monitoring:
+
+```javascript
+const axios = require('axios');
+
+class ForestAPIClient {
+  constructor(token, requestsPerMinute = 60) {
+    this.token = token;
+    this.baseURL = 'https://api.forestadmin.com';
+    this.queue = [];
+    this.processing = false;
+    this.interval = 60000 / requestsPerMinute;
+    this.monitor = {
+      requests: 0,
+      errors: 0,
+      rateLimits: 0
+    };
+  }
+
+  async request(endpoint, options = {}) {
+    return new Promise((resolve, reject) => {
+      this.queue.push({ endpoint, options, resolve, reject });
+      this.processQueue();
+    });
+  }
+
+  async processQueue() {
+    if (this.processing || this.queue.length === 0) return;
+
+    this.processing = true;
+    const { endpoint, options, resolve, reject } = this.queue.shift();
+
+    try {
+      const response = await this.makeRequest(endpoint, options);
+      this.monitor.requests++;
+      resolve(response);
+    } catch (error) {
+      this.monitor.errors++;
+      if (error.response?.status === 429) {
+        this.monitor.rateLimits++;
+        // Re-queue the request
+        this.queue.unshift({ endpoint, options, resolve, reject });
+        const retryAfter = error.response.headers['retry-after'] * 1000 || 60000;
+        await this.sleep(retryAfter);
+      } else {
+        reject(error);
+      }
+    }
+
+    await this.sleep(this.interval);
+    this.processing = false;
+    this.processQueue();
+  }
+
+  async makeRequest(endpoint, options, retries = 3) {
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        return await axios({
+          method: options.method || 'GET',
+          url: `${this.baseURL}${endpoint}`,
+          headers: {
+            'Authorization': `Bearer ${this.token}`,
+            'Content-Type': 'application/json',
+            ...options.headers
+          },
+          ...options
+        });
+      } catch (error) {
+        if (attempt === retries - 1) throw error;
+        if (error.response?.status === 429) {
+          const retryAfter = error.response.headers['retry-after'] * 1000 ||
+                            Math.pow(2, attempt) * 1000;
+          await this.sleep(retryAfter);
+        } else {
+          throw error;
+        }
+      }
+    }
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  getStats() {
+    return {
+      ...this.monitor,
+      error_rate: (this.monitor.errors / this.monitor.requests * 100).toFixed(2) + '%',
+      rate_limit_rate: (this.monitor.rateLimits / this.monitor.errors * 100).toFixed(2) + '%'
+    };
+  }
+}
+
+// Usage
+const client = new ForestAPIClient(process.env.FOREST_API_TOKEN, 60);
+
+async function fetchActivityLogs() {
+  const response = await client.request('/api/v1/activity-logs', {
+    params: {
+      start_date: '2024-01-01',
+      limit: 100
+    }
+  });
+  return response.data;
+}
+
+// Fetch multiple pages
+const allLogs = [];
+for (let page = 1; page <= 10; page++) {
+  const response = await client.request('/api/v1/activity-logs', {
+    params: { page, limit: 100 }
+  });
+  allLogs.push(...response.data);
+}
+
+console.log('Stats:', client.getStats());
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Authentication"
+    icon="key"
+    href="/reference/api/authentication"
+  >
+    Learn about API authentication
+  </Card>
+  <Card
+    title="Activity Logs"
+    icon="list-timeline"
+    href="/reference/api/endpoints/activity-logs"
+  >
+    Start using the Activity Logs API
+  </Card>
+  <Card
+    title="API Introduction"
+    icon="book"
+    href="/reference/api/introduction"
+  >
+    Back to API overview
+  </Card>
+  <Card
+    title="Best Practices"
+    icon="lightbulb"
+    href="/reference/api/rate-limits#best-practices"
+  >
+    Review best practices
+  </Card>
+</CardGroup>

@@ -1,0 +1,73 @@
+---
+title: Notes API
+---
+> **Status:** TODO - Priority: LOW
+>
+> **Audience:** Developers
+
+## Description
+
+API endpoints for creating and managing notes on records.
+
+## Sources to migrate
+
+- `public-api-guide/notes.md`
+
+## Content outline
+
+1. **Endpoints**
+   - `GET /api/collections/:collection/records/:id/notes` - List notes
+   - `POST /api/collections/:collection/records/:id/notes` - Create note
+   - `GET /api/notes/:id` - Get note details
+   - `PUT /api/notes/:id` - Update note
+   - `DELETE /api/notes/:id` - Delete note
+
+2. **Note Object**
+   - id
+   - content
+   - author
+   - created_at
+   - updated_at
+   - mentions
+
+3. **Creating Notes**
+   ```bash
+   POST /api/collections/customers/records/123/notes
+   {
+     "content": "Customer called regarding issue X"
+   }
+   ```
+
+4. **Formatting**
+   - Plain text
+   - Markdown
+   - @mentions
+   - Character limits
+
+5. **Permissions**
+   - Who can create
+   - Who can read
+   - Who can edit
+   - Who can delete
+
+6. **Use Cases**
+   - Automated note creation
+   - External system integration
+   - Bulk note operations
+   - Audit trail creation
+
+7. **Examples**
+   - Create note from webhook
+   - Sync notes from support system
+   - Add automated context
+
+## Migration notes
+
+- LOW priority
+- Part of public API migration
+- Check feature availability
+
+## Related pages
+
+- [API Introduction](/reference/api/introduction)
+- [Collaborate > Notes](/product/collaborate/notes)

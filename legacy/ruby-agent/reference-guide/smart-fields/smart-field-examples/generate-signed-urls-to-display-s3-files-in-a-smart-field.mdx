@@ -1,0 +1,22 @@
+---
+title: Generate signed urls to display S3 files in a smart field
+---
+
+# Generate signed urls to display S3 files in a smart field
+
+**Context**: As a user I want to be able to preview files from an S3 bucket thanks to secure signed urls.
+
+![](</images/legacy/javascript-agents/image (536).png>)
+
+**Example**: I have a collection `places` that has a `pictures` field which is an array of strings containing the file name of files stored on a s3 bucket.
+
+In a smart field called `s3pictures` I return the value of calls made to S3 to get signed urls for the files whose name is present in the `pictures` field.
+
+### Implementation
+
+First you need to implement the function to get the signed urls from s3. We use the `aws-sdk` npm package to connect to the bucket storing the pictures.
+
+`services/s3-helper.js`
+
+
+You can then use the default file viewer widget settings to preview the pictures.

@@ -1,7 +1,0 @@
----
-title: Display extensive logs
----
-For debugging purposes your might want to display extensive logs from your Admin Backend API.\
-\
-To do so, simply add the following in your code:
-

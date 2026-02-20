@@ -1,0 +1,18 @@
+---
+title: Add validation to a smart field edition
+---
+
+# Add validation to a smart field edition
+
+**Context**: I want to make sure that my users can only enter a value satisfying a certain set of conditions when editing a smart field.
+
+Here I'm working on a collection `customers` and the smart field `'must-be-kuku'` should only accept the value `kuku`.
+
+`forest/customers.js`
+
+
+At the route level I need to check the user input from the edit form in the UI and check the value that has been entered into the field `'must-be-kuku'`.
+
+`routes/customers.js`
+
+

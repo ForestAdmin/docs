@@ -1,0 +1,22 @@
+---
+title: Elasticsearch service/utils
+---
+
+# Elasticsearch service/utils
+
+## Connecting to Elasticsearch with a Custom Service
+
+This service wraps the [Elasticsearch Node.js client](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html) and provides the following implementation:
+
+- Get a list of records (with Pagination and Filters handling)
+- Get a simple record
+- Create a record
+- Update an existing record
+- Delete a record
+
+### Prototype
+
+
+<Warning>
+We expose utils to parse filters through **forest-express-sequelize** since version **7.6.0**
+</Warning>

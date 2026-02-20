@@ -1,0 +1,103 @@
+---
+title: Interact with your Elasticsearch data
+---
+
+# Interact with your Elasticsearch data
+
+### Creating the Smart Collection
+
+Let's take a simple example from Kibana, we will use [a set of fictitious accounts with randomly generated data.](https://download.elastic.co/demos/kibana/gettingstarted/accounts.zip) You can easily import the data using Kibana Home page section **Ingest your data**.
+
+When it's done we can start looking at how to play with those data in Forest Admin.
+
+### forest-express-sequelize
+First, we declare the `bank-accounts` collection in the `forest/` directory. In this Smart Collection, all fields are related to document mapping attributes except the field `id` that is computed using the document `_id`.&#x20;
+
+You can check out the list of [available field options](https://docs.forestadmin.com/documentation/reference-guide/fields/create-and-manage-smart-fields#available-field-options) if you need them.
+
+<Warning>
+You **MUST** declare an `id` field when creating a Smart Collection. The value of this field for each record **MUST** be unique. On the following example, we simply use the UUID provided on every Elasticsearch documents.
+</Warning>
+
+
+<Info>
+You can add the option `isSearchable: true` to your collection to display the search bar. Note that you will have to implement the search yourself by including it into your own `GET` logic.
+</Info>
+
+### Implementing the routes
+
+It's not an easy job to connect several data sources in the same structure. To accommodate you in this journey we already provide you a simple service [`ElasticsearchHelper`](https://docs.forestadmin.com/woodshop/how-tos/create-a-smart-collection-with-elasticsearch/elasticsearch-service-utils) that handles all the logic to connect with your Elasticsearch data.
+
+\
+Before getting further, in order to search your data using filters, we need to define the Elasticsearch configuration.
+
+| Name             | Type             | Description                                                                                                                                                                                                     |
+| ---------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| index            | string           | The name of your Elasticsearch index.                                                                                                                                                                           |
+| filterDefinition | string           | Type of your Elasticsearch fields. Can be `number`, `date`, `text`,`keyword`                                                                                                                                    |
+| sort             | array of objects | (optional) Required only to sort your data. [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/7.12/sort-search-results.html) `Example: [ { createdAt: { order: 'desc' } }]` |
+| mappingFunction  | function         | (optional) Required only to modify the data retrieved from Elasticsearch. `Example: (id, source) => { id,  ...source}`                                                                                          |
+
+
+<Info>
+Our custom filter translator only support `number`, `keyword`, `text`, `date` data types. Nonetheless, you can implement more filter mapper type in the`utils/filter-translator.js`
+</Info>
+
+### Implementing the GET (all records)
+
+In the file `routes/bank-accounts.js`, we’ve created a new route to implement the API behind the Smart Collection.
+
+The logic here is to list all the BankAccount records. We use a custom service `service/elasticsearch-helper.js` for this example. The implementation code of this service is available here.
+
+Finally, the last step is to serialize the response data in the expected format which is simply a standard [JSON API](http://jsonapi.org/) document. You are lucky `forest-express-sequelize` already does this for you using the RecordSerializer.
+
+javascript
+// Imports and ElasticsearchHelper base definition ...
+
+router.delete(
+  '/bank-accounts/:id',
+  permissionMiddlewareCreator.delete(),
+  async (request, response, next) => {
+    try {
+      await elasticsearchHelper.removeRecord(request.params.id);
+      response.status(204).send();
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+module.exports = router;
+```
+
+#### Delete a list of records
+
+### forest-express-sequelize
+
+javascript
+// Imports and ElasticsearchHelper base definition ...
+
+router.post(
+  '/bank-accounts',
+  permissionMiddlewareCreator.create(),
+  (request, response, next) => {
+    const recordCreator = new RecordCreator(
+      { name: 'bank-accounts' },
+      request.user,
+      request.query
+    );
+
+    recordCreator
+      .deserialize(request.body)
+      .then((recordToCreate) =>
+        elasticsearchHelper.createRecord(recordToCreate)
+      )
+      .then((record) => recordCreator.serialize(record))
+      .then((recordSerialized) => response.send(recordSerialized))
+      .catch(next);
+  }
+);
+
+module.exports = router;
+```
+

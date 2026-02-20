@@ -3,19 +3,19 @@ title: "Authenticate with Forest Admin"
 description: "Learn how to authenticate and manage access to your Forest Admin organization"
 ---
 
-## Authentication methods
+## Authentication Methods
 
 Forest Admin supports multiple authentication methods to access your admin panel:
 
-### Email and password
+### Email and Password
 
 The default authentication method. Users create an account with their email address and password to access Forest Admin.
 
-### Google sign-in
+### Google Sign-In
 
 Users can authenticate using their Google account for faster access without managing separate credentials.
 
-## Accessing organization settings
+## Accessing Organization Settings
 
 To configure authentication, security, and other organization-level settings:
 
@@ -26,7 +26,7 @@ To configure authentication, security, and other organization-level settings:
    - **Security** - Manage IP whitelisting, 2FA enforcement, session timeouts
    - **SCIM** - Set up automatic user provisioning
 
-## Single sign-on (SSO)
+## Single Sign-On (SSO)
 
 Single Sign-On allows your team to authenticate using your organization's existing identity provider, centralizing access control and improving security.
 
@@ -37,30 +37,27 @@ Single Sign-On allows your team to authenticate using your organization's existi
 - **Simplified management** - User access is controlled from your identity provider
 - **Audit trail** - Track authentication events through your IdP
 
-### Supported providers
+### Supported Providers
 
-### [Google workspace](/product/control/authentication/sso-google)
+<CardGroup cols={2}>
+  <Card title="Google Workspace" icon="google" href="/product/control/authentication/sso-google">
+    Configure SSO with Google Workspace for your organization
+  </Card>
+  <Card title="Azure AD" icon="microsoft" href="/product/control/authentication/sso-azure">
+    Set up SSO with Microsoft Azure Active Directory
+  </Card>
+  <Card title="Okta" icon="shield" href="/product/control/authentication/sso-okta">
+    Integrate Forest Admin with Okta identity provider
+  </Card>
+  <Card title="AWS IAM" icon="aws" href="/product/control/authentication/sso-aws">
+    Configure SSO using AWS IAM Identity Center
+  </Card>
+  <Card title="OneLogin" icon="key" href="/product/control/authentication/sso-onelogin">
+    Set up SSO with OneLogin identity platform
+  </Card>
+</CardGroup>
 
-Configure SSO with Google Workspace for your organization
-
-  ### [Azure AD](/product/control/authentication/sso-azure)
-
-Set up SSO with Microsoft Azure Active Directory
-
-  ### [Okta](/product/control/authentication/sso-okta)
-
-Integrate Forest Admin with Okta identity provider
-
-  ### [AWS IAM](/product/control/authentication/sso-aws)
-
-Configure SSO using AWS IAM Identity Center
-
-  ### [OneLogin](/product/control/authentication/sso-onelogin)
-
-Set up SSO with OneLogin identity platform
-
-
-### How SSO works
+### How SSO Works
 
 1. User attempts to access Forest Admin
 2. Forest Admin redirects to your identity provider
@@ -68,7 +65,7 @@ Set up SSO with OneLogin identity platform
 4. IdP sends authentication confirmation to Forest Admin
 5. User gains access to Forest Admin with appropriate permissions
 
-## SCIM provisioning
+## SCIM Provisioning
 
 SCIM (System for Cross-domain Identity Management) automatically provisions and deprovisions users from your identity provider to Forest Admin.
 
@@ -85,29 +82,28 @@ Before configuring SCIM:
 - SSO must be enabled and configured for your organization
 - You must have admin access to both Forest Admin and your identity provider
 
-### Supported providers
+### Supported Providers
 
-### [Okta scim](/product/control/authentication/scim-okta)
+<CardGroup cols={2}>
+  <Card title="Okta SCIM" icon="shield" href="/product/control/authentication/scim-okta">
+    Automatic user provisioning with Okta
+  </Card>
+  <Card title="OneLogin SCIM" icon="key" href="/product/control/authentication/scim-onelogin">
+    Automatic user provisioning with OneLogin
+  </Card>
+  <Card title="Okta Manual Setup" icon="wrench" href="/product/control/authentication/scim-okta-manual">
+    Manual SCIM configuration for Okta
+  </Card>
+</CardGroup>
 
-Automatic user provisioning with Okta
-
-  ### [OneLogin SCIM](/product/control/authentication/scim-onelogin)
-
-Automatic user provisioning with OneLogin
-
-  ### [Okta Manual Setup](/product/control/authentication/scim-okta-manual)
-
-Manual SCIM configuration for Okta
-
-
-### What SCIM syncs
+### What SCIM Syncs
 
 - **User creation** - New users are automatically added to Forest Admin
 - **User updates** - Name and email changes are synchronized
 - **User deactivation** - Removed or deactivated users lose Forest Admin access
 - **Group membership** - User assignments to teams (when supported)
 
-## Need help?
+## Need Help?
 
 - [Community Forum](https://community.forestadmin.com) - Ask authentication questions
 - [Contact Support](https://www.forestadmin.com/contact) - Get help configuring SSO or SCIM

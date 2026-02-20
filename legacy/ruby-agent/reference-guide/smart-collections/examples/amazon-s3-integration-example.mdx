@@ -1,0 +1,29 @@
+---
+title: Create a Smart Collection with Amazon S3
+---
+
+# Create a Smart Collection with Amazon S3
+
+### Creating the Smart Collection
+
+On our Live Demo, we’ve stored the `Legal Documents` of a `Company` on Amazon S3. In the following example, we show you how to create the Smart Collection to see and manipulate them in your Forest admin.
+
+### Implementing the GET (all records)
+
+At this time, there’s no Smart Collection Implementation because no route in your admin backend handles the API call yet.&#x20;
+
+### Implementing the GET (specific record)
+
+### Implementing the PUT
+
+To handle the update of a record we have to catch the PUT API call. In our example, all S3-related fields are set as read-only and only `is_verified` can be updated.
+
+### Implementing the DELETE
+
+Now we are able to see all the legal documents on Forest Admin, it’s time to implement the DELETE HTTP method in order to remove the documents on S3 when the admin user needs it.
+
+### Implementing the POST
+
+On our Live Demo example, creating a record directly from this Smart Collection does not make any sense because the admin user will upload the legal docs in the company details view. For the documentation purpose, we catch the call and returns an appropriate error message to the admin user.
+
+

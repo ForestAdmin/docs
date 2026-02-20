@@ -1,13 +1,13 @@
 ---
-title: "Security & privacy architecture"
+title: "Security & Privacy Architecture"
 description: "Understand how Forest Admin protects your data with privacy-first architecture and robust security measures"
 ---
 
 Forest Admin is built with security and privacy at its core. Your data never transits through Forest Admin servers, and you maintain complete control over your infrastructure and access policies.
 
-## Data privacy
+## Data Privacy
 
-### Private by design
+### Private by Design
 
 Forest Admin implements a **privacy-first architecture** where your sensitive data flows directly between your Agent and user browsers, never passing through Forest Admin servers.
 
@@ -55,7 +55,7 @@ When users access the Forest Admin UI, their browser establishes two separate co
 This architecture ensures your sensitive information remains protected within your infrastructure at all times.
 </Info>
 
-### No third-party tracking
+### No Third-Party Tracking
 
 Forest Admin guarantees data privacy across all plan levels:
 
@@ -67,9 +67,9 @@ Forest Admin guarantees data privacy across all plan levels:
 **Pro plan feature:** Disable all third-party tracking scripts in your Forest Admin project settings to ensure complete privacy for your team's activity.
 </Tip>
 
-## Security measures
+## Security Measures
 
-### Token-based authentication
+### Token-Based Authentication
 
 Forest Admin uses a **dual-token authentication system** to secure both UI access and Agent communication.
 
@@ -87,9 +87,11 @@ Authenticates requests between your Agent and Forest Admin servers.
 - Unique per environment (development, staging, production)
 - Should be stored as an environment variable
 
+<CodeGroup>
 ```bash .env
 FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
 ```
+</CodeGroup>
 
 <Warning>
 Never commit `FOREST_ENV_SECRET` to version control. Always use environment variables or secret management tools.
@@ -110,23 +112,25 @@ Authenticates requests between user browsers and your Agent (Self-Hosted and On-
 - Unique per environment
 - Used only in Self-Hosted and On-Premise architectures
 
+<CodeGroup>
 ```bash Generate a secure secret
 # Using Node.js
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-# Using openssl
+# Using OpenSSL
 openssl rand -hex 32
 ```
 
 ```bash .env
 FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 ```
+</CodeGroup>
 
 <Info>
 **Cloud architecture:** `FOREST_AUTH_SECRET` is not needed because authentication is handled by Forest Admin servers. Your data still flows directly from your Agent to browsers without passing through Forest Admin.
 </Info>
 
-### JWT token structure
+### JWT Token Structure
 
 Both tokens are JSON Web Tokens (JWT) containing user context:
 
@@ -145,6 +149,7 @@ Both tokens are JSON Web Tokens (JWT) containing user context:
 - Dynamic filtering based on user context
 - Integration with your internal systems
 
+<CodeGroup>
 ```javascript Node.js - Access user context
 agent.customizeCollection('orders', collection => {
   collection.addHook('Before', 'List', async (context) => {
@@ -170,8 +175,19 @@ collection.add_hook(:Before, :List) do |context|
 end
 ```
 
+```python Python - Access user context
+@collection.add_hook('Before', 'List')
+def filter_by_user(context):
+    email = context.caller.email
+    role = context.caller.role
 
-### IP whitelisting
+    # Custom logic based on user context
+    if role != 'admin':
+        context.filter = {'user_email': email}
+```
+</CodeGroup>
+
+### IP Whitelisting
 
 Organizations can restrict access by creating trusted IP address lists, controlling both UI access and Agent interactions.
 
@@ -188,7 +204,7 @@ Organizations can restrict access by creating trusted IP address lists, controll
 
 For detailed configuration, see [IP Whitelisting](/product/control/security/ip-whitelisting).
 
-### Infrastructure flexibility
+### Infrastructure Flexibility
 
 You maintain **complete control** over your Agent deployment:
 
@@ -208,7 +224,7 @@ You maintain **complete control** over your Agent deployment:
 **Best practice:** Deploy your Agent behind a VPN or firewall to add an additional layer of security. Even if an attacker obtains valid credentials, they would still need network access to reach your Agent.
 </Tip>
 
-### HTTPS/TLS encryption
+### HTTPS/TLS Encryption
 
 All communication is encrypted:
 
@@ -220,18 +236,18 @@ All communication is encrypted:
 Always deploy your Agent with HTTPS enabled in production. Never use HTTP for sensitive data.
 </Warning>
 
-## Compliance standards
+## Compliance Standards
 
 Forest Admin works with organizations meeting industry certifications and compliance standards:
 
-### SOC 2 (type II)
+### SOC 2 (Type II)
 
 Forest Admin maintains SOC 2 Type II compliance, ensuring:
 - Security controls are in place
 - Data is handled securely
 - Regular audits are performed
 
-### GDPR compliance
+### GDPR Compliance
 
 Forest Admin helps you maintain GDPR compliance:
 - Data privacy by design (no data transit through Forest Admin)
@@ -259,7 +275,7 @@ Security practices aligned with ISO 27001 standards:
 **Your responsibility:** While Forest Admin provides a secure platform, you are responsible for configuring security controls, managing access, and ensuring compliance with your specific regulatory requirements.
 </Info>
 
-## Security best practices
+## Security Best Practices
 
 <Tip>
 **Recommended security practices:**
@@ -295,9 +311,9 @@ Security practices aligned with ISO 27001 standards:
    - Have a rollback plan
 </Tip>
 
-## Security features roadmap
+## Security Features Roadmap
 
-### Current features
+### Current Features
 
 ✅ Dual-token authentication
 ✅ Direct data flow (no Forest Admin transit)
@@ -306,14 +322,14 @@ Security practices aligned with ISO 27001 standards:
 ✅ Audit logging
 ✅ 2FA enforcement
 
-### Planned features
+### Planned Features
 
 🔄 Enhanced audit logs with data change tracking
 🔄 Advanced encryption options
 🔄 Integration with enterprise SSO/SAML providers
 🔄 Custom authentication hooks
 
-## Related pages
+## Related Pages
 
 - [IP Whitelisting](/product/control/security/ip-whitelisting) - Configure IP-based access control
 - [2FA Enforcement](/product/control/security/2fa-enforcement) - Require two-factor authentication

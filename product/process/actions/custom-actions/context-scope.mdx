@@ -112,6 +112,7 @@ const email = context.formValues['email'];
 
 Get data from the records the action is running on:
 
+<CodeGroup>
 ```javascript Single action
 const user = await context.getRecord(['id', 'email', 'name']);
 console.log(user.id, user.email, user.name);
@@ -127,6 +128,7 @@ const users = await context.getRecords(['id', 'email']);
 const ids = await context.getRecordIds();
 // Returns array of IDs: [1, 2, 3, ...]
 ```
+</CodeGroup>
 
 ### Current user
 
@@ -180,6 +182,7 @@ if (context.hasFieldChanged('Status')) {
 
 ### Example: Access record data
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Display customer info', {
   scope: 'Single',
@@ -224,9 +227,11 @@ collection.add_action(
   end
 )
 ```
+</CodeGroup>
 
 ### Example: Update selected records
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Mark as live', {
   scope: 'Single',
@@ -256,9 +261,11 @@ collection.add_action(
   end
 )
 ```
+</CodeGroup>
 
 ### Example: Bulk processing with error handling
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Send notifications', {
   scope: 'Bulk',
@@ -323,9 +330,11 @@ collection.add_action(
   end
 )
 ```
+</CodeGroup>
 
 ### Example: Use user context
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Assign to me', {
   scope: 'Single',
@@ -359,9 +368,11 @@ collection.add_action(
   end
 )
 ```
+</CodeGroup>
 
 ### Example: Global action with filters
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 collection.addAction('Export filtered data', {
   scope: 'Global',
@@ -401,4 +412,62 @@ collection.add_action(
   end
 )
 ```
+</CodeGroup>
 
+## Best practices
+
+<AccordionGroup>
+  <Accordion title="Choose the right scope" icon="bullseye">
+    - **Single**: One record operations (send email, view details)
+    - **Bulk**: Same operation on many records (status update, archive)
+    - **Global**: Collection-wide operations (import, report generation)
+  </Accordion>
+
+  <Accordion title="Only request needed fields" icon="list">
+    When calling `getRecord()` or `getRecords()`, only request the fields you actually need. This improves performance.
+
+    ```javascript
+    // Good
+    const user = await context.getRecord(['email', 'name']);
+
+    // Avoid
+    const user = await context.getRecord(['*']);  // Gets all fields
+    ```
+  </Accordion>
+
+  <Accordion title="Handle bulk action failures" icon="circle-exclamation">
+    Decide on a strategy for handling failures:
+    - Stop on first error
+    - Continue and report all failures at the end
+    - Use transactions for atomic operations
+  </Accordion>
+
+  <Accordion title="Use filters for efficiency" icon="filter">
+    For Bulk and Global actions, use `context.filter` with collection methods instead of loading all records:
+
+    ```javascript
+    // Efficient
+    await context.collection.update(context.filter, { status: 'archived' });
+
+    // Less efficient
+    const records = await context.getRecords(['id']);
+    for (const record of records) {
+      await updateRecord(record.id, { status: 'archived' });
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Access relations efficiently" icon="link">
+    Use dot notation to access related fields without additional queries:
+
+    ```javascript
+    const order = await context.getRecord([
+      'id',
+      'total',
+      'customer:name',
+      'customer:email',
+      'items:product:name'
+    ]);
+    ```
+  </Accordion>
+</AccordionGroup>

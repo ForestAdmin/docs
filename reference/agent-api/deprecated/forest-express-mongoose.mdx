@@ -1,0 +1,296 @@
+---
+title: forest-express-mongoose Reference (LEGACY)
+---
+> **Status:** LEGACY - DO NOT USE FOR NEW PROJECTS
+>
+> **Audience:** Legacy users (migration reference only)
+
+## ⚠️ Legacy Notice
+
+**forest-express-mongoose is legacy and will reach End of Life on [Date].**
+
+**Migrate to @forestadmin/agent:** [Migration Guide](/guides/migration/from-v1/overview)
+
+---
+
+## Legacy Documentation
+
+This page provides reference for existing implementations only. **Do not use for new projects.**
+
+### Installation (Legacy)
+
+```bash
+npm install forest-express-mongoose --save
+```
+
+### Basic Setup (Legacy)
+
+```javascript
+const express = require('express');
+const { Liana } = require('forest-express-mongoose');
+const mongoose = require('mongoose');
+
+const app = express();
+
+mongoose.connect(process.env.DATABASE_URL);
+
+app.use(Liana.init({
+  modelsDir: __dirname + '/models',
+  envSecret: process.env.FOREST_ENV_SECRET,
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  mongoose: mongoose
+}));
+
+app.listen(3000);
+```
+
+### Smart Actions (Legacy)
+
+**Forest/routes/users.js:**
+```javascript
+const express = require('express');
+const router = express.Router();
+const Liana = require('forest-express-mongoose');
+
+router.post('/actions/send-email',
+  Liana.ensureAuthenticated,
+  (req, res) => {
+    const userIds = req.body.data.attributes.ids;
+    const values = req.body.data.attributes.values;
+
+    // Action logic here
+
+    res.send({
+      success: 'Email sent!'
+    });
+  }
+);
+
+module.exports = router;
+```
+
+**Forest/users.js:**
+```javascript
+const { collection } = require('forest-express-mongoose');
+
+collection('users', {
+  actions: [{
+    name: 'Send email',
+    type: 'bulk',
+    fields: [{
+      field: 'subject',
+      type: 'String',
+      isRequired: true
+    }]
+  }]
+});
+```
+
+### Smart Fields (Legacy)
+
+```javascript
+const { collection } = require('forest-express-mongoose');
+
+collection('users', {
+  fields: [{
+    field: 'fullName',
+    type: 'String',
+    get: (user) => {
+      return `${user.firstName} ${user.lastName}`;
+    }
+  }, {
+    field: 'orderCount',
+    type: 'Number',
+    get: (user) => {
+      return Order.countDocuments({ userId: user._id });
+    }
+  }]
+});
+```
+
+### Smart Segments (Legacy)
+
+```javascript
+const { collection } = require('forest-express-mongoose');
+
+collection('users', {
+  segments: [{
+    name: 'Active users',
+    where: { status: 'active' }
+  }, {
+    name: 'Premium users',
+    where: function() {
+      return this.find({ 'subscription.plan': 'premium' });
+    }
+  }]
+});
+```
+
+### Smart Relationships (Legacy)
+
+```javascript
+const { collection } = require('forest-express-mongoose');
+
+collection('users', {
+  fields: [{
+    field: 'recentOrders',
+    type: ['String'],
+    reference: 'orders._id',
+    get: (user) => {
+      const thirtyDaysAgo = new Date(Date.now() - 30*24*60*60*1000);
+      return Order.find({
+        userId: user._id,
+        createdAt: { $gte: thirtyDaysAgo }
+      });
+    }
+  }]
+});
+```
+
+### Mongoose Integration (Legacy)
+
+**Model Definition:**
+```javascript
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  email: String,
+  status: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
+// Virtual field
+userSchema.virtual('fullName').get(function() {
+  return `${this.firstName} ${this.lastName}`;
+});
+
+module.exports = mongoose.model('User', userSchema);
+```
+
+---
+
+## Migration to @forestadmin/agent
+
+### Key Differences
+
+| forest-express-mongoose | @forestadmin/agent |
+|------------------------|-------------------|
+| `Liana.init()` | `createAgent()` + `createMongoDataSource()` |
+| `collection('users', {...})` | `agent.customizeCollection('users', ...)` |
+| Smart Actions in routes | `collection.addAction()` |
+| Smart Fields in collection config | `collection.addField()` |
+| Mongoose queries | Similar, but in new API |
+| `res.send({ success: '...' })` | `resultBuilder.success('...')` |
+
+### Migration Example
+
+**Before (forest-express-mongoose):**
+```javascript
+collection('users', {
+  actions: [{
+    name: 'Send email',
+    type: 'single',
+    fields: [{ field: 'message', type: 'String' }]
+  }],
+  fields: [{
+    field: 'orderCount',
+    type: 'Number',
+    get: (user) => Order.countDocuments({ userId: user._id })
+  }]
+});
+
+router.post('/actions/send-email', async (req, res) => {
+  const userId = req.body.data.attributes.ids[0];
+  const message = req.body.data.attributes.values.message;
+
+  const user = await User.findById(userId);
+  // Send email...
+
+  res.send({ success: 'Email sent!' });
+});
+```
+
+**After (@forestadmin/agent):**
+```typescript
+import { createAgent } from '@forestadmin/agent';
+import { createMongoDataSource } from '@forestadmin/datasource-mongo';
+
+const agent = createAgent({...})
+  .addDataSource(createMongoDataSource(process.env.DATABASE_URL));
+
+agent.customizeCollection('users', collection => {
+  collection.addField('orderCount', {
+    columnType: 'Number',
+    dependencies: ['_id'],
+    getValues: async (users) => {
+      return Promise.all(
+        users.map(user =>
+          Order.countDocuments({ userId: user._id })
+        )
+      );
+    }
+  });
+
+  collection.addAction('Send email', {
+    scope: 'Single',
+    form: [{ label: 'Message', type: 'String' }],
+    execute: async (context, resultBuilder) => {
+      const user = await context.getRecord(['email']);
+      const { message } = context.formValues;
+
+      // Send email...
+
+      return resultBuilder.success('Email sent!');
+    }
+  });
+});
+```
+
+---
+
+## Complete Migration Guide
+
+**Follow these steps to migrate:**
+
+1. **[Step 1: Dependencies](/guides/migration/from-v1/steps/dependencies)**
+2. **[Step 2: Datasources](/guides/migration/from-v1/steps/datasources)**
+3. **[Step 3: Smart Actions](/guides/migration/from-v1/steps/smart-actions)**
+4. **[Step 4: Smart Fields](/guides/migration/from-v1/steps/smart-fields)**
+5. **[And more...](/guides/migration/from-v1/overview)**
+
+---
+
+## Mongoose-Specific Considerations
+
+### Schema Definition
+- Mongoose schemas work the same with new agent
+- Virtual fields can become Smart Fields
+- Model methods can be used in Smart Fields
+
+### Query Syntax
+- MongoDB queries remain similar
+- Can use Mongoose or native MongoDB driver
+- Better async/await support in new agent
+
+### Aggregation
+- Mongoose aggregation pipelines supported
+- Better integration with Smart Segments
+- Can use in Smart Fields for computed values
+
+---
+
+## Sources
+
+- forest-express-mongoose npm package
+- v1 documentation archive
+- Migration guides
+
+## Related Pages
+
+- **[Migration Guide](/guides/migration/from-v1/overview)** ← START HERE
+- [Node.js Agent API](/reference/agent-api/nodejs) - New agent reference
+- [MongoDB Setup](/product/integration/data-sources/mongodb) - MongoDB with new agent
+- [Node.js Setup](/product/integration/setup/nodejs) - New agent setup
+- [Legacy Overview](/reference/agent-api/deprecated/overview)

@@ -1,5 +1,5 @@
 ---
-title: "Roles & permissions"
+title: "Roles & Permissions"
 description: "Create and manage custom roles with granular permission controls in Forest Admin"
 ---
 
@@ -9,7 +9,7 @@ Forest Admin enables administrators to create and manage custom roles with granu
 
 Only users with Admin permission level can create and manage roles. Roles are configured in the Roles tab within project settings, where you can establish permissions that apply to all users assigned to that role.
 
-## Permission levels
+## Permission Levels
 
 Forest Admin defines five user permission levels with increasing administrative capabilities:
 
@@ -44,7 +44,7 @@ Forest Admin defines five user permission levels with increasing administrative 
 
 Roles are configured in **Project Settings → Roles**. Each role defines granular permissions for collections and Smart Actions.
 
-### Collection permissions
+### Collection Permissions
 
 Control what users can do with data in each collection:
 
@@ -57,7 +57,7 @@ Control what users can do with data in each collection:
 | **Delete** | Remove records permanently |
 | **Export** | Export data from the collection in various formats (CSV, JSON, etc.) |
 
-### Smart action permissions
+### Smart Action Permissions
 
 Control user ability to trigger and approve Smart Actions:
 
@@ -68,7 +68,7 @@ Control user ability to trigger and approve Smart Actions:
 | **Approve** | Permits role members to approve trigger requests submitted by other users - can review and authorize pending action requests |
 | **Self Approve** | Allows users to approve their own action requests - bypasses the need for another user to review the action, useful for trusted users who need faster execution |
 
-### Approval workflows
+### Approval Workflows
 
 When "Require Approval" is enabled for a Smart Action:
 
@@ -81,7 +81,7 @@ This workflow ensures sensitive operations (like refunds, data exports, or accou
 
 [Learn more about Smart Action approval workflows →](/product/process/actions/approval-workflows)
 
-## Conditional permissions
+## Conditional Permissions
 
 Restrict permissions based on data conditions using filters. For example, operators might trigger refunds under $1,000 without approval, while higher amounts require authorization.
 
@@ -93,7 +93,7 @@ Conditional permissions allow you to:
 
 **Example:** Allow the "Support" role to trigger refunds only when `amount < 1000`, otherwise require approval.
 
-## Default permissions
+## Default Permissions
 
 Configure default permissions that are automatically applied when new collections or Smart Actions are created. This ensures consistent permission settings across your project without having to manually configure each new collection or action.
 
@@ -104,6 +104,6 @@ Default permissions are configured in **Project Settings → Roles** and apply t
 
 This saves time and ensures security by establishing baseline permissions that new elements inherit automatically.
 
-## User assignment
+## User Assignment
 
 Administrators modify individual user roles and permission levels through the Users tab. Select the appropriate role and permission level for each user before saving changes.

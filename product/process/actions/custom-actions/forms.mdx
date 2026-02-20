@@ -23,6 +23,7 @@ Fields are configurable using the following properties:
 
 ## Basic form example
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 agent.customizeCollection('customers', collection => {
   collection.addAction('Charge credit card', {
@@ -89,6 +90,7 @@ forest_agent.customize_collection('customers') do |collection|
   )
 end
 ```
+</CodeGroup>
 
 ## Field types
 
@@ -122,7 +124,7 @@ Checkbox for true/false values.
 { type: 'Boolean', label: 'Send confirmation email' }
 ```
 
-### Date and dateonly
+### Date and Dateonly
 
 Date picker for dates with or without time.
 
@@ -159,7 +161,7 @@ Reference to a record from another collection.
 
 The value will be the primary key of the selected record (as an array for composite keys).
 
-### File and filelist
+### File and FileList
 
 File upload fields.
 
@@ -186,6 +188,7 @@ Make forms reactive by using functions instead of static values. Functions recei
 
 Make a field required based on another field's value:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -219,11 +222,13 @@ form: [
   }
 ]
 ```
+</CodeGroup>
 
 ### Conditional visibility
 
 Show or hide fields based on conditions:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -255,11 +260,13 @@ form: [
   }
 ]
 ```
+</CodeGroup>
 
 ### Default values from record data
 
 Pre-fill form with data from the selected record:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -287,11 +294,13 @@ form: [
   }
 ]
 ```
+</CodeGroup>
 
 ### Dynamic enum values
 
 Change dropdown options based on context:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -342,11 +351,13 @@ form: [
   }
 ]
 ```
+</CodeGroup>
 
 ### Dynamic collection references
 
 Change the target collection dynamically:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -380,12 +391,13 @@ form: [
   }
 ]
 ```
+</CodeGroup>
 
 ## Widgets
 
 Widgets customize the UI appearance of fields. Here are the most common ones:
 
-### Textarea
+### TextArea
 
 Multi-line text input.
 
@@ -406,7 +418,7 @@ Alternative to Enum for dropdown selection.
 }
 ```
 
-### Radiogroup
+### RadioGroup
 
 Radio buttons for single selection.
 
@@ -419,7 +431,7 @@ Radio buttons for single selection.
 }
 ```
 
-### Checkboxgroup
+### CheckboxGroup
 
 Checkboxes for multiple selection.
 
@@ -432,7 +444,7 @@ Checkboxes for multiple selection.
 }
 ```
 
-### Datepicker
+### DatePicker
 
 Calendar widget for date selection.
 
@@ -440,7 +452,7 @@ Calendar widget for date selection.
 { type: 'Date', label: 'Appointment', widget: 'DatePicker' }
 ```
 
-### Colorpicker
+### ColorPicker
 
 Color selection widget.
 
@@ -448,7 +460,7 @@ Color selection widget.
 { type: 'String', label: 'Brand color', widget: 'ColorPicker' }
 ```
 
-### Filepicker
+### FilePicker
 
 File upload with preview.
 
@@ -456,7 +468,7 @@ File upload with preview.
 { type: 'File', label: 'Profile picture', widget: 'FilePicker' }
 ```
 
-### Jsoneditor
+### JsonEditor
 
 JSON editor with syntax highlighting.
 
@@ -464,7 +476,7 @@ JSON editor with syntax highlighting.
 { type: 'Json', label: 'Configuration', widget: 'JsonEditor' }
 ```
 
-### Userdropdown
+### UserDropdown
 
 Dropdown pre-filled with Forest Admin users.
 
@@ -472,7 +484,7 @@ Dropdown pre-filled with Forest Admin users.
 { type: 'String', label: 'Assigned to', widget: 'UserDropdown' }
 ```
 
-### Currencyinput
+### CurrencyInput
 
 Number input with currency formatting.
 
@@ -485,7 +497,7 @@ Number input with currency formatting.
 }
 ```
 
-### Richtext
+### RichText
 
 Rich text editor with formatting options.
 
@@ -499,6 +511,7 @@ Rich text editor with formatting options.
 
 Create wizard-like forms by conditionally showing sections:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -558,11 +571,13 @@ form: [
   }
 ]
 ```
+</CodeGroup>
 
 ### Read-only fields for context
 
 Show record data as read-only context:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 form: [
   {
@@ -600,11 +615,13 @@ form: [
   }
 ]
 ```
+</CodeGroup>
 
 ### Validation with required fields
 
 Combine conditions for complex validation:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 {
   type: 'String',
@@ -628,11 +645,13 @@ Combine conditions for complex validation:
   }
 }
 ```
+</CodeGroup>
 
 ## Accessing form values
 
 In the execute handler, access form values from the context:
 
+<CodeGroup>
 ```javascript Node.js / Cloud
 execute: async (context, resultBuilder) => {
   // Access by label
@@ -665,4 +684,32 @@ execute: ->(context, result_builder) {
   description = context.form_values['Description']
 }
 ```
+</CodeGroup>
 
+## Best practices
+
+<AccordionGroup>
+  <Accordion title="Use clear labels" icon="tag">
+    Make labels descriptive and action-oriented. Use "Refund amount" instead of "Amount".
+  </Accordion>
+
+  <Accordion title="Provide helpful descriptions" icon="circle-info">
+    Add descriptions to explain what users should enter, especially for complex fields.
+  </Accordion>
+
+  <Accordion title="Set appropriate defaults" icon="sliders">
+    Pre-fill forms with sensible defaults to speed up common workflows.
+  </Accordion>
+
+  <Accordion title="Use dynamic forms sparingly" icon="wand-magic-sparkles">
+    Dynamic forms are powerful but can be confusing. Only use them when truly necessary.
+  </Accordion>
+
+  <Accordion title="Validate input" icon="shield-check">
+    Use `isRequired` for mandatory fields and add custom validation in the execute handler.
+  </Accordion>
+
+  <Accordion title="Choose the right widget" icon="palette">
+    Select widgets that match your data type and provide the best user experience.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,36 @@
+---
+title: Create a Hubspot company
+---
+
+# Create a Hubspot company
+
+This example shows you how to create a Smart Action `"Create company in Hubspot"` that generates a company in Hubspot based on information from your database.
+
+{/* markdown-link-check-disable */}
+
+{/* markdown-link-check-ensable */}
+
+## Requirements
+
+- An admin backend running on forest-express-sequelize
+- [superagent](https://www.npmjs.com/package/superagent) npm package
+- a Hubspot account
+
+## How it works
+
+### Directory: /models
+
+This directory contains the `companies.js` file where the collection is declared.
+
+
+### Directory: /routes
+
+This directory contains the `companies.js` file where the smart action logic is implemented.&#x20;
+
+In this logic a Hubspot company instance is created through a /post create company call to the Hubspot API.
+
+<Info>
+The Hubspot API key is defined in the `.env` file and requested through the expression `process.env.HUBSPOT_API`.
+</Info>
+
+

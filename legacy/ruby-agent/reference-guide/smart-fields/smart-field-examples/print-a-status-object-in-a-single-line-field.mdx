@@ -1,0 +1,25 @@
+---
+title: Print a status object in a single line field
+---
+
+# Print a status object in a single line field
+
+**Context**: as a user I want to display in a single field all the lines from a status object from a user's record.
+
+Example of a user document:
+
+
+`style/fields-style.js`
+
+```javascript
+exports.customFieldsStyles = {
+  fieldDivStyle: 'margin: 24px 0px; color: #415574',
+  fieldNameStyle:
+    'padding: 6px 16px; margin: 12px; background-color:#b5c8d05e; border-radius: 6px',
+  fieldValueStyle: 'padding: 6px 16px; margin: 12px; border-radius: 6px',
+  fieldValueStyleRed:
+    'padding: 6px 12px; background-color:#ff7f7f87; border-radius: 6px',
+  fieldValueStyleGreen:
+    'padding: 6px 12px; background-color:#7FFF7F; border-radius: 6px',
+};
+```
