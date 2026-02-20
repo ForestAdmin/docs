@@ -48,7 +48,7 @@ In that case, adding the above code will not suffice to add the `belongsTo` rela
 
 If the field `fk_customername` of a table **Address** points to the field `name` of a table **Customer**, add the following:
 
-javascript
+```javascript
 ...
 UserProjects.associate = (models) => {
   UserProjects.belongsTo(models.projects, {

@@ -51,7 +51,7 @@ The logic here is to list all the BankAccount records. We use a custom service `
 
 Finally, the last step is to serialize the response data in the expected format which is simply a standard [JSON API](http://jsonapi.org/) document. You are lucky `forest-express-sequelize` already does this for you using the RecordSerializer.
 
-javascript
+```javascript
 // Imports and ElasticsearchHelper base definition ...
 
 router.delete(
@@ -74,7 +74,7 @@ module.exports = router;
 
 ### forest-express-sequelize
 
-javascript
+```javascript
 // Imports and ElasticsearchHelper base definition ...
 
 router.post(

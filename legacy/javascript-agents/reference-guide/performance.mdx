@@ -71,7 +71,7 @@ collection('companies', {
 ### Rails
 In this example, we configure Forest to only search on the fields `name` and `industry` of our collection `Company`.
 
-ruby
+```ruby
 class Forest::BooksController < ForestLiana::ResourcesController
   def count
     deactivate_count_response
@@ -144,7 +144,7 @@ end
 
 Furthermore, if you want to disable on all relationships at once:
 
-python
+```python
 class CustomDeactivateCountMiddleware(DeactivateCountMiddleware):
 
     def is_deactivated(self, request, view_func, *args, **kwargs):

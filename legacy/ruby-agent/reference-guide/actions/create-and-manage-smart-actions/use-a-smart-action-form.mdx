@@ -365,7 +365,7 @@ To make a field read only, you can use the `isReadOnly` property:
 
 Combined with the **load** [hook](./#making-a-form-dynamic) feature, this can be used to make a field read-only dynamically:
 
-javascript
+```javascript
 actions 'Send invoice',
   type: 'single',
   fields: [
@@ -458,7 +458,7 @@ To dynamically change a property within a `load` or `change` [hook](use-a-smart-
 
 ### Rails
 
-ruby
+```ruby
 :hooks => {
   :change => {
     'onFieldChanged' => -> (context) {

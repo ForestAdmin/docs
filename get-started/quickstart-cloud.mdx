@@ -3,8 +3,6 @@ title: "Quickstart: Cloud"
 description: "Get your admin panel running in 5 minutes with Forest Admin Cloud"
 ---
 
-import { ConnectionUriBuilder } from "/snippets/ConnectionUriBuilder.jsx"
-
 Forest Admin Cloud is the fastest way to get started. We host and manage everything for you—just connect your database.
 
 ## What you'll do
@@ -51,11 +49,11 @@ Select your database from the list:
 
 ### Enter connection details
 
-Use this tool to build your connection URI:
+Enter your connection URI directly in Forest Admin's interface:
 
-<ConnectionUriBuilder dbType="postgresql" />
-
-Or provide your credentials directly in Forest Admin's interface.
+```
+postgresql://user:password@host:5432/database
+```
 
 <Tip>
 **Using a local database?** You can set up SSH tunneling using tools like Ngrok, Bastion, or Localtunnel. Forest Admin will provide an SSH public key to add to your server's `authorized_keys` file.
