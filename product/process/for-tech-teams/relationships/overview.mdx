@@ -1,0 +1,53 @@
+---
+title: Relationships - Overview
+---
+
+When relationships are defined during the customization step, Forest Admin Collections act as if the 2 Collections were natively linked at the data source level.
+
+You may have noticed that relationships within a data source are configured out of the box, so you won't need to define those.
+
+However, you may want to create additional intra and cross data source relationships to:
+
+- help users navigate within your admin panel
+- create charts that use data from multiple data sources
+- let users filter, use scopes, or segment with conditions that cross data source boundaries
+
+## Minimal example
+
+```javascript
+agent.customizeCollection('towns', collection =>
+  collection
+    // Towns belong to 1 country
+    .addManyToOneRelation('country', 'countries', { foreignKey: 'country_id' })
+
+    // Towns have 1 mayor
+    .addOneToOneRelation('mayor', 'mayors', { originKey: 'town_id' })
+
+    // Towns have multiple inhabitants
+    .addOneToManyRelation('inhabitants', 'people', { originKey: 'town_id' })
+
+    // Towns electricity is supplied by power plants that are shared with other towns
+    .addManyToManyRelation('energyProviders', 'powerPlants', 'utilityContracts', {
+      originKey: 'town_id',
+      foreignKey: 'power_plant_id',
+    })
+
+    // Towns have a list of honorary citizen that is retrievable through a public API
+    .addExternalRelation('honoraryCitizen', {
+      schema: { firstName: 'String', lastName: 'String' },
+      listRecords: async ({ id }) => {
+        const response = await axios.get(
+          `https://api.mytown.com/cities/${id}/honorary-citizen`,
+        );
+        return response.body;
+      },
+    }),
+);
+```
+
+## Next steps
+
+- [Single-Record Relations](/product/process/for-tech-teams/relationships/single-record) — ManyToOne, OneToOne
+- [Multiple-Records Relations](/product/process/for-tech-teams/relationships/multiple-records) — OneToMany, ManyToMany, External
+- [Computed Foreign Keys](/product/process/for-tech-teams/relationships/computed-fks) — relations without a native FK
+- [Under the Hood](/product/process/for-tech-teams/relationships/under-the-hood) — how join emulation works

@@ -240,6 +240,16 @@
                     ]
                   },
                   {
+                    "group": "Relationships",
+                    "pages": [
+                      "product/process/for-tech-teams/relationships/overview",
+                      "product/process/for-tech-teams/relationships/single-record",
+                      "product/process/for-tech-teams/relationships/multiple-records",
+                      "product/process/for-tech-teams/relationships/computed-fks",
+                      "product/process/for-tech-teams/relationships/under-the-hood"
+                    ]
+                  },
+                  {
                     "group": "Developer Workflow",
                     "pages": [
                       "product/process/for-tech-teams/developer-workflow/environments-and-branches",

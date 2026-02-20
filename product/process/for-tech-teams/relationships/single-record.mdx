@@ -1,0 +1,57 @@
+---
+title: Single-Record Relations
+---
+
+Relationships that point to a single record are displayed in the GUI as links.
+
+Once configured, they can be used in charts, filters, scopes, and segments.
+
+<Info>
+  For performance reasons when sorting a Table View on customizer-defined relations, Forest Admin will always sort on the primary key of the related collection.
+</Info>
+
+## Many-to-One relations
+
+Many-to-One relations are by far the most common type of relation: many records from a Collection are attached to another Collection record.
+
+Think about countries and towns: a town belongs to a single country, but each country can have multiple towns.
+
+```javascript
+agent.customizeCollection('towns', collection =>
+  collection.addManyToOneRelation('country', 'countries', {
+    foreignKey: 'country_id',
+    foreignKeyTarget: 'id', // Optional (uses `country` primary key by default)
+  }),
+);
+```
+
+## One-to-One relations
+
+In a one-to-one relation, there is a one-to-one mapping between records in 2 Collections. The relation can be unset for some records, but no record from the first Collection can be linked to more than one record in the other Collection.
+
+Think about cities and mayors: A city can have at most one mayor, and each mayor belongs to a single city.
+
+<Warning>
+  Take note that the inverse of a `one-to-one` is a `many-to-one`.
+
+  This may seem counter-intuitive: the side of the relation which should be configured as `many-to-one` is the one that carries the foreign key.
+</Warning>
+
+```javascript
+// Configure one side of the relation ...
+agent.customizeCollection('mayors', collection => {
+  collection.addOneToOneRelation('city', 'cities', {
+    originKey: 'mayor_id',
+    originKeyTarget: 'id', // Optional (uses `mayors` primary key by default)
+  });
+});
+
+// ... and the other one.
+agent.customizeCollection('cities', collection => {
+  // ⚠️ Not 'OneToOne'
+  collection.addManyToOneRelation('mayor', 'mayors', {
+    foreignKey: 'mayor_id',
+    foreignKeyTarget: 'id', // Optional (uses `mayors` primary key by default)
+  });
+});
+```
