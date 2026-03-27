@@ -1,13 +1,14 @@
 ---
 title: "SQL datasource"
-description: "Connect to PostgreSQL, MySQL, MariaDB, SQL Server, or SQLite with automatic schema introspection"
+description: "Connect to PostgreSQL, MySQL, MariaDB, or SQL Server with automatic schema introspection"
 ---
+
+<Note>This datasource is only available for Node.js agents.</Note>
 
 The SQL datasource connects directly to SQL databases with automatic schema introspection. Each database table or view maps to a Forest Admin collection - tables offer full read-write capabilities while views are read-only.
 
 ## Basic usage
 
-<CodeGroup>
 ```javascript
 import { createAgent } from '@forestadmin/agent';
 import { createSqlDataSource } from '@forestadmin/datasource-sql';
@@ -21,15 +22,6 @@ agent.addDataSource(
   })
 );
 ```
-
-```ruby
-require 'forest_admin_agent'
-
-ForestAdminAgent::Agent.new do |config|
-  config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
-end
-```
-</CodeGroup>
 
 ## Automatic schema introspection
 
@@ -69,12 +61,6 @@ createSqlDataSource({
 ```javascript
 createSqlDataSource({
   uri: 'mssql://user:password@host:1433/database'
-})
-```
-
-```javascript
-createSqlDataSource({
-  uri: 'sqlite://path/to/database.db'
 })
 ```
 </CodeGroup>
@@ -258,8 +244,3 @@ Live Queries execute raw SQL. Ensure proper access controls and review queries b
 | **MySQL** | 5.7+ | `mysql2` | ✅ Production-ready |
 | **MariaDB** | 10+ | `mariadb` | ✅ Production-ready |
 | **SQL Server** | 2017+ | `tedious` | ✅ Enterprise support |
-| **SQLite** | 3+ | `sqlite3` | ⚠️ Development only |
-
-<Info>
-SQLite is suitable for development and testing but not recommended for production use due to concurrency limitations.
-</Info>

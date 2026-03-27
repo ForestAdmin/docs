@@ -1,18 +1,18 @@
 ---
-title: Single-Record Relations
+title: Single-record relationships
 ---
 
-Relationships that point to a single record are displayed in the GUI as links.
+Relationships that point to a single record are displayed in your back-office as links.
 
 Once configured, they can be used in charts, filters, scopes, and segments.
 
 <Info>
-  For performance reasons when sorting a Table View on customizer-defined relations, Forest Admin will always sort on the primary key of the related collection.
+  For performance reasons when sorting a Table View on customizer-defined relationships, Forest Admin will always sort on the primary key of the related collection.
 </Info>
 
-## Many-to-One relations
+## Many-to-One relationships
 
-Many-to-One relations are by far the most common type of relation: many records from a Collection are attached to another Collection record.
+Many-to-One relationships are by far the most common type of relationship: many records from a Collection are attached to another Collection record.
 
 Think about countries and towns: a town belongs to a single country, but each country can have multiple towns.
 
@@ -25,20 +25,20 @@ agent.customizeCollection('towns', collection =>
 );
 ```
 
-## One-to-One relations
+## One-to-One relationships
 
-In a one-to-one relation, there is a one-to-one mapping between records in 2 Collections. The relation can be unset for some records, but no record from the first Collection can be linked to more than one record in the other Collection.
+In a one-to-one relationship, there is a one-to-one mapping between records in 2 Collections. The relationship can be unset for some records, but no record from the first Collection can be linked to more than one record in the other Collection.
 
 Think about cities and mayors: A city can have at most one mayor, and each mayor belongs to a single city.
 
 <Warning>
   Take note that the inverse of a `one-to-one` is a `many-to-one`.
 
-  This may seem counter-intuitive: the side of the relation which should be configured as `many-to-one` is the one that carries the foreign key.
+  This may seem counter-intuitive: the side of the relationship which should be configured as `many-to-one` is the one that carries the foreign key.
 </Warning>
 
 ```javascript
-// Configure one side of the relation ...
+// Configure one side of the relationship ...
 agent.customizeCollection('mayors', collection => {
   collection.addOneToOneRelation('city', 'cities', {
     originKey: 'mayor_id',

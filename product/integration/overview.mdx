@@ -3,11 +3,11 @@ title: "Overview"
 description: "Load your data into Forest Admin and enrich it with additional sources"
 ---
 
-The **Integration** layer is the foundation of Forest Admin. It determines what data is available in your admin panel and how it's structured.
+Forest Admin connects to your databases and external services to expose your data and make it actionable.
 
 ## How data flows into Forest Admin
 
-Forest Admin loads data through **datasources** - connections to your databases, APIs, or any system that stores data. The agent introspects your datasources to automatically discover tables, collections, and their relationships.
+Forest Admin loads data through **datasources** — connections to your databases, APIs, or any system that holds data.
 
 <CodeGroup>
 ```javascript Node.js
@@ -16,6 +16,11 @@ const agent = createAgent(options);
 // Connect your primary database
 agent.addDataSource(
   createSqlDataSource('postgresql://localhost/mydb')
+);
+
+// Add a second datasource (e.g. MongoDB)
+agent.addDataSource(
+  createMongooseDataSource(mongoConnection)
 );
 
 // Forest Admin automatically:
@@ -33,6 +38,11 @@ agent.add_datasource(
   Forestadmin::Datasource::ActiveRecord.new
 )
 
+# Add a second datasource
+agent.add_datasource(
+  Forestadmin::Datasource::Mongoid.new
+)
+
 # Forest Admin automatically:
 # - Discovers all tables
 # - Detects column types
@@ -41,9 +51,9 @@ agent.add_datasource(
 ```
 </CodeGroup>
 
-### What gets loaded
+## Forest Admin datasources
 
-When you connect a datasource, Forest Admin **introspects** it to understand its structure. The introspection method differs based on how you connect:
+Forest Admin loads data through **datasources** — connections to your databases, APIs, or any system that holds data. For some datasources, Forest Admin performs introspection to discover the schema automatically. For others (like ORM-based connections), the schema is already known from your model definitions.
 
 **ORM-based connections** (Sequelize, Mongoose):
 - Forest Admin reads your ORM model definitions
@@ -54,6 +64,8 @@ When you connect a datasource, Forest Admin **introspects** it to understand its
 **Direct database connections** (SQL, MongoDB):
 - **SQL databases**: Forest Admin queries the database metadata (information_schema or system catalogs) to discover tables, columns, data types, constraints, foreign keys, and indexes
 - **MongoDB**: Forest Admin samples a subset of documents (default: 100 per collection) and analyzes them to infer the schema structure, including nested fields and references
+
+**API-based connections** (REST, GraphQL): Forest Admin uses the API schema or a custom mapping to expose data.
 
 Once introspection is complete, Forest Admin automatically:
 
@@ -106,19 +118,3 @@ If you want to add computed fields or fetch external data to enrich individual r
 </Warning>
 
 [Learn more about multi-datasources →](/product/integration/data-sources/multi-datasources)
-
-## Architecture choices
-
-Your architecture determines where the agent runs and how it accesses your data:
-
-| Architecture | Agent location | UI location | Best for |
-|--------------|---------------|-------------|----------|
-| **Self-Hosted** | Your infrastructure | Forest Admin servers | Most popular - full control over data access |
-| **Cloud** | Forest Admin servers | Forest Admin servers | Fastest setup - Forest Admin connects directly |
-| **On-Premise** | Your infrastructure | Your infrastructure | Enterprise - complete air-gapped deployment |
-
-## Need help?
-
-- [Multi-datasources setup](/product/integration/data-sources/multi-datasources) - Combine multiple data sources
-- [Relationships](/product/integration/relationships) - Connect data across collections
-- [Community forum](https://community.forestadmin.com) - Ask questions and get help

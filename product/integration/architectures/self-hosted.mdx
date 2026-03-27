@@ -1,11 +1,11 @@
 ---
-title: "Self-Hosted Architecture"
+title: "Self-hosted architecture"
 description: "Deploy Forest Admin agent in your infrastructure while Forest Admin hosts the UI - the most popular deployment option"
 ---
 
 The self-hosted architecture gives you full control over your data and code by hosting the Forest Admin agent in your own infrastructure. This is the **most popular deployment option** for production applications.
 
-## Architecture Overview
+## Architecture overview
 
 <img src="/assets/architecture-self-hosted.svg" alt="Self-Hosted Architecture Diagram" />
 
@@ -26,7 +26,7 @@ The self-hosted architecture gives you full control over your data and code by h
 | Component | Hosted by | Location | Responsibilities |
 |-----------|-----------|----------|------------------|
 | **Your Agent** | You | Your infrastructure | • Runs in Node.js or Ruby<br/>• Direct access to your database<br/>• Executes business logic (Smart Actions, Fields, Hooks)<br/>• Handles authentication and authorization<br/>• Exposes REST API for Forest Admin UI |
-| **Forest Admin UI** | Forest Admin | `app.forestadmin.com` | • Admin interface for your users<br/>• Communicates with your agent via HTTPS<br/>• Receives only schema metadata (no data)<br/>• Managed and updated by Forest Admin |
+| **Forest Admin UI** | Forest Admin | `app.forestadmin.com` | • Back-office interface for your users<br/>• Communicates with your agent via HTTPS<br/>• Receives only schema metadata (no data)<br/>• Managed and updated by Forest Admin |
 | **Your Database** | You | Your infrastructure | • PostgreSQL, MySQL, MongoDB, etc.<br/>• Only accessible to your agent<br/>• No direct connection from Forest Admin<br/>• Your data never leaves your infrastructure |
 
 ## Agent deployment
@@ -43,27 +43,15 @@ This approach is particularly valuable when you want to leverage your existing O
 
 ### Standalone deployment
 
-Standalone deployment runs the Forest Admin agent as a completely separate service. It operates in its own process or container with dedicated resources and its own database connection pool. Your application and the admin panel are deployed and scaled independently.
+Standalone deployment runs the Forest Admin agent as a completely separate service. It operates in its own process or container with dedicated resources and its own database connection pool. Your application and the back-office are deployed and scaled independently.
 
-This architecture provides a cleaner separation of concerns. Your application code stays focused on your business logic, while Forest Admin responsibilities are isolated in their own service. The two services communicate through well-defined boundaries, making your overall system architecture simpler to understand and maintain. This is particularly beneficial as your team grows—developers working on the application don't need to think about admin panel concerns, and vice versa.
+This architecture provides a cleaner separation of concerns. Your application code stays focused on your business logic, while Forest Admin responsibilities are isolated in their own service. The two services communicate through well-defined boundaries, making your overall system architecture simpler to understand and maintain. This is particularly beneficial as your team grows—developers working on the application don't need to think about back-office concerns, and vice versa.
 
 <Info>
 **Note**: Standalone deployment is currently available for Node.js only. If you need standalone deployment with Ruby, please [contact our sales team](https://www.forestadmin.com/contact).
 </Info>
 
 <img src="/assets/deployment-standalone.svg" alt="Standalone Deployment Architecture" />
-
-**Architecture comparison**
-
-| Aspect | In-app | Standalone |
-|--------|--------|------------|
-| **Deployment** | Single deployment | Separate deployment |
-| **Process** | Shared with your app | Dedicated process |
-| **Port** | Same port as your app | Own port (e.g., 3310) |
-| **Database connections** | Shared pool | Dedicated pool |
-| **Scaling** | Scales with your app | Scales independently |
-| **Resources** | Shared CPU/memory | Dedicated CPU/memory |
-| **Isolation** | Low isolation | High isolation |
 
 <Info>
 **Recommendation**: We recommend **standalone deployment** for cleaner architecture and better separation of concerns. Use **in-app** if you need to reuse your ORM models or existing business logic.
@@ -112,14 +100,3 @@ sequenceDiagram
 ```
 
 **The key principle:** Forest Admin's servers (`app.forestadmin.com`, `api.forestadmin.com`) only send configuration and UI code to your browser. All data requests go directly from your browser to your agent behind your firewall, and your data never leaves your infrastructure.
-
-| What stays behind your firewall | What Forest Admin receives |
-|----------------------------------|----------------------------|
-| ✅ **All your data** (customers, orders, PII) | ⚙️ **Schema metadata** (table/column names, types) |
-| ✅ **Database queries** (`SELECT * FROM users`) | ⚙️ **Access rights configuration** |
-| ✅ **Query results** (actual records) | ❌ No data |
-| ✅ **Business logic** (Smart Actions, Fields) | ❌ No query results |
-
-## Need help?
-
-If you encounter issues during setup, check out our [troubleshooting guide](/guides/troubleshooting-onboarding-authentication) for common onboarding and authentication problems.

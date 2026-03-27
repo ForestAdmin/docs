@@ -1,9 +1,9 @@
 ---
-title: Actions
+title: Overview
 description: Trigger custom operations on your data across Forest Admin
 ---
 
-Actions are interactive buttons in Forest Admin that execute operations on your data. They enable you to implement business logic, integrate with external services, and automate workflows directly from your admin panel.
+Actions are interactive buttons in Forest Admin that execute operations on your data. They enable you to implement business logic, integrate with external services, and automate workflows directly from your back-office.
 
 ## What are actions?
 
@@ -23,7 +23,9 @@ Actions let you:
 Actions are available throughout Forest Admin:
 
 - **Collection view**: Actions on records in table and detail views (single, bulk, or global actions)
-- **Workspaces**: Trigger actions from custom dashboards
+- **Workspaces**: Trigger actions from custom views
+- **Workflow views**: Trigger actions from workflow steps
+- **Summary views**: Trigger actions from record summary panels
 
 ## Built-in actions
 
@@ -117,11 +119,11 @@ Control when and where actions appear in your interface.
 
 After creating a code-based action in your codebase, you need to make it visible in the Forest Admin interface:
 
-1. **Deploy your code** (or save in Cloud editor if using Forest Admin Cloud)
+1. **Deploy your code**
 2. **Enable Layout Editor mode** in Forest Admin
 3. **Go to Collection Settings** (gear icon) → Actions tab
 4. **Find your action** and toggle it to **Visible**
-5. **Configure permissions** for each role
+5. **Configure permissions** for each role in Project Settings
 
 <Note>
 Actions are only visible if they are marked as "visible" in the UI and the user's role has "trigger" permission.
@@ -144,20 +146,3 @@ Control who can execute actions by configuring permissions per team and role. Sh
 <Card title="Roles & permissions" icon="shield" href="/product/control/roles-permissions">
   Configure action permissions
 </Card>
-
-## Learn more
-
-<CardGroup cols={2}>
-  <Card title="No-code actions" icon="plug" href="/product/process/actions/nocode-actions">
-    Create actions with webhooks and integrations
-  </Card>
-  <Card title="Code-based actions" icon="code" href="/product/process/actions/custom-actions/overview">
-    Build Smart Actions with code
-  </Card>
-  <Card title="Execute actions" icon="play" href="/product/execute/actions">
-    Learn how to trigger actions as a user
-  </Card>
-  <Card title="UI configuration" icon="palette" href="/product/build/action-ui-configuration">
-    Customize action appearance
-  </Card>
-</CardGroup>

@@ -9,7 +9,7 @@ A join is used to combine rows from two or more tables, based on a related colum
 
 In Forest Admin, relations are defined as fields and are traversable in only one direction.
 
-## Join Types
+## Join types
 
 Four join types are available: `ManyToOne`, `ManyToMany`, `OneToMany`, and `OneToOne`.
 
@@ -20,8 +20,3 @@ Four join types are available: `ManyToOne`, `ManyToMany`, `OneToMany`, and `OneT
 | ManyToMany | `origin[originKeyTarget] == through[originKey] && though[foreignKey] == foreign[foreignKeyTarget]` |
 | OneToOne   | `origin[originKeyTarget] == foreign[originKey]`                                                    |
 
-## Related Pages
-
-- [Data Types](/product/integration/data-types) - Field type reference
-- [.forestadmin-schema.json Reference](/reference/schema/forestadmin-schema) - Schema file documentation
-- [Smart Relationships](/product/integration/relationships) - Computed and custom relationships

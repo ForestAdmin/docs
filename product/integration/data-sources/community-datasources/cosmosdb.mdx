@@ -1,0 +1,39 @@
+---
+title: "CosmosDB"
+description: "Connect Azure CosmosDB to Forest Admin"
+---
+
+<Warning>
+CosmosDB datasource is only available for Node.js and is an experimental community package.
+</Warning>
+
+The CosmosDB datasource connects your Azure CosmosDB instance to Forest Admin, allowing you to browse, search, and manage your CosmosDB data directly from your back-office.
+
+## Installation
+
+```bash
+npm install @forestadmin-experimental/datasource-cosmos
+```
+
+## Basic usage
+
+```javascript
+import { createAgent } from '@forestadmin/agent';
+import { createCosmosDataSource } from '@forestadmin-experimental/datasource-cosmos';
+
+const agent = createAgent(options);
+
+agent.addDataSource(
+  createCosmosDataSource({
+    endpoint: process.env.COSMOS_ENDPOINT,
+    key: process.env.COSMOS_KEY,
+    databaseId: process.env.COSMOS_DATABASE_ID
+  })
+);
+```
+
+## Source code
+
+This is a community datasource maintained on GitHub:
+
+[https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-cosmos](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-cosmos)

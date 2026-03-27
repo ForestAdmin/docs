@@ -1,8 +1,8 @@
 ---
-title: Import, Rename & Remove Fields
+title: Import, rename & remove fields
 ---
 
-When building your admin panel, you will probably want to hide as much complexity from your users as you can.
+When building your back-office, you will probably want to hide as much complexity from your users as you can.
 
 This includes:
 
@@ -39,7 +39,7 @@ collection.renameField('account_v3_uuid_new', 'account').removeField('password')
 ```
 
 <Warning>
-  Renamed and removed fields are renamed and removed **only in the admin panel**.
+  Renamed and removed fields are renamed and removed **only in the back-office**.
 
   In your code:
   - Removed fields are still accessible (for instance, as dependencies to compute new fields)

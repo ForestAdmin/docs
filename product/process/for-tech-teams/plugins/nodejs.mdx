@@ -2,38 +2,4 @@
 title: Write a Custom Plugin
 ---
 
-Each Plugin is nothing more than an `async function` that can perform customizations at either Agent level, Collection level, or both.
-
-```javascript
-export async function removeTimestamps(dataSource, collection, options) {
-  // ... call customization methods here
-}
-```
-
-3 parameters are provided:
-
-| Name | Description |
-| --- | --- |
-| `dataSource` | An object that allows customizing the whole agent. It has the same interface as the `Agent` you manipulate outside of Plugins |
-| `collection` | An object that allows customizing the collection that the Plugin was called from (`null` if the Plugin was called on the Agent). It is the same object passed when you call `customizeCollection` |
-| `options` | Options that are provided to the Plugin. There is no set structure for this parameter, as each Plugin will provide specific mandatory or optional options |
-
-## Making your Plugin act differently depending on the Collection
-
-When making a Plugin, you may want it to generalize to many different Collections.
-
-This can be achieved by adopting different behavior depending on the `schema` of the Collection being targeted.
-
-```javascript
-export async function removeTimestamps(dataSource, collection, options) {
-  for (const currentCollection of dataSource.collections) {
-    if (currentCollection.schema.fields.createdAt) {
-      currentCollection.removeField('createdAt');
-    }
-
-    if (currentCollection.schema.fields.updatedAt) {
-      currentCollection.removeField('updatedAt');
-    }
-  }
-}
-```
+This content has been merged into the [Plugins overview](/product/process/for-tech-teams/plugins/overview) page.

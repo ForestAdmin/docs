@@ -1,0 +1,37 @@
+---
+title: "Stripe"
+description: "Connect Stripe to Forest Admin"
+---
+
+<Warning>
+Stripe datasource is only available for Node.js and is an experimental community package.
+</Warning>
+
+The Stripe datasource connects your Stripe account to Forest Admin, allowing you to browse and manage your Stripe data (customers, payments, subscriptions, and more) directly from your back-office.
+
+## Installation
+
+```bash
+npm install @forestadmin-experimental/datasource-stripe
+```
+
+## Basic usage
+
+```javascript
+import { createAgent } from '@forestadmin/agent';
+import { createStripeDataSource } from '@forestadmin-experimental/datasource-stripe';
+
+const agent = createAgent(options);
+
+agent.addDataSource(
+  createStripeDataSource({
+    secretKey: process.env.STRIPE_SECRET_KEY
+  })
+);
+```
+
+## Source code
+
+This is a community datasource maintained on GitHub:
+
+[https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-stripe](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-stripe)

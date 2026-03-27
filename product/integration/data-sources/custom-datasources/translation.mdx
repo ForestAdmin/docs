@@ -1,13 +1,13 @@
 ---
-title: "Translation"
-description: "Build custom datasources by translating Forest Admin queries into your API's query language"
+title: "Create your own datasource"
+description: "Build your own datasource by translating Forest Admin queries into your API's query language"
 ---
 
 <Warning>
 Translation datasources require advanced knowledge of Forest Admin's query interface.
 </Warning>
 
-The translation strategy is an advanced approach for creating custom datasources that involves translating Forest Admin's query interface into the target API's query language.
+The translation strategy is an advanced approach for creating your own datasources that involves translating Forest Admin's query interface into the target API's query language.
 
 ## Overview
 
@@ -17,9 +17,9 @@ A full-featured query translation module typically exceeds 1000 lines of code. T
 
 Implementing this strategy requires completing three main phases:
 
-1. **Structure Declaration** - Define the data structure
-2. **Capabilities Declaration** - Specify API capabilities
-3. **Translation Layer Implementation** - Code the actual query translation
+1. **Structure declaration** - Define the data structure
+2. **Capabilities declaration** - Specify API capabilities
+3. **Translation layer implementation** - Code the actual query translation
 
 ### Minimal example
 
@@ -57,7 +57,7 @@ end
 ```
 </CodeGroup>
 
-## Structure Declaration
+## Structure declaration
 
 ### Columns
 
@@ -140,7 +140,7 @@ The typing system for columns is the same as the one used when declaring fields 
 
 ### Validation
 
-Forest Admin permits declaring validation rules on primitive-type fields. These rules validate records during creation/updating in the admin interface.
+Forest Admin permits declaring validation rules on primitive-type fields. These rules validate records during creation/updating in the back-office interface.
 
 The validation API mirrors the condition tree structure but excludes a "field" entry. Example validation clause:
 
@@ -214,7 +214,7 @@ end
 ```
 </CodeGroup>
 
-## Capabilities Declaration
+## Capabilities declaration
 
 Data source implementers don't need to translate every possible query type. Forest Admin ensures only supported query features are available by having collections declare capabilities on construction.
 
@@ -231,7 +231,7 @@ All datasources must support:
 
 ### Optional features (opt-in)
 
-| Unlocked Feature | Required Capabilities |
+| Unlocked feature | Required capabilities |
 |---|---|
 | Pagination page count display | Count |
 | Charts | All field support in Aggregation |
@@ -569,7 +569,7 @@ end
 
 ## Intra-datasource relationships
 
-When building custom datasources using the translation strategy, collections must handle intra-datasource relationships that are declared in their structure.
+When building your own datasources using the translation strategy, collections must handle intra-datasource relationships that are declared in their structure.
 
 ### Relationship types and requirements
 
@@ -686,11 +686,11 @@ datasource.collection('Movie').list(
 
 ### Implementation scope
 
-Developers implementing custom datasources must handle prefixed field references in:
+Developers implementing your own datasources must handle prefixed field references in:
 - **Filters** (condition trees)
 - **Projections** (field selections)
 - **Aggregations** (calculation operations)
 
 <Info>
-Want to share your custom datasource with the community? Check out [Forest Admin experimental](/guides/forestadmin-experimental) to contribute.
+Want to share your datasource with the community? Check out [Forest Admin experimental](/guides/forestadmin-experimental) to contribute.
 </Info>

@@ -1,0 +1,40 @@
+---
+title: "GraphQL / Hasura"
+description: "Connect GraphQL or Hasura to Forest Admin"
+---
+
+<Warning>
+GraphQL / Hasura datasource is only available for Node.js and is an experimental community package.
+</Warning>
+
+The GraphQL / Hasura datasource connects your GraphQL API or Hasura instance to Forest Admin, allowing you to browse and manage your data through your back-office without writing custom integration code.
+
+## Installation
+
+```bash
+npm install @forestadmin-experimental/datasource-graphql-hasura
+```
+
+## Basic usage
+
+```javascript
+import { createAgent } from '@forestadmin/agent';
+import { createGraphqlHasuraDataSource } from '@forestadmin-experimental/datasource-graphql-hasura';
+
+const agent = createAgent(options);
+
+agent.addDataSource(
+  createGraphqlHasuraDataSource({
+    url: process.env.GRAPHQL_ENDPOINT,
+    headers: {
+      'x-hasura-admin-secret': process.env.HASURA_ADMIN_SECRET
+    }
+  })
+);
+```
+
+## Source code
+
+This is a community datasource maintained on GitHub:
+
+[https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-graphql-hasura](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-graphql-hasura)

@@ -1,0 +1,38 @@
+---
+title: "Airtable"
+description: "Connect Airtable bases to Forest Admin"
+---
+
+<Warning>
+Airtable datasource is only available for Node.js and is an experimental community package.
+</Warning>
+
+The Airtable datasource connects your Airtable bases to Forest Admin, allowing you to browse, search, and manage your Airtable data directly from your back-office.
+
+## Installation
+
+```bash
+npm install @forestadmin-experimental/datasource-airtable
+```
+
+## Basic usage
+
+```javascript
+import { createAgent } from '@forestadmin/agent';
+import { createAirtableDataSource } from '@forestadmin-experimental/datasource-airtable';
+
+const agent = createAgent(options);
+
+agent.addDataSource(
+  createAirtableDataSource({
+    apiKey: process.env.AIRTABLE_API_KEY,
+    baseId: process.env.AIRTABLE_BASE_ID
+  })
+);
+```
+
+## Source code
+
+This is a community datasource maintained on GitHub:
+
+[https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-airtable](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-airtable)

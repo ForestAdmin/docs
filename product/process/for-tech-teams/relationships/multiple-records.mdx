@@ -1,10 +1,10 @@
 ---
-title: Multiple-Records Relations
+title: Multiple-records relationships
 ---
 
 Relationships that point to multiple records are displayed in the frontend in the "Related Data" and "Explorer" tabs.
 
-## One-to-Many relations
+## One-to-Many relationships
 
 In a one-to-many relationship, one record from a Collection is attached to multiple records of another Collection.
 
@@ -20,16 +20,16 @@ agent.customizeCollection('countries', collection => {
 });
 ```
 
-## Many-to-Many relations
+## Many-to-Many relationships
 
-In a many-to-many relation, 3 Collections are used instead of 2 to build the relation.
+In a many-to-many relationship, 3 Collections are used instead of 2 to build the relationship.
 
 This allows multiple records from one Collection to be attached to multiple records from another Collection.
 
 For instance, on a movie recommendation website, each user can rate many movies, and each movie can be rated by many users. The 3 Collections used are `users` (the "origin"), `ratings` (the "through"), and `movies` (the "foreign" Collection).
 
 ```javascript
-// Create one side of the relation ...
+// Create one side of the relationship ...
 agent.customizeCollection('users', collection => {
   collection.addManyToManyRelation('ratedMovies', 'movies', 'ratings', {
     originKey: 'user_id',
@@ -48,12 +48,12 @@ agent.customizeCollection('movies', collection => {
 });
 ```
 
-## External relations
+## External relationships
 
-External relations allow defining Collections which will only be available through the "Related Data" section of a given model.
+External relationships allow defining Collections which will only be available through the "Related Data" section of a given model.
 
 <Warning>
-  External relations do not support pagination.
+  External relationships do not support pagination.
 </Warning>
 
 ```javascript
@@ -68,7 +68,7 @@ const states = [
 
 agent.customizeCollection('address', collection => {
   collection.addExternalRelation('nearStates', {
-    // Define schema of the records in the relation.
+    // Define schema of the records in the relationship.
     schema: { code: 'Number', name: 'String' },
 
     // Which fields are needed from the parent record to run the handler?

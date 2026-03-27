@@ -1,53 +1,70 @@
 ---
-title: Fields - Overview
+title: Overview
+description: Customize how fields behave in your Forest Admin back-office
 ---
 
-Forest Admin is a platform to administrate your business operations efficiently; it provides powerful features to ease data navigation and implement high level views.
+Fields are the individual data points displayed and edited across your collections in Forest Admin. By default, Forest Admin exposes the fields that exist in your data source. You can then extend and customize them to match your business needs.
 
-When designing databases and APIs, the way to go is usually to push for normalization. This means ensuring there is no redundancy of data (all data is stored in only one place), and that data dependencies are logical.
+## What are fields?
 
-On the other hand, graphical user interfaces usually need duplication and shortcuts to be user-friendly.
+A field in Forest Admin maps to a column, property, or attribute in your data source. Forest Admin lets you go beyond that default mapping by:
 
-To bridge that gap, Forest Admin allows adding, moving, removing, and overriding behaviors from fields.
+- **Creating computed fields**: derive new values from existing data or external APIs
+- **Importing fields**: pull in fields from related records directly into a collection
+- **Renaming and removing fields**: hide technical details and use business-friendly names
+- **Adding write behavior**: make computed or read-only fields editable
+- **Adding validation rules**: enforce stricter constraints beyond what your data source provides
+- **Enabling filtering and sorting**: make any field filterable or sortable
+- **Handling binary data**: configure how binary fields are displayed and uploaded
 
-## Minimal example
+## How field customization works
+
+Field customization is applied in your agent code using a fluent API on the collection object. Changes are applied at the agent level and reflected in the Forest Admin UI.
 
 ```javascript
 collection
-  // Create a new field
   .addField('fullName', {
     columnType: 'String',
     dependencies: ['firstName', 'lastName'],
     getValues: (records, context) =>
       records.map(r => `${r.firstName} ${r.lastName}`),
   })
-
-  // Make it writable
   .replaceFieldWriting('fullName', (value, context) => {
     const [firstName, lastName] = value.split(' ');
-
     return { firstName, lastName };
   })
-
-  // Add validators
   .addFieldValidation('fullName', 'Present')
   .addFieldValidation('fullName', 'ShorterThan', 30)
-  .addFieldValidation('fullName', 'LongerThan', 2)
-
-  // Make it filterable and sortable
   .emulateFieldFiltering('fullName')
   .emulateFieldSorting('fullName')
-
-  // Remove previous fields
   .removeField('firstName', 'lastName');
 ```
 
-## Next steps
+## Explore field customization
 
-- [Computed Fields](/product/process/fields/computed)
-- [Import, Rename & Remove](/product/process/fields/import-rename-remove)
-- [Validation](/product/process/fields/validation)
-- [Writing Behavior](/product/process/fields/write)
-- [Filtering](/product/process/fields/filter)
-- [Sorting](/product/process/fields/sort)
-- [Binary Fields](/product/process/fields/binary)
+<CardGroup cols={2}>
+  <Card title="Computed fields" icon="calculator" href="/product/process/fields/computed">
+    Create new fields derived from existing data or external APIs
+  </Card>
+  <Card title="Import, rename & remove" icon="pencil" href="/product/process/fields/import-rename-remove">
+    Import fields from relationships, rename for clarity, or hide technical fields
+  </Card>
+  <Card title="Validation" icon="shield-check" href="/product/process/fields/validation">
+    Add validation rules beyond what your data source enforces
+  </Card>
+  <Card title="Write behavior" icon="pen" href="/product/process/fields/write">
+    Make fields writable and control how writes are applied
+  </Card>
+  <Card title="Filtering" icon="filter" href="/product/process/fields/filter">
+    Enable filtering on any field, including computed ones
+  </Card>
+  <Card title="Sorting" icon="arrow-up-down" href="/product/process/fields/sort">
+    Enable or customize sorting behavior for any field
+  </Card>
+  <Card title="Binary fields" icon="file" href="/product/process/fields/binary">
+    Configure how binary data is displayed and uploaded
+  </Card>
+  <Card title="Configuring fields (UI)" icon="sliders" href="/product/process/fields/configuring-fields">
+    Configure field display, formatting, and widgets without code
+  </Card>
+</CardGroup>

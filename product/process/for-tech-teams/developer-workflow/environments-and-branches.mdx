@@ -1,8 +1,8 @@
 ---
-title: Environments & Branches
+title: Environments & branches
 ---
 
-One of the goals of Forest Admin is empowering technical teams to achieve more in less time. Your Forest Admin panel is composed of 2 parts — the frontend (UI) and the backend — and for each one, you need the right tools:
+One of the goals of Forest Admin is empowering technical teams to achieve more in less time. Your Forest Admin back-office is composed of 2 parts — the frontend (UI) and the backend — and for each one, you need the right tools:
 
 The **Admin backend** is part of your codebase. You'll be using your favorite tools to customize it:
 - Editing: your favorite IDE
@@ -14,7 +14,7 @@ Your **Forest Admin UI** is **not** part of your codebase: it is managed on Fore
 
 ## Environments
 
-### Deploying to Production
+### Deploying to production
 
 Forest Admin is meant to help you manage your operations: this can only happen if your team operates on your Production data. To do so, you need to **create your Production Environment**.
 
@@ -40,13 +40,13 @@ In the next step, you need to fill out your Production database credentials.
 
 The final step requires that you add environment variables to your server. Follow the on-screen instructions. Once your server is successfully detected and running with the indicated environment variables, a "Finish" button will appear.
 
-### Creating a Remote Environment
+### Creating a remote environment
 
-Now that your admin panel is live in production, you might want to add an extra step for testing purposes. Forest Admin allows you to create Remote Environments (for test, qa, staging, pre-production, etc.).
+Now that your back-office is live in production, you might want to add an extra step for testing purposes. Forest Admin allows you to create Remote Environments (for test, qa, staging, pre-production, etc.).
 
 To create a new Remote Environment, go to your Project settings, then from the "Environments" tab, click on "Add a new environment".
 
-### Change Environment origin
+### Change environment origin
 
 You can change the origins of your Environments to create complex workflows, for instance, `dev > staging > preprod > production`. All the layouts of an environment will be generated based on its parent's layout.
 
@@ -54,7 +54,7 @@ You can change the origins of your Environments to create complex workflows, for
   All child Environments will be refreshed based on the new hierarchy.
 </Warning>
 
-### Set an Environment as Production
+### Set an environment as production
 
 To set another Environment as your Production Environment (also known as "reference"), click on the Environment you wish to set as production, and from its details page, click "Set as production".
 
@@ -66,7 +66,7 @@ To set another Environment as your Production Environment (also known as "refere
   The actual reference will take the new production as the origin. All children layouts will be refreshed. Any layout change that is not applicable will be ignored.
 </Warning>
 
-### Delete an Environment
+### Delete an environment
 
 You may also delete an Environment. **Be very careful** as there is no going back.
 
@@ -80,7 +80,7 @@ A **layout** is all the configuration that **defines your user interface (UI)**.
 
 The [Forest Admin CLI](/reference/cli/overview) will help you manage layouts across environments.
 
-### What is a Branch?
+### What is a branch?
 
 A Branch is a fork (i.e. copy) of the layout of the Environment it is attached to. A Branch can only be created in your own Development Environment.
 
@@ -90,7 +90,7 @@ A Branch is a fork (i.e. copy) of the layout of the Environment it is attached t
 
 Once you've created a Branch, your layout will look exactly like the layout of its origin Environment.
 
-### How do Branches work?
+### How do branches work?
 
 Any **layout change** you make on your current Branch using the Layout Editor will be **saved on your current Branch** and will not affect its origin Environment.
 
@@ -100,7 +100,7 @@ Any **layout change** you make on your current Branch using the Layout Editor wi
   For those familiar with git's _rebase_, this means you will **never have to rebase** your Branch on its origin, as it is done automatically.
 </Warning>
 
-### How do you create a Branch?
+### How do you create a branch?
 
 To create a branch, you'll need to use [Forest Admin CLI](/reference/cli/overview). Make sure you've created your local Development Environment using the `init` command. Then, to create a Branch named `my-branch` based on your `production` Environment:
 
@@ -112,9 +112,9 @@ forest branch my-branch --origin production
   Using kebab-case is recommended. However, if you prefer to use spaces in your Branch names, surround them with quotes: `forest branch "my branch" --origin production`.
 </Info>
 
-### Checking your Branch information
+### Checking your branch information
 
-On your interface, you can check at all times what is your current Branch and how many layout changes were made on it. These information appear in the top banner of your admin panel.
+On your interface, you can check at all times what is your current Branch and how many layout changes were made on it. These information appear in the top banner of your back-office.
 
 <Info>
   To switch your _current_ branch to another existing branch, use the `forest switch` command.
@@ -124,7 +124,7 @@ On your interface, you can check at all times what is your current Branch and ho
 
 ## Deploying your changes
 
-### Applying your changes to Production: `deploy`
+### Applying your changes to production: `deploy`
 
 `deploy` means applying your branch's changes to your reference environment definitively.
 
@@ -142,7 +142,7 @@ forest deploy
   Don't forget to **deploy your backend changes** (if any) before the `deploy` command.
 </Warning>
 
-### Testing your changes on a Remote Environment: `push`
+### Testing your changes on a remote environment: `push`
 
 `push` means moving your Branch's changes to a Remote Environment set as the origin of your Branch.
 
@@ -156,10 +156,10 @@ forest push
 
 Note that you'll be pushing your **current** Branch. To select another Branch, use `forest switch`. If the origin of your Branch is not the Remote you want, change it with `forest set-origin`.
 
-#### Deploying the layout of a Remote Environment
+#### Deploying the layout of a remote environment
 
 Once you have tested your new layout on a Remote Environment, to deploy it to Production simply **click on "Deploy to production"** in the top banner of that Environment's layout.
 
-#### Making changes directly from a Remote Environment
+#### Making changes directly from a remote environment
 
 You can apply final touches using the Layout Editor from the Remote Environment. Any changes you make on that Remote Environment will also be deployed when you run `forest deploy`.
