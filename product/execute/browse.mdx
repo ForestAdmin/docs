@@ -1,100 +1,106 @@
 ---
 title: Browsing & Searching Data
+description: Navigate, search, filter, and explore your data effectively in Forest Admin.
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** All users
 
-## Description
+Forest Admin gives you a powerful set of tools to navigate your data: a flexible table view, full-text search, advanced filters, segments, and bulk selection. This page covers everything you need to find and explore records efficiently.
 
-Navigate, browse, search, and filter your data effectively in Forest Admin.
+## Table View
 
-## Sources to migrate
+When you open a collection, records are displayed in a **table view** with one row per record and one column per field. You can customize this view using the [Layout Editor](/product/build/layout-editor).
 
-- `documentation-user-guide/collections/browse.md`
-- User guide for data navigation
+- **Sort** by any column by clicking its header. Click again to reverse the order.
+- **Resize** columns by dragging the column separator.
+- **Reorder** columns by dragging the column header to a new position.
+- **Show/hide** columns using the column picker button in the top-right of the table.
 
-## Content outline
+## Searching
 
-1. **Browsing Overview**
-   - Collection view
-   - Table view
-   - Detail view
-   - List navigation
+The **search bar** at the top of any collection lets you filter records by keyword.
 
-2. **Table View**
-   - Column display
-   - Column sorting
-   - Column resizing
-   - Column reordering
-   - Row selection
+- Forest Admin searches across the fields configured as searchable for that collection (configured by your developers in the agent).
+- Search supports **contains** matching by default.
+- To search by exact value, check with your admin whether extended search mode is enabled.
 
-3. **Searching**
-   - Search bar usage
-   - Search scope
-   - Search modes (contains, exact)
-   - Multi-field search
-   - Search tips
+<Info>
+Developers can configure which fields are included in search using the `searchable` option in the agent configuration.
+</Info>
 
-4. **Filtering**
-   - Filter panel
-   - Filter conditions
-   - Multiple filters (AND/OR)
-   - Filter combinations
-   - Saving filters
+## Filtering
 
-5. **Segments**
-   - Using segments
-   - Switching between segments
-   - Segment tabs
-   - Record counts
+The **filter panel** lets you apply precise conditions to narrow down the list of records.
 
-6. **Sorting**
-   - Single column sort
-   - Multi-column sort
-   - Sort direction
-   - Default sort
+Click the **Filter** button (funnel icon) to open the filter panel, then:
 
-7. **Pagination**
-   - Page navigation
-   - Page size selection
-   - Jump to page
-   - Total record count
+1. Select a **field** to filter on.
+2. Choose an **operator** (equals, contains, greater than, is null, etc.).
+3. Enter a **value**.
+4. Click **Apply**.
 
-8. **Detail View**
-   - Record details
-   - Related data
-   - Relationships
-   - Action buttons
-   - Edit mode
+You can add multiple filters and combine them with **AND** or **OR** logic. Filters are applied on top of any active segment.
 
-9. **Bulk Selection**
-   - Select multiple records
-   - Select all
-   - Selection across pages
-   - Bulk actions
+### Saving Filters
 
-10. **Keyboard Shortcuts**
-    - Navigation shortcuts
-    - Search shortcut
-    - Action shortcuts
-    - Selection shortcuts
+Frequently-used filters can be saved as **segments** by your developers. See [Segments](/product/process/segments/overview) for more information.
 
-11. **Performance Tips**
-    - Efficient searching
-    - Using segments
-    - Filter strategies
-    - Pagination best practices
+## Segments
 
-## Migration notes
+**Segments** are predefined subsets of a collection — equivalent to a saved filter. They appear as **tabs** above the record list.
 
-- MEDIUM priority
-- Basic user operations
-- Screenshots very helpful
+Switch between segments by clicking the tabs. The record count next to each tab shows how many records match that segment.
 
-## Related pages
+<Info>
+Segments are configured by developers in the agent code or by admins in the Layout Editor. See [Segments](/product/process/segments/overview).
+</Info>
 
-- [Build > Collection Configuration](/product/build/collection-configuration)
-- [Build > Search Configuration](/product/build/search-configuration)
-- [Process > Segments](/product/process/segments/overview)
-- [Execute Overview](/product/execute/overview)
+## Pagination
+
+Large collections are split across multiple pages. Use the pagination controls at the bottom of the table to:
+
+- Navigate **Previous / Next** page.
+- Jump to a **specific page** by entering the page number.
+- Change the **page size** (number of records per page).
+
+The total record count is displayed next to the pagination controls.
+
+## Detail View
+
+Click any row in the table to open the **detail view** for that record. The detail view shows:
+
+- All fields for the record, organized in the layout defined by your admin.
+- **Related data** — linked records from related collections (one-to-many, many-to-many).
+- **Action buttons** — Smart Actions available for this record.
+- **Collaboration tab** — notes, approval requests.
+
+Use the **Edit** button to modify field values directly from the detail view.
+
+## Bulk Selection
+
+To perform an action on multiple records at once:
+
+1. Check the **checkbox** on the left of each row you want to select.
+2. To select all records on the current page, check the **header checkbox**.
+3. To select all records across all pages (matching the current filter), use the **"Select all N records"** option that appears after selecting the page.
+
+Once records are selected, **bulk actions** appear in the toolbar above the table.
+
+<Warning>
+Some bulk actions may have a maximum record limit. Check the action documentation or contact your developers for details.
+</Warning>
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Collection Configuration" icon="sliders" href="/product/build/collection-configuration">
+    Configure which fields and columns are visible
+  </Card>
+  <Card title="Segments" icon="filter" href="/product/process/segments/overview">
+    Learn how segments are created and managed
+  </Card>
+  <Card title="Executing Actions" icon="bolt" href="/product/execute/actions">
+    Run actions on records you've selected
+  </Card>
+  <Card title="Export Data" icon="arrow-up-from-bracket" href="/product/execute/export">
+    Export your filtered data to CSV or other formats
+  </Card>
+</CardGroup>

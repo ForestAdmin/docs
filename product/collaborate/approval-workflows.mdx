@@ -1,17 +1,90 @@
 ---
 title: Approval Workflows
+description: Review, approve, or reject actions that require team validation before execution.
 ---
 
-Improve your team's workflow efficiency with the Approval Workflow feature available in Forest Admin under the Collaboration tab. This feature allows you to easily track, review, and manage every step of the approval process. When an action needs approval, you can quickly navigate to the Approval Workflow section to approve, reject, or comment on the action. This ensures clear communication among team members and helps in executing actions promptly after collective approval.
+The **Approval Workflow** feature lets your team ensure that sensitive or high-impact actions are reviewed before they execute. When an action requires approval, it is held in a queue until a qualified team member approves or rejects it.
 
-The Approval Workflow feature is designed for large teams. It implements advanced processes for a structured and controlled decision-making environment. This feature improves collaboration in Forest Admin by ensuring every action is reviewed and approved, leading to more efficient and accurate workflows.
+This is especially valuable for large teams that need structured, controlled decision-making — ensuring every critical action is reviewed and audited.
 
-## Configuring an approval workflow
+## How It Works
 
-To set up an approval for a specific action in Forest Admin, navigate to the Project Settings and select "Roles." Choose the role you wish to configure and edit its permissions. Within the permissions settings for the desired action, you will find the option to enable the approval workflow. Activate the "Require approval" checkbox to initiate the approval process for this action.
+1. An operator triggers an action that requires approval.
+2. Instead of executing immediately, an **approval request** is created.
+3. Team members with approval permission are notified and can review the request.
+4. Once approved (or rejected), the action either executes or is cancelled.
+5. The request moves to **History** for audit purposes.
 
-- **Require approval:** Enable the approval workflow on this action.
-- **Approve:** Grant the role the authority to approve this action.
-- **Self Approve:** Allow the role to self-approve an action triggered by the role itself.
+## The Approval Workflow Screen
 
-By configuring these settings, you set up an approval workflow for a specific action in your Forest Admin project. This creates a systematic and team-based approach to decision making.
+Navigate to the **Collaboration** tab → **Approval Workflow** to access the approval queue. Requests are divided into three lists:
+
+| List | Description |
+|------|-------------|
+| **Created** | Approval requests you have submitted and are pending review |
+| **To review** | Requests you have permission to approve or reject |
+| **History** | All processed requests (approved or rejected) |
+
+## Reviewing a Request
+
+Click on any approval request to open a modal showing:
+
+- The **action** that was triggered and its name.
+- The **target record** the action applies to.
+- The **form values** entered by the requester (if the action has a form).
+
+After reviewing, you can:
+
+- **Approve** — the action will execute immediately.
+- **Reject** — the action is cancelled; the requester is notified.
+- **Comment** — leave a note explaining your decision.
+
+Once processed, the request moves to **History**.
+
+## Filtering Approval Requests
+
+For large teams with high request volumes, use the **filter panel** to narrow the list:
+
+| Filter | Description |
+|--------|-------------|
+| **Action** | Filter by the name of the Smart Action |
+| **Requester** | Filter by the team member who submitted the request |
+| **Team** | Filter by the team associated with the request |
+| **Creation date** | Select a date interval |
+
+Multiple filters can be combined for precise results.
+
+## Exporting Approval History
+
+Click the **Export** button in the History section to download a CSV of your approval requests over a given time period. The file will be sent to your email.
+
+## Configuring Approval Workflows
+
+Approval workflows are configured in **Project Settings → Roles**. For each role, you can configure each action's approval behavior:
+
+| Permission | Effect |
+|------------|--------|
+| **Require approval** | Operators in this role must request approval before the action executes |
+| **Approve** | Operators in this role can approve requests submitted by others |
+| **Self Approve** | Operators in this role can approve their own requests |
+
+<Info>
+Approval workflow configuration is available to admins in Project Settings → Roles. Operators cannot modify these settings.
+</Info>
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Executing Actions" icon="bolt" href="/product/execute/actions">
+    Learn how to trigger actions as an operator
+  </Card>
+  <Card title="Notes" icon="note-sticky" href="/product/collaborate/notes">
+    Leave comments on records for your team
+  </Card>
+  <Card title="Inbox" icon="inbox" href="/product/collaborate/inbox">
+    Distribute and process tasks across your team
+  </Card>
+  <Card title="Roles & Permissions" icon="lock" href="/product/control/roles-permissions">
+    Configure action permissions by role
+  </Card>
+</CardGroup>

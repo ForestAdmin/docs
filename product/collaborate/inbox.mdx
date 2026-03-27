@@ -1,19 +1,87 @@
 ---
 title: Inbox
+description: Automatically distribute and process tasks across your team with Inboxes.
 ---
 
-The Inbox feature efficiently distributes tasks among team members based on their workload and expertise, improving the efficiency of your workflows.
+The **Inbox** feature automatically assigns tasks to team members based on workload and dispatch rules, improving efficiency and ensuring no record falls through the cracks.
+
+An inbox is always tied to a **segment of a collection** — for example, the `Waiting for Validation` segment of a `Documents` collection. Every record in that segment becomes a task for operators to process.
+
+<Info>
+The Inbox feature must be enabled for your project. Contact your Forest Admin account manager to activate it.
+</Info>
 
 ## Creating an Inbox
 
-To create an inbox in Forest Admin, navigate to the Collaboration tab and enable the Layout Editor mode. In the left navbar, you'll find an "Inboxes" section where you can create a new one.
+1. Navigate to the **Collaboration** tab.
+2. Enable **Layout Editor** mode.
+3. In the left menu, find the **Inboxes** section and click **Create Inbox**.
+4. Select the **collection** and **segment** that defines the tasks.
+5. Choose a **dispatch rule**:
 
-An inbox is always based on a segment of a collection. For example, you can create an inbox based on the `Documents` collection and the `Waiting for Validation` segment, which contains all the documents that have not been verified yet.
+| Dispatch rule | Description |
+|---------------|-------------|
+| **Field-based** | Records are sorted by up to 3 fields (ascending or descending). For example: sort by creation date descending, then by priority ascending. |
+| **Random** | Records are assigned in random order. |
 
-## Processing tickets
+## Processing Tasks
 
-After creation, click on "Start processing" to automatically allocate it to the next task — in this example, verifying a document.
+Once an inbox is created, operators can access it from the **Collaboration** tab.
 
-You will then be redirected to the record view where you can verify the document and update the relevant fields.
+### Todo
 
-At the top, a bar will appear indicating that you are currently processing a task from the inbox. By clicking on "Next ticket", you will be automatically assigned a new task, helping you complete tasks efficiently.
+The **Todo** count shows the number of unassigned records in the segment. Click **Start processing** to be automatically assigned to the next task and redirected to the record.
+
+After completing the work on that record (e.g. triggering a `Validate Document` action), click **Next ticket** in the top bar to be assigned a new task automatically.
+
+### Doing
+
+The **Doing** section shows tasks currently assigned to you. You can navigate back to an in-progress record from here.
+
+### Backlog
+
+The **Backlog** is visible to operators with a **Manager, Editor, Developer, or Administrator** permission level. It provides an overview of all records in the segment:
+
+- Which tasks are unassigned, in progress, or completed.
+- Which operator is assigned to each task.
+- For in-progress tasks: when the task was started.
+- For completed tasks: the total handling time (including approval time if applicable).
+
+## Manual Task Assignment
+
+Managers can manually assign a specific record to an operator from:
+
+- The **Backlog** section of the inbox.
+- The **record detail view**, using the native **"Assign to..."** action — which also lets you assign records to operators outside your current team.
+
+Manual assignments bypass the sorting rules and become the next task for that operator.
+
+## Inbox Settings
+
+Access inbox settings from **Layout Editor mode** → the menu next to the inbox name. You can:
+
+- **Rename** or **delete** the inbox.
+- **Organize inboxes into folders** for cleaner navigation.
+- **Set a maximum number of concurrent tasks per operator** — when reached, clicking "Next ticket" redirects the operator to one of their in-progress tasks instead of assigning a new one.
+- **Automatically unassign tasks** after a configurable idle time, making them available to other operators.
+
+<Info>
+Maximum concurrent tasks and automatic unassignment are disabled by default.
+</Info>
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
+    Require team approval before actions execute
+  </Card>
+  <Card title="Dispatcher" icon="arrows-split-up-and-left" href="/product/manage/dispatcher">
+    Advanced task routing and assignment rules
+  </Card>
+  <Card title="Segments" icon="filter" href="/product/process/segments/overview">
+    Understand the segments that power inboxes
+  </Card>
+  <Card title="Activity Logs" icon="clock-rotate-left" href="/product/manage/activity">
+    Track inbox activity and task events
+  </Card>
+</CardGroup>

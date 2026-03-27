@@ -1,86 +1,68 @@
 ---
 title: Escalation Workflows
+description: Automatically escalate time-sensitive records and manage SLAs for your operations team.
 ---
-> **Status:** TODO - Priority: LOW
->
-> **Audience:** Team leads, support managers
 
-## Description
+<Info>
+Escalation Workflows are an advanced feature. Contact your Forest Admin account manager to learn about availability for your plan.
+</Info>
 
-Set up automatic escalation rules for time-sensitive items and SLA management.
+**Escalation Workflows** let you define rules that automatically escalate records when they've been waiting too long, haven't been processed, or require urgent attention. This helps teams manage SLAs and ensure nothing gets stuck in a queue.
 
-## Sources to migrate
+## What is Escalation?
 
-- Escalation documentation
-- SLA management features
+Escalation is the automatic process of raising the priority of a record or notifying a supervisor when a defined condition is met — typically a time-based or status-based threshold.
 
-## Content outline
+**Common escalation triggers:**
+- A support ticket has not been assigned within 2 hours.
+- A document has been in the "Waiting for Validation" state for more than 24 hours.
+- A high-priority order has not been fulfilled by its deadline.
 
-1. **Escalation Overview**
-   - What is escalation
-   - When to use
-   - Escalation triggers
+## Escalation Actions
 
-2. **Escalation Rules**
-   - Time-based escalation
-   - Priority-based escalation
-   - Status-based escalation
-   - Custom trigger conditions
+When an escalation rule is triggered, one or more of the following actions can occur:
 
-3. **Escalation Actions**
-   - Notify team lead
-   - Reassign record
-   - Change priority
-   - Send alerts
-   - Create tasks
+| Action | Description |
+|--------|-------------|
+| **Notify a team lead** | Send an alert to a supervisor or specific user |
+| **Reassign the record** | Move the task to a different operator or team |
+| **Change priority** | Update a field to indicate elevated urgency |
+| **Trigger a Smart Action** | Execute custom logic defined by your developers |
 
-4. **SLA Management**
-   - Define SLAs
-   - Response time SLAs
-   - Resolution time SLAs
-   - SLA tracking
-   - Breach notifications
+## Use Cases
 
-5. **Escalation Chains**
-   - Multi-level escalation
-   - Escalation hierarchy
-   - Fallback assignees
-   - Round-robin assignment
+**Customer support:** Escalate tickets that haven't received a first response within your SLA window.
 
-6. **Notifications**
-   - Escalation alerts
-   - SLA warnings
-   - Breach notifications
-   - Stakeholder updates
+**Document review:** Flag documents that have been in a review queue longer than allowed by compliance rules.
 
-7. **Use Cases**
-   - Support ticket escalation
-   - Incident management
-   - Approval delays
-   - High-priority items
-   - VIP customer handling
+**Incident management:** Alert the on-call team lead when an incident has been open for more than a defined threshold.
 
-8. **Monitoring**
-   - Escalation metrics
-   - SLA compliance
-   - Response times
-   - Breach analysis
+**Approval delays:** Escalate approval requests that have been pending for too long.
 
-9. **Best Practices**
-   - Clear escalation paths
-   - Realistic SLAs
-   - Backup coverage
-   - Regular reviews
+## Setting Up Escalation Rules
 
-## Migration notes
+Escalation rules are configured in your project settings. Each rule defines:
 
-- LOW priority
-- May be ROADMAP or limited feature
-- Focus on available capabilities
+1. **The trigger condition** — which segment or field state activates the rule.
+2. **The time threshold** — how long the condition must be true before escalating.
+3. **The escalation action** — what happens when the rule fires.
 
-## Related pages
+Contact your Forest Admin admin or account manager to configure escalation rules for your project.
 
-- [Collaborate Overview](/product/collaborate/overview)
-- [Approval Workflows](/product/collaborate/approval-workflows)
-- [Inbox](/product/collaborate/inbox)
-- [Build > Workspace Patterns > Incident Management](/product/build/workspace-patterns/incident-management)
+## Monitoring
+
+Escalation events are recorded in the **[Activity Logs](/product/manage/activity)**, giving you a full audit trail of when and why escalations occurred.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Inbox" icon="inbox" href="/product/collaborate/inbox">
+    Distribute tasks and track processing time
+  </Card>
+  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
+    Manage actions requiring team review
+  </Card>
+  <Card title="Activity Logs" icon="clock-rotate-left" href="/product/manage/activity">
+    Audit trail including escalation events
+  </Card>
+</CardGroup>

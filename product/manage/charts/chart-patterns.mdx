@@ -1,71 +1,244 @@
 ---
 title: Chart Patterns & Examples
+description: Practical chart examples for common business analytics use cases.
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** All users
 
-## Description
+This page provides ready-to-use chart patterns for the most common analytics scenarios. Each example includes the chart type and a SQL query you can adapt for your data.
 
-Common chart patterns and examples for business analytics and reporting.
+For instructions on creating charts, see [Charts Overview](/product/manage/charts/overview).
 
-## Sources to migrate
+## Revenue Analytics
 
-- `documentation-user-guide/dashboards/charts/` (examples)
-- Chart gallery/examples
+### Monthly Recurring Revenue (MRR)
 
-## Content outline
+Track your MRR as a single KPI value.
 
-1. **Revenue Analytics**
-   - MRR (Monthly Recurring Revenue)
-   - Revenue trends
-   - Revenue by product
-   - Revenue forecasting
+**Chart type:** Single value
 
-2. **Customer Analytics**
-   - Customer acquisition
-   - Customer retention
-   - Churn rate
-   - Customer lifetime value
-   - Cohort analysis
+```sql
+SELECT SUM(monthly_amount) AS value
+FROM subscriptions
+WHERE status = 'active';
+```
 
-3. **Operations Analytics**
-   - Order volume
-   - Processing time
-   - Fulfillment metrics
-   - Error rates
+### Revenue Over Time
 
-4. **User Analytics**
-   - Active users (DAU/MAU/WAU)
-   - User engagement
-   - Feature adoption
-   - User segments
+Visualize revenue trends by month.
 
-5. **Sales Analytics**
-   - Sales pipeline
-   - Conversion rates
-   - Sales by region/rep
-   - Quota attainment
+**Chart type:** Time-based
 
-6. **Support Analytics**
-   - Ticket volume
-   - Response time
-   - Resolution time
-   - CSAT scores
+```sql
+SELECT DATE_TRUNC('month', created_at) AS key, SUM(amount) / 100 AS value
+FROM payments
+WHERE status = 'succeeded'
+GROUP BY key
+ORDER BY key;
+```
 
-7. **Product Analytics**
-   - Feature usage
-   - User flows
-   - A/B test results
+### Revenue by Product
 
-## Migration notes
+See which products contribute the most revenue.
 
-- Rich examples with use cases
-- Screenshots recommended
-- Link to aggregations for implementation
+**Chart type:** Repartition
 
-## Related pages
+```sql
+SELECT products.name AS key, SUM(order_items.amount) AS value
+FROM order_items
+JOIN products ON order_items.product_id = products.id
+GROUP BY products.name;
+```
 
-- [Charts Overview](/product/manage/charts/overview)
-- [Dashboards](/product/manage/dashboards)
-- [Process > Aggregations](/product/process/for-tech-teams/aggregations/overview)
+## Customer Analytics
+
+### Total Active Customers
+
+**Chart type:** Single value
+
+```sql
+SELECT COUNT(*) AS value
+FROM customers
+WHERE status = 'active';
+```
+
+### Customer Growth Over Time
+
+Track new customer signups per month.
+
+**Chart type:** Time-based
+
+```sql
+SELECT DATE_TRUNC('month', created_at) AS key, COUNT(*) AS value
+FROM customers
+GROUP BY key
+ORDER BY key;
+```
+
+### Customers by Country
+
+**Chart type:** Repartition
+
+```sql
+SELECT country AS key, COUNT(*) AS value
+FROM customers
+GROUP BY country
+ORDER BY value DESC;
+```
+
+### Churn Rate (%)
+
+Display percentage of customers who churned this month.
+
+**Chart type:** Percentage
+
+```sql
+SELECT churned.count AS value, total.count AS total
+FROM (
+  SELECT COUNT(*) AS count FROM customers WHERE status = 'churned'
+    AND DATE_TRUNC('month', churned_at) = DATE_TRUNC('month', NOW())
+) AS churned,
+(
+  SELECT COUNT(*) AS count FROM customers
+) AS total;
+```
+
+## Operations Analytics
+
+### Orders by Status
+
+Understand your current order pipeline.
+
+**Chart type:** Repartition
+
+```sql
+SELECT status AS key, COUNT(*) AS value
+FROM orders
+GROUP BY status;
+```
+
+### Orders Volume Over Time
+
+Track daily or monthly order volume.
+
+**Chart type:** Time-based
+
+```sql
+SELECT DATE_TRUNC('day', created_at) AS key, COUNT(*) AS value
+FROM orders
+GROUP BY key
+ORDER BY key;
+```
+
+### Monthly Orders vs Target
+
+Compare actual orders to your monthly goal.
+
+**Chart type:** Objective
+
+```sql
+SELECT COUNT(*) AS value, 1000 AS objective
+FROM orders
+WHERE created_at >= DATE_TRUNC('month', NOW());
+```
+
+## Support Analytics
+
+### Open Tickets
+
+**Chart type:** Single value
+
+```sql
+SELECT COUNT(*) AS value
+FROM tickets
+WHERE status = 'open';
+```
+
+### Tickets by Priority
+
+**Chart type:** Repartition
+
+```sql
+SELECT priority AS key, COUNT(*) AS value
+FROM tickets
+WHERE status = 'open'
+GROUP BY priority;
+```
+
+### Ticket Volume Over Time
+
+**Chart type:** Time-based
+
+```sql
+SELECT DATE_TRUNC('week', created_at) AS key, COUNT(*) AS value
+FROM tickets
+GROUP BY key
+ORDER BY key;
+```
+
+### Top Agents by Tickets Resolved
+
+**Chart type:** Leaderboard
+
+```sql
+SELECT users.name AS key, COUNT(*) AS value
+FROM tickets
+JOIN users ON tickets.assigned_to = users.id
+WHERE tickets.status = 'resolved'
+  AND tickets.resolved_at >= DATE_TRUNC('month', NOW())
+GROUP BY users.name
+ORDER BY value DESC
+LIMIT 10;
+```
+
+## User Analytics
+
+### Daily Active Users (DAU)
+
+**Chart type:** Single value
+
+```sql
+SELECT COUNT(DISTINCT user_id) AS value
+FROM user_sessions
+WHERE DATE_TRUNC('day', started_at) = DATE_TRUNC('day', NOW());
+```
+
+### Active Users Over Time (MAU)
+
+**Chart type:** Time-based
+
+```sql
+SELECT DATE_TRUNC('month', started_at) AS key, COUNT(DISTINCT user_id) AS value
+FROM user_sessions
+GROUP BY key
+ORDER BY key;
+```
+
+## Record-Specific Charts
+
+For charts in the **Analytics** tab of a record, use `{{recordId}}` in your query to scope the data to the current record.
+
+**Example — Transactions per month for a specific company:**
+
+```sql
+SELECT DATE_TRUNC('month', transactions.created_at) AS key,
+       SUM(transactions.amount) / 100 AS value
+FROM transactions
+WHERE transactions.company_id = {{recordId}}
+GROUP BY key
+ORDER BY key;
+```
+
+This chart will automatically work for any company record the operator views.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Charts Overview" icon="chart-bar" href="/product/manage/charts/overview">
+    Chart types, creation steps, and configuration
+  </Card>
+  <Card title="Dashboards" icon="gauge" href="/product/manage/dashboards">
+    Organize charts into dashboards
+  </Card>
+  <Card title="Aggregations (Developer)" icon="code" href="/product/process/for-tech-teams/aggregations/overview">
+    Define custom data aggregations
+  </Card>
+</CardGroup>

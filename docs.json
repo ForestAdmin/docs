@@ -78,11 +78,16 @@
                     "group": "Community Datasources",
                     "pages": [
                       "product/integration/data-sources/community-datasources/hubspot",
-                      "product/integration/data-sources/community-datasources/elasticsearch"
+                      "product/integration/data-sources/community-datasources/elasticsearch",
+                      "product/integration/data-sources/community-datasources/airtable",
+                      "product/integration/data-sources/community-datasources/stripe",
+                      "product/integration/data-sources/community-datasources/rpc",
+                      "product/integration/data-sources/community-datasources/graphql-hasura",
+                      "product/integration/data-sources/community-datasources/cosmosdb"
                     ]
                   },
                   {
-                    "group": "Custom Datasources",
+                    "group": "Create your own datasource",
                     "pages": [
                       "product/integration/data-sources/custom-datasources/translation",
                       "product/integration/data-sources/custom-datasources/replication"
@@ -235,20 +240,8 @@
               {
                 "group": "Advanced Concepts",
                 "pages": [
-                  {
-                    "group": "Hooks",
-                    "pages": [
-                      "product/process/for-tech-teams/hooks/overview",
-                      "product/process/for-tech-teams/hooks/nodejs"
-                    ]
-                  },
-                  {
-                    "group": "Plugins",
-                    "pages": [
-                      "product/process/for-tech-teams/plugins/overview",
-                      "product/process/for-tech-teams/plugins/nodejs"
-                    ]
-                  },
+                  "product/process/for-tech-teams/hooks/overview",
+                  "product/process/for-tech-teams/plugins/overview",
                   {
                     "group": "Developer Workflow",
                     "pages": [

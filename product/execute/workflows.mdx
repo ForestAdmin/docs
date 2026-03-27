@@ -1,70 +1,68 @@
 ---
 title: Executing Workflows
+description: Trigger and monitor automated multi-step workflows from Forest Admin.
 ---
-> **Status:** TODO - Priority: MEDIUM (ROADMAP)
->
-> **Audience:** Operations teams
 
-## Description
+<Info>
+Workflows are a roadmap feature. This page describes the intended behavior. Some capabilities may not yet be available in your version of Forest Admin.
+</Info>
 
-Execute automated workflows for multi-step business processes.
+**Workflows** in Forest Admin allow operators to trigger and monitor automated multi-step processes directly from the admin panel — without needing to run scripts or contact developers.
 
-## Sources to migrate
+## What are Workflows?
 
-- Workflow execution documentation
-- If ROADMAP, minimal content
+A Workflow chains together multiple operations into a single automated sequence. Examples include:
 
-## Content outline
+- Sending a welcome email → creating an account → notifying the sales team
+- Validating a document → updating a status → triggering an external sync
+- Running a nightly report → distributing it to stakeholders
 
-1. **Workflow Execution Overview**
-   - What are workflows
-   - Manual vs automatic triggers
-   - Workflow monitoring
+Workflows can be triggered **manually** by operators, **automatically** based on events, or **on a schedule**.
 
-2. **Triggering Workflows**
-   - Manual trigger
-   - Event-based triggers
-   - Scheduled triggers
-   - API triggers
+## Triggering a Workflow
 
-3. **Workflow Progress**
-   - Execution status
-   - Current step
-   - Progress tracking
-   - Estimated completion
+Depending on how your workflows are configured, you can trigger them from:
 
-4. **Workflow Results**
-   - Success/failure status
-   - Step-by-step results
-   - Error handling
-   - Retry options
+- **A record detail view** — a workflow button appears alongside standard actions.
+- **A collection action** — workflows can be exposed as global or bulk actions.
+- **A scheduled trigger** — workflows that run automatically don't require manual triggering.
 
-5. **Monitoring Workflows**
-   - Active workflows
-   - Workflow history
-   - Failed workflows
-   - Performance metrics
+To trigger a workflow manually:
 
-6. **Canceling Workflows**
-   - Manual cancellation
-   - Timeout handling
-   - Rollback (if supported)
+1. Navigate to the relevant record or collection.
+2. Click the workflow trigger button or select it from the **Actions** menu.
+3. Fill in any required input form and click **Start**.
 
-7. **Use Cases**
-   - Approval processes
-   - Data synchronization
-   - Notification chains
-   - Multi-step operations
-   - Scheduled tasks
+## Monitoring Workflow Progress
 
-## Migration notes
+Once triggered, you can monitor the workflow's execution:
 
-- ROADMAP feature
-- May have limited documentation
-- Link to Process > Workflows
+- **Status indicator** — shows whether the workflow is pending, running, completed, or failed.
+- **Step-by-step progress** — view which step is currently executing.
+- **Activity log** — each workflow execution is recorded in the [Activity Logs](/product/manage/activity).
 
-## Related pages
+## Workflow Results
 
-- [Process > Workflows](/product/process/workflows/overview)
-- [Execute Overview](/product/execute/overview)
-- [Actions](/product/execute/actions)
+When a workflow completes, the result is shown:
+
+| Result | Description |
+|--------|-------------|
+| **Completed** | All steps executed successfully |
+| **Failed** | One or more steps encountered an error |
+| **Cancelled** | The workflow was manually stopped or timed out |
+
+Failed workflows show which step failed and the error message. Depending on the configuration, some workflows support retrying from the failed step.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Executing Actions" icon="bolt" href="/product/execute/actions">
+    Trigger single-step actions on records
+  </Card>
+  <Card title="Activity Logs" icon="clock-rotate-left" href="/product/manage/activity">
+    View the history of workflow executions
+  </Card>
+  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
+    Workflows that require team approval steps
+  </Card>
+</CardGroup>

@@ -1,5 +1,69 @@
 ---
 title: Activity Logs
+description: Track every action, note, and change made in your Forest Admin project with a full audit trail.
 ---
 
-The Activity Logs feature provides a detailed timeline of all activities within Forest Admin, accessible through the Activity Logs tab. This is a critical tool for teams and projects requiring a detailed activity history for accountability, troubleshooting, and record-keeping. It captures everything from writing and specific actions to leaving notes and other administrative activities.
+The **Activity Logs** provide a complete, chronological history of everything that happens in your Forest Admin project. Every record edit, action triggered, note left, and administrative change is captured and stored.
+
+This is a critical tool for teams that require **accountability**, **compliance**, and **troubleshooting** capabilities.
+
+## Accessing Activity Logs
+
+Navigate to the **Activity Logs** tab from the main navigation. You'll see a timeline of events across the entire project.
+
+Each entry in the activity log shows:
+
+- **Timestamp** — when the event occurred.
+- **User** — which operator or admin performed the action.
+- **Event type** — what kind of activity was recorded (edit, action, note, approval, etc.).
+- **Target** — the record or resource affected.
+- **Details** — the specific change made (e.g. field name, old value, new value).
+
+## What Gets Logged
+
+The Activity Logs capture:
+
+| Event type | Examples |
+|------------|---------|
+| **Record edits** | A field value was changed on a record |
+| **Smart Actions** | An operator triggered an action (with or without approval) |
+| **Approval Workflow** | A request was created, approved, or rejected |
+| **Notes** | A note was created or updated on a record |
+| **Inbox events** | A task was assigned, started, completed, or unassigned |
+| **Administrative changes** | Role or permission changes, user added/removed |
+
+## Filtering the Activity Log
+
+Use the **filter bar** at the top to narrow down the log:
+
+- Filter by **user** to see all actions taken by a specific team member.
+- Filter by **event type** to focus on edits, actions, or approvals.
+- Filter by **date range** to review a specific period.
+- Filter by **collection or record** to see everything that happened to a specific piece of data.
+
+## Use Cases
+
+**Accountability:** Understand who changed what and when — invaluable for post-incident reviews or compliance audits.
+
+**Troubleshooting:** Trace back a sequence of events that led to an unexpected data state.
+
+**Compliance:** Demonstrate that data access and modifications follow your organization's policies.
+
+**Team oversight:** Monitor team activity patterns and identify unusually high or low activity.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
+    Approval events are recorded in the activity log
+  </Card>
+  <Card title="Inbox" icon="inbox" href="/product/collaborate/inbox">
+    Inbox task events appear in activity logs
+  </Card>
+  <Card title="Team Performance" icon="chart-bar" href="/product/manage/team-performance">
+    Aggregate metrics built on top of activity data
+  </Card>
+  <Card title="Roles & Permissions" icon="lock" href="/product/control/roles-permissions">
+    Control who can access which data and actions
+  </Card>
+</CardGroup>

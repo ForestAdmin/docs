@@ -1,57 +1,59 @@
 ---
 title: Export Data
+description: Export your data to CSV for reporting, analysis, and integration with other tools.
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** All users
 
-## Description
+Forest Admin lets you export collection data to **CSV** directly from the UI. Exports respect your active filters and segments, so you can export exactly the records you need.
 
-Export your data to various formats for reporting, analysis, and integration with other tools.
+## Exporting Records
 
-## Sources to migrate
+1. Open the collection you want to export.
+2. Optionally, apply **filters** or switch to a **segment** to narrow the records.
+3. Click the **Export** button (download icon) in the top-right toolbar.
+4. Forest Admin will generate and download a CSV file with the current record set.
 
-- `documentation-user-guide/collections/export-data.md`
-- Export functionality documentation
+<Info>
+The export includes all records matching your current filter — not just the records on the current page. Pagination does not affect exports.
+</Info>
 
-## Content outline
+## What Gets Exported
 
-1. **Export Formats**
-   - CSV export
-   - Excel export
-   - JSON export
-   - Custom formats
+The CSV export includes:
 
-2. **Export Options**
-   - Current selection
-   - All records
-   - Filtered data
-   - Specific fields
+- All **visible columns** in the current table view (as configured in the Layout Editor).
+- All records matching the **active filter and segment**.
+- Field values formatted as plain text.
 
-3. **Export Configuration**
-   - Field selection
-   - Column ordering
-   - Data formatting
-   - File naming
+Relationships (linked records) are exported as their identifier or display field, depending on your configuration.
 
-4. **Bulk Export**
-   - Large dataset handling
-   - Pagination
-   - Background exports
-   - Export scheduling
+## Export Limits
 
-5. **Automated Exports**
-   - Scheduled exports
-   - API-driven exports
-   - Webhook integration
+For very large datasets, exports may take a moment to generate. Forest Admin processes the export in the background and downloads the file when ready.
 
-6. **Best Practices**
-   - Performance considerations
-   - Data security
-   - Format selection
+<Warning>
+Extremely large exports (hundreds of thousands of records) may be slow. Consider applying filters to reduce the dataset before exporting.
+</Warning>
 
-## Related pages
+## Exporting Approval Request History
 
-- [Browse](/product/execute/browse)
-- [Process > Aggregations](/product/process/for-tech-teams/aggregations/overview)
-- [Reference > API](/reference/api/introduction)
+From the **Approval Workflows** tab, you can also export the history of approval requests over a given period. Click the **Export** button in that tab and select the desired time interval — you'll receive a CSV file by email.
+
+## Best Practices
+
+- **Filter before exporting** — apply segments or filters to export only the relevant data.
+- **Check column visibility** — only visible columns are exported; configure your table view in the [Layout Editor](/product/build/layout-editor) before exporting.
+- **Handle sensitive data carefully** — exports may contain personal or confidential information. Ensure exports are handled according to your data governance policies.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Browsing & Searching" icon="magnifying-glass" href="/product/execute/browse">
+    Filter your data before exporting
+  </Card>
+  <Card title="Layout Editor" icon="pencil" href="/product/build/layout-editor">
+    Configure which columns appear in the table view
+  </Card>
+  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
+    Export approval request history
+  </Card>
+</CardGroup>

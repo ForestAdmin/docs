@@ -1,82 +1,97 @@
 ---
 title: Executing Actions
+description: Trigger Smart Actions and perform operations on your data directly from Forest Admin.
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** All users
 
-## Description
+**Actions** in Forest Admin let operators trigger custom business logic on one or more records — sending emails, updating statuses, charging payments, generating reports, and more. This page explains how to find and execute actions as an operator.
 
-Learn how to execute Smart Actions and perform operations on your data.
+## Types of Actions
 
-## Sources to migrate
+| Type | Description |
+|------|-------------|
+| **Single record** | Triggered from a specific record's detail view or row menu |
+| **Bulk** | Triggered on multiple selected records at once |
+| **Global** | Triggered from the collection level, without selecting a record |
 
-- Action execution documentation
-- User guides for actions
+## Triggering a Single Record Action
 
-## Content outline
+1. Open a record by clicking on a row in the table view.
+2. In the detail view, look for the **Actions** button (top-right area).
+3. Click the action you want to execute.
+4. If the action has a form, fill in the required fields and click **Submit**.
 
-1. **Action Execution Overview**
-   - What are actions
-   - Types of actions (single, bulk, global)
-   - Action results
+You can also trigger actions directly from the row using the **context menu** (three-dot icon) without opening the detail view.
 
-2. **Triggering Actions**
-   - Single record actions
-   - Bulk actions (multiple records)
-   - Global actions (no record selection)
-   - Action buttons location
+## Triggering Bulk Actions
 
-3. **Action Forms**
-   - Filling out action forms
-   - Required fields
-   - Field validation
-   - Form helpers
+1. [Select multiple records](/product/execute/browse#bulk-selection) using the checkboxes in the table view.
+2. The **Actions** toolbar appears at the top of the table.
+3. Click the action you want to run on the selected records.
+4. Fill in the form (if required) and confirm.
 
-4. **Action Results**
-   - Success messages
-   - Error handling
-   - Result types:
-     - Success/error message
-     - File download
-     - Redirect
-     - Webhook
-     - HTML response
+<Info>
+Bulk actions apply to all selected records. Some actions may have a maximum number of records they can process at once.
+</Info>
 
-5. **Bulk Actions**
-   - Selecting multiple records
-   - Selection limits
-   - Progress tracking
-   - Partial success handling
+## Triggering Global Actions
 
-6. **Long-Running Actions**
-   - Async operations
-   - Progress indication
-   - Background processing
-   - Result notification
+Global actions are not tied to any specific record. They appear in the **Actions** menu at the top of the collection view, regardless of whether records are selected.
 
-7. **Action Permissions**
-   - Who can execute
-   - Dynamic permissions
-   - Approval requirements
-   - Confirmation prompts
+Use global actions for operations like generating a report, triggering a sync, or exporting data.
 
-8. **Common Actions**
-   - Send email
-   - Export data
-   - Update status
-   - Charge payment
-   - Generate report
-   - Sync external service
+## Action Forms
 
-## Migration notes
+Many actions open a **form** before execution. The form lets you provide additional input required by the action — for example, a reason for rejection, an amount to refund, or a target email address.
 
-- MEDIUM priority
-- User-facing operations guide
-- Link to process layer for implementation
+- **Required fields** are marked and must be filled before the form can be submitted.
+- **Dynamic fields** may appear or change based on values you enter in other fields.
+- **Dropdowns and pickers** are common field types for structured input.
 
-## Related pages
+## Action Results
 
-- [Process > Actions](/product/process/actions/overview)
-- [Process > Using Actions](/product/process/actions/using-actions)
-- [Execute Overview](/product/execute/overview)
+After an action runs, Forest Admin displays the result:
+
+| Result type | What you see |
+|-------------|-------------|
+| **Success message** | A green notification with a confirmation message |
+| **Error message** | A red notification describing what went wrong |
+| **File download** | A file download starts automatically (e.g. PDF, CSV) |
+| **Redirect** | You are redirected to a URL or another record |
+| **HTML response** | A custom HTML panel is displayed in a modal |
+
+## Actions Requiring Approval
+
+Some actions are configured to require approval from another team member before they execute. When you trigger such an action:
+
+1. A request is submitted to the **Approval Workflow**.
+2. The action is not executed immediately — it waits for approval.
+3. You can track the status in the [Approval Workflows](/product/collaborate/approval-workflows) tab.
+
+<Info>
+Approval workflows are configured by admins in Project Settings → Roles. See [Approval Workflows](/product/collaborate/approval-workflows).
+</Info>
+
+## Actions Requiring Confirmation
+
+Some actions display a **confirmation dialog** before executing, to prevent accidental triggers. Read the confirmation message carefully before proceeding.
+
+## Permissions
+
+Which actions you can see and execute depends on your **role permissions**, configured by your admin. If an action is not visible, you may not have permission to access it.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
+    Manage actions that require team approval
+  </Card>
+  <Card title="Smart Actions (Developer)" icon="code" href="/product/process/actions/overview">
+    How developers configure and implement actions
+  </Card>
+  <Card title="Browsing Data" icon="table" href="/product/execute/browse">
+    Select records before triggering bulk actions
+  </Card>
+  <Card title="Roles & Permissions" icon="lock" href="/product/control/roles-permissions">
+    Understand action access control
+  </Card>
+</CardGroup>
