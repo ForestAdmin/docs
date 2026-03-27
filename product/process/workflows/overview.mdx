@@ -1,6 +1,6 @@
 ---
-title: Workflows
-description: Formalize your operational processes in a no-code editor, leveraging your data, actions, and 3rd party apps for reliable, secure, and efficient executions.
+title: "Workflows"
+description: "Formalize your operational processes in a no-code editor, leveraging your data, actions, and 3rd party apps for reliable, secure, and efficient executions."
 ---
 
 Forest Admin Workflows let you formalize your operational processes in a no-code editor, leveraging your data, actions, and 3rd party apps to ensure reliable, secure, and efficient executions, right in your back-office.
@@ -11,9 +11,9 @@ Like all UI customization features in Forest Admin, Workflows can be created and
 
 ### Getting started
 
-The quickest way to create a new workflow is through the **Customization Center** (Edit Layout → + Add New).
+The quickest way to create a new workflow is through the **Customization Center** (Edit Layout → \+ Add New).
 
-Alternatively, you can add a new workflow directly from your **Collection Settings**, using the **+ New** button in the Workflows tab.
+Alternatively, you can add a new workflow directly from your **Collection Settings**, using the **\+ New** button in the Workflows tab.
 
 ### The workflow editor
 
@@ -32,17 +32,17 @@ The Workflow Editor is made up of four main elements:
 
 A workflow is a series of Steps. Some steps are entirely manual — the end user simply carries out the instruction provided — while **AI-powered** steps surface the relevant data or actions at runtime to help the user complete the step more efficiently.
 
-The following step types are available (* denotes AI-powered):
+The following step types are available (\* denotes AI-powered):
 
 **Guidance** tasks provide instructions to the end user on how to complete the step.
 
-**Trigger Action*** tasks provide the end user with the action required to complete the step (e.g. "Trigger the Onboard Customer action").
+**Trigger Action**\* tasks provide the end user with the action required to complete the step (e.g. "Trigger the Onboard Customer action").
 
-**Get Data*** tasks retrieve the value of one or multiple fields, display them to the end user, and load them into the workflow context (e.g. "Retrieve the Name, Address, and Email of the customer").
+**Get Data**\* tasks retrieve the value of one or multiple fields, display them to the end user, and load them into the workflow context (e.g. "Retrieve the Name, Address, and Email of the customer").
 
-**Update Data*** tasks provide the end user with a way to update the value of a field (e.g. "Update the value of the customer's Address").
+**Update Data**\* tasks provide the end user with a way to update the value of a field (e.g. "Update the value of the customer's Address").
 
-**Load Related Record*** tasks let you load a related record to access its data and actions in subsequent steps (e.g. "Load the Bank Statement related to the Customer, from the Document collection").
+**Load Related Record**\* tasks let you load a related record to access its data and actions in subsequent steps (e.g. "Load the Bank Statement related to the Customer, from the Document collection").
 
 **Decision** steps split your workflow into separate branches based on a condition.
 
@@ -54,10 +54,10 @@ The following step types are available (* denotes AI-powered):
 
 **Escalations** indicate a point where the workflow run is placed in an Inbox, so that another user can pick it up where the previous one left off.
 
-**MCP Tasks*** let the end user perform an action in a 3rd party app via the corresponding MCP Server.
+**MCP Tasks**\* let the end user perform an action in a 3rd party app via the corresponding MCP Server.
 
 <Note>
-MCP Tasks require an MCP Server to be configured in your Forest Admin project. See [MCP Servers](/product/integration/integrations/mcp-servers) for details.
+  MCP Tasks require an MCP Server to be configured in your Forest Admin project. See [MCP Servers](/product/integration/integrations/mcp-servers) for details.
 </Note>
 
 #### Step automation
@@ -69,7 +69,7 @@ At the end of each step, the user clicks the confirmation button (labelled **Don
 On **Trigger Action** and **MCP Tasks** steps, the end user must explicitly click Execute by default. Once you're confident in the AI suggesting the correct tool, set the **Execution** toggle to **Automatic** to skip that extra click.
 
 <Note>
-Actions featuring a form still need to be filled out by the end user before they can be submitted automatically.
+  Actions featuring a form still need to be filled out by the end user before they can be submitted automatically.
 </Note>
 
 **Decisions** can also be delegated to AI: set the **Decision maker** toggle to **AI** on a decision step, and the workflow will automatically guide users through the correct branch, assuming it has sufficient context from previous steps.
@@ -81,32 +81,6 @@ Existing workflows can be managed from the relevant **Collection Settings**, in 
 By default, workflows are available when selecting a single record from the List View. You can toggle their visibility and reorder them in the **Layout Editor**.
 
 Workflows can also be made available in Summary Views and Workspaces.
-
----
-
-## Executing workflows
-
-Workflows can be executed from the List View (on a single record), the Summary or Details view of a record, or from a Workspace.
-
-### AI-powered steps
-
-The **Get Data**, **Update Data**, **Trigger Action**, and **MCP Task** steps aim to provide end users with the tools they need to efficiently complete actions in Forest Admin and 3rd party apps.
-
-Each time one of these steps is completed, the workflow context gathers more information, increasing the AI's ability to help with subsequent steps — for example by pre-filling fields when updating data, or composing an email with the relevant context when notifying a customer via a tool like Zendesk.
-
-Every AI-powered step provides a **Handle Manually** option, allowing users to bypass the suggestion if it is not relevant or if it encountered an error. Subsequent steps would lack that context, which may affect the rest of the workflow.
-
-### Saving & resuming
-
-During execution, a workflow can be closed at any time, prompting the user to either **Save** it or **Abort** it.
-
-Saved workflows can be picked up by another user, after any length of time. They resume automatically when triggered from a record's Summary View or a Workspace, and can be resumed from the **To Continue** section when accessed from the List or Record View.
-
-### Revising steps
-
-Workflows help reduce mistakes in complex processes, but errors may still happen. If you need to correct something, you can always go back and revise a completed step.
-
-After completing a step, click the **Revise** button to redo it. Since workflows can branch based on your choices, revising a step will cancel any steps completed after it — ensuring the workflow follows the correct path based on your updated input.
 
 ---
 
@@ -130,12 +104,15 @@ Every interaction within a workflow execution is also recorded in your **Activit
   <Card title="Actions" icon="bolt" href="/product/process/actions/overview">
     Trigger custom operations on your data
   </Card>
+
   <Card title="Approval workflows" icon="circle-check" href="/product/collaborate/approval-workflows">
     Require sign-off before sensitive operations
   </Card>
+
   <Card title="Execute workflows" icon="play" href="/product/execute/workflows">
     Learn how end users run workflows
   </Card>
+
   <Card title="Inboxes & escalations" icon="inbox" href="/product/collaborate/inbox">
     Distribute workflow tasks across your team
   </Card>

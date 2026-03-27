@@ -1,11 +1,7 @@
 ---
-title: Executing Workflows
-description: Trigger and monitor automated multi-step workflows from Forest Admin.
+title: "Executing Workflows"
+description: "Trigger and monitor automated multi-step workflows from Forest Admin."
 ---
-
-<Info>
-Workflows are a roadmap feature. This page describes the intended behavior. Some capabilities may not yet be available in your version of Forest Admin.
-</Info>
 
 **Workflows** in Forest Admin allow operators to trigger and monitor automated multi-step processes directly from the admin panel — without needing to run scripts or contact developers.
 
@@ -17,41 +13,35 @@ A Workflow chains together multiple operations into a single automated sequence.
 - Validating a document → updating a status → triggering an external sync
 - Running a nightly report → distributing it to stakeholders
 
-Workflows can be triggered **manually** by operators, **automatically** based on events, or **on a schedule**.
+## Executing workflows
 
-## Triggering a Workflow
+Workflows can be executed from the List View (on a single record), the Summary or Details view of a record, or from a Workspace.
 
-Depending on how your workflows are configured, you can trigger them from:
+### AI-powered steps
 
-- **A record detail view** — a workflow button appears alongside standard actions.
-- **A collection action** — workflows can be exposed as global or bulk actions.
-- **A scheduled trigger** — workflows that run automatically don't require manual triggering.
+The **Get Data**, **Update Data**, **Trigger Action**, and **MCP Task** steps aim to provide end users with the tools they need to efficiently complete actions in Forest Admin and 3rd party apps.
 
-To trigger a workflow manually:
+Each time one of these steps is completed, the workflow context gathers more information, increasing the AI's ability to help with subsequent steps — for example by pre-filling fields when updating data, or composing an email with the relevant context when notifying a customer via a tool like Zendesk.
 
-1. Navigate to the relevant record or collection.
-2. Click the workflow trigger button or select it from the **Actions** menu.
-3. Fill in any required input form and click **Start**.
+Every AI-powered step provides a **Handle Manually** option, allowing users to bypass the suggestion if it is not relevant or if it encountered an error. Subsequent steps would lack that context, which may affect the rest of the workflow.
 
-## Monitoring Workflow Progress
+### Automated steps
 
-Once triggered, you can monitor the workflow's execution:
+Some steps in a Workflow may be automated, meaning they won't require any user input to complete, namely for the AI-powered steps listed above, and some Decisions.
 
-- **Status indicator** — shows whether the workflow is pending, running, completed, or failed.
-- **Step-by-step progress** — view which step is currently executing.
-- **Activity log** — each workflow execution is recorded in the [Activity Logs](/product/manage/activity).
+In some cases, for example if Forest's AI is lacking context to make a decision, or a 3rd party system is not responding, the user may be required to take over and complete the step manually, similarly to the Handle Manually option.
 
-## Workflow Results
+### Saving & resuming
 
-When a workflow completes, the result is shown:
+During execution, a workflow can be closed at any time, prompting the user to either **Save** it or **Abort** it.
 
-| Result | Description |
-|--------|-------------|
-| **Completed** | All steps executed successfully |
-| **Failed** | One or more steps encountered an error |
-| **Cancelled** | The workflow was manually stopped or timed out |
+Saved workflows can be picked up by another user, after any length of time. They resume automatically when triggered from a record's Summary View or a Workspace, and can be resumed from the **To Continue** section when accessed from the List or Record View.
 
-Failed workflows show which step failed and the error message. Depending on the configuration, some workflows support retrying from the failed step.
+### Revising steps
+
+Workflows help reduce mistakes in complex processes, but errors may still happen. If you need to correct something, you can always go back and revise a completed step.
+
+After completing a step, click the **Revise** button to redo it. Since workflows can branch based on your choices, revising a step will cancel any steps completed after it — ensuring the workflow follows the correct path based on your updated input.
 
 ## Related Pages
 
@@ -59,9 +49,11 @@ Failed workflows show which step failed and the error message. Depending on the 
   <Card title="Executing Actions" icon="bolt" href="/product/execute/actions">
     Trigger single-step actions on records
   </Card>
+
   <Card title="Activity Logs" icon="clock-rotate-left" href="/product/manage/activity">
     View the history of workflow executions
   </Card>
+
   <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
     Workflows that require team approval steps
   </Card>
