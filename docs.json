@@ -267,7 +267,14 @@
               "product/build/layout-editor",
               "product/build/collection-configuration",
               "product/build/layout-maintenance",
-              "product/build/workspaces",
+              {
+                "group": "Workspaces",
+                "pages": [
+                  "product/build/workspaces",
+                  "product/build/workspaces/kyc-example",
+                  "product/build/workspaces/incident-management-example"
+                ]
+              },
               "product/manage/dashboards",
               {
                 "group": "Fields & Widgets",

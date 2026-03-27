@@ -1,57 +1,122 @@
 ---
-title: Schema Updates
+title: Schema updates
+description: Keep your Forest Admin back-office in sync when your database schema changes.
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+<Note>This page needs to be completed with best practices from the Forest Admin team.</Note>
 
-Learn how to update your data schema and sync it with Forest Admin.
+When you add a table, rename a column, or change a relationship in your database, Forest Admin needs to learn about those changes. This page explains how schema synchronization works and how to handle common scenarios.
 
-## Sources to migrate
+## What is the schema?
 
-- `documentation-agent-v1/how-tos/maintain/update-your-models-definition.md`
-- `documentation-cloud/sources/data-sources-settings/schema-synchronization.md`
-- `reference/schema/forestadmin-schema.md`
+Forest Admin introspects your database at startup and builds an internal representation of your data model — the **schema**. This schema drives everything: which collections appear, what fields are available, and how relationships are represented.
 
-## Content outline
+For self-hosted agents, the schema is also saved to a local file called `.forestadmin-schema.json`. This file acts as a cache and allows Forest Admin to detect changes between restarts.
 
-1. **Schema Management**
-   - What is the schema?
-   - .forestadmin-schema.json structure
-   - Automatic vs manual sync
+## Automatic schema detection
 
-2. **Updating Schema**
-   - Database changes detection
-   - Schema sync process
-   - Schema conflict resolution
+For self-hosted agents, schema updates are detected **automatically on agent restart**. When your agent starts up:
 
-3. **Schema Synchronization**
-   - Automatic synchronization
-   - Manual sync triggers
-   - Version control for schemas
+1. It connects to your database and introspects the current schema
+2. It compares the result with `.forestadmin-schema.json` (if it exists)
+3. If changes are detected, it updates the file and notifies the Forest Admin cloud
 
-4. **Troubleshooting**
-   - Schema conflicts
-   - Missing fields
-   - Type mismatches
-   - Relationship issues
+This means the typical workflow for a database change is:
 
-5. **Best Practices**
-   - Testing schema changes
-   - Staging environment validation
-   - Rollback strategies
-   - Documentation of changes
+```bash
+# 1. Make your database change (migration, ALTER TABLE, etc.)
+# 2. Restart your agent
+npm run start
+# 3. The new fields/tables appear in Forest Admin automatically
+```
 
-## Migration notes
+<Info>
+  During development, agents often restart on file change (via nodemon or similar). Schema changes show up immediately.
+</Info>
 
-- Critical for development workflow
-- Related to environments and deployment
-- Links to CLI commands
+## Cloud Agent schema sync
 
-## Related pages
+For **Forest Admin Cloud** (where Forest Admin manages the agent), you trigger schema synchronization manually from the UI:
 
-- [Environments & Branches](/product/process/for-tech-teams/developer-workflow/environments-and-branches)
-- [Reference > Schema](/product/reference/schema/forestadmin-schema)
-- [Reference > CLI > Deploy](/product/reference/cli/deploy)
+1. Go to **Project Settings** → **Environments**
+2. Click on the environment you want to sync
+3. In the **Agent** section, click **Synchronize schema**
+
+Forest Admin will connect to your database and pull the latest schema. New tables and columns will appear in your back-office.
+
+You can also trigger a sync from the **quick access icon** in the left navigation bar.
+
+## The `.forestadmin-schema.json` file
+
+This file is auto-generated and lives in your project root. It contains a snapshot of your data model as Forest Admin sees it.
+
+**Do:**
+- Commit it to your repository — it ensures schema consistency across team members and environments
+- Review changes in pull requests to catch unexpected schema drift
+
+**Don't:**
+- Edit it manually — changes will be overwritten on the next agent start
+- Delete it unless troubleshooting — the agent will regenerate it, but this forces a full re-introspection
+
+## Common scenarios
+
+### Adding a new table
+
+After running your database migration:
+
+1. Restart your agent
+2. The new table appears as a new collection in Forest Admin
+3. Configure its layout and permissions as needed
+
+### Adding a new column
+
+After adding a column to an existing table:
+
+1. Restart your agent
+2. The new field appears in the collection's configuration
+3. It's hidden by default — enable it in the [Layout Editor](/product/build/layout-editor) if needed
+
+### Renaming a column
+
+Renaming a column is treated as **removing the old field and adding a new one**. This means:
+
+- Any widget configuration, segments, or Smart Actions referencing the old name will break
+- You'll need to update your Forest Admin configuration to reference the new name
+
+To minimize disruption, consider adding a database view or alias that preserves the old column name temporarily.
+
+### Removing a column
+
+After dropping a column from your database and restarting your agent, the field disappears from Forest Admin. If it was referenced in segments, actions, or custom code, you'll see errors — clean those up first.
+
+### Changing a column type
+
+Type changes may cause widget incompatibilities (e.g. a field that was a `String` and is now a `JSON` object). After the schema update, review the field's widget configuration and update it if needed.
+
+## Troubleshooting
+
+### New fields aren't appearing
+
+- Confirm your database migration ran successfully
+- Restart your agent (a running agent doesn't auto-detect database changes)
+- Check your agent logs for introspection errors
+
+### Schema conflict errors
+
+If the agent reports a schema conflict, it means the `.forestadmin-schema.json` file is out of sync with the current database. Delete the file and restart the agent to regenerate it from scratch.
+
+### Missing relationships
+
+Relationships are inferred from foreign keys in the database. If a relationship isn't showing up:
+
+- Verify the foreign key constraint exists in the database
+- If you're using a non-standard naming convention, you may need to declare the relationship explicitly in your agent configuration
+
+See [Relationships](/product/process/for-tech-teams/relationships/overview) for how to define relationships in code.
+
+## Best practices
+
+- **Run migrations before deploying agent changes** — the agent should start against the already-migrated database
+- **Test schema changes in a development branch** — use [Environments & branches](/product/process/for-tech-teams/developer-workflow/environments-and-branches) to validate layout impact before hitting production
+- **Commit `.forestadmin-schema.json`** — keeps all team members on the same schema version
+- **Review the schema diff in PRs** — catching an unintended table rename in review is much easier than debugging it in production

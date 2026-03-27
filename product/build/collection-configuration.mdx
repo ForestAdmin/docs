@@ -1,73 +1,115 @@
 ---
 title: Collection Configuration
+description: Configure how collections behave, display, and interact with your operators.
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** All users
 
-## Description
+Collection configuration controls everything about how a collection appears and behaves in Forest Admin — from its name and icon to which fields are searchable, how records are sorted by default, and what actions are available.
 
-Learn how to configure collection settings, display options, and behavior in Forest Admin.
+Most settings are configured visually through the **Layout Editor** or the collection's **Settings** panel.
 
-## Sources to migrate
+## Collection Settings
 
-- `documentation-user-guide/collections/`
-- Collection settings documentation
+Access collection settings by entering Layout Editor mode and clicking the **gear icon** next to a collection name in the sidebar.
 
-## Content outline
+| Setting | Description |
+|---------|-------------|
+| **Display name** | The label shown in the navigation and throughout the UI |
+| **Icon** | An icon to identify the collection visually |
+| **Description** | A short note shown to operators to explain what this collection contains |
+| **Visibility** | Control whether the collection appears in the navigation |
 
-1. **Collection Settings**
-   - Collection name and label
-   - Icon selection
-   - Description
-   - Visibility settings
+## Table View Configuration
 
-2. **Table View Configuration**
-   - Column selection
-   - Column ordering
-   - Column width
-   - Default sorting
-   - Compact vs comfortable view
+The table view is the primary way operators browse records. Configure it to show the right information at a glance:
 
-3. **Record Display**
-   - Summary field configuration
-   - Record preview
-   - Related data display
+- **Column selection** — choose which fields appear as columns
+- **Column ordering** — set the left-to-right order of columns
+- **Column width** — adjust how much space each column takes
+- **Default sort** — define which field is sorted by default and in which direction
+- **View density** — switch between compact and comfortable row height
 
-4. **Segments Configuration**
-   - Creating segments
-   - Segment ordering
-   - Default segment
-   - Segment permissions
+These settings are managed in the [Layout Editor](/product/build/layout-editor).
 
-5. **Search Configuration**
-   - Searchable fields
-   - Search modes (contains, exact, fuzzy)
-   - Advanced search options
+## Record Display
 
-6. **Filters**
-   - Available filters
-   - Filter presets
-   - Custom filter logic
+When an operator clicks a record to open it, Forest Admin shows a detail view. You can configure:
 
-7. **Actions Configuration**
-   - Smart Actions visibility
-   - Action permissions
-   - Action ordering
+- **Summary field** — which field value appears in breadcrumbs and relationship pickers (typically a name or identifier)
+- **Related collections** — which HasMany relationships appear in the detail view and in what order
 
-8. **Pagination Settings**
-   - Page size
-   - Pagination type
-   - Performance considerations
+To set the summary field, go to collection settings and select a field from the **"Record title"** dropdown.
 
-## Migration notes
+## Segments
 
-- HIGH priority - core UI configuration
-- Cross-references to Process layer for logic
-- Screenshots helpful
+Segments are pre-filtered views of a collection — like "Active users", "Pending orders", or "High-risk transactions". Operators can switch between segments from the collection's navigation bar.
 
-## Related pages
+Configure segments in the **Segments** tab of the collection settings:
 
-- [Layout Editor](/product/build/layout-editor)
-- [Process > Segments](/product/process/segments/overview)
-- [Build > Search Configuration](/product/build/search-configuration)
+- **Create a segment** — define a filter condition (no-code) or write a Smart Segment (code)
+- **Reorder segments** — drag to set the display order
+- **Set a default segment** — the segment that loads when the collection is opened
+- **Segment permissions** — control which teams can see each segment
+
+See [Creating Segments](/product/process/segments/creating-segments) for details on building segment conditions.
+
+## Search Configuration
+
+By default, Forest Admin searches across all text fields. You can fine-tune this:
+
+- **Searchable fields** — select which fields are included in search queries
+- **Search mode** — `contains` (partial match), `exact` (full match), or `starts with`
+
+To configure search, go to collection settings → **Search** tab and select the fields operators should be able to search on.
+
+<Info>
+  For performance on large datasets, limit searchable fields to those with database indexes.
+</Info>
+
+## Filters
+
+Operators can filter collection records using the filter panel. You can configure:
+
+- **Available filters** — which fields appear as filter options
+- **Filter presets** — saved filter combinations that operators can apply in one click
+
+Filter presets are shared across the team. Create them by applying a filter in the collection view and clicking **Save filter**.
+
+## Actions Configuration
+
+Actions are buttons that operators can trigger on records. In collection settings, you can control:
+
+- **Action visibility** — show or hide specific actions for this collection
+- **Action ordering** — set the display order in the action menu
+- **Action permissions** — managed through [Roles & Permissions](/product/control/roles-permissions)
+
+Both built-in actions (create, edit, delete, export) and Smart Actions appear here.
+
+## Pagination Settings
+
+For large collections, pagination affects both user experience and database performance:
+
+| Setting | Options | Default |
+|---------|---------|---------|
+| **Page size** | 10, 25, 50, 100 records | 15 |
+| **Pagination style** | Page numbers or infinite scroll | Page numbers |
+
+<Warning>
+  Increasing page size on slow queries can significantly impact load times. Test with realistic data volumes before changing defaults.
+</Warning>
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Layout Editor" icon="pencil" href="/product/build/layout-editor">
+    Visually rearrange columns, sections, and forms
+  </Card>
+  <Card title="Creating Segments" icon="filter" href="/product/process/segments/creating-segments">
+    Build static and dynamic data segments
+  </Card>
+  <Card title="Fields & Widgets" icon="puzzle-piece" href="/product/build/fields-and-widgets/overview">
+    Configure how individual fields are displayed
+  </Card>
+  <Card title="Roles & Permissions" icon="lock" href="/product/control/roles-permissions">
+    Control who can access collections and actions
+  </Card>
+</CardGroup>

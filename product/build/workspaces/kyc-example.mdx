@@ -1,0 +1,147 @@
+---
+title: "Example: KYC Onboarding Workspace"
+description: Step-by-step guide to building a document review and applicant approval workspace.
+---
+
+This guide walks through building a KYC (Know Your Customer) Workspace — a focused interface where your compliance team can review company applications, check submitted documents, and approve or reject applicants without switching between multiple views.
+
+**What operators will be able to do:**
+- See all companies in "Signed up" status at a glance
+- View the documents submitted by a specific company
+- Upload missing documents on behalf of the company
+- Approve or reject applications directly from the workspace
+
+## 1. Create the Workspace
+
+In your Forest Admin project (start in a staging environment), click the **🧩 icon** in the left sidebar, then click **"Create your first Workspace"**.
+
+Rename it by clicking the edit icon next to "My Workspace". Choose a clear name like **"KYC Review"** — operators will see this label every day.
+
+## 2. Add a Title with Templating
+
+Drag a **Text** component onto the canvas. Add a title like:
+
+```
+KYC Review — Welcome, {{currentUser.firstName}}
+```
+
+Type `{{` to see the available template variables. Dynamic text makes the workspace feel personalized and lets you reference selected record data as you build more components.
+
+## 3. Add a Summary Chart
+
+Drag a **Chart** component from the sidebar. Configure it:
+
+- **Chart type:** Single value
+- **Collection:** Company
+- **Metric:** Count
+- **Filter:** `status = "Signed up"`
+
+This gives operators a live count of pending applications — useful context before they dive into the queue.
+
+## 4. Add the Companies Collection
+
+Drag a **Collection** component onto the canvas. In the sidebar:
+
+- **Collection:** Company
+- **Segment:** Select or create a "Signed up" segment that filters `status = "Signed up"`
+- **On row click:** "Select a record"
+
+Setting "Select a record" on click is what makes the workspace dynamic — other components will react to whichever company the operator clicks.
+
+Add a **Text** component above the collection as a label: "Companies awaiting review"
+
+## 5. Display Company Details with Field Components
+
+Create a new section to the right of the companies list. Add a **Text** component:
+
+```
+Reviewing: {{collection1.selectedRecord.name}}
+```
+
+Then drag **Field** components from the "Data" section in the sidebar. For each field you want to display (e.g. registration number, risk level, country):
+
+1. Drag a **Field** component onto the canvas
+2. Set **Source** to the Company collection
+3. Set **Field** to the relevant field
+4. Choose the appropriate display widget (text, badge, image, etc.)
+
+For document fields (e.g. passport scan, proof of address), use the **File viewer** widget to show an inline preview.
+
+## 6. Add a Link to the Full Record
+
+Drag a **Link** component and configure it:
+
+- **URL type:** Redirect to record
+- **Source:** Collection 1 (Company)
+
+The link dynamically points to the currently selected company's detail view — useful when the operator needs to see the full record.
+
+## 7. Show Related Documents with a Second Collection
+
+Drag a second **Collection** component. Configure it:
+
+- **Collection:** Document
+- **Filter:** `company_id = {{collection1.selectedRecord.id}}`
+
+This filter uses Templating to automatically show only the documents that belong to the selected company. As the operator clicks different rows in the companies list, this collection updates instantly.
+
+## 8. Add Action Buttons
+
+Drag a **Button** component onto the canvas. Configure it:
+
+- **Source:** Collection 1 (Company)
+- **Action:** "Upload Legal Docs" (a Smart Action defined in your agent)
+
+Repeat for other actions:
+- "Approve Application"
+- "Reject Application"
+- "Request More Documents"
+
+The buttons appear next to the selected company's details, so operators can review and act in one motion.
+
+## 9. Add a Dropdown for Document Filtering
+
+To let operators filter documents by type, drag a **Dropdown** component:
+
+- **Type:** Dynamic
+- **Collection:** Document
+- **Field:** type
+
+Then add a filter to the Documents collection: `type = {{dropdown1.value}}`
+
+Now operators can select "Passport" from the dropdown and the document list filters automatically.
+
+## 10. Test the Workspace
+
+Click **"Exit builder"** to switch to the operator view. Test the full workflow:
+
+1. Click a company row — details and documents should update
+2. Trigger an action — the Smart Action form should appear
+3. Submit the form — the collection should refresh and show the updated status
+
+## The Result
+
+When fully built, operators get a single-screen workflow:
+
+- **Left panel:** List of companies awaiting KYC review
+- **Right panel:** Details, documents, and action buttons for the selected company
+- **Top:** Count of pending applications for context
+
+Companies move out of the queue automatically once their status changes — operators never need to navigate elsewhere.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Workspaces Overview" icon="layout" href="/product/build/workspaces">
+    Learn about all workspace components and how they work
+  </Card>
+  <Card title="Incident Management Example" icon="triangle-exclamation" href="/product/build/workspaces/incident-management-example">
+    Build a support triage workspace
+  </Card>
+  <Card title="Smart Actions" icon="bolt" href="/product/process/for-tech-teams/smart-actions/overview">
+    Define the backend logic triggered by workspace buttons
+  </Card>
+  <Card title="Creating Segments" icon="filter" href="/product/process/segments/creating-segments">
+    Create the filtered views used in workspace collections
+  </Card>
+</CardGroup>

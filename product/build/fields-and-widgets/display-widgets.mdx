@@ -1,74 +1,154 @@
 ---
 title: Display Widgets Catalog
+description: Complete reference of widgets available for displaying data in table and detail views.
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** All users
 
-## Description
+Display widgets control how field values appear when operators are browsing or viewing records — in the table view, the detail view, and in Workspaces. They are read-only by nature.
 
-Complete catalog of display widgets for showing data in table and detail views.
+To change a display widget, enter [Layout Editor](/product/build/layout-editor) mode, click a field, and select a new widget from the configuration panel.
 
-## Sources to migrate
+---
 
-- `documentation-user-guide/collections/customize-your-fields.md` (display widgets section)
-- Look for widget galleries/catalogs
+## Text Widgets
 
-## Content outline
+### Text
+The default widget for string fields. Renders the raw value as plain text. Best for identifiers, names, and short labels.
 
-1. **Text Display Widgets**
-   - Text
-   - Long text
-   - Rich text
-   - Code
-   - Markdown
-   - Email
-   - URL
-   - Phone
+### Long Text
+For multi-line text content. Displays the first line in table view with a "show more" toggle in the detail view. Automatically wraps long content.
 
-2. **Number Display Widgets**
-   - Number
-   - Currency
-   - Percentage
-   - Duration
+### Rich Text
+Renders HTML or markdown content with formatting (bold, lists, headings). Use for fields that store formatted content like descriptions or notes.
 
-3. **Date/Time Display Widgets**
-   - Date
-   - DateTime
-   - Time
-   - Relative time
+### Code
+Displays the value in a monospace code block with syntax highlighting. Useful for JSON snippets, SQL queries, or script content stored in your database.
 
-4. **Boolean Display Widgets**
-   - Checkbox (read-only)
-   - Badge
-   - Icon
+### Email
+Renders the value as a clickable `mailto:` link. Ideal for email address fields so operators can open their mail client in one click.
 
-5. **Media Display Widgets**
-   - Image
-   - File
-   - Video
-   - Audio
+### URL
+Renders the value as a clickable external link that opens in a new tab. Good for website URLs, document links, or any external resource.
 
-6. **Relationship Display Widgets**
-   - BelongsTo
-   - HasMany (count)
-   - Link
+### Phone
+Formats and displays phone numbers. On mobile, renders as a `tel:` link for direct dialing.
 
-7. **Special Display Widgets**
-   - JSON viewer
-   - Color picker (display)
-   - Rating stars
-   - Progress bar
-   - Status badge
+---
 
-## Migration notes
+## Number Widgets
 
-- Comprehensive widget reference
-- Include screenshots
-- Link to edit widgets
+### Number
+Default for numeric fields. Displays the raw number with optional thousands separators.
 
-## Related pages
+### Currency
+Displays a number with a currency symbol and appropriate decimal places (e.g. `$1,234.56`). Configure the currency and locale in the widget settings.
 
-- [Overview](/product/build/fields-and-widgets/overview)
-- [Edit Widgets](/product/build/fields-and-widgets/edit-widgets)
-- [Layout Editor](/product/build/layout-editor)
+### Percentage
+Displays a number as a percentage (e.g. `73.5%`). Assumes the raw value is either 0–100 or 0–1 (configurable).
+
+### Duration
+Converts a number (in seconds, minutes, or milliseconds) to a human-readable duration like `2h 34m`. Useful for call durations, session lengths, or SLA timers.
+
+### Progress Bar
+Renders a visual progress bar. Requires a min and max value to calculate the fill. Good for completion percentages, quotas, or scores.
+
+---
+
+## Date & Time Widgets
+
+### Date
+Displays a date value formatted according to your locale setting (e.g. `Mar 15, 2024` or `15/03/2024`). Time portion is hidden.
+
+### DateTime
+Displays both date and time (e.g. `Mar 15, 2024 at 14:32`). Good for created_at, updated_at, and event timestamps.
+
+### Time
+Displays only the time portion of a timestamp (e.g. `14:32:05`).
+
+### Relative Time
+Displays how long ago (or how far in the future) the value is, relative to now — e.g. `3 days ago`, `in 2 hours`. Automatically updates as time passes. Useful for `last_seen`, `created_at`, and due dates.
+
+<Info>
+  Hover over a relative time widget to see the full absolute date and time.
+</Info>
+
+---
+
+## Boolean Widgets
+
+### Checkbox (read-only)
+Displays a checked or unchecked checkbox. Simple and universally understood for true/false values.
+
+### Badge
+Renders the boolean as a colored badge — green for `true`, red for `false`. Labels are customizable (e.g. "Active" / "Inactive", "Enabled" / "Disabled").
+
+### Icon
+Displays a checkmark (✓) or cross (✗) icon instead of a checkbox. More compact for table views with many boolean columns.
+
+---
+
+## Media Widgets
+
+### Image
+Renders the field value (a URL or base64 string) as an inline image thumbnail. Clicking the thumbnail opens the full-size image. Configure max dimensions to control how much space it takes.
+
+### File
+Renders a download link for a file URL. Displays the filename and a download icon. Supports any file type.
+
+### Video
+Embeds a video player inline. Supports URLs pointing to video files or embeddable video platforms.
+
+### Audio
+Embeds an audio player with play/pause controls. Good for voice recordings, call recordings, or audio content.
+
+---
+
+## Relationship Widgets
+
+### BelongsTo
+Displays the related record as a clickable link that opens the record's detail view. Shows the related record's summary field (configured in the related collection's settings).
+
+### HasMany Count
+Displays the number of related records as a badge (e.g. `12 orders`). Clicking opens the filtered list of related records.
+
+### Link
+A custom link widget for manually constructed URLs using field values. Configure a URL template like `https://app.example.com/users/{{id}}`.
+
+---
+
+## Special Widgets
+
+### JSON Viewer
+Renders a JSON value as a collapsible, syntax-highlighted tree structure. Makes nested JSON data readable without formatting it yourself.
+
+### Color
+Displays a color swatch alongside the hex or RGB value. For fields that store color codes.
+
+### Rating
+Displays a star rating (e.g. ★★★☆☆) based on a numeric value. Configure the max rating in widget settings.
+
+### Status Badge
+A flexible badge widget for enum/string fields. Map specific values to colors:
+
+| Value | Badge |
+|-------|-------|
+| `active` | 🟢 Active |
+| `pending` | 🟡 Pending |
+| `blocked` | 🔴 Blocked |
+
+Configure value-to-color mappings in the widget settings panel.
+
+---
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Edit Widgets Catalog" icon="pencil" href="/product/build/fields-and-widgets/edit-widgets">
+    Widgets for data input in forms and inline editing
+  </Card>
+  <Card title="Fields & Widgets Overview" icon="puzzle-piece" href="/product/build/fields-and-widgets/overview">
+    Understand how fields and widgets relate
+  </Card>
+  <Card title="Layout Editor" icon="layout" href="/product/build/layout-editor">
+    Apply widget changes to your views
+  </Card>
+</CardGroup>

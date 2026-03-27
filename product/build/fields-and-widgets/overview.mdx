@@ -1,46 +1,104 @@
 ---
-title: Fields & Widgets - Overview
+title: Fields & Widgets
+description: Understand how fields and widgets work together to display and edit your data in Forest Admin.
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** All users
 
-## Description
+Every piece of data in Forest Admin is represented by a **field**. Every field is rendered using a **widget**. Understanding this distinction helps you configure exactly how your data looks and behaves.
 
-Understand how fields and widgets work together to display and edit your data.
+## Fields vs. Widgets
 
-## Sources to migrate
+A **field** is a data definition — it comes from your database schema or is computed by your agent. Fields have a name, a type (`String`, `Number`, `Date`, `Boolean`, etc.), and a value.
 
-- `documentation-user-guide/collections/customize-your-fields.md`
-- Widget documentation across repos
+A **widget** is the UI component used to display or edit that field. The same field can be rendered differently depending on where it appears and what you want operators to do with it.
 
-## Content outline
+For example, a `String` field named `status` could be displayed as:
+- A plain text label in the table view
+- A colored **status badge** in the detail view
+- A **dropdown selector** in the edit form
 
-1. **Fields vs Widgets**
-   - Field: data definition
-   - Widget: display/edit component
-   - How they connect
+## Display vs. Edit Widgets
 
-2. **Widget Types**
-   - Display widgets (read-only views)
-   - Edit widgets (form inputs)
-   - Specialized widgets
+Widgets come in two categories:
 
-3. **Widget Categories**
-   - Text widgets
-   - Number widgets
-   - Date/time widgets
-   - Boolean widgets
-   - File widgets
-   - Relationship widgets
-   - JSON widgets
+| Category | When it's used | Purpose |
+|----------|---------------|---------|
+| **Display widget** | Table view, detail view, Workspaces | Shows data in a readable format |
+| **Edit widget** | Create form, edit form, inline editing | Accepts input from operators |
 
-4. **Next Steps**
-   - [Display Widgets Catalog](/product/build/fields-and-widgets/display-widgets)
-   - [Edit Widgets Catalog](/product/build/fields-and-widgets/edit-widgets)
-   - [Process > Configuring Fields](/product/process/fields/configuring-fields)
+A field can have different widgets for display and edit. A date field might display as a relative time ("3 days ago") but edit with a date picker calendar.
 
-## Related pages
+## Widget Categories
 
-- [Process > Fields](/product/process/fields/overview)
-- [Layout Editor](/product/build/layout-editor)
+### Text
+
+For short and long text, emails, URLs, code, and rich content.
+
+Examples: Plain text, Textarea, Markdown renderer, Code block, Email link, URL link
+
+### Number
+
+For integers, decimals, percentages, currencies, and durations.
+
+Examples: Number, Currency (with symbol), Percentage, Progress bar
+
+### Date & Time
+
+For timestamps, dates, times, and relative time.
+
+Examples: Date, DateTime, Time, Relative time ("2 hours ago")
+
+### Boolean
+
+For true/false values.
+
+Examples: Checkbox, Toggle, Badge (Yes/No), Icon (✓/✗)
+
+### Media & Files
+
+For images, documents, videos, and binary data.
+
+Examples: Image preview, File download link, Video player, Audio player
+
+### Relationships
+
+For BelongsTo and HasMany associations.
+
+Examples: Related record link, Record count, Search & select picker
+
+### Special
+
+For structured or complex data.
+
+Examples: JSON viewer, JSON editor, Color swatch, Star rating, Map/location
+
+## Configuring Widgets
+
+To change a widget for a field:
+
+1. Enter **Layout Editor** mode
+2. Navigate to the view you want to change (table, detail, or form)
+3. Click on a field to open its configuration panel
+4. Select a new widget from the **Widget** dropdown
+5. Adjust widget-specific options (format, color, validation, etc.)
+6. Save your changes
+
+<Info>
+  Widget availability depends on the field's data type. A Boolean field can't use a text input widget, for example.
+</Info>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Display Widgets Catalog" icon="eye" href="/product/build/fields-and-widgets/display-widgets">
+    Browse all available widgets for showing data
+  </Card>
+  <Card title="Edit Widgets Catalog" icon="pencil" href="/product/build/fields-and-widgets/edit-widgets">
+    Browse all available widgets for data input
+  </Card>
+  <Card title="Layout Editor" icon="layout" href="/product/build/layout-editor">
+    Learn how to apply widget changes to your views
+  </Card>
+  <Card title="Configuring Fields" icon="sliders" href="/product/process/fields/overview">
+    Add computed fields and customize field behavior in code
+  </Card>
+</CardGroup>

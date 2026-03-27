@@ -1,54 +1,153 @@
 ---
-title: TypeScript Setup & Autocompletion
+title: TypeScript setup & autocompletion
+description: Enable full TypeScript support and IDE autocompletion for your Forest Admin agent.
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Node.js developers using TypeScript
 
-## Description
+The `@forestadmin/agent` package is written in TypeScript and ships with complete type definitions. With a small amount of setup, you get autocompletion for collection names, field names, and all customization APIs — in both TypeScript and JavaScript projects.
 
-Setup TypeScript support and IDE autocompletion for Forest Admin agent.
+## How it works
 
-## Sources to migrate
+Forest Admin generates a **typings file** from your data model. This file contains TypeScript interfaces that describe each collection and its fields. Once generated, you pass this schema as a generic type parameter to `createAgent`, which propagates the types throughout all your customization code.
 
-- `developer-guide-agent-v2/sources/getting-started/install/autocompletion-and-typings.md`
+The result: your IDE knows that the `orders` collection has a `total_amount` field of type `number`, and will autocomplete accordingly.
 
-## Content outline
+## Generating the typings file
 
-1. **TypeScript Support**
-   - @forestadmin/agent TypeScript types
-   - Type definitions included
-   - TypeScript version compatibility
+Add two options to your `createAgent` call:
 
-2. **IDE Configuration**
-   - VS Code setup
-   - WebStorm/IntelliJ setup
-   - Type checking configuration
+- `typingsPath` — where to write the generated file (e.g. `'./typings.ts'`)
+- `typingsMaxDepth` — how deep to introspect relationships (default `5` is usually sufficient)
 
-3. **Autocompletion**
-   - Collection methods
-   - Field types
-   - Action context types
-   - Result builder types
+The file is generated automatically on agent startup. **Do not edit it manually** — it will be overwritten on the next restart.
 
-4. **Type Safety**
-   - Strongly typed collections
-   - Type inference
-   - Generic types
-   - Custom type definitions
+## TypeScript setup
 
-5. **Troubleshooting**
-   - Missing types
-   - Type errors
-   - Import issues
+```typescript
+// agent.ts
+import { createAgent } from '@forestadmin/agent';
+import { Schema } from './typings';
+import customizeOrders from './customization/orders';
 
-## Migration notes
+await createAgent<Schema>({
+  authSecret: process.env.FOREST_AUTH_SECRET!,
+  envSecret: process.env.FOREST_ENV_SECRET!,
+  isProduction: process.env.NODE_ENV === 'production',
+  typingsPath: './typings.ts',
+  typingsMaxDepth: 5,
+})
+  .customizeCollection('orders', customizeOrders)
+  .mountOnStandaloneServer(Number(process.env.PORT))
+  .start();
+```
 
-- Node.js specific
-- Framework: Express, NestJS, Fastify, etc.
-- Improves developer experience significantly
+In your customization files, import both `CollectionCustomizer` and your `Schema`:
 
-## Related pages
+```typescript
+// customization/orders.ts
+import { CollectionCustomizer } from '@forestadmin/agent';
+import { Schema } from '../typings';
 
-- [Integration > Setup > Node.js](/product/process/integration/setup/nodejs)
-- [Get Started > Quickstart Self-hosted](/product/get-started/quickstart-self-hosted)
+export default (orders: CollectionCustomizer<Schema, 'orders'>) => {
+  // Full autocompletion: field names, types, action context, etc.
+  orders.addField('display_name', {
+    columnType: 'String',
+    dependencies: ['first_name', 'last_name'],
+    getValues: (records) =>
+      records.map((r) => `${r.first_name} ${r.last_name}`),
+  });
+};
+```
+
+The `customizeCollection` call is strongly typed — the second argument (`'orders'`) is validated against your actual collection names, and the handler receives a fully-typed `CollectionCustomizer`.
+
+## JavaScript setup (with JSDoc)
+
+If your project uses JavaScript, you can still get autocompletion using JSDoc type annotations. The pattern uses `@typedef` to import types from the generated typings file.
+
+```javascript
+// agent.js
+const { createAgent } = require('@forestadmin/agent');
+const customizeOrders = require('./customization/orders');
+
+/**
+ * @typedef {import('@forestadmin/agent').Agent} Agent
+ * @typedef {import('./typings').Schema} Schema
+ * @type {Agent<Schema>}
+ */
+const agent = createAgent({
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  envSecret: process.env.FOREST_ENV_SECRET,
+  isProduction: process.env.NODE_ENV === 'production',
+  typingsPath: './typings.ts',
+  typingsMaxDepth: 5,
+});
+
+await agent
+  .customizeCollection('orders', customizeOrders)
+  .mountOnStandaloneServer(Number(process.env.PORT))
+  .start();
+```
+
+In customization files:
+
+```javascript
+// customization/orders.js
+
+/**
+ * @typedef {import('@forestadmin/agent').CollectionCustomizer} CollectionCustomizer
+ * @typedef {import('../typings').Schema} Schema
+ * @param {CollectionCustomizer<Schema, 'orders'>} orders
+ */
+module.exports = (orders) => {
+  // Autocompletion works here in VS Code and WebStorm
+  orders.addField('display_name', {
+    columnType: 'String',
+    dependencies: ['first_name', 'last_name'],
+    getValues: (records) =>
+      records.map((r) => `${r.first_name} ${r.last_name}`),
+  });
+};
+```
+
+## What gets autocompleted
+
+Once the schema is typed, your IDE provides autocompletion for:
+
+| Context | What's autocompleted |
+|---------|---------------------|
+| `customizeCollection('...')` | Collection names from your database |
+| `addField`, `removeField`, `renameField` | Field names within the collection |
+| `dependencies: [...]` | Field names available as dependencies |
+| `getValues` record parameter | Field values with correct types |
+| Action context (`.form`, `.record`) | Field names and types in action handlers |
+| Filter conditions | Field names for Smart Segment and scope filters |
+
+## IDE configuration
+
+### VS Code
+
+TypeScript and JSDoc autocompletion work out of the box with the built-in TypeScript language server. No additional extensions are required.
+
+To verify it's working: open a customization file, type `orders.` and you should see a list of available methods. Inside a `dependencies` array, type a quote and you should see field name suggestions.
+
+### WebStorm / IntelliJ
+
+WebStorm has built-in TypeScript support. Open your project and the IDE will automatically pick up the typings file. JSDoc-based autocompletion also works without additional configuration.
+
+## Troubleshooting
+
+### The typings file isn't being generated
+
+- Make sure `typingsPath` is set in your `createAgent` call
+- Check that the agent starts without errors — introspection failures prevent typings generation
+- Verify the directory in `typingsPath` exists (e.g. if you set `'./src/typings.ts'`, the `src/` directory must exist)
+
+### Collection names aren't being suggested
+
+- Confirm the typings file exists and isn't empty
+- Make sure you're passing `<Schema>` as the generic to `createAgent`
+- Try restarting your TypeScript language server in your IDE (VS Code: Cmd+Shift+P → "Restart TS Server")
+
+### Type errors after a schema change
+
+The typings file is regenerated on agent restart. If you added or removed fields and see type errors, restart your agent and the typings will update automatically.

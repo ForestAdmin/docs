@@ -1,103 +1,132 @@
 ---
 title: Workspaces
+description: Build custom, workflow-specific applications for your operations teams — without writing code.
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Category:** Operations > Build
->
-> **Audience:** Ops teams (primary) + Developers (advanced)
 
-## Description
+A **Workspace** is a custom application you build inside Forest Admin, tailored to a specific workflow. Instead of navigating between multiple collections, operators get a single focused interface that shows exactly what they need and lets them take action immediately.
 
-Workspaces are custom applications built for specific workflows - think "KYC app", "Incident management app", or "Fraud monitoring dashboard".
+Think of a Workspace as the difference between a generic spreadsheet and a purpose-built tool: same data, dramatically better experience.
 
-## Sources to migrate
+<CardGroup cols={3}>
+  <Card title="KYC Review" icon="id-card">
+    Review applications, check documents, approve or reject — all in one screen
+  </Card>
+  <Card title="Incident Management" icon="triangle-exclamation">
+    Triage support tickets, view context, and resolve or escalate from a single view
+  </Card>
+  <Card title="Fraud Monitoring" icon="shield">
+    Inspect flagged transactions, see user history, and take action in one place
+  </Card>
+</CardGroup>
 
-- `documentation-user-guide/workspaces/introduction-to-workspaces.md`
-- `documentation-user-guide/workspaces/using-workspaces/`
-- `documentation-user-guide/workspaces/building-a-workspace/`
-- `documentation-user-guide/workspaces/building-a-workspace/workspace-incident-management-example.md`
-- `documentation-user-guide/workspaces/building-a-workspace/workspace-kyc-example.md`
-- `documentation-user-guide/workspaces/building-a-workspace/transactions-monitoring-and-fraud-management-example.md`
-- `documentation-user-guide/workspaces/building-a-workspace/fleet-management-example.md`
-- `documentation-cloud/sources/ui-customization/workspaces.md`
-- `documentation-cloud/sources/core-concepts/workspaces.md`
+## Why Use Workspaces
 
-## Content outline
+The default "Data" tab gives operators access to all your collections, but it's generic. Workspaces let you:
 
-1. **What is a Workspace?**
-   - Custom application for a specific workflow
-   - Combines data, actions, and UI in one place
-   - No code required for basic workspaces
-   - Code available for advanced customization
+- **Focus** — show only the data relevant to a specific task
+- **Contextualize** — display related information side by side without navigating away
+- **Act faster** — put action buttons directly next to the data that triggers them
+- **Guide** — add text, sections, and structure to make workflows self-explanatory
 
-2. **When to Use Workspaces**
-   - Specific operational workflow (KYC, incident response, fraud review)
-   - Team needs focused interface (not full admin panel)
-   - Multiple steps/stages in a process
-   - Examples: Customer onboarding, Order fulfillment, Content moderation
+Workspaces are built with a **drag-and-drop editor** — no code required for most use cases.
 
-3. **Workspace Components**
-   - **Data:** Collections displayed in workspace
-   - **Layouts:** How data is arranged (tables, cards, lists)
-   - **Actions:** Buttons to execute operations
-   - **Filters:** Pre-set data filters
-   - **Charts:** Visualizations for context
+## Workspace Components
 
-4. **Building a Workspace** (step-by-step)
-   - Step 1: Create new workspace
-   - Step 2: Choose collections to display
-   - Step 3: Design layout (drag-and-drop)
-   - Step 4: Add filters and actions
-   - Step 5: Share with team
+A Workspace is composed of **components** that you drag onto a canvas and configure:
 
-5. **Workspace Examples**
+| Component | Purpose |
+|-----------|---------|
+| **Text** | Headers, instructions, labels with optional dynamic templating |
+| **Section** | Groups related components under a collapsible heading |
+| **Tabs** | Splits the workspace into tabbed panels |
+| **Divider** | Visual separator between areas |
+| **Collection** | Displays a filtered list of records from any collection |
+| **Field** | Shows the value of a specific field from a selected record |
+| **Chart** | Embeds a chart or metric (single value, distribution, etc.) |
+| **Button** | Triggers a Smart Action on a selected record |
+| **Search** | Lets operators search for a record from a collection |
+| **Dropdown** | A selector that filters connected components dynamically |
+| **Toggle** | A boolean switch that controls connected components |
+| **Link** | A link to a record, external URL, or another workspace |
 
-   **KYC Onboarding Workspace**
-   - Displays: Pending applications
-   - Actions: Approve, Reject, Request documents
-   - Filters: By status, by risk level
-   - [See full example](#)
+## Templating: Making Workspaces Dynamic
 
-   **Incident Management Workspace**
-   - Displays: Active incidents
-   - Actions: Assign, Escalate, Resolve
-   - Charts: Incidents over time
-   - [See full example](#)
+The real power of Workspaces comes from **Templating** — the ability to reference values from other components dynamically. Type `{{` anywhere in a text, filter, or link to see available variables.
 
-   **Fraud Monitoring Workspace**
-   - Displays: Flagged transactions
-   - Actions: Block user, Refund, Mark safe
-   - Filters: By risk score
-   - [See full example](#)
+For example:
+- A **Text** component can display `Welcome, {{currentUser.name}}`
+- A **Collection** component can filter records where `company_id = {{collection1.selectedRecord.id}}`
+- A **Link** can redirect to `https://app.example.com/users/{{collection1.selectedRecord.id}}`
 
-6. **Advanced: Custom Actions in Workspaces**
-   - Workspaces can trigger Smart Actions
-   - Actions defined in code (Process layer)
-   - Example: "Approve KYC" button → calls Smart Action → updates database + sends email
-   - [See Smart Actions](/product/process/for-tech-teams/smart-actions/overview)
+When an operator selects a row in `collection1`, all connected components update instantly.
 
-7. **Sharing Workspaces**
-   - Share URL with pre-selected data
-   - Team-specific workspaces
-   - Permission control (who can access)
+## Building a Workspace
 
-8. **Tips & Best Practices**
-   - Start simple, add complexity later
-   - Focus on one workflow per workspace
-   - Use clear naming (team will use this daily)
-   - Test with actual users before rolling out
+**Step 1 — Create a new Workspace**
 
-## Migration notes
+Click the **🧩** icon in the left sidebar, then click "Create your first Workspace". Give it a descriptive name that reflects the workflow (e.g. "KYC Review", "Fraud Queue").
 
-- Heavy content from user-guide (good source)
-- Examples are GOLD - migrate all workspace examples
-- Cloud docs have similar content - check for differences
-- Workspaces are PRIMARY Operations tool - emphasize heavily
-- Link to Smart Actions but don't duplicate Process layer content
+**Step 2 — Add a Collection component**
 
-## Related pages
+Drag a **Collection** from the sidebar onto the canvas. Select which collection to display and optionally apply a segment (e.g. "Pending applications"). Set the row click behavior to **"Select a record"** to enable dynamic updates.
 
-- [Layout Editor](/product/build/layout-editor)
-- [Smart Actions](/product/process/for-tech-teams/smart-actions/overview)
-- [Actions (Execute)](/product/execute/actions)
+**Step 3 — Add context with Field components**
+
+Drag **Field** components onto the canvas. Link them to your Collection and select which fields to display. When an operator clicks a row, these fields update to show the selected record's values.
+
+**Step 4 — Add action Buttons**
+
+Drag a **Button** and link it to your Collection and a Smart Action. Now operators can click a row and immediately trigger the right action — no need to open the record detail.
+
+**Step 5 — Add charts and text for context**
+
+Use **Chart** components to show aggregated metrics (e.g. "Pending applications today"). Use **Text** components with Templating to show dynamic labels and guide operators through the workflow.
+
+**Step 6 — Exit the builder and test it**
+
+Click "Exit builder" to switch to the operator view. Test the workflow by clicking rows and triggering actions.
+
+## Sharing Workspaces
+
+Workspaces are available to all operators in your project by default. Control access using [Roles & Permissions](/product/control/roles-permissions) — you can limit Workspace visibility to specific teams.
+
+Operators can also share a Workspace URL with a pre-applied filter state, making it easy to hand off specific work items.
+
+## Examples
+
+<CardGroup cols={2}>
+  <Card title="KYC Onboarding Workspace" icon="id-card" href="/product/build/workspaces/kyc-example">
+    Step-by-step guide to building a document review and approval workspace
+  </Card>
+  <Card title="Incident Management Workspace" icon="triangle-exclamation" href="/product/build/workspaces/incident-management-example">
+    Build a support triage workspace with dynamic field display and escalation actions
+  </Card>
+</CardGroup>
+
+## Advanced: Connecting Smart Actions
+
+Buttons in Workspaces trigger **Smart Actions** — custom business logic defined in your agent code. This is how Workspaces bridge the no-code UI with your backend:
+
+1. Operator clicks a **Button** in the Workspace
+2. A Smart Action form opens (optional — can also trigger silently)
+3. The action runs on your backend (update database, send email, call API, etc.)
+4. The Workspace refreshes automatically
+
+See [Smart Actions](/product/process/for-tech-teams/smart-actions/overview) to learn how to define actions in code.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Layout Editor" icon="pencil" href="/product/build/layout-editor">
+    Customize standard collection views
+  </Card>
+  <Card title="Smart Actions" icon="bolt" href="/product/process/for-tech-teams/smart-actions/overview">
+    Add custom business logic triggered from Workspaces
+  </Card>
+  <Card title="Roles & Permissions" icon="lock" href="/product/control/roles-permissions">
+    Control which teams can access which Workspaces
+  </Card>
+  <Card title="Charts" icon="chart-bar" href="/product/manage/charts/overview">
+    Create charts to embed in your Workspaces
+  </Card>
+</CardGroup>
