@@ -7,24 +7,13 @@ The **Inbox** feature automatically assigns tasks to team members based on workl
 
 An inbox is always tied to a **segment of a collection** — for example, the `Waiting for Validation` segment of a `Documents` collection. Every record in that segment becomes a task for operators to process.
 
-<Info>
-The Inbox feature must be enabled for your project. Contact your Forest Admin account manager to activate it.
-</Info>
+<Note>This feature may not be available on all plans. Check the pricing page for more information, or contact us to enable it.</Note>
 
-## Creating an Inbox
+## Creating an inbox
 
-1. Navigate to the **Collaboration** tab.
-2. Enable **Layout Editor** mode.
-3. In the left menu, find the **Inboxes** section and click **Create Inbox**.
-4. Select the **collection** and **segment** that defines the tasks.
-5. Choose a **dispatch rule**:
+To create an Inbox, click **Add New** at the bottom left of the screen, then configure your inbox settings.
 
-| Dispatch rule | Description |
-|---------------|-------------|
-| **Field-based** | Records are sorted by up to 3 fields (ascending or descending). For example: sort by creation date descending, then by priority ascending. |
-| **Random** | Records are assigned in random order. |
-
-## Processing Tasks
+## Processing tasks
 
 Once an inbox is created, operators can access it from the **Collaboration** tab.
 
@@ -47,7 +36,7 @@ The **Backlog** is visible to operators with a **Manager, Editor, Developer, or 
 - For in-progress tasks: when the task was started.
 - For completed tasks: the total handling time (including approval time if applicable).
 
-## Manual Task Assignment
+## Manual task assignment
 
 Managers can manually assign a specific record to an operator from:
 
@@ -56,7 +45,7 @@ Managers can manually assign a specific record to an operator from:
 
 Manual assignments bypass the sorting rules and become the next task for that operator.
 
-## Inbox Settings
+## Inbox settings
 
 Access inbox settings from **Layout Editor mode** → the menu next to the inbox name. You can:
 
@@ -68,20 +57,3 @@ Access inbox settings from **Layout Editor mode** → the menu next to the inbox
 <Info>
 Maximum concurrent tasks and automatic unassignment are disabled by default.
 </Info>
-
-## Related Pages
-
-<CardGroup cols={2}>
-  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
-    Require team approval before actions execute
-  </Card>
-  <Card title="Dispatcher" icon="arrows-split-up-and-left" href="/product/manage/dispatcher">
-    Advanced task routing and assignment rules
-  </Card>
-  <Card title="Segments" icon="filter" href="/product/process/segments/overview">
-    Understand the segments that power inboxes
-  </Card>
-  <Card title="Activity Logs" icon="clock-rotate-left" href="/product/manage/activity">
-    Track inbox activity and task events
-  </Card>
-</CardGroup>

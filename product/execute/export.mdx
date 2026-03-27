@@ -1,11 +1,11 @@
 ---
-title: Export Data
+title: Export data
 description: Export your data to CSV for reporting, analysis, and integration with other tools.
 ---
 
 Forest Admin lets you export collection data to **CSV** directly from the UI. Exports respect your active filters and segments, so you can export exactly the records you need.
 
-## Exporting Records
+## Exporting records
 
 1. Open the collection you want to export.
 2. Optionally, apply **filters** or switch to a **segment** to narrow the records.
@@ -16,7 +16,7 @@ Forest Admin lets you export collection data to **CSV** directly from the UI. Ex
 The export includes all records matching your current filter — not just the records on the current page. Pagination does not affect exports.
 </Info>
 
-## What Gets Exported
+## What gets exported
 
 The CSV export includes:
 
@@ -26,7 +26,7 @@ The CSV export includes:
 
 Relationships (linked records) are exported as their identifier or display field, depending on your configuration.
 
-## Export Limits
+## Export limits
 
 For very large datasets, exports may take a moment to generate. Forest Admin processes the export in the background and downloads the file when ready.
 
@@ -34,26 +34,8 @@ For very large datasets, exports may take a moment to generate. Forest Admin pro
 Extremely large exports (hundreds of thousands of records) may be slow. Consider applying filters to reduce the dataset before exporting.
 </Warning>
 
-## Exporting Approval Request History
+<Tip>For very large datasets, consider using a custom action to trigger an asynchronous export instead. This avoids timeout issues and lets you send the result by email or generate a downloadable file.</Tip>
+
+## Exporting approval request history
 
 From the **Approval Workflows** tab, you can also export the history of approval requests over a given period. Click the **Export** button in that tab and select the desired time interval — you'll receive a CSV file by email.
-
-## Best Practices
-
-- **Filter before exporting** — apply segments or filters to export only the relevant data.
-- **Check column visibility** — only visible columns are exported; configure your table view in the [Layout Editor](/product/build/layout-editor) before exporting.
-- **Handle sensitive data carefully** — exports may contain personal or confidential information. Ensure exports are handled according to your data governance policies.
-
-## Related Pages
-
-<CardGroup cols={2}>
-  <Card title="Browsing & Searching" icon="magnifying-glass" href="/product/execute/browse">
-    Filter your data before exporting
-  </Card>
-  <Card title="Layout Editor" icon="pencil" href="/product/build/layout-editor">
-    Configure which columns appear in the table view
-  </Card>
-  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
-    Export approval request history
-  </Card>
-</CardGroup>

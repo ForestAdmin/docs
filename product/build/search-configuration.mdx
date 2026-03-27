@@ -1,62 +1,192 @@
 ---
 title: Search Configuration
+description: Configure which fields are searchable in your collections, how search behaves, and how to extend or replace the default search logic.
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** All users
 
-## Description
+Forest Admin includes a free-text search bar on every collection's table view. By default it searches across text, enum, number, and UUID fields. You can configure exactly which fields are searched, what operators are used, and even replace the default behavior entirely with custom logic.
 
-Configure search behavior and customize which fields are searchable in your collections.
+## How Search Works
 
-## Sources to migrate
+When an operator types in the search bar, Forest Admin sends a query to your agent with the search string. The agent applies it as a filter against your data source and returns matching records.
 
-- `documentation-user-guide/collections/customize-the-search-bar.md`
-- Search-related settings documentation
+Two search modes exist:
 
-## Content outline
+- **Normal search** — searches fields in the current collection
+- **Extended search** — also searches fields in directly related collections. Operators can trigger extended search from the footer when normal results are empty.
 
-1. **Search Overview**
-   - How search works in Forest Admin
-   - Search scope (current collection, related data)
-   - Search performance considerations
+## Default Search Behavior
 
-2. **Searchable Fields**
-   - Enabling/disabling search per field
-   - Field priority in search results
-   - Relationship field search
+By default, Forest Admin searches only specific field types:
 
-3. **Search Modes**
-   - Contains search (default)
-   - Exact match
-   - Fuzzy search
-   - Starts with / Ends with
+| Field type | Default behavior |
+|------------|-----------------|
+| `String` | Field contains the search string (case-insensitive) |
+| `Enum` | Field equals the search string (case-insensitive) |
+| `Number` | Field equals the search string (if numeric) |
+| `UUID` | Field equals the search string |
+| Other types | Field is ignored |
 
-4. **Advanced Search**
-   - Filter combinations
-   - Boolean operators (AND/OR)
-   - Field-specific search
-   - Date range search
+## Configuring Searchable Fields (No-Code)
 
-5. **Search Customization**
-   - Search bar placement
-   - Placeholder text
-   - Search result display
-   - Highlight matches
+For basic control over which fields are searched, go to your collection settings in the Layout Editor:
 
-6. **Performance Optimization**
-   - Database indexes
-   - Search field limits
-   - Caching strategies
+1. Enter **Layout Editor** mode
+2. Click the gear icon next to the collection
+3. Open the **Search** tab
+4. Enable or disable individual fields
 
-## Migration notes
+This lets you include or exclude specific fields without writing code.
 
-- Important for user experience
-- Link to Collection Configuration
-- Cross-reference with database optimization
+<Info>
+  For large datasets, limit searchable fields to columns with database indexes. Searching unindexed fields causes full table scans.
+</Info>
 
-## Related pages
+## Replacing the Search Handler (Code)
 
-- [Collection Configuration](/product/build/collection-configuration)
-- [Execute > Browse](/product/execute/browse)
-- [Process > Advanced Patterns > Query Optimization](/product/process/for-tech-teams/advanced-patterns/query-optimization)
+For full control, use `replaceSearch` in your agent configuration. This lets you define exactly how search strings are translated into filters.
+
+### Restricting Which Fields Are Searched
+
+```javascript
+agent.customizeCollection('people', collection => {
+  collection.replaceSearch((searchString, extendedMode, context) => {
+    return context.generateSearchFilter(searchString, {
+      extended: extendedMode,
+      onlyFields: ['firstName', 'lastName', 'email'],
+    });
+  });
+});
+```
+
+```python
+def search_in_people(search_string, extended_search, context):
+    return context.generate_search_filter(
+        search_string,
+        extended=extended_search,
+        only_fields=["firstName", "lastName", "email"],
+    )
+
+agent.customize_collection("people").replace_search(search_in_people)
+```
+
+```ruby
+@create_agent.customize_collection('people') do |collection|
+  collection.replace_search do |search_string, extended_search, context|
+    context.generate_search_filter(
+      search_string,
+      extended: extended_search,
+      only_fields: ['firstName', 'lastName', 'email']
+    )
+  end
+end
+```
+
+### Excluding Fields from Default Search
+
+```javascript
+agent.customizeCollection('people', collection => {
+  collection.replaceSearch((searchString, extendedMode, context) => {
+    return context.generateSearchFilter(searchString, {
+      extended: extendedMode,
+      excludeFields: ['internalNotes', 'legacyId'],
+    });
+  });
+});
+```
+
+### Context-Dependent Search
+
+Different search logic depending on what the operator is searching for:
+
+```javascript
+const referenceRegexp = /^[a-f]{16}$/i;
+const barcodeRegexp = /^[0-9]{10}$/;
+
+agent.customizeCollection('products', collection => {
+  collection.replaceSearch(async (searchString, extendedMode, context) => {
+    if (referenceRegexp.test(searchString))
+      return { field: 'reference', operator: 'Equal', value: searchString };
+
+    if (barcodeRegexp.test(searchString))
+      return { field: 'barCode', operator: 'Equal', value: searchString };
+
+    if (!extendedMode)
+      return context.generateSearchFilter(searchString, { onlyFields: ['name'] });
+
+    return context.generateSearchFilter(searchString, {
+      onlyFields: ['name', 'description', 'brand:name'],
+    });
+  });
+});
+```
+
+### Integrating an External Search Engine
+
+If your data is indexed in Algolia, Elasticsearch, or another service, call it directly in the search handler:
+
+```javascript
+const algoliasearch = require('algoliasearch');
+const client = algoliasearch('APPLICATION_ID', 'API_KEY');
+const index = client.initIndex('products');
+
+agent.customizeCollection('products', collection =>
+  collection.replaceSearch(async (searchString) => {
+    const { hits } = await index.search(searchString, {
+      attributesToRetrieve: ['id'],
+      hitsPerPage: 50,
+    });
+
+    return { field: 'id', operator: 'In', value: hits.map(h => h.id) };
+  })
+);
+```
+
+```python
+from algoliasearch.search_client import SearchClient
+
+client = SearchClient.create("APPLICATION_ID", "API_KEY")
+index = client.init_index("products")
+
+async def search_products(search_string, extended_search, context):
+    results = index.search(search_string, {"attributesToRetrieve": ["id"], "hitsPerPage": 50})
+    ids = [hit["id"] for hit in results["hits"]]
+    return ConditionTreeLeaf("id", "in", ids)
+
+agent.customize_collection("products").replace_search(search_products)
+```
+
+## Disabling Search
+
+To remove the search bar from a collection entirely:
+
+```javascript
+agent.customizeCollection('products', collection => {
+  collection.disableSearch();
+});
+```
+
+```python
+agent.customize_collection("products").disable_search()
+```
+
+```ruby
+@create_agent.customize_collection('products') do |collection|
+  collection.disable_search
+end
+```
+
+This is useful for collections where free-text search doesn't apply — for example, collections that only display computed or joined data.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Collection Configuration" icon="sliders" href="/product/build/collection-configuration">
+    Overview of all collection-level configuration options
+  </Card>
+  <Card title="Fields & Filters" icon="filter" href="/product/build/fields-and-widgets/overview">
+    Configure filterable fields and operators
+  </Card>
+  <Card title="Browse" icon="table" href="/product/execute/browse">
+    How operators interact with search and filters
+  </Card>
+</CardGroup>

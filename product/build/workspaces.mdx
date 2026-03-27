@@ -1,5 +1,5 @@
 ---
-title: Workspaces
+title: Overview
 description: Build custom, workflow-specific applications for your operations teams — without writing code.
 ---
 
@@ -7,19 +7,7 @@ A **Workspace** is a custom application you build inside Forest Admin, tailored 
 
 Think of a Workspace as the difference between a generic spreadsheet and a purpose-built tool: same data, dramatically better experience.
 
-<CardGroup cols={3}>
-  <Card title="KYC Review" icon="id-card">
-    Review applications, check documents, approve or reject — all in one screen
-  </Card>
-  <Card title="Incident Management" icon="triangle-exclamation">
-    Triage support tickets, view context, and resolve or escalate from a single view
-  </Card>
-  <Card title="Fraud Monitoring" icon="shield">
-    Inspect flagged transactions, see user history, and take action in one place
-  </Card>
-</CardGroup>
-
-## Why Use Workspaces
+## Why use workspaces
 
 The default "Data" tab gives operators access to all your collections, but it's generic. Workspaces let you:
 
@@ -30,7 +18,7 @@ The default "Data" tab gives operators access to all your collections, but it's 
 
 Workspaces are built with a **drag-and-drop editor** — no code required for most use cases.
 
-## Workspace Components
+## Workspace components
 
 A Workspace is composed of **components** that you drag onto a canvas and configure:
 
@@ -49,7 +37,7 @@ A Workspace is composed of **components** that you drag onto a canvas and config
 | **Toggle** | A boolean switch that controls connected components |
 | **Link** | A link to a record, external URL, or another workspace |
 
-## Templating: Making Workspaces Dynamic
+## Templating: making workspaces dynamic
 
 The real power of Workspaces comes from **Templating** — the ability to reference values from other components dynamically. Type `{{` anywhere in a text, filter, or link to see available variables.
 
@@ -60,9 +48,9 @@ For example:
 
 When an operator selects a row in `collection1`, all connected components update instantly.
 
-## Building a Workspace
+## Building a workspace
 
-**Step 1 — Create a new Workspace**
+**Step 1 — Create a new workspace**
 
 Click the **🧩** icon in the left sidebar, then click "Create your first Workspace". Give it a descriptive name that reflects the workflow (e.g. "KYC Review", "Fraud Queue").
 
@@ -74,7 +62,7 @@ Drag a **Collection** from the sidebar onto the canvas. Select which collection 
 
 Drag **Field** components onto the canvas. Link them to your Collection and select which fields to display. When an operator clicks a row, these fields update to show the selected record's values.
 
-**Step 4 — Add action Buttons**
+**Step 4 — Add action buttons**
 
 Drag a **Button** and link it to your Collection and a Smart Action. Now operators can click a row and immediately trigger the right action — no need to open the record detail.
 
@@ -86,47 +74,8 @@ Use **Chart** components to show aggregated metrics (e.g. "Pending applications 
 
 Click "Exit builder" to switch to the operator view. Test the workflow by clicking rows and triggering actions.
 
-## Sharing Workspaces
+## Sharing workspaces
 
 Workspaces are available to all operators in your project by default. Control access using [Roles & Permissions](/product/control/roles-permissions) — you can limit Workspace visibility to specific teams.
 
 Operators can also share a Workspace URL with a pre-applied filter state, making it easy to hand off specific work items.
-
-## Examples
-
-<CardGroup cols={2}>
-  <Card title="KYC Onboarding Workspace" icon="id-card" href="/product/build/workspaces/kyc-example">
-    Step-by-step guide to building a document review and approval workspace
-  </Card>
-  <Card title="Incident Management Workspace" icon="triangle-exclamation" href="/product/build/workspaces/incident-management-example">
-    Build a support triage workspace with dynamic field display and escalation actions
-  </Card>
-</CardGroup>
-
-## Advanced: Connecting Smart Actions
-
-Buttons in Workspaces trigger **Smart Actions** — custom business logic defined in your agent code. This is how Workspaces bridge the no-code UI with your backend:
-
-1. Operator clicks a **Button** in the Workspace
-2. A Smart Action form opens (optional — can also trigger silently)
-3. The action runs on your backend (update database, send email, call API, etc.)
-4. The Workspace refreshes automatically
-
-See [Smart Actions](/product/process/for-tech-teams/smart-actions/overview) to learn how to define actions in code.
-
-## Related Pages
-
-<CardGroup cols={2}>
-  <Card title="Layout Editor" icon="pencil" href="/product/build/layout-editor">
-    Customize standard collection views
-  </Card>
-  <Card title="Smart Actions" icon="bolt" href="/product/process/for-tech-teams/smart-actions/overview">
-    Add custom business logic triggered from Workspaces
-  </Card>
-  <Card title="Roles & Permissions" icon="lock" href="/product/control/roles-permissions">
-    Control which teams can access which Workspaces
-  </Card>
-  <Card title="Charts" icon="chart-bar" href="/product/manage/charts/overview">
-    Create charts to embed in your Workspaces
-  </Card>
-</CardGroup>

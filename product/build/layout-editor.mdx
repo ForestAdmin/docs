@@ -1,19 +1,19 @@
 ---
-title: Layout Editor
+title: Layout editor
 description: Customize the appearance and structure of your collections without writing code.
 ---
 
 The Layout Editor is Forest Admin's visual customization tool. It lets you control exactly what your operators see and how data is presented — which columns appear in tables, how detail views are organized, and how create/edit forms are structured.
 
 <Info>
-  Layout changes are per-environment and per-team. You can iterate safely in development before deploying to production.
+  Each environment and team has its own layout. Changes you make in development don't affect production until you deploy them.
 </Info>
 
-## Accessing the Layout Editor
+## Accessing the layout editor
 
-To enter Layout Editor mode, click the **Layout Editor** toggle in the top navigation bar of your admin panel. A purple banner appears when the mode is active — any changes you make are saved automatically as a draft.
+To enter Layout Editor mode, click the **Layout Editor** toggle in the top navigation bar of your back-office. A purple banner appears when the mode is active — any changes you make are saved automatically as a draft.
 
-## Customizing the Table View
+## Customizing the table view
 
 The table view is what operators see when browsing a collection. In Layout Editor mode, you can:
 
@@ -24,7 +24,7 @@ The table view is what operators see when browsing a collection. In Layout Edito
 
 Changes apply immediately in preview. Other team members continue seeing the previous layout until you publish.
 
-## Customizing the Detail View
+## Customizing the detail view
 
 The detail view shows when an operator opens a single record. You can reorganize fields to match your team's workflow:
 
@@ -34,7 +34,7 @@ The detail view shows when an operator opens a single record. You can reorganize
 - **Hide fields** that operators don't need to see on this view
 - **Configure related data panels** — choose which relationships appear and how they're displayed
 
-### Sections and Tabs
+### Sections and tabs
 
 Sections help organize long detail views. To add a section:
 1. Click **Add section** in the Layout Editor sidebar
@@ -43,7 +43,7 @@ Sections help organize long detail views. To add a section:
 
 Tabs are useful when a record has many distinct categories of information. Each tab becomes a separate panel in the detail view.
 
-## Customizing Forms
+## Customizing forms
 
 Create and edit forms are configured separately from the detail view, giving you full control over the data entry experience.
 
@@ -57,43 +57,3 @@ In the Layout Editor, switch to **"New record"** or **"Edit record"** view using
 <Warning>
   Hiding a required field from a form will prevent operators from creating records. Make sure required fields remain visible.
 </Warning>
-
-## Layout Components
-
-| Component | Description |
-|-----------|-------------|
-| **Section** | Groups fields under a collapsible heading |
-| **Tab** | Creates a tabbed panel for separating content areas |
-| **Columns** | Places fields side by side in a multi-column layout |
-| **Separator** | Adds a visual divider between fields |
-
-## Publishing Your Changes
-
-Layout changes are saved as a **draft** while you're in Layout Editor mode. To make them visible to your team:
-
-1. Review your changes in the Layout Editor
-2. Click **Save** in the top bar to publish to your current branch
-3. Use the [Forest Admin CLI](/reference/cli/overview) to deploy to production: `forest deploy`
-
-To discard your draft and revert to the last published layout, click **Discard changes**.
-
-<Info>
-  Layouts are versioned via branches. You can safely test layout changes in development without affecting production operators. See [Environments & Branches](/product/process/for-tech-teams/developer-workflow/environments-and-branches) for details.
-</Info>
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Collection Configuration" icon="sliders" href="/product/build/collection-configuration">
-    Configure collection-level settings like search, filters, and segments
-  </Card>
-  <Card title="Fields & Widgets" icon="puzzle-piece" href="/product/build/fields-and-widgets/overview">
-    Choose how each field is displayed and edited
-  </Card>
-  <Card title="Workspaces" icon="layout" href="/product/build/workspaces">
-    Build custom task-specific interfaces for your team
-  </Card>
-  <Card title="Layout Maintenance" icon="wrench" href="/product/build/layout-maintenance">
-    Keep your layouts clean and performant over time
-  </Card>
-</CardGroup>

@@ -259,34 +259,14 @@
             "pages": [
               "product/build/layout-editor",
               "product/build/collection-configuration",
-              "product/build/layout-maintenance",
-              {
-                "group": "Workspaces",
-                "pages": [
-                  "product/build/workspaces",
-                  "product/build/workspaces/kyc-example",
-                  "product/build/workspaces/incident-management-example"
-                ]
-              },
+              "product/build/workspaces",
               "product/manage/dashboards",
-              {
-                "group": "Fields & Widgets",
-                "pages": [
-                  "product/build/fields-and-widgets/overview",
-                  "product/build/fields-and-widgets/display-widgets",
-                  "product/build/fields-and-widgets/edit-widgets"
-                ]
-              },
-              {
-                "group": "Smart Views",
-                "pages": [
-                  "product/build/custom-views/smart-views"
-                ]
-              },
+              "product/build/fields-and-widgets/overview",
               {
                 "group": "Advanced Concepts",
                 "pages": [
                   "product/build/layout-versioning",
+                  "product/build/custom-views/smart-views",
                   "product/build/search-configuration",
                   "product/build/pagination"
                 ]
@@ -307,8 +287,7 @@
             "pages": [
               "product/collaborate/approval-workflows",
               "product/collaborate/inbox",
-              "product/collaborate/notes",
-              "product/collaborate/escalation"
+              "product/collaborate/notes"
             ]
           },
           {
@@ -317,20 +296,15 @@
               "product/manage/activity",
               "product/manage/team-performance",
               "product/manage/dispatcher",
-              {
-                "group": "Charts",
-                "pages": [
-                  "product/manage/charts/overview",
-                  "product/manage/charts/chart-patterns"
-                ]
-              }
+              "product/manage/charts/overview"
             ]
           },
           {
             "group": "Embed",
             "pages": [
-              "product/embed/assist",
-              "product/embed/mcp-server"
+              "product/embed/mcp-server",
+              "product/embed/zendesk",
+              "product/embed/n8n"
             ]
           }
         ]
@@ -454,7 +428,16 @@
             "pages": [
               "guides/best-practices/performance",
               "guides/best-practices/security",
-              "guides/best-practices/troubleshooting"
+              "guides/best-practices/troubleshooting",
+              "guides/best-practices/layout-maintenance"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "guides/chart-patterns",
+              "guides/workspaces/kyc-onboarding",
+              "guides/workspaces/incident-management"
             ]
           },
           {

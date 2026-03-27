@@ -1,11 +1,11 @@
 ---
-title: Executing Actions
+title: Executing actions
 description: Trigger Smart Actions and perform operations on your data directly from Forest Admin.
 ---
 
 **Actions** in Forest Admin let operators trigger custom business logic on one or more records — sending emails, updating statuses, charging payments, generating reports, and more. This page explains how to find and execute actions as an operator.
 
-## Types of Actions
+## Types of actions
 
 | Type | Description |
 |------|-------------|
@@ -13,7 +13,7 @@ description: Trigger Smart Actions and perform operations on your data directly 
 | **Bulk** | Triggered on multiple selected records at once |
 | **Global** | Triggered from the collection level, without selecting a record |
 
-## Triggering a Single Record Action
+## Triggering a single record action
 
 1. Open a record by clicking on a row in the table view.
 2. In the detail view, look for the **Actions** button (top-right area).
@@ -22,7 +22,7 @@ description: Trigger Smart Actions and perform operations on your data directly 
 
 You can also trigger actions directly from the row using the **context menu** (three-dot icon) without opening the detail view.
 
-## Triggering Bulk Actions
+## Triggering bulk actions
 
 1. [Select multiple records](/product/execute/browse#bulk-selection) using the checkboxes in the table view.
 2. The **Actions** toolbar appears at the top of the table.
@@ -33,13 +33,13 @@ You can also trigger actions directly from the row using the **context menu** (t
 Bulk actions apply to all selected records. Some actions may have a maximum number of records they can process at once.
 </Info>
 
-## Triggering Global Actions
+## Triggering global actions
 
 Global actions are not tied to any specific record. They appear in the **Actions** menu at the top of the collection view, regardless of whether records are selected.
 
 Use global actions for operations like generating a report, triggering a sync, or exporting data.
 
-## Action Forms
+## Action forms
 
 Many actions open a **form** before execution. The form lets you provide additional input required by the action — for example, a reason for rejection, an amount to refund, or a target email address.
 
@@ -47,19 +47,7 @@ Many actions open a **form** before execution. The form lets you provide additio
 - **Dynamic fields** may appear or change based on values you enter in other fields.
 - **Dropdowns and pickers** are common field types for structured input.
 
-## Action Results
-
-After an action runs, Forest Admin displays the result:
-
-| Result type | What you see |
-|-------------|-------------|
-| **Success message** | A green notification with a confirmation message |
-| **Error message** | A red notification describing what went wrong |
-| **File download** | A file download starts automatically (e.g. PDF, CSV) |
-| **Redirect** | You are redirected to a URL or another record |
-| **HTML response** | A custom HTML panel is displayed in a modal |
-
-## Actions Requiring Approval
+## Actions requiring approval
 
 Some actions are configured to require approval from another team member before they execute. When you trigger such an action:
 
@@ -71,27 +59,10 @@ Some actions are configured to require approval from another team member before 
 Approval workflows are configured by admins in Project Settings → Roles. See [Approval Workflows](/product/collaborate/approval-workflows).
 </Info>
 
-## Actions Requiring Confirmation
+## Actions requiring confirmation
 
 Some actions display a **confirmation dialog** before executing, to prevent accidental triggers. Read the confirmation message carefully before proceeding.
 
 ## Permissions
 
 Which actions you can see and execute depends on your **role permissions**, configured by your admin. If an action is not visible, you may not have permission to access it.
-
-## Related Pages
-
-<CardGroup cols={2}>
-  <Card title="Approval Workflows" icon="check-circle" href="/product/collaborate/approval-workflows">
-    Manage actions that require team approval
-  </Card>
-  <Card title="Smart Actions (Developer)" icon="code" href="/product/process/actions/overview">
-    How developers configure and implement actions
-  </Card>
-  <Card title="Browsing Data" icon="table" href="/product/execute/browse">
-    Select records before triggering bulk actions
-  </Card>
-  <Card title="Roles & Permissions" icon="lock" href="/product/control/roles-permissions">
-    Understand action access control
-  </Card>
-</CardGroup>

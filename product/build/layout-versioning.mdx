@@ -1,54 +1,130 @@
 ---
 title: Layout Versioning
+description: Manage, version, and deploy your Forest Admin layout configurations across environments using branches.
 ---
-> **Status:** TODO - Priority: LOW
->
-> **Audience:** All users
 
-## Description
+Every layout change you make in Forest Admin — column ordering, field visibility, segments, custom views — is versioned. This lets you iterate safely in development, test in staging, and promote to production without disrupting your operators.
 
-Manage and version your layout configurations across environments.
+## How Layout Versioning Works
 
-## Sources to migrate
+Your Forest Admin panel has two independently versioned parts:
 
-- `documentation-user-guide/project-settings/other-project-settings/versioning-tab.md`
+- **Agent code** — your backend customizations, versioned with Git
+- **Layout** — your UI configuration (field visibility, columns, segments, forms…), versioned with Forest Admin branches
 
-## Content outline
+Branches are isolated copies of a layout. You create one, make changes, test them, then deploy when ready. The production layout is never touched until you explicitly deploy.
 
-1. **What is Layout Versioning?**
-   - Layout changes tracking
-   - Version history
-   - Rollback capability
+## Environments and Layouts
 
-2. **Version Management**
-   - Viewing version history
-   - Comparing versions
-   - Rolling back changes
-   - Version metadata
+Each environment has its own layout:
 
-3. **Environment Sync**
-   - Development to staging
-   - Staging to production
-   - Layout promotion workflow
+| Environment | Typical use |
+|-------------|-------------|
+| **Development** | Your personal branch — safe to experiment |
+| **Remote (staging)** | Test layout changes with your team before production |
+| **Production** | Live layout seen by all operators |
 
-4. **Collaboration**
-   - Team member changes
-   - Change notifications
-   - Conflict resolution
+When you enter Layout Editor mode in your development environment, changes are saved to your current branch — not immediately deployed anywhere.
 
-5. **Best Practices**
-   - Testing layout changes
-   - Documentation of changes
-   - Gradual rollouts
+## Working with Branches
 
-## Migration notes
+### Creating a Branch
 
-- Related to environments and deployment
-- Important for teams
-- Link to CLI for automation
+A branch is created from an existing environment's layout. Use the Forest Admin CLI:
 
-## Related pages
+```bash
+forest branch my-feature-layout --origin production
+```
 
-- [Layout Editor](/product/build/layout-editor)
-- [Process > Developer Workflow > Environments](/product/process/for-tech-teams/developer-workflow/environments-and-branches)
-- [Reference > CLI](/reference/cli/overview)
+This creates a branch called `my-feature-layout` that starts from the production layout. Switch to it:
+
+```bash
+forest switch my-feature-layout
+```
+
+### Making Layout Changes
+
+With your branch active, open Forest Admin in your browser. Enter **Layout Editor** mode and make your changes — reorder columns, create segments, configure forms. All changes are saved automatically to your branch.
+
+### Comparing Layouts
+
+Before deploying, review what changed:
+
+```bash
+forest schema:diff
+```
+
+This shows the difference between your branch and the target environment's layout.
+
+### Deploying Changes
+
+To push your branch to a remote (staging) environment:
+
+```bash
+forest push --environment staging
+```
+
+To deploy to production:
+
+```bash
+forest deploy
+```
+
+<Warning>
+  Deploying overwrites the target environment's layout. Make sure to review your changes before deploying to production.
+</Warning>
+
+## Rolling Back
+
+If a layout change causes issues in production, you can roll back by deploying a previous branch or reverting to the last known-good state.
+
+To reset an environment to match another environment's layout:
+
+```bash
+forest environments:reset --environment staging --from production
+```
+
+<Info>
+  Layout rollbacks only affect the UI configuration — your agent code and database are not touched.
+</Info>
+
+## Team Collaboration
+
+When multiple people work on the same project:
+
+- Each developer works on their own named branch
+- Branches are isolated — one developer's changes don't affect another's view
+- Changes are only visible to others after a push or deploy
+- The CLI `forest branch` command lists all active branches
+
+### Avoiding Conflicts
+
+Layout branches don't support merging — deploying one branch's changes overwrites the target. To collaborate safely:
+
+- Communicate which collections or features each person is working on
+- Work on distinct parts of the layout to avoid overlap
+- Use short-lived branches and deploy frequently
+
+## Best Practices
+
+- **Name branches descriptively** — `feature/add-order-segments` is clearer than `dev-branch-1`
+- **Keep branches short-lived** — the longer a branch lives, the more it diverges from production
+- **Test in a remote environment** before deploying to production
+- **Use `schema:diff`** to review all changes before each deploy
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Layout Editor" icon="pencil" href="/product/build/layout-editor">
+    Make visual changes to your collections and forms
+  </Card>
+  <Card title="Environments & Branches" icon="git-branch" href="/product/process/for-tech-teams/developer-workflow/environments-and-branches">
+    Full guide to the Forest Admin development workflow
+  </Card>
+  <Card title="CLI Reference" icon="terminal" href="/reference/cli/overview">
+    All available CLI commands for managing branches and deployments
+  </Card>
+  <Card title="Layout Maintenance" icon="wrench" href="/product/build/layout-maintenance">
+    Keep your layouts clean and performant over time
+  </Card>
+</CardGroup>

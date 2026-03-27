@@ -3,9 +3,9 @@ title: MCP Server
 description: Integrate Forest Admin with AI tools using the Model Context Protocol
 ---
 
-# MCP Server
+# MCP server
 
-Forest Admin provides a Model Context Protocol (MCP) server that allows AI assistants and tools to interact with your admin panel programmatically.
+Forest Admin provides a Model Context Protocol (MCP) server that allows AI assistants and tools to interact with your back-office programmatically.
 
 ## What is MCP?
 
@@ -47,11 +47,11 @@ Configure the MCP server in your AI tool's settings:
 }
 ```
 
-## Available Tools
+## Available tools
 
 The MCP server exposes the following capabilities:
 
-### Data Access
+### Data access
 - **Browse collections**: View available collections and their schemas
 - **Query records**: Search and filter records across collections
 - **Read relationships**: Access related data through relationships
@@ -66,16 +66,16 @@ The MCP server exposes the following capabilities:
 - **Business rules**: Access validation rules and constraints
 - **User permissions**: Check what operations are allowed
 
-## Use Cases
+## Use cases
 
-### AI-Assisted Operations
+### AI-assisted operations
 Use Claude or other AI assistants to:
 - Answer questions about your data
 - Generate reports and insights
 - Automate routine tasks
 - Perform data analysis
 
-### Example Prompts
+### Example prompts
 
 > "Show me all pending orders from the last 24 hours"
 
@@ -94,20 +94,3 @@ The MCP server:
 <Warning>
 Only provide MCP server access to trusted AI tools and users. The server can perform any operation that the authenticated user can perform.
 </Warning>
-
-## Related Features
-
-<CardGroup cols={2}>
-  <Card title="MCP Integration" icon="plug" href="/product/integration/integrations/mcp-servers">
-    Configure MCP servers in Forest Admin
-  </Card>
-  <Card title="AI Assist" icon="sparkles" href="/product/embed/assist">
-    Learn about Forest Admin's built-in AI features
-  </Card>
-</CardGroup>
-
-## Learn More
-
-- [MCP Protocol Specification](https://modelcontextprotocol.io)
-- [Claude Desktop MCP Guide](https://www.anthropic.com/claude)
-- [Forest Admin API Documentation](/reference/api/introduction)

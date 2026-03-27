@@ -1,5 +1,5 @@
 ---
-title: Collection Configuration
+title: Collection configuration
 description: Configure how collections behave, display, and interact with your operators.
 ---
 
@@ -7,7 +7,7 @@ Collection configuration controls everything about how a collection appears and 
 
 Most settings are configured visually through the **Layout Editor** or the collection's **Settings** panel.
 
-## Collection Settings
+## Collection settings
 
 Access collection settings by entering Layout Editor mode and clicking the **gear icon** next to a collection name in the sidebar.
 
@@ -18,7 +18,7 @@ Access collection settings by entering Layout Editor mode and clicking the **gea
 | **Description** | A short note shown to operators to explain what this collection contains |
 | **Visibility** | Control whether the collection appears in the navigation |
 
-## Table View Configuration
+## Table view configuration
 
 The table view is the primary way operators browse records. Configure it to show the right information at a glance:
 
@@ -30,7 +30,7 @@ The table view is the primary way operators browse records. Configure it to show
 
 These settings are managed in the [Layout Editor](/product/build/layout-editor).
 
-## Record Display
+## Record display
 
 When an operator clicks a record to open it, Forest Admin shows a detail view. You can configure:
 
@@ -52,19 +52,6 @@ Configure segments in the **Segments** tab of the collection settings:
 
 See [Creating Segments](/product/process/segments/creating-segments) for details on building segment conditions.
 
-## Search Configuration
-
-By default, Forest Admin searches across all text fields. You can fine-tune this:
-
-- **Searchable fields** — select which fields are included in search queries
-- **Search mode** — `contains` (partial match), `exact` (full match), or `starts with`
-
-To configure search, go to collection settings → **Search** tab and select the fields operators should be able to search on.
-
-<Info>
-  For performance on large datasets, limit searchable fields to those with database indexes.
-</Info>
-
 ## Filters
 
 Operators can filter collection records using the filter panel. You can configure:
@@ -74,7 +61,7 @@ Operators can filter collection records using the filter panel. You can configur
 
 Filter presets are shared across the team. Create them by applying a filter in the collection view and clicking **Save filter**.
 
-## Actions Configuration
+## Actions configuration
 
 Actions are buttons that operators can trigger on records. In collection settings, you can control:
 
@@ -83,33 +70,3 @@ Actions are buttons that operators can trigger on records. In collection setting
 - **Action permissions** — managed through [Roles & Permissions](/product/control/roles-permissions)
 
 Both built-in actions (create, edit, delete, export) and Smart Actions appear here.
-
-## Pagination Settings
-
-For large collections, pagination affects both user experience and database performance:
-
-| Setting | Options | Default |
-|---------|---------|---------|
-| **Page size** | 10, 25, 50, 100 records | 15 |
-| **Pagination style** | Page numbers or infinite scroll | Page numbers |
-
-<Warning>
-  Increasing page size on slow queries can significantly impact load times. Test with realistic data volumes before changing defaults.
-</Warning>
-
-## Related Pages
-
-<CardGroup cols={2}>
-  <Card title="Layout Editor" icon="pencil" href="/product/build/layout-editor">
-    Visually rearrange columns, sections, and forms
-  </Card>
-  <Card title="Creating Segments" icon="filter" href="/product/process/segments/creating-segments">
-    Build static and dynamic data segments
-  </Card>
-  <Card title="Fields & Widgets" icon="puzzle-piece" href="/product/build/fields-and-widgets/overview">
-    Configure how individual fields are displayed
-  </Card>
-  <Card title="Roles & Permissions" icon="lock" href="/product/control/roles-permissions">
-    Control who can access collections and actions
-  </Card>
-</CardGroup>

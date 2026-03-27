@@ -10,7 +10,7 @@ Charts can be displayed in two places:
 - The **Dashboard** tab — a shared dashboard visible to your team.
 - The **Analytics** tab of a specific record — charts scoped to a single record's data.
 
-## Chart Types
+## Chart types
 
 Forest Admin supports six chart types:
 
@@ -27,7 +27,7 @@ Forest Admin supports six chart types:
 For Repartition charts, only the top 5 categories are shown individually. All others are grouped into a 6th "Other" category.
 </Info>
 
-## Creating a Chart
+## Creating a chart
 
 1. Enable **Layout Editor** mode by clicking the toggle in the top navigation.
 2. Navigate to the **Dashboard** tab (or the Analytics tab of a record).
@@ -37,7 +37,7 @@ For Repartition charts, only the top 5 categories are shown individually. All ot
 6. Configure the chart data source (see below).
 7. Save and exit Layout Editor mode.
 
-### Simple Mode (UI-based)
+### Simple mode (UI-based)
 
 In **Simple mode**, configure your chart by selecting:
 
@@ -47,7 +47,7 @@ In **Simple mode**, configure your chart by selecting:
 - **Time frame** — for time-based charts: day, week, month, or year.
 - **Filters** — optional conditions to restrict which records are included.
 
-### Query Mode (SQL)
+### Query mode (SQL)
 
 For advanced analytics, use **Query mode** to write custom SQL directly.
 
@@ -97,7 +97,7 @@ ORDER BY value DESC
 LIMIT 10;
 ```
 
-## Record-Specific Analytics
+## Record-specific analytics
 
 Charts can also be scoped to a single record. When placed in the **Analytics** tab of a collection:
 
@@ -115,7 +115,7 @@ ORDER BY key;
 
 A chart configured this way works for all records in the collection.
 
-## Managing Charts
+## Managing charts
 
 In **Layout Editor** mode, you can:
 
@@ -123,20 +123,3 @@ In **Layout Editor** mode, you can:
 - **Resize** charts to fit your layout.
 - **Edit** a chart's configuration by clicking the pencil icon.
 - **Delete** a chart by clicking the trash icon.
-
-## Related Pages
-
-<CardGroup cols={2}>
-  <Card title="Chart Patterns & Examples" icon="chart-line" href="/product/manage/charts/chart-patterns">
-    Practical examples for common analytics use cases
-  </Card>
-  <Card title="Dashboards" icon="gauge" href="/product/manage/dashboards">
-    Organize charts into shareable dashboards
-  </Card>
-  <Card title="Aggregations (Developer)" icon="code" href="/product/process/for-tech-teams/aggregations/overview">
-    Define custom aggregations for use in charts
-  </Card>
-  <Card title="Workspaces" icon="layout" href="/product/build/workspaces">
-    Embed charts in custom operational views
-  </Card>
-</CardGroup>

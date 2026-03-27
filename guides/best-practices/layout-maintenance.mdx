@@ -1,0 +1,106 @@
+---
+title: Layout maintenance
+description: Best practices for keeping your Forest Admin layouts clean, fast, and up to date over time.
+---
+
+A Forest Admin project evolves along with your product. New fields get added, old workflows get replaced, and teams change. Without periodic maintenance, layouts accumulate unused components, obsolete segments, and hidden fields that slow things down.
+
+This page covers practical habits for keeping your back-office healthy.
+
+## Identifying layout issues
+
+Before cleaning up, audit what exists. Common issues to look for:
+
+- **Hidden fields that haven't been used in months** — they still load but no one sees them
+- **Duplicate segments** — multiple segments with the same or overlapping filters
+- **Orphaned Smart Actions** — actions whose backend logic was removed but the button still appears
+- **Outdated collection names** — labels that no longer reflect what the data represents
+- **Unused relationships** — related collections shown in detail views that operators never scroll to
+
+To audit your layout, enter Layout Editor mode and review each collection systematically.
+
+## Cleanup tasks
+
+### Removing unused fields
+
+Fields hidden in the Layout Editor still exist in the schema and are returned by queries in some cases. If a field is no longer relevant:
+
+1. Hide it in the Layout Editor (for operator-facing cleanup)
+2. If it's a computed/smart field defined in code, remove it from your agent configuration
+3. Deploy your changes
+
+<Warning>
+  Don't remove fields that are still referenced in segments, Smart Actions, or custom views — even if hidden from the main layout.
+</Warning>
+
+### Cleaning up segments
+
+Too many segments make navigation confusing. Review your segments periodically:
+
+- Archive segments that are no longer used by any team
+- Merge overlapping segments into a single one with multiple filter options
+- Rename segments to reflect current workflows (e.g. "New signups" → "Onboarding queue")
+
+### Archiving old actions
+
+Smart Actions that were useful in the past may no longer apply. To clean up:
+
+1. Identify actions with zero recent usage (check the [Activity log](/product/manage/activity))
+2. Hide them from the collection's action menu in collection settings
+3. Remove the underlying code from your agent if the feature is truly deprecated
+
+### Collection organization
+
+As your project grows, the sidebar navigation can become cluttered:
+
+- **Reorder collections** in the sidebar by dragging them in Layout Editor mode
+- **Hide collections** that are only relevant for technical debugging
+- **Group related collections** using Workspaces so operators access them in context
+
+## Performance optimization
+
+Layout issues can cause slow page loads even when the database is fast.
+
+### Widget optimization
+
+Some widget types are more expensive than others. For table views on large collections:
+
+- Prefer lightweight display widgets (plain text, badge, date) over complex ones (file viewer, rich text renderer)
+- Avoid showing relationship fields in table view columns — they trigger additional queries per row
+
+### Relationship panel limits
+
+If a detail view shows HasMany relationships, each panel loads additional records. Limit the number of visible relationship panels to what operators actually use.
+
+### Segment query performance
+
+Segments with complex filters can slow down collection loading. Ensure that fields used in segment filters have appropriate database indexes. Work with your technical team to add indexes if needed.
+
+## Regular maintenance schedule
+
+A lightweight recurring review prevents layout debt from accumulating:
+
+| Frequency | Task |
+|-----------|------|
+| **Monthly** | Review new fields added since last deployment — configure widgets and visibility |
+| **Quarterly** | Audit segments and remove unused ones |
+| **Per release** | Check if any removed features left orphaned actions or smart fields |
+| **Annually** | Full layout audit across all collections and teams |
+
+## Handling deprecations and breaking changes
+
+When Forest Admin releases updates that affect layout behavior:
+
+- Check the [changelog](https://www.forestadmin.com/changelog) for deprecated features
+- Test layout compatibility in a development branch before deploying
+- Update any Smart Actions or custom views that rely on deprecated APIs
+
+## Permission audits
+
+Layouts interact with permissions — a field visible in the layout but restricted by permissions creates confusion ("why can't I see this?"). Periodically review:
+
+- Fields visible in layouts but restricted for most roles
+- Actions shown in the UI but denied at the permission level
+- Segments visible to teams who shouldn't filter by those criteria
+
+See [Roles & Permissions](/product/control/roles-permissions) for how to align layout visibility with access control.
