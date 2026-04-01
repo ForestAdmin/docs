@@ -1,9 +1,9 @@
 ---
-title: Overview
-description: Build custom, workflow-specific applications for your operations teams — without writing code.
+title: "Workspaces"
+description: "Build custom, use-case specific interfaces for your operations teams, without writing code."
 ---
 
-A **Workspace** is a custom application you build inside Forest Admin, tailored to a specific workflow. Instead of navigating between multiple collections, operators get a single focused interface that shows exactly what they need and lets them take action immediately.
+A **Workspace** is a custom interface you build inside Forest Admin, tailored to a specific use case. Instead of navigating between multiple collections, operators get a single focused view that shows exactly what they need and lets them take action immediately.
 
 Think of a Workspace as the difference between a generic spreadsheet and a purpose-built tool: same data, dramatically better experience.
 
@@ -11,37 +11,62 @@ Think of a Workspace as the difference between a generic spreadsheet and a purpo
 
 The default "Data" tab gives operators access to all your collections, but it's generic. Workspaces let you:
 
-- **Focus** — show only the data relevant to a specific task
-- **Contextualize** — display related information side by side without navigating away
-- **Act faster** — put action buttons directly next to the data that triggers them
-- **Guide** — add text, sections, and structure to make workflows self-explanatory
+- **Focus** - show only the data relevant to a specific task
+- **Contextualize** - display related information side by side without navigating away
+- **Act faster** - put action buttons directly next to the data that triggers them
+- **Guide** - add text, sections, and structure to guide users through it
 
-Workspaces are built with a **drag-and-drop editor** — no code required for most use cases.
+Workspaces are built with a **drag-and-drop editor**, no code required for most use cases.
 
 ## Workspace components
 
-A Workspace is composed of **components** that you drag onto a canvas and configure:
+A Workspace is composed of **components**, broken down into 5 categories, that you drag onto a canvas and configure:
+
+**Layout & Guidance** components aim to design your workspace in an intuitive way, and guide end users through it:
 
 | Component | Purpose |
-|-----------|---------|
+| --- | --- |
 | **Text** | Headers, instructions, labels with optional dynamic templating |
-| **Section** | Groups related components under a collapsible heading |
-| **Tabs** | Splits the workspace into tabbed panels |
-| **Divider** | Visual separator between areas |
-| **Collection** | Displays a filtered list of records from any collection |
-| **Field** | Shows the value of a specific field from a selected record |
-| **Chart** | Embeds a chart or metric (single value, distribution, etc.) |
-| **Button** | Triggers a Smart Action on a selected record |
-| **Search** | Lets operators search for a record from a collection |
-| **Dropdown** | A selector that filters connected components dynamically |
-| **Toggle** | A boolean switch that controls connected components |
+| **Section** | Groups related components within a section |
+| **Tabs** | Tabbed section to segment groups of components |
 | **Link** | A link to a record, external URL, or another workspace |
+| **Dividers** | Visual separators |
+
+**Source** components set the context of your workspace, for all data-related components to plug into:
+
+| Component | Purpose |
+| --- | --- |
+| **Search** | Lets users search for a record from a collection |
+| **Collection** | Lets users select a record from a list, optionally filtered |
+| **Inbox** | Picks the highest priority record for the user to process |
+| **Dropdown** | A selector that filters connected components dynamically |
+| **Date Picker** | A date picker that filters connected components dynamically |
+| **Toggle** | A boolean switch that filters connected components dynamically |
+| **Input** | Free text input that filters connected components dynamically |
+
+**Data & Action** components provide users with data, actions, and workflows available on the record coming from a Source component:
+
+| Component | Purpose |
+| --- | --- |
+| **Field** | Shows the value of a specific field from a selected record |
+| **Action** | Triggers an Action on a selected record |
+| **Workflow** | Triggers or resumes a Workflow on a selected record |
+
+**Analytics** components provide charts and dashboards for extra context:
+
+| Component | Purpose |
+| --- | --- |
+| **Chart** | Embeds a chart or metric (single value, distribution, etc.) |
+| **Metabase** | Embeds a Metabase dashboard using an iframe |
+
+The **Custom** components lets you write your own, based on your own business logic and preferences in terms of visual representation.
 
 ## Templating: making workspaces dynamic
 
-The real power of Workspaces comes from **Templating** — the ability to reference values from other components dynamically. Type `{{` anywhere in a text, filter, or link to see available variables.
+The real power of Workspaces comes from **Templating** — the ability to reference values from other components dynamically. Click on the `{}` button in any text, filter, or link to see available variables.
 
 For example:
+
 - A **Text** component can display `Welcome, {{currentUser.name}}`
 - A **Collection** component can filter records where `company_id = {{collection1.selectedRecord.id}}`
 - A **Link** can redirect to `https://app.example.com/users/{{collection1.selectedRecord.id}}`
@@ -50,9 +75,15 @@ When an operator selects a row in `collection1`, all connected components update
 
 ## Building a workspace
 
+Here's a step-by-step guide on building your first very basic Workspace:
+
+<div style={{position: "relative", paddingBottom: "calc(54.6875% + 47px)", height: 0}}>
+  <iframe id="gkyvev6f4k" src="https://app.guideflow.com/embed/mk60x69u6k" width="100%" height="100%" style={{overflow: "hidden", position: "absolute", border: "none"}} allow="clipboard-read; clipboard-write" allowFullScreen allowTransparency />
+</div>
+
 **Step 1 — Create a new workspace**
 
-Click the **🧩** icon in the left sidebar, then click "Create your first Workspace". Give it a descriptive name that reflects the workflow (e.g. "KYC Review", "Fraud Queue").
+Click on `+ Add New` in the left sidebar, select **Workspace**, and give it a descriptive name that reflects the use case (e.g. "Customer Onboarding", "CRM").
 
 **Step 2 — Add a Collection component**
 
@@ -62,20 +93,16 @@ Drag a **Collection** from the sidebar onto the canvas. Select which collection 
 
 Drag **Field** components onto the canvas. Link them to your Collection and select which fields to display. When an operator clicks a row, these fields update to show the selected record's values.
 
-**Step 4 — Add action buttons**
+**Step 4 — Add Actions**
 
-Drag a **Button** and link it to your Collection and a Smart Action. Now operators can click a row and immediately trigger the right action — no need to open the record detail.
+Drag an **Action** and link it to your Collection. Now operators can click a row and immediately trigger the right action — no need to open the record detail.
 
-**Step 5 — Add charts and text for context**
-
-Use **Chart** components to show aggregated metrics (e.g. "Pending applications today"). Use **Text** components with Templating to show dynamic labels and guide operators through the workflow.
-
-**Step 6 — Exit the builder and test it**
+**Step 5 — Exit the builder and test it**
 
 Click "Exit builder" to switch to the operator view. Test the workflow by clicking rows and triggering actions.
 
 ## Sharing workspaces
 
-Workspaces are available to all operators in your project by default. Control access using [Roles & Permissions](/product/control/roles-permissions) — you can limit Workspace visibility to specific teams.
+Workspaces are available to all operators in your project by default. Control access using [Roles & Permissions](/product/control/roles-permissions), you can limit Workspace visibility to specific teams.
 
 Operators can also share a Workspace URL with a pre-applied filter state, making it easy to hand off specific work items.
