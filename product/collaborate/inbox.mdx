@@ -1,11 +1,14 @@
 ---
 title: "Inbox"
-description: "Automatically distribute and process tasks across your team with Inboxes."
+description: "Automatically distribute tasks across your team with Inboxes."
 ---
 
 The **Inbox** feature automatically assigns tasks to team members based on workload and dispatch rules, improving efficiency and ensuring no record falls through the cracks.
 
-An inbox is always tied to a **segment of a collection** — for example, the `Waiting for Validation` segment of a `Documents` collection. Every record in that segment becomes a task for operators to process.
+An inbox is either tied to:
+
+- A **Segment**, for example the `Waiting for Validation` segment of a `Documents` collection. Every record in that segment becomes a task for operators to process.
+- A **Workflow**, as an Escalation mechanism for a user to pick up a process where a previous user left off
 
 <Note>
   This feature may not be available on all plans. Check the pricing page for more information, or contact us to enable it.
@@ -21,11 +24,11 @@ To create an Inbox, click **Add New** at the bottom left of the screen, then con
 
 ## Processing tasks
 
-Once an inbox is created, operators can access it from the **Collaboration** tab.
+Once an inbox is created, operators can access it from the main tab, or any Workspace on which the Inbox may have been configured as a source.
 
-### Todo
+### To do
 
-The **Todo** count shows the number of unassigned records in the segment. Click **Start processing** to be automatically assigned to the next task and redirected to the record.
+The **To do** section shows the number of unassigned records, and provides you with the **Start Processing** button to be automatically assigned to the next task, and redirected to the record.
 
 After completing the work on that record (e.g. triggering a `Validate Document` action), click **Next ticket** in the top bar to be assigned a new task automatically.
 
@@ -35,7 +38,7 @@ The **Doing** section shows tasks currently assigned to you. You can navigate ba
 
 ### Backlog
 
-The **Backlog** is visible to operators with a **Manager, Editor, Developer, or Administrator** permission level. It provides an overview of all records in the segment:
+The **Backlog** is visible to operators with a **Manager, Editor, Developer, or Administrator** permission level. It provides an overview of all records in the inbox:
 
 - Which tasks are unassigned, in progress, or completed.
 - Which operator is assigned to each task.
@@ -47,7 +50,7 @@ The **Backlog** is visible to operators with a **Manager, Editor, Developer, or 
 Managers can manually assign a specific record to an operator from:
 
 - The **Backlog** section of the inbox.
-- The **record detail view**, using the native **"Assign to..."** action — which also lets you assign records to operators outside your current team.
+- The **record detail view**, using the native **"Assign to..."** action, which also lets you assign records to operators outside your current team.
 
 Manual assignments bypass the sorting rules and become the next task for that operator.
 
@@ -55,10 +58,16 @@ Manual assignments bypass the sorting rules and become the next task for that op
 
 Access inbox settings from **Layout Editor mode** → the menu next to the inbox name. You can:
 
-- **Rename** or **delete** the inbox.
-- **Organize inboxes into folders** for cleaner navigation.
-- **Set a maximum number of concurrent tasks per operator** — when reached, clicking "Next ticket" redirects the operator to one of their in-progress tasks instead of assigning a new one.
-- **Automatically unassign tasks** after a configurable idle time, making them available to other operators.
+- **Rename** the inbox or update its icon, to easily find it in the sidebar
+- Edit its **dispatch rules**
+- **Prevent operators from un-assigning **themselves from tasks
+
+<Info>
+  By default, operators can un-assign themselves from a task, and assign someone else in their place.
+</Info>
+
+- **Automatically un-assign tasks** after a configurable idle time, making them available to other operators.
+- **Set a maximum number of concurrent tasks per operator**; when reached, clicking "Next ticket" redirects the operator to one of their in-progress tasks instead of assigning a new one from the To do queue.
 
 <Info>
   Maximum concurrent tasks and automatic unassignment are disabled by default.
