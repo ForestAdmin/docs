@@ -1,6 +1,7 @@
 ---
-title: No-code actions
-description: Create actions with webhooks and integrations - no coding required
+title: "No-code actions"
+description: "Create actions with webhooks and integrations - no coding required"
+hidden: true
 ---
 
 No-code actions let you create powerful operations directly from the Forest Admin interface, without writing any code. Connect to external services like Make, n8n, or Zapier, or simply update field values with a click.
@@ -8,7 +9,7 @@ No-code actions let you create powerful operations directly from the Forest Admi
 Perfect for non-technical teams and simple operations that don't require custom business logic.
 
 <Note>
-For advanced actions with custom code, dynamic forms, or complex logic, see [Code-based actions](/product/process/actions/custom-actions/overview).
+  For advanced actions with custom code, dynamic forms, or complex logic, see [Code-based actions](/product/process/actions/custom-actions/overview).
 </Note>
 
 ## What you can do
@@ -31,7 +32,6 @@ No-code actions work seamlessly with popular automation platforms:
     4. Paste the webhook URL
     5. Make receives the payload and continues your workflow
   </Tab>
-
   <Tab title="n8n">
     1. Create a webhook node in n8n
     2. Copy the webhook URL
@@ -39,7 +39,6 @@ No-code actions work seamlessly with popular automation platforms:
     4. Paste the webhook URL
     5. n8n processes the data through your workflow
   </Tab>
-
   <Tab title="Zapier">
     1. Create a "Webhooks by Zapier" trigger
     2. Copy the webhook URL
@@ -92,6 +91,7 @@ Trigger HTTP requests to your API or external services (Zapier, Make, n8n).
 **Webhook payload format:**
 
 <CodeGroup>
+
 ```json Single action
 {
   "action": {
@@ -125,6 +125,7 @@ Trigger HTTP requests to your API or external services (Zapier, Make, n8n).
   }
 }
 ```
+
 </CodeGroup>
 
 **Configuration:**
