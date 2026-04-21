@@ -1,65 +1,119 @@
 ---
 title: forest branch
+description: Create a new branch or list and delete your existing branches
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+# forest branch
 
-Create and manage branches for isolated development environments.
+Create, list, or delete layout branches. Branches work similarly to Git branches, but for your Forest Admin UI layout — they let you isolate UI changes while you develop a feature, then push or deploy those changes when ready.
 
-## Sources to migrate
+## Usage
 
-- `developer-guide-agent-v2/sources/deployment/using-branches.md`
-- CLI documentation
+```bash
+forest branch [BRANCH_NAME] [options]
+```
 
-## Content outline
+## Arguments
 
-1. **Command Overview**
-   ```bash
-   forest branch <branch-name>
-   forest branch list
-   forest branch delete <branch-name>
-   ```
+| Argument | Description |
+|---|---|
+| `BRANCH_NAME` | Name of the branch to create (optional — omit to list branches) |
 
-2. **Creating Branches**
-   - Branch naming conventions
-   - Base branch selection
-   - Automatic environment creation
+## Options
 
-3. **Branch Management**
-   - List all branches
-   - Switch between branches
-   - Delete branches
-   - Branch status
+| Option | Description |
+|---|---|
+| `-d, --delete` | Delete a branch |
+| `--force` | Skip confirmation when deleting a branch |
+| `-o, --origin` | Set the origin environment for the new branch |
+| `-p, --projectId` | The ID of the project to work on |
+| `--format` | Output format: `table` (default) or `json` |
+| `--help` | Display usage information |
 
-4. **Branch Workflow**
-   - Feature development
-   - Layout changes isolation
-   - Testing changes
-   - Merging to production
+## Listing branches
 
-5. **Options & Flags**
-   - `--origin` - Specify base branch
-   - `--delete` - Delete branch
-   - `--list` - List branches
+Run `forest branch` without arguments to list all your existing branches:
 
-6. **Examples**
-   ```bash
-   # Create new branch
-   forest branch feature/new-action
+```bash
+$ forest branch
+NAME                    ORIGIN      IS CURRENT  CLOSED AT
+feature/new-button      production  ✅
+fix-missing-label       staging
+feature/remove-tooltip  preprod                 2022-08-19T08:08:47.678Z
+```
 
-   # List all branches
-   forest branch list
+The **IS CURRENT** column shows your active branch — the one your Development Environment is currently using.
 
-   # Delete branch
-   forest branch delete feature/new-action
-   ```
+## Creating a branch
+
+Append a branch name to create a new branch:
+
+```bash
+$ forest branch feature/new-ops-feature --origin production
+✅ Switched to new branch: feature/new-ops-feature
+```
+
+<Info>
+Your project must have at least one remote or production environment before you can create branches.
+</Info>
+
+```bash
+$ forest branch add-refund-action
+❌ You cannot create a branch until this project has either a remote or a production environment.
+```
+
+### Branch origins
+
+Every branch needs an **origin** — the environment whose layout state the branch starts from. Your layout changes build on top of the origin's layout.
+
+- If you omit `--origin`, you will be prompted to select one interactively.
+- Branches usually originate from your Production or a Remote Environment.
+
+<Tip>
+There are no specific constraints on branch names, but **kebab-case** is the convention. Branch names must be unique within a project.
+</Tip>
+
+## Deleting a branch
+
+Use the `-d` flag with a branch name to delete it:
+
+```bash
+$ forest branch -d hotfix/fix-dropdown-issue
+? Delete branch "hotfix/fix-dropdown-issue"? Y
+✅ Branch hotfix/fix-dropdown-issue successfully deleted.
+```
+
+You will be prompted to confirm deletion. To skip the confirmation:
+
+```bash
+forest branch -d hotfix/fix-dropdown-issue --force
+```
+
+## Examples
+
+```bash
+# List all branches
+forest branch
+
+# Create a new branch with a specific origin
+forest branch feature/customer-export --origin production
+
+# Create a branch in a specific project
+forest branch feature/new-view --projectId 42
+
+# Delete a branch
+forest branch -d feature/old-experiment
+
+# Delete a branch without confirmation
+forest branch -d feature/old-experiment --force
+
+# Output branch list as JSON
+forest branch --format json
+```
 
 ## Related pages
 
 - [forest switch](/reference/cli/switch)
 - [forest push](/reference/cli/push)
 - [forest deploy](/reference/cli/deploy)
-- [Guides > Development Workflow](/guides/deployment/development-workflow)
+- [CLI Overview](/reference/cli/overview)

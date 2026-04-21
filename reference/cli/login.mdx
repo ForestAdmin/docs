@@ -1,64 +1,95 @@
 ---
 title: forest login
+description: Authenticate the Forest Admin CLI with your Forest Admin account
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers
 
-## Description
+# forest login
 
-Authenticate the Forest Admin CLI with your Forest Admin account.
+Sign in to your Forest Admin account to enable CLI commands.
 
-## Content outline
+## Usage
 
-1. **Command Overview**
-   ```bash
-   forest login
-   ```
+```bash
+forest login [options]
+```
 
-2. **What It Does**
-   - Opens browser for authentication
-   - Stores authentication token
-   - Enables CLI commands
+## Options
 
-3. **Authentication Flow**
-   - Run `forest login`
-   - Browser opens automatically
-   - Login to Forest Admin
-   - Grant CLI access
-   - Return to terminal
+| Option | Description |
+|---|---|
+| `-e, --email` | Your Forest Admin account email |
+| `-P, --password` | Your Forest Admin account password (ignored if `--token` is set) |
+| `-t, --token` | Your Forest Admin account token (replaces password) |
 
-4. **Token Storage**
-   - Local configuration
-   - Token location
-   - Token expiration
-   - Security considerations
+## Authentication methods
 
-5. **Options**
-   - `--token <token>` - Login with token directly
-   - `--email <email>` - Pre-fill email
+### Interactive login
 
-6. **Examples**
-   ```bash
-   # Interactive login
-   forest login
+Running `forest login` without arguments will prompt you for your email and password:
 
-   # Login with token
-   forest login --token YOUR_TOKEN
-   ```
+```bash
+$ forest login
+? Enter your email: you@company.com
+? Enter your password: ********
+✅ You are now logged in.
+```
 
-7. **Troubleshooting**
-   - Browser doesn't open
-   - Authentication fails
-   - Token expired
-   - Permission denied
+### Login with email and password
 
-8. **Logout**
-   ```bash
-   forest logout
-   ```
+```bash
+forest login --email you@company.com --password yourpassword
+```
+
+### Login with an application token
+
+Application tokens are a secure alternative to passwords, especially useful in CI/CD pipelines or shared environments.
+
+```bash
+forest login --token YOUR_APPLICATION_TOKEN
+```
+
+To create an application token, go to your **Account settings** (accessible from the top-right dropdown in the Forest Admin UI) and generate a new token.
+
+<Tip>
+Use application tokens in automated environments to avoid storing your password in plain text.
+</Tip>
+
+## Logging out
+
+To sign out of your account:
+
+```bash
+forest logout
+```
+
+## Checking the current user
+
+To display which account is currently authenticated:
+
+```bash
+forest user
+```
+
+## Token storage
+
+The CLI stores your session token locally in `~/.forest.d/`. This directory is created automatically on first login.
+
+<Warning>
+Do not commit the `~/.forest.d/` directory to version control. It contains your authentication credentials.
+</Warning>
+
+## Troubleshooting
+
+**Authentication fails with correct credentials**
+Check that your account exists and that you're using the correct email. If you log in via SSO, use an application token instead.
+
+**Token expired**
+Run `forest login` again to obtain a fresh session.
+
+**Command requires authentication**
+Most CLI commands require you to be logged in. Run `forest login` before using other commands.
 
 ## Related pages
 
 - [CLI Overview](/reference/cli/overview)
-- [Init](/reference/cli/init)
+- [forest init](/reference/cli/init)

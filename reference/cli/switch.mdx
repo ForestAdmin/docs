@@ -1,68 +1,78 @@
 ---
 title: forest switch
+description: Switch to a different branch in your local Forest Admin development environment
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers
 
-## Description
+# forest switch
 
-Switch between different Forest Admin branches or environments.
+Switch your active branch in your local development environment. The active branch determines which layout configuration your Development Environment uses.
 
-## Content outline
+## Usage
 
-1. **Command Overview**
-   ```bash
-   forest switch <branch-name>
-   ```
+```bash
+forest switch [BRANCH_NAME] [options]
+```
 
-2. **What It Does**
-   - Changes active branch
-   - Updates environment variables
-   - Switches Forest Admin UI context
+## Arguments
 
-3. **Switching Branches**
-   ```bash
-   # Switch to feature branch
-   forest switch feature/new-action
+| Argument | Description |
+|---|---|
+| `BRANCH_NAME` | The name of the branch to switch to (optional — omit for interactive selection) |
 
-   # Switch back to production
-   forest switch main
-   ```
+## Options
 
-4. **Viewing Current Branch**
-   ```bash
-   forest branch --current
-   ```
+| Option | Description |
+|---|---|
+| `--help` | Display usage information |
 
-5. **Options**
-   - `--create` - Create and switch in one command
-   - `--force` - Force switch (discard changes)
+## Interactive selection
 
-6. **Examples**
-   ```bash
-   # Switch to existing branch
-   forest switch develop
+If you omit the branch name, the CLI presents an interactive list of available branches:
 
-   # Create and switch
-   forest switch --create feature/customer-export
+```bash
+$ forest switch
+? Select the branch you want to set as current:
+❯ feature/add-new-smart-view
+  hotfix/fix-dropdown-issue
+  feature/implement-refund-action
+```
 
-   # Switch back to production
-   forest switch production
-   ```
+## Direct switch
 
-7. **Best Practices**
-   - Commit changes before switching
-   - Restart agent after switching
-   - Clear browser cache if needed
+Provide the branch name directly to switch without the interactive prompt:
 
-8. **Troubleshooting**
-   - Branch not found
-   - Uncommitted changes
-   - Environment mismatch
+```bash
+$ forest switch feature/add-new-smart-view
+✅ Switched to branch: feature/add-new-smart-view
+```
+
+<Info>
+You cannot switch to the branch that is already active.
+</Info>
+
+## Examples
+
+```bash
+# Interactive branch selection
+forest switch
+
+# Switch to a specific branch
+forest switch feature/customer-export
+
+# Switch to main development branch
+forest switch main-feature
+```
+
+## After switching
+
+After switching branches, your Development Environment will reflect the layout of the new branch. If your local agent is running, **restart it** to ensure it picks up any environment variable changes.
+
+<Tip>
+If your Forest Admin UI does not update after switching branches, try refreshing your browser.
+</Tip>
 
 ## Related pages
 
-- [Branch](/reference/cli/branch)
-- [Push](/reference/cli/push)
+- [forest branch](/reference/cli/branch)
+- [forest push](/reference/cli/push)
 - [CLI Overview](/reference/cli/overview)

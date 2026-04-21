@@ -1,74 +1,90 @@
 ---
 title: forest deploy
+description: Deploy layout changes from your current branch to the production (reference) environment
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+# forest deploy
 
-Deploy your branch changes to production environment.
+Deploy the layout changes of your current branch to the reference environment (typically Production). Unlike [`forest push`](/reference/cli/push), which targets non-production environments, `forest deploy` permanently applies your changes to production.
 
-## Sources to migrate
+## Usage
 
-- `developer-guide-agent-v2/sources/deployment/`
-- CLI deploy documentation
+```bash
+forest deploy [options]
+```
 
-## Content outline
+## Options
 
-1. **Command Overview**
-   ```bash
-   forest deploy
-   ```
+| Option | Description |
+|---|---|
+| `-f, --force` | Skip deployment confirmation |
+| `-p, --projectId` | The ID of the project to deploy |
+| `--help` | Display usage information |
 
-2. **Deployment Process**
-   - Schema synchronization
-   - Layout deployment
-   - Code deployment
-   - Validation checks
+## How it works
 
-3. **Pre-Deployment Checks**
-   - Schema validation
-   - Layout validation
-   - Breaking change detection
-   - Conflict detection
+When you run `forest deploy`, your branch's layout changes (Δ) are permanently applied to your Production Environment:
 
-4. **Deployment Steps**
-   - Push to branch
-   - Review changes
-   - Confirm deployment
-   - Monitor deployment
+```
+my-branch (Δ) ──deploy──► Production (reference)
+```
 
-5. **Options & Flags**
-   - `--force` - Skip confirmations
-   - `--dry-run` - Preview changes
-   - `--no-layout` - Skip layout deployment
+Since remote environments have Production as their origin, the deployed changes will automatically appear in all remote environments too.
 
-6. **Post-Deployment**
-   - Verification steps
-   - Monitoring
-   - Rollback if needed
+<Warning>
+Deploying to production is **irreversible**. The layout changes will be permanently applied to your Production Environment. Make sure changes have been tested in a staging or remote environment first.
+</Warning>
 
-7. **Examples**
-   ```bash
-   # Standard deployment
-   forest deploy
+## Prerequisites
 
-   # Preview without deploying
-   forest deploy --dry-run
+To deploy a branch, its **origin must be the reference environment** (Production). If you created your branch from a staging environment, you cannot deploy it directly — you would need to push it to staging first, then deploy from there.
 
-   # Force deployment
-   forest deploy --force
-   ```
+## Deploying changes
 
-8. **Troubleshooting**
-   - Common deployment errors
-   - Conflict resolution
-   - Rollback procedures
+Run `forest deploy` from your project directory:
+
+```bash
+$ forest deploy
+? Deploy my-current-branch to Production (Y|n): Y
+✅ Deployment successful.
+```
+
+You will be prompted to confirm the deployment. To skip the confirmation:
+
+```bash
+forest deploy --force
+```
+
+## Deploy from the UI
+
+You can also deploy layout changes directly from the Forest Admin UI. When a remote environment has changes ready to deploy to production, a banner appears at the top with a **"Deploy to …"** link.
+
+<Info>
+Deploy from the UI is only available for remote environments whose origin **is** the reference environment (Production).
+</Info>
+
+## Push vs. deploy
+
+| Command | Target | Effect |
+|---|---|---|
+| [`forest push`](/reference/cli/push) | Non-reference environments (e.g. staging) | Applies layout changes to a remote environment |
+| `forest deploy` | Reference environment (Production) | Permanently applies layout changes to production |
+
+## Examples
+
+```bash
+# Deploy with confirmation prompt
+forest deploy
+
+# Deploy without confirmation
+forest deploy --force
+
+# Deploy in a specific project
+forest deploy --projectId 42
+```
 
 ## Related pages
 
 - [forest push](/reference/cli/push)
 - [forest branch](/reference/cli/branch)
-- [Guides > Development Workflow](/guides/deployment/development-workflow)
-- [Process > Schema Updates](/product/process/for-tech-teams/developer-workflow/schema-updates)
+- [CLI Overview](/reference/cli/overview)

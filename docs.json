@@ -202,7 +202,6 @@
                 "group": "Fields",
                 "pages": [
                   "product/process/fields/overview",
-                  "product/process/fields/configuring-fields",
                   "product/process/fields/computed",
                   "product/process/fields/import-rename-remove",
                   "product/process/fields/validation",
@@ -210,14 +209,6 @@
                   "product/process/fields/filter",
                   "product/process/fields/sort",
                   "product/process/fields/binary",
-                  {
-                    "group": "Smart Fields",
-                    "pages": [
-                      "product/process/fields/smart-fields/overview",
-                      "product/process/fields/smart-fields/nodejs",
-                      "product/process/fields/smart-fields/cloud"
-                    ]
-                  },
                   "product/integration/relationships"
                 ]
               },

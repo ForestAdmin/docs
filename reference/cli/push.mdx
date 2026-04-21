@@ -1,99 +1,93 @@
 ---
 title: forest push
+description: Push layout changes from your current branch to its origin environment
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+# forest push
 
-Push local schema and layout changes to your Forest Admin branch.
+Push the layout changes of your current branch to its origin environment. This applies your branch's UI changes to a remote environment (such as staging), making them visible to users of that environment.
 
-## Sources to migrate
+## Usage
 
-- `developer-guide-agent-v2/sources/deployment/`
-- Schema push documentation
+```bash
+forest push [options]
+```
 
-## Content outline
+## Options
 
-1. **Command Overview**
-   ```bash
-   forest push
-   ```
+| Option | Description |
+|---|---|
+| `--force` | Skip push confirmation |
+| `-p, --projectId` | The ID of the project to push to |
+| `--help` | Display usage information |
 
-2. **What It Does**
-   - Uploads `.forestadmin-schema.json`
-   - Syncs layout changes
-   - Updates branch configuration
-   - Validates changes
+## How it works
 
-3. **When to Use**
-   - After adding Smart Actions
-   - After adding Smart Fields
-   - After adding collections
-   - After relationship changes
-   - After any agent customization
+When you run `forest push`, your branch's layout changes (noted Δ) are applied to the branch's **origin environment**:
 
-4. **Push Process**
-   - Read local schema
-   - Compare with remote
-   - Upload changes
-   - Validate schema
-   - Confirm success
+```
+my-branch (Δ) ──push──► Staging (origin)
+```
 
-5. **Options**
-   - `--force` - Force push (skip confirmation)
-   - `--dry-run` - Preview without pushing
-   - `--branch <name>` - Push to specific branch
+The layout changes are moved from your branch to the origin environment. Other users of that environment will immediately see the updated layout.
 
-6. **Examples**
-   ```bash
-   # Standard push
-   forest push
+<Warning>
+Pushing your branch to its origin environment will **delete the branch** automatically. Make sure your changes are ready before pushing.
+</Warning>
 
-   # Preview changes
-   forest push --dry-run
+## Pushing changes
 
-   # Force push
-   forest push --force
+Run `forest push` from your project directory:
 
-   # Push to specific branch
-   forest push --branch feature/new-field
-   ```
+```bash
+$ forest push
+? Push branch my-current-branch onto Staging (Y|n): Y
+✅ Push successful.
+```
 
-7. **Validation**
-   - Schema validation
-   - Breaking change detection
-   - Relationship checks
-   - Type checking
+You will be prompted to confirm before the push is applied. To skip the confirmation:
 
-8. **Errors & Warnings**
-   - Invalid schema
-   - Breaking changes
-   - Merge conflicts
-   - Network errors
+```bash
+forest push --force
+```
 
-9. **Best Practices**
-   - Push frequently
-   - Test locally first
-   - Review changes
-   - Use branches for features
+## Push vs. deploy
 
-10. **Troubleshooting**
-    - Push rejected
-    - Schema validation errors
-    - Authentication issues
-    - Network timeouts
+`forest push` and `forest deploy` are distinct commands with different purposes:
 
-## Migration notes
+| Command | Target | Effect |
+|---|---|---|
+| `forest push` | Non-reference environments (e.g. staging) | Applies layout changes to a remote environment; deletes the branch |
+| `forest deploy` | Reference environment (e.g. production) | Permanently applies layout changes to production |
 
-- HIGH priority - essential workflow
-- Clear examples
-- Link to deployment workflow
+<Warning>
+You cannot `push` to the Production (reference) environment. Use [`forest deploy`](/reference/cli/deploy) for production changes.
+</Warning>
+
+## Pushing from the UI
+
+You can also push layout changes directly from the Forest Admin UI. When a remote environment has unpushed changes, a banner appears at the top with a **"Push to …"** link.
+
+<Info>
+Push from the UI is only available for remote environments whose origin is **not** the reference environment.
+</Info>
+
+## Examples
+
+```bash
+# Push with confirmation prompt
+forest push
+
+# Push without confirmation
+forest push --force
+
+# Push in a specific project
+forest push --projectId 42
+```
 
 ## Related pages
 
-- [Deploy](/reference/cli/deploy)
-- [Branch](/reference/cli/branch)
-- [Process > Schema Updates](/product/process/for-tech-teams/developer-workflow/schema-updates)
-- [Guides > Development Workflow](/guides/deployment/development-workflow)
+- [forest deploy](/reference/cli/deploy)
+- [forest branch](/reference/cli/branch)
+- [forest switch](/reference/cli/switch)
+- [CLI Overview](/reference/cli/overview)

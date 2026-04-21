@@ -1,85 +1,138 @@
 ---
-title: Forest Admin CLI - Overview
+title: Forest Admin CLI
+description: Command-line tool for managing your Forest Admin projects, branches, environments, and deployments
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+# Forest Admin CLI
 
-The Forest Admin CLI (`forest`) is a command-line tool for managing your Forest Admin projects, branches, and deployments.
+The Forest Admin CLI (`forest`) is a command-line tool that lets you manage your Forest Admin layout changes throughout your development workflow — from local development to production deployment.
 
-## Sources to migrate
+## Installation
 
-- `developer-guide-agent-v2/sources/deployment/`
-- CLI documentation
+```bash
+npm install -g forest-cli
+```
 
-## Content outline
+You can verify the installation with:
 
-1. **CLI Overview**
-   - What is the CLI
-   - Use cases
-   - Installation
+```bash
+forest --version
+```
 
-2. **Installation**
+<Info>
+The Forest Admin CLI requires **Node.js >= 18.0.0**.
+</Info>
+
+## Getting started
+
+Once installed, authenticate with your Forest Admin account:
+
+```bash
+forest login
+```
+
+Then initialize your development environment from your project directory:
+
+```bash
+forest init
+```
+
+## Commands
+
+### Authentication
+
+| Command | Description |
+|---|---|
+| [`forest login`](/reference/cli/login) | Sign in to your Forest Admin account |
+| `forest logout` | Sign out of your account |
+| `forest user` | Display the currently logged-in user |
+
+### Branch management
+
+| Command | Description |
+|---|---|
+| [`forest branch`](/reference/cli/branch) | Create a branch or list existing branches |
+| [`forest switch`](/reference/cli/switch) | Switch to a different branch |
+| `forest set-origin` | Set an environment as your branch's origin |
+
+### Deployment
+
+| Command | Description |
+|---|---|
+| [`forest push`](/reference/cli/push) | Push layout changes from your branch to its origin environment |
+| [`forest deploy`](/reference/cli/deploy) | Deploy layout changes to the production (reference) environment |
+
+### Environment management
+
+| Command | Description |
+|---|---|
+| `forest environments` | List all environments |
+| `forest environments:create` | Create a new environment |
+| `forest environments:delete` | Delete an environment |
+| `forest environments:update` | Update an environment |
+| `forest environments:reset` | Reset all layout changes on a remote environment |
+
+### Project management
+
+| Command | Description |
+|---|---|
+| `forest projects` | List all projects |
+| `forest projects:get` | Get a project's configuration |
+
+### Schema
+
+| Command | Description |
+|---|---|
+| `forest schema:apply` | Apply your local schema to a specific environment |
+| `forest schema:diff` | Compare the schemas of two environments |
+| `forest schema:update` | Refresh your schema by generating missing files |
+
+## Development workflow
+
+A typical development workflow with the Forest Admin CLI looks like this:
+
+1. **Create a branch** to isolate your layout changes:
    ```bash
-   npm install -g forest-cli
-   # or
-   yarn global add forest-cli
+   forest branch feature/my-feature --origin production
    ```
 
-3. **Getting Started**
-   - [Login](/reference/cli/login)
-   - [Init](/reference/cli/init)
-   - First commands
+2. **Work locally** — make layout changes in your Forest Admin UI connected to your development environment.
 
-4. **Core Commands**
-   - **[forest init](/reference/cli/init)** - Initialize a new project
-   - **[forest login](/reference/cli/login)** - Authenticate CLI
-   - **[forest branch](/reference/cli/branch)** - Manage branches
-   - **[forest switch](/reference/cli/switch)** - Switch branches
-   - **[forest push](/reference/cli/push)** - Push schema changes
-   - **[forest deploy](/reference/cli/deploy)** - Deploy to production
-   - **[forest environments](/reference/cli/environments)** - Manage environments
-   - **[forest schema:update](/reference/cli/schema-update)** - Update schema
-   - **[forest user](/reference/cli/user)** - User management
+3. **Push your changes** to a staging or test environment for review:
+   ```bash
+   forest push
+   ```
 
-5. **Workflow Commands**
-   - Development workflow
-   - Branch workflow
-   - Deployment workflow
+4. **Deploy to production** once changes are validated:
+   ```bash
+   forest deploy
+   ```
 
-6. **Configuration**
-   - `.forestadmin-schema.json`
-   - Environment variables
-   - CLI config file
+## Docker usage
 
-7. **Common Operations**
-   - Create development branch
-   - Test changes locally
-   - Deploy to production
-   - Sync schema changes
+You can also run the CLI via Docker without installing it locally:
 
-8. **Troubleshooting**
-   - Common errors
-   - Authentication issues
-   - Connection problems
-   - Getting help
+```bash
+docker run --rm --init -it \
+  -v `pwd`:/usr/src/app \
+  -v ~/.forest.d:/usr/src/cli/.forest.d \
+  -e TOKEN_PATH="/usr/src/cli" \
+  forestadmin/toolbelt:latest [command]
+```
 
-9. **Global Options**
-   - `--help` - Show help
-   - `--version` - Show version
-   - `--debug` - Debug mode
+## Global options
 
-## Migration notes
+All commands support the following options:
 
-- HIGH priority - essential tool
-- Comprehensive command reference
-- Examples for common workflows
+| Option | Description |
+|---|---|
+| `--help` | Display usage information for the command |
+| `--version` | Show the CLI version |
 
 ## Related pages
 
-- [Branch](/reference/cli/branch)
-- [Deploy](/reference/cli/deploy)
-- [Push](/reference/cli/push)
-- [Guides > Development Workflow](/guides/deployment/development-workflow)
+- [forest init](/reference/cli/init)
+- [forest login](/reference/cli/login)
+- [forest branch](/reference/cli/branch)
+- [forest push](/reference/cli/push)
+- [forest deploy](/reference/cli/deploy)
