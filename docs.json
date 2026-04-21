@@ -21,8 +21,7 @@
           {
             "group": "Welcome",
             "pages": [
-              "index",
-              "home/placeholder"
+              "index"
             ]
           }
         ]
