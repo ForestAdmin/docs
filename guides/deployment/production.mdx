@@ -46,7 +46,7 @@ RAILS_ENV=production # For Ruby
 **Never commit secrets to version control.** Use your platform's secret management:
 - Heroku: Config Vars
 - AWS: Secrets Manager or Parameter Store
-- Vercel/Railway: Environment Variables dashboard
+- Railway: Environment Variables dashboard
 </Warning>
 
 ### Create Production Environment in Forest Admin
@@ -138,7 +138,7 @@ DATABASE_URL=mongodb://user:password@host:27017/db?ssl=true
 
 Forest Admin UI requires HTTPS in production. Ensure your agent is accessible via HTTPS:
 
-- Use your platform's built-in SSL (Heroku, Vercel, Railway)
+- Use your platform's built-in SSL (Heroku, Railway)
 - Use a reverse proxy (Nginx, Caddy) with Let's Encrypt
 - Use a load balancer with SSL termination (AWS ALB, Google Cloud Load Balancer)
 
@@ -165,7 +165,6 @@ Ensure your agent has a health check endpoint:
 Configure your platform's health checks:
 - Heroku: Automatically checks web dyno
 - AWS: Configure ALB health checks
-- Kubernetes: Add liveness and readiness probes
 
 ### Logging
 
@@ -198,15 +197,12 @@ Enable structured logging in production:
 
 See platform-specific guides:
 
-<CardGroup cols={3}>
+<CardGroup cols={2}>
   <Card title="AWS" icon="aws" href="/guides/deployment/platforms/aws">
     Deploy to AWS Lambda, ECS, or EC2
   </Card>
   <Card title="Heroku" icon="bolt" href="/guides/deployment/platforms/heroku">
     One-click deployment to Heroku
-  </Card>
-  <Card title="Vercel" icon="triangle" href="/guides/deployment/platforms/vercel">
-    Deploy serverless to Vercel
   </Card>
 </CardGroup>
 

@@ -124,11 +124,19 @@
                 "group": "Authentication",
                 "pages": [
                   "product/control/authentication/overview",
-                  "product/control/authentication/sso-google",
-                  "product/control/authentication/sso-azure",
-                  "product/control/authentication/sso-okta",
-                  "product/control/authentication/sso-aws",
-                  "product/control/authentication/sso-onelogin",
+                  "product/control/authentication/sso",
+                  {
+                    "group": "SSO Providers",
+                    "pages": [
+                      "product/control/authentication/sso-providers/overview",
+                      "product/control/authentication/sso-providers/google",
+                      "product/control/authentication/sso-providers/okta",
+                      "product/control/authentication/sso-providers/azure",
+                      "product/control/authentication/sso-providers/aws",
+                      "product/control/authentication/sso-providers/generic-saml"
+                    ]
+                  },
+                  "product/control/authentication/2fa",
                   {
                     "group": "SCIM Provisioning",
                     "pages": [

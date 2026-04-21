@@ -14,68 +14,11 @@ The default "Data" tab gives operators access to all your collections, but it's 
 - **Focus** - show only the data relevant to a specific task
 - **Contextualize** - display related information side by side without navigating away
 - **Act faster** - put action buttons directly next to the data that triggers them
-- **Guide** - add text, sections, and structure to guide users through it
+- **Guide** - add text, sections, and structure to guide users through a workflow
 
 Workspaces are built with a **drag-and-drop editor**, no code required for most use cases.
 
-## Workspace components
-
-A Workspace is composed of **components**, broken down into 5 categories, that you drag onto a canvas and configure:
-
-**Layout & Guidance** components aim to design your workspace in an intuitive way, and guide end users through it:
-
-| Component | Purpose |
-| --- | --- |
-| **Text** | Headers, instructions, labels with optional dynamic templating |
-| **Section** | Groups related components within a section |
-| **Tabs** | Tabbed section to segment groups of components |
-| **Link** | A link to a record, external URL, or another workspace |
-| **Dividers** | Visual separators |
-
-**Source** components set the context of your workspace, for all data-related components to plug into:
-
-| Component | Purpose |
-| --- | --- |
-| **Search** | Lets users search for a record from a collection |
-| **Collection** | Lets users select a record from a list, optionally filtered |
-| **Inbox** | Picks the highest priority record for the user to process |
-| **Dropdown** | A selector that filters connected components dynamically |
-| **Date Picker** | A date picker that filters connected components dynamically |
-| **Toggle** | A boolean switch that filters connected components dynamically |
-| **Input** | Free text input that filters connected components dynamically |
-
-**Data & Action** components provide users with data, actions, and workflows available on the record coming from a Source component:
-
-| Component | Purpose |
-| --- | --- |
-| **Field** | Shows the value of a specific field from a selected record |
-| **Action** | Triggers an Action on a selected record |
-| **Workflow** | Triggers or resumes a Workflow on a selected record |
-
-**Analytics** components provide charts and dashboards for extra context:
-
-| Component | Purpose |
-| --- | --- |
-| **Chart** | Embeds a chart or metric (single value, distribution, etc.) |
-| **Metabase** | Embeds a Metabase dashboard using an iframe |
-
-The **Custom** components lets you write your own, based on your own business logic and preferences in terms of visual representation.
-
-## Templating: making workspaces dynamic
-
-The real power of Workspaces comes from **Templating** — the ability to reference values from other components dynamically. Click on the `{}` button in any text, filter, or link to see available variables.
-
-For example:
-
-- A **Text** component can display `Welcome, {{currentUser.name}}`
-- A **Collection** component can filter records where `company_id = {{collection1.selectedRecord.id}}`
-- A **Link** can redirect to `https://app.example.com/users/{{collection1.selectedRecord.id}}`
-
-When an operator selects a row in `collection1`, all connected components update instantly.
-
 ## Building a workspace
-
-Here's a step-by-step guide on building your first very basic Workspace:
 
 <div style={{position: "relative", paddingBottom: "calc(54.6875% + 47px)", height: 0}}>
   <iframe id="gkyvev6f4k" src="https://app.guideflow.com/embed/mk60x69u6k" width="100%" height="100%" style={{overflow: "hidden", position: "absolute", border: "none"}} allow="clipboard-read; clipboard-write" allowFullScreen allowTransparency />
@@ -83,11 +26,11 @@ Here's a step-by-step guide on building your first very basic Workspace:
 
 **Step 1 — Create a new workspace**
 
-Click on `+ Add New` in the left sidebar, select **Workspace**, and give it a descriptive name that reflects the use case (e.g. "Customer Onboarding", "CRM").
+Click on `+ Add New` in the left sidebar, select **Workspace**, and give it a descriptive name that reflects the use case (e.g. "Customer Onboarding", "KYC Review").
 
 **Step 2 — Add a Collection component**
 
-Drag a **Collection** from the sidebar onto the canvas. Select which collection to display and optionally apply a segment (e.g. "Pending applications"). Set the row click behavior to **"Select a record"** to enable dynamic updates.
+Drag a **Collection** from the sidebar onto the canvas. Select which collection to display and optionally apply a segment. Set the row click behavior to **"Select a record"** to enable dynamic updates across all connected components.
 
 **Step 3 — Add context with Field components**
 
@@ -101,8 +44,163 @@ Drag an **Action** and link it to your Collection. Now operators can click a row
 
 Click "Exit builder" to switch to the operator view. Test the workflow by clicking rows and triggering actions.
 
+---
+
+## Components reference
+
+A Workspace is composed of **components** that you drag onto a canvas and configure. They fall into 5 categories.
+
+### Layout & Guidance
+
+Components to structure your workspace and guide operators through it.
+
+| Component | Purpose |
+|-----------|---------|
+| **Text** | Headers, instructions, labels — supports [templating](#templating) |
+| **Section** | Groups related components; visibility can be controlled as a unit |
+| **Tabs** | Tabbed area holding up to 10 tabs; only the active tab's components are rendered |
+| **Link** | Link to a record detail page, external URL, or another workspace |
+| **Divider** | Horizontal or vertical visual separator |
+
+### Source
+
+Source components set the data context for the rest of the workspace. Data & Action components subscribe to a Source to know which record to act on.
+
+| Component | Purpose |
+|-----------|---------|
+| **Search** | Lets operators search for a record by a specified field |
+| **Collection** | Displays records in a table; operators can select a row to feed connected components |
+| **Inbox** | Surfaces the next task from the operator's [Inbox](/product/collaborate/inbox) |
+| **Dropdown** | A selector that dynamically filters connected components |
+| **Date Picker** | A date selector that filters connected components |
+| **Toggle** | A boolean switch used to apply or remove a filter |
+| **Input** | Free text/number input used to filter connected components |
+
+#### Dropdown modes
+
+The Dropdown component has three modes:
+
+- **Static** — You hardcode a list of values. Reorder them with drag handles.
+- **Dynamic > Simple** — Choose a collection and a field; the dropdown is populated from your data, with an optional filter.
+- **Dynamic > Smart** — Fetches values from an external endpoint. The expected response format is:
+  ```json
+  {
+    "data": ["value1", "value2"]
+  }
+  ```
+
+Enable the **"Search"** option on any mode to add a search input, useful when the list is long.
+
+#### Date Picker
+
+Set minimum and/or maximum selectable dates — hardcoded or using [templating](#templating):
+
+```
+Minimum: {{currentDate.subtract.days.1}}
+Maximum: {{currentDate.add.days.1}}
+```
+
+#### Toggle
+
+Pick a value type (String, Number, Boolean, etc.) and set the value for the "toggled on" state. When toggled off, the component's value is undefined and any filter using it is ignored.
+
+Example: a Boolean toggle with value `true` filtering on `isEmailVerified`, combined with a String toggle with value `"onboarding"` filtering on `status`.
+
+### Data & Actions
+
+| Component | Purpose |
+|-----------|---------|
+| **Field** | Displays the value of a specific field from a selected record |
+| **Action** | Triggers a global, single, or bulk action on a selected record |
+| **Workflow** | Triggers or resumes a Workflow on a selected record |
+
+The **Field** component supports all [display widgets](/product/build/fields-and-widgets/overview). For nested values, use the code input mode:
+
+```
+{{country.headquarter.address}}
+```
+
+### Analytics
+
+| Component | Purpose |
+|-----------|---------|
+| **Chart** | Embeds any chart — single value, distribution, time-based, etc. |
+| **Metabase** | Embeds a Metabase dashboard |
+
+#### Metabase component setup
+
+| Parameter | Description |
+|-----------|-------------|
+| **URL** | Your Metabase instance URL (e.g. `https://myanalytics.mycompany.com`) |
+| **Token** | A JWT signed with your `METABASE_SECRET_KEY`, containing `{"resource": {"dashboard": <ID>}, "params": {}}` |
+| **Query** | Optional query string parameters passed to the dashboard, supports templating (e.g. `projectId={{search1.selectedRecord.id}}`) |
+
+### Custom
+
+The Custom component lets you write your own component in HTML/JS for advanced display logic not covered by the built-in set.
+
+---
+
+## Templating
+
+Templating lets components reference values from other components dynamically. Type `{{` in any text input, filter, or link field to open the autocomplete.
+
+| Syntax | Result |
+|--------|--------|
+| `{{collection1.selectedRecord.email}}` | Field value from the selected row |
+| `{{currentUser.fullName}}` | Logged-in operator's name |
+| `{{currentUser.email}}` | Logged-in operator's email |
+| `{{currentUser.team}}` | Logged-in operator's team |
+| `{{currentUser.tags.some-tag}}` | Value of a specific user tag |
+| `{{currentDate}}` | Today's date |
+| `{{currentDate.subtract.days.7}}` | 7 days ago |
+| `{{currentDate.startOf.months}}` | First day of current month |
+
+<Info>
+When you rename a component, all templating references to it update automatically.
+</Info>
+
+### Filtering charts with templating
+
+Charts in a workspace can be filtered using other components' values. In the chart's filter configuration, reference a source component:
+
+```
+company_id = {{collection1.selectedRecord.id}}
+```
+
+Templating also works inside **SQL Query** mode charts. You can use it in the **Timeframe** property of time-based charts — for example, a Dropdown with values _Day_, _Week_, _Month_, _Year_ can dynamically change a chart's timeframe.
+
+---
+
+## Visibility rules
+
+Every component has a **Visible** option at the bottom of its settings panel.
+
+| Option | Behavior |
+|--------|----------|
+| **Always** | Component is always visible. Filters using undefined templating values are silently ignored. |
+| **Only when a component is visible** | Component appears only when another specified component is also visible — useful for dividers and section titles. |
+| **Only when dynamic variables are defined** | Component appears only when all its templating variables have a value — prevents showing empty states. |
+
+Example: a related Collection filtered on `{{collection1.selectedRecord.id}}` with visibility set to "Only when dynamic variables are defined" will stay hidden until an operator selects a row in `collection1`.
+
+---
+
 ## Sharing workspaces
 
-Workspaces are available to all operators in your project by default. Control access using [Roles & Permissions](/product/control/roles-permissions), you can limit Workspace visibility to specific teams.
+Workspaces are available to all operators in your project by default. Use [Roles & Permissions](/product/control/roles-permissions) to limit visibility to specific teams.
 
-Operators can also share a Workspace URL with a pre-applied filter state, making it easy to hand off specific work items.
+Operators can share a Workspace URL with a pre-applied filter state, making it easy to hand off specific work items directly.
+
+---
+
+## Examples
+
+<CardGroup cols={2}>
+  <Card title="KYC Onboarding" icon="id-card" href="/guides/workspaces/kyc-onboarding">
+    Review companies, assess missing documents, and complete gaps in one interface
+  </Card>
+  <Card title="Incident Management" icon="triangle-exclamation" href="/guides/workspaces/incident-management">
+    Track, triage, and resolve incidents without leaving Forest Admin
+  </Card>
+</CardGroup>
