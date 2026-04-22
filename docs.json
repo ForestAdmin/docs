@@ -48,48 +48,48 @@
           {
             "group": "Connect",
             "pages": [
-              "product/integration/overview",
+              "get-started/connect/overview",
               {
                 "group": "Architectures",
                 "pages": [
-                  "product/integration/architectures/self-hosted",
-                  "product/integration/architectures/cloud",
-                  "product/integration/architectures/on-premise"
+                  "get-started/connect/architectures/self-hosted",
+                  "get-started/connect/architectures/cloud",
+                  "get-started/connect/architectures/on-premise"
                 ]
               },
               {
                 "group": "Data Sources",
                 "pages": [
-                  "product/integration/data-sources/overview",
+                  "get-started/connect/data-sources/overview",
                   {
                     "group": "Native Datasources",
                     "pages": [
-                      "product/integration/data-sources/sql",
-                      "product/integration/data-sources/sequelize",
-                      "product/integration/data-sources/mongoose",
-                      "product/integration/data-sources/mongodb",
-                      "product/integration/data-sources/dummy",
-                      "product/integration/data-sources/active-record",
-                      "product/integration/data-sources/mongoid"
+                      "get-started/connect/data-sources/sql",
+                      "get-started/connect/data-sources/sequelize",
+                      "get-started/connect/data-sources/mongoose",
+                      "get-started/connect/data-sources/mongodb",
+                      "get-started/connect/data-sources/dummy",
+                      "get-started/connect/data-sources/active-record",
+                      "get-started/connect/data-sources/mongoid"
                     ]
                   },
                   {
                     "group": "Community Datasources",
                     "pages": [
-                      "product/integration/data-sources/community-datasources/hubspot",
-                      "product/integration/data-sources/community-datasources/elasticsearch",
-                      "product/integration/data-sources/community-datasources/airtable",
-                      "product/integration/data-sources/community-datasources/stripe",
-                      "product/integration/data-sources/community-datasources/rpc",
-                      "product/integration/data-sources/community-datasources/graphql-hasura",
-                      "product/integration/data-sources/community-datasources/cosmosdb"
+                      "get-started/connect/data-sources/community-datasources/hubspot",
+                      "get-started/connect/data-sources/community-datasources/elasticsearch",
+                      "get-started/connect/data-sources/community-datasources/airtable",
+                      "get-started/connect/data-sources/community-datasources/stripe",
+                      "get-started/connect/data-sources/community-datasources/rpc",
+                      "get-started/connect/data-sources/community-datasources/graphql-hasura",
+                      "get-started/connect/data-sources/community-datasources/cosmosdb"
                     ]
                   },
                   {
                     "group": "Create your own datasource",
                     "pages": [
-                      "product/integration/data-sources/custom-datasources/translation",
-                      "product/integration/data-sources/custom-datasources/replication"
+                      "get-started/connect/data-sources/custom-datasources/translation",
+                      "get-started/connect/data-sources/custom-datasources/replication"
                     ]
                   }
                 ]
@@ -97,16 +97,16 @@
               {
                 "group": "Integrations",
                 "pages": [
-                  "product/integration/integrations/mcp-servers"
+                  "get-started/connect/integrations/mcp-servers"
                 ]
               },
               {
                 "group": "Advanced Concepts",
                 "pages": [
-                  "product/integration/environment-variables",
-                  "product/integration/data-types",
-                  "product/integration/relationships-schema",
-                  "product/integration/typescript-autocompletion",
+                  "get-started/connect/environment-variables",
+                  "get-started/connect/data-types",
+                  "get-started/connect/relationships-schema",
+                  "get-started/connect/typescript-autocompletion",
                   "reference/schema/forestadmin-schema"
                 ]
               }
@@ -115,34 +115,34 @@
           {
             "group": "Control",
             "pages": [
-              "product/control/overview",
-              "product/control/roles-permissions",
-              "product/control/teams",
-              "product/control/scopes-and-visibility",
-              "product/control/audit",
+              "get-started/control/overview",
+              "get-started/control/roles-permissions",
+              "get-started/control/teams",
+              "get-started/control/scopes-and-visibility",
+              "get-started/control/audit",
               {
                 "group": "Authentication",
                 "pages": [
-                  "product/control/authentication/overview",
-                  "product/control/authentication/sso",
+                  "get-started/control/authentication/overview",
+                  "get-started/control/authentication/sso",
                   {
                     "group": "SSO Providers",
                     "pages": [
-                      "product/control/authentication/sso-providers/overview",
-                      "product/control/authentication/sso-providers/google",
-                      "product/control/authentication/sso-providers/okta",
-                      "product/control/authentication/sso-providers/azure",
-                      "product/control/authentication/sso-providers/aws",
-                      "product/control/authentication/sso-providers/generic-saml"
+                      "get-started/control/authentication/sso-providers/overview",
+                      "get-started/control/authentication/sso-providers/google",
+                      "get-started/control/authentication/sso-providers/okta",
+                      "get-started/control/authentication/sso-providers/azure",
+                      "get-started/control/authentication/sso-providers/aws",
+                      "get-started/control/authentication/sso-providers/generic-saml"
                     ]
                   },
-                  "product/control/authentication/2fa",
+                  "get-started/control/authentication/2fa",
                   {
                     "group": "SCIM Provisioning",
                     "pages": [
-                      "product/control/authentication/scim-okta",
-                      "product/control/authentication/scim-onelogin",
-                      "product/control/authentication/scim-okta-manual"
+                      "get-started/control/authentication/scim-okta",
+                      "get-started/control/authentication/scim-onelogin",
+                      "get-started/control/authentication/scim-okta-manual"
                     ]
                   }
                 ]
@@ -150,10 +150,10 @@
               {
                 "group": "Security",
                 "pages": [
-                  "product/control/security/architecture",
-                  "product/control/security/ip-whitelisting",
-                  "product/control/security/auto-logout",
-                  "product/control/security/2fa-enforcement"
+                  "get-started/control/security/architecture",
+                  "get-started/control/security/ip-whitelisting",
+                  "get-started/control/security/auto-logout",
+                  "get-started/control/security/2fa-enforcement"
                 ]
               }
             ]
@@ -161,10 +161,10 @@
           {
             "group": "Project Settings",
             "pages": [
-              "product/project-settings/general",
-              "product/project-settings/users",
-              "product/project-settings/interface",
-              "product/project-settings/billing"
+              "get-started/project-settings/general",
+              "get-started/project-settings/users",
+              "get-started/project-settings/interface",
+              "get-started/project-settings/billing"
             ]
           }
         ]
@@ -209,7 +209,7 @@
                   "product/process/fields/filter",
                   "product/process/fields/sort",
                   "product/process/fields/binary",
-                  "product/integration/relationships"
+                  "product/process/fields/relationships"
                 ]
               },
               {
