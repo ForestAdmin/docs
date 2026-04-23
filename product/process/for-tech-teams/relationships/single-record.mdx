@@ -16,7 +16,8 @@ Many-to-One relationships are by far the most common type of relationship: many 
 
 Think about countries and towns: a town belongs to a single country, but each country can have multiple towns.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 agent.customizeCollection('towns', collection =>
   collection.addManyToOneRelation('country', 'countries', {
     foreignKey: 'country_id',
@@ -24,6 +25,18 @@ agent.customizeCollection('towns', collection =>
   }),
 );
 ```
+
+```ruby Ruby
+ForestAdmin.customize do
+  customize_collection('towns') do |collection|
+    collection.add_many_to_one_relation('country', 'countries',
+      foreign_key: 'country_id',
+      foreign_key_target: 'id' # Optional (uses `country` primary key by default)
+    )
+  end
+end
+```
+</CodeGroup>
 
 ## One-to-One relationships
 
@@ -37,7 +50,8 @@ Think about cities and mayors: A city can have at most one mayor, and each mayor
   This may seem counter-intuitive: the side of the relationship which should be configured as `many-to-one` is the one that carries the foreign key.
 </Warning>
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 // Configure one side of the relationship ...
 agent.customizeCollection('mayors', collection => {
   collection.addOneToOneRelation('city', 'cities', {
@@ -55,3 +69,25 @@ agent.customizeCollection('cities', collection => {
   });
 });
 ```
+
+```ruby Ruby
+ForestAdmin.customize do
+  # Configure one side of the relationship ...
+  customize_collection('mayors') do |collection|
+    collection.add_one_to_one_relation('city', 'cities',
+      origin_key: 'mayor_id',
+      origin_key_target: 'id' # Optional (uses `mayors` primary key by default)
+    )
+  end
+
+  # ... and the other one.
+  customize_collection('cities') do |collection|
+    # ⚠️ Not 'one_to_one'
+    collection.add_many_to_one_relation('mayor', 'mayors',
+      foreign_key: 'mayor_id',
+      foreign_key_target: 'id' # Optional (uses `mayors` primary key by default)
+    )
+  end
+end
+```
+</CodeGroup>

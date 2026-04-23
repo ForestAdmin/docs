@@ -17,7 +17,8 @@ Actions have three scopes that determine how they can be triggered and which rec
 
 Execute on one specific record.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.addAction('Send email', {
   scope: 'Single',
   execute: async (context, resultBuilder) => {
@@ -26,6 +27,17 @@ collection.addAction('Send email', {
   },
 });
 ```
+
+```ruby Ruby
+collection.add_action(
+  'Send email',
+  BaseAction.new(scope: ActionScope::SINGLE) do |context, result_builder|
+    user = context.get_record(['email', 'name'])
+    # Process single user
+  end
+)
+```
+</CodeGroup>
 
 **Use when:**
 - Sending an email to a specific user
@@ -41,7 +53,8 @@ collection.addAction('Send email', {
 
 Execute on multiple selected records simultaneously.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.addAction('Archive selected', {
   scope: 'Bulk',
   execute: async (context, resultBuilder) => {
@@ -50,6 +63,17 @@ collection.addAction('Archive selected', {
   },
 });
 ```
+
+```ruby Ruby
+collection.add_action(
+  'Archive selected',
+  BaseAction.new(scope: ActionScope::BULK) do |context, result_builder|
+    orders = context.get_records(['id'])
+    # Process all selected orders
+  end
+)
+```
+</CodeGroup>
 
 **Use when:**
 - Archiving multiple items
@@ -69,7 +93,8 @@ Handle failures gracefully in bulk actions. Decide whether to stop on first erro
 
 Execute at collection level without selecting specific records.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.addAction('Import data', {
   scope: 'Global',
   execute: async (context, resultBuilder) => {
@@ -78,6 +103,17 @@ collection.addAction('Import data', {
   },
 });
 ```
+
+```ruby Ruby
+collection.add_action(
+  'Import data',
+  BaseAction.new(scope: ActionScope::GLOBAL) do |context, result_builder|
+    file = context.form_values['file']
+    # Process import for entire collection
+  end
+)
+```
+</CodeGroup>
 
 **Use when:**
 - Importing data from CSV

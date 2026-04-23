@@ -24,7 +24,8 @@ You should refrain from using handlers that have side effects (to perform error 
 
 In the following example, editing or creating a `fullName` will update both `firstName` and `lastName` fields of the record.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.replaceFieldWriting('fullName', value => {
   const [firstName, lastName] = value.split(' ');
 
@@ -32,13 +33,22 @@ collection.replaceFieldWriting('fullName', value => {
 });
 ```
 
+```ruby Ruby
+collection.replace_field_writing('fullName') do |value|
+  first_name, last_name = value.split(' ')
+  { 'firstName' => first_name, 'lastName' => last_name }
+end
+```
+</CodeGroup>
+
 ### Having specific behavior only for updates
 
 You can have different behavior for `creations` and `updates`.
 
 In this example, each time the `firstName` field is edited, we also want to update a timestamp field.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.replaceFieldWriting('firstName', async (value, context) => {
   switch (context.action) {
     case 'create':
@@ -53,6 +63,20 @@ collection.replaceFieldWriting('firstName', async (value, context) => {
 });
 ```
 
+```ruby Ruby
+collection.replace_field_writing('firstName') do |value, context|
+  case context.action
+  when 'create'
+    { 'firstName' => value, 'firstNameLastEdited' => nil }
+  when 'update'
+    { 'firstName' => value, 'firstNameLastEdited' => Time.now.iso8601 }
+  else
+    raise 'Unexpected value'
+  end
+end
+```
+</CodeGroup>
+
 ### Changing fields in related records
 
 <Info>
@@ -66,11 +90,19 @@ In this simple example, we have two collections that are linked together:
 
 When the user updates his `job` field we want also to update the `title` of the portfolio by the `job` name.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolio: { title: job } };
 });
 ```
+
+```ruby Ruby
+collection.replace_field_writing('job') do |job, context|
+  { 'job' => job, 'portfolio' => { 'title' => job } }
+end
+```
+</CodeGroup>
 
 <Info>
   If the relationships do not exist, they will be created with the given field values.
@@ -78,16 +110,32 @@ collection.replaceFieldWriting('job', (job, { action }) => {
 
 You can also provide another `portfolioId` to update the relationships and their fields:
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolioId: 8, portfolio: { title: job } };
 });
 ```
 
+```ruby Ruby
+collection.replace_field_writing('job') do |job, context|
+  { 'job' => job, 'portfolioId' => 8, 'portfolio' => { 'title' => job } }
+end
+```
+</CodeGroup>
+
 You can chain the relationships. For example, if a portfolio has a `one-to-one` relationship with the `formats` collection, you can update it by writing the right path.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.replaceFieldWriting('job', (job, { action }) => {
   return { job, portfolioId: 8, portfolio: { title: job, format: { name: 'pdf' } } };
 });
 ```
+
+```ruby Ruby
+collection.replace_field_writing('job') do |job, context|
+  { 'job' => job, 'portfolioId' => 8, 'portfolio' => { 'title' => job, 'format' => { 'name' => 'pdf' } } }
+end
+```
+</CodeGroup>

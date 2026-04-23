@@ -14,7 +14,8 @@ However, you may want to create additional intra and cross data source relations
 
 ## Minimal example
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 agent.customizeCollection('towns', collection =>
   collection
     // Towns belong to 1 country
@@ -44,3 +45,35 @@ agent.customizeCollection('towns', collection =>
     }),
 );
 ```
+
+```ruby Ruby
+ForestAdmin.customize do
+  customize_collection('towns') do |collection|
+    collection
+      # Towns belong to 1 country
+      .add_many_to_one_relation('country', 'countries', foreign_key: 'country_id')
+
+      # Towns have 1 mayor
+      .add_one_to_one_relation('mayor', 'mayors', origin_key: 'town_id')
+
+      # Towns have multiple inhabitants
+      .add_one_to_many_relation('inhabitants', 'people', origin_key: 'town_id')
+
+      # Towns electricity is supplied by power plants that are shared with other towns
+      .add_many_to_many_relation('energyProviders', 'powerPlants', 'utilityContracts',
+        origin_key: 'town_id',
+        foreign_key: 'power_plant_id'
+      )
+
+      # Towns have a list of honorary citizen that is retrievable through a public API
+      .add_external_relation('honoraryCitizen',
+        schema: { 'firstName' => 'String', 'lastName' => 'String' },
+        list_records: ->(record) {
+          response = Faraday.get("https://api.mytown.com/cities/#{record['id']}/honorary-citizen")
+          JSON.parse(response.body)
+        }
+      )
+  end
+end
+```
+</CodeGroup>

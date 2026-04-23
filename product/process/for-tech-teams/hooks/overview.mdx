@@ -50,7 +50,8 @@ To declare a hook on a Collection, the following information is required:
 
 In the following example, we want to prevent a set of users from updating any records of the `Transactions` table. We want to check if the user email is allowed to update a record via an external API call.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 transaction.addHook('Before', 'Update', async context => {
   // context.caller contains information about the current user, the defined
   // timezone, etc.
@@ -65,9 +66,26 @@ transaction.addHook('Before', 'Update', async context => {
 });
 ```
 
+```ruby Ruby
+transaction.add_hook('Before', 'Update') do |context|
+  # context.caller contains information about the current user, the defined
+  # timezone, etc.
+  # In this case, context.caller.email is the email used in Forest Admin by the user
+  # that initiated the call
+  is_allowed = my_function_to_check_if_user_is_allowed(context.caller.email)
+  unless is_allowed
+    # Raising an error here will prevent the execution of the update function,
+    # as well as any other hooks that may be defined afterwards.
+    context.throw_forbidden_error("#{context.caller.email} is not allowed!")
+  end
+end
+```
+</CodeGroup>
+
 Another good example: each time a new `User` is created in the database, send them a welcome email.
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 user.addHook('After', 'Create', async (context, responseBuilder) => {
   // The result of the create function always returns an array of records
   const userEmail = context.records[0]?.email;
@@ -78,6 +96,19 @@ user.addHook('After', 'Create', async (context, responseBuilder) => {
   });
 });
 ```
+
+```ruby Ruby
+user.add_hook('After', 'Create') do |context|
+  # The result of the create function always returns an array of records
+  user_email = context.records[0]&.dig('email')
+  MyEmailSender.send_email(
+    from: 'erlich@bachman.com',
+    to: user_email,
+    message: 'Hey, a new account was created with this email.'
+  )
+end
+```
+</CodeGroup>
 
 ---
 
@@ -105,7 +136,8 @@ To define an override for a Collection, you must specify the handler function th
   Unknown properties in returned records will be removed.
 </Warning>
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.overrideCreate(async context => {
   // Custom logic to handle creation
   // context.data contains the data intended for creation
@@ -113,9 +145,19 @@ collection.overrideCreate(async context => {
 });
 ```
 
+```ruby Ruby
+collection.override_create do |context|
+  # Custom logic to handle creation
+  # context.data contains the data intended for creation
+  # Return an array of created records
+end
+```
+</CodeGroup>
+
 #### Custom Update operation
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.overrideUpdate(async context => {
   // Custom logic to handle update
   // context.filter to determine which records are targeted
@@ -124,15 +166,35 @@ collection.overrideUpdate(async context => {
 });
 ```
 
+```ruby Ruby
+collection.override_update do |context|
+  # Custom logic to handle update
+  # context.filter to determine which records are targeted
+  # context.patch contains the data for update
+  # Perform update operation
+end
+```
+</CodeGroup>
+
 #### Custom Delete operation
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 collection.overrideDelete(async context => {
   // Custom logic to handle deletion
   // context.filter to determine which records are targeted
   // Perform deletion operation
 });
 ```
+
+```ruby Ruby
+collection.override_delete do |context|
+  # Custom logic to handle deletion
+  # context.filter to determine which records are targeted
+  # Perform deletion operation
+end
+```
+</CodeGroup>
 
 <Warning>
   Overrides take precedence over the default operation. Ensure your custom handlers properly manage all necessary logic for the operation, as the default behavior will not be executed.
@@ -144,7 +206,8 @@ collection.overrideDelete(async context => {
 
 You might want to create the record with your custom API:
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 const { MissingFieldError } = require('@forestadmin/datasource-toolkit');
 
 product.overrideCreate(async context => {
@@ -166,11 +229,31 @@ product.overrideCreate(async context => {
 });
 ```
 
+```ruby Ruby
+product.override_create do |context|
+  data = context.data
+
+  if data.any? { |p| p['name'].nil? }
+    raise ForestAdminDatasourceToolkit::Exceptions::ForestException, 'name is required for products'
+  end
+
+  response = Faraday.post('https://my-product-api.com/products', data.to_json,
+    'Content-Type' => 'application/json'
+  )
+
+  # structure is an array of Partial<Product>
+  # [ { 'name' => 'CoffeeMaker3000', 'price' => '$300' } ]
+  JSON.parse(response.body)
+end
+```
+</CodeGroup>
+
 #### Modify data before update
 
 You might want to modify payload data before updating your record:
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 product.overrideUpdate(async context => {
   const { patch } = context;
 
@@ -189,3 +272,22 @@ product.overrideUpdate(async context => {
   await context.collection.update(context.filter, context.patch);
 });
 ```
+
+```ruby Ruby
+product.override_update do |context|
+  patch = context.patch
+
+  # Execute data modification and validation only if one of name or slug was edited
+  if patch['name'] || patch['slug']
+    name = patch['name'] || patch['slug'].split('-')[0]
+    response = Faraday.get('https://my-product-api.com/slug', { name: name })
+    uuid = JSON.parse(response.body)
+
+    patch['name'] = name
+    patch['slug'] = "#{name}-#{uuid}"
+  end
+
+  context.collection.update(context.filter, context.patch)
+end
+```
+</CodeGroup>
