@@ -220,11 +220,11 @@
               {
                 "group": "Relationships",
                 "pages": [
-                  "product/process/for-tech-teams/relationships/overview",
-                  "product/process/for-tech-teams/relationships/single-record",
-                  "product/process/for-tech-teams/relationships/multiple-records",
-                  "product/process/for-tech-teams/relationships/computed-fks",
-                  "product/process/for-tech-teams/relationships/under-the-hood"
+                  "product/process/relationships/overview",
+                  "product/process/relationships/single-record",
+                  "product/process/relationships/multiple-records",
+                  "product/process/relationships/computed-fks",
+                  "product/process/relationships/under-the-hood"
                 ]
               },
               {
@@ -236,14 +236,14 @@
               {
                 "group": "Advanced Concepts",
                 "pages": [
-                  "product/process/for-tech-teams/hooks/overview",
-                  "product/process/for-tech-teams/plugins/overview",
+                  "product/process/advanced-concepts/hooks/overview",
+                  "product/process/advanced-concepts/plugins/overview",
                   {
                     "group": "Developer Workflow",
                     "pages": [
-                      "product/process/for-tech-teams/developer-workflow/environments-and-branches",
-                      "product/process/for-tech-teams/developer-workflow/schema-updates",
-                      "product/process/for-tech-teams/developer-workflow/typescript-setup"
+                      "product/process/advanced-concepts/developer-workflow/environments-and-branches",
+                      "product/process/advanced-concepts/developer-workflow/schema-updates",
+                      "product/process/advanced-concepts/developer-workflow/typescript-setup"
                     ]
                   }
                 ]
