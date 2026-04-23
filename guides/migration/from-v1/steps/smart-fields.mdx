@@ -1,0 +1,194 @@
+---
+title: Migrating Smart Fields
+description: "How to migrate smart fields from Agent v1 to the new agent"
+---
+
+In the legacy agent, declaring a smart field was done in one big step. In the new agent, the process is split into multiple steps depending on the capabilities of the field (writing, filtering, sorting, etc.).
+
+This makes it easier to reuse the same API when customizing normal fields, reducing the API surface you need to learn.
+
+## API cheatsheet
+
+| Legacy agent | New agent |
+|---|---|
+| `get: (record) => { ... }` | `getValues: (records) => { ... }` |
+| `set: (record, value) => { ... }` | `.replaceFieldWriting(...)` |
+| `filter: ({ condition, where }) => { ... }` | `.replaceFieldOperator(...)` / `.emulateFieldOperator(...)` / `.emulateFieldFiltering(...)` |
+| `type: 'String'` | `columnType: 'String'` |
+| `enums: ['foo', 'bar']` | `columnType: 'Enum', enumValues: ['foo', 'bar']` |
+| `reference: 'otherCollection.id'` | [Use a relationship](/guides/migration/from-v1/steps/smart-relationships) |
+
+## Do you still need a computed field?
+
+Smart fields were powerful but often a performance bottleneck. Before migrating, consider whether you can replace them with simpler alternatives:
+
+- If you were moving a field from one collection to another → use [import field](/product/process/fields/import-rename-remove)
+- If you were creating a link to another record → use [relationships](/product/process/for-tech-teams/relationships/overview)
+
+## Step 1: Implement a read-only field
+
+### Dependencies are explicit
+
+You now need to declare a `dependencies` array — the field names that your `getValues` function needs. Unlike the legacy agent, the new agent will not automatically fetch the whole record.
+
+### Fields work in batches
+
+The `get` function is now called `getValues`: it takes an **array of records** and must return an **array of values** in the same order.
+
+### Other API changes
+
+- `type` was renamed to `columnType`
+- The `field` property no longer exists — the field name is the first argument of `addField`
+- `reference` no longer exists — use [smart relationships](/guides/migration/from-v1/steps/smart-relationships)
+- `enums` was renamed to `enumValues`
+
+### Example
+
+<Tabs>
+  <Tab title="Before (Node.js)">
+    ```javascript
+    collection('users', {
+      fields: [
+        {
+          field: 'full_address',
+          type: 'String',
+          get: async user => {
+            const addr = await geoWebService.getAddress(user.address_id);
+            return [addr.line_1, addr.line_2, addr.city, addr.country].join('\n');
+          },
+        },
+      ],
+    });
+    ```
+  </Tab>
+  <Tab title="After (Node.js)">
+    ```javascript
+    agent.customizeCollection('users', users => {
+      users.addField('full_address', {
+        columnType: 'String',
+        dependencies: ['address_id'],
+        getValues: users =>
+          users.map(async user => {
+            const addr = await geoWebService.getAddress(user.address_id);
+            return [addr.line_1, addr.line_2, addr.city, addr.country].join('\n');
+          }),
+      });
+    });
+    ```
+  </Tab>
+  <Tab title="Before (Ruby)">
+    ```ruby
+    class Forest::User
+      collection :User
+
+      field :full_address, type: 'String' do
+        addr = GeoWebService.get_address(user.address_id)
+        [addr.line_1, addr.line_2, addr.city, addr.country].join("\n")
+      end
+    end
+    ```
+  </Tab>
+  <Tab title="After (Ruby)">
+    ```ruby
+    @create_agent.customize_collection('customer') do |collection|
+      collection.add_field(
+        'full_address',
+        ComputedDefinition.new(
+          column_type: 'String',
+          dependencies: ['address_line_1', 'address_line_2', 'address_city', 'address_country'],
+          values: proc { |records|
+            records.map { |r|
+              "#{r['address_line_1']} #{r['address_line_2']} #{r['address_city']} #{r['address_country']}"
+            }
+          }
+        )
+      )
+    end
+    ```
+  </Tab>
+</Tabs>
+
+## Step 2: Implement write handler
+
+If your smart field was writable, use `replaceFieldWriting`:
+
+<Tabs>
+  <Tab title="Before (Node.js)">
+    ```javascript
+    collection('users', {
+      fields: [{
+        field: 'full_address',
+        type: 'String',
+        get: /* ... */,
+        set: async (user, value) => {
+          const parts = value.split('\n');
+          // update address...
+          return {};
+        },
+      }],
+    });
+    ```
+  </Tab>
+  <Tab title="After (Node.js)">
+    ```javascript
+    agent.customizeCollection('users', users => {
+      users
+        .addField('full_address', { /* ... same as before ... */ })
+        .replaceFieldWriting('full_address', (value) => {
+          const [line1, line2, city, country] = value.split('\n');
+          return { address_line_1: line1, address_line_2: line2, address_city: city, address_country: country };
+        });
+    });
+    ```
+  </Tab>
+  <Tab title="Before (Ruby)">
+    ```ruby
+    field :full_address, type: 'String', set: lambda { |params, value|
+      parts = value.split("\n")
+      params[:line_1] = parts[0]
+      params[:line_2] = parts[1]
+      params
+    } do
+      # ...
+    end
+    ```
+  </Tab>
+  <Tab title="After (Ruby)">
+    ```ruby
+    collection.replace_field_writing('full_address') do |value, context|
+      {
+        address_line_1: value.split("\n")[0],
+        address_line_2: value.split("\n")[1],
+        address_city:   value.split("\n")[2],
+        address_country: value.split("\n")[3]
+      }
+    end
+    ```
+  </Tab>
+</Tabs>
+
+## Step 3: Implement filters
+
+Filtering is now done operator by operator instead of using a single function. This allows more fine-grained control and means you only need to implement the operators you actually use.
+
+```javascript
+agent.customizeCollection('users', users => {
+  users
+    .addField('full_address', { /* ... */ })
+
+    // Implement only the operators you need
+    .replaceFieldOperator('full_address', 'Equal', (value, context) => ({
+      aggregator: 'And',
+      conditions: [
+        { field: 'address_city', operator: 'Equal', value: value.split('\n')[2] },
+      ],
+    }))
+
+    // Emulate all other operators (slower, but works automatically)
+    .emulateFieldFiltering('full_address');
+});
+```
+
+<Warning>
+  Emulation forces the agent to retrieve all records and compute values for each one. Use it sparingly for collections with many records.
+</Warning>

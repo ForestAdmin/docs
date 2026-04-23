@@ -1,0 +1,161 @@
+---
+title: Migrating Smart Relationships
+description: "How to migrate smart relationships from Agent v1 to the new agent"
+---
+
+Smart relationships work very differently between v1 and v2.
+
+In legacy agents, smart relationships were declared as smart fields with a `reference` property:
+- **Many-to-one / one-to-one**: implemented via the `get` function returning a single record
+- **One-to-many / many-to-many**: implemented by creating all CRUD routes on a router file
+
+The new system is completely different: it is based on **primary keys and foreign keys**.
+
+## When the foreign key is accessible
+
+If the foreign key already exists in your data:
+
+<Tabs>
+  <Tab title="Before (Node.js)">
+    ```javascript
+    // Many-to-one
+    collection('order', {
+      fields: [{
+        field: 'delivery_address',
+        type: 'String',
+        reference: 'Address._id',
+        get: async order => models.addresses.find({ id: order.delivery_address_id }),
+      }],
+    });
+
+    // Reverse relationship
+    collection('address', {
+      fields: [{ field: 'orders', type: ['String'], reference: 'Order.id' }],
+    });
+
+    router.get('/address/:id/relationships/orders', (req, res) => { /* ... */ });
+    ```
+  </Tab>
+  <Tab title="After (Node.js)">
+    ```javascript
+    // Many-to-one
+    agent.customizeCollection('order', orders => {
+      orders.addManyToOneRelation('deliveryAddress', 'address', {
+        foreignKey: 'deliveryAddressId',
+      });
+    });
+
+    // Reverse relationship
+    agent.customizeCollection('address', addresses => {
+      addresses.addOneToManyRelation('orders', 'order', {
+        originKey: 'deliveryAddressId',
+      });
+    });
+    ```
+  </Tab>
+  <Tab title="Before (Ruby)">
+    ```ruby
+    class Forest::Product
+      include ForestLiana::Collection
+      collection :Product
+      has_many :buyers, type: ['String'], reference: 'Customer.id'
+    end
+
+    # routes.rb
+    namespace :forest do
+      get '/Product/:product_id/buyers' => 'orders#buyers'
+    end
+    ```
+  </Tab>
+  <Tab title="After (Ruby)">
+    ```ruby
+    @create_agent.customize_collection('Product') do |collection|
+      collection.add_many_to_one_relation('buyers', 'Customer', { foreign_key: 'country_id' })
+    end
+
+    @create_agent.customize_collection('Customer') do |collection|
+      collection.add_one_to_many_relation('products', 'Product', { origin_key: 'country_id' })
+    end
+    ```
+  </Tab>
+</Tabs>
+
+## When you need complex logic to get the foreign key
+
+If the foreign key doesn't exist in your database and requires custom logic:
+
+1. Create a **computed field** that contains the foreign key value
+2. Make that field filterable with the `In` operator (required for relationships to work)
+3. Declare the relationship using the computed field as the foreign key
+
+<Info>
+  If the foreign key exists in a related table but not the current one, use [import field](/product/process/fields/import-rename-remove) instead. It's faster and natively filterable.
+</Info>
+
+<Tabs>
+  <Tab title="Before (Node.js)">
+    ```javascript
+    collection('order', {
+      fields: [{
+        field: 'delivery_address',
+        type: 'String',
+        reference: 'Address._id',
+        get: async order => models.addresses.find(/* complex query */),
+      }],
+    });
+    ```
+  </Tab>
+  <Tab title="After (Node.js)">
+    ```javascript
+    agent.customizeCollection('order', orders => {
+      // 1. Computed field containing the FK
+      orders.addField('deliveryAddressId', {
+        columnType: 'Number',
+        dependencies: ['id'],
+        getValues: async orders => {
+          const addressByOrderId = await models.addresses.find(/* complex query */);
+          return orders.map(order => addressByOrderId[order.id].id);
+        },
+      });
+
+      // 2. Make it filterable (required)
+      orders.replaceFieldOperator('deliveryAddressId', 'In', (value, context) => {
+        // reverse-lookup logic
+      });
+
+      // 3. Declare the relationship
+      orders.addManyToOneRelation('deliveryAddress', 'address', {
+        foreignKey: 'deliveryAddressId',
+      });
+    });
+    ```
+  </Tab>
+  <Tab title="Before (Ruby)">
+    ```ruby
+    class Forest::ProductsController < ForestLiana::ApplicationController
+      def buyers
+        query = # complex query
+        render json: serialize_models(query, meta: {count: query.count})
+      end
+    end
+    ```
+  </Tab>
+  <Tab title="After (Ruby)">
+    ```ruby
+    @create_agent.customize_collection('Product') do |collection|
+      collection.add_field(
+        'customerId',
+        ComputedDefinition.new(
+          column_type: 'Number',
+          dependencies: ['id'],
+          values: proc { |customers, context| ... }
+        )
+      )
+      .replace_field_operator('customerId', Operators::IN) { |customer_ids, context|
+        ...
+      }
+      .add_many_to_one_relation('buyers', 'Customer', { foreign_key: 'customerId' })
+    end
+    ```
+  </Tab>
+</Tabs>

@@ -1,44 +1,37 @@
 ---
-title: Activity Logs API
+title: Activity Logs
+description: "List activity logs for a project environment"
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers
 
-## Description
+<Info>
+  This API is not available for self-service. [Contact us](https://www.forestadmin.com/contact-us) if you are interested in using it.
+</Info>
 
-API endpoints for accessing and managing activity logs.
+## List activity logs
 
-## Sources to migrate
+Returns activity logs for a specific project and environment, sorted by `createdAt` date in descending order (most recent first).
 
-- `public-api-guide/activity-logs.md`
+Use the `createdAt` filter for pagination.
 
-## Content outline
+```
+GET /v1/project/{projectName}/environment/{environmentName}/activity-logs
+```
 
-1. **Endpoints**
-   - `GET /api/activity-logs` - List activity logs
-   - `GET /api/activity-logs/:id` - Get activity log details
+### Authentication
 
-2. **Query Parameters**
-   - Filtering options
-   - Pagination
-   - Sorting
-   - Date ranges
+All requests require a Bearer token in the `Authorization` header. Generate one from [your account settings](https://app.forestadmin.com/user-settings).
 
-3. **Response Format**
-   - Activity log object structure
-   - User information
-   - Action details
-   - Timestamps
+```
+Authorization: Bearer YOUR_APPLICATION_TOKEN
+```
 
-4. **Use Cases**
-   - Audit trail export
-   - Compliance reporting
-   - User activity tracking
-   - Security monitoring
+<Warning>
+  If your project uses SSO, the application token must be generated while logged in with SSO.
+</Warning>
 
-5. **Examples**
-   - Fetch recent activities
-   - Filter by user
-   - Filter by collection
-   - Export for analysis
+### Path parameters
+
+| Parameter | Type | Description |
+|---|---|---|
+| `projectName` | string | Your project name |
+| `environmentName` | string | The environment name (e.g., `production`, `staging`) |

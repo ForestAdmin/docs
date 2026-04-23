@@ -1,49 +1,25 @@
 ---
-title: AWS SSO / IAM Identity Center
+title: AWS IAM Identity Center SSO
+description: "Configure SSO with AWS IAM Identity Center"
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Admins
 
-## Description
+<Info>
+  Requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing).
+</Info>
 
-Configure Single Sign-On with AWS SSO (IAM Identity Center).
+## Configuration
 
-## Sources to migrate
+Forest Admin is compatible with AWS's SAML 2.0 application. Follow the AWS guide [Set up your own SAML 2.0 application](https://docs.aws.amazon.com/singlesignon/latest/userguide/set-up-single-sign-on-access-to-applications.html) with these settings:
 
-- `documentation-user-guide/project-settings/teams-and-users/sso/`
-- AWS SSO setup documentation
+| Setting | Value |
+|---|---|
+| Application ACS URL | `https://api.forestadmin.com/api/saml/callback` |
+| Application SAML audience | `forestadmin-YourOrganizationName` |
+| Relay State (optional) | `{"organizationName": "YourOrganizationName", "destinationUrl": "organization.projects"}` |
 
-## Content outline
+After configuring your AWS application, download or copy the SAML metadata and configure it in Forest Admin (see [SSO configuration guide](/get-started/control/authentication/sso-providers/overview)).
 
-1. **Prerequisites**
-   - AWS account with SSO enabled
-   - IAM permissions
-   - Forest Admin plan requirements
+## Troubleshooting
 
-2. **AWS SSO Setup**
-   - Add custom SAML application
-   - Configure SAML settings
-   - Attribute mappings
-   - User/group assignments
-
-3. **Forest Admin Configuration**
-   - Enable SSO
-   - Upload metadata
-   - Configure attributes
-   - Test connection
-
-4. **User Provisioning**
-   - Automatic user creation
-   - Role mapping
-   - Team assignment
-   - SCIM integration
-
-5. **Advanced Configuration**
-   - Permission sets
-   - Multi-account setup
-
-6. **Troubleshooting**
-   - Common errors
-   - SAML response issues
-
+- Double-check all endpoints and certificate expiration dates
+- Ensure `nameID` matches the **email address used on Forest Admin accounts**

@@ -1,72 +1,72 @@
 ---
 title: SSO Provider Guides
+description: "Configure Single Sign-On with your Identity Provider"
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Admins
 
-## Description
+Forest Admin supports SAML 2.0 SSO. The configuration is done in two steps:
 
-Provider-specific guides for configuring Single Sign-On with Forest Admin.
+1. **Declare Forest Admin in your Identity Provider** using the values below
+2. **Configure Forest Admin** with your IdP metadata
 
-## Supported Providers
+<Info>
+  SSO requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing). You must be an Organization Owner to configure it.
+</Info>
 
-### Major Identity Providers
+## Forest Admin SAML settings
 
-- **[Azure AD / Entra ID](/get-started/control/authentication/sso-providers/azure)** - Microsoft's identity platform
-- **[Okta](/get-started/control/authentication/sso-providers/okta)** - Leading enterprise identity provider
-- **[Google Workspace](/get-started/control/authentication/sso-providers/google)** - Formerly G Suite
-- **[AWS SSO / IAM Identity Center](/get-started/control/authentication/sso-providers/aws)** - Amazon's identity service
+Use these values when configuring Forest Admin as a Service Provider in your IdP:
 
-### Generic SAML
+| Setting | Value |
+|---|---|
+| Callback URL (ACS URL) | `https://api.forestadmin.com/api/saml/callback` |
+| Sign on URL | `https://api.forestadmin.com/api/saml/callback` |
+| Logout URL | `https://app.forestadmin.com/login` |
+| Audience (EntityID) | Displayed in your Forest Admin Organization settings |
 
-- **[Generic SAML 2.0](/get-started/control/authentication/sso-providers/generic-saml)** - For any SAML-compatible provider:
-  - OneLogin
-  - Auth0
-  - Ping Identity
-  - JumpCloud
-  - Custom SAML IdP
+## Configuration methods
 
-## Choosing a Provider
+### Option 1: XML metadata (recommended)
 
-If your organization already uses an identity provider, use that one. If you're choosing a provider:
+Provide either a URL to your IdP's metadata XML endpoint, or upload the metadata XML file. This method supports automatic certificate rotation without service interruption.
 
-- **Azure AD** - Best for Microsoft 365 organizations
-- **Okta** - Best for enterprise SSO with many integrations
-- **Google Workspace** - Best for Google-centric organizations
-- **AWS SSO** - Best for AWS-heavy infrastructure
+### Option 2: Manual input
 
-## Setup Process Overview
+Enter the following fields manually:
+- Login endpoint
+- Logout endpoint
+- Valid certificate
 
-All providers follow a similar process:
+## Enabling SSO
 
-1. **Forest Admin Configuration**
-   - Enable SSO in project settings
-   - Note the ACS URL and Entity ID
+After configuring and testing your SSO setup, enable it for all users in your Organization settings.
 
-2. **IdP Configuration**
-   - Create SAML application
-   - Configure SAML settings
-   - Set attribute mappings
-   - Assign users/groups
+<Danger>
+  After enabling SSO, all users will be required to log in again.
+</Danger>
 
-3. **Metadata Exchange**
-   - Download IdP metadata
-   - Upload to Forest Admin
-   - OR manually configure endpoints
+## IdP-initiated login (optional)
 
-4. **Testing**
-   - Test with a user
-   - Verify attribute mapping
-   - Test login flow
+To allow users to be automatically redirected to Forest Admin from your IdP dashboard, enable **IdP-initiated login** and set a default Relay State on your IdP:
 
-5. **Enforcement** (optional)
-   - Enable SSO-only login
-   - Disable password authentication
+```json
+{
+  "organizationName": "YourOrganizationName",
+  "destinationUrl": "organization.projects"
+}
+```
 
-## Getting Help
+## Troubleshooting
 
-- Review provider-specific guides
-- Check [Generic SAML guide](/get-started/control/authentication/sso-providers/generic-saml) for troubleshooting
-- Contact support with SAML response for debugging
+- Double-check all endpoints and certificate expiration dates
+- Ensure the `NameID` configured on your IdP matches the **email address used on Forest Admin accounts**
+- Ensure you selected **SAML 2.0** on your IdP
 
+## Provider guides
+
+<CardGroup cols={2}>
+  <Card title="Google Workspace" href="/get-started/control/authentication/sso-providers/google" />
+  <Card title="Okta" href="/get-started/control/authentication/sso-providers/okta" />
+  <Card title="Azure AD" href="/get-started/control/authentication/sso-providers/azure" />
+  <Card title="AWS IAM Identity Center" href="/get-started/control/authentication/sso-providers/aws" />
+  <Card title="Generic SAML" href="/get-started/control/authentication/sso-providers/generic-saml" />
+</CardGroup>

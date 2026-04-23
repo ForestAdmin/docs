@@ -1,65 +1,108 @@
 ---
 title: Development Workflow
+description: "Use branches to develop and test layout changes before deploying to production"
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers
 
-## Description
+## Overview
 
-Establish an effective development workflow for Forest Admin projects with environments, branches, and deployments.
+Forest Admin separates your **backend code** (your agent) from your **UI layout** (what your team sees in the admin panel). This means you can version and deploy them independently.
 
-## Sources to migrate
+The development workflow uses **branches** — copies of a layout — so you can make UI changes without affecting your production environment.
 
-- `developer-guide-agent-v2/sources/deployment/development-workflow.md`
-- `developer-guide-agent-v2/sources/deployment/using-branches.md`
-- Workflow documentation
+## What is a layout?
 
-## Content outline
+A **layout** is all the configuration that defines your user interface: which fields are visible, how collections are organized, what actions are available, etc. There is one layout per environment per team.
 
-1. **Workflow Overview**
-   - Development → Staging → Production
-   - Branch-based development
-   - Team collaboration
+## What is a branch?
 
-2. **Local Development**
-   - Local agent setup
-   - Hot reloading
-   - Local testing
-   - Database setup
+A **branch** is a fork (copy) of the layout of the environment it is attached to. Branches can only be created in your Development environment.
 
-3. **Branch Workflow**
-   - Creating branches
-   - Working on features
-   - Layout changes
-   - Code changes
+Any layout changes you make on your current branch using the Layout Editor are saved on that branch and do not affect its origin environment.
 
-4. **Testing**
-   - Local testing
-   - Staging environment
-   - QA process
-   - User acceptance testing
+<Info>
+  Branches are automatically rebased on their origin. If someone changes the production layout, your branch will automatically reflect those changes — you never need to rebase manually.
+</Info>
 
-5. **Deployment Process**
-   - Pushing changes
-   - Schema sync
-   - Layout deployment
-   - Code deployment
+## Creating a branch
 
-6. **CI/CD Integration**
-   - Automated testing
-   - Automated deployments
-   - GitHub Actions examples
-   - GitLab CI examples
+First, make sure you've set up your local Development environment with the CLI `init` command. Then create a branch:
 
-7. **Best Practices**
-   - Git workflow
-   - Code review process
-   - Rollback strategies
-   - Documentation
+```bash
+forest branch my-branch --origin production
+```
 
-## Migration notes
+This creates a branch named `my-branch` based on your production layout.
 
-- HIGH priority for developer teams
-- Combines environment, branch, and deployment concepts
-- Framework-agnostic with specific examples
+<Info>
+  Use kebab-case for branch names. If you prefer spaces, wrap the name in quotes: `forest branch "my branch" --origin production`.
+</Info>
+
+To switch to an existing branch:
+
+```bash
+forest switch my-branch
+```
+
+## The development flow
+
+A typical workflow looks like this:
+
+```
+Development (branch) → Staging (push) → Production (deploy)
+```
+
+### 1. Make layout changes locally
+
+Create a branch, open your local Forest Admin, and use the Layout Editor to make UI changes. All changes are saved in your branch's layout.
+
+### 2. Test on staging: `forest push`
+
+When you're ready to test on a staging environment, push your branch:
+
+```bash
+forest push
+```
+
+<Warning>
+  Pushing your branch will automatically **delete** it locally. Make sure you're done with your changes before pushing.
+</Warning>
+
+This moves your branch's layout changes to the remote environment set as the origin of your branch (e.g., staging).
+
+### 3. Deploy to production: `forest deploy`
+
+Once validated on staging, deploy to production:
+
+```bash
+forest deploy
+```
+
+Or click **"Deploy to production"** in the top banner of your staging environment.
+
+<Danger>
+  `forest deploy` is irreversible. Always deploy your **backend changes first**, then run `forest deploy`.
+</Danger>
+
+## Checking your current branch
+
+Your current branch and the number of layout changes are always visible in the top banner of your admin panel.
+
+## Complex workflows
+
+For larger teams, you can create a multi-stage hierarchy: `dev → test → staging → preprod → production`. Use `forest environments:create` to create test environments for CI/CD pipelines:
+
+```bash
+forest environments:create --name 'pr-1930' -u 'https://pr-1930.my-app.com' --disableRoles
+```
+
+To change the origin of a branch:
+
+```bash
+forest set-origin staging
+```
+
+To reset a remote environment's layout:
+
+```bash
+forest environments:reset
+```

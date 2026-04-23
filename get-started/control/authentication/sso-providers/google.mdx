@@ -1,49 +1,32 @@
 ---
 title: Google Workspace SSO
+description: "Configure SSO with Google Workspace"
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Admins
 
-## Description
+<Info>
+  Requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing).
+</Info>
 
-Configure Single Sign-On with Google Workspace (formerly G Suite).
+## Configuration
 
-## Sources to migrate
+1. Log in to your Google account and navigate to the **Admin console**
+2. Go to **Menu → Apps → Web and mobile apps**
+3. Click **Add App → Add custom SAML app** and follow the wizard
+4. In the **Service Provider Details** window, enter:
 
-- `documentation-user-guide/project-settings/teams-and-users/sso/`
-- Google SSO setup documentation
+| Setting | Value |
+|---|---|
+| ACS URL | `https://api.forestadmin.com/api/saml/callback` |
+| Entity ID | Displayed in your Forest Admin Organization settings |
+| Start URL (optional) | For [IdP-initiated login](/get-started/control/authentication/sso-providers/overview#idp-initiated-login-optional) |
 
-## Content outline
+5. Download or copy the IdP metadata and paste it into Forest Admin (see [SSO configuration guide](/get-started/control/authentication/sso-providers/overview))
 
-1. **Prerequisites**
-   - Google Workspace account
-   - Super Admin access
-   - Forest Admin plan requirements
+<Info>
+  See the [Google documentation on custom SAML applications](https://support.google.com/a/answer/6087519) for more details.
+</Info>
 
-2. **Google Workspace Setup**
-   - Add SAML app
-   - Configure SAML settings
-   - Attribute mapping
-   - User access
+## Troubleshooting
 
-3. **Forest Admin Configuration**
-   - Enable SSO
-   - Upload metadata
-   - Configure attributes
-   - Test connection
-
-4. **User Provisioning**
-   - Automatic user creation
-   - Role mapping
-   - Team assignment
-
-5. **Advanced Configuration**
-   - Group-based access
-   - Custom attributes
-
-6. **Troubleshooting**
-   - Common errors
-   - Login issues
-   - SAML debugging
-
+- Double-check all endpoints and certificate expiration dates
+- Ensure the `Name ID` (primary email) in your IdP matches the **email address used on Forest Admin accounts**

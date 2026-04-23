@@ -1,68 +1,135 @@
 ---
-title: Performance Best Practices
+title: Performance
+description: "Tips and patterns to optimize your Forest Admin agent"
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers
 
-## Description
+## Computed fields
 
-Optimize your Forest Admin setup for maximum performance and responsiveness.
+### Use the `dependencies` option instead of inline queries
 
-## Sources to migrate
+A common pattern in legacy agents was to make database queries inside the `get` function. In the new agent, the `dependencies` option lets you declare which related fields you need — the agent will fetch them automatically via JOIN, which is much faster.
 
-- Performance tips across all repos
-- Best practices documentation
+<Tabs>
+  <Tab title="Slow (inline query)">
+    ```javascript
+    agent.customizeCollection('post', postCollection => {
+      postCollection.addField('authorFullName', {
+        columnType: 'String',
+        dependencies: ['authorId'],
+        getValues: posts =>
+          posts.map(async post => {
+            // One query per post — very slow with many records
+            const author = await models.authors.findOne({ where: { id: post.authorId } });
+            return `${author.firstName} ${author.lastName}`;
+          }),
+      });
+    });
+    ```
+  </Tab>
+  <Tab title="Fast (dependencies)">
+    ```javascript
+    agent.customizeCollection('post', postCollection => {
+      postCollection.addField('authorFullName', {
+        columnType: 'String',
+        // Agent performs a single JOIN — much faster
+        dependencies: ['author:firstName', 'author:lastName'],
+        getValues: posts =>
+          posts.map(post => `${post.author.firstName} ${post.author.lastName}`),
+      });
+    });
+    ```
+  </Tab>
+  <Tab title="Best (import field)">
+    ```javascript
+    // Define the field once on the author collection
+    agent.customizeCollection('author', authorCollection => {
+      authorCollection.addField('fullName', {
+        columnType: 'String',
+        dependencies: ['firstName', 'lastName'],
+        getValues: authors => authors.map(a => `${a.firstName} ${a.lastName}`),
+      });
+    });
 
-## Content outline
+    // Import it on the post collection
+    agent.customizeCollection('post', postCollection => {
+      postCollection.importField('authorFullName', { path: 'author:fullName' });
+    });
+    ```
+  </Tab>
+</Tabs>
 
-1. **Database Optimization**
-   - Index optimization
-   - Query optimization
-   - Connection pooling
-   - Read replicas
+### Move async calls outside the hot loop
 
-2. **Query Performance**
-   - N+1 query prevention
-   - Eager loading
-   - Pagination strategies
-   - Field selection
+The new agent works in batch mode. If you have external service calls (APIs, etc.), fetch all records in a single request rather than one per record:
 
-3. **Caching Strategies**
-   - Field caching
-   - Query caching
-   - API response caching
-   - Cache invalidation
+<Tabs>
+  <Tab title="Slow (per-record)">
+    ```javascript
+    getValues: users =>
+      users.map(async user => {
+        // One API call per user
+        const address = await geoWebService.getAddress(user.address_id);
+        return [address.line_1, address.city].join(', ');
+      }),
+    ```
+  </Tab>
+  <Tab title="Fast (batch)">
+    ```javascript
+    getValues: async users => {
+      // One API call for all users
+      const addresses = await geoWebService.getAddresses(users.map(u => u.address_id));
+      return users.map(user => {
+        const addr = addresses.find(a => a.id === user.address_id);
+        return [addr.line1, addr.city].join(', ');
+      });
+    },
+    ```
+  </Tab>
+</Tabs>
 
-4. **Smart Field Performance**
-   - Async operations
-   - Batching
-   - Memoization
-   - Avoiding expensive computations
+### Avoid duplicate queries across computed fields
 
-5. **Smart Action Performance**
-   - Background jobs
-   - Async operations
-   - Timeout handling
-   - Progress tracking
+If multiple computed fields depend on the same external data source, have one field fetch the data and let others depend on it:
 
-6. **API Performance**
-   - Rate limiting
-   - Batch requests
-   - GraphQL optimization (if applicable)
+```javascript
+agent.customizeCollection('users', users => {
+  users.addField('userInfo', {
+    columnType: { firstName: 'String', lastName: 'String' },
+    dependencies: ['id'],
+    getValues: async users => {
+      const ids = users.map(u => u.id);
+      return await authService.getUserInfo(ids); // single request
+    },
+  });
 
-7. **Frontend Performance**
-   - Smart Views optimization
-   - Widget selection
-   - Lazy loading
+  users.importField('firstName', { path: 'userInfo:firstName' });
+  users.importField('lastName', { path: 'userInfo:lastName' });
+});
+```
 
-8. **Monitoring**
-   - Performance metrics
-   - Slow query detection
-   - APM tools
-   - Profiling
+## Segments
 
-9. **Scaling**
-   - Horizontal scaling
-   - Load balancing
-   - Microservices patterns
+### Use condition trees when possible
+
+If your segment logic can be expressed as a Forest Admin condition tree, use it instead of running a raw query and filtering by IDs. The agent can push the condition tree down to the database as a native query, which is much faster.
+
+```javascript
+// Fast: agent translates this to a native query
+products.addSegment('InStock', () => ({
+  field: 'stock_count',
+  operator: 'GreaterThan',
+  value: 0,
+}));
+
+// Slower: fetches all IDs first, then filters
+products.addSegment('InStock', async () => {
+  const ids = await db.query('SELECT id FROM products WHERE stock_count > 0');
+  return { field: 'id', operator: 'In', value: ids };
+});
+```
+
+## Filtering emulation
+
+<Warning>
+  `emulateFieldFiltering` and `emulateFieldSorting` force the agent to retrieve **all** records to compute values. Use them only for collections with a low number of records (a few thousand at most). Prefer `replaceFieldOperator` for large collections.
+</Warning>

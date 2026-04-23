@@ -1,55 +1,53 @@
 ---
 title: Creating segments
+description: "Create and manage segments through the Forest Admin UI — no code required"
 ---
 
-<Note>Creating segments via the no-code interface (UI) will be documented here soon.</Note>
+A **segment** is a saved filter that gives you a dedicated tab on a collection, showing only the records that match specific conditions. Use them for workflows you consult regularly (e.g. "Pending transactions", "Signups this week").
 
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** All users (no code required)
+For code-based segments, see [Smart Segments](/product/process/segments/smart-segments/overview).
 
-## Description
+## Create a segment
 
-Learn how to create and manage segments through the Forest Admin UI using filters.
+1. Enable **Layout Editor** mode (top right of your screen)
+2. Click the **cog icon** next to the collection you want to edit
+3. Go to the **Segments** tab
+4. Click **"Create your first segment"** (or **"+ New segment"** if you already have some)
+5. Give your segment a **name**
+6. Add one or more **filters**
+7. Optionally adjust the **sort field and order**
+8. Save
 
-For segments defined with custom code (Live Queries), see [Smart Segments](/product/process/segments/smart-segments/overview).
+<Warning>
+  Newly created segments are **disabled** by default. Enable them from the Segments tab in Layout Editor mode.
+</Warning>
 
-## Sources to migrate
+## Reorder segments
 
-- `documentation-user-guide/collections/segments.md`
-- `documentation-cloud/sources/ui-customization/segments.md`
+Use the Layout Editor to drag and drop segments into the order that matches your workflow.
 
-## Content outline
+## SQL Query segments
 
-1. **Creating segments in UI**
-   - Access segment creation
-   - Define filter conditions
-   - Name and save segments
+For advanced filtering, you can create a segment using a raw SQL query.
 
-2. **Filter conditions**
-   - Field-based filters
-   - Comparison operators
-   - Multiple conditions (AND/OR)
-   - Date ranges
+<Info>
+  To enable SQL Query segments in agent v2, your developers need to add a connection name to the datasources on which you want to run live queries.
+</Info>
 
-3. **Managing segments**
-   - Edit existing segments
-   - Delete segments
-   - Reorder segments
-   - Default segment
+<Warning>
+  SQL Query mode is only available for SQL databases. For security reasons, only `SELECT` queries are allowed.
+</Warning>
 
-4. **Segment display**
-   - Segment tabs
-   - Record counts
-   - Quick switching
+Switch to **Query** mode, type your SQL query, and save. The query must return the **primary key** column of the collection.
 
-5. **Best practices**
-   - Naming conventions
-   - Organization strategies
-   - Performance tips
+```sql
+SELECT t.id FROM transactions t
+JOIN companies beneficiary ON t.beneficiary_company_id = beneficiary.id
+JOIN companies emitter ON t.emitter_company_id = emitter.id
+WHERE beneficiary.headquarter ILIKE '%United States%'
+  AND emitter.headquarter ILIKE '%United States%'
+```
 
-## Migration notes
-
-- UI-focused, no code required
-- Link to Smart Segments for code-based logic
-- Reference Build section for UI configuration
+<Info>
+  To query across multiple databases in PostgreSQL, you can use the [dblink function](https://www.postgresql.org/docs/current/contrib-dblink-function.html).
+</Info>

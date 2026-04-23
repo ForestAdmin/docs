@@ -207,9 +207,7 @@
                   "product/process/fields/validation",
                   "product/process/fields/write",
                   "product/process/fields/filter",
-                  "product/process/fields/sort",
-                  "product/process/fields/binary",
-                  "product/process/fields/relationships"
+                  "product/process/fields/binary"
                 ]
               },
               {
@@ -378,15 +376,6 @@
             ]
           },
           {
-            "group": "Learning Paths",
-            "pages": [
-              "guides/learning-paths/overview",
-              "guides/learning-paths/developer",
-              "guides/learning-paths/operations",
-              "guides/learning-paths/business"
-            ]
-          },
-          {
             "group": "Deployment",
             "pages": [
               "guides/deployment/overview",
@@ -414,7 +403,10 @@
                     "group": "Steps",
                     "pages": [
                       "guides/migration/from-v1/steps/datasources",
-                      "guides/migration/from-v1/steps/smart-actions"
+                      "guides/migration/from-v1/steps/smart-actions",
+                      "guides/migration/from-v1/steps/smart-fields",
+                      "guides/migration/from-v1/steps/smart-relationships",
+                      "guides/migration/from-v1/steps/smart-segments"
                     ]
                   }
                 ]

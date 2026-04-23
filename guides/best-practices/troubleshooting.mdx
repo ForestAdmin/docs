@@ -1,77 +1,66 @@
 ---
-title: Troubleshooting Guide
+title: Troubleshooting
+description: "Common issues and how to fix them"
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers
 
-## Description
+## CORS errors
 
-Common issues and their solutions when working with Forest Admin.
+CORS is the most common issue when setting up the Forest Admin agent. Open your browser's Developer Console (Network tab) to detect it.
 
-## Sources to migrate
+**Check:**
 
-- Troubleshooting content across all repos
-- FAQ sections
-- Common error messages
+- The Forest Admin agent is mounted **before** any other middleware. In NestJS specifically, the Nest App Factory's CORS configuration can interfere with `@forestadmin/agent` — configure it after mounting the agent.
+- Your server is up and running. Test it by calling the `/forest` endpoint: `curl http://localhost:3310/forest`
 
-## Content outline
+## 403 Forbidden errors after permission changes
 
-1. **Connection Issues**
-   - Database connection errors
-   - Network timeouts
-   - Authentication failures
-   - Firewall/proxy issues
+If you add users, create collections, or change permissions in Forest Admin and start getting `403` errors that only go away after restarting your agent, this is likely caused by **SSE (Server-Sent Events) buffering** in a reverse proxy.
 
-2. **Schema Issues**
-   - Schema sync failures
-   - Missing collections
-   - Field type mismatches
-   - Relationship errors
+Forest Admin uses SSE to push permission updates to your agent in real time. Some reverse proxies buffer SSE connections and prevent the agent from receiving updates.
 
-3. **Performance Issues**
-   - Slow queries
-   - Timeout errors
-   - Memory issues
-   - High CPU usage
+**To confirm:** Restart your agent. If the 403 errors disappear, SSE buffering is the cause.
 
-4. **Smart Feature Issues**
-   - Smart Actions not appearing
-   - Smart Fields errors
-   - Smart Segments not working
-   - Hook failures
+**Fix option 1 — Disable buffering in your reverse proxy:**
 
-5. **Deployment Issues**
-   - Build failures
-   - Environment variable problems
-   - Branch sync issues
-   - Production deployment errors
+For nginx:
+```nginx
+fastcgi_buffering off;
+proxy_buffering off;
+```
 
-6. **UI Issues**
-   - Layout not updating
-   - Fields not displaying
-   - Actions not working
-   - Permission problems
+**Fix option 2 — Fall back to TTL-based cache:**
 
-7. **API Issues**
-   - Rate limiting
-   - API errors
-   - Authentication issues
-   - CORS problems
+Set `instantCacheRefresh: false` in your agent initialization options. This disables SSE and uses a periodic cache refresh instead.
 
-8. **Integration Issues**
-   - SSO problems
-   - Webhook failures
-   - Third-party API issues
+```javascript
+const agent = createAgent({
+  // ...
+  instantCacheRefresh: false,
+});
+```
 
-9. **Debugging Techniques**
-   - Logging
-   - Network inspection
-   - Database query analysis
-   - Error stack traces
+## Agent health check
 
-10. **Getting Help**
-    - Support channels
-    - Community resources
-    - Bug reporting
-    - Feature requests
+Test that your agent is reachable:
+
+```bash
+curl http://localhost:3310/forest
+# Should return: {"meta":{"name":"@forestadmin/agent",...}}
+```
+
+In production, test with HTTPS:
+```bash
+curl https://your-agent.yourcompany.com/forest
+```
+
+## Schema not updating
+
+If your database schema changes are not reflected in Forest Admin:
+
+1. Make sure your agent is restarted after schema changes
+2. Check that `isProduction` is set correctly — in production mode, the schema is not re-introspected on startup
+3. Delete `.forestadmin-schema.json` and restart to force a full schema refresh (development only)
+
+## Need more help?
+
+Post your question on the [Forest Admin Community Forum](https://community.forestadmin.com) — the team responds quickly.

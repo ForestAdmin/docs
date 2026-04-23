@@ -1,0 +1,148 @@
+---
+title: Migrating Smart Segments
+description: "How to migrate smart segments from Agent v1 to the new agent"
+---
+
+Smart segments migrate quickly — the syntax is very similar to the legacy agent. The main difference is in the **return value**.
+
+## What changed
+
+Because the new agent is designed to work with multiple databases, the return value of the segment handler is no longer a Sequelize/Mongoose condition. Instead, you build a **condition tree** that the agent translates to the appropriate database syntax.
+
+## API cheatsheet (Node.js)
+
+| Legacy agent | New agent |
+|---|---|
+| `where:` | handler body (return value) |
+| `sequelize.where(...)` | condition tree `{ field, operator, value }` |
+
+## Performance tip
+
+Many queries can be expressed directly as Forest Admin condition trees, which gives much better performance than performing the query yourself and then building a naive `id IN (...)` condition.
+
+## Example
+
+<Tabs>
+  <Tab title="Before (Node.js)">
+    ```javascript
+    collection('products', {
+      segments: [{
+        name: 'Bestsellers',
+        where: async product => {
+          const query = `
+            SELECT products.id, COUNT(orders.*)
+            FROM products
+            JOIN orders ON orders.product_id = products.id
+            GROUP BY products.id
+            ORDER BY count DESC
+            LIMIT 5;
+          `;
+          const products = await models.connections.default.query(query, {
+            type: QueryTypes.SELECT,
+          });
+          return { id: { [Op.in]: products.map(p => p.id) } };
+        },
+      }],
+    });
+    ```
+  </Tab>
+  <Tab title="After (Node.js)">
+    ```javascript
+    agent.customizeCollection('products', products => {
+      products.addSegment('Bestsellers', async () => {
+        const query = `
+          SELECT products.id, COUNT(orders.*)
+          FROM products
+          JOIN orders ON orders.product_id = products.id
+          GROUP BY products.id
+          ORDER BY count DESC
+          LIMIT 5;
+        `;
+        const products = await models.connections.default.query(query, {
+          type: QueryTypes.SELECT,
+        });
+        return { field: 'id', operator: 'In', value: products.map(p => p.id) };
+      });
+    });
+    ```
+  </Tab>
+  <Tab title="Before (Ruby)">
+    ```ruby
+    class Forest::Product
+      include ForestLiana::Collection
+      collection :Product
+
+      segment 'Bestsellers' do
+        query = <<~SQL
+          SELECT products.id, COUNT(orders.*)
+          FROM products
+          JOIN orders ON orders.product_id = products.id
+          GROUP BY products.id
+          ORDER BY count DESC
+          LIMIT 5;
+        SQL
+        products = ActiveRecord::Base.connection.execute(query)
+        { id: products.map { |p| p['id'] } }
+      end
+    end
+    ```
+  </Tab>
+  <Tab title="After (Ruby)">
+    ```ruby
+    @create_agent.customize_collection('product') do |collection|
+      collection.add_segment('best_sellers') do |context|
+        rows = ActiveRecord::Base.connection.execute(
+          'SELECT products.id as product_id, COUNT(orders.id) as nb
+           FROM products
+           INNER JOIN orders ON orders.product_id = products.id
+           GROUP BY products.id
+           ORDER BY nb DESC
+           LIMIT 5;'
+        )
+        {
+          field: 'id',
+          operator: 'In',
+          value: rows.map { |r| r['product_id'] }
+        }
+      end
+    end
+    ```
+  </Tab>
+  <Tab title="Before (Python)">
+    ```python
+    class ProductsForest(Collection):
+        def load(self):
+            self.segments = [{
+                "name": "best_sellers",
+                "where": self.get_best_sellers
+            }]
+
+        def get_best_sellers(self):
+            products = Product.objects.raw("""
+                SELECT products.id, COUNT(orders.*)
+                FROM products
+                JOIN orders ON orders.product_id = products.id
+                GROUP BY products.id
+                ORDER BY count DESC
+                LIMIT 5;""")
+            return Q(id__in=[p.id for p in products])
+    ```
+  </Tab>
+  <Tab title="After (Python)">
+    ```python
+    def best_sellers_segment_handler(context: CollectionCustomizationContext):
+        products = Product.objects.raw("""
+            SELECT products.id, COUNT(orders.*)
+            FROM products
+            JOIN orders ON orders.product_id = products.id
+            GROUP BY products.id
+            ORDER BY count DESC
+            LIMIT 5;""")
+        return ConditionTreeLeaf("id", "in", [p.id for p in products])
+
+    agent.customize_collection("Products").add_segment(
+        "best_sellers", best_sellers_segment_handler
+    )
+    ```
+  </Tab>
+</Tabs>

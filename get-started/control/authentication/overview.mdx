@@ -1,104 +1,50 @@
 ---
-title: "Authenticate with Forest Admin"
-description: "Learn how to authenticate and manage access to your Forest Admin organization"
+title: "Authentication"
+description: "Authentication options and security features for your Forest Admin organization"
 ---
 
-## Authentication methods
+## Standard login
 
-Forest Admin supports multiple authentication methods to access your back-office:
-
-### Email and password
-
-The default authentication method. Users create an account with their email address and password to access Forest Admin.
-
-### Google Sign-In
-
-Users can authenticate using their Google account for faster access without managing separate credentials.
-
-## Accessing organization settings
-
-To configure authentication, security, and other organization-level settings:
-
-1. Click your **Gravatar** in the bottom-left corner
-2. Select **Organization Settings**
-3. Navigate to the appropriate tab:
-   - **SSO** - Configure Single Sign-On with identity providers
-   - **Security** - Manage IP whitelisting, 2FA enforcement, session timeouts
-   - **SCIM** - Set up automatic user provisioning
+Users log in to Forest Admin with their email and password at [app.forestadmin.com](https://app.forestadmin.com).
 
 ## Single Sign-On (SSO)
 
-Single Sign-On allows your team to authenticate using your organization's existing identity provider, centralizing access control and improving security.
+Forest Admin supports SAML 2.0 SSO, allowing your users to log in via your Identity Provider (IdP). SSO is configured at the **Organization** level.
 
-### Benefits
+<Info>
+  SSO requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing). At least one project in the organization must be on this plan.
+</Info>
 
-- **Centralized authentication** - Users sign in once to access all corporate applications
-- **Enhanced security** - Leverage your IdP's security policies and MFA requirements
-- **Simplified management** - User access is controlled from your identity provider
-- **Audit trail** - Track authentication events through your IdP
+Supported providers with step-by-step guides:
 
-### Supported providers
+- [Google Workspace](/get-started/control/authentication/sso-providers/google)
+- [Okta](/get-started/control/authentication/sso-providers/okta)
+- [Azure Active Directory](/get-started/control/authentication/sso-providers/azure)
+- [AWS IAM Identity Center](/get-started/control/authentication/sso-providers/aws)
+- [Generic SAML 2.0](/get-started/control/authentication/sso-providers/generic-saml)
 
-<CardGroup cols={2}>
-  <Card title="Google Workspace" icon="google" href="/get-started/control/authentication/sso-providers/google">
-    Configure SSO with Google Workspace for your organization
-  </Card>
-  <Card title="Azure AD" icon="microsoft" href="/get-started/control/authentication/sso-providers/azure">
-    Set up SSO with Microsoft Azure Active Directory
-  </Card>
-  <Card title="Okta" icon="shield" href="/get-started/control/authentication/sso-providers/okta">
-    Integrate Forest Admin with Okta identity provider
-  </Card>
-  <Card title="AWS IAM" icon="aws" href="/get-started/control/authentication/sso-providers/aws">
-    Configure SSO using AWS IAM Identity Center
-  </Card>
-  <Card title="Generic SAML" icon="key" href="/get-started/control/authentication/sso-providers/generic-saml">
-    Set up SSO with any SAML 2.0 identity provider
-  </Card>
-</CardGroup>
+### How users log in with SSO
 
-### How SSO works
+On the Forest Admin login page, click **"Login with SSO"**, enter the name of your Organization, and click **"Login"**.
 
-1. User attempts to access Forest Admin
-2. Forest Admin redirects to your identity provider
-3. User authenticates with your IdP (using corporate credentials)
-4. IdP sends authentication confirmation to Forest Admin
-5. User gains access to Forest Admin with appropriate permissions
+## Two-factor authentication (2FA)
+
+2FA is available to all users. You can also **require** 2FA before accessing specific environments from **Project Settings → Security → Two-factor authentication**.
+
+See [2FA documentation](/get-started/control/authentication/2fa).
 
 ## SCIM provisioning
 
-SCIM (System for Cross-domain Identity Management) automatically provisions and deprovisions users from your identity provider to Forest Admin.
+Manage users at scale through your Identity Provider using SCIM. This lets you add users to Forest Admin projects directly from your IdP, with the correct role and permissions.
 
-### Benefits
+Supported providers: Okta and OneLogin.
 
-- **Automatic user management** - New employees are automatically added to Forest Admin
-- **Immediate deprovisioning** - Users are removed when they leave your organization
-- **Reduced overhead** - No manual user management required
-- **Compliance** - Ensures access is always synchronized with your IdP
+See [SCIM documentation](/get-started/control/authentication/scim-okta).
 
-### Prerequisites
+## Security features
 
-Before configuring SCIM:
-- SSO must be enabled and configured for your organization
-- You must have admin access to both Forest Admin and your identity provider
+Additional security features are available in **Project Settings → Security**:
 
-### Supported providers
-
-<CardGroup cols={2}>
-  <Card title="Okta SCIM" icon="shield" href="/get-started/control/authentication/scim-okta">
-    Automatic user provisioning with Okta
-  </Card>
-  <Card title="OneLogin SCIM" icon="key" href="/get-started/control/authentication/scim-onelogin">
-    Automatic user provisioning with OneLogin
-  </Card>
-  <Card title="Okta Manual Setup" icon="wrench" href="/get-started/control/authentication/scim-okta-manual">
-    Manual SCIM configuration for Okta
-  </Card>
-</CardGroup>
-
-### What SCIM syncs
-
-- **User creation** - New users are automatically added to Forest Admin
-- **User updates** - Name and email changes are synchronized
-- **User deactivation** - Removed or deactivated users lose Forest Admin access
-- **Group membership** - User assignments to teams (when supported)
+- **IP whitelisting** — Restrict access to specific IP addresses
+- **Auto logout** — Force session expiry after inactivity
+- **2FA enforcement** — Require 2FA for specific environments

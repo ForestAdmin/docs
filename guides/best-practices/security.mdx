@@ -1,71 +1,72 @@
 ---
-title: Security Best Practices
+title: Security
+description: "Security architecture and best practices for Forest Admin"
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers, Admins
 
-## Description
+## Data privacy
 
-Implement security best practices to protect your Forest Admin setup and data.
+When a user logs into the Forest Admin UI, their browser connects to:
 
-## Sources to migrate
+1. **Forest Admin servers** — to retrieve the layout configuration (UI settings)
+2. **Your agent** — to retrieve your data
 
-- `documentation-agent-v1/how-tos/maintain/forest-admin-and-security.md`
-- Security documentation across repos
+<Tip>
+  Your data is transmitted directly between your agent and the user's browser. **It never transits through Forest Admin servers.**
+</Tip>
 
-## Content outline
+## Authentication tokens
 
-1. **Authentication & Access**
-   - Strong password policies
-   - SSO implementation
-   - 2FA enforcement
-   - Session management
+Requests are protected using two separate JSON Web Tokens:
 
-2. **Authorization**
-   - Role-based access control (RBAC)
-   - Least privilege principle
-   - Scopes implementation
-   - Permission audits
+| Token | Purpose |
+|---|---|
+| `FOREST_ENV_SECRET` | Authenticates requests to Forest Admin servers. Provided by Forest Admin — unique per environment. |
+| `FOREST_AUTH_SECRET` | Authenticates requests to your agent. Chosen freely by you — unknown to Forest Admin. |
 
-3. **Data Protection**
-   - Sensitive data handling
-   - PII protection
-   - Encryption at rest
-   - Encryption in transit
+<Warning>
+  Both secrets must never be disclosed. The `FOREST_AUTH_SECRET` is only known to you — Forest Admin cannot help you recover it.
+</Warning>
 
-4. **API Security**
-   - API key management
-   - Token rotation
-   - Rate limiting
-   - Request validation
+The JWT payload contains the requesting user's details, available on any authenticated request to your agent:
 
-5. **Network Security**
-   - IP whitelisting
-   - VPN access
-   - HTTPS enforcement
-   - Firewall configuration
+```json
+{
+  "id": "172",
+  "email": "user@example.com",
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "team": "Operations",
+  "role": "Manager",
+  "tags": [{ "key": "country", "value": "FR" }],
+  "renderingId": "4998"
+}
+```
 
-6. **Code Security**
-   - Input validation
-   - SQL injection prevention
-   - XSS prevention
-   - Secure dependencies
+You can use this information in your agent to implement custom behaviors (e.g., scoping data by team, auditing actions).
 
-7. **Audit & Monitoring**
-   - Activity logging
-   - Security alerts
-   - Regular audits
-   - Incident response
+## IP whitelisting
 
-8. **Compliance**
-   - GDPR compliance
-   - HIPAA compliance
-   - SOC 2 considerations
-   - Data residency
+The IP whitelisting feature lets you restrict access to both the Forest Admin UI and your agent to a specific list of trusted IP addresses or ranges.
 
-9. **Self-Hosted Security**
-   - Server hardening
-   - Database security
-   - Regular updates
-   - Backup security
+Configure it in **Project Settings → Security → IP Whitelisting**.
+
+## DMZ & VPN
+
+You can host your agent in any cloud architecture compliant with your security requirements — DMZ, VPN, private network, etc. Forest Admin only needs to reach your agent URL to retrieve the schema; all data requests come directly from the user's browser.
+
+## Third-party tracking
+
+Forest Admin provides an option to disable all third-party vendors that could track metadata from your users' browsers.
+
+<Info>
+  This feature is available on the Pro plan and above.
+</Info>
+
+## Self-hosted security checklist
+
+- Use HTTPS — your agent URL must use the `https://` protocol
+- Use a separate `FOREST_ENV_SECRET` for each environment (development, staging, production)
+- Store secrets in your platform's secret manager (AWS Secrets Manager, Heroku Config Vars, etc.)
+- Never commit `.env` files to version control
+- Restrict your agent's network access to only what's needed (database, external APIs)
+- Keep your agent and its dependencies updated

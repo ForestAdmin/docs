@@ -1,65 +1,36 @@
 ---
-title: Admin API Logs
+title: Admin Logs
+description: "List admin logs for a project"
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers
 
-## Description
+<Info>
+  This API is not available for self-service. [Contact us](https://www.forestadmin.com/contact-us) if you are interested in using it.
+</Info>
 
-API endpoint for accessing administrative logs and system events.
+## List admin logs
 
-## Sources to migrate
+Returns admin logs for a specific project, sorted by `createdAt` date in descending order (most recent first).
 
-- `public-api-guide/admin-api-logs.md`
+Use the `createdAt` filter for pagination.
 
-## Content outline
+```
+GET /v1/project/{projectName}/admin-logs
+```
 
-1. **Endpoint Overview**
-   - Purpose
-   - Use cases
-   - vs Activity Logs
+### Authentication
 
-2. **Endpoints**
-   - `GET /api/admin-logs` - List admin logs
-   - `GET /api/admin-logs/:id` - Get log details
+All requests require a Bearer token in the `Authorization` header. Generate one from [your account settings](https://app.forestadmin.com/user-settings).
 
-3. **Query Parameters**
-   - Filtering
-   - Pagination
-   - Sorting
-   - Date ranges
-   - Log level
+```
+Authorization: Bearer YOUR_APPLICATION_TOKEN
+```
 
-4. **Response Format**
-   - Log object structure
-   - Timestamp
-   - Event type
-   - User
-   - Details
+<Warning>
+  If your project uses SSO, the application token must be generated while logged in with SSO.
+</Warning>
 
-5. **Log Types**
-   - Configuration changes
-   - Permission updates
-   - Integration events
-   - System events
-   - Error logs
+### Path parameters
 
-6. **Use Cases**
-   - System monitoring
-   - Audit compliance
-   - Troubleshooting
-   - Change tracking
-
-7. **Examples**
-   ```bash
-   # Fetch recent admin logs
-   curl -H "Authorization: Bearer TOKEN" \
-        https://api.forestadmin.com/api/admin-logs
-   ```
-
-## Migration notes
-
-- MEDIUM priority
-- Part of public API migration
-- Clear examples needed
+| Parameter | Type | Description |
+|---|---|---|
+| `projectName` | string | Your project name |

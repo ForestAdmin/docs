@@ -1,51 +1,31 @@
 ---
 title: Okta SSO
+description: "Configure SSO with Okta"
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Admins
 
-## Description
+<Info>
+  Requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing).
+</Info>
 
-Configure Single Sign-On with Okta identity provider.
+## Configuration
 
-## Sources to migrate
+1. In your Okta admin dashboard, click **Create a new app integration**
+2. Select **SAML 2.0** and follow the wizard
+3. Configure the app with these settings:
 
-- `documentation-user-guide/project-settings/teams-and-users/sso/`
-- Okta SSO setup documentation
+| Setting | Value |
+|---|---|
+| ACS URL | `https://api.forestadmin.com/api/saml/callback` |
+| Audience URI (EntityID) | `forestadmin-YourOrganizationName` |
+| Name ID format | **EmailAddress** |
+| Application username | **Email** |
+| Update application username on | **Create and update** |
+| Relay State (optional) | `{"organizationName": "YourOrganizationName", "destinationUrl": "organization.projects"}` |
 
-## Content outline
+4. Go to the **Sign On** tab → **Metadata details** and copy the **Metadata URL**
+5. In Forest Admin Organization settings, select **XML file endpoint** and paste the Metadata URL
 
-1. **Prerequisites**
-   - Okta account
-   - Admin access
-   - Forest Admin plan requirements
+## Troubleshooting
 
-2. **Okta Setup**
-   - Create SAML application
-   - Configure SAML settings
-   - Attribute statements
-   - User/group assignment
-
-3. **Forest Admin Configuration**
-   - Enable SSO
-   - Upload metadata
-   - Configure attributes
-   - Test connection
-
-4. **User Provisioning**
-   - Automatic user creation
-   - Role mapping
-   - Team assignment
-   - SCIM integration
-
-5. **Advanced Configuration**
-   - Multi-factor authentication
-   - Adaptive policies
-   - Group-based access
-
-6. **Troubleshooting**
-   - Common errors
-   - Login issues
-   - SAML response debugging
-
+- Double-check all endpoints and certificate expiration dates
+- Ensure `Name ID format` is set to **EmailAddress** and matches the email used on Forest Admin accounts
