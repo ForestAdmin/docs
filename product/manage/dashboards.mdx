@@ -1,7 +1,127 @@
 ---
 title: Dashboards
+description: Create and organize dashboards to monitor KPIs and metrics across your team.
 ---
 
-A Dashboard serves as a centralized space for visualizing and analyzing key data metrics and insights. Create various types of charts, including time-based charts, leaderboards, value charts, pie charts, etc., based on all your structured data plugged into Forest Admin. This structured data setup allows for complex filters and advanced data visualization.
+A **dashboard** is a tab in your Forest Admin project where you group charts to track KPIs and operational metrics. You can create as many dashboards as needed — one per team, use case, or business domain.
 
-For maximum flexibility, code the HTML/CSS/JS of your charts, enabling advanced data visualization tailored to your specific needs. The computation of data runs through an HTTP URL, ensuring that you don't encounter limitations and integrating dynamic data into your dashboard. Dashboards in Forest Admin let you efficiently monitor and derive valuable insights from your structured data, facilitating informed decision-making and optimal data management within your admin panel.
+## Creating a dashboard
+
+1. Enable **Layout Editor** mode from the top navigation.
+2. Click **+ New** next to the dashboard tabs.
+3. Give the dashboard a name.
+4. Add charts to it (see [Charts](./charts/overview)).
+
+## Managing dashboards
+
+In Layout Editor mode, you can:
+
+- **Rename** a dashboard by clicking its tab name.
+- **Reorder** dashboards by dragging the tabs.
+- **Delete** a dashboard by clicking the trash icon next to its name.
+
+<Warning>
+Deleting a dashboard also deletes all charts it contains.
+</Warning>
+
+## Adding charts
+
+Charts are the building blocks of a dashboard. Forest Admin supports two ways to populate chart data:
+
+- **Simple mode** — configure charts from the UI by selecting a collection, an aggregate function, and optional filters. No code required.
+- **Query mode** — write a raw SQL query directly in the UI for advanced analytics.
+
+See [Charts](./charts/overview) for the full reference on chart types and configuration.
+
+## API-powered charts
+
+When chart data requires custom business logic — calling an external API, joining data across sources, or applying transformations not possible in SQL — you can implement the data retrieval in your agent.
+
+Use `agent.addChart()` to register a named chart handler:
+
+```javascript
+agent.addChart('monthlyRecurringRevenue', async (context, resultBuilder) => {
+  const rows = await context.dataSource
+    .getCollection('payments')
+    .aggregate(
+      { conditionTree: { field: 'status', operator: 'equal', value: 'paid' } },
+      { operation: 'Sum', field: 'amount' }
+    );
+
+  return resultBuilder.value(rows[0].value);
+});
+```
+
+```ruby
+@agent.add_chart('monthlyRecurringRevenue') do |context, result_builder|
+  result = context.datasource.get_collection('payment').aggregate(
+    Filter.new(condition_tree: Nodes::ConditionTreeLeaf.new('status', Operators::EQUAL, 'paid')),
+    Aggregation.new(operation: 'Sum', field: 'amount')
+  )
+  result_builder.value(result[0]['value'])
+end
+```
+
+Then in the UI, create a chart on the dashboard, select **API** as the data source, and enter the chart URL:
+
+```
+/forest/_charts/monthlyRecurringRevenue
+```
+
+<Info>
+The chart type selected in the UI must match the `resultBuilder` method used in your agent (`value`, `timeBased`, `distribution`, `percentage`, `objective`, `leaderboard`). The chart name must be URL-safe.
+</Info>
+
+### Record-specific API charts
+
+To scope a chart to a specific record, register it on the collection instead:
+
+```javascript
+agent.customizeCollection('customers', collection => {
+  collection.addChart('revenueByCustomer', async (context, resultBuilder) => {
+    const rows = await context.dataSource
+      .getCollection('payments')
+      .aggregate(
+        {
+          conditionTree: {
+            aggregator: 'And',
+            conditions: [
+              { field: 'status', operator: 'equal', value: 'paid' },
+              { field: 'customer:id', operator: 'equal', value: context.recordId },
+            ],
+          },
+        },
+        { operation: 'Sum', field: 'amount' }
+      );
+
+    return resultBuilder.value(rows[0].value);
+  });
+});
+```
+
+```ruby
+@agent.customize_collection('customer') do |collection|
+  collection.add_chart('revenueByCustomer') do |context, result_builder|
+    result = context.datasource.get_collection('payment').aggregate(
+      Filter.new(
+        condition_tree: Nodes::ConditionTreeBranch.new('And', [
+          Nodes::ConditionTreeLeaf.new('status', Operators::EQUAL, 'paid'),
+          Nodes::ConditionTreeLeaf.new('customer:id', Operators::EQUAL, context.get_record_id)
+        ])
+      ),
+      Aggregation.new(operation: 'Sum', field: 'amount')
+    )
+    result_builder.value(result[0]['value'])
+  end
+end
+```
+
+The chart URL for collection-scoped charts follows this pattern:
+
+```
+/forest/_charts/customers/revenueByCustomer
+```
+
+## Access control
+
+Dashboard visibility follows your project's role permissions. Users only see the charts they have access to based on their role's collection permissions.
