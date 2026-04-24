@@ -189,6 +189,83 @@ await agent.stop(): Promise<void>;
 
 ---
 
+### agent.restart()
+
+Reconstruct routing and remount routes at runtime. Called when customizations are refreshed externally (e.g. in cloud environments).
+
+```typescript
+await agent.restart(): Promise<void>;
+```
+
+---
+
+### agent.addAi(provider)
+
+Configure an AI provider to power Forest Admin's AI features (natural language search, smart actions, etc.).
+
+```typescript
+agent.addAi(provider: AiProviderDefinition): Agent;
+```
+
+Can only be called once — calling it a second time throws an error.
+
+**Example:**
+
+```typescript
+import { createAgent } from '@forestadmin/agent';
+
+const agent = createAgent({
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  envSecret: process.env.FOREST_ENV_SECRET,
+})
+  .addAi({
+    provider: 'openai',
+    apiKey: process.env.OPENAI_API_KEY,
+    model: 'gpt-4o',
+  });
+```
+
+---
+
+### agent.mountAiMcpServer(options?)
+
+Enable a Model Context Protocol (MCP) server on the agent, allowing AI assistants to interact with your data through standardized tools.
+
+```typescript
+agent.mountAiMcpServer(options?: {
+  enabledTools?: ToolName[];
+}): Agent;
+```
+
+**Parameters:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `enabledTools` | `ToolName[]` | Restrict which MCP tools are exposed. Defaults to all tools. |
+
+**Available tool names:** `'describeCollection'`, `'list'`, `'listRelated'`, `'create'`, `'update'`, `'delete'`, `'associate'`, `'dissociate'`, `'getActionForm'`, `'executeAction'`
+
+**Example:**
+
+```typescript
+agent.mountAiMcpServer({
+  enabledTools: ['describeCollection', 'list', 'listRelated'],
+});
+```
+
+The MCP server exposes HTTP endpoints for OAuth and protocol communication:
+
+| Endpoint | Purpose |
+|----------|---------|
+| `POST /mcp` | Main MCP protocol endpoint (Bearer token required) |
+| `POST /oauth/authorize` | OAuth authorization |
+| `POST /oauth/token` | Token exchange |
+| `GET /.well-known/oauth-protected-resource/mcp` | OAuth discovery |
+
+You can also configure enabled tools via the `FOREST_MCP_ENABLED_TOOLS` environment variable (comma-separated tool names), or set the server port with `MCP_SERVER_PORT` (default: `3931`).
+
+---
+
 ### agent.updateTypesOnFileSystem(typingsPath, typingsMaxDepth)
 
 Update the TypeScript typings file generated from your datasources.
@@ -1512,4 +1589,223 @@ Specify which fields to retrieve:
 import { Projection } from '@forestadmin/agent';
 
 const projection = new Projection('id', 'name', 'email', 'company:name');
+```
+
+---
+
+## Plugin: Flattener
+
+`@forestadmin/plugin-flattener` flattens nested data structures (composite columns, relations, JSON columns) into individual top-level fields.
+
+### flattenColumn(dataSource, collection, options)
+
+Decompose a column with a composite type into individual fields.
+
+```typescript
+import { flattenColumn } from '@forestadmin/plugin-flattener';
+
+agent.customizeCollection('orders', async (collection) => {
+  await collection.use(flattenColumn, {
+    columnName: 'address',
+    include: ['street', 'city', 'zipCode'],
+    readonly: false,
+  });
+});
+```
+
+**Options:**
+
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `columnName` | string | Yes | Column to flatten |
+| `include` | string[] | No | Fields to import (defaults to all) |
+| `exclude` | string[] | No | Fields to skip |
+| `level` | number | No | Maximum nesting depth |
+| `readonly` | boolean | No | Whether imported fields are read-only |
+| `columnType` | object | No | Custom type mapping for nested fields |
+
+---
+
+### flattenRelation(dataSource, collection, options)
+
+Import fields from a relation directly into the collection.
+
+```typescript
+import { flattenRelation } from '@forestadmin/plugin-flattener';
+
+agent.customizeCollection('books', async (collection) => {
+  await collection.use(flattenRelation, {
+    relationName: 'author',
+    include: ['firstName', 'lastName', 'email'],
+    readonly: true,
+  });
+});
+```
+
+**Options:**
+
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `relationName` | string | Yes | Relation to flatten |
+| `include` | string[] | No | Fields to import |
+| `exclude` | string[] | No | Fields to skip |
+| `readonly` | boolean | No | Whether imported fields are read-only |
+
+---
+
+### flattenJsonColumn(dataSource, collection, options)
+
+Expand a JSON column into individual typed fields.
+
+```typescript
+import { flattenJsonColumn } from '@forestadmin/plugin-flattener';
+
+agent.customizeCollection('products', (collection) => {
+  collection.use(flattenJsonColumn, {
+    columnName: 'metadata',
+    columnType: {
+      weight: 'Number',
+      dimensions: { width: 'Number', height: 'Number' },
+      tags: ['String'],
+    },
+    readonly: false,
+    keepOriginalColumn: false,
+  });
+});
+```
+
+**Options:**
+
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `columnName` | string | Yes | JSON column to flatten |
+| `columnType` | object | Yes | Type definition for nested fields |
+| `level` | number | No | Maximum nesting depth |
+| `readonly` | boolean | No | Whether flattened fields are read-only |
+| `keepOriginalColumn` | boolean | No | Whether to preserve the original JSON column |
+
+---
+
+## Package: Forest Cloud
+
+`@forestadmin/forest-cloud` is a dev-only package that provides CLI tooling for cloud-hosted customization projects.
+
+### Installation
+
+```bash
+npm install @forestadmin/forest-cloud --save-dev
+```
+
+### CLI Commands
+
+#### bootstrap
+
+Initialize a cloud customization project. Authenticates with Forest Admin, creates a `cloud-customizer` directory, configures credentials, and generates type definitions.
+
+```bash
+npx forest-cloud bootstrap --env-secret YOUR_FOREST_ENV_SECRET
+```
+
+#### update-typings
+
+Regenerate TypeScript type definitions based on your current database structure and customization code.
+
+```bash
+npx forest-cloud update-typings
+```
+
+#### login
+
+Refresh your Forest Admin authentication token.
+
+```bash
+npx forest-cloud login
+```
+
+### Exported Types
+
+```typescript
+import type { Agent, SqlConnectionParams, MongoConnectionParams } from '@forestadmin/forest-cloud';
+```
+
+| Type | Description |
+|------|-------------|
+| `Agent` | Re-export of the `Agent` class from `@forestadmin/agent` |
+| `SqlConnectionParams` | Connection options for SQL datasources |
+| `MongoConnectionParams` | Connection parameters for MongoDB datasources |
+
+---
+
+## Package: Agent Testing
+
+`@forestadmin/agent-testing` provides utilities to test agent customizations locally without connecting to Forest Admin servers.
+
+### createForestServerSandbox(port)
+
+Start a local sandbox that mimics Forest Admin servers.
+
+```typescript
+import { createForestServerSandbox } from '@forestadmin/agent-testing';
+
+const sandbox = await createForestServerSandbox(3001);
+
+// ... run your tests
+
+await sandbox.close();
+```
+
+---
+
+### createAgentTestClient(options)
+
+Connect a test client to a running agent to simulate frontend requests.
+
+```typescript
+import { createAgentTestClient } from '@forestadmin/agent-testing';
+
+const client = await createAgentTestClient({
+  agentForestEnvSecret: process.env.FOREST_ENV_SECRET,
+  agentForestAuthSecret: process.env.FOREST_AUTH_SECRET,
+  agentUrl: 'http://localhost:3000',
+  serverUrl: 'http://localhost:3001',
+  agentSchemaPath: '.forestadmin-schema.json',
+});
+```
+
+**Parameters:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `agentForestEnvSecret` | string | Environment secret |
+| `agentForestAuthSecret` | string | Auth secret |
+| `agentUrl` | string | URL of your running agent |
+| `serverUrl` | string | URL of the sandbox server |
+| `agentSchemaPath` | string | Path to `.forestadmin-schema.json` |
+
+### Typical test workflow
+
+```typescript
+import { createForestServerSandbox, createAgentTestClient } from '@forestadmin/agent-testing';
+
+// 1. Start sandbox
+const sandbox = await createForestServerSandbox(3001);
+
+// 2. Start your agent (pointing at sandbox)
+// FOREST_SERVER_URL=http://localhost:3001 node index.js
+
+// 3. Connect test client
+const client = await createAgentTestClient({
+  agentForestEnvSecret: 'test-env-secret',
+  agentForestAuthSecret: 'test-auth-secret',
+  agentUrl: 'http://localhost:3000',
+  serverUrl: 'http://localhost:3001',
+  agentSchemaPath: '.forestadmin-schema.json',
+});
+
+// 4. Assert
+const users = await client.collection('users').list();
+expect(users).toHaveLength(3);
+
+// 5. Cleanup
+await sandbox.close();
 ```
