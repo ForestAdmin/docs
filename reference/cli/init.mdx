@@ -62,11 +62,10 @@ If your account has only one project, this step is skipped automatically.
 Forest Admin needs to know where your local agent is running to set up the Development Environment:
 
 ```
-? Enter your local agent host: (localhost)
-? Enter your local agent port: (3310)
+? Enter your local admin backend endpoint: (http://localhost:3310)
 ```
 
-Press **Enter** to accept the defaults (`localhost:3310`) or provide custom values.
+Press **Enter** to accept the default (`http://localhost:3310`) or provide a custom URL.
 
 <Tip>
 Your Development Environment is created as soon as you confirm the endpoint. 🎉
@@ -74,10 +73,10 @@ Your Development Environment is created as soon as you confirm the endpoint. �
 
 ### Database configuration (optional)
 
-`forest init` can help you set up your `DATABASE_URL` and related environment variables:
+`forest init` will offer to set up your `DATABASE_URL` if it is not already configured:
 
 ```
-? Would you like to set up your database connection? (Y/n)
+? You don't have a DATABASE_URL yet. Do you need help setting it? (Y/n)
 ```
 
 If you accept, you will be guided through entering your database credentials, which will be written to your `.env` file.
@@ -101,13 +100,11 @@ The `FOREST_ENV_SECRET` uniquely identifies your Development Environment. Keep t
 $ cd my-forest-admin-project
 $ forest init
 
-✅ You are now logged in.
 ? Select your project: My CRM Admin
-? Enter your local agent host: (localhost)
-? Enter your local agent port: (3310)
+? Enter your local admin backend endpoint: (http://localhost:3310)
 ✅ Development Environment created!
-? Would you like to set up your database connection? Yes
-? Enter your database URL: postgresql://user:password@localhost:5432/mydb
+? You don't have a DATABASE_URL yet. Do you need help setting it? Yes
+...
 ✅ Your .env file has been updated.
 ```
 
