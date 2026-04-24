@@ -5,7 +5,7 @@ description: "Create and manage Forest Admin environments"
 
 ## Overview
 
-Each Forest Admin project has multiple environments — at minimum a **Development** environment (created automatically) and a **Production** environment. You can also create **Remote** environments for staging, QA, pre-production, etc.
+Each Forest Admin project has multiple environments — at minimum a **Development** environment (created automatically) and a **Production** environment. **Remote** environments are also available for staging, QA, pre-production, etc.
 
 Each environment has:
 - Its own agent URL (pointing to your deployed server)
@@ -29,7 +29,7 @@ Remote environments are useful for staging, QA, and other intermediate environme
 6. Follow the on-screen instructions to set the generated environment variables on your server
 
 <Info>
-  You can create a Remote Environment before going to production — the order is up to you.
+  Create a Remote Environment before going to production if needed — the order is up to you.
 </Info>
 
 ## Environment hierarchy
@@ -39,7 +39,7 @@ Environments have an **origin** — the environment their layout is based on. By
 - Remote environments have Production as their origin
 - Development branches can have any environment as their origin
 
-You can change the origin of an environment to create complex workflows:
+Change the origin of an environment to create complex workflows:
 
 ```
 dev → staging → preprod → production
@@ -68,7 +68,7 @@ If you need to promote a Remote environment to Production:
 
 ## Deleting an environment
 
-From the environment's detail page in Project Settings, you can delete an environment.
+From the environment's detail page in Project Settings, delete an environment.
 
 <Warning>
   Deleting an environment is irreversible.
@@ -80,7 +80,7 @@ Each environment requires these variables on the agent server:
 
 | Variable | Description |
 |---|---|
-| `FOREST_ENV_SECRET` | Unique secret for this environment (provided by Forest Admin) |
+| `FOREST_ENV_SECRET` | Unique secret for this environment (Forest Admin generates this) |
 | `FOREST_AUTH_SECRET` | Secret for signing JWT tokens (shared across environments) |
 | `DATABASE_URL` | Connection string for this environment's database |
 

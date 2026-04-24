@@ -282,7 +282,6 @@
             "group": "Collaborate",
             "pages": [
               "product/collaborate/approval-workflows",
-              "product/collaborate/inbox",
               "product/collaborate/notes"
             ]
           },
@@ -291,7 +290,7 @@
             "pages": [
               "product/manage/activity",
               "product/manage/team-performance",
-              "product/manage/dispatcher",
+              "product/manage/inbox",
               "product/manage/charts/overview"
             ]
           },

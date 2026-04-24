@@ -7,12 +7,12 @@ title: Filtering & Sorting
 ### Disabling operators
 
 <Info>
-  Disabling filtering can be made without any code in the field settings in the Forest Admin UI.
+  Disable filtering without any code in the field settings in the Forest Admin UI.
 </Info>
 
 ### Substitution
 
-Operation substitution can be used for two purposes:
+Operation substitution serves two purposes:
 
 - **Performance**: provide a more efficient way to perform a given filtering operation
 - **Capabilities**: enable filtering on a computed field or other non-filterable fields
@@ -40,7 +40,7 @@ collection.replaceFieldOperator('fullName', 'Equal', (value, context) => {
 | String | IContains OR Contains OR Equal |
 | Uuid | Equal |
 
-You can use the `replaceFieldOperator` method to unlock the operators.
+Use the `replaceFieldOperator` method to unlock the operators.
 
 ### Emulation
 
@@ -66,11 +66,11 @@ collection.emulateFieldOperator('fullName', 'Equal');
 
 Depending on the data source, not all fields may be sortable, or you may want to change how the native sorting works.
 
-By using the `replaceFieldSorting` and `emulateFieldSorting` methods, you can change a single column's sorting behavior.
+Use the `replaceFieldSorting` and `emulateFieldSorting` methods to change a single column's sorting behavior.
 
 ### Substitution
 
-You can provide replacement sort clauses. In this example, we're telling Forest Admin "When a user sorts by full name, I want to sort by the last name, and then by the first name".
+Provide replacement sort clauses. In this example, we're telling Forest Admin "When a user sorts by full name, I want to sort by the last name, and then by the first name".
 
 ```javascript
 collection.replaceFieldSorting('fullName', [

@@ -39,7 +39,7 @@ SELECT authors.id, authors.firstName, authors.lastName FROM authors WHERE id IN 
 ```
 
 <Warning>
-  Automatic query splitting is a very powerful tool, however not all queries are created equal.
+  Automatic query splitting handles complex cross-datasource queries, however not all queries are created equal.
 
   In this simple example, it is a straightforward three-step process, but the feature can come at the cost of performance on more complex queries.
 </Warning>

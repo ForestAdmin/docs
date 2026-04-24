@@ -12,7 +12,7 @@ However, you may want to enforce stricter restrictions than the ones implemented
 
 ## Adding validation rules
 
-The list of operators (`Present`, `LongerThan`, ...) which can be used when adding validators is the same as the filter operators.
+The list of operators (`Present`, `LongerThan`, ...) available when adding validators is the same as the filter operators.
 
 ```javascript
 collection
@@ -28,7 +28,7 @@ If you need to implement custom validators or validation over multiple fields yo
 
 ## Make a field optional
 
-If the introspection marks a field as required, and you would like to make it optional, you can use the `setFieldNullable` function on your collection.
+If the introspection marks a field as required, and you would like to make it optional, use the `setFieldNullable` function on your collection.
 
 <Warning>
   Be wary that if your database system does not allow empty values on the specified field, updating that field on records with an empty value will result in an error.

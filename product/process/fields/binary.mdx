@@ -31,7 +31,7 @@ The hexadecimal mode is suitable for all data that you would not save in a file.
 
 It is the default mode for all binary fields that are used as either a primary or foreign key.
 
-If you want to use the hexadecimal mode for another field, use the `replaceFieldBinaryMode` method:
+To use the hexadecimal mode for another field, use the `replaceFieldBinaryMode` method:
 
 ```javascript
 agent.customizeCollection('people', collection =>
@@ -43,9 +43,9 @@ agent.customizeCollection('people', collection =>
 
 The data-URI mode is suitable for all data that you would save in a file (images, PDFs, ...).
 
-When using that mode, you will be able to use both the File Viewer and the File Picker widgets in the UI to respectively preview and upload files.
+When using that mode, both the File Viewer and the File Picker widgets are available in the UI to respectively preview and upload files.
 
-If the automatic detection based on the field type is not working for you, you can force the `datauri` mode using the `replaceFieldBinaryMode` method:
+If the automatic detection based on the field type is not working for you, force the `datauri` mode using the `replaceFieldBinaryMode` method:
 
 ```javascript
 agent.customizeCollection('people', collection =>

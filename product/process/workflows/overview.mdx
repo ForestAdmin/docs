@@ -13,7 +13,7 @@ Like all UI customization features in Forest Admin, Workflows can be created and
 
 The quickest way to create a new workflow is through the **Customization Center** (Edit Layout → \+ Add New).
 
-Alternatively, you can add a new workflow directly from your **Collection Settings**, using the **\+ New** button in the Workflows tab.
+Alternatively, add a new workflow directly from your **Collection Settings**, using the **\+ New** button in the Workflows tab.
 
 ### The workflow editor
 
@@ -26,11 +26,11 @@ The Workflow Editor is made up of four main elements:
 - **Toolbar** — on the left, where you'll find the Steps available to build your workflow
 - **Canvas** — in the center, where you build the flow of your process
 - **Settings Panel** — on the right, where you configure the step(s) currently selected in the canvas
-- **Header** — where you can save your workflow, after fixing any issues raised in the **Errors Panel**
+- **Header** — where you save your workflow, after fixing any issues raised in the **Errors Panel**
 
 #### Steps
 
-A workflow is a series of Steps. Some steps are entirely manual — the end user simply carries out the instruction provided — while **AI-powered** steps surface the relevant data or actions at runtime to help the user complete the step more efficiently.
+A workflow is a series of Steps. Some steps are entirely manual — the end user carries out the instruction provided — while **AI-powered** steps surface the relevant data or actions at runtime to help the user complete the step more efficiently.
 
 The following step types are available (\* denotes AI-powered):
 
@@ -64,21 +64,21 @@ The following step types are available (\* denotes AI-powered):
 
 Workflows are designed to be human-first for reliability and compliance, but it is possible to automate certain steps to boost execution efficiency.
 
-At the end of each step, the user clicks the confirmation button (labelled **Done** by default) to proceed. You can skip this by setting the **Step Completion** toggle to **Automatic**, so the workflow advances to the next step immediately upon completion.
+At the end of each step, the user clicks the confirmation button (labelled **Done** by default) to proceed. Skip this by setting the **Step Completion** toggle to **Automatic**, so the workflow advances to the next step immediately upon completion.
 
 On **Trigger Action** and **MCP Tasks** steps, the end user must explicitly click Execute by default. Once you're confident in the AI suggesting the correct tool, set the **Execution** toggle to **Automatic** to skip that extra click.
 
 <Note>
-  Actions featuring a form still need to be filled out by the end user before they can be submitted automatically.
+  Actions featuring a form still need to be filled out by the end user before the workflow submits them automatically.
 </Note>
 
 **Decisions** can also be delegated to AI: set the **Decision maker** toggle to **AI** on a decision step, and the workflow will automatically guide users through the correct branch, assuming it has sufficient context from previous steps.
 
 ### Managing workflows
 
-Existing workflows can be managed from the relevant **Collection Settings**, in the Workflows tab. From there, you can rename a workflow, restrict its availability to a subset of Segments, and access the Workflow Editor.
+Existing workflows can be managed from the relevant **Collection Settings**, in the Workflows tab. From there, rename a workflow, restrict its availability to a subset of Segments, and access the Workflow Editor.
 
-By default, workflows are available when selecting a single record from the List View. You can toggle their visibility and reorder them in the **Layout Editor**.
+By default, workflows are available when selecting a single record from the List View. Toggle their visibility and reorder them in the **Layout Editor**.
 
 Workflows can also be made available in Summary Views and Workspaces.
 
@@ -88,7 +88,7 @@ Workflows can also be made available in Summary Views and Workspaces.
 
 As with everything in Forest Admin, the Workflow feature is built on the **Roles & Permissions** system. Although anyone can trigger a workflow, data and actions are only made available to users whose role permits it.
 
-Every completed and aborted workflow execution is recorded in the workflow list for a given record, and can be opened in read-only mode to review its execution in detail.
+Every completed and aborted workflow execution is recorded in the workflow list for a given record, and opens in read-only mode to review its execution in detail.
 
 Every interaction within a workflow execution is also recorded in your **Activity Logs**, available in the Reports tab or through the public API.
 

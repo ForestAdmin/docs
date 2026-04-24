@@ -15,7 +15,7 @@ You should refrain from using handlers that have side effects (to perform error 
 ## Making a field read-only
 
 <Info>
-  Can be achieved without any code in the field settings in the Forest Admin UI.
+  Achieve this without any code in the field settings in the Forest Admin UI.
 </Info>
 
 ## Examples
@@ -43,7 +43,7 @@ end
 
 ### Having specific behavior only for updates
 
-You can have different behavior for `creations` and `updates`.
+Define different behavior for `creations` and `updates`.
 
 In this example, each time the `firstName` field is edited, we also want to update a timestamp field.
 
@@ -108,7 +108,7 @@ end
   If the relationships do not exist, they will be created with the given field values.
 </Info>
 
-You can also provide another `portfolioId` to update the relationships and their fields:
+Provide another `portfolioId` to update the relationships and their fields:
 
 <CodeGroup>
 ```javascript Node.js / Cloud
@@ -124,7 +124,7 @@ end
 ```
 </CodeGroup>
 
-You can chain the relationships. For example, if a portfolio has a `one-to-one` relationship with the `formats` collection, you can update it by writing the right path.
+Chain the relationships. For example, if a portfolio has a `one-to-one` relationship with the `formats` collection, you can update it by writing the right path.
 
 <CodeGroup>
 ```javascript Node.js / Cloud

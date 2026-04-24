@@ -8,7 +8,7 @@ The **Inbox** feature automatically assigns tasks to team members based on workl
 An inbox is either tied to:
 
 - A **Segment**, for example the `Waiting for Validation` segment of a `Documents` collection. Every record in that segment becomes a task for operators to process.
-- A **Workflow**, as an Escalation mechanism for a user to pick up a process where a previous user left off
+- A **Workflow**, as an escalation mechanism for a user to pick up a process where a previous user left off.
 
 <Note>
   This feature may not be available on all plans. Check the pricing page for more information, or contact us to enable it.
@@ -16,7 +16,15 @@ An inbox is either tied to:
 
 ## Creating an inbox
 
-To create an Inbox, click **Add New** at the bottom left of the screen, then configure your inbox settings.
+To create an inbox, navigate to the **Collaboration** tab and enable **Layout Editor** mode. In the left navbar, find the **Inboxes** section and click **Add New**.
+
+<img src="/images/inbox-create.png" alt="Inboxes section in the left navbar" />
+
+An inbox is always based on a segment of a collection. In this example, the inbox is based on the `Documents` collection and the `Waiting for Validation` segment — all documents that have not been verified yet.
+
+<img src="/images/inbox-config-1.png" alt="Selecting a collection for the inbox" />
+
+<img src="/images/inbox-config-2.png" alt="Selecting a segment for the inbox" />
 
 <div style={{position: "relative", paddingBottom: "calc(54.6875% + 47px)", height: 0}}>
   <iframe id="gkyvev6f4k" src="https://app.guideflow.com/embed/er5d2jvhlk" width="100%" height="100%" style={{overflow: "hidden", position: "absolute", border: "none"}} allow="clipboard-read; clipboard-write" allowFullScreen allowTransparency />
@@ -24,17 +32,25 @@ To create an Inbox, click **Add New** at the bottom left of the screen, then con
 
 ## Processing tasks
 
-Once an inbox is created, operators can access it from the main tab, or any Workspace on which the Inbox may have been configured as a source.
+Once an inbox is created, operators can access it from the main tab, or any Workspace on which the inbox has been configured as a source.
+
+Click **Start processing** to be automatically assigned to the next task and redirected to the record.
+
+<img src="/images/inbox-processing.png" alt="Record view while processing an inbox task" />
+
+A bar appears at the top indicating you are processing a task. Click **Next ticket** to be automatically assigned a new task.
+
+<img src="/images/inbox-next-ticket.png" alt="Next ticket bar at the top of the screen" />
 
 ### To do
 
-The **To do** section shows the number of unassigned records, and provides you with the **Start Processing** button to be automatically assigned to the next task, and redirected to the record.
+The **To do** section shows the number of unassigned records, and provides the **Start Processing** button to be automatically assigned to the next task and redirected to the record.
 
 After completing the work on that record (e.g. triggering a `Validate Document` action), click **Next ticket** in the top bar to be assigned a new task automatically.
 
 ### Doing
 
-The **Doing** section shows tasks currently assigned to you. You can navigate back to an in-progress record from here.
+The **Doing** section shows tasks currently assigned to you. Navigate back to an in-progress record from here.
 
 ### Backlog
 
@@ -56,18 +72,18 @@ Manual assignments bypass the sorting rules and become the next task for that op
 
 ## Inbox settings
 
-Access inbox settings from **Layout Editor mode** → the menu next to the inbox name. You can:
+Access inbox settings from **Layout Editor mode** → the menu next to the inbox name. From there:
 
-- **Rename** the inbox or update its icon, to easily find it in the sidebar
-- Edit its **dispatch rules**
-- **Prevent operators from un-assigning **themselves from tasks
+- **Rename** the inbox or update its icon.
+- Edit its **dispatch rules**.
+- **Prevent operators from un-assigning themselves** from tasks.
 
 <Info>
   By default, operators can un-assign themselves from a task, and assign someone else in their place.
 </Info>
 
 - **Automatically un-assign tasks** after a configurable idle time, making them available to other operators.
-- **Set a maximum number of concurrent tasks per operator**; when reached, clicking "Next ticket" redirects the operator to one of their in-progress tasks instead of assigning a new one from the To do queue.
+- **Set a maximum number of concurrent tasks per operator** — when reached, clicking "Next ticket" redirects the operator to one of their in-progress tasks instead of assigning a new one.
 
 <Info>
   Maximum concurrent tasks and automatic unassignment are disabled by default.

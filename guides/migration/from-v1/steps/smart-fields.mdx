@@ -5,7 +5,7 @@ description: "How to migrate smart fields from Agent v1 to the new agent"
 
 In the legacy agent, declaring a smart field was done in one big step. In the new agent, the process is split into multiple steps depending on the capabilities of the field (writing, filtering, sorting, etc.).
 
-This makes it easier to reuse the same API when customizing normal fields, reducing the API surface you need to learn.
+This allows reuse of the same API when customizing normal fields, reducing the API surface you need to learn.
 
 ## API cheatsheet
 
@@ -20,7 +20,7 @@ This makes it easier to reuse the same API when customizing normal fields, reduc
 
 ## Do you still need a computed field?
 
-Smart fields were powerful but often a performance bottleneck. Before migrating, consider whether you can replace them with simpler alternatives:
+Smart fields were flexible but often a performance bottleneck. Before migrating, consider whether to replace them with simpler alternatives:
 
 - If you were moving a field from one collection to another → use [import field](/product/process/fields/import-rename-remove)
 - If you were creating a link to another record → use [relationships](/product/process/for-tech-teams/relationships/overview)

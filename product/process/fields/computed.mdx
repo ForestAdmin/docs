@@ -4,7 +4,7 @@ title: Computed fields
 
 Forest Admin allows creating new fields on any collection, either computationally, by fetching data on an external API, or based on other data available on the connected data sources.
 
-By default, the fields that you create will be read-only, but you can make them [filterable](/product/process/fields/filter), [sortable](/product/process/fields/sort), and [writable](/product/process/fields/write) by using the relevant methods.
+By default, the fields that you create will be read-only, but make them [filterable](/product/process/fields/filter), [sortable](/product/process/fields/sort), and [writable](/product/process/fields/write) by using the relevant methods.
 
 ## How does it work?
 
@@ -173,7 +173,7 @@ agent.customizeCollection('user', collection => {
       const recordIds = records.map(r => r.id);
 
       // We're using Forest Admin's query interface
-      // (you can use an ORM or a plain SQL query)
+      // (use an ORM or a plain SQL query)
       const filter = {
         conditionTree: { field: 'customer_id', operator: 'In', value: recordIds },
       };
@@ -209,7 +209,7 @@ ForestAdmin.customize do
         record_ids = records.map { |r| r['id'] }
 
         # We're using Forest Admin's query interface
-        # (you can use an ORM or a plain SQL query)
+        # (use an ORM or a plain SQL query)
         filter = { condition_tree: { field: 'customer_id', operator: 'In', value: record_ids } }
         aggregation = { operation: 'Sum', field: 'amount', groups: [{ field: 'customer_id' }] }
         rows = context.datasource.get_collection('order').aggregate(filter, aggregation)

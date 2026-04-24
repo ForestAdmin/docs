@@ -35,7 +35,7 @@ To configure the default page size for a collection, go to collection settings i
 
 The total record count query can be expensive on large tables — especially if the query involves complex filters, joins, or a database without good index coverage.
 
-If the total count isn't needed, you can disable it per collection:
+If the total count isn't needed, disable it per collection:
 
 ```javascript
 agent.customizeCollection('orders', collection => {

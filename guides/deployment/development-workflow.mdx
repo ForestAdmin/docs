@@ -5,9 +5,9 @@ description: "Use branches to develop and test layout changes before deploying t
 
 ## Overview
 
-Forest Admin separates your **backend code** (your agent) from your **UI layout** (what your team sees in the admin panel). This means you can version and deploy them independently.
+Forest Admin separates your **backend code** (your agent) from your **UI layout** (what your team sees in the admin panel). This means you version and deploy them independently.
 
-The development workflow uses **branches** — copies of a layout — so you can make UI changes without affecting your production environment.
+The development workflow uses **branches** — copies of a layout — to make UI changes without affecting your production environment.
 
 ## What is a layout?
 
@@ -89,7 +89,7 @@ Your current branch and the number of layout changes are always visible in the t
 
 ## Complex workflows
 
-For larger teams, you can create a multi-stage hierarchy: `dev → test → staging → preprod → production`. Use `forest environments:create` to create test environments for CI/CD pipelines:
+For larger teams, create a multi-stage hierarchy: `dev → test → staging → preprod → production`. Use `forest environments:create` to create test environments for CI/CD pipelines:
 
 ```bash
 forest environments:create --name 'pr-1930' -u 'https://pr-1930.my-app.com' --disableRoles

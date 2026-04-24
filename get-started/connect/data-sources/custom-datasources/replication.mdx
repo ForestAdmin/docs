@@ -13,11 +13,11 @@ The replication strategy maintains a copy of target API data in an internal cach
 
 ### Key advantages
 
-- **Easy**: No query translation logic required
+- **No query translation**: No query translation logic required
 - **Performant**: Eliminates synchronous network calls to the target API
 - **Feature-complete**: Charts, filtering, and search work out of the box
 - **Flexible**: Implement custom logic for fetching target API data
-- **Robust**: Bad states can be recovered by reconstructing the replica from scratch
+- **Robust**: Recover bad states by reconstructing the replica from scratch
 
 ### Minimal implementation
 
@@ -113,7 +113,7 @@ Real-world scenarios require keeping the Forest Admin agent to display up-to-dat
 
 ### Three update methods
 
-You can use these approaches independently or combine them:
+Use these approaches independently or combine them:
 
 1. **Scheduled rebuilds** - Refetch all records periodically
 2. **Change polling** - Uses Forest Admin events to detect modifications
@@ -318,7 +318,7 @@ When enabled, flatten mode:
 
 ### Implementation requirements
 
-Three optional handlers can be implemented: `createRecordHandler`, `updateRecordHandler`, and `deleteRecordHandler`. You can omit any handler if that operation isn't needed.
+Three optional handlers can be implemented: `createRecordHandler`, `updateRecordHandler`, and `deleteRecordHandler`. Omit any handler for operations not needed.
 
 The `createRecordHandler` function uniquely supports return values, which proves useful when the target API auto-generates record IDs.
 

@@ -129,7 +129,7 @@ A field can have different widgets for display and edit. For example, a date fie
 **Edit widgets:**
 - **BelongsTo Selector** — a searchable dropdown that lets operators pick a related record. Searches by the related collection's summary field.
 - **HasMany Editor** — displays existing related records in a list, with options to add new records or remove existing associations.
-- **Search & Select** — an autocomplete input that searches across a related collection as the operator types. More powerful for large related collections.
+- **Search & Select** — an autocomplete input that searches across a related collection as the operator types. Better suited for large related collections with many records.
 
 ### JSON
 
@@ -177,4 +177,4 @@ Most edit widgets support built-in validation options:
 | **Pattern** | Regex validation for custom formats |
 | **Custom error message** | Override the default validation error text |
 
-Validation runs client-side for immediate feedback, and can also be enforced server-side in Smart Action hooks.
+Validation runs client-side for immediate feedback, and Smart Action hooks can also enforce it server-side.

@@ -2,7 +2,7 @@
 title: Environments & branches
 ---
 
-One of the goals of Forest Admin is empowering technical teams to achieve more in less time. Your Forest Admin back-office is composed of 2 parts — the frontend (UI) and the backend — and for each one, you need the right tools:
+One of the goals of Forest Admin is enabling technical teams to achieve more in less time. Your Forest Admin back-office is composed of 2 parts — the frontend (UI) and the backend — and for each one, you need the right tools:
 
 The **Admin backend** is part of your codebase. You'll be using your favorite tools to customize it:
 - Editing: your favorite IDE
@@ -10,7 +10,7 @@ The **Admin backend** is part of your codebase. You'll be using your favorite to
 
 Your **Forest Admin UI** is **not** part of your codebase: it is managed on Forest Admin servers. Here's what we've built for you:
 - Editing: use the Layout Editor mode to intuitively manage your layout (UI)
-- Versioning: use [Forest Admin CLI](/reference/cli/overview) to seamlessly manage your layout versions
+- Versioning: use [Forest Admin CLI](/reference/cli/overview) to manage your layout versions
 
 ## Environments
 
@@ -42,13 +42,13 @@ The final step requires that you add environment variables to your server. Follo
 
 ### Creating a remote environment
 
-Now that your back-office is live in production, you might want to add an extra step for testing purposes. Forest Admin allows you to create Remote Environments (for test, qa, staging, pre-production, etc.).
+Now that your back-office is live in production, you might want to add an extra step for testing purposes. Forest Admin lets you create Remote Environments (for test, qa, staging, pre-production, etc.).
 
 To create a new Remote Environment, go to your Project settings, then from the "Environments" tab, click on "Add a new environment".
 
 ### Change environment origin
 
-You can change the origins of your Environments to create complex workflows, for instance, `dev > staging > preprod > production`. All the layouts of an environment will be generated based on its parent's layout.
+Change the origins of your Environments to create complex workflows, for instance, `dev > staging > preprod > production`. All the layouts of an environment will be generated based on its parent's layout.
 
 <Warning>
   All child Environments will be refreshed based on the new hierarchy.
@@ -102,7 +102,7 @@ Any **layout change** you make on your current Branch using the Layout Editor wi
 
 ### How do you create a branch?
 
-To create a branch, you'll need to use [Forest Admin CLI](/reference/cli/overview). Make sure you've created your local Development Environment using the `init` command. Then, to create a Branch named `my-branch` based on your `production` Environment:
+To create a branch, use [Forest Admin CLI](/reference/cli/overview). Make sure you've created your local Development Environment using the `init` command. Then, to create a Branch named `my-branch` based on your `production` Environment:
 
 ```
 forest branch my-branch --origin production
@@ -114,7 +114,7 @@ forest branch my-branch --origin production
 
 ### Checking your branch information
 
-On your interface, you can check at all times what is your current Branch and how many layout changes were made on it. These information appear in the top banner of your back-office.
+The interface shows at all times what is your current Branch and how many layout changes were made on it. These information appear in the top banner of your back-office.
 
 <Info>
   To switch your _current_ branch to another existing branch, use the `forest switch` command.
@@ -158,8 +158,8 @@ Note that you'll be pushing your **current** Branch. To select another Branch, u
 
 #### Deploying the layout of a remote environment
 
-Once you have tested your new layout on a Remote Environment, to deploy it to Production simply **click on "Deploy to production"** in the top banner of that Environment's layout.
+Once you have tested your new layout on a Remote Environment, to deploy it to Production **click on "Deploy to production"** in the top banner of that Environment's layout.
 
 #### Making changes directly from a remote environment
 
-You can apply final touches using the Layout Editor from the Remote Environment. Any changes you make on that Remote Environment will also be deployed when you run `forest deploy`.
+Apply final touches using the Layout Editor from the Remote Environment. Any changes you make on that Remote Environment will also be deployed when you run `forest deploy`.
