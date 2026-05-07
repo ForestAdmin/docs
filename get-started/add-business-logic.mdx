@@ -1,0 +1,52 @@
+---
+title: "Add business logic"
+description: "Create actions and computed fields to go beyond CRUD"
+---
+
+Forest Admin's real power comes from the business logic you add on top of your data. This step covers the two most common building blocks: actions and computed fields.
+
+## Create your first action
+
+Actions are custom operations your team can trigger from the UI — refunding an order, sending an email, flagging a record for review.
+
+The easiest way to create an action is with the **AI action generator**:
+
+1. Open a collection in your panel
+2. Click **Actions** → **New action**
+3. Describe what you want the action to do in plain language
+4. Review and adjust the generated code
+5. Click **Save** — the action is immediately available in your panel
+
+Actions run as code in your agent, so they can call external APIs, update multiple tables, or trigger any side effect you need.
+
+<Info>
+Actions can have forms with dynamic fields, approval workflows, and granular permissions. See [Actions](/product/process/actions/overview) for the full reference.
+</Info>
+
+## Create a computed field
+
+Computed fields let you display values that don't exist directly in your database — a full name from first and last name, a status derived from multiple columns, a formatted price.
+
+To create a computed field, add it to your agent code:
+
+```javascript
+collection.addField('fullName', {
+  columnType: 'String',
+  dependencies: ['firstName', 'lastName'],
+  getValues: (records) => records.map(r => `${r.firstName} ${r.lastName}`),
+});
+```
+
+Restart your agent and the field will appear in your panel like any other field.
+
+<Info>
+Computed fields can also be made writable, filterable, and sortable. See [Fields](/product/process/fields/computed).
+</Info>
+
+## What's next
+
+With actions and computed fields in place, you're ready to build higher-level operational tools: workspaces, workflows, and inboxes.
+
+<Card title="Next: Set up operations →" icon="arrow-right" href="/get-started/set-up-operations">
+  Build workspaces, workflows, and inboxes for your team
+</Card>

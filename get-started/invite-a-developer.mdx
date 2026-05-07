@@ -1,0 +1,72 @@
+---
+title: "Invite a developer"
+description: "Onboard a new developer onto the project with their own development environment"
+---
+
+When a new developer joins the project, they need their own local environment connected to Forest Admin. This keeps their work isolated from production while they develop.
+
+## Invite them to the project
+
+1. Go to **Project Settings** → **Users**
+2. Invite the developer with the **Admin** or **Editor** role so they can manage their environment
+
+## They set up their local agent
+
+The developer clones the agent repository and installs dependencies:
+
+```bash
+git clone <your-agent-repo>
+cd <your-agent>
+npm install
+```
+
+## Create a development environment
+
+Each developer works in their own environment, which has its own `FOREST_ENV_SECRET`.
+
+1. In Forest Admin, go to **Project Settings** → **Environments**
+2. Click **Add environment** → **Development**
+3. Give it a name (e.g. "Alice's dev")
+4. Copy the generated `FOREST_ENV_SECRET`
+
+The developer adds their environment variables to their local `.env`:
+
+```bash
+FOREST_ENV_SECRET=<their-dev-env-secret>
+FOREST_AUTH_SECRET=<same-as-production>
+DATABASE_URL=<their-local-or-staging-db>
+```
+
+## Start the agent
+
+```bash
+npm start
+```
+
+Their local agent is now connected to their own Forest Admin environment, isolated from production.
+
+## Work with branches
+
+Layout changes (collections display, segments, workspaces) are managed through branches, just like code. The developer creates a branch to work on UI changes without affecting production:
+
+```bash
+forest branch my-feature-branch
+```
+
+When the changes are ready, they push the branch:
+
+```bash
+forest push
+```
+
+An Admin can then review and deploy the branch to production from the Forest Admin UI.
+
+<Info>
+For a full explanation of the branch and deploy workflow, see [Developer Workflow](/product/process/advanced-concepts/developer-workflow/environments-and-branches).
+</Info>
+
+---
+
+You're all set. Your panel is live, your team has access, and your development workflow is in place.
+
+**Explore [Product](/product/overview)** to go deeper on any feature — Connect, Build, Customize, Control, and more.

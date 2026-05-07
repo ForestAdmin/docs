@@ -1,100 +1,66 @@
 ---
 title: "Quickstart"
-description: "Get your admin panel running in 5 minutes"
+description: "Get your agent running locally in 10 minutes"
 ---
 
-## How Forest Admin Works
+## Prerequisites
 
-Forest Admin works through an **agent**—a lightweight backend application that sits between your data and the Forest Admin UI.
+- Node.js 18+ installed
+- Your database URI ready
+- A Forest Admin account ([sign up](https://app.forestadmin.com/signup) if needed)
 
-**What the agent does:**
-- Connects to your databases and APIs
-- Handles authentication and permissions
-- Executes your business logic (Smart Actions, Smart Fields)
-- Translates Forest Admin UI requests into database queries
+## Steps
 
-<Info>
-**Important:** The agent is the only component that accesses your data. Forest Admin UI never connects directly to your database.
-</Info>
+<Steps>
+  <Step title="Create a new project">
+    Go to [app.forestadmin.com](https://app.forestadmin.com), create a new project and choose **Self-Hosted**.
+  </Step>
 
-## Deployment Options
+  <Step title="Follow the onboarding">
+    The Forest Admin UI will guide you through the setup. It will ask for your database URI and generate a ready-to-run application with your environment variables pre-configured.
+  </Step>
 
-To install Forest Admin, you need to decide **where to run the agent**:
+  <Step title="Start your agent">
+    In the generated project directory, run:
 
-|  | **Cloud** | **Self-Hosted** | **On-Premise** |
-|---|---|---|---|
-| **Architecture** | ![Cloud](/assets/architecture-cloud.svg) | ![Self-Hosted](/assets/architecture-self-hosted.svg) | ![On-Premise](/assets/architecture-on-premise.svg) |
-| **What** | We host the agent | You host the agent | You host everything |
-| **Best for** | Quick POC, startups | Private networks, compliance | Air-gapped, maximum security |
-| **Requirements** | Internet-accessible DB | Node.js 18+ or Ruby 3+ | Enterprise license |
+    ```bash
+    npm start
+    ```
 
-## Which deployment is right for you?
+    You should see:
+    ```
+    [Forest] 🌳  Your agent is running at http://localhost:3310
+    ```
+  </Step>
 
-Answer these questions to find your best option:
+  <Step title="Open your panel">
+    Forest Admin automatically opens your panel in the browser. Your database schema has been detected — collections, relationships, and CRUD operations are ready.
+  </Step>
+</Steps>
+
+<Warning>
+Never commit your `.env` file to version control. Add it to `.gitignore`.
+</Warning>
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Is your database accessible from the internet?" icon="globe">
-    **Yes** → Consider **Cloud** (easiest setup)
-
-    **No** → Go to next question ↓
+  <Accordion title="Agent not starting" icon="circle-xmark">
+    - Check that your `.env` file is present and loaded
+    - Ensure port `3310` is not already in use
+    - Run `curl http://localhost:3310/forest` — should return Forest Admin metadata
   </Accordion>
 
-  <Accordion title="Do you need air-gapped deployment (zero external connections)?" icon="shield-halved">
-    **Yes** → You need **On-Premise**
-
-    **No** → Go to next question ↓
-  </Accordion>
-
-  <Accordion title="Do you have strict compliance requirements (HIPAA, SOC2, data residency)?" icon="file-shield">
-    **Yes** → Choose **Self-Hosted** or **On-Premise**
-
-    **No** → Go to next question ↓
-  </Accordion>
-
-  <Accordion title="Do you want to manage infrastructure yourself?" icon="server">
-    **No, I want it managed** → Choose **Cloud**
-
-    **Yes, I can manage it** → Choose **Self-Hosted**
+  <Accordion title="No tables showing up" icon="table">
+    - Verify your `DATABASE_URL` is correct and the database is reachable
+    - Check that the database user has read permissions on tables
   </Accordion>
 </AccordionGroup>
 
 <Info>
-**Need help choosing?**
-- [Contact sales](mailto:sales@forestadmin.com) to discuss your specific requirements
+Forest Admin also supports **Cloud** (we host the agent) and **On-Premise** (fully air-gapped) deployments. See [Connect](/product/connect/overview) for details.
 </Info>
 
-## Choose your deployment method
-
-<CardGroup cols={3}>
-  <Card
-    title="Cloud"
-    icon="cloud"
-    href="/get-started/quickstart-cloud"
-  >
-    Perfect for quick evaluation and standard use cases
-  </Card>
-
-  <Card
-    title="Self-hosted"
-    icon="server"
-    href="/get-started/quickstart-self-hosted"
-  >
-    Ideal for private networks and compliance needs
-  </Card>
-
-  <Card
-    title="On-premise"
-    icon="building"
-    href="/get-started/quickstart-on-premise"
-  >
-    Full control and air-gapped deployment
-  </Card>
-</CardGroup>
-
-<Info>
-Need guidance? Our team is here to help you choose the right deployment option for your needs. [Contact us](mailto:sales@forestadmin.com)
-</Info>
-
----
-
-**Need help?** [Join our community](https://community.forestadmin.com) or [contact sales](mailto:sales@forestadmin.com)
+<Card title="Next: Customize your panel →" icon="arrow-right" href="/get-started/customize-your-panel">
+  Organize your collections, fields, and create your first segment
+</Card>

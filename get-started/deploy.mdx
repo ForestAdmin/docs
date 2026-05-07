@@ -1,0 +1,63 @@
+---
+title: "Deploy"
+description: "Move your agent to production and set up your development workflow"
+---
+
+So far you've been working locally. This step covers deploying your agent to production and understanding how Forest Admin's development workflow keeps your environments in sync.
+
+## Understand environments and branches
+
+Forest Admin distinguishes between **environments** (your local dev, staging, production) and **branches** (layout and configuration changes in progress).
+
+- Your **production environment** is the live panel your team uses
+- Your **development environment** is your local agent
+- **Branches** let you make layout changes without affecting production until you're ready to deploy
+
+This means you can iterate on your panel configuration safely, then push changes to production when they're ready.
+
+## Deploy your agent
+
+<Steps>
+  <Step title="Deploy your agent to your infrastructure">
+    Host your agent on any platform that can run a Node.js application. See the deployment guides for specific platforms:
+
+    - [Deploy to AWS](/guides/deployment/platforms/aws)
+    - [Deploy to Heroku](/guides/deployment/platforms/heroku)
+
+    Make sure to set the environment variables (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`) in your hosting platform.
+  </Step>
+
+  <Step title="Create a production environment in Forest Admin">
+    In Forest Admin, go to **Project Settings** → **Environments** → **Add environment**.
+
+    Give it a name (e.g. "Production") and enter the URL where your agent is running.
+  </Step>
+
+  <Step title="Push your schema to production">
+    From your local project, run:
+
+    ```bash
+    forest push
+    ```
+
+    This pushes your agent's schema (collections, fields, actions) to the production environment.
+  </Step>
+
+  <Step title="Deploy your layout">
+    In the Forest Admin UI, go to **Environments** and click **Deploy to production** to push your layout configuration (segments, UI customizations, workspaces) to production.
+  </Step>
+</Steps>
+
+Your team can now access the production panel.
+
+<Info>
+For a full explanation of the development workflow — branches, schema updates, environment management — see [Developer Workflow](/product/process/advanced-concepts/developer-workflow/environments-and-branches).
+</Info>
+
+## What's next
+
+Production is live. Time to invite your team.
+
+<Card title="Next: Invite your team →" icon="arrow-right" href="/get-started/invite-your-team">
+  Add users, create teams, and set up permissions
+</Card>

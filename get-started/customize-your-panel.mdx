@@ -1,0 +1,44 @@
+---
+title: "Customize your panel"
+description: "Organize your collections, rename fields, and create your first segment"
+---
+
+Forest Admin generates a default layout from your database schema. This step is about making it useful for the people who'll work in it every day.
+
+## Organize your collections and fields
+
+Open the **Layout Editor** (the pencil icon in the top bar) to enter edit mode. From there you can:
+
+- **Rename** collections and fields to match your business vocabulary (e.g. `users` → `Customers`)
+- **Reorder** fields in the detail view to surface the most important information first
+- **Hide** fields that are irrelevant for your team's daily work
+
+Changes in the Layout Editor are saved as configuration — they don't affect your database schema.
+
+<Info>
+The Layout Editor is only available to users with the **Admin** role. [Learn more about roles](/product/control/roles-permissions).
+</Info>
+
+## Create a segment
+
+Segments are saved filters that let your team quickly access specific subsets of data — for example "Pending orders" or "Enterprise customers".
+
+To create a segment:
+
+1. Open a collection
+2. Apply the filters you want (e.g. `status = pending`)
+3. Click **Save as segment** and give it a name
+
+The segment will appear in the left sidebar for that collection.
+
+<Info>
+You can also create **smart segments** with custom backend logic for more complex filtering. See [Segments](/product/process/segments/creating-segments).
+</Info>
+
+## What's next
+
+You now have a clean, readable panel. The next step is adding custom business logic — actions your team can trigger directly from the UI.
+
+<Card title="Next: Add business logic →" icon="arrow-right" href="/get-started/add-business-logic">
+  Create actions and computed fields
+</Card>
