@@ -1,82 +1,237 @@
 ---
-title: "Migration Step 3: Smart Actions"
+title: "Migrating Smart Actions"
+description: "Convert legacy Smart Actions to the current agent's action API."
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers (v1 users)
 
-## Description
+The Smart Actions API was redesigned to be more composable and explicit. The legacy API mixed declaration, form definition, and execution in a single object; the new agent splits these concerns and ties everything to a fluent collection-customization API.
 
-Migrate your Smart Actions from Agent v1 to Agent v2.
+## API cheatsheet
 
-## Sources to migrate
+| Legacy agent | New agent |
+| --- | --- |
+| `collection(name, { actions: [...] })` | `agent.customizeCollection(name, c => c.addAction('Name', ...))` |
+| `name` | First argument of `addAction` |
+| `type: 'single' \| 'bulk' \| 'global'` | `scope: 'Single' \| 'Bulk' \| 'Global'` |
+| `fields: [...]` (form definition) | `form: [...]` |
+| `download: true` | `generateFile: true` |
+| Express handler at custom route | `execute: (context, resultBuilder) => ...` |
+| `req.body.data.attributes.values` | `context.formValues` |
+| `req.body.data.attributes.ids` | `context.getRecordIds()` |
+| `res.send({ success: '...' })` | `resultBuilder.success('...')` |
+| `res.send({ error: '...' })` | `resultBuilder.error('...')` |
+| `res.redirect(url)` | `resultBuilder.redirectTo(url)` |
 
-- `developer-guide-agent-v2/sources/migration/smart-actions.md`
+## Before (Node.js, forest-express-sequelize)
 
-## Content outline
+```javascript
+// forest/users.js
+const Liana = require('forest-express-sequelize');
 
-1. **v1 vs v2 Actions**
-   - API differences
-   - Response format changes
-   - Form field syntax
-   - Result types
+Liana.collection('users', {
+  actions: [{
+    name: 'Send welcome email',
+    type: 'single',
+    fields: [
+      { field: 'subject', type: 'String', isRequired: true },
+      { field: 'message', type: 'String', widget: 'text area' },
+    ],
+  }],
+});
 
-2. **Action Definition**
-   **v1:**
-   ```javascript
-   collection('users', {
-     actions: [{
-       name: 'Send email',
-       // v1 syntax
-     }]
-   });
-   ```
+// routes/users.js
+const express = require('express');
+const router = express.Router();
 
-   **v2:**
-   ```typescript
-   agent.customizeCollection('users', collection =>
-     collection.addAction('Send email', {
-       // v2 syntax
-     })
-   );
-   ```
+router.post('/actions/send-welcome-email', Liana.ensureAuthenticated, async (req, res) => {
+  const { subject, message } = req.body.data.attributes.values;
+  const userId = req.body.data.attributes.ids[0];
+  const user = await models.users.findByPk(userId);
 
-3. **Form Fields**
-   - v1 to v2 field mapping
-   - Field types
-   - Validation
-   - Dynamic fields
+  await sendEmail(user.email, subject, message);
 
-4. **Action Handler**
-   - Context API changes
-   - Request/response format
-   - Async/await patterns
-   - Error handling
+  res.send({ success: 'Email sent' });
+});
 
-5. **Result Types**
-   - Success messages
-   - Error responses
-   - File downloads
-   - Redirects
-   - Webhooks
+module.exports = router;
+```
 
-6. **Code Examples**
-   - Before/after comparisons
-   - Common action patterns
-   - Migration templates
+## After (Node.js, @forestadmin/agent)
 
-7. **Testing**
-   - Testing migrated actions
-   - Verification checklist
-   - Common issues
+```javascript
+agent.customizeCollection('users', users => {
+  users.addAction('Send welcome email', {
+    scope: 'Single',
+    form: [
+      { label: 'Subject', type: 'String', isRequired: true },
+      { label: 'Message', type: 'String', widget: 'TextArea' },
+    ],
+    execute: async (context, resultBuilder) => {
+      const user = await context.getRecord(['email']);
+      const { Subject, Message } = context.formValues;
 
-8. **Breaking Changes**
-   - API deprecations
-   - Behavior changes
-   - Workarounds
+      await sendEmail(user.email, Subject, Message);
 
-## Migration notes
+      return resultBuilder.success('Email sent');
+    },
+  });
+});
+```
 
-- HIGH priority for v1 users
-- Side-by-side examples
-- Automated migration tools (if available)
+## Before (Ruby, forest-rails)
+
+```ruby
+# app/services/forest_liana/actions/send_welcome_email.rb
+class ForestLiana::Actions::SendWelcomeEmail < ForestLiana::SmartAction
+  type 'single'
+
+  fields([
+    { field: 'subject', type: 'String', is_required: true },
+    { field: 'message', type: 'String', widget: 'text area' },
+  ])
+end
+
+# app/controllers/forest/users_controller.rb
+class Forest::UsersController < ForestLiana::SmartActionsController
+  def send_welcome_email
+    user = User.find(params['data']['attributes']['ids'].first)
+    values = params['data']['attributes']['values']
+
+    UserMailer.welcome(user, values['subject'], values['message']).deliver_now
+
+    render serializer: nil, json: { success: 'Email sent' }
+  end
+end
+```
+
+## After (Ruby, forest_admin_rails)
+
+```ruby
+ForestAdmin.agent.customize_collection('User') do |collection|
+  collection.add_action('Send welcome email', {
+    scope: 'Single',
+    form: [
+      { label: 'Subject', type: 'String', is_required: true },
+      { label: 'Message', type: 'String', widget: 'TextArea' },
+    ],
+    execute: ->(context, result_builder) {
+      user = context.get_record(['email'])
+      values = context.form_values
+
+      UserMailer.welcome(user, values['Subject'], values['Message']).deliver_now
+
+      result_builder.success('Email sent')
+    },
+  })
+end
+```
+
+## Result types
+
+The new agent supports the same result types as v1, plus a few new ones, all returned via `resultBuilder`:
+
+| Result | API | Use case |
+| --- | --- | --- |
+| Success message | `resultBuilder.success(message)` | Confirmation toast |
+| Error message | `resultBuilder.error(message)` | Failure toast |
+| Redirect | `resultBuilder.redirectTo(url)` | Open external URL |
+| File download | `resultBuilder.file(buffer, filename, mimeType)` | Generate and download a file |
+| HTML response | `resultBuilder.webhookSuccess(message, html)` | Show custom HTML |
+
+See [Action result types](/product/process/actions/custom-actions/result-types) for details.
+
+## Form fields
+
+Forms in the new agent are typed and support dynamic behavior more cleanly:
+
+```javascript
+agent.customizeCollection('orders', orders => {
+  orders.addAction('Refund', {
+    scope: 'Single',
+    form: [
+      {
+        label: 'Amount',
+        type: 'Number',
+        isRequired: true,
+        defaultValue: async context => {
+          const record = await context.getRecord(['total']);
+          return record.total;
+        },
+      },
+      {
+        label: 'Reason',
+        type: 'Enum',
+        enumValues: ['Customer request', 'Defective product', 'Other'],
+        isRequired: true,
+      },
+      {
+        label: 'Note',
+        type: 'String',
+        widget: 'TextArea',
+        if: context => context.formValues.Reason === 'Other',
+      },
+    ],
+    execute: async (context, resultBuilder) => {
+      // ...
+    },
+  });
+});
+```
+
+See [Action forms](/product/process/actions/custom-actions/forms) for the full API.
+
+## Approval workflows
+
+If your legacy action used the approval system, the configuration moves from the action declaration to **Project Settings → Roles**. The action code itself doesn't need changes — Forest's UI handles the approval gating around your `execute` function.
+
+## Bulk and global actions
+
+| Legacy `type` | New `scope` |
+| --- | --- |
+| `'single'` | `'Single'` |
+| `'bulk'` | `'Bulk'` |
+| `'global'` | `'Global'` |
+
+Bulk actions can use `context.getRecordIds()` to retrieve every selected record's primary key, or `context.getRecords(fields)` to fetch the full records.
+
+## Common conversions
+
+<AccordionGroup>
+  <Accordion title="Action that returns a file download">
+    v1 used `download: true` and the route returned a file via `res`. v2 returns the file via `resultBuilder.file(buffer, filename, mimeType)` and sets `generateFile: true` in the action declaration.
+  </Accordion>
+  <Accordion title="Action with dynamic form fields">
+    v1 supported `change` hooks on form fields. v2 uses the `if` and `defaultValue` properties, which receive a context and the current form values. See [Action forms](/product/process/actions/custom-actions/forms).
+  </Accordion>
+  <Accordion title="Action with custom permission logic">
+    v1 used `Liana.ensureAuthenticated` middleware and custom permission checks. v2 uses the standard role and team permission system configured in the UI. For dynamic checks (e.g. only the assigned rep can run an action), use action visibility conditions or check inside `execute` and return `resultBuilder.error(...)`.
+  </Accordion>
+  <Accordion title="Action that triggers a webhook">
+    Direct port — `execute` calls your webhook URL the same way the v1 route handler did. The `axios.post(...)` (or `Net::HTTP.post(...)`) line is unchanged.
+  </Accordion>
+</AccordionGroup>
+
+## Migration checklist
+
+<Steps>
+  <Step title="List every Smart Action in your project">
+    Pull from your `forest/` (Node.js) or `app/services/forest_liana/actions/` (Ruby) directory.
+  </Step>
+  <Step title="For each action, port the declaration">
+    Replace `Liana.collection(...).actions = [...]` with `agent.customizeCollection(...).addAction(...)`.
+  </Step>
+  <Step title="Port the form definition">
+    Convert each `field` to a `form` entry. Update widget names (camelCase → PascalCase: `'text area'` → `'TextArea'`).
+  </Step>
+  <Step title="Port the execute logic">
+    Move the route handler body into the `execute` function. Replace `req.body.data.attributes.values` with `context.formValues`.
+  </Step>
+  <Step title="Test in parallel">
+    Run both agents and confirm each action behaves the same.
+  </Step>
+</Steps>
+
+## Next step
+
+<Card title="Migrate Smart Fields" icon="arrow-right" href="/guides/migration/from-v1/steps/smart-fields">
+  Convert computed fields to the new `addField` API with explicit dependencies.
+</Card>

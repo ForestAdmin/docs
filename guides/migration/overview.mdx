@@ -1,45 +1,138 @@
 ---
-title: Migration Guide
+title: "Migration"
+description: "Move from a legacy v1 agent to the current generation."
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers migrating from v1 to v2
 
-## Description
+If you're running a legacy agent — `forest-express-sequelize`, `forest-express-mongoose`, `forest-rails`, or `django-forestadmin` v1 — this section walks you through migrating to the current agent generation.
 
-Migrate from Forest Admin Agent v1 to v2 - step by step.
+The current generation is the foundation of everything Forest has shipped since the original admin-panel era — workflows, MCP server for AI agents, multi-datasource, decision traces. Legacy agents only expose the original admin-panel capabilities.
 
-## Content outline
+<Note>
+  Most teams complete migration in 1-2 days. You can run v1 and v2 in parallel with zero downtime.
+</Note>
 
-1. **Why Migrate to v2?**
-   - Better performance
-   - New features
-   - Active support
-   - Security updates
-2. **Migration Overview**
-   - Pre-requisites
-   - Recommendations
-   - Timeline estimate
-3. **Migration Steps**
-   - Run agents in parallel
-   - Configure datasources
-   - Transform customizations
-   - Compare schemas
-   - Swap agents
-4. **Code Transformations**
-   - Smart Actions
-   - Smart Fields
-   - Smart Relationships
-   - Smart Segments
-   - Route overrides
-   - API Charts
-   - Live Queries
-5. **Post-Migration**
-   - Optimization
-   - Drop legacy dependencies
-6. **Get Help**
+## Why migrate
 
-## Sources to migrate
+| | Legacy agents | Current agents |
+| --- | --- | --- |
+| Workflows orchestration | ❌ | ✅ |
+| MCP server for AI agents | ❌ | ✅ |
+| Multi-datasource | ❌ | ✅ |
+| Decision traces / audit-ready | Limited | ✅ |
+| TypeScript | ❌ | ✅ (Node.js) |
+| Active development | ❌ | ✅ |
+| New features | ❌ | ✅ |
+| Performance | OK | Optimized query layer |
 
-- `developer-guide-agent-v2/sources/getting-started/migrating/`
-- `documentation-agent-v1/how-tos/maintain/upgrade-notes-*/`
+## Start here
+
+<Card title="Migrating from v1 to v2" icon="arrow-right-arrow-left" href="/guides/migration/from-v1/overview">
+  Full step-by-step migration guide covering all agent stacks.
+</Card>
+
+## Migration paths by stack
+
+<CardGroup cols={2}>
+  <Card title="forest-express-sequelize" href="/guides/migration/from-v1/overview">
+    Migrate from the Node.js + Sequelize legacy agent to `@forestadmin/agent`.
+  </Card>
+  <Card title="forest-express-mongoose" href="/guides/migration/from-v1/overview">
+    Migrate from the Node.js + Mongoose legacy agent to `@forestadmin/agent`.
+  </Card>
+  <Card title="forest-rails" href="/guides/migration/from-v1/overview">
+    Migrate from the Rails legacy agent to `forest_admin_rails`.
+  </Card>
+  <Card title="django-forestadmin v1" href="/guides/migration/from-v1/overview">
+    Migrate from the Django v1 agent. Approaching end-of-life.
+  </Card>
+</CardGroup>
+
+## What gets migrated
+
+Each migration touches the same set of customizations. Pick the steps that apply to your project:
+
+<CardGroup cols={2}>
+  <Card title="Datasources" href="/guides/migration/from-v1/steps/datasources">
+    Connection setup, schema definition, and multi-datasource support.
+  </Card>
+  <Card title="Smart Actions" href="/guides/migration/from-v1/steps/smart-actions">
+    Convert legacy Smart Actions to the new `addAction` API.
+  </Card>
+  <Card title="Smart Fields" href="/guides/migration/from-v1/steps/smart-fields">
+    Migrate computed fields to the new `addField` API with explicit dependencies.
+  </Card>
+  <Card title="Smart Relationships" href="/guides/migration/from-v1/steps/smart-relationships">
+    Convert smart relationships to native relations or external relations.
+  </Card>
+  <Card title="Smart Segments" href="/guides/migration/from-v1/steps/smart-segments">
+    Migrate segments to condition trees that work across data sources.
+  </Card>
+</CardGroup>
+
+## Migration approach
+
+<Steps>
+  <Step title="Install the new agent alongside your current one">
+    The new agent runs on a different port. Both can run simultaneously without conflict, so you can compare behavior side by side.
+  </Step>
+  <Step title="Configure datasources">
+    Re-declare your data sources using the new datasource API. See [Datasources](/guides/migration/from-v1/steps/datasources).
+  </Step>
+  <Step title="Migrate customizations one feature at a time">
+    Smart Actions, Smart Fields, Smart Relationships, Smart Segments. Each has its own step page.
+  </Step>
+  <Step title="Test in parallel">
+    Run both agents and compare results before flipping traffic.
+  </Step>
+  <Step title="Switch and clean up">
+    Point your Forest environment to the new agent's URL. Once stable, remove the legacy packages.
+  </Step>
+</Steps>
+
+## Run v1 and v2 in parallel
+
+Run both agents on different ports during migration:
+
+```bash
+# Terminal 1 — legacy agent on port 3000
+npm run start:v1
+
+# Terminal 2 — new agent on port 3001
+npm run start:v2
+```
+
+Switch your Forest environment URL when you're confident the new agent is correct.
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="Do I need to migrate everything at once?">
+    No. Migrate incrementally. Run v1 and v2 in parallel and switch when ready. Most teams migrate one feature at a time over a few days.
+  </Accordion>
+  <Accordion title="Will my UI break during migration?">
+    No. Your Forest UI configuration (layouts, segments, dashboards) is preserved. The agent change is transparent to end users.
+  </Accordion>
+  <Accordion title="Can I revert if something goes wrong?">
+    Yes. Keep the legacy agent running in parallel until you're confident. You can switch back instantly by pointing your environment URL back at the legacy agent.
+  </Accordion>
+  <Accordion title="What about my data?">
+    Your database is not affected. Only the agent code changes — the database schema, records, and credentials stay exactly as they are.
+  </Accordion>
+  <Accordion title="Are there breaking changes?">
+    The customization API is different, but the concepts are the same. Most changes are syntax updates. The step-by-step pages cover every conversion side by side.
+  </Accordion>
+</AccordionGroup>
+
+## Need help
+
+<CardGroup cols={3}>
+  <Card title="Step-by-step guide" href="/guides/migration/from-v1/overview">
+    The detailed migration instructions.
+  </Card>
+  <Card title="Community" href="https://community.forestadmin.com">
+    Migration patterns from other teams.
+  </Card>
+  <Card title="Support" href="mailto:support@forestadmin.com">
+    Direct help from the Forest team.
+  </Card>
+</CardGroup>

@@ -1,17 +1,17 @@
 ---
 title: Schema updates
-description: Keep your Forest Admin back-office in sync when your database schema changes.
+description: Keep your Forest back-office in sync when your database schema changes.
 ---
 
-<Note>This page needs to be completed with best practices from the Forest Admin team.</Note>
+<Note>This page needs to be completed with best practices from the Forest team.</Note>
 
-When you add a table, rename a column, or change a relationship in your database, Forest Admin needs to learn about those changes. This page explains how schema synchronization works and how to handle common scenarios.
+When you add a table, rename a column, or change a relationship in your database, Forest needs to learn about those changes. This page explains how schema synchronization works and how to handle common scenarios.
 
 ## What is the schema?
 
-Forest Admin introspects your database at startup and builds an internal representation of your data model — the **schema**. This schema drives everything: which collections appear, what fields are available, and how relationships are represented.
+Forest introspects your database at startup and builds an internal representation of your data model — the **schema**. This schema drives everything: which collections appear, what fields are available, and how relationships are represented.
 
-For self-hosted agents, the schema is also saved to a local file called `.forestadmin-schema.json`. This file acts as a cache and allows Forest Admin to detect changes between restarts.
+For self-hosted agents, the schema is also saved to a local file called `.forestadmin-schema.json`. This file acts as a cache and allows Forest to detect changes between restarts.
 
 ## Automatic schema detection
 
@@ -19,7 +19,7 @@ For self-hosted agents, schema updates are detected **automatically on agent res
 
 1. It connects to your database and introspects the current schema
 2. It compares the result with `.forestadmin-schema.json` (if it exists)
-3. If changes are detected, it updates the file and notifies the Forest Admin cloud
+3. If changes are detected, it updates the file and notifies the Forest cloud
 
 This means the typical workflow for a database change is:
 
@@ -27,7 +27,7 @@ This means the typical workflow for a database change is:
 # 1. Make your database change (migration, ALTER TABLE, etc.)
 # 2. Restart your agent
 npm run start
-# 3. The new fields/tables appear in Forest Admin automatically
+# 3. The new fields/tables appear in Forest automatically
 ```
 
 <Info>
@@ -36,19 +36,19 @@ npm run start
 
 ## Cloud Agent schema sync
 
-For **Forest Admin Cloud** (where Forest Admin manages the agent), you trigger schema synchronization manually from the UI:
+For **Forest Cloud** (where Forest manages the agent), you trigger schema synchronization manually from the UI:
 
 1. Go to **Project Settings** → **Environments**
 2. Click on the environment you want to sync
 3. In the **Agent** section, click **Synchronize schema**
 
-Forest Admin will connect to your database and pull the latest schema. New tables and columns will appear in your back-office.
+Forest will connect to your database and pull the latest schema. New tables and columns will appear in your back-office.
 
 You can also trigger a sync from the **quick access icon** in the left navigation bar.
 
 ## The `.forestadmin-schema.json` file
 
-This file is auto-generated and lives in your project root. It contains a snapshot of your data model as Forest Admin sees it.
+This file is auto-generated and lives in your project root. It contains a snapshot of your data model as Forest sees it.
 
 **Do:**
 - Commit it to your repository — it ensures schema consistency across team members and environments
@@ -65,7 +65,7 @@ This file is auto-generated and lives in your project root. It contains a snapsh
 After running your database migration:
 
 1. Restart your agent
-2. The new table appears as a new collection in Forest Admin
+2. The new table appears as a new collection in Forest
 3. Configure its layout and permissions as needed
 
 ### Adding a new column
@@ -81,13 +81,13 @@ After adding a column to an existing table:
 Renaming a column is treated as **removing the old field and adding a new one**. This means:
 
 - Any widget configuration, segments, or Smart Actions referencing the old name will break
-- You'll need to update your Forest Admin configuration to reference the new name
+- You'll need to update your Forest configuration to reference the new name
 
 To minimize disruption, consider adding a database view or alias that preserves the old column name temporarily.
 
 ### Removing a column
 
-After dropping a column from your database and restarting your agent, the field disappears from Forest Admin. If it was referenced in segments, actions, or custom code, you'll see errors — clean those up first.
+After dropping a column from your database and restarting your agent, the field disappears from Forest. If it was referenced in segments, actions, or custom code, you'll see errors — clean those up first.
 
 ### Changing a column type
 

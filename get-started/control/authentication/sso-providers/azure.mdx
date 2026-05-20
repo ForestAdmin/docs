@@ -4,13 +4,13 @@ description: "Configure SSO with Azure Active Directory / Microsoft Entra ID"
 ---
 
 <Info>
-  Requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing).
+  Requires the [Forest Enterprise plan](https://www.forestadmin.com/pricing).
 </Info>
 
 ## Configuration
 
 1. In the Azure Active Directory admin center, go to **Enterprise applications → New application**
-2. Select **Create your own application** (Forest Admin is not in the gallery)
+2. Select **Create your own application** (Forest is not in the gallery)
 3. Choose **Integrate any other application you don't find in the gallery (Non-gallery)**
 4. Configure SAML settings:
 
@@ -23,9 +23,9 @@ description: "Configure SSO with Azure Active Directory / Microsoft Entra ID"
 | Relay State (optional) | `{"organizationName": "YourOrganizationName", "destinationUrl": "organization.projects"}` |
 
 5. In the **SAML Signing Certificate** section, copy the **App Federation Metadata Url**
-6. In Forest Admin Organization settings, select **XML file endpoint** and paste the URL
+6. In Forest Organization settings, select **XML file endpoint** and paste the URL
 
 ## Troubleshooting
 
 - Double-check all endpoints and certificate expiration dates
-- Ensure `nameID` is configured to use the **email address used on Forest Admin accounts**
+- Ensure `nameID` is configured to use the **email address used on Forest accounts**

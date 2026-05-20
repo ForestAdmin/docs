@@ -1,6 +1,6 @@
 ---
 title: "Sequelize datasource"
-description: "Connect Forest Admin to your existing Sequelize models with support for scopes, hooks, and associations"
+description: "Connect Forest to your existing Sequelize models with support for scopes, hooks, and associations"
 ---
 
 The Sequelize datasource allows importing collections from a Sequelize instance, preserving your ORM configuration including scopes, hooks, associations, and validations.
@@ -38,7 +38,7 @@ agent.addDataSource(createSequelizeDataSource(sequelize));
 
 The Sequelize datasource automatically preserves your ORM configuration:
 
-- **Sequelize scopes** - Mapped to Forest Admin segments
+- **Sequelize scopes** - Mapped to Forest segments
 - **Sequelize hooks** - Continue to execute as configured
 - **Associations** - Relationships are automatically recognized
 - **Validations** - Model validations are enforced

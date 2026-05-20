@@ -3,25 +3,25 @@ title: SSO Provider Guides
 description: "Configure Single Sign-On with your Identity Provider"
 ---
 
-Forest Admin supports SAML 2.0 SSO. The configuration is done in two steps:
+Forest supports SAML 2.0 SSO. The configuration is done in two steps:
 
-1. **Declare Forest Admin in your Identity Provider** using the values below
-2. **Configure Forest Admin** with your IdP metadata
+1. **Declare Forest in your Identity Provider** using the values below
+2. **Configure Forest** with your IdP metadata
 
 <Info>
-  SSO requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing). You must be an Organization Owner to configure it.
+  SSO requires the [Forest Enterprise plan](https://www.forestadmin.com/pricing). You must be an Organization Owner to configure it.
 </Info>
 
-## Forest Admin SAML settings
+## Forest SAML settings
 
-Use these values when configuring Forest Admin as a Service Provider in your IdP:
+Use these values when configuring Forest as a Service Provider in your IdP:
 
 | Setting | Value |
 |---|---|
 | Callback URL (ACS URL) | `https://api.forestadmin.com/api/saml/callback` |
 | Sign on URL | `https://api.forestadmin.com/api/saml/callback` |
 | Logout URL | `https://app.forestadmin.com/login` |
-| Audience (EntityID) | Displayed in your Forest Admin Organization settings |
+| Audience (EntityID) | Displayed in your Forest Organization settings |
 
 ## Configuration methods
 
@@ -46,7 +46,7 @@ After configuring and testing your SSO setup, enable it for all users in your Or
 
 ## IdP-initiated login (optional)
 
-To allow users to be automatically redirected to Forest Admin from your IdP dashboard, enable **IdP-initiated login** and set a default Relay State on your IdP:
+To allow users to be automatically redirected to Forest from your IdP dashboard, enable **IdP-initiated login** and set a default Relay State on your IdP:
 
 ```json
 {
@@ -58,7 +58,7 @@ To allow users to be automatically redirected to Forest Admin from your IdP dash
 ## Troubleshooting
 
 - Double-check all endpoints and certificate expiration dates
-- Ensure the `NameID` configured on your IdP matches the **email address used on Forest Admin accounts**
+- Ensure the `NameID` configured on your IdP matches the **email address used on Forest accounts**
 - Ensure you selected **SAML 2.0** on your IdP
 
 ## Provider guides

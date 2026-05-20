@@ -5,7 +5,7 @@ description: "Enable and enforce two-factor authentication to add an extra layer
 
 ## Overview
 
-Two-Factor Authentication (2FA) adds an additional security layer beyond username and password. Users must provide a second factor - typically a time-based one-time password (TOTP) from an authenticator app - to access Forest Admin.
+Two-Factor Authentication (2FA) adds an additional security layer beyond username and password. Users must provide a second factor - typically a time-based one-time password (TOTP) from an authenticator app - to access Forest.
 
 <Info>
 **Recommended for All Users**: 2FA significantly reduces the risk of unauthorized access, even if passwords are compromised.
@@ -92,7 +92,7 @@ Recovery codes to use if you lose access to your authenticator app:
   <Step title="Scan QR Code">
     1. Open your authenticator app
     2. Tap "Add account" or "+" button
-    3. Scan the QR code displayed in Forest Admin
+    3. Scan the QR code displayed in Forest
 
     **Or** enter the setup key manually if you can't scan
   </Step>
@@ -140,7 +140,7 @@ Type: Time-based
   </Step>
 
   <Step title="Access Granted">
-    You're logged in to Forest Admin
+    You're logged in to Forest
   </Step>
 </Steps>
 
@@ -199,7 +199,7 @@ Require 2FA for everyone:
   </Step>
 
   <Step title="Notify Users">
-    Forest Admin automatically emails users about the requirement
+    Forest automatically emails users about the requirement
   </Step>
 
   <Step title="Monitor Compliance">
@@ -332,7 +332,7 @@ If a user loses access to their authenticator and backup codes:
 
     - User authenticates with IdP (e.g., Okta, Azure AD)
     - IdP requires MFA (push notification, TOTP, etc.)
-    - Forest Admin trusts the IdP's authentication
+    - Forest trusts the IdP's authentication
 
     **Advantages**:
     - Centralized MFA management
@@ -342,16 +342,16 @@ If a user loses access to their authenticator and backup codes:
     **Configuration**: Enable MFA in your IdP settings
   </Tab>
 
-  <Tab title="Forest Admin 2FA + SSO">
-    **Additional 2FA layer in Forest Admin**
+  <Tab title="Forest 2FA + SSO">
+    **Additional 2FA layer in Forest**
 
     - User authenticates via SSO
-    - Forest Admin requires its own 2FA
+    - Forest requires its own 2FA
 
     **Advantages**:
     - Extra layer of security
     - Works even if IdP MFA is disabled
-    - Forest Admin-specific second factor
+    - Forest-specific second factor
 
     **Use Case**: Very high security environments, compliance requirements
   </Tab>
@@ -360,7 +360,7 @@ If a user loses access to their authenticator and backup codes:
     **Rely entirely on IdP security**
 
     - User authenticates via SSO
-    - No additional 2FA in Forest Admin
+    - No additional 2FA in Forest
     - IdP should enforce MFA
 
     **Advantages**:
@@ -377,11 +377,11 @@ If a user loses access to their authenticator and backup codes:
   <Card title="For SSO Users" icon="building">
     Enforce MFA at the IdP level
 
-    Disable Forest Admin 2FA for SSO users to avoid double-prompting
+    Disable Forest 2FA for SSO users to avoid double-prompting
   </Card>
 
   <Card title="For Password Users" icon="user">
-    Require Forest Admin 2FA
+    Require Forest 2FA
 
     These users don't benefit from IdP security
   </Card>

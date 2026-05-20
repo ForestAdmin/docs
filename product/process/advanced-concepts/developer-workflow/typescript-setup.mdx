@@ -1,13 +1,13 @@
 ---
 title: TypeScript setup & autocompletion
-description: Enable full TypeScript support and IDE autocompletion for your Forest Admin agent.
+description: Enable full TypeScript support and IDE autocompletion for your Forest agent.
 ---
 
 The `@forestadmin/agent` package is written in TypeScript and ships with complete type definitions. With a small amount of setup, you get autocompletion for collection names, field names, and all customization APIs — in both TypeScript and JavaScript projects.
 
 ## How it works
 
-Forest Admin generates a **typings file** from your data model. This file contains TypeScript interfaces that describe each collection and its fields. Once generated, you pass this schema as a generic type parameter to `createAgent`, which propagates the types throughout all your customization code.
+Forest generates a **typings file** from your data model. This file contains TypeScript interfaces that describe each collection and its fields. Once generated, you pass this schema as a generic type parameter to `createAgent`, which propagates the types throughout all your customization code.
 
 The result: your IDE knows that the `orders` collection has a `total_amount` field of type `number`, and will autocomplete accordingly.
 

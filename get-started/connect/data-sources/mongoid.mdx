@@ -1,9 +1,9 @@
 ---
 title: "Mongoid datasource"
-description: "Connect Forest Admin to MongoDB using Mongoid models with flexible nested document handling"
+description: "Connect Forest to MongoDB using Mongoid models with flexible nested document handling"
 ---
 
-The Mongoid datasource imports collections from a Mongoid instance into Forest Admin, with configurable strategies for handling deeply nested embedded documents.
+The Mongoid datasource imports collections from a Mongoid instance into Forest, with configurable strategies for handling deeply nested embedded documents.
 
 <Warning>
 Mongoid datasource is only available for Ruby. For Node.js, check the [Mongoose datasource](/get-started/connect/data-sources/mongoose) or [MongoDB datasource](/get-started/connect/data-sources/mongodb).
@@ -27,7 +27,7 @@ The Mongoid datasource provides three modes for handling embedded documents:
 
 ### `flatten_mode: 'auto'`
 
-Embedded documents (embeds_one, embeds_many) are automatically converted into separate Forest Admin collections.
+Embedded documents (embeds_one, embeds_many) are automatically converted into separate Forest collections.
 
 ```ruby
 datasource = ForestAdminDatasourceMongoid::Datasource.new(
@@ -46,7 +46,7 @@ datasource = ForestAdminDatasourceMongoid::Datasource.new(
   options: {
     flatten_mode: 'manual',
     # Configure which paths become collections vs fields
-    # Contact Forest Admin support for manual mode configuration details
+    # Contact Forest support for manual mode configuration details
   }
 )
 ```

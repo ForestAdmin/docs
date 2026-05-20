@@ -1,17 +1,17 @@
 ---
 title: "Troubleshooting Onboarding & Authentication"
-description: "Common issues and solutions when setting up Forest Admin or connecting your agent"
+description: "Common issues and solutions when setting up Forest or connecting your agent"
 ---
 
-This guide covers common problems you might encounter when onboarding to Forest Admin or connecting your agent to the platform.
+This guide covers common problems you might encounter when onboarding to Forest or connecting your agent to the platform.
 
-## Agent can't connect to Forest Admin UI
+## Agent can't connect to Forest UI
 
-**Symptoms**: Your agent starts successfully, but the Forest Admin UI shows "Agent not responding" or "Connection failed".
+**Symptoms**: Your agent starts successfully, but the Forest UI shows "Agent not responding" or "Connection failed".
 
 ### Check outbound HTTPS access
 
-Your agent needs to reach Forest Admin's servers. Verify your firewall allows outbound connections to:
+Your agent needs to reach Forest's servers. Verify your firewall allows outbound connections to:
 
 - `api.forestadmin.com` (port 443)
 - `app.forestadmin.com` (port 443)
@@ -26,7 +26,7 @@ If this fails, check your firewall rules, proxy settings, or network security gr
 
 ### Verify environment secret
 
-The `FOREST_ENV_SECRET` environment variable must match the secret provided in your Forest Admin project settings. A mismatch will prevent authentication.
+The `FOREST_ENV_SECRET` environment variable must match the secret provided in your Forest project settings. A mismatch will prevent authentication.
 
 <CodeGroup>
 ```javascript Node.js
@@ -148,11 +148,11 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON database.* TO 'username'@'%';
 
 ## Authentication token expired
 
-**Symptoms**: "Invalid token" or "Token expired" errors when accessing Forest Admin UI.
+**Symptoms**: "Invalid token" or "Token expired" errors when accessing Forest UI.
 
 ### Solution
 
-Log out and log back in to Forest Admin:
+Log out and log back in to Forest:
 
 1. Click your profile picture in the top-right corner
 2. Select "Logout"
@@ -162,7 +162,7 @@ Your session token will be refreshed automatically.
 
 ## Schema not syncing
 
-**Symptoms**: Changes to your database schema don't appear in Forest Admin UI, or collections are missing.
+**Symptoms**: Changes to your database schema don't appear in Forest UI, or collections are missing.
 
 ### Force schema refresh
 
@@ -218,7 +218,7 @@ GRANT SELECT ON information_schema.* TO 'username'@'%';
 
 ## Environment not appearing
 
-**Symptoms**: Created a new environment in Forest Admin, but it doesn't show up in the UI or agent can't connect to it.
+**Symptoms**: Created a new environment in Forest, but it doesn't show up in the UI or agent can't connect to it.
 
 ### Generate environment credentials
 
@@ -236,11 +236,11 @@ Never reuse the same `FOREST_ENV_SECRET` across multiple environments. Each envi
 
 ## CORS errors in browser console
 
-**Symptoms**: Browser console shows CORS errors when accessing Forest Admin UI.
+**Symptoms**: Browser console shows CORS errors when accessing Forest UI.
 
 ### Check agent URL configuration
 
-Ensure your agent URL is correctly configured in Forest Admin project settings:
+Ensure your agent URL is correctly configured in Forest project settings:
 
 1. Go to Project Settings → Environments
 2. Verify the "Agent URL" matches your actual agent URL
@@ -290,7 +290,7 @@ production:
 Disabling certificate verification (`rejectUnauthorized: false`) is not recommended for production. Use proper SSL certificates whenever possible.
 </Warning>
 
-### For outbound connections to Forest Admin
+### For outbound connections to Forest
 
 If your infrastructure uses a corporate proxy or custom certificates, you may need to configure Node.js or Ruby to trust your CA:
 
@@ -307,12 +307,12 @@ export SSL_CERT_FILE=/path/to/ca-bundle.crt
 If you're still experiencing problems after trying these solutions:
 
 1. **Check our status page**: Visit [status.forestadmin.com](https://status.forestadmin.com) for any ongoing incidents
-2. **Search our community**: Browse the [Forest Admin Community](https://community.forestadmin.com) for similar issues
+2. **Search our community**: Browse the [Forest Community](https://community.forestadmin.com) for similar issues
 3. **Contact support**: Reach out to our support team with:
    - Your agent logs (redact sensitive information)
    - Error messages you're seeing
    - Steps to reproduce the issue
-   - Your Forest Admin project ID
+   - Your Forest project ID
 
 <Info>
 When contacting support, provide as much context as possible, including error messages, logs, and your configuration (without sensitive credentials).

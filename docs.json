@@ -34,7 +34,7 @@
             "pages": [
               "get-started/intro-to-forest-admin",
               "get-started/quickstart",
-              "get-started/customize-your-panel",
+              "get-started/customize-your-back-office",
               "get-started/add-business-logic",
               "get-started/set-up-operations",
               "get-started/deploy",

@@ -57,7 +57,7 @@ This basic implementation fetches all records at startup but doesn't update them
 
 ## Persistent cache
 
-The Forest Admin Node.js agent uses a SQL database as its underlying cache mechanism. By default, an in-memory SQLite database is used.
+The Forest Node.js agent uses a SQL database as its underlying cache mechanism. By default, an in-memory SQLite database is used.
 
 ### Limitations of in-memory cache
 
@@ -72,7 +72,7 @@ Depending on which API you are targeting, it may be absolutely fine to use an in
 
 ### Cache initialization
 
-Forest Admin will automatically detect when the schema of the tables in the caching database does not match the schema of the target API. When mismatches occur, tables and indexes are dropped, recreated, and repopulated from the target API.
+Forest will automatically detect when the schema of the tables in the caching database does not match the schema of the target API. When mismatches occur, tables and indexes are dropped, recreated, and repopulated from the target API.
 
 ### Configuration options
 
@@ -109,14 +109,14 @@ const myCustomDataSource = createReplicaDataSource({
 
 ## Updating the replica
 
-Real-world scenarios require keeping the Forest Admin agent to display up-to-date data.
+Real-world scenarios require keeping the Forest agent to display up-to-date data.
 
 ### Three update methods
 
 Use these approaches independently or combine them:
 
 1. **Scheduled rebuilds** - Refetch all records periodically
-2. **Change polling** - Uses Forest Admin events to detect modifications
+2. **Change polling** - Uses Forest events to detect modifications
 3. **Change pushing** - Leverages target API events via webhooks
 
 ## Scheduled rebuilds
@@ -353,8 +353,8 @@ const myCustomDataSource = createReplicaDataSource({
 - All three write handlers remain optional
 - Create handlers can return newly generated IDs from the API
 - Update and delete handlers perform remote operations without returning values
-- The handlers abstract the communication layer between Forest Admin and external APIs
+- The handlers abstract the communication layer between Forest and external APIs
 
 <Info>
-Want to share your custom datasource with the community? Check out [Forest Admin experimental](/guides/forestadmin-experimental) to contribute.
+Want to share your custom datasource with the community? Check out [Forest experimental](/guides/forestadmin-experimental) to contribute.
 </Info>

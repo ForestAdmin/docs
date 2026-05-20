@@ -1,9 +1,9 @@
 ---
 title: Deploy to AWS
-description: "Step-by-step guide to deploy the Forest Admin agent to Amazon Web Services using EC2, ELB, ACM and Route53"
+description: "Step-by-step guide to deploy the Forest agent to Amazon Web Services using EC2, ELB, ACM and Route53"
 ---
 
-This guide walks you through deploying your Forest Admin agent to AWS using EC2, an Application Load Balancer, ACM for SSL, and Route53 for DNS.
+This guide walks you through deploying your Forest agent to AWS using EC2, an Application Load Balancer, ACM for SSL, and Route53 for DNS.
 
 <Info>
   You'll need an AWS account. [Sign up here](https://aws.amazon.com/) if you don't have one.
@@ -49,7 +49,7 @@ cd your-repo-directory
 npm install
 ```
 
-Set up all environment variables provided by the Forest Admin environment creation wizard, and add the `APPLICATION_PORT` variable:
+Set up all environment variables provided by the Forest environment creation wizard, and add the `APPLICATION_PORT` variable:
 
 ```bash
 export APPLICATION_PORT=3310
@@ -103,7 +103,7 @@ npm run start:watch
 
 ## Step 9: Finalize
 
-Check your domain — you should be able to access your Forest Admin agent. 🎉
+Check your domain — you should be able to access your Forest agent. 🎉
 
 <Info>
   This is a basic setup. For production-ready deployments, consider using RDS for the database, tightening security groups, and enabling auto-scaling. Refer to the [AWS documentation](https://docs.aws.amazon.com/index.html) for more.
@@ -111,4 +111,4 @@ Check your domain — you should be able to access your Forest Admin agent. 🎉
 
 ## Next step
 
-Once your agent is deployed and accessible via HTTPS, go back to Forest Admin and [create your production environment](/guides/deployment/production#step-2-create-the-production-environment-in-forest-admin).
+Once your agent is deployed and accessible via HTTPS, go back to Forest and [create your production environment](/guides/deployment/production#step-2-create-the-production-environment-in-forest-admin).

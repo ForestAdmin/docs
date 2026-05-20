@@ -5,7 +5,7 @@ description: "Connect to Elasticsearch indices with query and aggregation suppor
 
 <Note>Only available for Node.js.</Note>
 
-The Elasticsearch datasource connects to Elasticsearch indices, allowing you to query, filter, and aggregate your data through Forest Admin.
+The Elasticsearch datasource connects to Elasticsearch indices, allowing you to query, filter, and aggregate your data through Forest.
 
 ## Basic usage
 
@@ -30,7 +30,7 @@ agent.addDataSource(
 
 ### Index-based collections
 
-Map each Elasticsearch index to a Forest Admin collection:
+Map each Elasticsearch index to a Forest collection:
 
 ```javascript
 createElasticsearchDataSource({
@@ -146,7 +146,7 @@ The datasource supports 16+ filter operators:
 Sort records by any field:
 
 ```javascript
-// Forest Admin UI automatically generates queries with sorting
+// Forest UI automatically generates queries with sorting
 // Example: GET /products?sort=-price (descending by price)
 ```
 

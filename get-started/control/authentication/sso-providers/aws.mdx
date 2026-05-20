@@ -4,12 +4,12 @@ description: "Configure SSO with AWS IAM Identity Center"
 ---
 
 <Info>
-  Requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing).
+  Requires the [Forest Enterprise plan](https://www.forestadmin.com/pricing).
 </Info>
 
 ## Configuration
 
-Forest Admin is compatible with AWS's SAML 2.0 application. Follow the AWS guide [Set up your own SAML 2.0 application](https://docs.aws.amazon.com/singlesignon/latest/userguide/set-up-single-sign-on-access-to-applications.html) with these settings:
+Forest is compatible with AWS's SAML 2.0 application. Follow the AWS guide [Set up your own SAML 2.0 application](https://docs.aws.amazon.com/singlesignon/latest/userguide/set-up-single-sign-on-access-to-applications.html) with these settings:
 
 | Setting | Value |
 |---|---|
@@ -17,9 +17,9 @@ Forest Admin is compatible with AWS's SAML 2.0 application. Follow the AWS guide
 | Application SAML audience | `forestadmin-YourOrganizationName` |
 | Relay State (optional) | `{"organizationName": "YourOrganizationName", "destinationUrl": "organization.projects"}` |
 
-After configuring your AWS application, download or copy the SAML metadata and configure it in Forest Admin (see [SSO configuration guide](/get-started/control/authentication/sso-providers/overview)).
+After configuring your AWS application, download or copy the SAML metadata and configure it in Forest (see [SSO configuration guide](/get-started/control/authentication/sso-providers/overview)).
 
 ## Troubleshooting
 
 - Double-check all endpoints and certificate expiration dates
-- Ensure `nameID` matches the **email address used on Forest Admin accounts**
+- Ensure `nameID` matches the **email address used on Forest accounts**

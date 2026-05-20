@@ -1,9 +1,9 @@
 ---
 title: "Quickstart: Self-Hosted"
-description: "Deploy the Forest Admin agent in your own infrastructure in 10 minutes"
+description: "Deploy the Forest agent in your own infrastructure in 10 minutes"
 ---
 
-With Self-Hosted deployment, you run the Forest Admin agent in your infrastructure while using our hosted UI. This gives you full control over your data and business logic.
+With Self-Hosted deployment, you run the Forest agent in your infrastructure while using our hosted UI. This gives you full control over your data and business logic.
 
 ## What you'll do
 
@@ -12,10 +12,10 @@ With Self-Hosted deployment, you run the Forest Admin agent in your infrastructu
     Standalone microservice or in-app integration
   </Step>
   <Step title="Set up the agent">
-    Follow the onboarding flow to configure Forest Admin
+    Follow the onboarding flow to configure Forest
   </Step>
   <Step title="Start your agent">
-    Launch the agent and access your admin panel
+    Launch the agent and access your back-office
   </Step>
 </Steps>
 
@@ -25,17 +25,17 @@ Before you begin, make sure you have:
 
 - **Node.js 18+** or **Ruby 3.0+** installed
 - **A database** (PostgreSQL, MySQL, MongoDB, etc.)
-- **Forest Admin account** - [Sign up here](https://app.forestadmin.com/signup) if needed
+- **Forest account** - [Sign up here](https://app.forestadmin.com/signup) if needed
 
 ## Step 1: Choose your architecture
 
-Forest Admin can be deployed in two ways:
+Forest can be deployed in two ways:
 
 ### Architecture 1: Standalone microservice
 
-A **dedicated Node.js application** that only runs Forest Admin. This is ideal for:
-- Keeping Forest Admin separate from your main application
-- Using Forest Admin with multiple services or databases
+A **dedicated Node.js application** that only runs Forest. This is ideal for:
+- Keeping Forest separate from your main application
+- Using Forest with multiple services or databases
 - Maximum isolation and independent scaling
 
 **Architecture:**
@@ -44,8 +44,8 @@ A **dedicated Node.js application** that only runs Forest Admin. This is ideal f
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f9f5','primaryTextColor':'#1a1a1a','primaryBorderColor':'#00B392','lineColor':'#00B392','secondaryColor':'#f5f5f5','tertiaryColor':'#ffffff','fontSize':'14px'}}}%%
 graph LR
     DB[("💾 Your Database")]
-    Agent["⚙️ Forest Admin Agent<br/>(Standalone Node.js app)"]
-    UI["🌐 Forest Admin UI<br/>(Hosted by Forest)"]
+    Agent["⚙️ Forest Agent<br/>(Standalone Node.js app)"]
+    UI["🌐 Forest UI<br/>(Hosted by Forest)"]
 
     DB -->|Direct access| Agent
     Agent -->|API| UI
@@ -57,7 +57,7 @@ graph LR
 
 ### Architecture 2: In-app integration
 
-**Integrate Forest Admin directly into your existing application**. This is ideal for:
+**Integrate Forest directly into your existing application**. This is ideal for:
 - Simpler deployment alongside your existing app
 - Sharing code, middleware, and infrastructure
 - Single application to manage
@@ -68,8 +68,8 @@ graph LR
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f9f5','primaryTextColor':'#1a1a1a','primaryBorderColor':'#00B392','lineColor':'#00B392','secondaryColor':'#f5f5f5','tertiaryColor':'#ffffff','fontSize':'14px'}}}%%
 graph LR
     DB[("💾 Your Database")]
-    App["🔧 Your Application<br/>+ Forest Admin Agent"]
-    UI["🌐 Forest Admin UI<br/>(Hosted by Forest)"]
+    App["🔧 Your Application<br/>+ Forest Agent"]
+    UI["🌐 Forest UI<br/>(Hosted by Forest)"]
 
     DB -->|Direct access| App
     App -->|API| UI
@@ -91,8 +91,8 @@ Choose the architecture that best fits your needs and continue with the appropri
     2. Choose **"Self-Hosted"** deployment
     3. Select **"Standalone application"** option
     4. Follow the onboarding instructions. They will guide you to:
-       - Install Forest Admin CLI: `npm install -g forest`
-       - Login to Forest Admin: `forest login`
+       - Install Forest CLI: `npm install -g forest`
+       - Login to Forest: `forest login`
        - Generate the standalone application: `forest create:project`
 
     When this is done, you are prompted to start your newly created agent:
@@ -107,7 +107,7 @@ Choose the architecture that best fits your needs and continue with the appropri
     ```
 
     <Info>
-    This command automatically generates a standalone application, with all the files necessary to make Forest Admin work, including a first `.env` with the environment variables such as `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET`.
+    This command automatically generates a standalone application, with all the files necessary to make Forest work, including a first `.env` with the environment variables such as `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET`.
     </Info>
 
     <Warning>
@@ -116,7 +116,7 @@ Choose the architecture that best fits your needs and continue with the appropri
   </Tab>
 
   <Tab title="In-app (Node.js)">
-    Forest Admin integrates with popular Node.js frameworks: **Express**, **Fastify**, **Koa**, **NestJS**, and more.
+    Forest integrates with popular Node.js frameworks: **Express**, **Fastify**, **Koa**, **NestJS**, and more.
 
     ### Follow the onboarding flow
 
@@ -124,7 +124,7 @@ Choose the architecture that best fits your needs and continue with the appropri
     2. Select **"In-app integration"** option
     3. Choose your framework (**Express**, **Fastify**, **Koa**, **NestJS**)
     4. Follow the onboarding instructions. They will provide you with:
-       - Installation command for Forest Admin packages
+       - Installation command for Forest packages
        - Ready-to-use code snippet with your `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` already configured
        - Instructions on where to add the code in your application
 
@@ -136,7 +136,7 @@ Choose the architecture that best fits your needs and continue with the appropri
     npm run dev
     ```
 
-    🎉 **Congratulations!** The Forest Admin agent will start on port `3310` alongside your application.
+    🎉 **Congratulations!** The Forest agent will start on port `3310` alongside your application.
 
     <Warning>
     Never commit your `.env` file to version control. Add it to `.gitignore`.
@@ -144,7 +144,7 @@ Choose the architecture that best fits your needs and continue with the appropri
   </Tab>
 
   <Tab title="In-app (Ruby)">
-    Forest Admin integrates with **Ruby on Rails** applications.
+    Forest integrates with **Ruby on Rails** applications.
 
     ### Follow the onboarding flow
 
@@ -152,7 +152,7 @@ Choose the architecture that best fits your needs and continue with the appropri
     2. Select **"In-app integration"** option
     3. Choose **Ruby on Rails**
     4. Follow the onboarding instructions. They will provide you with:
-       - Installation command for the Forest Admin gem
+       - Installation command for the Forest gem
        - Ready-to-use configuration with your `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` already configured
        - Instructions on where to add the configuration in your Rails application
 
@@ -162,7 +162,7 @@ Choose the architecture that best fits your needs and continue with the appropri
     rails server
     ```
 
-    🎉 **Congratulations!** Your application (including Forest Admin) will start on port `3000` by default.
+    🎉 **Congratulations!** Your application (including Forest) will start on port `3000` by default.
 
     <Warning>
     Never commit your `.env` file to version control. Add it to `.gitignore`.
@@ -170,13 +170,13 @@ Choose the architecture that best fits your needs and continue with the appropri
   </Tab>
 </Tabs>
 
-## Step 3: Access your admin panel
+## Step 3: Access your back-office
 
-Once your agent is running, **Forest Admin automatically opens your admin panel in the browser**.
+Once your agent is running, **Forest automatically opens your back-office in the browser**.
 
-🎉 **Congratulations!** Your admin panel is ready.
+🎉 **Congratulations!** Your back-office is ready.
 
-Forest Admin automatically:
+Forest automatically:
 - ✅ Discovered your database schema
 - ✅ Analyzed relationships between tables
 - ✅ Created collections for each table
@@ -184,13 +184,13 @@ Forest Admin automatically:
 - ✅ Configured search and filters
 - ✅ Generated a default layout
 
-After an optional review, access the Forest Admin UI to manage your data.
+After an optional review, access the Forest UI to manage your data.
 
 ## What's next?
 
 <CardGroup cols={3}>
   <Card title="Customize your UI" icon="paintbrush" href="/product/build/layout-editor">
-    Use the layout editor to customize your admin panel
+    Use the layout editor to customize your back-office
   </Card>
   <Card title="Add business logic" icon="wand-magic-sparkles" href="/product/process/actions/overview">
     Create Smart Actions for custom workflows
@@ -223,12 +223,12 @@ After an optional review, access the Forest Admin UI to manage your data.
         ```bash
         curl http://localhost:3000/forest
         ```
-        Should return Forest Admin metadata
+        Should return Forest metadata
       </Tab>
     </Tabs>
   </Accordion>
 
-  <Accordion title="Cannot connect from Forest Admin UI" icon="plug">
+  <Accordion title="Cannot connect from Forest UI" icon="plug">
     **Connection troubleshooting checklist:**
 
     1. ✅ **Is your agent running?** Check the terminal for the "agent is now running" message
@@ -284,7 +284,7 @@ After an optional review, access the Forest Admin UI to manage your data.
     2. Set environment variables (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`)
     3. Set `NODE_ENV=production` (Node.js) or `RAILS_ENV=production` (Ruby)
     4. Ensure your production database is accessible from your agent
-    5. Configure your agent URL in Forest Admin UI
+    5. Configure your agent URL in Forest UI
 
     **Learn more:** [Self-Hosted Architecture](/get-started/connect/architectures/self-hosted)
   </Accordion>

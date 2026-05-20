@@ -3,7 +3,7 @@ title: "Add business logic"
 description: "Create actions and computed fields to go beyond CRUD"
 ---
 
-Forest Admin's real power comes from the business logic you add on top of your data. This step covers the two most common building blocks: actions and computed fields.
+Forest's real power comes from the business logic you add on top of your data. This step covers the two most common building blocks: actions and computed fields.
 
 ## Create your first action
 
@@ -11,11 +11,11 @@ Actions are custom operations your team can trigger from the UI — refunding an
 
 The easiest way to create an action is with the **AI action generator**:
 
-1. Open a collection in your panel
+1. Open a collection in your back-office
 2. Click **Actions** → **New action**
 3. Describe what you want the action to do in plain language
 4. Review and adjust the generated code
-5. Click **Save** — the action is immediately available in your panel
+5. Click **Save** — the action is immediately available in your back-office
 
 Actions run as code in your agent, so they can call external APIs, update multiple tables, or trigger any side effect you need.
 
@@ -37,7 +37,7 @@ collection.addField('fullName', {
 });
 ```
 
-Restart your agent and the field will appear in your panel like any other field.
+Restart your agent and the field will appear in your back-office like any other field.
 
 <Info>
 Computed fields can also be made writable, filterable, and sortable. See [Fields](/product/process/fields/computed).

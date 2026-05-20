@@ -1,1 +1,87 @@
-{/* TODO: rewrite this page */}
+---
+title: "Legacy agents"
+description: "Reference documentation for legacy Forest agents — maintained for migration purposes only."
+---
+
+<Warning>
+  **Do not start new projects with legacy agents.** This section is preserved for teams maintaining existing v1 deployments and as a reference during migration to the current generation.
+</Warning>
+
+## What's a legacy agent?
+
+A legacy agent is any Forest agent prior to the current generation — the era when the product was branded as Forest Admin and centered on building admin panels. The legacy agents are:
+
+| Agent | Language | Status |
+| --- | --- | --- |
+| `forest-express-sequelize` | Node.js + Sequelize | Maintenance only |
+| `forest-express-mongoose` | Node.js + Mongoose | Maintenance only |
+| `forest-rails` | Ruby on Rails | Maintenance only |
+| `django-forestadmin` v1 | Python / Django | End-of-life soon |
+
+These have been replaced by the current agent generation:
+
+<CardGroup cols={2}>
+  <Card title="@forestadmin/agent" icon="node-js" href="/reference/agent-api/nodejs">
+    Node.js — TypeScript-first, multi-datasource, modern API.
+  </Card>
+  <Card title="forest_admin_agent" icon="gem" href="/reference/agent-api/ruby">
+    Ruby — ActiveRecord and Mongoid support, Rails integration.
+  </Card>
+</CardGroup>
+
+## Why we recommend migrating
+
+The current agent generation is the foundation Forest is built on today. Legacy agents only expose the original admin-panel capabilities; the current agents add everything Forest has shipped since:
+
+- **Multi-datasource support** — combine SQL, MongoDB, APIs, and custom sources in a single agent.
+- **Workflows** — orchestrate multi-step operational processes across humans, AI agents, and external systems.
+- **MCP server** — expose your data, actions, and workflows to AI agents under governance.
+- **Decision traces** — every action carries its full context, audit-ready by default.
+- **Better performance** — query optimization and reduced overhead.
+- **Active development** — new features, regular security updates, full support.
+- **Cleaner customization API** — fewer concepts to learn, more composable.
+- **TypeScript** (Node.js) — full type inference for your collections and actions.
+
+## Where to start
+
+<CardGroup cols={2}>
+  <Card title="Migration guide" icon="arrow-right-arrow-left" href="/guides/migration/from-v1/overview">
+    Step-by-step migration from any legacy agent. Run v1 and v2 in parallel with zero downtime.
+  </Card>
+  <Card title="Agent SDK reference" icon="code" href="/reference/agent-api/overview">
+    Reference for the current agents.
+  </Card>
+</CardGroup>
+
+## Legacy reference
+
+If you need to keep working in a legacy agent while you plan a migration:
+
+<CardGroup cols={2}>
+  <Card title="JavaScript (Express) agents" icon="js" href="/legacy/javascript-agents/README">
+    Reference for `forest-express-sequelize` and `forest-express-mongoose`. Setup, customization, and how-tos for v1 Node.js agents.
+  </Card>
+  <Card title="Ruby on Rails agent" icon="gem" href="/legacy/ruby-agent/README">
+    Reference for `forest-rails`. Setup, customization, and how-tos for the v1 Ruby agent.
+  </Card>
+  <Card title="Python (Django) v1" icon="python" href="/legacy/python-agent-v1">
+    Reference for `django-forestadmin` v1. Approaching end-of-life — migrate as soon as possible.
+  </Card>
+  <Card title="Migration guides (legacy index)" icon="list-check" href="/legacy/migration-guides">
+    Index of v1 → v2 migration paths per agent.
+  </Card>
+</CardGroup>
+
+## Need help migrating?
+
+<CardGroup cols={3}>
+  <Card title="Migration guide" href="/guides/migration/from-v1/overview">
+    Full step-by-step instructions.
+  </Card>
+  <Card title="Community forum" href="https://community.forestadmin.com">
+    Migration questions and patterns shared by other teams.
+  </Card>
+  <Card title="Support" href="mailto:support@forestadmin.com">
+    Reach out to the Forest team directly.
+  </Card>
+</CardGroup>

@@ -1,11 +1,11 @@
 ---
-title: Forest Admin CLI
-description: Command-line tool for managing your Forest Admin projects, branches, environments, and deployments
+title: Forest CLI
+description: Command-line tool for managing your Forest projects, branches, environments, and deployments
 ---
 
-# Forest Admin CLI
+# Forest CLI
 
-The Forest Admin CLI (`forest`) is a command-line tool that lets you manage your Forest Admin layout changes throughout your development workflow — from local development to production deployment.
+The Forest CLI (`forest`) is a command-line tool that lets you manage your Forest layout changes throughout your development workflow — from local development to production deployment.
 
 ## Installation
 
@@ -20,12 +20,12 @@ forest --version
 ```
 
 <Info>
-The Forest Admin CLI requires **Node.js >= 18.0.0**.
+The Forest CLI requires **Node.js >= 18.0.0**.
 </Info>
 
 ## Getting started
 
-Once installed, authenticate with your Forest Admin account:
+Once installed, authenticate with your Forest account:
 
 ```bash
 forest login
@@ -43,7 +43,7 @@ forest init
 
 | Command | Description |
 |---|---|
-| [`forest login`](/reference/cli/login) | Sign in to your Forest Admin account |
+| [`forest login`](/reference/cli/login) | Sign in to your Forest account |
 | `forest logout` | Sign out of your account |
 | `forest user` | Display the currently logged-in user |
 
@@ -89,14 +89,14 @@ forest init
 
 ## Development workflow
 
-A typical development workflow with the Forest Admin CLI looks like this:
+A typical development workflow with the Forest CLI looks like this:
 
 1. **Create a branch** to isolate your layout changes:
    ```bash
    forest branch feature/my-feature --origin production
    ```
 
-2. **Work locally** — make layout changes in your Forest Admin UI connected to your development environment.
+2. **Work locally** — make layout changes in your Forest UI connected to your development environment.
 
 3. **Push your changes** to a staging or test environment for review:
    ```bash

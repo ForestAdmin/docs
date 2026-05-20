@@ -1,9 +1,9 @@
 ---
 title: "Quickstart: Cloud"
-description: "Get your admin panel running in 5 minutes with Forest Admin Cloud"
+description: "Get your back-office running in 5 minutes with Forest Cloud"
 ---
 
-Forest Admin Cloud is the fastest way to get started. We host and manage everything for you—connect your database.
+Forest Cloud is the fastest way to get started. We host and manage everything for you—connect your database.
 
 ## What you'll do
 
@@ -14,7 +14,7 @@ Forest Admin Cloud is the fastest way to get started. We host and manage everyth
   <Step title="Connect your database">
     Provide your database credentials
   </Step>
-  <Step title="Access your admin panel">
+  <Step title="Access your back-office">
     Start managing your data immediately
   </Step>
 </Steps>
@@ -49,25 +49,25 @@ Select your database from the list:
 
 ### Enter connection details
 
-Enter your connection URI directly in Forest Admin's interface:
+Enter your connection URI directly in Forest's interface:
 
 ```
 postgresql://user:password@host:5432/database
 ```
 
 <Tip>
-**Using a local database?** You can set up SSH tunneling using tools like Ngrok, Bastion, or Localtunnel. Forest Admin will provide an SSH public key to add to your server's `authorized_keys` file.
+**Using a local database?** You can set up SSH tunneling using tools like Ngrok, Bastion, or Localtunnel. Forest will provide an SSH public key to add to your server's `authorized_keys` file.
 </Tip>
 
 ### Test connection
 
 Click **"Test connection"** to verify your credentials, then click **"Next"** to sync your schema.
 
-## Step 3: Access your admin panel
+## Step 3: Access your back-office
 
-🎉 **Congratulations!** Your admin panel is ready.
+🎉 **Congratulations!** Your back-office is ready.
 
-Forest Admin automatically:
+Forest automatically:
 - ✅ Discovered your database schema
 - ✅ Created collections for each table
 - ✅ Set up CRUD operations
@@ -85,7 +85,7 @@ Start immediately:
 
 <CardGroup cols={3}>
   <Card title="Customize your UI" icon="paintbrush" href="/product/build/layout-editor">
-    Use the layout editor to customize your admin panel
+    Use the layout editor to customize your back-office
   </Card>
   <Card title="Add business logic" icon="wand-magic-sparkles" href="/product/process/actions/overview">
     Create Smart Actions for custom workflows
@@ -102,7 +102,7 @@ Start immediately:
     **Solution:** Your database needs to be accessible from the internet.
 
     Options:
-    - Whitelist Forest Admin IP: **35.180.175.97**
+    - Whitelist Forest IP: **35.180.175.97**
     - Use Cloud SQL/RDS with public access
     - Set up SSH tunneling (see Step 2)
   </Accordion>
@@ -110,7 +110,7 @@ Start immediately:
   <Accordion title="No tables showing up" icon="table">
     **Solution:** Make sure your database user has read permissions on the tables you want to access.
 
-    Check your database permissions and refresh the schema in Forest Admin settings.
+    Check your database permissions and refresh the schema in Forest settings.
   </Accordion>
 
   <Accordion title="I want to use a local database" icon="laptop">

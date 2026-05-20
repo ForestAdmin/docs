@@ -4,7 +4,7 @@ description: "Configure SSO with Google Workspace"
 ---
 
 <Info>
-  Requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing).
+  Requires the [Forest Enterprise plan](https://www.forestadmin.com/pricing).
 </Info>
 
 ## Configuration
@@ -17,10 +17,10 @@ description: "Configure SSO with Google Workspace"
 | Setting | Value |
 |---|---|
 | ACS URL | `https://api.forestadmin.com/api/saml/callback` |
-| Entity ID | Displayed in your Forest Admin Organization settings |
+| Entity ID | Displayed in your Forest Organization settings |
 | Start URL (optional) | For [IdP-initiated login](/get-started/control/authentication/sso-providers/overview#idp-initiated-login-optional) |
 
-5. Download or copy the IdP metadata and paste it into Forest Admin (see [SSO configuration guide](/get-started/control/authentication/sso-providers/overview))
+5. Download or copy the IdP metadata and paste it into Forest (see [SSO configuration guide](/get-started/control/authentication/sso-providers/overview))
 
 <Info>
   See the [Google documentation on custom SAML applications](https://support.google.com/a/answer/6087519) for more details.
@@ -29,4 +29,4 @@ description: "Configure SSO with Google Workspace"
 ## Troubleshooting
 
 - Double-check all endpoints and certificate expiration dates
-- Ensure the `Name ID` (primary email) in your IdP matches the **email address used on Forest Admin accounts**
+- Ensure the `Name ID` (primary email) in your IdP matches the **email address used on Forest accounts**

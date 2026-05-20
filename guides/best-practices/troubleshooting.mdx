@@ -5,18 +5,18 @@ description: "Common issues and how to fix them"
 
 ## CORS errors
 
-CORS is the most common issue when setting up the Forest Admin agent. Open your browser's Developer Console (Network tab) to detect it.
+CORS is the most common issue when setting up the Forest agent. Open your browser's Developer Console (Network tab) to detect it.
 
 **Check:**
 
-- The Forest Admin agent is mounted **before** any other middleware. In NestJS specifically, the Nest App Factory's CORS configuration can interfere with `@forestadmin/agent` — configure it after mounting the agent.
+- The Forest agent is mounted **before** any other middleware. In NestJS specifically, the Nest App Factory's CORS configuration can interfere with `@forestadmin/agent` — configure it after mounting the agent.
 - Your server is up and running. Test it by calling the `/forest` endpoint: `curl http://localhost:3310/forest`
 
 ## 403 Forbidden errors after permission changes
 
-If you add users, create collections, or change permissions in Forest Admin and start getting `403` errors that only go away after restarting your agent, this is likely caused by **SSE (Server-Sent Events) buffering** in a reverse proxy.
+If you add users, create collections, or change permissions in Forest and start getting `403` errors that only go away after restarting your agent, this is likely caused by **SSE (Server-Sent Events) buffering** in a reverse proxy.
 
-Forest Admin uses SSE to push permission updates to your agent in real time. Some reverse proxies buffer SSE connections and prevent the agent from receiving updates.
+Forest uses SSE to push permission updates to your agent in real time. Some reverse proxies buffer SSE connections and prevent the agent from receiving updates.
 
 **To confirm:** Restart your agent. If the 403 errors disappear, SSE buffering is the cause.
 
@@ -55,7 +55,7 @@ curl https://your-agent.yourcompany.com/forest
 
 ## Schema not updating
 
-If your database schema changes are not reflected in Forest Admin:
+If your database schema changes are not reflected in Forest:
 
 1. Make sure your agent is restarted after schema changes
 2. Check that `isProduction` is set correctly — in production mode, the schema is not re-introspected on startup
@@ -63,4 +63,4 @@ If your database schema changes are not reflected in Forest Admin:
 
 ## Need more help?
 
-Post your question on the [Forest Admin Community Forum](https://community.forestadmin.com) — the team responds quickly.
+Post your question on the [Forest Community Forum](https://community.forestadmin.com) — the team responds quickly.

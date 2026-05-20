@@ -1,36 +1,34 @@
 ---
-title: Layout Versioning
-description: Manage, version, and deploy your Forest Admin layout configurations across environments using branches.
+title: "Layout versioning"
+description: "Manage, version, and deploy your Forest layout configurations across environments using branches."
 ---
 
-Every layout change you make in Forest Admin — column ordering, field visibility, segments, custom views — is versioned. This lets you iterate safely in development, test in staging, and promote to production without disrupting your operators.
+Every layout change you make in Forest — column ordering, field visibility, segments, custom views — is versioned. This lets you iterate safely in development, test in staging, and promote to production without disrupting your operators.
 
-## How Layout Versioning Works
+## How layout versioning works
 
-Your Forest Admin panel has two independently versioned parts:
+A Forest project has two independently versioned parts:
 
-- **Agent code** — your backend customizations, versioned with Git
-- **Layout** — your UI configuration (field visibility, columns, segments, forms…), versioned with Forest Admin branches
+- **Agent code** — your backend customizations (datasources, Smart Actions, computed fields, hooks). Versioned with Git.
+- **Layout** — your UI configuration (field visibility, columns, segments, forms, dashboards). Versioned with Forest branches.
 
 Branches are isolated copies of a layout. You create one, make changes, test them, then deploy when ready. The production layout is never touched until you explicitly deploy.
 
-## Environments and Layouts
+## Environments and layouts
 
 Each environment has its own layout:
 
 | Environment | Typical use |
-|-------------|-------------|
-| **Development** | Your personal branch — safe to experiment |
-| **Remote (staging)** | Test layout changes with your team before production |
-| **Production** | Live layout seen by all operators |
+| --- | --- |
+| Development | Your personal branch — safe to experiment |
+| Remote (staging) | Test layout changes with your team before production |
+| Production | Live layout seen by all operators |
 
 When you enter Layout Editor mode in your development environment, changes are saved to your current branch — not immediately deployed anywhere.
 
-## Working with Branches
+## Creating a branch
 
-### Creating a Branch
-
-A branch is created from an existing environment's layout. Use the Forest Admin CLI:
+A branch is created from an existing environment's layout. Use the Forest CLI:
 
 ```bash
 forest branch my-feature-layout --origin production
@@ -42,11 +40,11 @@ This creates a branch called `my-feature-layout` that starts from the production
 forest switch my-feature-layout
 ```
 
-### Making Layout Changes
+## Making layout changes
 
-With your branch active, open Forest Admin in your browser. Enter **Layout Editor** mode and make your changes — reorder columns, create segments, configure forms. All changes are saved automatically to your branch.
+With your branch active, open the Forest UI in your browser. Enter Layout Editor mode and make your changes — reorder columns, create segments, configure forms. All changes are saved automatically to your branch.
 
-### Comparing Layouts
+## Comparing layouts
 
 Before deploying, review what changed:
 
@@ -56,7 +54,7 @@ forest schema:diff
 
 This shows the difference between your branch and the target environment's layout.
 
-### Deploying Changes
+## Deploying changes
 
 To push your branch to a remote (staging) environment:
 
@@ -71,24 +69,22 @@ forest deploy
 ```
 
 <Warning>
-  Deploying overwrites the target environment's layout. Make sure to review your changes before deploying to production.
+  Deploying overwrites the target environment's layout. Review your changes with `forest schema:diff` before deploying to production.
 </Warning>
 
-## Rolling Back
+## Rolling back
 
-If a layout change causes issues in production, roll back by deploying a previous branch or reverting to the last known-good state.
-
-To reset an environment to match another environment's layout:
+If a layout change causes issues in production, roll back by deploying a previous branch or resetting the environment:
 
 ```bash
 forest environments:reset --environment staging --from production
 ```
 
-<Info>
+<Note>
   Layout rollbacks only affect the UI configuration — your agent code and database are not touched.
-</Info>
+</Note>
 
-## Team Collaboration
+## Team collaboration
 
 When multiple people work on the same project:
 
@@ -97,7 +93,7 @@ When multiple people work on the same project:
 - Changes are only visible to others after a push or deploy
 - The CLI `forest branch` command lists all active branches
 
-### Avoiding Conflicts
+## Avoiding conflicts
 
 Layout branches don't support merging — deploying one branch's changes overwrites the target. To collaborate safely:
 
@@ -105,9 +101,33 @@ Layout branches don't support merging — deploying one branch's changes overwri
 - Work on distinct parts of the layout to avoid overlap
 - Use short-lived branches and deploy frequently
 
-## Best Practices
+## Best practices
 
-- **Name branches descriptively** — `feature/add-order-segments` is clearer than `dev-branch-1`
-- **Keep branches short-lived** — the longer a branch lives, the more it diverges from production
-- **Test in a remote environment** before deploying to production
-- **Use `schema:diff`** to review all changes before each deploy
+<AccordionGroup>
+  <Accordion title="Name branches descriptively">
+    `feature/add-order-segments` is clearer than `dev-branch-1`. Use kebab-case.
+  </Accordion>
+  <Accordion title="Keep branches short-lived">
+    The longer a branch lives, the more it diverges from production and the harder it is to deploy cleanly.
+  </Accordion>
+  <Accordion title="Always test in a remote environment first">
+    Before deploying to production, push to staging and verify the layout renders as expected for at least one operator role.
+  </Accordion>
+  <Accordion title="Use schema:diff before each deploy">
+    Read every change before pushing. The diff is the last review gate before operators see the change.
+  </Accordion>
+</AccordionGroup>
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Development workflow" href="/guides/deployment/development-workflow">
+    The full branch → push → deploy flow.
+  </Card>
+  <Card title="Environments" href="/guides/deployment/environments">
+    Create and manage environments.
+  </Card>
+  <Card title="CLI reference" href="/reference/cli/overview">
+    All `forest` commands.
+  </Card>
+</CardGroup>

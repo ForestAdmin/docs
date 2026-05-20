@@ -1,13 +1,13 @@
 ---
 title: "Overview"
-description: "Load your data into Forest Admin and enrich it with additional sources"
+description: "Load your data into Forest and enrich it with additional sources"
 ---
 
-Forest Admin connects to your databases and external services to expose your data and make it actionable.
+Forest connects to your databases and external services to expose your data and make it actionable.
 
-## How data flows into Forest Admin
+## How data flows into Forest
 
-Forest Admin loads data through **datasources** — connections to your databases, APIs, or any system that holds data.
+Forest loads data through **datasources** — connections to your databases, APIs, or any system that holds data.
 
 <CodeGroup>
 ```javascript Node.js
@@ -23,7 +23,7 @@ agent.addDataSource(
   createMongooseDataSource(mongoConnection)
 );
 
-// Forest Admin automatically:
+// Forest automatically:
 // - Discovers all tables
 // - Detects column types
 // - Identifies relationships (foreign keys)
@@ -43,7 +43,7 @@ agent.add_datasource(
   Forestadmin::Datasource::Mongoid.new
 )
 
-# Forest Admin automatically:
+# Forest automatically:
 # - Discovers all tables
 # - Detects column types
 # - Identifies relationships (foreign keys)
@@ -51,26 +51,26 @@ agent.add_datasource(
 ```
 </CodeGroup>
 
-## Forest Admin datasources
+## Forest datasources
 
-Forest Admin loads data through **datasources** — connections to your databases, APIs, or any system that holds data. For some datasources, Forest Admin performs introspection to discover the schema automatically. For others (like ORM-based connections), the schema is already known from your model definitions.
+Forest loads data through **datasources** — connections to your databases, APIs, or any system that holds data. For some datasources, Forest performs introspection to discover the schema automatically. For others (like ORM-based connections), the schema is already known from your model definitions.
 
 **ORM-based connections** (Sequelize, Mongoose):
-- Forest Admin reads your ORM model definitions
+- Forest reads your ORM model definitions
 - Uses the schemas you've already defined in your application code
 - Detects relationships from model associations
 - No database introspection needed - everything comes from your models
 
 **Direct database connections** (SQL, MongoDB):
-- **SQL databases**: Forest Admin queries the database metadata (information_schema or system catalogs) to discover tables, columns, data types, constraints, foreign keys, and indexes
-- **MongoDB**: Forest Admin samples a subset of documents (default: 100 per collection) and analyzes them to infer the schema structure, including nested fields and references
+- **SQL databases**: Forest queries the database metadata (information_schema or system catalogs) to discover tables, columns, data types, constraints, foreign keys, and indexes
+- **MongoDB**: Forest samples a subset of documents (default: 100 per collection) and analyzes them to infer the schema structure, including nested fields and references
 
-**API-based connections** (REST, GraphQL): Forest Admin uses the API schema or a custom mapping to expose data.
+**API-based connections** (REST, GraphQL): Forest uses the API schema or a custom mapping to expose data.
 
-Once introspection is complete, Forest Admin automatically:
+Once introspection is complete, Forest automatically:
 
 1. **Discovers schema** - all tables/collections and their structure
-2. **Maps data types** - converts database types to Forest Admin types
+2. **Maps data types** - converts database types to Forest types
 3. **Detects relationships** - foreign keys or references become navigable relationships
 4. **Creates collections** - each table/collection becomes a collection in the UI
 5. **Enables CRUD operations** - browse, create, edit, delete records

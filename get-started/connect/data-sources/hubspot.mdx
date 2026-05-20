@@ -5,7 +5,7 @@ description: "Connect to Hubspot CRM data including contacts, companies, deals, 
 
 <Note>Only available for Node.js. This is a read-only datasource.</Note>
 
-The Hubspot datasource connects to your Hubspot CRM through the HubSpot API, allowing you to browse and search contacts, companies, deals, tickets, and other CRM objects in Forest Admin.
+The Hubspot datasource connects to your Hubspot CRM through the HubSpot API, allowing you to browse and search contacts, companies, deals, tickets, and other CRM objects in Forest.
 
 ## Basic usage
 
@@ -59,7 +59,7 @@ Default rate limits respect HubSpot API constraints:
 
 ### Custom object configuration
 
-Include custom HubSpot objects in your Forest Admin:
+Include custom HubSpot objects in your Forest:
 
 ```javascript
 createHubSpotDataSource({
@@ -112,11 +112,11 @@ The datasource supports filtering with these operators:
 
 ## Relationships
 
-The datasource attempts to map HubSpot associations to Forest Admin relationships:
+The datasource attempts to map HubSpot associations to Forest relationships:
 
 ```javascript
 // Example: Companies associated with Contacts
-// Automatically exposed as relationships in Forest Admin
+// Automatically exposed as relationships in Forest
 ```
 
 However, relationships are limited:
@@ -129,7 +129,7 @@ Browse large datasets with automatic pagination:
 
 - Default page size: 100 records
 - Maximum page size: 100 records (HubSpot API limit)
-- Automatic "Load More" in Forest Admin UI
+- Automatic "Load More" in Forest UI
 
 ## Rate limiting and performance
 

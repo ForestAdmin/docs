@@ -1,41 +1,37 @@
 ---
-title: Development Workflow
-description: "Use branches to develop and test layout changes before deploying to production"
+title: "Development workflow"
+description: "Use branches to develop and test layout changes before deploying to production."
 ---
 
-## Overview
+Forest separates your backend code (your agent) from your UI layout (what your team sees in the Forest UI). The two are versioned and deployed independently. The development workflow uses **branches** — copies of a layout — to make UI changes without affecting your production environment.
 
-Forest Admin separates your **backend code** (your agent) from your **UI layout** (what your team sees in the admin panel). This means you version and deploy them independently.
+## Concepts
 
-The development workflow uses **branches** — copies of a layout — to make UI changes without affecting your production environment.
+### What is a layout?
 
-## What is a layout?
+A layout is all the configuration that defines your operations UI: which fields are visible, how collections are organized, what actions are available, dashboard composition, segment definitions. There is **one layout per environment per team**.
 
-A **layout** is all the configuration that defines your user interface: which fields are visible, how collections are organized, what actions are available, etc. There is one layout per environment per team.
+### What is a branch?
 
-## What is a branch?
+A branch is a fork (copy) of the layout of the environment it's attached to. Branches can only be created in your **development environment**. Layout changes you make on the current branch using the Layout Editor are saved to the branch and don't affect its origin environment.
 
-A **branch** is a fork (copy) of the layout of the environment it is attached to. Branches can only be created in your Development environment.
-
-Any layout changes you make on your current branch using the Layout Editor are saved on that branch and do not affect its origin environment.
-
-<Info>
-  Branches are automatically rebased on their origin. If someone changes the production layout, your branch will automatically reflect those changes — you never need to rebase manually.
-</Info>
+Branches are automatically rebased on their origin. If someone changes the production layout while you're working on a branch, your branch will reflect those changes — no manual rebase needed.
 
 ## Creating a branch
 
-First, make sure you've set up your local Development environment with the CLI `init` command. Then create a branch:
+First, set up your local development environment with the CLI:
+
+```bash
+forest init
+```
+
+Then create a branch:
 
 ```bash
 forest branch my-branch --origin production
 ```
 
-This creates a branch named `my-branch` based on your production layout.
-
-<Info>
-  Use kebab-case for branch names. If you prefer spaces, wrap the name in quotes: `forest branch "my branch" --origin production`.
-</Info>
+This creates a branch named `my-branch` based on your production layout. Use kebab-case for branch names. If you prefer spaces, wrap the name in quotes: `forest branch "my branch" --origin production`.
 
 To switch to an existing branch:
 
@@ -51,48 +47,53 @@ A typical workflow looks like this:
 Development (branch) → Staging (push) → Production (deploy)
 ```
 
-### 1. Make layout changes locally
+<Steps>
+  <Step title="Make layout changes locally">
+    Create a branch, open Forest in your browser, and use the Layout Editor to make UI changes. All changes are saved in your branch's layout.
+  </Step>
+  <Step title="Test on staging — forest push">
+    When you're ready to test on a staging environment, push your branch:
 
-Create a branch, open your local Forest Admin, and use the Layout Editor to make UI changes. All changes are saved in your branch's layout.
+    ```bash
+    forest push
+    ```
 
-### 2. Test on staging: `forest push`
+    This moves your branch's layout changes to the remote environment set as your branch's origin (e.g., staging).
 
-When you're ready to test on a staging environment, push your branch:
+    <Warning>
+      Pushing your branch automatically deletes it locally. Make sure you're done with your changes before pushing.
+    </Warning>
+  </Step>
+  <Step title="Deploy to production — forest deploy">
+    Once validated on staging, deploy to production:
 
-```bash
-forest push
-```
+    ```bash
+    forest deploy
+    ```
 
-<Warning>
-  Pushing your branch will automatically **delete** it locally. Make sure you're done with your changes before pushing.
-</Warning>
+    Or click **Deploy to production** in the top banner of your staging environment.
 
-This moves your branch's layout changes to the remote environment set as the origin of your branch (e.g., staging).
-
-### 3. Deploy to production: `forest deploy`
-
-Once validated on staging, deploy to production:
-
-```bash
-forest deploy
-```
-
-Or click **"Deploy to production"** in the top banner of your staging environment.
-
-<Danger>
-  `forest deploy` is irreversible. Always deploy your **backend changes first**, then run `forest deploy`.
-</Danger>
+    <Warning>
+      `forest deploy` is irreversible. Always deploy your backend code changes first, then run `forest deploy`.
+    </Warning>
+  </Step>
+</Steps>
 
 ## Checking your current branch
 
-Your current branch and the number of layout changes are always visible in the top banner of your admin panel.
+Your current branch and the number of layout changes are always visible in the top banner of the Forest UI.
 
 ## Complex workflows
 
-For larger teams, create a multi-stage hierarchy: `dev → test → staging → preprod → production`. Use `forest environments:create` to create test environments for CI/CD pipelines:
+For larger teams, create a multi-stage hierarchy: `dev → test → staging → preprod → production`.
+
+Use `forest environments:create` to create test environments for CI/CD pipelines:
 
 ```bash
-forest environments:create --name 'pr-1930' -u 'https://pr-1930.my-app.com' --disableRoles
+forest environments:create \
+  --name 'pr-1930' \
+  -u 'https://pr-1930.my-app.com' \
+  --disableRoles
 ```
 
 To change the origin of a branch:
@@ -106,3 +107,17 @@ To reset a remote environment's layout:
 ```bash
 forest environments:reset
 ```
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Environments" href="/guides/deployment/environments">
+    Create and manage environments.
+  </Card>
+  <Card title="Production deployment" href="/guides/deployment/production">
+    Deploy your agent and create the production environment.
+  </Card>
+  <Card title="CLI reference" href="/reference/cli/overview">
+    All `forest` commands.
+  </Card>
+</CardGroup>

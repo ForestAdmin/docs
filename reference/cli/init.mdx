@@ -1,11 +1,11 @@
 ---
 title: forest init
-description: Set up your Forest Admin development environment in your current project directory
+description: Set up your Forest development environment in your current project directory
 ---
 
 # forest init
 
-Set up your development environment in your current project directory. This command configures your local Forest Admin environment, linking your codebase to a project on Forest Admin.
+Set up your development environment in your current project directory. This command configures your local Forest environment, linking your codebase to a project on Forest.
 
 ## Usage
 
@@ -24,14 +24,14 @@ forest init [options]
 `forest init` is an interactive wizard that:
 
 1. Authenticates you if you are not already logged in
-2. Selects the Forest Admin project to connect to
+2. Selects the Forest project to connect to
 3. Configures your local agent endpoint (host and port)
-4. Creates your **Development Environment** on Forest Admin
+4. Creates your **Development Environment** on Forest
 5. Optionally sets up your database connection
 6. Creates or updates your `.env` file with the required environment variables
 
 <Warning>
-`forest init` is not meant to create a new project from scratch. If you do not have an existing Forest Admin project yet, create one from the UI first.
+`forest init` is not meant to create a new project from scratch. If you do not have an existing Forest project yet, create one from the UI first.
 </Warning>
 
 <Info>
@@ -59,7 +59,7 @@ If your account has only one project, this step is skipped automatically.
 
 ### Endpoint configuration
 
-Forest Admin needs to know where your local agent is running to set up the Development Environment:
+Forest needs to know where your local agent is running to set up the Development Environment:
 
 ```
 ? Enter your local admin backend endpoint: (http://localhost:3310)
@@ -114,7 +114,7 @@ $ forest init
 Run [`forest login`](/reference/cli/login) first, or let `forest init` handle authentication interactively.
 
 **Project not found**
-Ensure your Forest Admin account has access to the project. Contact your project admin if needed.
+Ensure your Forest account has access to the project. Contact your project admin if needed.
 
 **Endpoint unreachable**
-Make sure your local agent is running before confirming the endpoint. Forest Admin will attempt to reach it during setup.
+Make sure your local agent is running before confirming the endpoint. Forest will attempt to reach it during setup.

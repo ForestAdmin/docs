@@ -1,15 +1,15 @@
 ---
 title: "Audit & Activity Logs"
-description: "Track and monitor all user actions in Forest Admin"
+description: "Track and monitor all user actions in Forest"
 ---
 
 ## Overview
 
-The Activity tab provides a comprehensive view of team activities within Forest Admin. Every action performed by users is tracked and logged with complete context for accountability and compliance.
+The Activity tab provides a comprehensive view of team activities within Forest. Every action performed by users is tracked and logged with complete context for accountability and compliance.
 
 ## What gets logged
 
-Forest Admin tracks all user activities across different areas:
+Forest tracks all user activities across different areas:
 
 | Category | Activities |
 |----------|-----------|
@@ -19,7 +19,7 @@ Forest Admin tracks all user activities across different areas:
 | **Workflows** | `triggerWorkflow` - Workflow initiated<br/>`completeWorkflowStep` - Step completed<br/>`selectWorkflowOption` - Option selected<br/>`reviseWorkflowStep` - Step revised<br/>`resumeWorkflow` - Workflow resumed<br/>`completeWorkflow` - Workflow finished<br/>`abortWorkflow` - Workflow aborted |
 | **Collaboration** | `createNote` - Note added<br/>`deleteNote` - Note removed<br/>`createMessage` - Message sent |
 
-For each action, the system logs the **user, targeted record(s), and timestamp**. Forest Admin tracks and stores these activities **without records' sensitive data** except the ID/primary key.
+For each action, the system logs the **user, targeted record(s), and timestamp**. Forest tracks and stores these activities **without records' sensitive data** except the ID/primary key.
 
 <Warning>
 **Known Limitation**: When collections share identical names with different capitalization (e.g., `myCollection` and `MyCollection`), activity tracking may incorrectly attribute actions between these collections.
@@ -29,7 +29,7 @@ For each action, the system logs the **user, targeted record(s), and timestamp**
 
 ### Global activity tab
 
-Access the Activity tab to see all team activities across your Forest Admin project. The logs show all actions with user information, affected records, and timestamps.
+Access the Activity tab to see all team activities across your Forest project. The logs show all actions with user information, affected records, and timestamps.
 
 ### Record-level activity
 
@@ -55,7 +55,7 @@ To export activity logs:
 You will receive download links via email shortly after the export request.
 
 <Info>
-**API Access**: Audit logs are also available programmatically through the Forest Admin API. See the [Activity Logs API reference](/reference/api/endpoints/activity-logs) for more information.
+**API Access**: Audit logs are also available programmatically through the Forest API. See the [Activity Logs API reference](/reference/api/endpoints/activity-logs) for more information.
 </Info>
 
 <Info>

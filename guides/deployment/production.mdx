@@ -1,17 +1,17 @@
 ---
 title: "Production Deployment"
-description: "Deploy Forest Admin to production"
+description: "Deploy Forest to production"
 ---
 
 ## Prerequisites
 
-- A working Forest Admin agent running locally or in staging
+- A working Forest agent running locally or in staging
 - A production server accessible via HTTPS
 - A production database
 
 ## Step 1: Deploy your agent to a server
 
-Before creating the production environment in Forest Admin, deploy your agent code to your production server. See the platform-specific guides:
+Before creating the production environment in Forest, deploy your agent code to your production server. See the platform-specific guides:
 
 <CardGroup cols={2}>
   <Card title="Deploy to AWS" icon="aws" href="/guides/deployment/platforms/aws">
@@ -37,9 +37,9 @@ RAILS_ENV=production  # Ruby
   Your agent must be accessible via **HTTPS**. The URL must not end with a trailing `/`.
 </Warning>
 
-## Step 2: Create the Production Environment in Forest Admin
+## Step 2: Create the Production Environment in Forest
 
-Click **"Deploy to production"** in the top banner of your Forest Admin project, or go to **Project Settings → Environments**.
+Click **"Deploy to production"** in the top banner of your Forest project, or go to **Project Settings → Environments**.
 
 ### Enter your agent URL
 
@@ -55,7 +55,7 @@ Follow the on-screen instructions to add the generated environment variables to 
 
 ## Step 3: Deploy layout changes
 
-Once your production environment is created, use the Forest Admin CLI to deploy your layout changes from development to production:
+Once your production environment is created, use the Forest CLI to deploy your layout changes from development to production:
 
 ```bash
 forest deploy
@@ -75,7 +75,7 @@ Before going live:
 
 - [ ] Agent deployed and accessible via HTTPS
 - [ ] `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` set on the server
-- [ ] Production environment created in Forest Admin UI
+- [ ] Production environment created in Forest UI
 - [ ] Health check returns 200: `curl https://your-agent.com/forest`
 - [ ] All collections visible in the UI
 - [ ] CRUD operations work correctly

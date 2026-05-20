@@ -3,7 +3,7 @@ title: "Mongoose datasource"
 description: "Connect to MongoDB using Mongoose ODM with flexible data transformation strategies"
 ---
 
-The Mongoose datasource connects to MongoDB through Mongoose models, automatically importing your collections into Forest Admin with support for nested objects, arrays, and relationships.
+The Mongoose datasource connects to MongoDB through Mongoose models, automatically importing your collections into Forest with support for nested objects, arrays, and relationships.
 
 <Warning>
 Mongoose datasource is only available for Node.js. For Ruby, check the [Mongoid datasource](/get-started/connect/data-sources/mongoid).
@@ -67,7 +67,7 @@ createMongooseDataSource(connection, {
 
 ### `flattenMode: 'none'`
 
-No transformations are made. Forest Admin collections use the exact same structure as your Mongoose models.
+No transformations are made. Forest collections use the exact same structure as your Mongoose models.
 
 ```javascript
 createMongooseDataSource(connection, {

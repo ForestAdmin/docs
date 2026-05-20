@@ -5,7 +5,7 @@ description: "Connect to PostgreSQL, MySQL, MariaDB, or SQL Server with automati
 
 <Note>This datasource is only available for Node.js agents.</Note>
 
-The SQL datasource connects directly to SQL databases with automatic schema introspection. Each database table or view maps to a Forest Admin collection - tables offer full read-write capabilities while views are read-only.
+The SQL datasource connects directly to SQL databases with automatic schema introspection. Each database table or view maps to a Forest collection - tables offer full read-write capabilities while views are read-only.
 
 ## Basic usage
 
@@ -188,7 +188,7 @@ createSqlDataSource({
 })
 ```
 
-This is useful when your application uses soft deletes (e.g., `deleted_at` column) and you want to manage deleted records in Forest Admin.
+This is useful when your application uses soft deletes (e.g., `deleted_at` column) and you want to manage deleted records in Forest.
 
 ## Caching introspection
 

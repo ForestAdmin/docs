@@ -7,7 +7,7 @@ Actions can return different types of results to provide feedback to users. Use 
 
 ## Default behavior
 
-If you don't return anything and no exception is thrown, Forest Admin displays a generic success notification.
+If you don't return anything and no exception is thrown, Forest displays a generic success notification.
 
 ```javascript
 execute: async (context, resultBuilder) => {
@@ -266,11 +266,11 @@ collection.add_action(
 
 ## Redirect
 
-Redirect users to another page after the action executes. Works for both internal Forest Admin pages and external URLs.
+Redirect users to another page after the action executes. Works for both internal Forest pages and external URLs.
 
 ### Internal redirect
 
-Redirect to another page within Forest Admin:
+Redirect to another page within Forest:
 
 <CodeGroup>
 ```javascript Node.js / Cloud
@@ -343,7 +343,7 @@ collection.add_action(
 Trigger an HTTP callback from the user's browser. Useful for logging into third-party applications or triggering operations on the user's behalf.
 
 <Warning>
-Webhooks are triggered from the user's browser and are subject to CORS restrictions. Make sure the target server accepts requests from Forest Admin domains.
+Webhooks are triggered from the user's browser and are subject to CORS restrictions. Make sure the target server accepts requests from Forest domains.
 </Warning>
 
 <CodeGroup>

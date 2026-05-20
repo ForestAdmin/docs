@@ -1,35 +1,136 @@
 ---
-title: Deployment Guide
+title: "Deployment"
+description: "Deploy your Forest agent to production and manage environments."
 ---
-> **Status:** TODO - Priority: MEDIUM
->
-> **Audience:** Developers & DevOps
 
-## Description
+Deploying Forest involves three things: deploying the agent code to a server, registering the production environment in Forest, and setting up a development workflow with branches and remote environments.
 
-Deploy Forest Admin agents to production infrastructure.
+## Start here
 
-## Content outline
+<CardGroup cols={2}>
+  <Card title="Production deployment" icon="rocket" href="/guides/deployment/production">
+    Deploy your agent to production and create the Forest production environment.
+  </Card>
+  <Card title="Development workflow" icon="code-branch" href="/guides/deployment/development-workflow">
+    Use branches to develop and test layout changes before deploying to production.
+  </Card>
+</CardGroup>
 
-1. **Deployment Overview**
-2. **Development Workflow**
-   - Local development
-   - Branches
-   - Environments (dev/staging/prod)
-3. **Deployment Options**
-   - AWS
-   - Heroku
-   - GCP
-   - Self-hosted (Ubuntu, Docker, etc.)
-4. **Best Practices**
-   - Environment variables
-   - Database connections
-   - HTTPS/SSL
-   - Monitoring
-5. **What's Next?**
+## Platforms
 
-## Sources to migrate
+<CardGroup cols={2}>
+  <Card title="AWS" icon="aws" href="/guides/deployment/platforms/aws">
+    Deploy to EC2 with an Application Load Balancer, ACM, and Route53. Step-by-step.
+  </Card>
+  <Card title="Heroku" icon="heroku" href="/guides/deployment/platforms/heroku">
+    Deploy with Heroku Git. SSL is automatic on `*.herokuapp.com`.
+  </Card>
+</CardGroup>
 
-- `developer-guide-agent-v2/sources/deployment/`
-- `documentation-agent-v1/how-tos/setup/deploy-*.md`
-- `documentation-agent-v1/reference-guide/how-it-works/developing-on-forest-admin/`
+<Note>
+  These two platforms are documented end-to-end. Forest agents are standard Node.js or Rails applications, so they deploy on any platform that supports those runtimes — GCP, Azure, DigitalOcean, Render, Fly.io, Railway, ECS, Kubernetes, your own VPS. The agent just needs to be HTTPS-accessible from `app.forestadmin.com`.
+</Note>
+
+## Environments
+
+<CardGroup cols={2}>
+  <Card title="Environments" icon="layer-group" href="/guides/deployment/environments">
+    Create and manage Development, Production, and Remote environments. Set hierarchies for staging → production layouts.
+  </Card>
+  <Card title="Architectures" icon="diagram-project" href="/get-started/connect/architectures/self-hosted">
+    Cloud (managed), Self-Hosted (most popular), and On-Premise (air-gapped) deployment architectures.
+  </Card>
+</CardGroup>
+
+## What you'll need
+
+| Requirement | Notes |
+| --- | --- |
+| HTTPS-accessible agent URL | Forest's UI talks to your agent over HTTPS. Localhost and HTTP are not allowed for production. |
+| Environment variables | `FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`. Plus `NODE_ENV=production` (Node) or `RAILS_ENV=production` (Ruby). |
+| `.forestadmin-schema.json` | Generated automatically in development. Must be committed and deployed for production environments. |
+| Forest CLI | Used to push layout changes between environments. See [CLI reference](/reference/cli/overview). |
+
+## Deployment workflow
+
+The full path from local development to production:
+
+<Steps>
+  <Step title="Develop locally">
+    Run your agent on `localhost:3310`. Connect to your Forest development environment. Use the Layout Editor in Forest to make UI changes — these are saved on a branch.
+  </Step>
+  <Step title="Deploy your agent code to production">
+    Push your code to your hosting platform ([AWS](/guides/deployment/platforms/aws), [Heroku](/guides/deployment/platforms/heroku), or your own infrastructure). The agent must be reachable via HTTPS.
+  </Step>
+  <Step title="Create the Forest production environment">
+    In Forest → Project Settings → Environments → Add. Enter your agent's URL. Set the environment variables Forest generates on your server.
+  </Step>
+  <Step title="Push layout changes to staging (optional)">
+    Run `forest push` to push your branch to a remote (staging) environment.
+  </Step>
+  <Step title="Deploy layout changes to production">
+    Run `forest deploy` (or click "Deploy to production" in the staging banner). Always deploy backend code first, then run `forest deploy`.
+  </Step>
+</Steps>
+
+<Warning>
+  `forest deploy` is irreversible. Always deploy your backend code changes (datasource configuration, Smart Actions, computed fields) **before** running `forest deploy`. The layout deployment expects the schema to match.
+</Warning>
+
+## Environment hierarchy
+
+Forest separates two concepts:
+
+- **Environments** — your local dev, staging, production. Each has its own database, agent URL, and `FOREST_ENV_SECRET`.
+- **Branches** — layout changes in progress on top of an environment. Branches only exist in development; they're pushed to a remote environment with `forest push` and deployed with `forest deploy`.
+
+A typical hierarchy:
+
+```
+development → staging → production
+```
+
+For larger teams: `development → test → staging → preprod → production`. See [Environments](/guides/deployment/environments).
+
+## Pre-launch checklist
+
+<AccordionGroup>
+  <Accordion title="Agent deployed and HTTPS-accessible">
+    Your agent's URL must respond on HTTPS, with no trailing slash. Test with `curl https://your-agent.com/forest` — should return Forest metadata.
+  </Accordion>
+  <Accordion title="Environment variables set">
+    `FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`, plus `NODE_ENV=production` or `RAILS_ENV=production`. All set on the production server.
+  </Accordion>
+  <Accordion title="Schema file committed">
+    `.forestadmin-schema.json` is generated in development on agent startup. Commit it to version control and deploy with your code.
+  </Accordion>
+  <Accordion title="Production environment created in Forest">
+    Project Settings → Environments → "Add a new environment". Enter the agent URL.
+  </Accordion>
+  <Accordion title="CRUD operations verified in production">
+    Browse a collection. Open a record. Edit a field. Confirm the change persists. If anything fails, check agent logs and database connectivity.
+  </Accordion>
+  <Accordion title="Smart Actions tested">
+    For each Smart Action, run it against a non-destructive test record and confirm the expected outcome.
+  </Accordion>
+  <Accordion title="Permissions configured">
+    Project Settings → Roles. Confirm each role has the right access to collections, fields, and actions before exposing the back-office to your team.
+  </Accordion>
+</AccordionGroup>
+
+## Best practices
+
+<CardGroup cols={2}>
+  <Card title="Performance" href="/guides/best-practices/performance">
+    Query optimization, caching, pagination, and load patterns.
+  </Card>
+  <Card title="Security" href="/guides/best-practices/security">
+    Authentication, IP whitelisting, audit logging, encryption, compliance.
+  </Card>
+  <Card title="Layout maintenance" href="/guides/best-practices/layout-maintenance">
+    Keep your layout configuration manageable as your project grows.
+  </Card>
+  <Card title="Troubleshooting" href="/guides/best-practices/troubleshooting">
+    Common issues and how to debug them.
+  </Card>
+</CardGroup>

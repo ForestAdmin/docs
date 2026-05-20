@@ -2,21 +2,21 @@
 title: Environments & branches
 ---
 
-One of the goals of Forest Admin is enabling technical teams to achieve more in less time. Your Forest Admin back-office is composed of 2 parts — the frontend (UI) and the backend — and for each one, you need the right tools:
+One of the goals of Forest is enabling technical teams to achieve more in less time. Your Forest back-office is composed of 2 parts — the frontend (UI) and the backend — and for each one, you need the right tools:
 
 The **Admin backend** is part of your codebase. You'll be using your favorite tools to customize it:
 - Editing: your favorite IDE
 - Versioning: your favorite versioning tool (git, svn, mercurial, etc.)
 
-Your **Forest Admin UI** is **not** part of your codebase: it is managed on Forest Admin servers. Here's what we've built for you:
+Your **Forest UI** is **not** part of your codebase: it is managed on Forest servers. Here's what we've built for you:
 - Editing: use the Layout Editor mode to intuitively manage your layout (UI)
-- Versioning: use [Forest Admin CLI](/reference/cli/overview) to manage your layout versions
+- Versioning: use [Forest CLI](/reference/cli/overview) to manage your layout versions
 
 ## Environments
 
 ### Deploying to production
 
-Forest Admin is meant to help you manage your operations: this can only happen if your team operates on your Production data. To do so, you need to **create your Production Environment**.
+Forest is meant to help you manage your operations: this can only happen if your team operates on your Production data. To do so, you need to **create your Production Environment**.
 
 Click "Deploy to production" on the top banner or in the "Environments" tab of your Project settings.
 
@@ -42,7 +42,7 @@ The final step requires that you add environment variables to your server. Follo
 
 ### Creating a remote environment
 
-Now that your back-office is live in production, you might want to add an extra step for testing purposes. Forest Admin lets you create Remote Environments (for test, qa, staging, pre-production, etc.).
+Now that your back-office is live in production, you might want to add an extra step for testing purposes. Forest lets you create Remote Environments (for test, qa, staging, pre-production, etc.).
 
 To create a new Remote Environment, go to your Project settings, then from the "Environments" tab, click on "Add a new environment".
 
@@ -76,9 +76,9 @@ You may also delete an Environment. **Be very careful** as there is no going bac
 
 ### What is a layout?
 
-A **layout** is all the configuration that **defines your user interface (UI)**. In Forest Admin, there is 1 layout per environment and per team.
+A **layout** is all the configuration that **defines your user interface (UI)**. In Forest, there is 1 layout per environment and per team.
 
-The [Forest Admin CLI](/reference/cli/overview) will help you manage layouts across environments.
+The [Forest CLI](/reference/cli/overview) will help you manage layouts across environments.
 
 ### What is a branch?
 
@@ -102,7 +102,7 @@ Any **layout change** you make on your current Branch using the Layout Editor wi
 
 ### How do you create a branch?
 
-To create a branch, use [Forest Admin CLI](/reference/cli/overview). Make sure you've created your local Development Environment using the `init` command. Then, to create a Branch named `my-branch` based on your `production` Environment:
+To create a branch, use [Forest CLI](/reference/cli/overview). Make sure you've created your local Development Environment using the `init` command. Then, to create a Branch named `my-branch` based on your `production` Environment:
 
 ```
 forest branch my-branch --origin production

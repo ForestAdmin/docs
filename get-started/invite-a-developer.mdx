@@ -3,7 +3,7 @@ title: "Invite a developer"
 description: "Onboard a new developer onto the project with their own development environment"
 ---
 
-When a new developer joins the project, they need their own local environment connected to Forest Admin. This keeps their work isolated from production while they develop.
+When a new developer joins the project, they need their own local environment connected to Forest. This keeps their work isolated from production while they develop.
 
 ## Invite them to the project
 
@@ -24,7 +24,7 @@ npm install
 
 Each developer works in their own environment, which has its own `FOREST_ENV_SECRET`.
 
-1. In Forest Admin, go to **Project Settings** → **Environments**
+1. In Forest, go to **Project Settings** → **Environments**
 2. Click **Add environment** → **Development**
 3. Give it a name (e.g. "Alice's dev")
 4. Copy the generated `FOREST_ENV_SECRET`
@@ -43,7 +43,7 @@ DATABASE_URL=<their-local-or-staging-db>
 npm start
 ```
 
-Their local agent is now connected to their own Forest Admin environment, isolated from production.
+Their local agent is now connected to their own Forest environment, isolated from production.
 
 ## Work with branches
 
@@ -59,7 +59,7 @@ When the changes are ready, they push the branch:
 forest push
 ```
 
-An Admin can then review and deploy the branch to production from the Forest Admin UI.
+An Admin can then review and deploy the branch to production from the Forest UI.
 
 <Info>
 For a full explanation of the branch and deploy workflow, see [Developer Workflow](/product/process/advanced-concepts/developer-workflow/environments-and-branches).
@@ -67,6 +67,6 @@ For a full explanation of the branch and deploy workflow, see [Developer Workflo
 
 ---
 
-You're all set. Your panel is live, your team has access, and your development workflow is in place.
+You're all set. Your back-office is live, your team has access, and your development workflow is in place.
 
 **Explore [Product](/product/overview)** to go deeper on any feature — Connect, Build, Customize, Control, and more.

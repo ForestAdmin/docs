@@ -1,44 +1,44 @@
 ---
 title: "SCIM Integration with Okta"
-description: "Automate user management by integrating Okta's SCIM provisioning with Forest Admin"
+description: "Automate user management by integrating Okta's SCIM provisioning with Forest"
 ---
 
 <Info>
-This feature may not be available on all plans. You need administrator access to the Forest Admin project. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
+This feature may not be available on all plans. You need administrator access to the Forest project. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it.
 </Info>
 
 ## Supported Features
 
 The Okta SCIM integration enables:
-- User provisioning from Okta to Forest Admin
+- User provisioning from Okta to Forest
 - Updating user roles, permission levels, and tags
-- Deleting users when removed from the Forest Admin app in Okta
+- Deleting users when removed from the Forest app in Okta
 - SCIM Groups for team assignment
 - Read-only `userName` (email format) and name fields post-creation
 
 ## Setup Process
 
-### Step 1: Add Forest Admin App
+### Step 1: Add Forest App
 
-Navigate to Okta Applications tab, browse the app catalog, and select Forest Admin. Assign a descriptive label.
+Navigate to Okta Applications tab, browse the app catalog, and select Forest. Assign a descriptive label.
 
 ### Step 2: Authenticate Okta
 
-Enable the User provisioning feature in Forest Admin project settings. This generates an API token to paste into Okta's Integration tab.
+Enable the User provisioning feature in Forest project settings. This generates an API token to paste into Okta's Integration tab.
 
 ### Step 3: Configure Mapping Rules
 
-Create rules for mandatory fields: `teams`, `role`, `permissionLevel`, and optional `tags`. Values must match existing Forest Admin configurations. Ensure mapping direction flows from Okta to Forest Admin.
+Create rules for mandatory fields: `teams`, `role`, `permissionLevel`, and optional `tags`. Values must match existing Forest configurations. Ensure mapping direction flows from Okta to Forest.
 
 **Required Parameters:**
 - `permissionLevel`: Must be `admin`, `editor`, `user`, or `developer`
-- `role`: Must match existing Forest Admin roles
+- `role`: Must match existing Forest roles
 - `teams`: Team names for user assignment
 - `tags`: Optional key/value pairs for user tagging
 
 ### Step 4: Manage Groups
 
-In Okta's Directory section, create groups matching Forest Admin teams. Use the "Push groups" tab to link Okta groups with Forest Admin teams. Optionally disable group renaming to prevent Okta from overwriting team names.
+In Okta's Directory section, create groups matching Forest teams. Use the "Push groups" tab to link Okta groups with Forest teams. Optionally disable group renaming to prevent Okta from overwriting team names.
 
 ## Custom Attributes
 
@@ -47,6 +47,6 @@ Add custom user attributes via Directory > Profile Editor for enhanced mapping f
 ## Troubleshooting
 
 - Verify `permissionLevel` values: admin, editor, user, or developer
-- Confirm `role` matches existing Forest Admin roles
+- Confirm `role` matches existing Forest roles
 - Allow time for synchronization
 - Note that team updates may trigger agent restarts

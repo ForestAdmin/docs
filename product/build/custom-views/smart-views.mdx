@@ -3,11 +3,11 @@ title: Smart views
 description: Build fully custom collection views using JavaScript, HTML, and CSS — beyond what the table layout offers.
 ---
 
-Smart Views let you replace the default table view with any UI you can code. Display orders on a map, events in a calendar, pictures in a gallery — all powered by your real data and integrated with Forest Admin actions.
+Smart Views let you replace the default table view with any UI you can code. Display orders on a map, events in a calendar, pictures in a gallery — all powered by your real data and integrated with Forest actions.
 
 ## What is a smart view?
 
-A Smart View is a [Glimmer Component](https://api.emberjs.com/ember/3.28/modules/@glimmer%2Fcomponent) composed of three files: a JavaScript component, an HTML/Handlebars template, and a CSS stylesheet. Forest Admin hosts and runs this code directly in your back-office.
+A Smart View is a [Glimmer Component](https://api.emberjs.com/ember/3.28/modules/@glimmer%2Fcomponent) composed of three files: a JavaScript component, an HTML/Handlebars template, and a CSS stylesheet. Forest hosts and runs this code directly in your back-office.
 
 <Info>
   You don't need to know Ember.js to write a Smart View. The examples below cover all the patterns you'll need. For advanced use, refer to the [Glimmer Component](https://api.emberjs.com/ember/3.28/modules/@glimmer%2Fcomponent) and [Handlebars Template](https://guides.emberjs.com/v3.28.0/components/) documentation.
@@ -19,11 +19,11 @@ A Smart View is a [Glimmer Component](https://api.emberjs.com/ember/3.28/modules
 
 ## Creating a smart view
 
-Forest Admin provides an online editor to write your Smart View code. Access it from the collection's **Settings**, then the **Smart Views** tab.
+Forest provides an online editor to write your Smart View code. Access it from the collection's **Settings**, then the **Smart Views** tab.
 
 ## Available properties
 
-Forest Admin automatically injects the following properties into your Smart View:
+Forest automatically injects the following properties into your Smart View:
 
 | Property        | Type    | Description                                           |
 | --------------- | ------- | ----------------------------------------------------- |
@@ -36,7 +36,7 @@ Forest Admin automatically injects the following properties into your Smart View
 
 ## Available actions
 
-Forest Admin also injects the following actions:
+Forest also injects the following actions:
 
 | Action                                               | Description                                                          |
 | ---------------------------------------------------- | -------------------------------------------------------------------- |
@@ -66,7 +66,7 @@ Access field values using the `forest-` prefix before the field name:
 
 ### Accessing belongsTo relationships
 
-Accessing a `belongsTo` relationship works the same as a field. Forest Admin automatically fetches the related data via API when needed:
+Accessing a `belongsTo` relationship works the same as a field. Forest automatically fetches the related data via API when needed:
 
 ```handlebars
 {{#each @records as |record|}}

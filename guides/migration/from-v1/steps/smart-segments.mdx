@@ -18,7 +18,7 @@ Because the new agent is designed to work with multiple databases, the return va
 
 ## Performance tip
 
-Many queries map directly to Forest Admin condition trees, giving much better performance than performing the query yourself and then building a naive `id IN (...)` condition.
+Many queries map directly to Forest condition trees, giving much better performance than performing the query yourself and then building a naive `id IN (...)` condition.
 
 ## Example
 
@@ -106,43 +106,6 @@ Many queries map directly to Forest Admin condition trees, giving much better pe
         }
       end
     end
-    ```
-  </Tab>
-  <Tab title="Before (Python)">
-    ```python
-    class ProductsForest(Collection):
-        def load(self):
-            self.segments = [{
-                "name": "best_sellers",
-                "where": self.get_best_sellers
-            }]
-
-        def get_best_sellers(self):
-            products = Product.objects.raw("""
-                SELECT products.id, COUNT(orders.*)
-                FROM products
-                JOIN orders ON orders.product_id = products.id
-                GROUP BY products.id
-                ORDER BY count DESC
-                LIMIT 5;""")
-            return Q(id__in=[p.id for p in products])
-    ```
-  </Tab>
-  <Tab title="After (Python)">
-    ```python
-    def best_sellers_segment_handler(context: CollectionCustomizationContext):
-        products = Product.objects.raw("""
-            SELECT products.id, COUNT(orders.*)
-            FROM products
-            JOIN orders ON orders.product_id = products.id
-            GROUP BY products.id
-            ORDER BY count DESC
-            LIMIT 5;""")
-        return ConditionTreeLeaf("id", "in", [p.id for p in products])
-
-    agent.customize_collection("Products").add_segment(
-        "best_sellers", best_sellers_segment_handler
-    )
     ```
   </Tab>
 </Tabs>

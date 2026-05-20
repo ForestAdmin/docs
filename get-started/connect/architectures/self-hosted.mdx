@@ -1,9 +1,9 @@
 ---
 title: "Self-hosted architecture"
-description: "Deploy Forest Admin agent in your infrastructure while Forest Admin hosts the UI - the most popular deployment option"
+description: "Deploy Forest agent in your infrastructure while Forest hosts the UI - the most popular deployment option"
 ---
 
-The self-hosted architecture gives you full control over your data and code by hosting the Forest Admin agent in your own infrastructure. This is the **most popular deployment option** for production applications.
+The self-hosted architecture gives you full control over your data and code by hosting the Forest agent in your own infrastructure. This is the **most popular deployment option** for production applications.
 
 ## Architecture overview
 
@@ -11,8 +11,8 @@ The self-hosted architecture gives you full control over your data and code by h
 
 ### How it works
 
-1. **Your users** access the Forest Admin UI hosted at `app.forestadmin.com`
-2. **Forest Admin UI** makes API calls to your agent
+1. **Your users** access the Forest UI hosted at `app.forestadmin.com`
+2. **Forest UI** makes API calls to your agent
 3. **Your agent** runs in your infrastructure (AWS, GCP, Heroku, etc.)
 4. **Your agent** queries your database directly
 5. **All data** stays within your infrastructure
@@ -25,27 +25,27 @@ The self-hosted architecture gives you full control over your data and code by h
 
 | Component | Hosted by | Location | Responsibilities |
 |-----------|-----------|----------|------------------|
-| **Your Agent** | You | Your infrastructure | • Runs in Node.js or Ruby<br/>• Direct access to your database<br/>• Executes business logic (Smart Actions, Fields, Hooks)<br/>• Handles authentication and authorization<br/>• Exposes REST API for Forest Admin UI |
-| **Forest Admin UI** | Forest Admin | `app.forestadmin.com` | • Back-office interface for your users<br/>• Communicates with your agent via HTTPS<br/>• Receives only schema metadata (no data)<br/>• Managed and updated by Forest Admin |
-| **Your Database** | You | Your infrastructure | • PostgreSQL, MySQL, MongoDB, etc.<br/>• Only accessible to your agent<br/>• No direct connection from Forest Admin<br/>• Your data never leaves your infrastructure |
+| **Your Agent** | You | Your infrastructure | • Runs in Node.js or Ruby<br/>• Direct access to your database<br/>• Executes business logic (Smart Actions, Fields, Hooks)<br/>• Handles authentication and authorization<br/>• Exposes REST API for Forest UI |
+| **Forest UI** | Forest | `app.forestadmin.com` | • Back-office interface for your users<br/>• Communicates with your agent via HTTPS<br/>• Receives only schema metadata (no data)<br/>• Managed and updated by Forest |
+| **Your Database** | You | Your infrastructure | • PostgreSQL, MySQL, MongoDB, etc.<br/>• Only accessible to your agent<br/>• No direct connection from Forest<br/>• Your data never leaves your infrastructure |
 
 ## Agent deployment
 
-You can deploy the Forest Admin agent in two ways, depending on your application architecture:
+You can deploy the Forest agent in two ways, depending on your application architecture:
 
 ### In-app deployment
 
-With in-app deployment, the Forest Admin agent becomes part of your existing application. It runs in the same Node.js or Ruby process, sharing the same database connection pool and resources. When you deploy your application, the agent deploys with it as a single unit.
+With in-app deployment, the Forest agent becomes part of your existing application. It runs in the same Node.js or Ruby process, sharing the same database connection pool and resources. When you deploy your application, the agent deploys with it as a single unit.
 
-This approach is particularly valuable when you want to leverage your existing ORM models. Whether you're using Sequelize, Mongoose, or ActiveRecord, Forest Admin can read directly from your model definitions—no need to redefine your schema. You can also reuse your existing business logic, sharing code, services, and utilities between your application and Forest Admin without duplication.
+This approach is particularly valuable when you want to leverage your existing ORM models. Whether you're using Sequelize, Mongoose, or ActiveRecord, Forest can read directly from your model definitions—no need to redefine your schema. You can also reuse your existing business logic, sharing code, services, and utilities between your application and Forest without duplication.
 
 <img src="/assets/deployment-in-app.svg" alt="In-app Deployment Architecture" />
 
 ### Standalone deployment
 
-Standalone deployment runs the Forest Admin agent as a completely separate service. It operates in its own process or container with dedicated resources and its own database connection pool. Your application and the back-office are deployed and scaled independently.
+Standalone deployment runs the Forest agent as a completely separate service. It operates in its own process or container with dedicated resources and its own database connection pool. Your application and the back-office are deployed and scaled independently.
 
-This architecture provides a cleaner separation of concerns. Your application code stays focused on your business logic, while Forest Admin responsibilities are isolated in their own service. The two services communicate through well-defined boundaries, making your overall system architecture simpler to understand and maintain. This is particularly beneficial as your team grows—developers working on the application don't need to think about back-office concerns, and vice versa.
+This architecture provides a cleaner separation of concerns. Your application code stays focused on your business logic, while Forest responsibilities are isolated in their own service. The two services communicate through well-defined boundaries, making your overall system architecture simpler to understand and maintain. This is particularly beneficial as your team grows—developers working on the application don't need to think about back-office concerns, and vice versa.
 
 <Info>
 **Note**: Standalone deployment is currently available for Node.js only. If you need standalone deployment with Ruby, please [contact our sales team](https://www.forestadmin.com/contact).
@@ -59,7 +59,7 @@ This architecture provides a cleaner separation of concerns. Your application co
 
 ## Privacy by design
 
-The self-hosted architecture is built with privacy as a core principle. Here's how data flows when a user accesses Forest Admin:
+The self-hosted architecture is built with privacy as a core principle. Here's how data flows when a user accesses Forest:
 
 ```mermaid
 sequenceDiagram
@@ -77,9 +77,9 @@ sequenceDiagram
     end
 
     %% Séquence
-    user->>browser: Open Forest Admin
+    user->>browser: Open Forest
     browser->>app: Load UI
-    app-->>browser: Forest Admin UI
+    app-->>browser: Forest UI
 
     browser->>api: Get project config
     api-->>browser: Config & schema metadata
@@ -96,7 +96,7 @@ sequenceDiagram
 
     browser-->>user: Display data
 
-    Note over db,api: Your data NEVER goes to Forest Admin servers
+    Note over db,api: Your data NEVER goes to Forest servers
 ```
 
-**The key principle:** Forest Admin's servers (`app.forestadmin.com`, `api.forestadmin.com`) only send configuration and UI code to your browser. All data requests go directly from your browser to your agent behind your firewall, and your data never leaves your infrastructure.
+**The key principle:** Forest's servers (`app.forestadmin.com`, `api.forestadmin.com`) only send configuration and UI code to your browser. All data requests go directly from your browser to your agent behind your firewall, and your data never leaves your infrastructure.

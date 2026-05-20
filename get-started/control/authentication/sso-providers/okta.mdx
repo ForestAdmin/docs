@@ -4,7 +4,7 @@ description: "Configure SSO with Okta"
 ---
 
 <Info>
-  Requires the [Forest Admin Enterprise plan](https://www.forestadmin.com/pricing).
+  Requires the [Forest Enterprise plan](https://www.forestadmin.com/pricing).
 </Info>
 
 ## Configuration
@@ -23,9 +23,9 @@ description: "Configure SSO with Okta"
 | Relay State (optional) | `{"organizationName": "YourOrganizationName", "destinationUrl": "organization.projects"}` |
 
 4. Go to the **Sign On** tab → **Metadata details** and copy the **Metadata URL**
-5. In Forest Admin Organization settings, select **XML file endpoint** and paste the Metadata URL
+5. In Forest Organization settings, select **XML file endpoint** and paste the Metadata URL
 
 ## Troubleshooting
 
 - Double-check all endpoints and certificate expiration dates
-- Ensure `Name ID format` is set to **EmailAddress** and matches the email used on Forest Admin accounts
+- Ensure `Name ID format` is set to **EmailAddress** and matches the email used on Forest accounts

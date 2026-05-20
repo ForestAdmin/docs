@@ -1,9 +1,9 @@
 ---
 title: Deploy to Heroku
-description: "Step-by-step guide to deploy the Forest Admin agent to Heroku"
+description: "Step-by-step guide to deploy the Forest agent to Heroku"
 ---
 
-This guide walks you through deploying your Forest Admin agent to Heroku using Heroku Git.
+This guide walks you through deploying your Forest agent to Heroku using Heroku Git.
 
 ## Prerequisites
 
@@ -35,15 +35,15 @@ In your Heroku app's **Settings → Config Vars**, add:
 
 | Variable | Value |
 |---|---|
-| `FOREST_ENV_SECRET` | Your Forest Admin production env secret |
-| `FOREST_AUTH_SECRET` | Your Forest Admin auth secret |
+| `FOREST_ENV_SECRET` | Your Forest production env secret |
+| `FOREST_AUTH_SECRET` | Your Forest auth secret |
 | `DATABASE_URL` | Your production database connection string |
 | `NODE_ENV` | `production` (Node.js) |
 
 ## Next step
 
-Once your agent is deployed and accessible via HTTPS (Heroku provides SSL automatically on `*.herokuapp.com`), go back to Forest Admin and [create your production environment](/guides/deployment/production#step-2-create-the-production-environment-in-forest-admin).
+Once your agent is deployed and accessible via HTTPS (Heroku provides SSL automatically on `*.herokuapp.com`), go back to Forest and [create your production environment](/guides/deployment/production#step-2-create-the-production-environment-in-forest-admin).
 
 <Warning>
-  Deploying to Heroku does not automatically set up your Forest Admin production environment. You still need to configure it in the Forest Admin UI.
+  Deploying to Heroku does not automatically set up your Forest production environment. You still need to configure it in the Forest UI.
 </Warning>

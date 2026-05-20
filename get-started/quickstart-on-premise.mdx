@@ -1,11 +1,11 @@
 ---
 title: "Quickstart: On-Premise"
-description: "Deploy Forest Admin in a fully air-gapped environment"
+description: "Deploy Forest in a fully air-gapped environment"
 ---
 
 ## On-Premise Deployment
 
-On-Premise deployment provides complete control and isolation by running all Forest Admin components (agent, backend, and UI) within your infrastructure.
+On-Premise deployment provides complete control and isolation by running all Forest components (agent, backend, and UI) within your infrastructure.
 
 **Architecture:**
 
@@ -14,9 +14,9 @@ On-Premise deployment provides complete control and isolation by running all For
 graph TD
     subgraph Your_Infrastructure["🏢 Fully hosted on your servers (Air-gapped)"]
         DB["💾 Your Database<br/>(SQL, NoSQL, APIs)"]
-        Agent["⚙️ Forest Admin Agent<br/>(Node.js or Ruby)"]
-        UI["🌐 Forest Admin UI<br/>(Self-hosted)"]
-        Servers["🖥️ Forest Admin Backend<br/>(Self-hosted)"]
+        Agent["⚙️ Forest Agent<br/>(Node.js or Ruby)"]
+        UI["🌐 Forest UI<br/>(Self-hosted)"]
+        Servers["🖥️ Forest Backend<br/>(Self-hosted)"]
 
         DB -->|Direct access| Agent
         Agent --> Servers
@@ -39,7 +39,7 @@ On-Premise deployment is an **enterprise feature** that requires:
 - Full infrastructure management on your side
 
 <Warning>
-**Not available for self-service installation.** On-Premise deployment requires coordination with Forest Admin's team to ensure proper setup and licensing.
+**Not available for self-service installation.** On-Premise deployment requires coordination with Forest's team to ensure proper setup and licensing.
 </Warning>
 
 ## What You Get
@@ -54,7 +54,7 @@ With On-Premise deployment:
 
 ## Next Steps
 
-To deploy Forest Admin On-Premise:
+To deploy Forest On-Premise:
 
 <Card
   title="Book a Demo"

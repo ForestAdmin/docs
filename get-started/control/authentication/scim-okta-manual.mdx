@@ -1,6 +1,6 @@
 ---
 title: "Manual SCIM Integration with Okta"
-description: "Manually configure Okta's SCIM provisioning with Forest Admin using the SCIMForest 2.0 Test App"
+description: "Manually configure Okta's SCIM provisioning with Forest using the SCIMForest 2.0 Test App"
 ---
 
 <Info>
@@ -8,26 +8,26 @@ This feature may not be available on all plans. Check the [pricing page](https:/
 </Info>
 
 <Warning>
-Enabling SCIM disables Forest Admin user editing. All user management must be done through Okta.
+Enabling SCIM disables Forest user editing. All user management must be done through Okta.
 </Warning>
 
 ## Supported Features
 
 The manual Okta SCIM integration enables:
-- User provisioning from Okta to Forest Admin
+- User provisioning from Okta to Forest
 - Updating user role, permission level, and tags
 - User deletion when removed from the Okta app
 - Team assignment via groups
 
 ## Setup Steps
 
-### 1. Add Forest Admin App
+### 1. Add Forest App
 
-Navigate to Applications > Browse App Catalog, then select "SCIMForest 2.0 Test App (Header Auth)". Name the application, keeping in mind each app links to one Forest Admin project.
+Navigate to Applications > Browse App Catalog, then select "SCIMForest 2.0 Test App (Header Auth)". Name the application, keeping in mind each app links to one Forest project.
 
 ### 2. Authentication
 
-Generate a provisioning token in Forest Admin project settings. In Okta's Integration tab, enter the token prefixed with "Bearer" (format: "Bearer [token]").
+Generate a provisioning token in Forest project settings. In Okta's Integration tab, enter the token prefixed with "Bearer" (format: "Bearer [token]").
 
 ### 3. Configuration
 
@@ -47,8 +47,8 @@ In Profile Editor, set external namespace to `urn:ietf:params:scim:schemas:exten
 
 ### 6. Mapping Rules
 
-Create rules directing Okta to Forest Admin for automatic `role`, `permissionLevel`, and `tags` assignment.
+Create rules directing Okta to Forest for automatic `role`, `permissionLevel`, and `tags` assignment.
 
 ### 7. Group Management
 
-Configure Directory groups for team mapping, then use "Push Groups" to link Okta groups with Forest Admin teams. Optional: disable automatic team renaming in app settings.
+Configure Directory groups for team mapping, then use "Push Groups" to link Okta groups with Forest teams. Optional: disable automatic team renaming in app settings.

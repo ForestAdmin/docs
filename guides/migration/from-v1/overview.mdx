@@ -1,65 +1,143 @@
 ---
-title: Migrating from Agent v1 to v2
+title: "Migrating from Agent v1 to v2"
+description: "Complete guide to moving your setup from a legacy agent to the current generation."
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers (v1 users)
 
-## Description
+This guide covers migrating from any v1 agent (`forest-express-sequelize`, `forest-express-mongoose`, `forest-rails`, `django-forestadmin` v1) to the current generation.
 
-Complete guide to migrating your Forest Admin setup from Agent v1 to Agent v2.
+The migration unlocks workflows, the MCP server for AI agents, multi-datasource, decision traces, and everything Forest has shipped since the original admin-panel era. Most teams complete the migration in 1-2 days with zero downtime.
 
-## Sources to migrate
+## What v2 changes
 
-- `developer-guide-agent-v2/sources/migration/`
-- Migration guides across repos
+The new generation is a rebuilt agent with a cleaner, more composable customization API. The biggest changes you'll see during migration:
 
-## Content outline
+- **Multi-datasource is native.** A single agent can connect to multiple databases and APIs.
+- **Customization happens via a fluent API on collections.** `agent.customizeCollection('users', users => users.addField(...))`.
+- **Computed fields declare their dependencies explicitly.** `dependencies: ['firstName', 'lastName']`.
+- **Relationships are first-class.** Many-to-one, one-to-many, many-to-many, and external relations replace most legacy "smart relationships".
+- **Routes are no longer overridden directly.** Most v1 route overrides become hooks or computed fields.
 
-1. **Migration Overview**
-   - Why migrate to v2
-   - Breaking changes
-   - Benefits of v2
-   - Migration timeline
+## Before you start
 
-2. **Before You Start**
-   - Prerequisites
-   - Backup checklist
-   - Testing environment setup
-   - Rollback plan
+<Steps>
+  <Step title="Inventory your customizations">
+    List every Smart Action, Smart Field, Smart Relationship, Smart Segment, and route override in your current project. Each step page below covers one of these surfaces.
+  </Step>
+  <Step title="Set up a test environment">
+    Create a Remote test environment in Forest (Project Settings → Environments → Add). The new agent will run there before you flip production.
+  </Step>
+  <Step title="Back up your project">
+    Export your current Forest project layout. While the layout is preserved across the agent swap, having a baseline is good practice.
+  </Step>
+  <Step title="Plan parallel running">
+    Both agents can run side by side during migration — see [Migration overview](/guides/migration/overview#run-v1-and-v2-in-parallel).
+  </Step>
+</Steps>
 
-3. **Step-by-Step Migration**
-   - [1. Update Dependencies](/guides/migration/from-v1/steps/dependencies)
-   - [2. Migrate Datasources](/guides/migration/from-v1/steps/datasources)
-   - [3. Migrate Smart Actions](/guides/migration/from-v1/steps/smart-actions)
-   - [4. Migrate Smart Fields](/guides/migration/from-v1/steps/smart-fields)
-   - [5. Migrate Smart Relationships](/guides/migration/from-v1/steps/smart-relationships)
-   - [6. Migrate Smart Segments](/guides/migration/from-v1/steps/smart-segments)
-   - [7. Update Hooks](/guides/migration/from-v1/steps/hooks)
-   - [8. Update Authentication](/guides/migration/from-v1/steps/authentication)
+## Migration steps
 
-4. **Migration Tools**
-   - Automated migration scripts
-   - Code transformation tools
-   - Validation checkers
+<Steps>
+  <Step title="Install the new agent">
+    Install the new packages alongside your existing ones. The legacy agent keeps running on its current port; the new one runs on a different port.
 
-5. **Testing**
-   - Functionality testing
-   - Performance testing
-   - User acceptance testing
+    <Tabs>
+      <Tab title="Node.js">
+        ```bash
+        npm install @forestadmin/agent
+        npm install @forestadmin/datasource-sql
+        # or @forestadmin/datasource-mongo, @forestadmin/datasource-mongoose, etc.
+        ```
+      </Tab>
+      <Tab title="Ruby">
+        ```bash
+        # Gemfile
+        gem 'forest_admin_agent'
+        gem 'forest_admin_rails'
+        gem 'forest_admin_datasource_toolkit'
+        gem 'forest_admin_datasource_customizer'
+        gem 'forest_admin_datasource_active_record'
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+  <Step title="Migrate datasources">
+    Re-declare your data sources using the new datasource API. See [Datasources](/guides/migration/from-v1/steps/datasources).
+  </Step>
+  <Step title="Migrate Smart Actions">
+    Convert each Smart Action to the new `addAction` API. See [Smart Actions](/guides/migration/from-v1/steps/smart-actions).
+  </Step>
+  <Step title="Migrate Smart Fields">
+    Convert computed fields to `addField` with explicit dependencies. See [Smart Fields](/guides/migration/from-v1/steps/smart-fields).
+  </Step>
+  <Step title="Migrate Smart Relationships">
+    Convert legacy smart relationships to native relations or external relations. See [Smart Relationships](/guides/migration/from-v1/steps/smart-relationships).
+  </Step>
+  <Step title="Migrate Smart Segments">
+    Update segments to use condition trees instead of ORM-specific queries. See [Smart Segments](/guides/migration/from-v1/steps/smart-segments).
+  </Step>
+  <Step title="Test side by side">
+    Run both agents simultaneously. Point a test environment at the new agent and verify behavior matches v1 — especially actions, computed fields, and segments.
+  </Step>
+  <Step title="Switch your environment URL">
+    Once you're confident, update your Forest environment URL to point at the new agent. The UI configuration is preserved.
+  </Step>
+  <Step title="Remove legacy packages">
+    Once production has been stable on the new agent for a few days, remove the legacy packages and clean up the old code.
+  </Step>
+</Steps>
 
-6. **Deployment**
-   - Staging deployment
-   - Production cutover
-   - Monitoring
+## What's preserved
 
-7. **Troubleshooting**
-   - Common issues
-   - Error messages
-   - Getting help
+Your Forest UI configuration is **not** affected by the agent migration:
 
-## Migration notes
+- Layouts, segments, dashboards, charts
+- Roles, permissions, scopes, teams
+- Workspaces, workflows, inboxes
+- Approval workflow configurations
+- Smart Action visibility settings
 
-- HIGH priority for v1 users
-- Comprehensive step-by-step guide
-- Framework-specific examples needed
+These all live in Forest's UI configuration and continue to work as long as the new agent exposes the same collection and field names.
+
+## What needs updating
+
+| Surface | Where it changes | Step page |
+| --- | --- | --- |
+| Datasource configuration | Code | [Datasources](/guides/migration/from-v1/steps/datasources) |
+| Smart Actions | Code | [Smart Actions](/guides/migration/from-v1/steps/smart-actions) |
+| Smart Fields | Code | [Smart Fields](/guides/migration/from-v1/steps/smart-fields) |
+| Smart Relationships | Code | [Smart Relationships](/guides/migration/from-v1/steps/smart-relationships) |
+| Smart Segments | Code | [Smart Segments](/guides/migration/from-v1/steps/smart-segments) |
+| Route overrides | Reimplemented as hooks | See [Hooks](/product/process/advanced-concepts/hooks/overview) |
+| Environment variables | `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` are reused | No change |
+| Database | No change | No change |
+
+## Common issues
+
+<AccordionGroup>
+  <Accordion title="Field names changed between v1 and v2">
+    The new agent treats field names as case-sensitive and prefers camelCase by convention. If your legacy code used snake_case, you can either rename the fields or use the `rename` option on the datasource to keep the original names exposed.
+  </Accordion>
+  <Accordion title="A Smart Action's form behaves differently">
+    The Smart Action form API is more structured in v2 — fields are declared explicitly. See [Smart Actions](/guides/migration/from-v1/steps/smart-actions) for the new form syntax.
+  </Accordion>
+  <Accordion title="A computed field is slow">
+    The new agent supports batched computed fields — `getValues` receives an array of records. If you naively port a v1 `get` function inside a `.map(async ...)`, you'll keep the same N+1 problem. Aggregate the underlying query.
+  </Accordion>
+  <Accordion title="A relationship doesn't appear in the UI">
+    The new relationship API requires you to declare both sides. If you only declared one direction, the UI may not surface it. See [Smart Relationships](/guides/migration/from-v1/steps/smart-relationships).
+  </Accordion>
+</AccordionGroup>
+
+## Get help
+
+<CardGroup cols={3}>
+  <Card title="Step pages" href="/guides/migration/from-v1/steps/datasources">
+    Per-feature migration instructions with side-by-side examples.
+  </Card>
+  <Card title="Community" href="https://community.forestadmin.com">
+    Migration questions and patterns from other teams.
+  </Card>
+  <Card title="Support" href="mailto:support@forestadmin.com">
+    Direct help from the Forest team.
+  </Card>
+</CardGroup>

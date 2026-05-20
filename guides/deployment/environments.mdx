@@ -1,11 +1,11 @@
 ---
 title: Environments
-description: "Create and manage Forest Admin environments"
+description: "Create and manage Forest environments"
 ---
 
 ## Overview
 
-Each Forest Admin project has multiple environments — at minimum a **Development** environment (created automatically) and a **Production** environment. **Remote** environments are also available for staging, QA, pre-production, etc.
+Each Forest project has multiple environments — at minimum a **Development** environment (created automatically) and a **Production** environment. **Remote** environments are also available for staging, QA, pre-production, etc.
 
 Each environment has:
 - Its own agent URL (pointing to your deployed server)
@@ -80,7 +80,7 @@ Each environment requires these variables on the agent server:
 
 | Variable | Description |
 |---|---|
-| `FOREST_ENV_SECRET` | Unique secret for this environment (Forest Admin generates this) |
+| `FOREST_ENV_SECRET` | Unique secret for this environment (Forest generates this) |
 | `FOREST_AUTH_SECRET` | Secret for signing JWT tokens (shared across environments) |
 | `DATABASE_URL` | Connection string for this environment's database |
 
@@ -88,4 +88,4 @@ Each environment requires these variables on the agent server:
 
 - [Development Workflow](/guides/deployment/development-workflow) — How to use branches
 - [Production Deployment](/guides/deployment/production) — Deploying to production
-- [CLI Reference](/reference/cli/overview) — All Forest Admin CLI commands
+- [CLI Reference](/reference/cli/overview) — All Forest CLI commands

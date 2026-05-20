@@ -2,7 +2,7 @@
 title: Hooks
 ---
 
-Forest Admin provides extensive customization options for your collections, allowing you to tailor CRUD operations, implement business logic, and enhance data integrity through two features:
+Forest provides extensive customization options for your collections, allowing you to tailor CRUD operations, implement business logic, and enhance data integrity through two features:
 
 - **Collection hooks** — execute custom code before or after CRUD operations
 - **Collection overrides** — completely replace the default behavior of CUD operations
@@ -43,7 +43,7 @@ To declare a hook on a Collection, the following information is required:
 <Warning>
   A single Collection can have multiple hooks with the same position and the same type. They will run in their declaration order.
 
-  Collection hooks are only called when the Collection function is contacted by the UI. This means that any usage of the Forest Admin query interface will not trigger them.
+  Collection hooks are only called when the Collection function is contacted by the UI. This means that any usage of the Forest query interface will not trigger them.
 </Warning>
 
 ### Basic use cases
@@ -55,7 +55,7 @@ In the following example, we want to prevent a set of users from updating any re
 transaction.addHook('Before', 'Update', async context => {
   // context.caller contains information about the current user, the defined
   // timezone, etc.
-  // In this case, context.caller.email is the email used in Forest Admin by the user
+  // In this case, context.caller.email is the email used in Forest by the user
   // that initiated the call
   const isAllowed = await myFunctionToCheckIfUserIsAllowed(context.caller.email);
   if (!isAllowed) {
@@ -70,7 +70,7 @@ transaction.addHook('Before', 'Update', async context => {
 transaction.add_hook('Before', 'Update') do |context|
   # context.caller contains information about the current user, the defined
   # timezone, etc.
-  # In this case, context.caller.email is the email used in Forest Admin by the user
+  # In this case, context.caller.email is the email used in Forest by the user
   # that initiated the call
   is_allowed = my_function_to_check_if_user_is_allowed(context.caller.email)
   unless is_allowed

@@ -1,6 +1,6 @@
 ---
 title: Performance
-description: "Tips and patterns to optimize your Forest Admin agent"
+description: "Tips and patterns to optimize your Forest agent"
 ---
 
 ## Computed fields
@@ -111,7 +111,7 @@ agent.customizeCollection('users', users => {
 
 ### Use condition trees when possible
 
-If your segment logic maps to a Forest Admin condition tree, use it instead of running a raw query and filtering by IDs. The agent can push the condition tree down to the database as a native query, which is much faster.
+If your segment logic maps to a Forest condition tree, use it instead of running a raw query and filtering by IDs. The agent can push the condition tree down to the database as a native query, which is much faster.
 
 ```javascript
 // Fast: agent translates this to a native query

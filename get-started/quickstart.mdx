@@ -1,25 +1,29 @@
 ---
 title: "Quickstart"
-description: "Get your agent running locally in 10 minutes"
+description: "Get your agent running locally in 10 minutes."
 ---
+
+You'll have a working Forest agent connected to your database, with the Forest UI open and ready to configure, in about 10 minutes.
 
 ## Prerequisites
 
 - Node.js 18+ installed
-- Your database URI ready
-- A Forest Admin account ([sign up](https://app.forestadmin.com/signup) if needed)
+- Your database URI ready (PostgreSQL, MySQL, MongoDB, SQL Server, etc.)
+- A Forest account ([sign up](https://app.forestadmin.com/signup) if needed)
 
 ## Steps
 
 <Steps>
   <Step title="Create a new project">
-    Go to [app.forestadmin.com](https://app.forestadmin.com), create a new project and choose **Self-Hosted**.
+    Go to [app.forestadmin.com](https://app.forestadmin.com), create a new project, and choose **Self-Hosted**.
   </Step>
-
   <Step title="Follow the onboarding">
-    The Forest Admin UI will guide you through the setup. It will ask for your database URI and generate a ready-to-run application with your environment variables pre-configured.
-  </Step>
+    The onboarding flow asks for your database URI and generates a ready-to-run agent project with your environment variables pre-configured.
 
+    <Warning>
+      Never commit your `.env` file to version control. Add it to `.gitignore`.
+    </Warning>
+  </Step>
   <Step title="Start your agent">
     In the generated project directory, run:
 
@@ -28,39 +32,63 @@ description: "Get your agent running locally in 10 minutes"
     ```
 
     You should see:
+
     ```
     [Forest] 🌳  Your agent is running at http://localhost:3310
     ```
   </Step>
-
-  <Step title="Open your panel">
-    Forest Admin automatically opens your panel in the browser. Your database schema has been detected — collections, relationships, and CRUD operations are ready.
+  <Step title="Open Forest">
+    Forest automatically opens in your browser. Your database schema has been detected — collections, relationships, and CRUD operations are ready out of the box.
   </Step>
 </Steps>
 
-<Warning>
-Never commit your `.env` file to version control. Add it to `.gitignore`.
-</Warning>
+## What you have now
+
+A connected agent with every table from your database surfaced as a collection. Operators can browse, search, edit, and delete records. From here, the typical path:
+
+<CardGroup cols={2}>
+  <Card title="Customize what operators see" href="/get-started/customize-your-back-office">
+    Rename collections, hide internal fields, group fields into sections, create your first segment.
+  </Card>
+  <Card title="Add business logic" href="/get-started/add-business-logic">
+    Smart Actions, computed fields, custom forms — define your operations layer in code.
+  </Card>
+  <Card title="Build operational workflows" href="/get-started/set-up-operations">
+    Workspaces, workflows, and inboxes — turn collections into the place your team actually does work.
+  </Card>
+  <Card title="Deploy to production" href="/get-started/deploy">
+    Move from localhost to a deployed environment, with the development workflow your team can rely on.
+  </Card>
+</CardGroup>
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Agent not starting" icon="circle-xmark">
+  <Accordion title="Agent not starting">
     - Check that your `.env` file is present and loaded
-    - Ensure port `3310` is not already in use
-    - Run `curl http://localhost:3310/forest` — should return Forest Admin metadata
+    - Ensure port 3310 is not already in use
+    - Run `curl http://localhost:3310/forest` — should return Forest metadata
   </Accordion>
-
-  <Accordion title="No tables showing up" icon="table">
-    - Verify your `DATABASE_URL` is correct and the database is reachable
-    - Check that the database user has read permissions on tables
+  <Accordion title="No tables showing up">
+    - Verify your `DATABASE_URL` is correct and the database is reachable from your machine
+    - Check that the database user has read permissions on the relevant tables
+    - For SQL databases, the agent needs access to `information_schema` for introspection
   </Accordion>
 </AccordionGroup>
 
-<Info>
-Forest Admin also supports **Cloud** (we host the agent) and **On-Premise** (fully air-gapped) deployments. See [Connect](/product/connect/overview) for details.
-</Info>
+## Other architectures
 
-<Card title="Next: Customize your panel →" icon="arrow-right" href="/get-started/customize-your-panel">
-  Organize your collections, fields, and create your first segment
+Forest also supports two deployment architectures beyond self-hosted:
+
+<CardGroup cols={2}>
+  <Card title="Cloud" icon="cloud" href="/get-started/connect/architectures/cloud">
+    Fully managed. We host the agent and UI. Connect your database and start.
+  </Card>
+  <Card title="On-Premise" icon="building-shield" href="/get-started/connect/architectures/on-premise">
+    Air-gapped. Everything runs in your infrastructure, including the UI. Enterprise only.
+  </Card>
+</CardGroup>
+
+<Card title="Next: Customize your interface" icon="arrow-right" href="/get-started/customize-your-back-office">
+  Organize your collections, fields, and create your first segment.
 </Card>

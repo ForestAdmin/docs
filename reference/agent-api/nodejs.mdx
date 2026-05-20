@@ -1,6 +1,6 @@
 ---
 title: "Agent API Reference"
-description: "Complete API reference for the Forest Admin Node.js Agent"
+description: "Complete API reference for the Forest Node.js Agent"
 ---
 
 Complete API reference for `@forestadmin/agent` (Node.js/TypeScript).
@@ -9,7 +9,7 @@ Complete API reference for `@forestadmin/agent` (Node.js/TypeScript).
 
 ### createAgent(options)
 
-Create and configure a Forest Admin agent.
+Create and configure a Forest agent.
 
 ```typescript
 import { createAgent } from '@forestadmin/agent';
@@ -164,7 +164,7 @@ agent.use(advancedExportPlugin, { format: 'xlsx' });
 
 ### agent.start()
 
-Start the agent and connect to Forest Admin servers.
+Start the agent and connect to Forest servers.
 
 ```typescript
 await agent.start(): Promise<void>;
@@ -201,7 +201,7 @@ await agent.restart(): Promise<void>;
 
 ### agent.addAi(provider)
 
-Configure an AI provider to power Forest Admin's AI features (natural language search, smart actions, etc.).
+Configure an AI provider to power Forest's AI features (natural language search, smart actions, etc.).
 
 ```typescript
 agent.addAi(provider: AiProviderDefinition): Agent;
@@ -1700,7 +1700,7 @@ npm install @forestadmin/forest-cloud --save-dev
 
 #### bootstrap
 
-Initialize a cloud customization project. Authenticates with Forest Admin, creates a `cloud-customizer` directory, configures credentials, and generates type definitions.
+Initialize a cloud customization project. Authenticates with Forest, creates a `cloud-customizer` directory, configures credentials, and generates type definitions.
 
 ```bash
 npx forest-cloud bootstrap --env-secret YOUR_FOREST_ENV_SECRET
@@ -1716,7 +1716,7 @@ npx forest-cloud update-typings
 
 #### login
 
-Refresh your Forest Admin authentication token.
+Refresh your Forest authentication token.
 
 ```bash
 npx forest-cloud login
@@ -1738,11 +1738,11 @@ import type { Agent, SqlConnectionParams, MongoConnectionParams } from '@foresta
 
 ## Package: Agent Testing
 
-`@forestadmin/agent-testing` provides utilities to test agent customizations locally without connecting to Forest Admin servers.
+`@forestadmin/agent-testing` provides utilities to test agent customizations locally without connecting to Forest servers.
 
 ### createForestServerSandbox(port)
 
-Start a local sandbox that mimics Forest Admin servers.
+Start a local sandbox that mimics Forest servers.
 
 ```typescript
 import { createForestServerSandbox } from '@forestadmin/agent-testing';

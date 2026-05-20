@@ -1,15 +1,15 @@
 ---
 title: "Environment Variables"
-description: "Configure your Forest Admin agent with required environment variables"
+description: "Configure your Forest agent with required environment variables"
 ---
 
-Environment variables are used to configure your Forest Admin agent securely, keeping sensitive information separate from your codebase.
+Environment variables are used to configure your Forest agent securely, keeping sensitive information separate from your codebase.
 
 ## Required variables
 
 ### FOREST_ENV_SECRET
 
-Your unique environment secret provided by Forest Admin.
+Your unique environment secret provided by Forest.
 
 <CodeGroup>
 ```bash Node.js
@@ -22,8 +22,8 @@ FOREST_ENV_SECRET=1234567890abcdef1234567890abcdef1234567890abcdef
 </CodeGroup>
 
 **Purpose:**
-- Authenticates your agent with Forest Admin
-- Links your agent to your Forest Admin project
+- Authenticates your agent with Forest
+- Links your agent to your Forest project
 - Required for all architectures (Cloud, Self-Hosted, On-Premise)
 
 **Where to find it:**
@@ -95,5 +95,5 @@ end
 </CodeGroup>
 
 <Warning>
-**Security reminder:** These environment variables contain sensitive secrets that authenticate your agent with Forest Admin. Never commit them to version control, share them publicly, or reuse them across different environments (development, staging, production). Always use separate secrets for each environment and store them securely using environment variables or secret management tools.
+**Security reminder:** These environment variables contain sensitive secrets that authenticate your agent with Forest. Never commit them to version control, share them publicly, or reuse them across different environments (development, staging, production). Always use separate secrets for each environment and store them securely using environment variables or secret management tools.
 </Warning>

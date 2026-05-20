@@ -1,6 +1,6 @@
 ---
 title: "ActiveRecord datasource"
-description: "Connect Forest Admin to your ActiveRecord models with support for relationships and Live Query"
+description: "Connect Forest to your ActiveRecord models with support for relationships and Live Query"
 ---
 
 The ActiveRecord datasource enables importing collections from all model classes extending `ActiveRecord::Base`. It automatically respects your ActiveRecord relationships and configurations.
@@ -65,11 +65,11 @@ ForestAdminDatasourceActiveRecord::Datasource.new(
 )
 ```
 
-The configuration keys display in Forest Admin's UI, while the values reference connection names from your `config/database.yml` file.
+The configuration keys display in Forest's UI, while the values reference connection names from your `config/database.yml` file.
 
 ## Polymorphic relationships
 
-Forest Admin supports polymorphic relationships in ActiveRecord by enabling a specific configuration option on the datasource instance.
+Forest supports polymorphic relationships in ActiveRecord by enabling a specific configuration option on the datasource instance.
 
 ### Configuration
 

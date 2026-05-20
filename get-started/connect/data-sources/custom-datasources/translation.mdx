@@ -1,17 +1,17 @@
 ---
 title: "Create your own datasource"
-description: "Build your own datasource by translating Forest Admin queries into your API's query language"
+description: "Build your own datasource by translating Forest queries into your API's query language"
 ---
 
 <Warning>
-Translation datasources require advanced knowledge of Forest Admin's query interface.
+Translation datasources require advanced knowledge of Forest's query interface.
 </Warning>
 
-The translation strategy is an advanced approach for creating your own datasources that involves translating Forest Admin's query interface into the target API's query language.
+The translation strategy is an advanced approach for creating your own datasources that involves translating Forest's query interface into the target API's query language.
 
 ## Overview
 
-A full-featured query translation module typically exceeds 1000 lines of code. This approach suits full-featured databases and requires deep understanding of Forest Admin's internals.
+A full-featured query translation module typically exceeds 1000 lines of code. This approach suits full-featured databases and requires deep understanding of Forest's internals.
 
 ### Key steps
 
@@ -32,7 +32,7 @@ class MyCollection extends BaseCollection {
   }
 
   async list(caller, filter, projection) {
-    // Translate Forest Admin query to API format
+    // Translate Forest query to API format
     const params = QueryGenerator.generateListQueryString(filter, projection);
     const response = axios.get('https://my-api/my-collection', { params });
     return response.body.items;
@@ -48,7 +48,7 @@ class MyCollection < ForestAdminDatasourceToolkit::Collection
   end
 
   def list(caller, filter, projection)
-    # Translate Forest Admin query to API format
+    # Translate Forest query to API format
     params = QueryGenerator.generate_list_query_string(filter, projection)
     response = HTTParty.get('https://my-api/my-collection', query: params)
     response.parsed_response['items']
@@ -140,7 +140,7 @@ The typing system for columns is the same as the one used when declaring fields 
 
 ### Validation
 
-Forest Admin permits declaring validation rules on primitive-type fields. These rules validate records during creation/updating in the back-office interface.
+Forest permits declaring validation rules on primitive-type fields. These rules validate records during creation/updating in the back-office interface.
 
 The validation API mirrors the condition tree structure but excludes a "field" entry. Example validation clause:
 
@@ -216,7 +216,7 @@ end
 
 ## Capabilities declaration
 
-Data source implementers don't need to translate every possible query type. Forest Admin ensures only supported query features are available by having collections declare capabilities on construction.
+Data source implementers don't need to translate every possible query type. Forest ensures only supported query features are available by having collections declare capabilities on construction.
 
 ### Required features
 
@@ -577,7 +577,7 @@ When building your own datasources using the translation strategy, collections m
 - `one-to-many` relationships
 - `many-to-many` relationships
 
-For these types, Forest Admin will automatically call the destination collection with a valid filter, requiring no additional implementation work.
+For these types, Forest will automatically call the destination collection with a valid filter, requiring no additional implementation work.
 
 **Manual implementation required:**
 - `many-to-one` relationships
@@ -692,5 +692,5 @@ Developers implementing your own datasources must handle prefixed field referenc
 - **Aggregations** (calculation operations)
 
 <Info>
-Want to share your datasource with the community? Check out [Forest Admin experimental](/guides/forestadmin-experimental) to contribute.
+Want to share your datasource with the community? Check out [Forest experimental](/guides/forestadmin-experimental) to contribute.
 </Info>

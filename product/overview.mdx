@@ -1,5 +1,145 @@
 ---
-title: Forest Admin Product
-description: Build, configure, and operate back-offices tailored to your business needs.
+title: "Product"
+description: "What Forest does — workflows, governance, MCP, decision traces, and the surfaces that build them."
 ---
-{/* TODO: Fill this page with product overview content */}
+
+Forest is the operational infrastructure where regulated companies run end-to-end workflows across humans, AI agents, suppliers, and partners. The product is organized around six surfaces — what you build, how operators execute work, who collaborates, where the platform shows up, what gets managed, and how developers customize the agent in code.
+
+## The six surfaces
+
+<CardGroup cols={2}>
+  <Card title="Build" icon="hammer" href="/product/build/layout-editor">
+    Shape what your operators see. Layout editor, collection settings, fields and widgets, custom Smart Views, workspaces, search, pagination, layout versioning.
+  </Card>
+  <Card title="Execute" icon="bolt" href="/product/execute/actions">
+    Operations your team performs daily — browsing records, triggering actions, exporting data, running workflows.
+  </Card>
+  <Card title="Manage" icon="chart-line" href="/product/manage/dashboards">
+    See what's happening — dashboards, charts, activity logs, inboxes, and team performance views.
+  </Card>
+  <Card title="Collaborate" icon="users" href="/product/collaborate/notes">
+    Coordinate on records — notes, mentions, and approval workflows.
+  </Card>
+  <Card title="Embed" icon="code-merge" href="/product/embed/mcp-server">
+    Bring Forest into the tools your team and AI agents already use — MCP server, n8n node, Zendesk app.
+  </Card>
+  <Card title="Process (developer)" icon="terminal" href="/product/process/fields/overview">
+    Customize the agent in code — fields, actions, relationships, segments, workflows, hooks, and plugins.
+  </Card>
+</CardGroup>
+
+## Build — shape the interface
+
+The Build surface is where you configure what operators see. Most of it is no-code.
+
+<CardGroup cols={2}>
+  <Card title="Layout editor" href="/product/build/layout-editor">
+    Visually customize collection views, detail pages, and forms.
+  </Card>
+  <Card title="Collection configuration" href="/product/build/collection-configuration">
+    Display name, summary field, segments, filters, and per-collection action visibility.
+  </Card>
+  <Card title="Fields & widgets" href="/product/build/fields-and-widgets/overview">
+    Map field types to display and edit widgets — from text and numbers to images, JSON, and relationships.
+  </Card>
+  <Card title="Smart Views" href="/product/build/custom-views/smart-views">
+    Replace the default table with any UI — maps, calendars, galleries, kanban — using JavaScript, HTML, and CSS.
+  </Card>
+  <Card title="Workspaces" href="/product/build/workspaces">
+    Combine data and actions from multiple collections into a single page for an operational workflow.
+  </Card>
+  <Card title="Search & pagination" href="/product/build/search-configuration">
+    Configure how search behaves and how large collections paginate.
+  </Card>
+</CardGroup>
+
+## Execute — get work done
+
+<CardGroup cols={2}>
+  <Card title="Browse" href="/product/execute/browse">
+    Filter, sort, and inspect records across your collections.
+  </Card>
+  <Card title="Actions" href="/product/execute/actions">
+    Trigger custom and built-in actions on single records, bulk selections, or at the collection level.
+  </Card>
+  <Card title="Workflows" href="/product/execute/workflows">
+    Run multi-step operational processes — KYC reviews, refunds, onboarding — with a no-code editor.
+  </Card>
+  <Card title="Export" href="/product/execute/export">
+    Export collection data to CSV.
+  </Card>
+</CardGroup>
+
+## Manage — see what's happening
+
+<CardGroup cols={2}>
+  <Card title="Dashboards" href="/product/manage/dashboards">
+    Combine charts to monitor KPIs and operational metrics.
+  </Card>
+  <Card title="Charts" href="/product/manage/charts/overview">
+    Single value, repartition, time-based, percentage, objective, and leaderboard charts — with simple or SQL-based configuration.
+  </Card>
+  <Card title="Activity logs" href="/product/manage/activity">
+    Every action taken in Forest — with full audit context.
+  </Card>
+  <Card title="Inbox" href="/product/manage/inbox">
+    Distribute work to your team — review queues, escalations, and assigned records.
+  </Card>
+  <Card title="Team performance" href="/product/manage/team-performance">
+    Track team productivity and bottlenecks across operations.
+  </Card>
+</CardGroup>
+
+## Collaborate — work as a team
+
+<CardGroup cols={2}>
+  <Card title="Notes" href="/product/collaborate/notes">
+    Leave contextual notes on records and mention teammates.
+  </Card>
+  <Card title="Approval workflows" href="/product/collaborate/approval-workflows">
+    Require sign-off from another team member before sensitive actions execute.
+  </Card>
+</CardGroup>
+
+## Embed — bring Forest into the tools your operators and agents use
+
+<CardGroup cols={3}>
+  <Card title="MCP server" href="/product/embed/mcp-server">
+    Expose Forest data and workflows to AI agents via the Model Context Protocol — with permissions and audit trails preserved.
+  </Card>
+  <Card title="n8n node" href="/product/embed/n8n">
+    Trigger Forest actions and access data from n8n workflows.
+  </Card>
+  <Card title="Zendesk app" href="/product/embed/zendesk">
+    Surface Forest records inside Zendesk tickets.
+  </Card>
+</CardGroup>
+
+## Process — customize the agent in code
+
+This is where developers extend Forest's behavior beyond the no-code surface.
+
+<CardGroup cols={2}>
+  <Card title="Fields" href="/product/process/fields/overview">
+    Computed fields, validation, write behavior, filtering and sorting on any field.
+  </Card>
+  <Card title="Actions" href="/product/process/actions/overview">
+    Custom actions in code — dynamic forms, multi-step logic, file generation, custom result types.
+  </Card>
+  <Card title="Relationships" href="/product/process/relationships/overview">
+    Cross-database relationships, computed foreign keys, external API-backed relationships.
+  </Card>
+  <Card title="Segments" href="/product/process/segments/creating-segments">
+    No-code and code-based segments to slice your collections.
+  </Card>
+  <Card title="Workflows" href="/product/process/workflows/overview">
+    Configure no-code workflow steps that combine data, actions, and AI.
+  </Card>
+  <Card title="Hooks & plugins" href="/product/process/advanced-concepts/hooks/overview">
+    Intercept CRUD operations and package reusable customizations.
+  </Card>
+</CardGroup>
+
+## Looking for the API or CLI?
+
+Configuration happens here. Reference documentation lives in **[Reference](/reference/overview)** — the Node.js and Ruby agent SDKs, the public API, the Forest CLI, and the `.forestadmin-schema.json` format.

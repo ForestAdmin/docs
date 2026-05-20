@@ -25,7 +25,7 @@ agent.customizeCollection('customers', collection => {
     columnType: 'Number',
     dependencies: ['id'],
     getValues: async (customers, context) => {
-      // We're using Forest Admin's Query Interface (you can use an ORM or plain SQL)
+      // We're using Forest's Query Interface (you can use an ORM or plain SQL)
       const messages = context.dataSource.getCollection('messages');
       const conditionTree = {
         field: 'customer_id',

@@ -1,9 +1,9 @@
 ---
 title: "Cloud architecture"
-description: "Get started in 5 minutes with fully-managed Forest Admin Cloud - no infrastructure required"
+description: "Get started in 5 minutes with fully-managed Forest Cloud - no infrastructure required"
 ---
 
-The Cloud architecture is Forest Admin's fully-managed solution where everything is hosted for you. Connect your database and start building your back-office in minutes without any infrastructure setup.
+The Cloud architecture is Forest's fully-managed solution where everything is hosted for you. Connect your database and start building your back-office in minutes without any infrastructure setup.
 
 ## Architecture overview
 
@@ -11,11 +11,11 @@ The Cloud architecture is Forest Admin's fully-managed solution where everything
 
 ### How it works
 
-1. **Your users** access the Forest Admin UI hosted at `app.forestadmin.com`
-2. **Forest Admin Cloud** hosts both the agent and UI
+1. **Your users** access the Forest UI hosted at `app.forestadmin.com`
+2. **Forest Cloud** hosts both the agent and UI
 3. **Cloud agent** connects to your database using credentials you provide
-4. **Your database** must be network-accessible to Forest Admin's servers
-5. **All queries** are executed from Forest Admin's infrastructure
+4. **Your database** must be network-accessible to Forest's servers
+5. **All queries** are executed from Forest's infrastructure
 
 ## Limitations
 
@@ -40,15 +40,15 @@ For full developer workflow with staging environments and branch management, use
 
 ### Database must be network accessible
 
-Your database must accept connections from Forest Admin's IP address:
+Your database must accept connections from Forest's IP address:
 
 ```
-Required: Allow inbound connections from Forest Admin
+Required: Allow inbound connections from Forest
 - Whitelist IP: 35.180.175.97
 - Your database needs a public endpoint or VPN
 - Cannot use localhost or internal-only databases
 ```
 
 <Info>
-**Forest Admin Cloud IP to whitelist**: `35.180.175.97`
+**Forest Cloud IP to whitelist**: `35.180.175.97`
 </Info>

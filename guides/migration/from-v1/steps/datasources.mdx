@@ -1,46 +1,207 @@
 ---
-title: "Migration Step 2: Datasources"
+title: "Migrating datasources"
+description: "Move your datasource configuration from a legacy agent to the current generation."
 ---
-> **Status:** TODO - Priority: HIGH
->
-> **Audience:** Developers (v1 users)
 
-## Description
+In legacy agents, the datasource was tied to a single ORM (Sequelize, Mongoose, ActiveRecord, Mongoid). The new agent introduces an explicit datasource layer that supports multiple databases and APIs in the same agent, and decouples the connection from the framework.
 
-Migrate your datasource configuration from Agent v1 to Agent v2.
+## API cheatsheet
 
-## Sources to migrate
+| Legacy agent | New agent |
+| --- | --- |
+| `forest-express-sequelize` | `@forestadmin/agent` + `@forestadmin/datasource-sql` |
+| `forest-express-sequelize` (with Sequelize models) | `@forestadmin/agent` + `@forestadmin/datasource-sequelize` |
+| `forest-express-mongoose` | `@forestadmin/agent` + `@forestadmin/datasource-mongoose` |
+| `forest-rails` (ActiveRecord) | `forest_admin_agent` + `forest_admin_rails` + `forest_admin_datasource_active_record` (+ toolkit, customizer) |
+| `forest-rails` (Mongoid) | `forest_admin_agent` + `forest_admin_rails` + `forest_admin_datasource_mongoid` (+ toolkit, customizer) |
 
-- `developer-guide-agent-v2/sources/migration/datasources.md`
+<Note>
+  Pick `datasource-sql` or `datasource-mongo` if you want Forest to introspect the database directly. Pick `datasource-sequelize`, `datasource-mongoose`, or `datasource-active-record` if you want to reuse your existing ORM models (recommended when your application already defines them).
+</Note>
 
-## Content outline
+## Before (Node.js, forest-express-sequelize)
 
-1. **v1 vs v2 Datasources**
-   - Configuration differences
-   - Connection string changes
-   - Multi-datasource support
+```javascript
+const Liana = require('forest-express-sequelize');
+const models = require('./models');
 
-2. **Database Configuration**
-   - SQL databases migration
-   - MongoDB migration
-   - Connection pooling
+app.use(Liana.init({
+  modelsDir: __dirname + '/models',
+  envSecret: process.env.FOREST_ENV_SECRET,
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  sequelize: models.sequelize,
+}));
+```
 
-3. **Collection Definition**
-   - Schema changes
-   - Model mapping
-   - Type changes
+## After (Node.js, reusing Sequelize models)
 
-4. **Code Changes**
-   - Node.js migration
-   - Ruby migration
-   - Python migration
+```javascript
+import { createAgent } from '@forestadmin/agent';
+import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
+import { sequelize } from './models';
 
-5. **Testing**
-   - Connection testing
-   - Schema validation
-   - Data access verification
+const agent = createAgent({
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  envSecret: process.env.FOREST_ENV_SECRET,
+  isProduction: process.env.NODE_ENV === 'production',
+});
 
-6. **Common Issues**
-   - Connection errors
-   - Schema mismatches
-   - Type incompatibilities
+agent.addDataSource(createSequelizeDataSource(sequelize));
+
+agent.mountOnExpress(app).start();
+```
+
+## After (Node.js, direct SQL connection)
+
+If you don't want to reuse your ORM models, connect directly to the database. Forest introspects the schema automatically.
+
+```javascript
+import { createAgent } from '@forestadmin/agent';
+import { createSqlDataSource } from '@forestadmin/datasource-sql';
+
+const agent = createAgent({
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  envSecret: process.env.FOREST_ENV_SECRET,
+  isProduction: process.env.NODE_ENV === 'production',
+});
+
+agent.addDataSource(
+  createSqlDataSource({
+    uri: process.env.DATABASE_URL,
+    sslMode: 'preferred',
+  })
+);
+
+agent.mountOnExpress(app).start();
+```
+
+## Before (Ruby, forest-rails with ActiveRecord)
+
+```ruby
+# Gemfile
+gem 'forest_liana'
+
+# config/initializers/forest_liana.rb
+ForestLiana.env_secret = ENV['FOREST_ENV_SECRET']
+ForestLiana.auth_secret = ENV['FOREST_AUTH_SECRET']
+```
+
+## After (Ruby, ActiveRecord)
+
+```ruby
+# Gemfile
+gem 'forest_admin_agent'
+gem 'forest_admin_rails'
+gem 'forest_admin_datasource_toolkit'
+gem 'forest_admin_datasource_customizer'
+gem 'forest_admin_datasource_active_record'
+
+# config/initializers/forest_admin.rb
+require 'forest_admin_agent'
+
+ForestAdmin.agent = ForestAdminAgent::Agent.new do |options|
+  options.auth_secret = ENV.fetch('FOREST_AUTH_SECRET')
+  options.env_secret = ENV.fetch('FOREST_ENV_SECRET')
+  options.is_production = Rails.env.production?
+end
+
+ForestAdmin.agent.add_datasource(
+  ForestAdminDatasourceActiveRecord::Datasource.new
+)
+
+ForestAdmin.agent.start
+```
+
+## Multi-datasource
+
+The biggest payoff of migrating: the new agent can connect to multiple data sources at once.
+
+```javascript
+const agent = createAgent({ /* ... */ });
+
+// Primary database (Sequelize models reused)
+agent.addDataSource(createSequelizeDataSource(sequelize));
+
+// Analytics database (direct SQL)
+agent.addDataSource(
+  createSqlDataSource(process.env.ANALYTICS_DATABASE_URL),
+  { name: 'analytics' }
+);
+
+// Stripe data
+agent.addDataSource(
+  createStripeDataSource({ secretKey: process.env.STRIPE_SECRET_KEY })
+);
+```
+
+Cross-datasource relationships are first-class. See [Relationships](/product/process/relationships/overview).
+
+## Configuration changes
+
+| Concept | Legacy | New |
+| --- | --- | --- |
+| `envSecret` | `FOREST_ENV_SECRET` | `FOREST_ENV_SECRET` (unchanged) |
+| `authSecret` | `FOREST_AUTH_SECRET` | `FOREST_AUTH_SECRET` (unchanged) |
+| Models directory | `modelsDir` option | Provided implicitly via the datasource (Sequelize / ActiveRecord) |
+| Including / excluding tables | Manual model filtering | `{ include: [...], exclude: [...] }` on `addDataSource` |
+| Schema generation | Forest CLI / runtime | `.forestadmin-schema.json` written on agent start in development |
+| Custom routes | Express routes | Hooks (see [Hooks](/product/process/advanced-concepts/hooks/overview)) |
+
+## Including or excluding collections
+
+In v1, you'd manually filter the models passed in. In v2:
+
+```javascript
+agent.addDataSource(
+  createSequelizeDataSource(sequelize),
+  { exclude: ['internal_logs', 'session_data'] }
+);
+
+// Or only include specific collections
+agent.addDataSource(
+  createSequelizeDataSource(sequelize),
+  { include: ['users', 'orders', 'products'] }
+);
+```
+
+## Validate the migration
+
+After swapping the datasource:
+
+<Steps>
+  <Step title="Start the new agent">
+    Run on a different port from the legacy agent (e.g. `3001`).
+  </Step>
+  <Step title="Check schema generation">
+    On first start in development, the agent writes a `.forestadmin-schema.json` file. Confirm every collection you expect is listed.
+  </Step>
+  <Step title="Smoke-test the API">
+    Hit `http://localhost:3001/forest` — should return Forest metadata.
+  </Step>
+  <Step title="Point a test environment at the new agent">
+    Update the agent URL in your Forest test environment. Browse collections — every collection should appear with the same fields.
+  </Step>
+  <Step title="Continue with customizations">
+    Once data flows correctly, move on to migrating Smart Actions, Smart Fields, and the rest.
+  </Step>
+</Steps>
+
+## Common issues
+
+<AccordionGroup>
+  <Accordion title="A column shows up with a different name">
+    Some legacy agents auto-converted snake_case to camelCase. The new agent preserves database column names by default. Use the `rename` option or the field-rename customization API to align names.
+  </Accordion>
+  <Accordion title="A relationship I had isn't appearing automatically">
+    Foreign keys defined in the database are detected automatically. Relationships defined only in your ORM models (`belongsTo`, `hasMany`) are detected when you use the ORM-backed datasources (`datasource-sequelize`, `datasource-mongoose`, `datasource-active-record`). Relationships that exist only in code paths the agent doesn't see won't be detected — declare them explicitly with `addManyToOneRelation`, `addOneToManyRelation`, etc.
+  </Accordion>
+  <Accordion title="The agent fails to connect to the database">
+    Verify that `DATABASE_URL` is set on the agent server, that the user has read permissions, and that SSL is configured if your database requires it. For SQL datasources, check `sslMode`.
+  </Accordion>
+</AccordionGroup>
+
+## Next step
+
+<Card title="Migrate Smart Actions" icon="arrow-right" href="/guides/migration/from-v1/steps/smart-actions">
+  Convert each Smart Action to the new `addAction` API.
+</Card>
