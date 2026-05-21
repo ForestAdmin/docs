@@ -14,6 +14,9 @@ The Ruby agent is designed for Rails applications and automatically introspects 
 ```ruby
 # Gemfile
 gem 'forest_admin_agent'
+gem 'forest_admin_rails'
+gem 'forest_admin_datasource_toolkit'
+gem 'forest_admin_datasource_customizer'
 gem 'forest_admin_datasource_active_record' # For ActiveRecord
 # or
 gem 'forest_admin_datasource_mongoid' # For Mongoid
@@ -23,39 +26,51 @@ gem 'forest_admin_datasource_mongoid' # For Mongoid
 
 ```bash
 bundle install
-rails generate forest_admin:install
+rails generate forest_admin_rails:install
 ```
 
-**Configuration:**
+The generator creates two files:
+
+- `config/initializers/forest_admin_rails.rb` — secrets and configuration
+- `app/lib/forest_admin_rails/create_agent.rb` — datasource setup and collection customizations
+
+**Configuration** (`config/initializers/forest_admin_rails.rb`):
 
 ```ruby
-# config/initializers/forest_admin.rb
-require 'forest_admin_agent'
-
-ForestAdmin.agent = ForestAdminAgent::Agent.new do |options|
-  options.auth_secret = ENV.fetch('FOREST_AUTH_SECRET')
-  options.env_secret = ENV.fetch('FOREST_ENV_SECRET')
-  options.is_production = Rails.env.production?
-  options.logger = Rails.logger
+ForestAdminRails.configure do |config|
+  config.auth_secret = ENV.fetch('FOREST_AUTH_SECRET')
+  config.env_secret = ENV.fetch('FOREST_ENV_SECRET')
 end
-
-ForestAdmin.agent.add_datasource(
-  ForestAdminDatasourceActiveRecord::Datasource.new
-)
-
-ForestAdmin.agent.start
 ```
 
-**Configuration Options:**
+**Datasource setup and customizations** (`app/lib/forest_admin_rails/create_agent.rb`):
+
+```ruby
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      database_configuration = Rails.configuration.database_configuration
+      datasource = ForestAdminDatasourceActiveRecord::Datasource.new(database_configuration[Rails.env])
+
+      @create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(datasource)
+      customize
+      @create_agent.build
+    end
+
+    def self.customize
+      # All your collection customizations go here — see below.
+    end
+  end
+end
+```
+
+**Configuration Options** (passed to `ForestAdminRails.configure`):
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
 | `auth_secret` | String | Yes | Your FOREST_AUTH_SECRET |
 | `env_secret` | String | Yes | Your FOREST_ENV_SECRET |
-| `is_production` | Boolean | No | Enable production mode |
-| `logger` | Logger | No | Custom logger instance |
-| `prefix` | String | No | API prefix (default: '/forest') |
-| `schema_path` | String | No | Path to .forestadmin-schema.json |
+| `forest_server_url` | String | No | Forest server URL (default: production) |
 
 ---
 
@@ -66,7 +81,8 @@ ForestAdmin.agent.start
 Customize a specific collection with the provided block.
 
 ```ruby
-ForestAdmin.agent.customize_collection('User') do |collection|
+# Inside ForestAdminRails::CreateAgent.customize
+@create_agent.customize_collection('User') do |collection|
   collection.add_action('Send email', {
     scope: 'Single',
     execute: ->(context, result_builder) {
@@ -90,11 +106,12 @@ end
 
 ### agent.add_datasource(datasource, options = {})
 
-Add a datasource to the agent.
+Add a datasource to the agent. Called inside `ForestAdminRails::CreateAgent.setup!`.
 
 ```ruby
-ForestAdmin.agent.add_datasource(
-  ForestAdminDatasourceActiveRecord::Datasource.new,
+# Inside ForestAdminRails::CreateAgent.setup!
+@create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(
+  ForestAdminDatasourceActiveRecord::Datasource.new(database_configuration[Rails.env]),
   exclude: ['internal_logs']
 )
 ```
@@ -110,7 +127,8 @@ ForestAdmin.agent.add_datasource(
 **Example with Mongoid:**
 
 ```ruby
-ForestAdmin.agent.add_datasource(
+# Inside ForestAdminRails::CreateAgent.setup!
+@create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(
   ForestAdminDatasourceMongoid::Datasource.new,
   rename: { 'old_name' => 'new_name' }
 )
@@ -712,84 +730,92 @@ form: [
 ## Complete Example
 
 ```ruby
-# config/initializers/forest_admin.rb
-require 'forest_admin_agent'
-
-ForestAdmin.agent = ForestAdminAgent::Agent.new do |options|
-  options.auth_secret = ENV.fetch('FOREST_AUTH_SECRET')
-  options.env_secret = ENV.fetch('FOREST_ENV_SECRET')
-  options.is_production = Rails.env.production?
-  options.logger = Rails.logger
+# config/initializers/forest_admin_rails.rb
+ForestAdminRails.configure do |config|
+  config.auth_secret = ENV.fetch('FOREST_AUTH_SECRET')
+  config.env_secret = ENV.fetch('FOREST_ENV_SECRET')
 end
+```
 
-ForestAdmin.agent.add_datasource(
-  ForestAdminDatasourceActiveRecord::Datasource.new
-)
+```ruby
+# app/lib/forest_admin_rails/create_agent.rb
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      database_configuration = Rails.configuration.database_configuration
+      datasource = ForestAdminDatasourceActiveRecord::Datasource.new(database_configuration[Rails.env])
 
-# Customize User collection
-ForestAdmin.agent.customize_collection('User') do |collection|
-  # Add computed field
-  collection.add_field('full_name', {
-    column_type: 'String',
-    dependencies: ['first_name', 'last_name'],
-    get_values: ->(records) {
-      records.map { |r| "#{r['first_name']} #{r['last_name']}" }
-    }
-  })
+      @create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(datasource)
+      customize
+      @create_agent.build
+    end
 
-  # Add segment
-  collection.add_segment('Active users', {
-    field: 'status',
-    operator: 'Equal',
-    value: 'active'
-  })
+    def self.customize
+      # Customize User collection
+      @create_agent.customize_collection('User') do |collection|
+        # Add computed field
+        collection.add_field('full_name', {
+          column_type: 'String',
+          dependencies: ['first_name', 'last_name'],
+          get_values: ->(records) {
+            records.map { |r| "#{r['first_name']} #{r['last_name']}" }
+          }
+        })
 
-  # Add action
-  collection.add_action('Send promotional email', {
-    scope: 'Bulk',
-    form: [
-      {
-        label: 'Campaign',
-        type: 'Enum',
-        enum_values: ['summer', 'winter', 'black_friday']
-      },
-      {
-        label: 'Discount',
-        type: 'Number',
-        is_required: true
-      }
-    ],
-    execute: ->(context, result_builder) {
-      campaign = context.form_values['campaign']
-      discount = context.form_values['discount']
-      users = context.get_records(['email'])
+        # Add segment
+        collection.add_segment('Active users', {
+          field: 'status',
+          operator: 'Equal',
+          value: 'active'
+        })
 
-      users.each do |user|
-        PromotionalMailer.campaign_email(
-          user['email'],
-          campaign,
-          discount
-        ).deliver_later
+        # Add action
+        collection.add_action('Send promotional email', {
+          scope: 'Bulk',
+          form: [
+            {
+              label: 'Campaign',
+              type: 'Enum',
+              enum_values: ['summer', 'winter', 'black_friday']
+            },
+            {
+              label: 'Discount',
+              type: 'Number',
+              is_required: true
+            }
+          ],
+          execute: ->(context, result_builder) {
+            campaign = context.form_values['campaign']
+            discount = context.form_values['discount']
+            users = context.get_records(['email'])
+
+            users.each do |user|
+              PromotionalMailer.campaign_email(
+                user['email'],
+                campaign,
+                discount
+              ).deliver_later
+            end
+
+            result_builder.success("Email sent to #{users.length} users")
+          }
+        })
+
+        # Add hook
+        collection.add_hook('Before', 'Create', ->(context) {
+          context.data['status'] ||= 'active'
+          context.data['created_by'] = context.caller.id
+        })
+
+        # Add chart
+        collection.add_chart('user_count', ->(context, result_builder) {
+          count = User.count
+          result_builder.value(count)
+        })
       end
-
-      result_builder.success("Email sent to #{users.length} users")
-    }
-  })
-
-  # Add hook
-  collection.add_hook('Before', 'Create', ->(context) {
-    context.data['status'] ||= 'active'
-    context.data['created_by'] = context.caller.id
-  })
-
-  # Add chart
-  collection.add_chart('user_count', ->(context, result_builder) {
-    count = User.count
-    result_builder.value(count)
-  })
+    end
+  end
 end
-
-ForestAdmin.agent.start
 ```
 
 ---

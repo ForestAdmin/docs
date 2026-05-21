@@ -87,7 +87,8 @@ const agent = createAgent({
 ```
 
 ```ruby Ruby
-agent = ForestAdminAgent::Agent.new do |config|
+# config/initializers/forest_admin_rails.rb
+ForestAdminRails.configure do |config|
   config.env_secret = ENV['FOREST_ENV_SECRET']
   config.auth_secret = ENV['FOREST_AUTH_SECRET']
 end

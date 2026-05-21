@@ -39,11 +39,10 @@ createAgent({
 ```
 
 ```ruby Ruby
-# Check your agent initialization
-ForestAdminAgent::Agent.new do |config|
+# config/initializers/forest_admin_rails.rb
+ForestAdminRails.configure do |config|
   config.auth_secret = ENV['FOREST_AUTH_SECRET']
   config.env_secret = ENV['FOREST_ENV_SECRET']  # Must be correct
-  # ...
 end
 ```
 </CodeGroup>

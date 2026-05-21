@@ -95,21 +95,36 @@ gem 'forest_admin_rails'
 gem 'forest_admin_datasource_toolkit'
 gem 'forest_admin_datasource_customizer'
 gem 'forest_admin_datasource_active_record'
+```
 
-# config/initializers/forest_admin.rb
-require 'forest_admin_agent'
+Run `rails generate forest_admin_rails:install` to scaffold the two configuration files.
 
-ForestAdmin.agent = ForestAdminAgent::Agent.new do |options|
-  options.auth_secret = ENV.fetch('FOREST_AUTH_SECRET')
-  options.env_secret = ENV.fetch('FOREST_ENV_SECRET')
-  options.is_production = Rails.env.production?
+```ruby
+# config/initializers/forest_admin_rails.rb
+ForestAdminRails.configure do |config|
+  config.auth_secret = ENV.fetch('FOREST_AUTH_SECRET')
+  config.env_secret = ENV.fetch('FOREST_ENV_SECRET')
 end
+```
 
-ForestAdmin.agent.add_datasource(
-  ForestAdminDatasourceActiveRecord::Datasource.new
-)
+```ruby
+# app/lib/forest_admin_rails/create_agent.rb
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      database_configuration = Rails.configuration.database_configuration
+      datasource = ForestAdminDatasourceActiveRecord::Datasource.new(database_configuration[Rails.env])
 
-ForestAdmin.agent.start
+      @create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(datasource)
+      customize
+      @create_agent.build
+    end
+
+    def self.customize
+      # Collection customizations (Smart Actions, computed fields, segments) go here.
+    end
+  end
+end
 ```
 
 ## Multi-datasource

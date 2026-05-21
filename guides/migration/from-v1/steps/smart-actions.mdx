@@ -105,23 +105,27 @@ end
 
 ## After (Ruby, forest_admin_rails)
 
+Customizations live inside `ForestAdminRails::CreateAgent.customize` in `app/lib/forest_admin_rails/create_agent.rb`:
+
 ```ruby
-ForestAdmin.agent.customize_collection('User') do |collection|
-  collection.add_action('Send welcome email', {
-    scope: 'Single',
-    form: [
-      { label: 'Subject', type: 'String', is_required: true },
-      { label: 'Message', type: 'String', widget: 'TextArea' },
-    ],
-    execute: ->(context, result_builder) {
-      user = context.get_record(['email'])
-      values = context.form_values
+def self.customize
+  @create_agent.customize_collection('User') do |collection|
+    collection.add_action('Send welcome email', {
+      scope: 'Single',
+      form: [
+        { label: 'Subject', type: 'String', is_required: true },
+        { label: 'Message', type: 'String', widget: 'TextArea' },
+      ],
+      execute: ->(context, result_builder) {
+        user = context.get_record(['email'])
+        values = context.form_values
 
-      UserMailer.welcome(user, values['Subject'], values['Message']).deliver_now
+        UserMailer.welcome(user, values['Subject'], values['Message']).deliver_now
 
-      result_builder.success('Email sent')
-    },
-  })
+        result_builder.success('Email sent')
+      },
+    })
+  end
 end
 ```
 

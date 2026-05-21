@@ -22,10 +22,21 @@ agent.addDataSource(
 ```
 
 ```ruby Ruby
-require 'forest_admin_agent'
+# app/lib/forest_admin_rails/create_agent.rb
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      datasource = ForestAdminDatasourceActiveRecord::Datasource.new(
+        Rails.configuration.database_configuration[Rails.env]
+      )
 
-ForestAdminAgent::Agent.new do |config|
-  config.add_data_source('postgresql://user:pass@localhost:5432/mydb')
+      @create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(datasource)
+      customize
+      @create_agent.build
+    end
+
+    def self.customize; end
+  end
 end
 ```
 </CodeGroup>
@@ -57,16 +68,20 @@ agent.addDataSource(
 ```
 
 ```ruby Ruby
-ForestAdminAgent::Agent.new do |config|
-  # Primary PostgreSQL database
-  config.add_data_source('postgresql://user:pass@localhost:5432/main')
+# app/lib/forest_admin_rails/create_agent.rb — inside CreateAgent.setup!
+factory = ForestAdminAgent::Builder::AgentFactory.instance
 
-  # MongoDB for analytics
-  config.add_data_source_mongoose(mongo_connection)
+# Primary PostgreSQL database
+factory.add_datasource(
+  ForestAdminDatasourceActiveRecord::Datasource.new(
+    Rails.configuration.database_configuration[Rails.env]
+  )
+)
 
-  # External API
-  config.add_custom_data_source(api_config)
-end
+# MongoDB for analytics
+factory.add_datasource(ForestAdminDatasourceMongoid::Datasource.new)
+
+@create_agent = factory
 ```
 </CodeGroup>
 
