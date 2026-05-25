@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Forest Admin Documentation",
+  "name": "Forest Documentation",
   "colors": {
     "primary": "#698000",
     "light": "#B0D030",
@@ -33,6 +33,7 @@
             "group": "Guide",
             "pages": [
               "get-started/intro-to-forest-admin",
+              "get-started/features-overview",
               "get-started/quickstart",
               "get-started/customize-your-back-office",
               "get-started/add-business-logic",
@@ -223,7 +224,8 @@
               "product/manage/activity",
               "product/manage/team-performance",
               "product/manage/inbox",
-              "product/manage/charts/overview"
+              "product/manage/charts/overview",
+              "product/manage/charts/smart-charts"
             ]
           },
           {
@@ -349,55 +351,6 @@
             "pages": [
               "reference/schema/forestadmin-schema"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "guides/overview"
-            ]
-          },
-          {
-            "group": "Deployment",
-            "pages": [
-              "guides/deployment/overview",
-              "guides/deployment/production",
-              "guides/deployment/development-workflow",
-              "guides/deployment/environments",
-              {
-                "group": "Platforms",
-                "pages": [
-                  "guides/deployment/platforms/aws",
-                  "guides/deployment/platforms/heroku"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Migration",
-            "pages": [
-              "guides/migration/overview",
-              {
-                "group": "From v1",
-                "pages": [
-                  "guides/migration/from-v1/overview",
-                  {
-                    "group": "Steps",
-                    "pages": [
-                      "guides/migration/from-v1/steps/datasources",
-                      "guides/migration/from-v1/steps/smart-actions",
-                      "guides/migration/from-v1/steps/smart-fields",
-                      "guides/migration/from-v1/steps/smart-relationships",
-                      "guides/migration/from-v1/steps/smart-segments"
-                    ]
-                  }
-                ]
-              }
-            ]
           },
           {
             "group": "Best Practices",
@@ -406,33 +359,6 @@
               "guides/best-practices/security",
               "guides/best-practices/troubleshooting",
               "guides/best-practices/layout-maintenance"
-            ]
-          },
-          {
-            "group": "Examples",
-            "pages": [
-              "guides/chart-patterns",
-              "guides/workspaces/kyc-onboarding",
-              "guides/workspaces/incident-management"
-            ]
-          },
-          {
-            "group": "Troubleshooting",
-            "pages": [
-              "guides/troubleshooting-onboarding-authentication"
-            ]
-          },
-          {
-            "group": "Integrations",
-            "pages": [
-              "guides/integrations/overview",
-              "guides/integrations/stripe"
-            ]
-          },
-          {
-            "group": "Contributing",
-            "pages": [
-              "guides/forestadmin-experimental"
             ]
           }
         ]
@@ -445,6 +371,18 @@
             "pages": [
               "legacy/agents-overview",
               "legacy/migration-guides"
+            ]
+          },
+          {
+            "group": "Migrating from v1",
+            "pages": [
+              "guides/migration/overview",
+              "guides/migration/from-v1/overview",
+              "guides/migration/from-v1/steps/datasources",
+              "guides/migration/from-v1/steps/smart-actions",
+              "guides/migration/from-v1/steps/smart-fields",
+              "guides/migration/from-v1/steps/smart-relationships",
+              "guides/migration/from-v1/steps/smart-segments"
             ]
           },
           {
@@ -1131,7 +1069,7 @@
   },
   "anchors": [
     {
-      "name": "Forest Admin",
+      "name": "Forest",
       "url": "https://www.forestadmin.com",
       "icon": "globe"
     },

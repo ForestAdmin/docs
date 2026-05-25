@@ -31,6 +31,10 @@ const agent = createAgent({
 | `false` (development) | Regenerates `.forestadmin-schema.json` on every restart |
 | `true` (production) | Never regenerates — uses the schema file deployed alongside the code |
 
+<Frame caption="The schema file is generated on every restart in dev, then frozen and deployed alongside production code">
+  <img src="/images/schema/under-the-hood-versioning.png" alt="Schema file versioning lifecycle" />
+</Frame>
+
 ## Why versioning matters
 
 In **remote and production environments**, the agent does NOT regenerate the schema file. It uses the version that was deployed with your code. This means:

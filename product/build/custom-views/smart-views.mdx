@@ -5,6 +5,10 @@ description: Build fully custom collection views using JavaScript, HTML, and CSS
 
 Smart Views let you replace the default table view with any UI you can code. Display orders on a map, events in a calendar, pictures in a gallery — all powered by your real data and integrated with Forest actions.
 
+<Frame caption="A map-based Smart View replacing the default table view">
+  <img src="/images/smart-views/smart-view-map.png" alt="Map Smart View on a collection" />
+</Frame>
+
 ## What is a smart view?
 
 A Smart View is a [Glimmer Component](https://api.emberjs.com/ember/3.28/modules/@glimmer%2Fcomponent) composed of three files: a JavaScript component, an HTML/Handlebars template, and a CSS stylesheet. Forest hosts and runs this code directly in your back-office.
@@ -20,6 +24,10 @@ A Smart View is a [Glimmer Component](https://api.emberjs.com/ember/3.28/modules
 ## Creating a smart view
 
 Forest provides an online editor to write your Smart View code. Access it from the collection's **Settings**, then the **Smart Views** tab.
+
+<Frame caption="The Smart View code editor — template, component, and style tabs">
+  <img src="/images/smart-views/smart-view-calendar-code.png" alt="Smart View code editor" />
+</Frame>
 
 ## Available properties
 
@@ -283,17 +291,37 @@ To activate a Smart View on a collection:
 2. Click the **view type** button (table icon)
 3. Drag and drop your Smart View to the first position in the dropdown
 
+<Frame caption="Reordering views in Layout Editor mode to apply a Smart View">
+  <img src="/images/smart-views/smart-view-ordering.png" alt="Reordering Smart Views in Layout Editor" />
+</Frame>
+
+<Frame caption="Enabling Layout Editor mode from the top navigation bar">
+  <img src="/images/smart-views/smart-view-layout-editor.png" alt="Layout Editor toggle in the top navigation" />
+</Frame>
+
 The view refreshes automatically. Disable Layout Editor mode when done.
 
 <Info>
   Once a Smart View is applied to a collection, it also appears in related data panels and summary views. It is not currently possible to set different views for the table, summary, and related data contexts independently.
 </Info>
 
+<Frame caption="A Smart View also appears in Related Data panels">
+  <img src="/images/smart-views/smart-view-related-data.png" alt="Smart View in a Related Data panel" />
+</Frame>
+
+<Frame caption="A Smart View also appears in Summary Views">
+  <img src="/images/smart-views/smart-view-summary-view.png" alt="Smart View in a Summary View" />
+</Frame>
+
 ## Examples
 
 ### Calendar view
 
 Displays collection records on a calendar using [FullCalendar](https://fullcalendar.io/). The component loads the library from CDN and uses date-range conditions to fetch relevant records.
+
+<Frame caption="Calendar Smart View built with FullCalendar">
+  <img src="/images/smart-views/smart-view-calendar.png" alt="Calendar Smart View" />
+</Frame>
 
 ```js title="component.js"
 import Component from '@glimmer/component';
@@ -449,6 +477,10 @@ export default class extends Component {
 
 Displays geo-located records on an interactive map using [Leaflet](https://leafletjs.com/). Clicking a marker opens the corresponding record. New records can be created by placing a marker.
 
+<Frame caption="Delivery map Smart View built with Leaflet">
+  <img src="/images/smart-views/smart-view-delivery-map.png" alt="Delivery map Smart View" />
+</Frame>
+
 ```js title="component.js"
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
@@ -596,6 +628,10 @@ export default class extends Component {
 
 Displays records as a grid of images. Each image links to the corresponding record's detail page.
 
+<Frame caption="Gallery Smart View showing records as a grid of images">
+  <img src="/images/smart-views/smart-view-gallery.png" alt="Gallery Smart View" />
+</Frame>
+
 ```js title="component.js"
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
@@ -674,6 +710,10 @@ export default class extends Component {
 ### Shipping status view
 
 Displays a master-detail layout: a scrollable list of orders on the left and a progress bar card on the right showing the shipping status of the selected order.
+
+<Frame caption="Shipping status Smart View — master-detail layout with a progress bar">
+  <img src="/images/smart-views/smart-view-shipping.png" alt="Shipping status Smart View" />
+</Frame>
 
 ```js title="component.js"
 import Component from '@glimmer/component';

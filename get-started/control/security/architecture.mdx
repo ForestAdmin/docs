@@ -18,28 +18,9 @@ When users access the Forest UI, their browser establishes two separate connecti
 1. **Forest servers:** Retrieves layout configuration, UI settings, and metadata
 2. **Your Agent:** Retrieves actual data from your database
 
-```
-┌─────────────┐
-│   User's    │
-│   Browser   │
-└──────┬──────┘
-       │
-       ├────────────────┐
-       │                │
-       ▼                ▼
-┌─────────────┐   ┌──────────────┐
-│   Forest    │   │  Your Agent  │
-│   Servers   │   │   (Your      │
-│   (UI/      │   │  Infrastructure)
-│  Layout)    │   │              │
-└─────────────┘   └──────┬───────┘
-                         │
-                         ▼
-                  ┌──────────────┐
-                  │  Your        │
-                  │  Database    │
-                  └──────────────┘
-```
+<Frame caption="The Forest privacy architecture: data flows directly between your agent and the user's browser">
+  <img src="/images/security/security-privacy-architecture.png" alt="Forest security and privacy architecture diagram" />
+</Frame>
 
 **What Forest sees:**
 - UI layouts and configurations
@@ -59,6 +40,10 @@ This architecture ensures your data remains within your infrastructure at all ti
 
 <Note>This is an add-on feature. This feature may not be available on all plans. Check the pricing page for more information, or contact us to enable it.</Note>
 
+<Frame caption="Your data never reaches third parties">
+  <img src="/images/security/security-privacy-no-3rd-party.png" alt="Diagram showing no third-party data sharing" />
+</Frame>
+
 Forest guarantees data privacy across all plan levels:
 
 - **No data sharing:** Your data is never sold or shared with third parties
@@ -70,6 +55,10 @@ Forest guarantees data privacy across all plan levels:
 ### Token-based authentication
 
 Forest uses a **dual-token authentication system** to secure both UI access and Agent communication.
+
+<Frame caption="The dual-token authentication flow">
+  <img src="/images/security/security-privacy-credentials.png" alt="Forest authentication credentials flow" />
+</Frame>
 
 #### FOREST_ENV_SECRET
 
@@ -132,6 +121,10 @@ FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 
 Both tokens are JSON Web Tokens (JWT) containing user context:
 
+<Frame caption="JWT token issuance and validation flow">
+  <img src="/images/security/security-privacy-jwt.png" alt="JWT token flow between Forest and your agent" />
+</Frame>
+
 **Token payload includes:**
 - User ID
 - Email
@@ -177,6 +170,10 @@ end
 ### Infrastructure flexibility
 
 You maintain **complete control** over your Agent deployment:
+
+<Frame caption="Deploying the Forest agent behind a DMZ or VPN">
+  <img src="/images/security/security-privacy-dmz-vpn.png" alt="Forest agent deployment behind DMZ and VPN" />
+</Frame>
 
 **Deployment options:**
 - **DMZ (Demilitarized Zone):** Deploy Agent in isolated network segment

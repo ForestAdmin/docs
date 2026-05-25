@@ -5,6 +5,10 @@ description: Collect user input with static and dynamic action forms
 
 Action forms let you collect user input before executing an action. Forms can be static with fixed fields, or dynamic with fields that adapt based on context or user input.
 
+<Frame caption="An action form displayed in Forest Admin">
+  <img src="/images/actions/actions-forms-charge-cc.png" alt="Action form displayed in Forest Admin" />
+</Frame>
+
 ## Field properties
 
 Fields are configurable using the following properties:
@@ -158,6 +162,10 @@ Reference to a record from another collection.
   description: 'Select the user to assign this ticket to'
 }
 ```
+
+<Frame caption="Collection reference widget on an action form">
+  <img src="/images/actions/actions-form-collection.png" alt="Collection reference widget on an action form" />
+</Frame>
 
 The value will be the primary key of the selected record (as an array for composite keys).
 
@@ -405,6 +413,67 @@ Multi-line text input.
 { type: 'String', label: 'Notes', widget: 'TextArea' }
 ```
 
+<Frame caption="TextArea widget on an action form">
+  <img src="/images/actions/action-forms-widget-text-area.png" alt="TextArea widget on an action form" />
+</Frame>
+
+### TextInput
+
+One-line text input — the default widget for `String` fields.
+
+```javascript
+{ type: 'String', label: 'Name', widget: 'TextInput' }
+```
+
+<Frame caption="TextInput widget on an action form">
+  <img src="/images/actions/action-forms-widget-text-input.png" alt="TextInput widget on an action form" />
+</Frame>
+
+### TextInputList
+
+One-line text input to enter a list of string values.
+
+```javascript
+{ type: 'StringList', label: 'Tags', widget: 'TextInputList' }
+```
+
+<Frame caption="TextInputList widget on an action form">
+  <img src="/images/actions/action-forms-widget-text-input-list.png" alt="TextInputList widget on an action form" />
+</Frame>
+
+### AddressAutocomplete
+
+Text input with address autocomplete powered by the Google Maps API.
+
+```javascript
+{
+  type: 'String',
+  label: 'Address',
+  widget: 'AddressAutocomplete',
+  placeholder: 'Type the address here'
+}
+```
+
+<Frame caption="AddressAutocomplete widget — empty state">
+  <img src="/images/actions/action-forms-widget-address-autocomplete-empty.png" alt="AddressAutocomplete widget on an action form, empty state" />
+</Frame>
+
+<Frame caption="AddressAutocomplete widget — with suggestions">
+  <img src="/images/actions/action-forms-widget-address-autocomplete-open.png" alt="AddressAutocomplete widget on an action form, with suggestions" />
+</Frame>
+
+### Checkbox
+
+Single checkbox for boolean values.
+
+```javascript
+{ type: 'Boolean', label: 'Send a notification', widget: 'Checkbox' }
+```
+
+<Frame caption="Checkbox widget on an action form">
+  <img src="/images/actions/action-forms-widget-checkbox.png" alt="Checkbox widget on an action form" />
+</Frame>
+
 ### Dropdown
 
 Alternative to Enum for dropdown selection.
@@ -418,6 +487,10 @@ Alternative to Enum for dropdown selection.
 }
 ```
 
+<Frame caption="Dropdown widget on an action form">
+  <img src="/images/actions/actions-forms-widget-dropdown.png" alt="Dropdown widget on an action form" />
+</Frame>
+
 ### RadioGroup
 
 Radio buttons for single selection.
@@ -430,6 +503,10 @@ Radio buttons for single selection.
   enumValues: ['Free', 'Pro', 'Enterprise']
 }
 ```
+
+<Frame caption="RadioGroup widget on an action form">
+  <img src="/images/actions/action-forms-widget-radio-group.png" alt="RadioGroup widget on an action form" />
+</Frame>
 
 ### CheckboxGroup
 
@@ -452,6 +529,18 @@ Calendar widget for date selection.
 { type: 'Date', label: 'Appointment', widget: 'DatePicker' }
 ```
 
+### TimePicker
+
+Input for entering a time value.
+
+```javascript
+{ type: 'Time', label: 'Opening time', widget: 'TimePicker' }
+```
+
+<Frame caption="TimePicker widget on an action form">
+  <img src="/images/actions/action-forms-widget-time-picker.png" alt="TimePicker widget on an action form" />
+</Frame>
+
 ### ColorPicker
 
 Color selection widget.
@@ -468,6 +557,10 @@ File upload with preview.
 { type: 'File', label: 'Profile picture', widget: 'FilePicker' }
 ```
 
+<Frame caption="FilePicker widget on an action form">
+  <img src="/images/actions/action-forms-widget-file-picker.png" alt="FilePicker widget on an action form" />
+</Frame>
+
 ### JsonEditor
 
 JSON editor with syntax highlighting.
@@ -476,6 +569,10 @@ JSON editor with syntax highlighting.
 { type: 'Json', label: 'Configuration', widget: 'JsonEditor' }
 ```
 
+<Frame caption="JsonEditor widget on an action form">
+  <img src="/images/actions/action-forms-widget-json-editor.png" alt="JsonEditor widget on an action form" />
+</Frame>
+
 ### UserDropdown
 
 Dropdown pre-filled with Forest users.
@@ -483,6 +580,10 @@ Dropdown pre-filled with Forest users.
 ```javascript
 { type: 'String', label: 'Assigned to', widget: 'UserDropdown' }
 ```
+
+<Frame caption="UserDropdown widget on an action form">
+  <img src="/images/actions/action-forms-widget-user-dropdown.png" alt="UserDropdown widget on an action form" />
+</Frame>
 
 ### CurrencyInput
 
@@ -497,6 +598,10 @@ Number input with currency formatting.
 }
 ```
 
+<Frame caption="CurrencyInput widget on an action form">
+  <img src="/images/actions/action-forms-widget-currency-input.png" alt="CurrencyInput widget on an action form" />
+</Frame>
+
 ### RichText
 
 Rich text editor with formatting options.
@@ -504,6 +609,10 @@ Rich text editor with formatting options.
 ```javascript
 { type: 'String', label: 'Content', widget: 'RichText' }
 ```
+
+<Frame caption="RichText widget on an action form">
+  <img src="/images/actions/action-forms-widget-rich-text.png" alt="RichText widget on an action form" />
+</Frame>
 
 ## Advanced patterns
 
@@ -685,4 +794,218 @@ execute: ->(context, result_builder) {
 }
 ```
 </CodeGroup>
+
+## Layout components
+
+Organize your fields with layout components — separators, rows, HTML blocks, and multi-page forms. Useful when a form has many fields and you want to break it into manageable chunks.
+
+### Common properties
+
+| Property | Required | Value | Description |
+|----------|----------|-------|-------------|
+| **type** | Yes | `"Layout"` | Differentiates a layout element from a field |
+| **component** | Yes | `"Separator"`, `"Row"`, `"HtmlBlock"`, `"Page"` | The layout component to render |
+| **if** (Node.js) / **if_condition** (Ruby) | No | callable | Only display if the function returns true |
+
+### Separator
+
+A horizontal line between two form elements.
+
+<CodeGroup>
+```javascript Node.js
+form: [
+  { type: 'String', label: 'firstName' },
+  { type: 'Layout', component: 'Separator' },
+  { type: 'String', label: 'lastName' },
+]
+```
+
+```ruby Ruby
+form: [
+  { type: FieldType::STRING, label: 'firstName' },
+  { type: FieldType::LAYOUT, component: 'Separator' },
+  { type: FieldType::STRING, label: 'lastName' },
+]
+```
+</CodeGroup>
+
+<Frame caption="A separator between two fields">
+  <img src="/images/actions/action-form-layout-separator.png" alt="Form with a horizontal separator between two fields" />
+</Frame>
+
+### HTML block
+
+Render arbitrary HTML content inside a form — useful for instructions, embedded content, or rich formatting.
+
+| Property | Required | Value | Description |
+|----------|----------|-------|-------------|
+| **component** | Yes | `"HtmlBlock"` | Enables this component |
+| **content** | Yes | string or callable returning a string | HTML content to render |
+
+<CodeGroup>
+```javascript Node.js
+{
+  type: 'Layout',
+  component: 'HtmlBlock',
+  content: ctx => `
+    <div style="text-align:center;">
+      <strong>Hi ${ctx.formValues.firstName} ${ctx.formValues.lastName}</strong>,
+      here you can put <strong style="color: red;">all the HTML</strong> you want.
+    </div>
+  `,
+}
+```
+
+```ruby Ruby
+{
+  type: FieldType::LAYOUT,
+  component: 'HtmlBlock',
+  content: ->(context) {
+    "<div style=\"text-align:center;\"><strong>Hi #{context.form_values['firstName']}</strong></div>"
+  },
+}
+```
+</CodeGroup>
+
+<Frame caption="An HTML block rendered inside an action form">
+  <img src="/images/actions/action-form-layout-htmlblock.png" alt="Action form with embedded HTML content" />
+</Frame>
+
+### Row
+
+Display two fields side by side on the same line.
+
+<Warning>
+  A row is designed for **exactly two fields**. If `if` conditions hide one, the remaining field fills the line. If more than two are visible, only the first two render.
+</Warning>
+
+| Property | Required | Value | Description |
+|----------|----------|-------|-------------|
+| **component** | Yes | `"Row"` | Enables this component |
+| **fields** | Yes | array of two fields | The two fields to display side by side. No nested layout elements allowed. |
+
+<CodeGroup>
+```javascript Node.js
+{
+  type: 'Layout',
+  component: 'Row',
+  fields: [
+    { label: 'gender', type: 'Enum', enumValues: ['M', 'F', 'other'] },
+    {
+      label: 'specify',
+      type: 'String',
+      if: ctx => ctx.formValues?.gender === 'other',
+    },
+  ],
+}
+```
+
+```ruby Ruby
+{
+  type: FieldType::LAYOUT,
+  component: 'Row',
+  fields: [
+    { label: 'gender', type: FieldType::ENUM, enum_values: ['M', 'F', 'other'] },
+    {
+      label: 'specify',
+      type: FieldType::STRING,
+      if_condition: ->(context) { context.form_values['gender'] == 'other' },
+    },
+  ],
+}
+```
+</CodeGroup>
+
+<Frame caption="Two fields displayed side by side in a row">
+  <img src="/images/actions/action-form-layout-row.png" alt="Two action form fields side by side" />
+</Frame>
+
+### Multi-page form
+
+Break a long form into multiple pages, with next/previous navigation.
+
+<Warning>
+  When using pages, you **must have only** `Page` components at the root of your form — no mixing fields and pages at the root, no nesting pages inside pages.
+</Warning>
+
+| Property | Required | Value | Description |
+|----------|----------|-------|-------------|
+| **component** | Yes | `"Page"` | Enables this component |
+| **elements** | Yes | array of fields and layout elements | Fields and layouts shown on this page |
+| **nextButtonLabel** (Node.js) / **next_button_label** (Ruby) | No | string | Label for the next button |
+| **previousButtonLabel** (Node.js) / **previous_button_label** (Ruby) | No | string | Label for the previous button |
+
+<CodeGroup>
+```javascript Node.js
+form: [
+  {
+    type: 'Layout',
+    component: 'Page',
+    nextButtonLabel: 'Go to address',
+    elements: [
+      { type: 'String', id: 'Firstname', label: 'First name' },
+      { type: 'String', id: 'Lastname', label: 'Last name' },
+      { type: 'Layout', component: 'Separator' },
+      { type: 'Date', id: 'Birthdate', label: 'Birth date' },
+    ],
+  },
+  {
+    type: 'Layout',
+    component: 'Page',
+    previousButtonLabel: 'Go back to identity',
+    elements: [
+      {
+        type: 'Layout',
+        component: 'Row',
+        fields: [
+          { type: 'Number', id: 'StreetNumber', label: 'Street number' },
+          { type: 'String', id: 'StreetName', label: 'Street name' },
+        ],
+      },
+      { type: 'String', id: 'PostalCode', label: 'Postal code' },
+      { type: 'String', id: 'City', label: 'City' },
+      { type: 'String', id: 'Country', label: 'Country' },
+    ],
+  },
+]
+```
+
+```ruby Ruby
+form: [
+  {
+    type: FieldType::LAYOUT,
+    component: 'Page',
+    next_button_label: 'Go to address',
+    elements: [
+      { type: FieldType::STRING, id: 'Firstname', label: 'First name' },
+      { type: FieldType::STRING, id: 'Lastname', label: 'Last name' },
+      { type: FieldType::LAYOUT, component: 'Separator' },
+      { type: FieldType::DATE, id: 'Birthdate', label: 'Birth date' },
+    ],
+  },
+  {
+    type: FieldType::LAYOUT,
+    component: 'Page',
+    previous_button_label: 'Go back to identity',
+    elements: [
+      { type: FieldType::STRING, id: 'PostalCode', label: 'Postal code' },
+      { type: FieldType::STRING, id: 'City', label: 'City' },
+      { type: FieldType::STRING, id: 'Country', label: 'Country' },
+    ],
+  },
+]
+```
+</CodeGroup>
+
+<Frame caption="First page of a multi-page action form">
+  <img src="/images/actions/action-form-layout-pages-1.png" alt="Page 1 of a multi-page action form" />
+</Frame>
+
+<Frame caption="Second page of a multi-page action form">
+  <img src="/images/actions/action-form-layout-pages-2.png" alt="Page 2 of a multi-page action form" />
+</Frame>
+
+<Note>
+  If every element on a page is hidden by `if` conditions, the page is automatically removed. To prevent this, add an unconditional `HtmlBlock` explaining why the page is empty.
+</Note>
 

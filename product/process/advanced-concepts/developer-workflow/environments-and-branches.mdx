@@ -78,17 +78,29 @@ You may also delete an Environment. **Be very careful** as there is no going bac
 
 A **layout** is all the configuration that **defines your user interface (UI)**. In Forest, there is 1 layout per environment and per team.
 
+<Frame caption="One layout per environment per team">
+  <img src="/images/branches/branch-layout.png" alt="Diagram showing one layout per environment and team" />
+</Frame>
+
 The [Forest CLI](/reference/cli/overview) will help you manage layouts across environments.
 
 ### What is a branch?
 
 A Branch is a fork (i.e. copy) of the layout of the Environment it is attached to. A Branch can only be created in your own Development Environment.
 
+<Frame caption="A branch is a copy of its origin environment's layout">
+  <img src="/images/branches/branch-how-it-works.png" alt="Diagram of how branches work in Forest" />
+</Frame>
+
 <Info>
   The **origin** of a branch is either specified using the `--origin` option or selected when prompted. You should choose the environment you want to make some layout changes on.
 </Info>
 
 Once you've created a Branch, your layout will look exactly like the layout of its origin Environment.
+
+<Frame caption="A branch and its origin environment side by side">
+  <img src="/images/branches/branch-example.png" alt="Example showing branch and origin environment relationship" />
+</Frame>
 
 ### How do branches work?
 
@@ -123,6 +135,10 @@ The interface shows at all times what is your current Branch and how many layout
 ---
 
 ## Deploying your changes
+
+<Frame caption="The development workflow: branch → push to remote → deploy to production">
+  <img src="/images/branches/dev-workflow-diagram.jpg" alt="Forest development workflow diagram" />
+</Frame>
 
 ### Applying your changes to production: `deploy`
 

@@ -16,6 +16,10 @@ execute: async (context, resultBuilder) => {
 }
 ```
 
+<Frame caption="Default success notification displayed after an action runs">
+  <img src="/images/actions/actions-default-success-result.png" alt="Default success notification" />
+</Frame>
+
 ## Success notification
 
 Display a custom success message.
@@ -29,6 +33,10 @@ return resultBuilder.success('Company is now live!');
 result_builder.success(message: 'Company is now live!')
 ```
 </CodeGroup>
+
+<Frame caption="Custom success notification">
+  <img src="/images/actions/actions-custom-success-result.png" alt="Custom success notification" />
+</Frame>
 
 ## Error notification
 
@@ -48,6 +56,10 @@ end
 ```
 </CodeGroup>
 
+<Frame caption="Custom error notification">
+  <img src="/images/actions/actions-custom-error-result.png" alt="Custom error notification" />
+</Frame>
+
 <Note>
 Always handle errors gracefully and return meaningful error messages to help users understand what went wrong.
 </Note>
@@ -55,6 +67,10 @@ Always handle errors gracefully and return meaningful error messages to help use
 ## HTML result
 
 Return rich formatted content displayed in a side panel. Perfect for showing detailed operation results.
+
+<Frame caption="HTML result displayed in a side panel after an action runs">
+  <img src="/images/actions/actions-html-result-success.png" alt="HTML success result in a side panel" />
+</Frame>
 
 <CodeGroup>
 ```javascript Node.js / Cloud
