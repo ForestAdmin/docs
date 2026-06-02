@@ -23,8 +23,15 @@ Actions are available throughout Forest:
 
 - **Collections**
   - **Table view**: Actions on records in table and detail views (single, bulk, or global actions)
+  <Frame>
+    ![Screenshot 2026 06 02 At 10 41 26](/images/Screenshot-2026-06-02-at-10.41.26.png)
+  </Frame>
   - **Details tab**: Trigger an Action on the selected record, from its Details tab
-  - **Summary tab**: Trigger an Action from a record's summary tab, when configured
+  <Frame>
+    ![Screenshot 2026 06 02 At 10 42 16](/images/Screenshot-2026-06-02-at-10.42.16.png)
+  </Frame>
+  - **Summary tab**: Trigger an Action from a record's summary view, when configured
+
 - **Workspaces** - learn more [here](/product/build/workspaces)
 - **Workflows** - learn more [here](/product/execute/workflows)
 
@@ -35,11 +42,11 @@ Forest provides native actions out-of-the-box:
 | Action | Description | Scope |
 | --- | --- | --- |
 | **Create** | Add a new record | Global |
-| **Update** | Edit record fields | Single / Bulk |
-| **Delete** | Remove records | Single / Bulk |
+| **Update** | Edit record fields | Single |
+| **Delete** | Delete a record | Single / Bulk |
 | **Duplicate** | Copy an existing record | Single |
-| **Export** | Download data as CSV | Bulk / Global |
-| **Assign to** | Assign records to team members | Single / Bulk |
+| **Export** | Download all records as a CSV | Global |
+| **Assign to** | Assign records to team members | Single |
 
 These work automatically with your data structure and require no configuration.
 
@@ -49,31 +56,23 @@ These work automatically with your data structure and require no configuration.
 
 ## Custom actions
 
-Beyond built-in actions, create your own custom actions in two ways:
+Beyond built-in actions, create your own custom actions with custom code in your backend:
 
-### No-code actions
-
-Connect Forest to external services without writing code:
-
-- **Webhooks**: Call APIs with Make, n8n, Zapier
-- **Update fields**: Change record values directly from the UI
-- **Simple workflows**: Trigger external automations
-
-Perfect for non-technical teams and simple operations.
-
-<Card title="No-code actions" icon="plug" href="/product/process/actions/nocode-actions">
-  Create actions with webhooks and integrations
-</Card>
-
-### Code-based actions
-
-Build advanced actions with custom code in your backend:
-
-- **Complex business logic**: Multi-step workflows, validations
+- **Complex business logic**
 - **Dynamic forms**: Forms that adapt to user input
 - **External integrations**: Deep API integrations
 - **File generation**: Create PDFs, CSVs, reports
 - **Custom result types**: HTML responses, redirects, downloads
+
+<Frame>
+  <img
+    src="/images/Screenshot-2026-06-02-at-10.47.02.png"
+    alt="Screenshot 2026 06 02 At 10 47 02"
+    title="Screenshot 2026 06 02 At 10 47 02"
+    className="mx-auto"
+    style={{ width:"46%" }}
+  />
+</Frame>
 
 For developers who need full control and flexibility.
 
@@ -93,18 +92,22 @@ Every action has a **scope** that defines when it's available:
 
 ## Action types
 
-Customize the appearance of action buttons to match their purpose:
+You can customize the appearance of action buttons to match their purpose, via the Collection settings:
 
 | Type | Color | Use case |
 | --- | --- | --- |
-| **Default** | Gray | Standard operations |
+| **Default** | Interface color | Standard operations |
 | **Info** | Blue | Informational actions |
 | **Success** | Green | Positive actions (approve, confirm) |
 | **Warning** | Orange | Actions requiring attention |
 | **Danger** | Red | Destructive actions (delete, ban) |
 | **Neutral** | Light gray | Secondary actions |
 
-The button color helps users quickly identify the nature of an action before executing it.
+<Frame>
+  ![Screenshot 2026 06 02 At 10 40 09](/images/Screenshot-2026-06-02-at-10.40.09.png)
+</Frame>
+
+The button color helps users quickly identify the nature of an action before executing it from a Workspace or Summary View.
 
 ## Action visibility
 
@@ -112,27 +115,23 @@ Control when and where actions appear in your interface.
 
 **Role-based permissions** determine which users can see and execute specific actions. Configure permissions per team and role to restrict sensitive operations. See [Roles & permissions](/get-started/control/roles-permissions) for configuration.
 
-**Conditional visibility** allows actions to appear only when certain conditions are met. Show actions based on segment membership, specific field values, or custom permission logic.
-
-**Approval workflows** require validation from another authorized user before execution. This adds a review step for critical operations. See [Approval workflows](/product/collaborate/approval-workflows) for more information.
-
-## Making actions visible
-
-After creating a code-based action in your codebase, make it visible in the Forest interface:
-
-1. **Deploy your code**
-2. **Enable Layout Editor mode** in Forest
-3. **Go to Collection Settings** (gear icon) → Actions tab
-4. **Find your action** and toggle it to **Visible**
-5. **Configure permissions** for each role in Project Settings
-
-<Frame caption="Toggling an action to Visible from collection settings">
-  <img src="/images/actions/actions-visibility.png" alt="Making an action visible in Forest Admin" />
+<Frame>
+  ![Screenshot 2026 06 02 At 10 59 01](/images/Screenshot-2026-06-02-at-10.59.01.png)
 </Frame>
 
-<Note>
-  Actions are only visible if they are marked as "visible" in the UI and the user's role has "trigger" permission.
-</Note>
+**Approval workflows** require validation from another authorized user before execution. This adds a review step for critical operations. See [Approval workflows](https://forest.mintlify.app/product/collaborate/approval-workflows) for more information.
+
+**Conditional visibility** allows actions to appear only when certain conditions are met, i.e. when the selected record belong to one or more specific segments.
+
+<Frame>
+  <img
+    src="/images/Screenshot-2026-06-02-at-11.23.51.png"
+    alt="Screenshot 2026 06 02 At 11 23 51"
+    title="Screenshot 2026 06 02 At 11 23 51"
+    className="mx-auto"
+    style={{ width:"66%" }}
+  />
+</Frame>
 
 ## What actions enable
 
