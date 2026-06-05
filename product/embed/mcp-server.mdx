@@ -1,11 +1,11 @@
 ---
-title: MCP Server
-description: Integrate Forest with AI tools using the Model Context Protocol
+title: "Forest MCP"
+description: "Securely access your Forest data and actions from AI-enabled third party apps using the Model Context Protocol."
 ---
 
 # MCP server
 
-Forest provides a Model Context Protocol (MCP) server that allows AI assistants and tools to interact with your back-office programmatically.
+Forest provides an MCP server that allows AI assistants and tools to securely interact with your back-office, using natural language.
 
 ## What is MCP?
 
@@ -19,6 +19,7 @@ The Model Context Protocol (MCP) is an open standard for connecting AI assistant
 ## Installation
 
 <CodeGroup>
+
 ```bash npm
 npm install @forestadmin/mcp-server
 ```
@@ -26,6 +27,7 @@ npm install @forestadmin/mcp-server
 ```bash yarn
 yarn add @forestadmin/mcp-server
 ```
+
 </CodeGroup>
 
 ## Configuration
@@ -52,16 +54,19 @@ Configure the MCP server in your AI tool's settings:
 The MCP server exposes the following capabilities:
 
 ### Data access
+
 - **Browse collections**: View available collections and their schemas
 - **Query records**: Search and filter records across collections
 - **Read relationships**: Access related data through relationships
 
 ### Actions
+
 - **Execute actions**: Run Smart Actions on records
 - **Bulk operations**: Perform operations on multiple records
 - **Approval workflows**: Interact with approval workflows
 
 ### Context
+
 - **Schema information**: Get collection and field definitions
 - **Business rules**: Access validation rules and constraints
 - **User permissions**: Check what operations are allowed
@@ -69,7 +74,9 @@ The MCP server exposes the following capabilities:
 ## Use cases
 
 ### AI-assisted operations
+
 Use Claude or other AI assistants to:
+
 - Answer questions about your data
 - Generate reports and insights
 - Automate routine tasks
@@ -86,11 +93,12 @@ Use Claude or other AI assistants to:
 ## Security
 
 The MCP server:
+
 - Respects all Forest permissions and roles
 - Uses your environment's authentication
 - Logs all operations for audit purposes
 - Never exposes sensitive data without proper access
 
 <Warning>
-Only provide MCP server access to trusted AI tools and users. The server can perform any operation that the authenticated user can perform.
+  Only provide MCP server access to trusted AI tools and users. The server can perform any operation that the authenticated user can perform.
 </Warning>

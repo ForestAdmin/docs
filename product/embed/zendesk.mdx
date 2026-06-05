@@ -1,18 +1,59 @@
 ---
 title: "Zendesk app"
-description: "Embed Forest data directly inside Zendesk tickets and customer profiles."
+description: "Embed Forest data and actions inside Zendesk tickets and customer profiles."
 ---
 
 The Forest Zendesk app lets you view and act on your data without leaving Zendesk. Access customer records, trigger actions, and see related data inline in ticket sidebars.
 
-<Note>This feature may not be available on all plans. Check the pricing page for more information, or contact us to enable it.</Note>
+<Note>
+  This feature may not be available on all plans. Check the pricing page for more information, or contact us to enable it.
+</Note>
 
-## How it works
+# How it works
 
-The app uses Forest's embed capabilities to surface your collections inside Zendesk. Install the app from the Zendesk marketplace, connect it to your Forest project, and configure which collections to display.
+The app uses the Forest MCP to surface your data and actions inside Zendesk. Install the app from the Zendesk marketplace, connect it to your Forest project, and configure which collections to display.
 
-## Setup
+# Install Guide
 
-1. Install the Forest app from the Zendesk marketplace.
-2. Connect the app to your Forest project using your project credentials.
-3. Configure which collections to display in ticket sidebars and customer profiles.
+## Pre-requisites
+
+1. Ensure the Forest MCP Server is up and running on your Forest project
+   <Note>
+     If you haven't configured the Forest MCP Server, refer to this guide [here](/product/embed/mcp-server)
+   </Note>
+2. Make a note of your Forest MCP Server URL; you will need it when installing the Zendesk app
+
+## Installing the Zendesk app
+
+1. Find the [Forest app in the Zendesk Marketplace](https://www.zendesk.fr/marketplace/apps/support/1231469/forest-admin/?queryID=507953d20df1906a17dbad7341966557)
+2. Click on Install
+3. Enter your Zendesk URL and click on Next; you will be re-directed to your Zendesk Admin Center
+   <Note>
+     You will need to be an Admin in Zendesk to access the Admin Center.
+   </Note>
+4. In the Installation form, you will need to provide:
+   1. The forestAgentUrl: this is the URL of your Forest MCP Server (as mentioned in the Pre-requisites section)
+   2. The contextField: this is the Zendesk Ticket Field that will be used to match the Ticket Sender with a record from your Forest project data
+   3. Optionally, you can set restrictions on which Zendesk Roles and Groups to grant access to the Forest app
+5. Click on Install
+
+<Check>
+  The Forest Zendesk app is now installed! It can now be added to your ticket sidebar, from the Apps tab.
+</Check>
+
+<Frame>
+  ![Screenshot 2026 06 05 At 11 15 59](/images/Screenshot-2026-06-05-at-11.15.59.png)
+</Frame>
+
+## Configuring the Zendesk App
+
+Now that the Forest app has been installed in your Zendesk project, your agents will simply need to configure it:
+
+1. In the Forest Admin app, click on "Connect with Forest Admin"
+2. Enter your Forest Admin credentials, as you usually would to access your Forest Admin project
+
+<Danger>
+  THE APP IS BROKEN SO I CAN'T REALLY GO BEYOND THIS POINT SO WE'LL UPDATE ONCE IT ACTUALLY WORKS SORRY THX BYYYEEE
+</Danger>
+
+# F.A.Q.
