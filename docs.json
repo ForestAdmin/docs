@@ -233,7 +233,9 @@
             "pages": [
               "product/embed/mcp-server",
               "product/embed/zendesk",
-              "product/embed/n8n"
+              "product/embed/n8n",
+              "product/embed/claude",
+              "product/embed/untitled-page"
             ]
           },
           {

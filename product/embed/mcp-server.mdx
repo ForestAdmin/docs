@@ -3,20 +3,23 @@ title: "Forest MCP"
 description: "Securely access your Forest data and actions from AI-enabled third party apps using the Model Context Protocol."
 ---
 
-# MCP server
+# What is the Model Context Protocol (MCP)?
 
-Forest provides an MCP server that allows AI assistants and tools to securely interact with your back-office, using natural language.
+The Model Context Protocol (MCP) is an open standard for connecting AI assistants to external data and tools through natural language.
 
-## What is MCP?
+# What can the Forest MCP do?
 
-The Model Context Protocol (MCP) is an open standard for connecting AI assistants to external data sources and tools. Forest's MCP server enables AI tools like Claude to:
+The Forest MCP server lets AI tools like [Claude](/product/embed/claude), [Dust](/product/embed/untitled-page), and others to:
 
-- Query and browse your data
-- Execute actions on records
 - Access collection schemas
-- Retrieve business context
+- Securely query and browse your data
+- Execute actions on records
 
-## Installation
+All of this while respecting the Roles & Permissions of your Forest project, and while logging every activity, just like if they were performed through the UI.
+
+The Forest MCP Server also enables other third party apps to embed and access Forest data and actions, for example in [Zendesk](/product/embed/zendesk) or [n8n](/product/embed/n8n).
+
+# Enabling the Forest MCP Server
 
 <CodeGroup>
 
@@ -30,26 +33,7 @@ yarn add @forestadmin/mcp-server
 
 </CodeGroup>
 
-## Configuration
-
-Configure the MCP server in your AI tool's settings:
-
-```json
-{
-  "mcpServers": {
-    "forestadmin": {
-      "command": "npx",
-      "args": ["-y", "@forestadmin/mcp-server"],
-      "env": {
-        "FOREST_ENV_SECRET": "your-environment-secret",
-        "FOREST_SERVER_URL": "your-server-url"
-      }
-    }
-  }
-}
-```
-
-## Available tools
+# Available tools
 
 The MCP server exposes the following capabilities:
 
@@ -92,7 +76,7 @@ Use Claude or other AI assistants to:
 
 ## Security
 
-The MCP server:
+The Forest MCP server:
 
 - Respects all Forest permissions and roles
 - Uses your environment's authentication
