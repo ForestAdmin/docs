@@ -34,7 +34,7 @@ collection('customers', {
 ```
 
 \
-Very often, the business logic behind the Smart Field is more complex and must be asynchronous. To do that, please have a look at [this section](./#createadvancedsmartfield).
+Very often, the business logic behind the Smart Field is more complex and must be asynchronous. To do that, please have a look at [this section](/legacy/javascript-agents/reference-guide/smart-fields/overview#createadvancedsmartfield).
 
 ### Mongodb
 On our Live Demo, the very simple Smart Field `fullname` is available on the `customers` collection.
@@ -56,7 +56,7 @@ collection('customers', {
 ```
 
 \
-Very often, the business logic behind the Smart Field is more complex and must be asynchronous. To do that, please have a look at [this section](./#createadvancedsmartfield).
+Very often, the business logic behind the Smart Field is more complex and must be asynchronous. To do that, please have a look at [this section](/legacy/javascript-agents/reference-guide/smart-fields/overview#createadvancedsmartfield).
 
 ### Rails
 On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` collection.
@@ -527,8 +527,8 @@ Make sure you set the option `isFilterable: true` in the field definition of you
 <Warning>
 **Sorting** on a Smart Field is not _natively supported_ in Forest Admin. However you can check out those guides:
 
-- [Sort by Smart field](smart-field-examples/sort-by-smart-field.md)
-- [Sort by Smart field that includes value from a belongsTo relationship](smart-field-examples/sort-by-smart-field-that-includes-value-from-a-belongsto-relationship.md)
+- [Sort by Smart field](/legacy/javascript-agents/reference-guide/smart-fields/smart-field-examples/sort-by-smart-field)
+- [Sort by Smart field that includes value from a belongsTo relationship](/legacy/javascript-agents/reference-guide/smart-fields/smart-field-examples/sort-by-smart-field-that-includes-value-from-a-belongsto-relationship)
 </Warning>
 
 ### Available Field Options
@@ -541,7 +541,7 @@ Here are the list of available options to customize your Smart Field:
 | type        | string           | Type of your field. Can be `Boolean`, `Date`, `Json`,`Dateonly`, `Enum`, `File`, `Number, ['String']` or `String` .            |
 | enums       | array of strings | (optional) Required only for the `Enum` type. This is where you list all the possible values for your input field.             |
 | description | string           | (optional) Add a description to your field.                                                                                    |
-| reference   | string           | (optional) Configure the Smart Field as a [Smart Relationship](../models/relationships/#what-is-a-smart-relationship).         |
+| reference   | string           | (optional) Configure the Smart Field as a [Smart Relationship](/legacy/javascript-agents/reference-guide/models/relationships/overview#what-is-a-smart-relationship).         |
 | isReadOnly  | boolean          | (optional) If `true`, the Smart Field won’t be editable in the browser. Default is `true` if there’s no `set` option declared. |
 | isRequired  | boolean          | (optional) If true, your Smart Field will be set as required in the browser. Default is false.                                 |
 

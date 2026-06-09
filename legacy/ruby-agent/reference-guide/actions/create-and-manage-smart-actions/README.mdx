@@ -11,7 +11,7 @@ Sooner or later, you will need to perform actions on your data that are specific
 On our Live Demo example, our `companies` collection has many examples of Smart Action. The simplest one is `Mark as live`.
 
 <Info>
-If you're looking for information on native actions (CRUD), check out [this page](../).
+If you're looking for information on native actions (CRUD), check out [this page](/legacy/ruby-agent/reference-guide/actions/overview).
 </Info>
 
 ### Creating a Smart action
@@ -97,7 +97,7 @@ You must make sure that all your Smart Actions controllers extend from the `Fore
 </Warning>
 
 <Info>
-You may have to [add CORS headers](../../../how-tos/setup/configuring-cors-headers.md) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:3000_).
+You may have to [add CORS headers](/legacy/ruby-agent/how-tos/setup/configuring-cors-headers) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:3000_).
 </Info>
 
 ### Django
@@ -134,7 +134,7 @@ The business logic in this Smart Action is extremely simple. We only update here
 Note that Forest Admin takes care of the authentication thanks to the `ActionView` parent class view.
 
 <Info>
-You may have to [add CORS headers](../../../how-tos/setup/configuring-cors-headers.md) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:8000_).
+You may have to [add CORS headers](/legacy/ruby-agent/how-tos/setup/configuring-cors-headers) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:8000_).
 </Info>
 
 ### Laravel
@@ -154,7 +154,7 @@ If you want to customize the API call, check the list of [available options](htt
 
 The payload of the HTTP request is based on a [JSON API](http://jsonapi.org) document.\
 The `data.attributes.ids` key allows you to retrieve easily the selected records from the UI.\
-The `data.attributes.values` key contains all the values of your input fields ([handling input values](use-a-smart-action-form.md#handling-input-values)).\
+The `data.attributes.values` key contains all the values of your input fields ([handling input values](/legacy/ruby-agent/reference-guide/actions/create-and-manage-smart-actions/use-a-smart-action-form#handling-input-values)).\
 Other properties of `data.attributes` are used to manage the _select all_ behavior.
 
 ```javascript
@@ -184,8 +184,8 @@ Here is the list of available options to customize your Smart Action:
 | Name                | Type             | Description                                                                                                                                                          |
 | ------------------- | ---------------- |	---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name                | string           | Label of the action displayed in Forest Admin.                                                                                                                       |
-| type                | string           | (optional) [Type](../#triggering-different-types-of-actions) of the action. Can be `bulk`, `global` or `single`. Default is `bulk`.                                  |
-| fields              | array of objects | (optional) Check the [handling input values](use-a-smart-action-form.md#handling-input-values) section.                                                              |
+| type                | string           | (optional) [Type](/legacy/ruby-agent/reference-guide/actions/overview#triggering-different-types-of-actions) of the action. Can be `bulk`, `global` or `single`. Default is `bulk`.                                  |
+| fields              | array of objects | (optional) Check the [handling input values](/legacy/ruby-agent/reference-guide/actions/create-and-manage-smart-actions/use-a-smart-action-form#handling-input-values) section.                                                              |
 | download            | boolean          | (optional) If `true`, the action triggers a file download in the Browser. Default is `false`                                                                         |
 | endpoint            | string           | (optional) Set the API route to call when clicking on the Smart Action. Default is `'/forest/actions/name-of-the-action-dasherized'`                                 |
 | http_method         | string           | (optional) Set the HTTP method to use when clicking on the Smart Action. Default is `POST`.                                                                          |
@@ -193,7 +193,7 @@ Here is the list of available options to customize your Smart Action:
 | submit_button_label | string           | (optional) Sets the text written on the submit button at the end of the form. Default value is the Smart Action name.  ⚠️ only available in `forest_liana` **9.4.0** |
 
 <Check>
-Want to go further with Smart Actions? Read the [next page](use-a-smart-action-form.md) to discover how to make your Smart Actions even more powerful with **Forms**!
+Want to go further with Smart Actions? Read the [next page](/legacy/ruby-agent/reference-guide/actions/create-and-manage-smart-actions/use-a-smart-action-form) to discover how to make your Smart Actions even more powerful with **Forms**!
 </Check>
 
 ### Available Smart Action properties

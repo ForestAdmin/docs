@@ -24,7 +24,7 @@ The **reference** environment is the one at the very end of your development flo
 As all your environments' layouts depend on your **reference** environment, the `deploy` command will apply the layout changes to all your project environments. Deploy with care as such action **cannot be reverted**.
 </Warning>
 
-To achieve this, you'll be using Forest CLI's [deploy](forest-cli-commands/deploy.md) command from an environment **that has your reference environment as its origin**:
+To achieve this, you'll be using Forest CLI's [deploy](/legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/deploy) command from an environment **that has your reference environment as its origin**:
 
 ```
 forest deploy
@@ -35,27 +35,27 @@ The end result is the following:
 <img src="/images/legacy/javascript-agents/deploying_your_changes_2.jpg" alt="" />
 
 <Warning>
-If you want to deploy from an environment whose origin is not your reference environment, you'll need to use the [set-origin](forest-cli-commands/set-origin.md) environment first so you can make it its origin.
+If you want to deploy from an environment whose origin is not your reference environment, you'll need to use the [set-origin](/legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/set-origin) environment first so you can make it its origin.
 </Warning>
 
 <Warning>
-Don't forget to **deploy your backend changes** as well (if any), as showcased on [this flowchart](./#development-workflow).
+Don't forget to **deploy your backend changes** as well (if any), as showcased on [this flowchart](/legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/overview#development-workflow).
 </Warning>
 
 ### Testing your changes on a remote (i.e "staging"): `push`
 
 Say, before you deployed to Production, you wanted to test your charges on a staging first.
 
-`push` means moving your branch's changes to a remote environment set as origin of your branch. To achieve this, you'll be using Forest CLI's [push](forest-cli-commands/push.md) command:
+`push` means moving your branch's changes to a remote environment set as origin of your branch. To achieve this, you'll be using Forest CLI's [push](/legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/push) command:
 
 ```
 forest push
 ```
 
-Note that you'll be pushing your **current** branch. To select another branch, use [switch](forest-cli-commands/switch.md). If the origin of your branch is not the remote you want (ie: staging) change it with [set-origin](forest-cli-commands/set-origin.md)
+Note that you'll be pushing your **current** branch. To select another branch, use [switch](/legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/switch). If the origin of your branch is not the remote you want (ie: staging) change it with [set-origin](/legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/set-origin)
 
 <Info>
-As your company grows, so does your development flow: you may want a more complex architecture where you have more than one layer of test environments before production (i.e preprod). This is definitely possible using Forest CLI and the right environment settings, see [here](../environments.md#change-environment-origin).
+As your company grows, so does your development flow: you may want a more complex architecture where you have more than one layer of test environments before production (i.e preprod). This is definitely possible using Forest CLI and the right environment settings, see [here](/legacy/ruby-agent/reference-guide/how-it-works/environments#change-environment-origin).
 </Info>
 
 ####

@@ -600,7 +600,7 @@ To make a field read only, you can use the `isReadOnly` property:
 | ------------ | ------- | ---------------------------------------------------------------------------------------------- |
 | `isReadOnly` | boolean | (optional) If `true`, the Smart action field won’t be editable in the form. Default is `false` |
 
-Combined with the **load** [hook](./#making-a-form-dynamic) feature, this can be used to make a field read-only dynamically:
+Combined with the **load** [hook](/legacy/javascript-agents/reference-guide/actions/create-and-manage-smart-actions/overview#making-a-form-dynamic) feature, this can be used to make a field read-only dynamically:
 
 ```javascript
 const { customers } = require('../models');
@@ -869,11 +869,11 @@ actions 'Send invoice',
 The `hooks` property receives a _context_ object containing:
 
 - the `fields` array in its current state (containing also the current values)
-- the `request` object containing all the information related to the records selection. Explained [here](./#available-smart-action-properties).
+- the `request` object containing all the information related to the records selection. Explained [here](/legacy/javascript-agents/reference-guide/actions/create-and-manage-smart-actions/overview#available-smart-action-properties).
 - the `changedField` is the current field who trigger the hook (only for change hook)
 
 <Info>
-`fields` **must** be returned. Note that `fields` is an array containing existing fields with properties described in [this section](./#handling-input-values).
+`fields` **must** be returned. Note that `fields` is an array containing existing fields with properties described in [this section](/legacy/javascript-agents/reference-guide/actions/create-and-manage-smart-actions/overview#handling-input-values).
 </Info>
 
 <Warning>
@@ -885,7 +885,7 @@ If you want to use a widget inside of a hook, you'll need to use the following s
 - For a `file`, use `{ widgetEdit: 'file picker', parameters: {} }`
 </Warning>
 
-To dynamically change a property within a `load` or `change` [hook](use-a-smart-action-form.md#making-a-form-dynamic-with-hooks), just set it! For instance, setting a new _description_ for the field `city`:
+To dynamically change a property within a `load` or `change` [hook](/legacy/javascript-agents/reference-guide/actions/create-and-manage-smart-actions/use-a-smart-action-form#making-a-form-dynamic-with-hooks), just set it! For instance, setting a new _description_ for the field `city`:
 
 ### SQL
 
@@ -928,7 +928,7 @@ def send_invoice_load(fields, request, *args, **kwargs):
 ### Add/remove fields dynamically
 
 <Info>
-This feature is only available from [**version 8.0.0**](../../../how-tos/maintain/upgrade-notes-sql-mongodb/upgrade-to-v8.md) (`forest-express-sequelize` and `forest-express-mongoose`) / [**version 7.0.0**](../../../how-tos/maintain/upgrade-notes-sql-mongodb/upgrade-to-v7.md) (`forest-rails`).
+This feature is only available from [**version 8.0.0**](/legacy/javascript-agents/how-tos/maintain/upgrade-notes-sql-mongodb/upgrade-to-v8) (`forest-express-sequelize` and `forest-express-mongoose`) / [**version 7.0.0**](/legacy/javascript-agents/how-tos/maintain/upgrade-notes-sql-mongodb/upgrade-to-v7) (`forest-rails`).
 </Info>
 
 You can add a `field` dynamically inside the `fields` array, like so:

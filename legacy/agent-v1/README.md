@@ -93,4 +93,4 @@ See [Migration Guide](/guides/migration/from-v1/overview) for detailed changes.
 
 ---
 
-**⚠️ Important:** This documentation is for legacy reference only. For current documentation, see [Get Started](/get-started/introduction).
+**⚠️ Important:** This documentation is for legacy reference only. For current documentation, see [Get Started](/get-started/intro-to-forest-admin).

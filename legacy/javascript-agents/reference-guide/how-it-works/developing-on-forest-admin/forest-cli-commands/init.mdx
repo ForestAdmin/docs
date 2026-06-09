@@ -6,7 +6,7 @@ title: init
 
 The `forest init` command provides an all-in-one initialization command that will:
 
-- allow you to log in if you haven't already done so with [forest login](login.md)
+- allow you to log in if you haven't already done so with [forest login](/legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/login)
 - set up your own development environment on a given project.
 
 ```
@@ -21,7 +21,7 @@ OPTIONS
 ```
 
 <Warning>
-`forest init` is not meant to help you create a new project. If you don't have an existing project yet, please refer to [this guide](../../../../getting-started/setup-guide.md).
+`forest init` is not meant to help you create a new project. If you don't have an existing project yet, please refer to [this guide](/legacy/javascript-agents/getting-started/setup-guide).
 </Warning>
 
 <Info>
@@ -30,7 +30,7 @@ OPTIONS
 
 #### Login
 
-All Forest CLI commands require to be **authenticated**. You can do this on the fly using `forest init` or use `forest login` first. Refer to the [forest login](login.md) page if you need further details.
+All Forest CLI commands require to be **authenticated**. You can do this on the fly using `forest init` or use `forest login` first. Refer to the [forest login](/legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/login) page if you need further details.
 
 #### Project selection
 
@@ -50,14 +50,14 @@ $ forest init
 > This project does not support branches yet. Please migrate your environments from your Project settings first.
 ```
 
-If you're seeing the above message, please refer to this [migration guide](../../../../how-tos/maintain/migrate-to-the-new-development-workflow.md).
+If you're seeing the above message, please refer to the [v1 to v2 migration guide](/guides/migration/from-v1/overview).
 </Warning>
 
 #### Endpoint selection
 
 {/* markdown-link-check-disable */}
 
-If you're using `forest init`, it means your admin backend should already be running **locally**. If you used the default values used during installation, your endpoint should be _http://localhost:3310_&#x20;
+If you're using `forest init`, it means your admin backend should already be running **locally**. If you used the default values used during installation, your endpoint should be `http://localhost:3310`&#x20;
 
 {/* markdown-link-check-enable */}
 
@@ -80,4 +80,4 @@ Note that your new development environment is identified by the `FOREST_ENV_SECR
 
 To work properly in your local environment, your Forest Admin project needs to be connected to the corresponding database (which could be local or remote, it's your choice.)
 
-As a result, we've added an extra step to the `forest init` command to help you set up your database. If you accept the help, you'll be taken through a few prompts and your `DATABASE_URL` (and potentially [other environment variables](../../../../getting-started/setup-guide.md#available-installation-options-for-the-above-step)) will be generated and added to your `.env` file.
+As a result, we've added an extra step to the `forest init` command to help you set up your database. If you accept the help, you'll be taken through a few prompts and your `DATABASE_URL` (and potentially [other environment variables](/legacy/javascript-agents/getting-started/setup-guide#available-installation-options-for-the-above-step)) will be generated and added to your `.env` file.

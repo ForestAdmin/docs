@@ -284,7 +284,7 @@ forest_demo=> \d
 
 You must export the environment variables `FOREST_ENV_SECRET` `FOREST_AUTH_SECRET` and `DATABASE_URL`. To do so, open and edit the file `/etc/environment`:
 
-The `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` environment variables will be given by Forest after creating a production environment from the interface. [See how to get them here](../../reference-guide/how-it-works/environments.md#deploying-to-production).
+The `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` environment variables will be given by Forest after creating a production environment from the interface. [See how to get them here](/legacy/ruby-agent/reference-guide/how-it-works/environments#deploying-to-production).
 
 ```bash
 sudo vim /etc/environment
@@ -325,7 +325,7 @@ npm start
 
 Congrats, your admin backend is now running on production. But we strongly advise you to continue following the next steps. If you chose not to do it, you can go back to your Forest interface to create a production environment. [Check out here how to do it](https://docs.forestadmin.com/documentation/getting-started/setup-guide#step-3-deploy-to-production).
 
-The admin backend is by default listening on port **3310**. Be sure you authorized the inbound traffic on this port or set up a web server (like NGINX) as a [Reverse Proxy Server](deploy-to-production-to-ubuntu-server.md#set-up-nginx-as-a-reverse-proxy-server) to use the port **80.**
+The admin backend is by default listening on port **3310**. Be sure you authorized the inbound traffic on this port or set up a web server (like NGINX) as a [Reverse Proxy Server](/legacy/ruby-agent/how-tos/setup/deploy-to-production-to-ubuntu-server#set-up-nginx-as-a-reverse-proxy-server) to use the port **80.**
 
 ### Manage Application with PM2
 
@@ -377,5 +377,5 @@ We now require that you configure **HTTPS** (port 443) on your admin backend ser
 </Warning>
 
 <Warning>
-Once you've completed the above steps, it does **not** mean your project is deployed to production on Forest Admin. To deploy to production, check out [this section](../../reference-guide/how-it-works/environments.md#deploying-to-production).
+Once you've completed the above steps, it does **not** mean your project is deployed to production on Forest Admin. To deploy to production, check out [this section](/legacy/ruby-agent/reference-guide/how-it-works/environments#deploying-to-production).
 </Warning>

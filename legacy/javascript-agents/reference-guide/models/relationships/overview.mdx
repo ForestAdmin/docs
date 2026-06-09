@@ -17,7 +17,7 @@ Relationships are visible and actionable in Forest Admin:
 
 If you installed Forest Admin within a **Rails** app, then all the relationships defined in your ActiveRecord models are supported out of the box. Check the official [Rails documentation](https://guides.rubyonrails.org/association_basics.html) to create new ones.
 
-If you installed Forest Admin directly on a database, then most relationships should have been [automatically generated](./#lumber-relationship-generation-rules). However, depending on your database nature and structure, you may have to add some manually.
+If you installed Forest Admin directly on a database, then most relationships should have been [automatically generated](/legacy/javascript-agents/reference-guide/models/relationships/overview#lumber-relationship-generation-rules). However, depending on your database nature and structure, you may have to add some manually.
 
 ## Adding relationships (databases only)
 
@@ -158,7 +158,7 @@ module.exports = (mongoose, Mongoose) => {
 This will work if your foreign keys are correctly named:\
 For a collection `collectionName`, the foreign key should be `collection_name_id`.\
 \
-If this is not the case, check out the [section below](./#declaring-a-foreign-key-sql-only).
+If this is not the case, check out the [section below](/legacy/javascript-agents/reference-guide/models/relationships/overview#declaring-a-foreign-key-sql-only).
 </Warning>
 
 ![](</images/legacy/javascript-agents/screenshot 2020-06-22 at 11.28.08.png>)

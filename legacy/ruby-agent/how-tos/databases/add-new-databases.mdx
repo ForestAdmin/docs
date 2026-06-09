@@ -45,7 +45,7 @@ To connect a new database on your project, you need to follow the following step
 ];
 ```
 
-- Run `forest schema:update` [command](../../reference-guide/models/#updating-your-models-automatically) and follow instructions.
+- Run `forest schema:update` [command](/legacy/ruby-agent/reference-guide/models/overview#updating-your-models-automatically) and follow instructions.
   - It should generate all the required files. ⚠️ Be aware that existing files will remain untouched when switching from a single database to a multi-database setup. If you made any modifications in the models of your existing connection.\
     In this example, you may want to check the freshly generated models that will be located in the `./models/your_first_database_connection` folder.
   - As stated on the `forest schema:update` documentation, when switching from a single to a multiple database setup, existing models in the `./models` folder will remain untouched, and you'll need to move them to the correct location (According to you `config/databases.js` file) or simply remove them if you never made any modifications on the models themselves.

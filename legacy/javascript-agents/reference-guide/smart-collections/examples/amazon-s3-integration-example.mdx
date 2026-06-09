@@ -11,7 +11,7 @@ On our Live Demo, we’ve stored the `Legal Documents` of a `Company` on Amazon 
 ### SQL
 First, we declare the `legal_docs` collection in the `forest/` directory. In this Smart Collection, all fields are related to S3 attributes except the field `is_verified` that is stored on our database in the collection `documents`.&#x20;
 
-You can check out the list of [available field options ](../../smart-fields/#available-field-options)if you need it.
+You can check out the list of [available field options ](/legacy/javascript-agents/reference-guide/smart-fields/overview#available-field-options)if you need it.
 
 <Warning>
 You **MUST** declare an `id` field when creating a Smart Collection. The value of this field for each record **MUST** be unique. On the following example, we simply generate a random UUID.
@@ -55,7 +55,7 @@ collection('legal_docs', {
 ### Mongodb
 First, we declare the `legal_docs` collection in the `forest/` directory. In this Smart Collection, all fields are related to S3 attributes except the field `is_verified` that is stored on our database in the collection `documents`.&#x20;
 
-You can check out the list of [available field options here ](../../smart-fields/#available-field-options)if you need it.
+You can check out the list of [available field options here ](/legacy/javascript-agents/reference-guide/smart-fields/overview#available-field-options)if you need it.
 
 <Warning>
 You **MUST** declare an `id` field when creating a Smart Collection. The value of this field for each record **MUST** be unique. On the following example, we simply generate a random UUID.
@@ -201,7 +201,7 @@ module.exports = new JSONAPISerializer('legal_docs', {
 ### SQL
 To access the details view of a Smart Collection record, you have to catch the GET API call on a specific record. One more time, we use a custom service `services/s3-helper.js` that encapsulates the S3 business logic for this example.
 
-The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already described in the [Implementing the GET (all records)](../#implementing-the-get-all-records) section.
+The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already described in the [Implementing the GET (all records)](/legacy/javascript-agents/reference-guide/smart-collections/overview#implementing-the-get-all-records) section.
 
 ```javascript
 const P = require('bluebird');
@@ -228,7 +228,7 @@ module.exports = router;
 ### Mongodb
 To access the details view of a Smart Collection record, you have to catch the GET API call on a specific record. One more time, we use a custom service `services/s3-helper.js` that encapsulates the S3 business logic for this example.
 
-The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already described in the [Implementing the GET (all records)](../#implementing-the-get-all-records) section.
+The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already described in the [Implementing the GET (all records)](/legacy/javascript-agents/reference-guide/smart-collections/overview#implementing-the-get-all-records) section.
 
 ```javascript
 const P = require('bluebird');
@@ -259,7 +259,7 @@ module.exports = router;
 To handle the update of a record we have to catch the PUT API call. In our example, all S3-related fields are set as read-only and only `is_verified` can be updated.
 
 ### SQL
-The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already explained in the [Implementing the GET (all records)](../#implementing-the-get-all-records) section.
+The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already explained in the [Implementing the GET (all records)](/legacy/javascript-agents/reference-guide/smart-collections/overview#implementing-the-get-all-records) section.
 
 ```javascript
 const P = require('bluebird');
@@ -289,7 +289,7 @@ module.exports = router;
 ```
 
 ### Mongodb
-The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already explained in the [Implementing the GET (all records)](../#implementing-the-get-all-records) section.
+The implementation of the `reconcileData()` and `Serializer.serialize()` functions are already explained in the [Implementing the GET (all records)](/legacy/javascript-agents/reference-guide/smart-collections/overview#implementing-the-get-all-records) section.
 
 ```javascript
 const P = require('bluebird');

@@ -47,7 +47,7 @@ New **relationships** may be added there:
 Company.associate = (models) => {};
 ```
 
-You can learn more about relationships on this [dedicated page](relationships/).
+You can learn more about relationships on this [dedicated page](/legacy/javascript-agents/reference-guide/models/relationships/overview).
 
 ### Mongodb
 
@@ -74,7 +74,7 @@ New **relationships** are to be added as properties:
   'customer_id': { type: mongoose.Schema.Types.ObjectId, ref: 'customers' },
 ```
 
-You can learn more about relationships on this [dedicated page](relationships/).
+You can learn more about relationships on this [dedicated page](/legacy/javascript-agents/reference-guide/models/relationships/overview).
 
 <Info>
 When you manually add a new model, you need to configure the permissions for the corresponding collection in the UI (allow record details view, record creation, record edit, etc). By default a new collection is not visible and all permissions are disabled. You can set permissions by going to the [Roles settings](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles).
@@ -95,7 +95,7 @@ createdAt: {
 
 An exhaustive list of **DataTypes** can be found in [Sequelize documentation](https://sequelize.org/master/manual/data-types.html).
 
-You can see how that snippet fits into your code in the [model example](enrich-your-models.md#declaring-a-new-model) above.
+You can see how that snippet fits into your code in the [model example](/legacy/javascript-agents/reference-guide/models/enrich-your-models#declaring-a-new-model) above.
 
 ### Mongodb
 Fields are declared as follows:
@@ -106,12 +106,12 @@ Fields are declared as follows:
 
 An exhaustive list of **SchemaTypes** can be found in [Mongoose documentation](https://mongoosejs.com/docs/schematypes.html#what-is-a-schematype).
 
-You can see how that snippet fits into your code in the [model example](enrich-your-models.md#declaring-a-new-model) above.
+You can see how that snippet fits into your code in the [model example](/legacy/javascript-agents/reference-guide/models/enrich-your-models#declaring-a-new-model) above.
 
 ### Managing nested documents in Mongoose
 
 <Info>
-For a better user experience, you can [Flatten nested fields](../../how-tos/setup/flatten-nested-fields-mongodb.md).
+For a better user experience, flatten nested fields — in v2 see the [Flattener plugin](/product/process/advanced-concepts/plugins/overview).
 </Info>
 
 Lumber introspects your data structure recursively, so _**nested fields**_ (object in object) are detected any level deep. Your **sub-documents** (array of nested fields) are detected as well.
@@ -164,7 +164,7 @@ module.exports = (mongoose, Mongoose) => {
 
 ### Removing a model
 
-By default **all** tables/collections in your database are analyzed by Lumber to generate your models. If you want to exclude some of them to prevent them from appearing in your Forest, check out [this how-to](../../how-tos/settings/include-exclude-models.md).
+By default **all** tables/collections in your database are analyzed by Lumber to generate your models. If you want to exclude some of them to prevent them from appearing in your Forest, check out [this how-to](/legacy/javascript-agents/how-tos/settings/include-exclude-models).
 
 ### Adding validation to your models
 

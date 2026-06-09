@@ -4,7 +4,7 @@ title: branch
 
 # branch
 
-The `forest branch` command is at the center of what your Forest Admin development workflow should look like. As explained on [this page](../using-branches.md), it allows you to manage your UI, a bit like you would use git's branches for your code.
+The `forest branch` command is at the center of what your Forest Admin development workflow should look like. As explained on [this page](/legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/using-branches), it allows you to manage your UI, a bit like you would use git's branches for your code.
 
 ```
 $ forest branch --help
@@ -71,7 +71,7 @@ $ forest branch add-refund-action
 ❌ You cannot create a branch until this project has either a remote or a production environment.
 ```
 
-Any branch reflects `LayoutChange(s)` (i.e. changes in your UI) that you've made on that branch: to make this possible, a branch needs an **origin**, which is the state of the layout you started from and made those `LayoutChange(s)` on. This is why you need to [have a production environment](../../environments.md#deploying-to-production) (ideally) or simply a remote environment: those environments can serve as origin to your branches.
+Any branch reflects `LayoutChange(s)` (i.e. changes in your UI) that you've made on that branch: to make this possible, a branch needs an **origin**, which is the state of the layout you started from and made those `LayoutChange(s)` on. This is why you need to [have a production environment](/legacy/javascript-agents/reference-guide/how-it-works/environments#deploying-to-production) (ideally) or simply a remote environment: those environments can serve as origin to your branches.
 
 ### Deleting a branch
 

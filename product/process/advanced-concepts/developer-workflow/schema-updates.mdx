@@ -112,11 +112,11 @@ Relationships are inferred from foreign keys in the database. If a relationship 
 - Verify the foreign key constraint exists in the database
 - If you're using a non-standard naming convention, you may need to declare the relationship explicitly in your agent configuration
 
-See [Relationships](/product/process/for-tech-teams/relationships/overview) for how to define relationships in code.
+See [Relationships](/product/process/relationships/overview) for how to define relationships in code.
 
 ## Best practices
 
 - **Run migrations before deploying agent changes** — the agent should start against the already-migrated database
-- **Test schema changes in a development branch** — use [Environments & branches](/product/process/for-tech-teams/developer-workflow/environments-and-branches) to validate layout impact before hitting production
+- **Test schema changes in a development branch** — use [Environments & branches](/product/process/advanced-concepts/developer-workflow/environments-and-branches) to validate layout impact before hitting production
 - **Commit `.forestadmin-schema.json`** — keeps all team members on the same schema version
 - **Review the schema diff in PRs** — catching an unintended table rename in review is much easier than debugging it in production

@@ -22,18 +22,18 @@ title: PHP Agent Documentation (End of Life)
 We recommend transitioning to one of our actively supported agents:
 
 1. **Node.js Agent** (Recommended)
-   - [Get Started with Node.js](/product/integration/setup/nodejs)
+   - [Get Started with Node.js](/reference/agent-api/nodejs)
    - Modern, actively maintained
    - Full feature support
    - TypeScript support
 
 2. **Ruby Agent**
-   - [Get Started with Ruby](/product/integration/setup/ruby)
+   - [Get Started with Ruby](/reference/agent-api/ruby)
    - Active development
    - Rails integration
 
 3. **Python Agent**
-   - [Get Started with Python](/product/integration/setup/python)
+   - [Get Started with Python](/legacy/python-agent-v1)
    - Django/Flask support
 
 ## Migration Options
@@ -100,4 +100,4 @@ While we cannot provide support for the PHP agent itself, we can help you:
 
 ---
 
-**⚠️ Critical:** Do not use the PHP agent for new projects. For current documentation, see [Get Started](/get-started/introduction).
+**⚠️ Critical:** Do not use the PHP agent for new projects. For current documentation, see [Get Started](/get-started/intro-to-forest-admin).

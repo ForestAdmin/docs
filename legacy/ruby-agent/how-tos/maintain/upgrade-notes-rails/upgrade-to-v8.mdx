@@ -16,7 +16,7 @@ Please be aware that while Forest Admin make every effort to ensure that our pla
 </Warning>
 
 <Info>
-Please follow the recommended procedure to upgrade your agent version by following [this note](../push-your-new-version-to-production.md).
+Please follow the recommended procedure to upgrade your agent version by following [this note](/legacy/ruby-agent/how-tos/maintain/push-your-new-version-to-production).
 </Info>
 
 This upgrade unlocks the following features:
@@ -30,9 +30,9 @@ This upgrade unlocks the following features:
 As for any dependency upgrade, it's very important to **test this upgrade** **in your testing environments**. Not doing so could result in your admin panel being unusable.
 </Warning>
 
-To upgrade to v8, first update your project according to the [_Breaking Changes_](../upgrade-notes-rails/upgrade-to-v8.md#breaking-changes) section below.&#x20;
+To upgrade to v8, first update your project according to the [_Breaking Changes_](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v8#breaking-changes) section below.&#x20;
 
-If you're upgrading from an older version, please make sure you've also read the previous upgrade notes ([v7](upgrade-to-v7.md), [v6](upgrade-to-v6.md),..)
+If you're upgrading from an older version, please make sure you've also read the previous upgrade notes ([v7](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v7), [v6](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v6),..)
 
 To upgrade to v8, **update the version in your Gemfile**, then run the following and update your project as shown in the _Breaking Changes_ section below.
 
@@ -48,7 +48,7 @@ In case of a regression introduced in Production after the upgrade, a rollback t
 
 ### Roles v2.0
 
-This new version (v8) drops the support of the legacy Roles system (v1.0). If you are this legacy configuration, please follow [this procedure](../migrate-to-the-new-role-system.md) in order to migrate to the new Roles system (v2.0) **before** you attempt to upgrade to version 8.
+This new version (v8) drops the support of the legacy Roles system (v1.0). If you are this legacy configuration, please follow [this procedure](/legacy/ruby-agent/how-tos/maintain/migrate-to-the-new-role-system) in order to migrate to the new Roles system (v2.0) **before** you attempt to upgrade to version 8.
 
 <Warning>
 **How do I know if I'm using the legacy or new Roles system?**
@@ -82,4 +82,4 @@ end
 
 If your project overrides routes, using the `ForestLiana::PermissionsChecker` to check the permissions, you must replace `PermissionsChecker.new(...)` by `ForestLiana::Ability::forest_authorize!(action, forest_user, @resource)`.
 
-An example can be found [here](../../../reference-guide/routes/override-a-route.md).
+An example can be found [here](/legacy/ruby-agent/reference-guide/routes/override-a-route).
