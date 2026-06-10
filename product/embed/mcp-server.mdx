@@ -31,11 +31,45 @@ The Forest MCP server lets AI tools like [Claude](/product/embed/claude), [Dust]
 - Securely query and browse your data
 - Execute actions on records
 
-All of this while respecting the Roles & Permissions of your Forest project, and while logging every activity, just like if they were performed through the UI.
+All of this while respecting the Roles & Permissions of your Forest project, and logging every activity, just like if they were performed through the UI.
 
-The Forest MCP Server also enables other third party apps to embed and access Forest data and actions, for example in [Zendesk](/product/embed/zendesk) or [n8n](/product/embed/n8n).
+The Forest MCP Server also enables other third party apps to embed and access Forest data and actions, for example in [Claude](/product/embed/claude), [Dust](/product/embed/untitled-page), [Zendesk](/product/embed/zendesk), or [n8n](/product/embed/n8n).
 
 # Enabling the Forest MCP Server
+
+There are 2 ways to configure the Forest MCP Server:
+
+- Mounted: the Forest MCP Server runs as part of your node.js agent
+- Standalone: the Forest MCP Server is an independent service, pointing to your existing node.js or ruby agent
+
+## Mounted Forest MCP Server
+
+<Note>
+  This is only available with the node.js agent. For other agents, refer to the Standalone method further down.
+</Note>
+
+In your node.js's `index.js` file, simply call the `mountAiMcpServer()` method when creating the agent, for example:
+
+```text
+const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer();
+```
+
+Upon restarting your agent, the Forest MCP Server will automatically start, as confirmed by the following console logs:
+
+```text
+info: [MCP] Server initialized successfully
+info: Successfully mounted on Standalone server (http://0.0.0.0:3310)
+```
+
+Your Forest MCP Server's URL will be `{your-agent-url}/mcp`
+
+<Note>
+  Your agent URL can be found in the Forest Admin UI, through Project Settings \> Environments.
+
+  Note that each Environment has its own Agent URL, and therefore its own Forest MCP Server URL.
+</Note>
+
+## Standalone Forest MCP Server
 
 <CodeGroup>
 
@@ -51,7 +85,7 @@ yarn add @forestadmin/mcp-server
 
 # Available tools
 
-The MCP server exposes the following capabilities:
+The Forest MCP server exposes the following capabilities:
 
 ### Data access
 
@@ -102,7 +136,3 @@ The Forest MCP server:
 <Warning>
   Only provide MCP server access to trusted AI tools and users. The server can perform any operation that the authenticated user can perform.
 </Warning>
-
-# Available tools
-
-The Forest MCP server:
