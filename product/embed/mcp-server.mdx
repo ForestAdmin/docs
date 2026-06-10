@@ -7,22 +7,6 @@ description: "Securely access your Forest data and actions from AI-enabled third
 
 The Model Context Protocol (MCP) is an open standard for connecting AI assistants to external data and tools through natural language.
 
-# What can the Forest MCP Server do?
-
-The Forest MCP server lets AI tools like [Claude](/product/embed/claude), [Dust](/product/embed/untitled-page), and others to:
-
-- Access collection schemas
-- Securely query and browse your data
-- Execute actions on records
-
-All of this while respecting the Roles & Permissions of your Forest project, and while logging every activity, just like if they were performed through the UI.
-
-The Forest MCP Server also enables other third party apps to embed and access Forest data and actions, for example in [Zendesk](/product/embed/zendesk) or [n8n](/product/embed/n8n).
-
-# What is the Model Context Protocol (MCP)?
-
-The Model Context Protocol (MCP) is an open standard for connecting AI assistants to external data and tools through natural language.
-
 # What can the Forest MCP do?
 
 The Forest MCP server lets AI tools like [Claude](/product/embed/claude), [Dust](/product/embed/untitled-page), and others to:
@@ -39,8 +23,24 @@ The Forest MCP Server also enables other third party apps to embed and access Fo
 
 There are 2 ways to configure the Forest MCP Server:
 
-- Mounted: the Forest MCP Server runs as part of your node.js agent
-- Standalone: the Forest MCP Server is an independent service, pointing to your existing node.js or ruby agent
+- **Standalone**: the Forest MCP Server runs as an standalone service, pointing to your existing node.js or ruby agent
+- **Mounted**: the Forest MCP Server runs as part of your node.js agent
+
+## Standalone Forest MCP Server
+
+To run your Forest MCP Server as a standalone service, you will first need to download the mcp-server package:
+
+```text
+npm install @forestadmin/mcp-server
+```
+
+You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET variables to start the Forest MCP Server, to ensure it can authenticate and access the right agent, corresponding to your project and environment of choice:
+
+```text
+FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+```
+
+Your Forest MCP Server will be accessible at this URL: `{your-standalone-server-url}/mcp` 
 
 ## Mounted Forest MCP Server
 
@@ -54,34 +54,19 @@ In your node.js's `index.js` file, simply call the `mountAiMcpServer()` method w
 const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer();
 ```
 
-Upon restarting your agent, the Forest MCP Server will automatically start, as confirmed by the following console logs:
+Upon restarting your agent, the Forest MCP Server will automatically start, as confirmed by the following console log:
 
 ```text
 info: [MCP] Server initialized successfully
-info: Successfully mounted on Standalone server (http://0.0.0.0:3310)
 ```
 
-Your Forest MCP Server's URL will be `{your-agent-url}/mcp`
+Your Forest MCP Server URL will be `{your-agent-url}/mcp`
 
 <Note>
-  Your agent URL can be found in the Forest Admin UI, through Project Settings \> Environments.
+  Your agent URL can be found in the Forest Admin UI's Project Settings, under the Environments tab.
 
   Note that each Environment has its own Agent URL, and therefore its own Forest MCP Server URL.
 </Note>
-
-## Standalone Forest MCP Server
-
-<CodeGroup>
-
-```bash npm
-npm install @forestadmin/mcp-server
-```
-
-```bash yarn
-yarn add @forestadmin/mcp-server
-```
-
-</CodeGroup>
 
 # Available tools
 
