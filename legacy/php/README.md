@@ -32,10 +32,6 @@ We recommend transitioning to one of our actively supported agents:
    - Active development
    - Rails integration
 
-3. **Python Agent**
-   - [Get Started with Python](/legacy/python-agent-v1)
-   - Django/Flask support
-
 ## Migration Options
 
 ### Option 1: Migrate to Node.js (Recommended)

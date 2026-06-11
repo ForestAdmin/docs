@@ -270,7 +270,6 @@
                       "get-started/control/authentication/sso-providers/google",
                       "get-started/control/authentication/sso-providers/okta",
                       "get-started/control/authentication/sso-providers/azure",
-                      "get-started/control/authentication/sso-providers/aws",
                       "get-started/control/authentication/sso-providers/generic-saml"
                     ]
                   },
