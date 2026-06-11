@@ -3,9 +3,7 @@
     <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
       <circle cx="2" cy="2" r="1.4" fill="#d4d2c6"/>
     </pattern>
-    <marker id="sq" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="0" markerUnits="userSpaceOnUse">
-      <rect x="0.5" y="0.5" width="7" height="7" fill="#f6f5ee" stroke="#bcbcb4" stroke-width="1"/>
-    </marker>
+    <marker id="sq" markerWidth="9" markerHeight="9" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L7.5 4 L1 7 Z" fill="#686c62"/></marker>
   </defs>
 
   <!-- uniform off-white canvas -->
@@ -18,12 +16,14 @@
 
   <!-- edges: orthogonal, light (#686c62 @0.7), square endpoints flush to nodes -->
   
+  <g stroke="#686c62" stroke-opacity="0.7" stroke-width="1.5" fill="none">
     <path d="M232 200 H302" marker-end="url(#sq)"/>
     <path d="M452 200 H520" marker-end="url(#sq)"/>
     <path d="M682 176 H720 L744 135 H756" marker-end="url(#sq)"/>
     <path d="M682 216 H720 L744 307 H756" stroke-dasharray="4 4" marker-end="url(#sq)"/>
     <path d="M972 124 H1030" marker-end="url(#sq)"/>
     <path d="M972 160 H1000 V229 H1030" stroke-dasharray="3 4" marker-end="url(#sq)"/>
+  </g>
   
 
   <!-- edge labels -->

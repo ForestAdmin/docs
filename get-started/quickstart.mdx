@@ -18,7 +18,11 @@ You'll have a working Forest back-end connected to your database, with the Fores
     Go to [app.forestadmin.com](https://app.forestadmin.com), create a new project, and choose **Self-Hosted**.
   </Step>
   <Step title="Follow the onboarding">
-    The onboarding flow asks for your database URI and generates a ready-to-run back-end project with your environment variables pre-configured.
+    The onboarding flow asks for your database URI and generates your back-end project. Before starting it, you'll set its environment variables in a `.env` file:
+
+    - `FOREST_ENV_SECRET` — identifies your Forest environment
+    - `FOREST_AUTH_SECRET` — signs your users' authentication tokens
+    - `DATABASE_URL` — your database connection URI
 
     <Warning>
       Never commit your `.env` file to version control. Add it to `.gitignore`.
@@ -44,22 +48,9 @@ You'll have a working Forest back-end connected to your database, with the Fores
 
 ## What you have now
 
-A connected Forest back-end with every table from your database surfaced as a collection. Operators can browse, search, edit, and delete records. From here, the typical path:
+A connected Forest back-end with every table from your database surfaced as a collection. Operators can browse, search, edit, and delete records out of the box.
 
-<CardGroup cols={2}>
-  <Card title="Browse & customize your data" href="/get-started/customize-your-back-office">
-    Explore records, then rename collections, hide internal fields, and create your first segment.
-  </Card>
-  <Card title="Add business logic" href="/get-started/add-business-logic">
-    Actions, computed fields, custom forms, define your operations layer in code.
-  </Card>
-  <Card title="Build operational workflows" href="/get-started/set-up-operations">
-    Workspaces, workflows, and inboxes, turn collections into the place your team actually does work.
-  </Card>
-  <Card title="Deploy to production" href="/get-started/deploy">
-    Move from localhost to a deployed environment, with the development workflow your team can rely on.
-  </Card>
-</CardGroup>
+From here, the guide walks you through it step by step, starting by shaping these collections into a back-office your team can actually use.
 
 ## Troubleshooting
 
