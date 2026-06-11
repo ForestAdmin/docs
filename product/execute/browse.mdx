@@ -18,6 +18,10 @@ When you open a collection, records are displayed in a **table view** with one r
 
 The **search bar** at the top of any collection lets you filter records by keyword. Matching text is highlighted within the results.
 
+<Frame caption="The search bar, with matches highlighted in the results">
+  <img src="/images/master-ui/search-bar.png" alt="Collection search bar with highlighted matches" />
+</Frame>
+
 By default, Forest searches across the fields configured as searchable for that collection (configured by your developers in the agent), and matches on **contains**.
 
 <Info>
@@ -27,6 +31,10 @@ Developers can configure which fields are included in search using the `searchab
 ### Extended search
 
 By default, only the collection's own fields are searched. Reference fields of `belongsTo` records are ignored. **Extended search** also looks inside the reference fields of related records. It is not the default because it is slower.
+
+<Frame caption="Toggling extended search to also match inside related records">
+  <img src="/images/master-ui/extended-search.png" alt="Extended search toggle" />
+</Frame>
 
 ### Advanced search syntax
 

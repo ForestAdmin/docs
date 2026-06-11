@@ -1034,12 +1034,6 @@
               },
               "legacy/ruby-agent/how-tos/releases-support/README"
             ]
-          },
-          {
-            "group": "Python Agent",
-            "pages": [
-              "legacy/python-agent-v1"
-            ]
           }
         ]
       }
