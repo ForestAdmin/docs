@@ -5,7 +5,7 @@ description: Create a new branch or list and delete your existing branches
 
 # forest branch
 
-Create, list, or delete layout branches. Branches work similarly to Git branches, but for your Forest UI layout — they let you isolate UI changes while you develop a feature, then push or deploy those changes when ready.
+Create, list, or delete layout branches. Branches work similarly to Git branches, but for your Forest UI layout, they let you isolate UI changes while you develop a feature, then push or deploy those changes when ready.
 
 ## Usage
 
@@ -17,7 +17,7 @@ forest branch [BRANCH_NAME] [options]
 
 | Argument | Description |
 |---|---|
-| `BRANCH_NAME` | Name of the branch to create (optional — omit to list branches) |
+| `BRANCH_NAME` | Name of the branch to create (optional, omit to list branches) |
 
 ## Options
 
@@ -42,7 +42,7 @@ fix-missing-label       staging
 feature/remove-tooltip  preprod                 2022-08-19T08:08:47.678Z
 ```
 
-The **IS CURRENT** column shows your active branch — the one your Development Environment is currently using.
+The **IS CURRENT** column shows your active branch, the one your Development Environment is currently using.
 
 ## Creating a branch
 
@@ -64,7 +64,7 @@ $ forest branch add-refund-action
 
 ### Branch origins
 
-Every branch needs an **origin** — the environment whose layout state the branch starts from. Your layout changes build on top of the origin's layout.
+Every branch needs an **origin**, the environment whose layout state the branch starts from. Your layout changes build on top of the origin's layout.
 
 - If you omit `--origin`, the CLI prompts you to select one interactively.
 - Branches usually originate from your Production or a Remote Environment.

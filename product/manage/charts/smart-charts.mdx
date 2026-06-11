@@ -3,13 +3,9 @@ title: Smart Charts
 description: Code your own custom charts when no-code chart types aren't enough.
 ---
 
-The no-code chart types (Single, Distribution, Time-based, Cohort, Leaderboard, Objective) cover most needs. When you want full control over how data is displayed — custom visualizations, external libraries, complex layouts — use **Smart Charts**.
+The no-code chart types (Single, Distribution, Time-based, Cohort, Leaderboard, Objective) cover most needs. When you want full control over how data is displayed, custom visualizations, external libraries, complex layouts, use **Smart Charts**.
 
 With Smart Charts you write the data source on the agent and the rendering component in the UI editor. There's no limit to what you can render: D3.js, custom SVG, embedded iframes, anything you can write in JavaScript.
-
-<Info>
-  Smart Charts require a [Forest Pro plan](https://www.forestadmin.com/pricing).
-</Info>
 
 ## Creating a Smart Chart
 
@@ -21,9 +17,9 @@ From any dashboard or record analytics tab, click **Edit Smart Chart** to open t
 
 The editor exposes three tabs:
 
-- **Template** — the Handlebars template that renders your chart
-- **Component** — the JavaScript component that loads data and orchestrates rendering
-- **Style** — optional CSS scoped to this chart
+- **Template**, the Handlebars template that renders your chart
+- **Component**, the JavaScript component that loads data and orchestrates rendering
+- **Style**, optional CSS scoped to this chart
 
 Click **Run code** at any time to preview the chart. When you're done, click **Create Chart** (or **Save** if already created).
 
@@ -42,7 +38,7 @@ A Smart Chart pulls its data from a custom endpoint you expose on the agent with
 <CodeGroup>
 ```javascript Node.js
 agent.addChart('mytablechart', async (context, resultBuilder) => {
-  // Load data from anywhere — your database, an external API, etc.
+  // Load data from anywhere: your database, an external API, etc.
   return resultBuilder.smart([
     { username: 'Darth Vader', points: 1500000 },
     { username: 'Luke Skywalker', points: 2 },
@@ -160,7 +156,7 @@ export default class extends Component {
   }
 
   renderChart(alphabet) {
-    // d3 rendering logic — produce an SVG node
+    // d3 rendering logic: produce an SVG node
     this.chart = svg.node();
   }
 }
@@ -174,7 +170,7 @@ export default class extends Component {
 
 ## Example: cohort retention chart
 
-A retention table with shaded cells — also using D3.js.
+A retention table with shaded cells, also using D3.js.
 
 <Frame caption="A cohort retention Smart Chart">
   <img src="/images/charts/smart-chart-cohort.png" alt="Cohort retention chart with shaded cells" />
@@ -202,7 +198,7 @@ agent.addChart('cohort', async (context, resultBuilder) => {
 
 ## Example: density map
 
-A geographic density map — fetching contour data and population statistics, rendering with D3 + topojson.
+A geographic density map, fetching contour data and population statistics, rendering with D3 + topojson.
 
 <Frame caption="A density map Smart Chart">
   <img src="/images/charts/smart-chart-density.png" alt="US density map showing population concentrations" />
@@ -217,8 +213,3 @@ agent.addChart('densitymap', async (context, resultBuilder) => {
 ```
 
 The component loads D3, topojson, then renders the SVG. See [this Observable notebook](https://observablehq.com/@d3/bubble-map) for the rendering logic.
-
-## Related
-
-- [Charts overview](/product/manage/charts/overview) — the no-code chart types
-- [Dashboards](/product/manage/dashboards) — where charts live

@@ -31,8 +31,8 @@ rails generate forest_admin_rails:install
 
 The generator creates two files:
 
-- `config/initializers/forest_admin_rails.rb` — secrets and configuration
-- `app/lib/forest_admin_rails/create_agent.rb` — datasource setup and collection customizations
+- `config/initializers/forest_admin_rails.rb`, secrets and configuration
+- `app/lib/forest_admin_rails/create_agent.rb`, datasource setup and collection customizations
 
 **Configuration** (`config/initializers/forest_admin_rails.rb`):
 
@@ -58,7 +58,7 @@ module ForestAdminRails
     end
 
     def self.customize
-      # All your collection customizations go here — see below.
+      # All your collection customizations go here, see below.
     end
   end
 end
@@ -140,7 +140,7 @@ Add a datasource to the agent. Called inside `ForestAdminRails::CreateAgent.setu
 
 ### collection.add_action(name, definition)
 
-Add a Smart Action to the collection.
+Add an action to the collection.
 
 ```ruby
 collection.add_action('Send email', {
@@ -856,12 +856,3 @@ context.caller.team        # User team
 context.caller.role        # User role
 context.caller.timezone    # User timezone
 ```
-
----
-
-## Related Documentation
-
-- [Actions Guide](/product/process/actions/overview)
-- [Fields Guide](/product/process/fields/overview)
-- [Segments Guide](/product/process/segments/creating-segments)
-- [Hooks Guide](/product/process/advanced-concepts/hooks/overview)

@@ -3,7 +3,7 @@ title: TypeScript setup & autocompletion
 description: Enable full TypeScript support and IDE autocompletion for your Forest agent.
 ---
 
-The `@forestadmin/agent` package is written in TypeScript and ships with complete type definitions. With a small amount of setup, you get autocompletion for collection names, field names, and all customization APIs — in both TypeScript and JavaScript projects.
+The `@forestadmin/agent` package is written in TypeScript and ships with complete type definitions. With a small amount of setup, you get autocompletion for collection names, field names, and all customization APIs, in both TypeScript and JavaScript projects.
 
 ## How it works
 
@@ -15,10 +15,10 @@ The result: your IDE knows that the `orders` collection has a `total_amount` fie
 
 Add two options to your `createAgent` call:
 
-- `typingsPath` — where to write the generated file (e.g. `'./typings.ts'`)
-- `typingsMaxDepth` — how deep to introspect relationships (default `5` is usually sufficient)
+- `typingsPath`, where to write the generated file (e.g. `'./typings.ts'`)
+- `typingsMaxDepth`, how deep to introspect relationships (default `5` is usually sufficient)
 
-The file is generated automatically on agent startup. **Do not edit it manually** — it will be overwritten on the next restart.
+The file is generated automatically on agent startup. **Do not edit it manually**, it will be overwritten on the next restart.
 
 ## TypeScript setup
 
@@ -58,7 +58,7 @@ export default (orders: CollectionCustomizer<Schema, 'orders'>) => {
 };
 ```
 
-The `customizeCollection` call is strongly typed — the second argument (`'orders'`) is validated against your actual collection names, and the handler receives a fully-typed `CollectionCustomizer`.
+The `customizeCollection` call is strongly typed, the second argument (`'orders'`) is validated against your actual collection names, and the handler receives a fully-typed `CollectionCustomizer`.
 
 ## JavaScript setup (with JSDoc)
 
@@ -139,7 +139,7 @@ WebStorm has built-in TypeScript support. Open your project and the IDE will aut
 ### The typings file isn't being generated
 
 - Make sure `typingsPath` is set in your `createAgent` call
-- Check that the agent starts without errors — introspection failures prevent typings generation
+- Check that the agent starts without errors, introspection failures prevent typings generation
 - Verify the directory in `typingsPath` exists (e.g. if you set `'./src/typings.ts'`, the `src/` directory must exist)
 
 ### Collection names aren't being suggested

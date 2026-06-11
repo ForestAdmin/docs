@@ -1,9 +1,9 @@
 ---
 title: Smart views
-description: Build fully custom collection views using JavaScript, HTML, and CSS — beyond what the table layout offers.
+description: Build fully custom collection views using JavaScript, HTML, and CSS, beyond what the table layout offers.
 ---
 
-Smart Views let you replace the default table view with any UI you can code. Display orders on a map, events in a calendar, pictures in a gallery — all powered by your real data and integrated with Forest actions.
+Smart Views let you replace the default table view with any UI you can code. Display orders on a map, events in a calendar, pictures in a gallery, all powered by your real data and integrated with Forest actions.
 
 <Frame caption="A map-based Smart View replacing the default table view">
   <img src="/images/smart-views/smart-view-map.png" alt="Map Smart View on a collection" />
@@ -25,7 +25,7 @@ A Smart View is a [Glimmer Component](https://api.emberjs.com/ember/3.28/modules
 
 Forest provides an online editor to write your Smart View code. Access it from the collection's **Settings**, then the **Smart Views** tab.
 
-<Frame caption="The Smart View code editor — template, component, and style tabs">
+<Frame caption="The Smart View code editor, template, component, and style tabs">
   <img src="/images/smart-views/smart-view-calendar-code.png" alt="Smart View code editor" />
 </Frame>
 
@@ -233,7 +233,7 @@ function triggerSmartAction(
 
 | Argument     | Description                                                                                    |
 | ------------ | ---------------------------------------------------------------------------------------------- |
-| `context`    | Reference to the component — use `this`                                                        |
+| `context`    | Reference to the component, use `this`                                                        |
 | `collection` | The collection where the action is defined                                                     |
 | `actionName` | The action name                                                                                |
 | `records`    | An array of records or a single record                                                         |
@@ -711,7 +711,7 @@ export default class extends Component {
 
 Displays a master-detail layout: a scrollable list of orders on the left and a progress bar card on the right showing the shipping status of the selected order.
 
-<Frame caption="Shipping status Smart View — master-detail layout with a progress bar">
+<Frame caption="Shipping status Smart View, master-detail layout with a progress bar">
   <img src="/images/smart-views/smart-view-shipping.png" alt="Shipping status Smart View" />
 </Frame>
 

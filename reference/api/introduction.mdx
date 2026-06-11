@@ -3,20 +3,20 @@ title: "Public API"
 description: "Programmatic access to Forest activity logs, admin logs, and notes."
 ---
 
-The Forest public API exposes a subset of platform data and operations for programmatic access — useful for compliance reporting, audit log archival, SIEM integration, and external tooling.
+The Forest public API exposes a subset of platform data and operations for programmatic access, useful for compliance reporting, audit log archival, SIEM integration, and external tooling.
 
 ## What the API exposes
 
 | Endpoint group | Use case |
 | --- | --- |
-| [Activity logs](/reference/api/endpoints/activity-logs) | Track every action taken in Forest — exports for audit and compliance |
+| [Activity logs](/reference/api/endpoints/activity-logs) | Track every action taken in Forest, exports for audit and compliance |
 | [Admin logs](/reference/api/endpoints/admin-logs) | Track configuration and administrative operations across the project |
 | [Notes](/reference/api/endpoints/notes) | Read and write [collaboration notes](/product/collaborate/notes) on records |
 
 If you need data access beyond what's exposed here, you have two options:
 
-- **Use the Forest Agent directly** — the agent serves your collections via its own REST API. See the [Node.js](/reference/agent-api/nodejs) or [Ruby](/reference/agent-api/ruby) agent reference.
-- **Connect via MCP** — the [MCP server](/product/embed/mcp-server) exposes your data, actions, and workflows to AI agents under the same governance.
+- **Use the Forest Agent directly**, the agent serves your collections via its own REST API. See the [Node.js](/reference/agent-api/nodejs) or [Ruby](/reference/agent-api/ruby) agent reference.
+- **Connect via MCP**, the [MCP server](/product/embed/mcp-server) exposes your data, actions, and workflows to AI agents under the same governance.
 
 ## Base URL
 

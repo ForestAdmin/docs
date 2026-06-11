@@ -3,7 +3,7 @@ title: Dashboards
 description: Create and organize dashboards to monitor KPIs and metrics across your team.
 ---
 
-A **dashboard** is a tab in your Forest project where you group charts to track KPIs and operational metrics. You can create as many dashboards as needed — one per team, use case, or business domain.
+A **dashboard** is a tab in your Forest project where you group charts to track KPIs and operational metrics. You can create as many dashboards as needed, one per team, use case, or business domain.
 
 ## Creating a dashboard
 
@@ -28,14 +28,14 @@ Deleting a dashboard also deletes all charts it contains.
 
 Charts are the building blocks of a dashboard. Forest supports two ways to populate chart data:
 
-- **Simple mode** — configure charts from the UI by selecting a collection, an aggregate function, and optional filters. No code required.
-- **Query mode** — write a raw SQL query directly in the UI for advanced analytics.
+- **Simple mode**, configure charts from the UI by selecting a collection, an aggregate function, and optional filters. No code required.
+- **Query mode**, write a raw SQL query directly in the UI for advanced analytics.
 
 See [Charts](./charts/overview) for the full reference on chart types and configuration.
 
 ## API-powered charts
 
-When chart data requires custom business logic — calling an external API, joining data across sources, or applying transformations not possible in SQL — you can implement the data retrieval in your agent.
+When chart data requires custom business logic, calling an external API, joining data across sources, or applying transformations not possible in SQL, you can implement the data retrieval in your agent.
 
 Use `agent.addChart()` to register a named chart handler:
 

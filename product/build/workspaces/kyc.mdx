@@ -1,9 +1,9 @@
 ---
-title: "Example: KYC onboarding workspace"
+title: "Example 1: KYC"
 description: Step-by-step guide to building a document review and applicant approval workspace.
 ---
 
-This guide walks through building a KYC (Know Your Customer) Workspace — a focused interface where your compliance team can review company applications, check submitted documents, and approve or reject applicants without switching between multiple views.
+This guide walks through building a KYC (Know Your Customer) Workspace, a focused interface where your compliance team can review company applications, check submitted documents, and approve or reject applicants without switching between multiple views.
 
 **What operators will be able to do:**
 - See all companies in "Signed up" status at a glance
@@ -15,14 +15,14 @@ This guide walks through building a KYC (Know Your Customer) Workspace — a foc
 
 In your Forest project (start in a staging environment), click the **🧩 icon** in the left sidebar, then click **"Create your first Workspace"**.
 
-Rename it by clicking the edit icon next to "My Workspace". Choose a clear name like **"KYC Review"** — operators will see this label every day.
+Rename it by clicking the edit icon next to "My Workspace". Choose a clear name like **"KYC Review"**, operators will see this label every day.
 
 ## 2. Add a title with templating
 
 Drag a **Text** component onto the canvas. Add a title like:
 
 ```
-KYC Review — Welcome, {{currentUser.firstName}}
+KYC Review - Welcome, {{currentUser.firstName}}
 ```
 
 Type `{{` to see the available template variables. Dynamic text makes the workspace feel personalized and lets you reference selected record data as you build more components.
@@ -36,7 +36,7 @@ Drag a **Chart** component from the sidebar. Configure it:
 - **Metric:** Count
 - **Filter:** `status = "Signed up"`
 
-This gives operators a live count of pending applications — useful context before they dive into the queue.
+This gives operators a live count of pending applications, useful context before they dive into the queue.
 
 ## 4. Add the Companies Collection
 
@@ -46,7 +46,7 @@ Drag a **Collection** component onto the canvas. In the sidebar:
 - **Segment:** Select or create a "Signed up" segment that filters `status = "Signed up"`
 - **On row click:** "Select a record"
 
-Setting "Select a record" on click is what makes the workspace dynamic — other components will react to whichever company the operator clicks.
+Setting "Select a record" on click is what makes the workspace dynamic, other components will react to whichever company the operator clicks.
 
 Add a **Text** component above the collection as a label: "Companies awaiting review"
 
@@ -74,7 +74,7 @@ Drag a **Link** component and configure it:
 - **URL type:** Redirect to record
 - **Source:** Collection 1 (Company)
 
-The link dynamically points to the currently selected company's detail view — useful when the operator needs to see the full record.
+The link dynamically points to the currently selected company's detail view, useful when the operator needs to see the full record.
 
 ## 7. Show related documents with a second Collection
 
@@ -90,7 +90,7 @@ This filter uses Templating to automatically show only the documents that belong
 Drag a **Button** component onto the canvas. Configure it:
 
 - **Source:** Collection 1 (Company)
-- **Action:** "Upload Legal Docs" (a Smart Action defined in your agent)
+- **Action:** "Upload Legal Docs" (an action defined in your agent)
 
 Repeat for other actions:
 - "Approve Application"
@@ -115,9 +115,9 @@ Now operators can select "Passport" from the dropdown and the document list filt
 
 Click **"Exit builder"** to switch to the operator view. Test the full workflow:
 
-1. Click a company row — details and documents should update
-2. Trigger an action — the Smart Action form should appear
-3. Submit the form — the collection should refresh and show the updated status
+1. Click a company row, details and documents should update
+2. Trigger an action, the action form should appear
+3. Submit the form, the collection should refresh and show the updated status
 
 ## The result
 
@@ -127,4 +127,4 @@ When fully built, operators get a single-screen workflow:
 - **Right panel:** Details, documents, and action buttons for the selected company
 - **Top:** Count of pending applications for context
 
-Companies move out of the queue automatically once their status changes — operators never need to navigate elsewhere.
+Companies move out of the queue automatically once their status changes, operators never need to navigate elsewhere.

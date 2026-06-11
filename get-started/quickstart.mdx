@@ -38,7 +38,7 @@ You'll have a working Forest agent connected to your database, with the Forest U
     ```
   </Step>
   <Step title="Open Forest">
-    Forest automatically opens in your browser. Your database schema has been detected — collections, relationships, and CRUD operations are ready out of the box.
+    Forest automatically opens in your browser. Your database schema has been detected, collections, relationships, and CRUD operations are ready out of the box.
   </Step>
 </Steps>
 
@@ -51,10 +51,10 @@ A connected agent with every table from your database surfaced as a collection. 
     Rename collections, hide internal fields, group fields into sections, create your first segment.
   </Card>
   <Card title="Add business logic" href="/get-started/add-business-logic">
-    Smart Actions, computed fields, custom forms — define your operations layer in code.
+    Actions, computed fields, custom forms, define your operations layer in code.
   </Card>
   <Card title="Build operational workflows" href="/get-started/set-up-operations">
-    Workspaces, workflows, and inboxes — turn collections into the place your team actually does work.
+    Workspaces, workflows, and inboxes, turn collections into the place your team actually does work.
   </Card>
   <Card title="Deploy to production" href="/get-started/deploy">
     Move from localhost to a deployed environment, with the development workflow your team can rely on.
@@ -67,7 +67,7 @@ A connected agent with every table from your database surfaced as a collection. 
   <Accordion title="Agent not starting">
     - Check that your `.env` file is present and loaded
     - Ensure port 3310 is not already in use
-    - Run `curl http://localhost:3310/forest` — should return Forest metadata
+    - Run `curl http://localhost:3310/forest`, should return Forest metadata
   </Accordion>
   <Accordion title="No tables showing up">
     - Verify your `DATABASE_URL` is correct and the database is reachable from your machine
@@ -78,19 +78,10 @@ A connected agent with every table from your database surfaced as a collection. 
 
 ## Other deployment options
 
-Self-hosted is the recommended path for most teams. Forest also supports two other architectures for specific needs:
-
-<CardGroup cols={2}>
-  <Card title="Cloud" icon="cloud" href="/get-started/connect/architectures/cloud">
-    Fully managed. We host the agent and UI. Connect your database and start.
-  </Card>
-  <Card title="On-Premise" icon="building-shield" href="/get-started/connect/architectures/on-premise">
-    Air-gapped. Everything runs in your infrastructure, including the UI. Enterprise only.
-  </Card>
-</CardGroup>
+Self-hosted is the recommended path for most teams. Forest also offers a fully-managed **Cloud** option and **on-premise** deployments. [Contact us](https://www.forestadmin.com/contact) to find the right fit for your needs.
 
 <Card title="Need help choosing or getting started?" icon="envelope" href="mailto:support@forestadmin.com">
-  Reach out to our team — we'll help you pick the right architecture and walk through setup.
+  Reach out to our team, we'll help you pick the right architecture and walk through setup.
 </Card>
 
 <Card title="Next: Customize your interface" icon="arrow-right" href="/get-started/customize-your-back-office">

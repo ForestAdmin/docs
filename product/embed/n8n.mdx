@@ -3,22 +3,18 @@ title: "n8n Node"
 description: "Trigger Forest actions and access your data from n8n workflows."
 ---
 
-The Forest n8n node turns Forest into a node in your automation stack. Read records, trigger custom actions, and react to Forest events directly from n8n workflows — without writing API calls by hand.
-
-<Note>
-  This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) or contact us to enable it.
-</Note>
+The Forest n8n node turns Forest into a node in your automation stack. Read records, trigger custom actions, and react to Forest events directly from n8n workflows, without writing API calls by hand.
 
 ## What you can do
 
-- **Read records** — query any collection and pipe the results into n8n nodes (Slack, Sheets, HubSpot, etc.).
-- **Trigger custom actions** — fire any [Forest action](/product/process/actions/overview) on one or many records, with parameters.
-- **Use Forest as a trigger** — react to events on your collections (record created, action executed) and kick off an n8n workflow.
-- **Combine with AI** — pass Forest records into AI nodes (OpenAI, Claude, etc.) and write the result back through a custom action.
+- **Read records**, query any collection and pipe the results into n8n nodes (Slack, Sheets, HubSpot, etc.).
+- **Trigger custom actions**, fire any [Forest action](/product/process/actions/overview) on one or many records, with parameters.
+- **Use Forest as a trigger**, react to events on your collections (record created, action executed) and kick off an n8n workflow.
+- **Combine with AI**, pass Forest records into AI nodes (OpenAI, Claude, etc.) and write the result back through a custom action.
 
 ## When to use n8n vs. native Forest workflows
 
-Use Forest [workflows](/product/process/workflows/overview) when the orchestration lives close to your data and your operators — multi-step, human approvals, audit trail.
+Use Forest [workflows](/product/process/workflows/overview) when the orchestration lives close to your data and your operators, multi-step, human approvals, audit trail.
 
 Use n8n when the orchestration spans many tools (Slack, Notion, HubSpot, Stripe…) and Forest is one of several systems involved. The Forest n8n node gives you the same record access and action execution, but inside n8n's broader automation graph.
 
@@ -40,14 +36,8 @@ Use n8n when the orchestration spans many tools (Slack, Notion, HubSpot, Stripe�
 
 A typical n8n workflow using Forest as the data source:
 
-1. **Forest trigger** — fires when a new record is created in `orders`.
-2. **Filter** — keep only orders where `amount > 10000`.
-3. **Slack node** — post a message to `#sales-ops` with the customer name and amount.
+1. **Forest trigger**, fires when a new record is created in `orders`.
+2. **Filter**, keep only orders where `amount > 10000`.
+3. **Slack node**, post a message to `#sales-ops` with the customer name and amount.
 
-Every Forest record fetched through n8n still respects the permissions of the API key — workspace scopes, role-based access, and the audit trail all apply.
-
-## Related
-
-- [MCP server](/product/embed/mcp-server) — for AI agents that need to act on Forest operations.
-- [Zendesk app](/product/embed/zendesk) — embed Forest data directly inside Zendesk tickets.
-- [Public API](/reference/api/introduction) — if you'd rather call Forest directly from your own code.
+Every Forest record fetched through n8n still respects the permissions of the API key: workspace scopes, role-based access, and the audit trail all apply.

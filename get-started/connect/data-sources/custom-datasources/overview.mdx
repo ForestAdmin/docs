@@ -1,0 +1,26 @@
+---
+title: "Overview"
+description: "Build a custom datasource for any system without an existing connector, using the translation or replication strategy"
+---
+
+When Forest has no built-in connector for your system (a proprietary database, a legacy service, a third-party REST API), you can build your own datasource. There are two strategies, and the right one depends on what your source can do and how fresh the data needs to be.
+
+## Translation vs. Replication
+
+| | [Translation](/get-started/connect/data-sources/custom-datasources/translation) | [Replication](/get-started/connect/data-sources/custom-datasources/replication) |
+|---|---|---|
+| **How it works** | Translates Forest's query interface into your API's query language and calls the source live on every request | Maintains a local copy (replica) of the source data in a cache controlled by the agent, and queries that copy |
+| **Data freshness** | Always live: every request hits the source | Eventually consistent: refreshed on a schedule, by polling, or via push/webhooks |
+| **Query translation** | You implement it (filters, sort, pagination, aggregation) | None: filtering, sorting, search, and charts work out of the box against the cache |
+| **Effort** | High: a full-featured translation layer often exceeds 1000 lines | Lower: you mostly implement how data is fetched and (optionally) written back |
+| **Best for** | Sources that already support rich querying and where data must always be live | Slow, rate-limited, or query-poor APIs where a cached copy is acceptable |
+| **Availability** | Node.js and Ruby | Node.js only |
+
+## Choosing a strategy
+
+- Reach for **Translation** when your source is a capable database or API that can filter, sort, and paginate efficiently, and you need every read to reflect the latest state.
+- Reach for **Replication** when the source API is slow, rate-limited, or hard to query, and a periodically synced copy is good enough. It is the simpler path and gives you Forest's full feature set with no query translation.
+
+<Note>
+**Don't see the datasource you need?** [Contact us](https://www.forestadmin.com/contact) to request a connector, or share your own through the [Forest experimental repository](https://github.com/ForestAdmin/forestadmin-experimental).
+</Note>

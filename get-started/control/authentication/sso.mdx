@@ -1,621 +1,86 @@
 ---
 title: "Single Sign-On (SSO)"
-description: "Enable Single Sign-On with SAML 2.0 to authenticate users through your existing identity provider"
+description: "Authenticate users through your identity provider using SAML 2.0"
 ---
 
-## Overview
+Single Sign-On lets your users access Forest with their existing corporate credentials, managed by your identity provider (IdP). Forest supports the **SAML 2.0** specification, so any SAML 2.0-compliant IdP can be used.
 
-Single Sign-On (SSO) allows users to access Forest using their existing corporate credentials through your identity provider (IdP). This centralizes authentication, improves security, and provides a better user experience.
-
-<Info>
-This feature may not be available on all plans. Check the [pricing page](https://www.forestadmin.com/pricing) for more information, or [contact us](https://www.forestadmin.com/contact) to enable it for your organization.
-</Info>
-
-## Benefits of SSO
-
-<CardGroup cols={2}>
-  <Card title="Centralized Authentication" icon="key">
-    Users authenticate once through your IdP and access Forest
-  </Card>
-
-  <Card title="Enhanced Security" icon="shield-check">
-    Leverage your IdP's security features: MFA, conditional access, device policies
-  </Card>
-
-  <Card title="Simplified Onboarding" icon="user-plus">
-    New employees automatically get Forest access through your IdP provisioning
-  </Card>
-
-  <Card title="Instant Offboarding" icon="user-minus">
-    Disabling a user in your IdP immediately revokes Forest access
-  </Card>
-</CardGroup>
-
-## Supported identity providers
-
-Forest supports any SAML 2.0-compliant identity provider:
-
-<CardGroup cols={2}>
-  <Card title="Google Workspace" icon="google" href="/get-started/control/authentication/sso-providers/google">
-    Setup guide for Google Workspace SSO
-  </Card>
-
-  <Card title="Okta" icon="circle-check" href="/get-started/control/authentication/sso-providers/okta">
-    Setup guide for Okta SSO
-  </Card>
-
-  <Card title="Azure AD / Entra ID" icon="microsoft" href="/get-started/control/authentication/sso-providers/azure">
-    Setup guide for Microsoft Azure AD
-  </Card>
-
-  <Card title="AWS SSO" icon="aws" href="/get-started/control/authentication/sso-providers/aws">
-    Setup guide for AWS IAM Identity Center
-  </Card>
-
-  <Card title="OneLogin" icon="fingerprint">
-    SAML 2.0 compatible
-  </Card>
-
-  <Card title="Auth0" icon="lock">
-    SAML 2.0 compatible
-  </Card>
-
-  <Card title="Ping Identity" icon="id-badge">
-    SAML 2.0 compatible
-  </Card>
-
-  <Card title="Generic SAML" icon="diagram-project" href="/get-started/control/authentication/sso-providers/generic-saml">
-    Any SAML 2.0-compliant IdP
-  </Card>
-</CardGroup>
+SSO is configured once, at the **organization** level, by an **organization owner**. A single identity provider is configured per organization.
 
 ## How SSO works
 
-SSO with Forest uses the SAML 2.0 protocol:
+Forest uses a standard SP-initiated SAML 2.0 flow: the user starts at Forest, authenticates against your IdP, and is redirected back with a signed assertion.
 
-```
-┌─────────┐           ┌─────────────┐           ┌────────────┐
-│  User   │           │   Forest    │           │ Identity   │
-│         │           │   Admin     │           │ Provider   │
-└────┬────┘           └──────┬──────┘           └──────┬─────┘
-     │                       │                         │
-     │  1. Access Forest     │                         │
-     ├──────────────────────>│                         │
-     │                       │                         │
-     │  2. SAML Request      │                         │
-     │<──────────────────────┤                         │
-     │                       │                         │
-     │  3. Login at IdP      │                         │
-     ├───────────────────────┼────────────────────────>│
-     │                       │                         │
-     │  4. SAML Response     │                         │
-     │<──────────────────────┼─────────────────────────┤
-     │                       │                         │
-     │  5. Session Created   │                         │
-     ├──────────────────────>│                         │
-     │                       │                         │
-     │  6. Access Granted    │                         │
-     │<──────────────────────┤                         │
-     │                       │                         │
+```mermaid
+sequenceDiagram
+    participant User
+    participant Forest as Forest (app.forestadmin.com)
+    participant IdP as Your identity provider
+
+    User->>Forest: Click "Login with SSO" and enter the organization name
+    Forest->>IdP: Redirect with a SAML authentication request
+    User->>IdP: Authenticate (with MFA if your IdP requires it)
+    IdP->>Forest: Signed SAML assertion (NameID = email) to the callback URL
+    Forest->>Forest: Validate the assertion and open a session
+    Forest->>User: Access granted
 ```
 
-### SAML flow explained
+## Forest SAML settings
+
+When you declare Forest as an application in your IdP, use these values (the audience / Entity ID is shown in your organization settings):
+
+| Setting | Value |
+|---------|-------|
+| Callback / ACS URL | `https://api.forestadmin.com/api/saml/callback` |
+| Sign-on URL | `https://api.forestadmin.com/api/saml/callback` |
+| Logout URL | `https://app.forestadmin.com/login` |
+| `NameID` | The user's **email address** (must match their Forest account) |
+
+## Configuring SSO
 
 <Steps>
-  <Step title="User Access">
-    User navigates to your Forest URL
+  <Step title="Open your organization's security settings">
+    As an organization owner, go to **Organization settings → Security** and open the SSO configuration.
   </Step>
-
-  <Step title="SAML Request">
-    Forest generates a SAML authentication request and redirects to your IdP
+  <Step title="Declare Forest in your identity provider">
+    Create a SAML 2.0 application in your IdP using the Forest SAML settings above. Make sure the `NameID` it returns is the user's email address.
   </Step>
+  <Step title="Provide your IdP metadata to Forest">
+    Give Forest your IdP's metadata in one of these ways:
 
-  <Step title="IdP Authentication">
-    User authenticates with your IdP (including MFA if configured)
+    - **XML metadata endpoint URL** (recommended): paste the metadata URL exposed by your IdP.
+    - **XML metadata file**: upload the metadata file downloaded from your IdP.
+    - **Manual entry**: enter the login endpoint, the logout endpoint, and a valid signing certificate.
   </Step>
-
-  <Step title="SAML Response">
-    IdP sends a signed SAML assertion back to Forest with user attributes
-  </Step>
-
-  <Step title="Session Creation">
-    Forest validates the SAML assertion and creates a session
-  </Step>
-
-  <Step title="Access Granted">
-    User is logged in and can access Forest based on their role
+  <Step title="Test and enable">
+    Test the configuration, then enable it. Once SSO is enabled, all users must log in again.
   </Step>
 </Steps>
-
-## Setting up SSO
-
-### Prerequisites
-
-Before configuring SSO, ensure you have:
-
-- Admin access to Forest
-- Admin access to your identity provider
-- User email addresses in both systems match
-
-### Configuration steps
-
-<Steps>
-  <Step title="Enable SSO in Forest">
-    1. Go to **Project Settings** > **Authentication** > **SSO**
-    2. Click **Enable SSO**
-    3. Note the **ACS URL** and **Entity ID** (you'll need these for IdP configuration)
-  </Step>
-
-  <Step title="Configure Your Identity Provider">
-    Create a new SAML application in your IdP:
-
-    - **Application Name**: Forest
-    - **ACS URL**: Copy from Forest settings
-    - **Entity ID**: Copy from Forest settings
-    - **Name ID Format**: Email Address
-    - **Signature Algorithm**: SHA-256 (recommended)
-
-    Configure attribute mapping (see below)
-  </Step>
-
-  <Step title="Upload IdP Metadata to Forest">
-    Option A: **Metadata URL** (recommended)
-    - Copy the metadata URL from your IdP
-    - Paste it into Forest SSO settings
-
-    Option B: **Upload XML File**
-    - Download metadata XML from your IdP
-    - Upload to Forest SSO settings
-  </Step>
-
-  <Step title="Test the Connection">
-    1. Click **Test SSO** in Forest
-    2. You'll be redirected to your IdP
-    3. Log in with a test account
-    4. Verify successful authentication
-  </Step>
-
-  <Step title="Configure User Provisioning">
-    Choose how users are created:
-
-    - **Just-in-Time (JIT) Provisioning**: Automatically create users on first login
-    - **Manual Provisioning**: Pre-create users before they can log in
-    - **SCIM Provisioning**: Sync users automatically (see [SCIM documentation](/get-started/control/authentication/scim))
-  </Step>
-
-  <Step title="Enforce SSO (Optional)">
-    Once tested, enforce SSO-only login:
-    - Disable password-based authentication
-    - Keep one admin account with password access for emergency
-  </Step>
-</Steps>
-
-## Attribute mapping
-
-SAML assertions contain user information that Forest maps to user profiles:
-
-### Required attributes
-
-| SAML Attribute | Forest Field | Description |
-|----------------|-------------------|-------------|
-| `email` or `NameID` | Email | User's email address (must match) |
-
-### Optional attributes
-
-| SAML Attribute | Forest Field | Use Case |
-|----------------|-------------------|----------|
-| `firstName` or `givenName` | First Name | User's first name |
-| `lastName` or `surname` | Last Name | User's last name |
-| `role` | Role | Auto-assign role (e.g., "editor", "admin") |
-| `teams` | Teams | Auto-assign team memberships |
-| `department` | Tags | Custom user metadata |
-
-### Attribute configuration example
-
-<Tabs>
-  <Tab title="Google Workspace">
-    ```xml
-    <!-- In Google Admin Console -->
-    <saml:Attribute Name="email">
-      <saml:AttributeValue>{primary_email}</saml:AttributeValue>
-    </saml:Attribute>
-
-    <saml:Attribute Name="firstName">
-      <saml:AttributeValue>{first_name}</saml:AttributeValue>
-    </saml:Attribute>
-
-    <saml:Attribute Name="lastName">
-      <saml:AttributeValue>{last_name}</saml:AttributeValue>
-    </saml:Attribute>
-
-    <saml:Attribute Name="role">
-      <saml:AttributeValue>{department}</saml:AttributeValue>
-    </saml:Attribute>
-    ```
-  </Tab>
-
-  <Tab title="Okta">
-    ```xml
-    <!-- In Okta SAML Settings -->
-    <saml2:Attribute Name="email">
-      <saml2:AttributeValue>${user.email}</saml2:AttributeValue>
-    </saml2:Attribute>
-
-    <saml2:Attribute Name="firstName">
-      <saml2:AttributeValue>${user.firstName}</saml2:AttributeValue>
-    </saml2:Attribute>
-
-    <saml2:Attribute Name="lastName">
-      <saml2:AttributeValue>${user.lastName}</saml2:AttributeValue>
-    </saml2:Attribute>
-
-    <saml2:Attribute Name="teams">
-      <saml2:AttributeValue>${user.department}</saml2:AttributeValue>
-    </saml2:Attribute>
-    ```
-  </Tab>
-
-  <Tab title="Azure AD">
-    ```xml
-    <!-- In Azure AD Application Claims -->
-    <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress">
-      <AttributeValue>user.mail</AttributeValue>
-    </Attribute>
-
-    <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname">
-      <AttributeValue>user.givenname</AttributeValue>
-    </Attribute>
-
-    <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname">
-      <AttributeValue>user.surname</AttributeValue>
-    </Attribute>
-
-    <Attribute Name="role">
-      <AttributeValue>user.department</AttributeValue>
-    </Attribute>
-    ```
-  </Tab>
-</Tabs>
-
-## User provisioning
-
-### Just-in-Time (JIT) provisioning
-
-Automatically create users when they first log in via SSO:
-
-<Steps>
-  <Step title="Enable JIT Provisioning">
-    In Forest SSO settings, enable **Automatic User Creation**
-  </Step>
-
-  <Step title="Configure Default Role">
-    Set the default role for new users (e.g., "Viewer" for safety)
-  </Step>
-
-  <Step title="Map Role from IdP (Optional)">
-    Map the `role` SAML attribute to automatically assign appropriate roles
-  </Step>
-
-  <Step title="First Login">
-    When a user logs in for the first time:
-    1. Forest verifies SAML assertion
-    2. Creates user account with email from assertion
-    3. Assigns default or mapped role
-    4. User can immediately access Forest
-  </Step>
-</Steps>
-
-<Info>
-**Role Mapping**: If you map roles from your IdP, ensure the role names match exactly (case-sensitive). Otherwise, the default role is assigned.
-</Info>
-
-### Manual provisioning
-
-Pre-create users before they can log in:
-
-1. Add users in **Project Settings** > **Teams** > **Users**
-2. User email must match their IdP email
-3. User logs in via SSO
-4. Forest matches by email and grants access
-
-### SCIM provisioning
-
-Automatically sync users from your IdP. See [SCIM Documentation](/get-started/control/authentication/scim) for setup.
-
-## Enforcing SSO
-
-Once SSO is configured and tested, enforce SSO-only authentication:
 
 <Warning>
-**Emergency Access**: Always keep at least one admin account with password authentication enabled. This ensures access to Forest if SSO has issues.
+Users must already exist in Forest (or be provisioned through [SCIM](/get-started/control/authentication/scim)) with the same email address used by your IdP. The `NameID` returned in the SAML assertion must equal that email.
 </Warning>
 
-<Steps>
-  <Step title="Test Thoroughly">
-    Verify all users can log in successfully via SSO
-  </Step>
+## How users log in with SSO
 
-  <Step title="Notify Users">
-    Inform users that password login will be disabled
-  </Step>
+On the Forest login page, click **"Login with SSO"**, enter your organization name, and click **"Login"**. The user is redirected to your IdP and back to Forest once authenticated.
 
-  <Step title="Enable SSO Enforcement">
-    Go to **Project Settings** > **Authentication** > **Enforcement**
+## IdP-initiated login (optional)
 
-    Enable: **Require SSO for all users**
-  </Step>
+Forest also accepts IdP-initiated logins, where the user starts from your IdP's portal and opens Forest from there.
 
-  <Step title="Configure Exceptions">
-    Optionally allow specific users to bypass SSO (emergency access accounts)
-  </Step>
-</Steps>
+<Warning>
+IdP-initiated login introduces a security risk associated with CSRF in the SAML protocol. Prefer SP-initiated login (starting from Forest) unless you specifically need the IdP-initiated flow.
+</Warning>
 
-### Enforcement options
+## Provider guides
 
-<Tabs>
-  <Tab title="Strict Enforcement">
-    **All users must use SSO**
-
-    - Password login disabled for everyone
-    - Only one emergency admin account with password
-    - Maximum security
-
-    **Use Case**: Large enterprises with strict security policies
-  </Tab>
-
-  <Tab title="Role-Based Enforcement">
-    **SSO required for specific roles**
-
-    - Internal employees use SSO
-    - External contractors use password
-    - Flexible for mixed environments
-
-    **Use Case**: Organizations with external partners
-  </Tab>
-
-  <Tab title="Optional SSO">
-    **SSO available but not required**
-
-    - Users can choose SSO or password
-    - Gradual transition period
-    - Least restrictive
-
-    **Use Case**: During SSO rollout phase
-  </Tab>
-</Tabs>
-
-## Troubleshooting
-
-### SAML configuration issues
-
-<AccordionGroup>
-  <Accordion title="Error: Invalid SAML Response">
-    **Possible Causes**:
-    - Clock skew between Forest and IdP (check time sync)
-    - Invalid signature (check certificate)
-    - Wrong ACS URL configured in IdP
-
-    **Solution**:
-    1. Verify ACS URL in IdP matches Forest
-    2. Ensure IdP certificate is valid and not expired
-    3. Check IdP and Forest server times are synchronized
-  </Accordion>
-
-  <Accordion title="Error: User Email Not Found">
-    **Possible Causes**:
-    - Email in SAML assertion doesn't match Forest user
-    - JIT provisioning is disabled
-    - Email attribute not mapped correctly
-
-    **Solution**:
-    1. Check email in SAML assertion (use browser dev tools)
-    2. Verify user exists with exact email match
-    3. Enable JIT provisioning or create user manually
-  </Accordion>
-
-  <Accordion title="User Can't Access After Login">
-    **Possible Causes**:
-    - User created but has no role assigned
-    - User's role has no permissions
-    - Scope filters exclude all data for user
-
-    **Solution**:
-    1. Verify user has appropriate role
-    2. Check role permissions
-    3. Review scope configuration
-  </Accordion>
-
-  <Accordion title="Redirect Loop">
-    **Possible Causes**:
-    - Multiple SSO configurations conflict
-    - IdP misconfigured
-    - Browser cookies/cache issues
-
-    **Solution**:
-    1. Clear browser cookies and cache
-    2. Verify only one SSO configuration is active
-    3. Check IdP logs for errors
-  </Accordion>
-</AccordionGroup>
-
-### Certificate issues
-
-**Certificate Expired**:
-```
-Error: Certificate expired, SAML assertion validation failed
-```
-
-**Solution**:
-1. Update certificate in your IdP
-2. Download new metadata
-3. Update metadata in Forest
-
-**Certificate Mismatch**:
-```
-Error: Signature verification failed
-```
-
-**Solution**:
-1. Ensure Forest has the correct IdP metadata
-2. Verify certificate in SAML response matches IdP metadata
-3. Check for multiple certificates (use the correct one)
-
-### Testing tools
-
-Use SAML debugging tools to diagnose issues:
+Forest works with any SAML 2.0 identity provider. Step-by-step guides are available for the most common ones:
 
 <CardGroup cols={2}>
-  <Card title="SAML Tracer (Browser Extension)" icon="magnifying-glass">
-    Capture and inspect SAML requests and responses in real-time
-  </Card>
-
-  <Card title="SAML Decoder" icon="code">
-    Decode base64-encoded SAML assertions to view contents
-  </Card>
-
-  <Card title="IdP Logs" icon="file-lines">
-    Check your IdP's logs for authentication errors and warnings
-  </Card>
-
-  <Card title="Forest Logs" icon="list">
-    Review Forest audit logs for SSO authentication events
-  </Card>
-</CardGroup>
-
-## Security best practices
-
-### Certificate management
-
-<CardGroup cols={2}>
-  <Card title="Use SHA-256" icon="shield">
-    Configure your IdP to sign assertions with SHA-256 (not SHA-1)
-  </Card>
-
-  <Card title="Monitor Expiration" icon="calendar-xmark">
-    Set reminders to renew certificates before expiration
-  </Card>
-
-  <Card title="Rotate Certificates" icon="arrows-rotate">
-    Update certificates annually or per your security policy
-  </Card>
-
-  <Card title="Secure Metadata" icon="lock">
-    Protect IdP metadata and private keys
-  </Card>
-</CardGroup>
-
-### Access control
-
-1. **Limit IdP Access**: Only authorize users who need Forest access
-2. **Use Groups**: Assign Forest access to IdP groups, not individual users
-3. **Regular Reviews**: Audit SSO access quarterly
-4. **MFA Required**: Enforce multi-factor authentication in your IdP
-5. **Conditional Access**: Use IdP conditional access policies (device compliance, location)
-
-### Monitoring
-
-- **Track Login Events**: Monitor SSO logins in [audit logs](/get-started/control/audit)
-- **Alert on Failures**: Set up alerts for failed SSO attempts
-- **Review Access**: Regularly review who has accessed Forest via SSO
-- **Test Regularly**: Periodically test SSO with different user accounts
-
-## Advanced configuration
-
-### Multiple IdPs
-
-Support users from different identity providers:
-
-```
-Company A users → Okta SSO
-Company B users → Azure AD SSO
-Internal users → Google Workspace SSO
-```
-
-**Setup**:
-1. Configure each IdP separately in Forest
-2. Use email domain routing to direct users to correct IdP
-3. Map each IdP to appropriate teams/roles
-
-### Custom attribute mapping
-
-Map custom SAML attributes to Forest user fields:
-
-```javascript
-// Custom attribute mapping configuration
-{
-  "attributeMapping": {
-    "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
-    "firstName": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
-    "lastName": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
-    "role": "http://schemas.mycompany.com/ws/2024/identity/claims/forestadminrole",
-    "department": "http://schemas.mycompany.com/ws/2024/identity/claims/department",
-    "employeeId": "http://schemas.mycompany.com/ws/2024/identity/claims/employeeid"
-  }
-}
-```
-
-### IdP-initiated vs SP-initiated SSO
-
-<Tabs>
-  <Tab title="SP-Initiated (Recommended)">
-    **User starts at Forest**
-
-    1. User goes to Forest URL
-    2. Clicks "Log in with SSO"
-    3. Redirected to IdP
-    4. Logs in and returns to Forest
-
-    **Advantages**: More secure, better user experience
-  </Tab>
-
-  <Tab title="IdP-Initiated">
-    **User starts at IdP portal**
-
-    1. User logs into IdP portal
-    2. Clicks Forest app icon
-    3. Directly lands in Forest
-
-    **Advantages**: Convenient for users with many apps
-    **Considerations**: Requires special IdP configuration
-  </Tab>
-</Tabs>
-
-## Compliance considerations
-
-### GDPR
-
-- Log all SSO authentications for audit trail
-- Document IdP integration in data processing records
-- Ensure IdP contract includes DPA (Data Processing Agreement)
-
-### HIPAA
-
-- Use SSO with MFA for all users accessing ePHI
-- Implement automatic session timeouts
-- Log all authentication events with timestamps
-
-### SOC 2
-
-- Document SSO configuration and change management
-- Implement role-based access through IdP groups
-- Regular access reviews and recertification
-
-## Next steps
-
-<CardGroup cols={2}>
-  <Card title="SCIM Provisioning" icon="users-gear" href="/get-started/control/authentication/scim">
-    Automate user provisioning from your IdP
-  </Card>
-
-  <Card title="2FA Setup" icon="mobile-screen" href="/get-started/control/authentication/2fa">
-    Add additional security with two-factor authentication
-  </Card>
-
-  <Card title="Teams & Roles" icon="user-group" href="/get-started/control/teams">
-    Organize SSO users into teams with appropriate roles
-  </Card>
-
-  <Card title="Audit Logs" icon="clock-rotate-left" href="/get-started/control/audit">
-    Monitor SSO authentication events
-  </Card>
+  <Card title="Google Workspace" icon="google" href="/get-started/control/authentication/sso-providers/google" />
+  <Card title="Okta" icon="circle-check" href="/get-started/control/authentication/sso-providers/okta" />
+  <Card title="Azure AD / Entra ID" icon="microsoft" href="/get-started/control/authentication/sso-providers/azure" />
+  <Card title="AWS IAM Identity Center" icon="aws" href="/get-started/control/authentication/sso-providers/aws" />
+  <Card title="Generic SAML 2.0" icon="diagram-project" href="/get-started/control/authentication/sso-providers/generic-saml" />
 </CardGroup>

@@ -14,7 +14,7 @@ Forest tracks all user activities across different areas:
 | Category | Activities |
 |----------|-----------|
 | **Data Operations** | `create` - Record creation<br/>`update` - Record updates<br/>`delete` - Record deletion |
-| **Smart Actions** | `action` - Smart Action execution<br/>`createApproval` - Approval request created<br/>`approveApproval` - Approval granted<br/>`rejectApproval` - Approval rejected<br/>`markApprovalAsFailed` - Approval failed<br/>`ignoreApprovalWarning` - Warning bypassed<br/>`sendApprovalBackInReview` - Sent back for review |
+| **Actions** | `action` - Action execution<br/>`createApproval` - Approval request created<br/>`approveApproval` - Approval granted<br/>`rejectApproval` - Approval rejected<br/>`markApprovalAsFailed` - Approval failed<br/>`ignoreApprovalWarning` - Warning bypassed<br/>`sendApprovalBackInReview` - Sent back for review |
 | **Inbox Management** | `startProcessingInboxTask` - Task processing started<br/>`assignUserToInboxTask` - Task assigned<br/>`unassignUserFromInboxTask` - Task unassigned<br/>`cancelInboxTask` - Task cancelled<br/>`autoCancelInboxTask` - Task auto-cancelled |
 | **Workflows** | `triggerWorkflow` - Workflow initiated<br/>`completeWorkflowStep` - Step completed<br/>`selectWorkflowOption` - Option selected<br/>`reviseWorkflowStep` - Step revised<br/>`resumeWorkflow` - Workflow resumed<br/>`completeWorkflow` - Workflow finished<br/>`abortWorkflow` - Workflow aborted |
 | **Collaboration** | `createNote` - Note added<br/>`deleteNote` - Note removed<br/>`createMessage` - Message sent |
@@ -55,9 +55,13 @@ To export activity logs:
 You will receive download links via email shortly after the export request.
 
 <Info>
-**API Access**: Audit logs are also available programmatically through the Forest API. See the [Activity Logs API reference](/reference/api/endpoints/activity-logs) for more information.
+**API Access**: Activity logs are also available programmatically through the Forest API. See the [Activity Logs API reference](/reference/api/endpoints/activity-logs) for more information.
 </Info>
 
-<Info>
-**Admin Logs**: This page covers data activity logs. Permission management changes (role modifications, user access changes, etc.) are tracked separately in Admin Logs. [View Admin Logs documentation →](/reference/api/endpoints/admin-logs)
-</Info>
+## Admin Logs
+
+While Activity Logs track what operators do with your **data**, **Admin Logs** track changes to your Forest project's **configuration**, such as permission and access-management changes. They are kept separately from the data activity logs.
+
+Admin Logs are available through the Forest public API, which lists the admin logs for a project, most recent first. This endpoint is not self-service: [contact us](https://www.forestadmin.com/contact) to enable access.
+
+See the [Admin Logs API reference](/reference/api/endpoints/admin-logs) for details.

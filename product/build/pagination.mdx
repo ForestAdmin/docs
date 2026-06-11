@@ -3,7 +3,7 @@ title: Pagination Configuration
 description: Configure page size and pagination behavior for collections, and optimize performance on large datasets.
 ---
 
-Pagination controls how many records are loaded at once when operators browse a collection. Getting it right balances user experience — showing enough records to be useful — with query performance on large tables.
+Pagination controls how many records are loaded at once when operators browse a collection. Getting it right balances user experience, showing enough records to be useful, with query performance on large tables.
 
 ## Default Behavior
 
@@ -16,16 +16,16 @@ By default, collections show **15 records per page**.
 
 ## Changing the Page Size
 
-Operators can change the number of records displayed per page using the page size selector at the bottom of the table view. Available options are typically 10, 25, 50, and 100.
+The page size is part of the collection's layout, so the value you set applies to **all operators**, not just you. It is not a personal, per-operator preference.
 
-This preference is saved per operator — each team member can set their own default.
-
-To configure the default page size for a collection, go to collection settings in the Layout Editor:
+To change it:
 
 1. Enter **Layout Editor** mode
-2. Click the gear icon next to the collection
-3. Find the **Pagination** section
-4. Set your preferred default page size
+2. Open the collection's table view
+3. Use the page-size selector at the **bottom-right** of the table and pick a value
+4. The new page size is saved to the layout and applies to everyone
+
+{/* TODO: add the page-size selector screenshot from the user-guide */}
 
 <Warning>
   Increasing the page size on slow queries significantly impacts load time. Always test with realistic data volumes before changing the default for large tables.
@@ -33,27 +33,28 @@ To configure the default page size for a collection, go to collection settings i
 
 ## Disabling the Record Count
 
-The total record count query can be expensive on large tables — especially if the query involves complex filters, joins, or a database without good index coverage.
+The total record count query can be expensive on large tables, especially if the query involves complex filters, joins, or a database without good index coverage.
 
 If the total count isn't needed, disable it per collection:
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 agent.customizeCollection('orders', collection => {
   collection.disableCount();
 });
 ```
 
-```python
-agent.customize_collection("orders").disable_count()
-```
-
-```ruby
+```ruby Ruby
 @create_agent.customize_collection('orders') do |collection|
   collection.disable_count
 end
 ```
 
-```php
+```python Python
+agent.customize_collection("orders").disable_count()
+```
+
+```php PHP
 use ForestAdmin\AgentPHP\DatasourceCustomizer\CollectionCustomizer;
 
 $forestAgent->customizeCollection(
@@ -63,6 +64,7 @@ $forestAgent->customizeCollection(
   }
 );
 ```
+</CodeGroup>
 
 When count is disabled, the total number of records and page count are not displayed in the table view. Operators can still paginate forward and backward through records.
 
@@ -76,7 +78,7 @@ When count is disabled, the total number of records and page count are not displ
 |----------|---------------|
 | Table has millions of rows | Disable count, use smaller page sizes (10–25) |
 | Frequent segment or filter use | Add database indexes on filtered fields |
-| Table view has relationship columns | Remove relationship columns from the table view — each row triggers an extra query |
-| Smart Fields in table view | Hide Smart Fields not needed at a glance — they compute per row |
+| Table view has relationship columns | Remove relationship columns from the table view, each row triggers an extra query |
+| Smart Fields in table view | Hide Smart Fields not needed at a glance, they compute per row |
 
 For more optimization strategies, see [Layout Maintenance](/guides/best-practices/layout-maintenance).

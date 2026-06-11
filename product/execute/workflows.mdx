@@ -3,7 +3,7 @@ title: "Executing workflows"
 description: "Trigger and monitor multi-step workflows from Forest."
 ---
 
-Workflows in Forest let operators run multi-step operational processes — KYC reviews, refunds, customer onboarding, supplier onboarding, incident response — directly from the operations UI, without scripts or developer involvement. Each workflow combines data, actions, AI-powered steps, and decisions into a single guided sequence with full audit trail.
+Workflows in Forest let operators run multi-step operational processes, KYC reviews, refunds, customer onboarding, supplier onboarding, incident response, directly from the operations UI, without scripts or developer involvement. Each workflow combines data, actions, AI-powered steps, and decisions into a single guided sequence with full audit trail.
 
 For developers building or configuring workflows, see [Workflows (process)](/product/process/workflows/overview). This page is for operators executing them.
 
@@ -15,7 +15,7 @@ A workflow chains multiple operations into a single automated sequence. Examples
 - **Customer refund**: validate eligibility → check balance → trigger Stripe refund → notify customer → close ticket
 - **Supplier onboarding**: create account → request documents → AI validates submission → escalate exceptions → finalize contract
 
-Each step is recorded — every decision, every input, every action triggered — producing a full decision trace operators (and auditors) can replay.
+Each step is recorded, every decision, every input, every action triggered, producing a full decision trace operators (and auditors) can replay.
 
 ## Where workflows are triggered
 
@@ -33,13 +33,13 @@ The workflow opens in a guided panel. The user works through each step; the work
 
 ## AI-powered steps
 
-The **Get Data**, **Update Data**, **Trigger Action**, and **MCP Task** steps surface the relevant data or actions automatically based on the workflow's context. Each completed step adds to that context, helping the AI suggest better defaults and pre-fills for subsequent steps — for example, pre-filling fields when updating a record, or composing an email with the right context when notifying a customer through a tool like Zendesk.
+The **Get Data**, **Update Data**, **Trigger Action**, and **MCP Task** steps surface the relevant data or actions automatically based on the workflow's context. Each completed step adds to that context, helping the AI suggest better defaults and pre-fills for subsequent steps, for example, pre-filling fields when updating a record, or composing an email with the right context when notifying a customer through a tool like Zendesk.
 
 Every AI-powered step provides a **Handle Manually** option, letting users bypass the AI suggestion if it isn't relevant or if the AI hits an error. Subsequent steps then lack that context, which may affect downstream steps.
 
 ## Automated steps
 
-Some steps run without user input — typically AI-powered steps and certain Decisions. If the AI lacks context to make a confident decision, or if a third-party system is unresponsive, the user is prompted to take over (same as **Handle Manually**).
+Some steps run without user input, typically AI-powered steps and certain Decisions. If the AI lacks context to make a confident decision, or if a third-party system is unresponsive, the user is prompted to take over (same as **Handle Manually**).
 
 ## Saving and resuming
 
@@ -48,17 +48,17 @@ A workflow can be paused at any time. The user is prompted to **Save** or **Abor
 - They resume automatically when triggered from a record's Summary View or a Workspace
 - They appear under **To Continue** when the workflow is accessed from the List View or Record View
 
-This is how queue handoffs work — one operator starts a case, leaves it for review, another picks it up.
+This is how queue handoffs work, one operator starts a case, leaves it for review, another picks it up.
 
 ## Revising steps
 
 Workflows reduce mistakes in complex processes, but errors still happen. To correct something, go back to a completed step and click **Revise** to redo it.
 
-Since workflows can branch based on user choices, revising a step **cancels any steps completed after it** — ensuring the workflow follows the correct path based on the updated input.
+Since workflows can branch based on user choices, revising a step **cancels any steps completed after it**, ensuring the workflow follows the correct path based on the updated input.
 
 ## Audit trail
 
-Every workflow execution is recorded. The full sequence of steps, decisions, inputs, and outputs is replayable in read-only mode from the workflow list on the record. Every interaction is also logged in your **Activity Logs** — accessible from the Reports tab or via the [public API](/reference/api/endpoints/activity-logs) for audit and compliance reporting.
+Every workflow execution is recorded. The full sequence of steps, decisions, inputs, and outputs is replayable in read-only mode from the workflow list on the record. Every interaction is also logged in your **Activity Logs**, accessible from the Reports tab or via the [public API](/reference/api/endpoints/activity-logs) for audit and compliance reporting.
 
 ## Permissions
 
@@ -69,17 +69,3 @@ Workflow execution is governed by the standard role and team permission system. 
 - Access data and actions inside steps based on their scopes
 
 See [Roles & permissions](/get-started/control/roles-permissions) for configuration.
-
-## Related
-
-<CardGroup cols={3}>
-  <Card title="Building workflows" href="/product/process/workflows/overview">
-    For developers — how to design and configure workflow templates.
-  </Card>
-  <Card title="Inboxes & escalations" href="/product/manage/inbox">
-    Distribute workflow tasks across your team.
-  </Card>
-  <Card title="Approval workflows" href="/product/collaborate/approval-workflows">
-    Require sign-off before sensitive operations.
-  </Card>
-</CardGroup>
