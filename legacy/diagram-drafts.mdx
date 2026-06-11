@@ -11,6 +11,79 @@ House style: `%%{init}%%` block forces the Forest palette; semantic `classDef`s 
 
 ---
 
+# ⚗️ Styling stress-test (MCP governance flow)
+
+Same diagram, three rendering ceilings. Compare which one Mintlify actually renders well, then we redo all diagrams to the winning bar.
+
+### A — Current (default dagre layout, flat fills)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart LR
+    AI["🤖 AI agent"] -->|request| EP(["/mcp endpoint"])
+    EP --> Gate{"permissions<br/>+ role"}
+    Gate -->|allowed| BE(["🌳 Forest back-end"])
+    Gate -->|denied| X["⛔ blocked"]
+    BE --> DB[("🗄️ your data")]
+    BE --> Log[["📋 audit log"]]
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
+    classDef audit fill:#FFF6E5,stroke:#E0A93D,color:#5A4300;
+    classDef danger fill:#FBE9E7,stroke:#C0492F,color:#7A2E1F;
+    class EP,BE forest; class AI,DB external; class Log audit; class X danger;
+```
+
+### B — ELK layout + refined palette / shapes / curves / colored edges (the realistic mermaid ceiling)
+
+Changes vs A: ELK renderer (clean orthogonal routing), `curve: basis`, a decision-node style, white external nodes for contrast, colored happy-path vs denied edges, dotted audit edge, and emoji dropped for a soberer look.
+
+```mermaid
+%%{init: {'theme':'base', 'flowchart':{'defaultRenderer':'elk','curve':'basis'}, 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart LR
+    AI(["AI agent"]) -->|request| EP(["/mcp endpoint"])
+    EP --> Gate{"permissions<br/>+ role"}
+    Gate -->|allowed| BE(["Forest back-end"])
+    Gate -->|denied| X(["blocked"])
+    BE --> DB[("your data")]
+    BE -.->|writes| Log[["audit log"]]
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#FFFFFF,stroke:#9CA88A,stroke-width:1.5px,color:#3A3F33;
+    classDef audit fill:#FFF6E5,stroke:#E0A93D,color:#5A4300;
+    classDef danger fill:#FBE9E7,stroke:#C0492F,color:#7A2E1F;
+    classDef gate fill:#F8FBEC,stroke:#698000,stroke-width:1.5px,color:#1F2A00;
+    class EP,BE forest; class AI,DB external; class Log audit; class X danger; class Gate gate;
+    linkStyle 2 stroke:#2E7D32,stroke-width:2.5px;
+    linkStyle 3 stroke:#C0492F,stroke-width:1.5px,stroke-dasharray:4 3;
+```
+
+### C — `architecture-beta` (built-in icons: server/database/disk/internet/cloud)
+
+Tests whether Mintlify renders the architecture diagram type and its built-in icons. Note: limited theming/color control compared to flowchart.
+
+```mermaid
+architecture-beta
+    group infra(server)[Your infrastructure]
+    service ai(internet)[AI agent]
+    service be(server)[Forest back-end] in infra
+    service db(database)[Your data] in infra
+    service log(disk)[Audit log] in infra
+    ai:R --> L:be
+    be:R --> L:db
+    be:B --> T:log
+```
+
+---
+
 ## 1. Hooks lifecycle
 
 **Destination:** [product/process/advanced-concepts/hooks/overview](/product/process/advanced-concepts/hooks/overview) · type: flowchart
