@@ -3,13 +3,13 @@ title: "Introduction"
 description: "What Forest is, how it works, and what you'll build in this guide."
 ---
 
-Forest is the operational infrastructure for regulated operations. It runs alongside your existing systems and gives your team — and your AI agents — one place to execute compliance workflows, business operations, and supplier coordination, with full governance and decision traces by default.
+Forest is the operational infrastructure for regulated operations. It runs alongside your existing systems and gives your team, and your AI agents, one place to execute compliance workflows, business operations, and supplier coordination, with full governance and decision traces by default.
 
 You keep full control of your data and infrastructure. Forest hosts the UI and configuration; the agent runs in your environment and your data never leaves your network.
 
 ## How it works
 
-Forest runs through an **agent** — a lightweight backend you deploy alongside your application. The agent connects to your databases, exposes your business logic and workflows, and serves the API that the Forest UI (and any AI agents you connect) consume.
+Forest runs through an **agent**, a lightweight backend you deploy alongside your application. The agent connects to your databases, exposes your business logic and workflows, and serves the API that the Forest UI (and any AI agents you connect) consume.
 
 ```mermaid
 graph LR
@@ -25,9 +25,9 @@ graph LR
 
 The agent does three things:
 
-1. **Connects to your data** — SQL, MongoDB, ActiveRecord, Mongoose, Sequelize, APIs, custom datasources. Multiple sources in one agent are supported by default.
-2. **Runs your business logic** — custom actions, computed fields, workflows, hooks, validations. Defined in code, executed where your data lives.
-3. **Exposes everything safely** — to your operations team via the Forest UI, and to AI agents via the built-in MCP server. Same permissions, same audit trail, regardless of who or what is asking.
+1. **Connects to your data**, SQL, MongoDB, ActiveRecord, Mongoose, Sequelize, APIs, custom datasources. Multiple sources in one agent are supported by default.
+2. **Runs your business logic**, custom actions, computed fields, hooks, validations. Defined in code, executed where your data lives.
+3. **Exposes everything safely**, to your operations team via the Forest UI, and to AI agents via the built-in MCP server. Same permissions, same audit trail, regardless of who or what is asking.
 
 ## What you'll build in this guide
 
@@ -46,7 +46,7 @@ Before you start:
 
 - Node.js 18+ installed (or Ruby 3.0+ if you're using the Ruby agent)
 - A database with a connection URI ready (PostgreSQL, MySQL, MongoDB, SQL Server, etc.)
-- A Forest account — [sign up here](https://app.forestadmin.com/signup) if you don't have one
+- A Forest account, [sign up here](https://app.forestadmin.com/signup) if you don't have one
 - Comfortable with a terminal
 
 <Card title="Start with the Quickstart" icon="rocket" href="/get-started/quickstart">

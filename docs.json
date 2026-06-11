@@ -58,14 +58,7 @@
             "group": "Connect",
             "pages": [
               "get-started/connect/overview",
-              {
-                "group": "Architectures",
-                "pages": [
-                  "get-started/connect/architectures/self-hosted",
-                  "get-started/connect/architectures/cloud",
-                  "get-started/connect/architectures/on-premise"
-                ]
-              },
+              "get-started/connect/architectures/self-hosted",
               {
                 "group": "Data Sources",
                 "pages": [
@@ -85,8 +78,9 @@
                   "get-started/connect/data-sources/graphql-hasura",
                   "get-started/connect/data-sources/cosmosdb",
                   {
-                    "group": "Create your own datasource",
+                    "group": "Custom datasources",
                     "pages": [
+                      "get-started/connect/data-sources/custom-datasources/overview",
                       "get-started/connect/data-sources/custom-datasources/translation",
                       "get-started/connect/data-sources/custom-datasources/replication"
                     ]
@@ -96,7 +90,9 @@
               {
                 "group": "Integrations",
                 "pages": [
-                  "get-started/connect/integrations/mcp-servers"
+                  "get-started/connect/integrations/mcp-servers",
+                  "product/embed/zendesk",
+                  "product/embed/n8n"
                 ]
               },
               {
@@ -188,7 +184,14 @@
             "pages": [
               "product/build/layout-editor",
               "product/build/collection-configuration",
-              "product/build/workspaces",
+              {
+                "group": "Workspaces",
+                "pages": [
+                  "product/build/workspaces",
+                  "product/build/workspaces/kyc",
+                  "product/build/workspaces/incident-management"
+                ]
+              },
               "product/manage/dashboards",
               "product/build/fields-and-widgets/overview",
               {
@@ -221,7 +224,6 @@
           {
             "group": "Manage",
             "pages": [
-              "product/manage/activity",
               "product/manage/team-performance",
               "product/manage/inbox",
               "product/manage/charts/overview",
@@ -241,7 +243,6 @@
           {
             "group": "Control",
             "pages": [
-              "get-started/control/overview",
               "get-started/control/roles-permissions",
               "get-started/control/teams",
               "get-started/control/scopes-and-visibility",
@@ -249,7 +250,6 @@
               {
                 "group": "Authentication",
                 "pages": [
-                  "get-started/control/authentication/overview",
                   "get-started/control/authentication/sso",
                   {
                     "group": "SSO Providers",
@@ -358,7 +358,6 @@
             "group": "Best Practices",
             "pages": [
               "guides/best-practices/performance",
-              "guides/best-practices/security",
               "guides/best-practices/troubleshooting",
               "guides/best-practices/layout-maintenance"
             ]

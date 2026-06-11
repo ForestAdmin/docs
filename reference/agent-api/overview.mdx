@@ -5,8 +5,8 @@ description: "How Forest agents fit into your stack across supported languages."
 
 A Forest agent is the lightweight backend that connects Forest to your data. It runs in your infrastructure, executes your business logic, and exposes your data and workflows to two consumers:
 
-- **The Forest UI** — what your operations team uses daily.
-- **AI agents** (Claude, Dust, Decagon, internal builds) — via the built-in MCP server, with the same permissions and audit trail.
+- **The Forest UI**, what your operations team uses daily.
+- **AI agents** (Claude, Dust, Decagon, internal builds), via the built-in MCP server, with the same permissions and audit trail.
 
 The agent is the substrate that makes Forest the operational layer for regulated work, not a thin wrapper around your database.
 
@@ -14,12 +14,12 @@ The agent is the substrate that makes Forest the operational layer for regulated
 
 <CardGroup cols={2}>
   <Card title="Node.js" icon="node-js" href="/reference/agent-api/nodejs">
-    `@forestadmin/agent` — TypeScript-first, multi-datasource, plugin ecosystem. The most actively developed agent.
+    `@forestadmin/agent`, TypeScript-first, multi-datasource, plugin ecosystem. The most actively developed agent.
 
     **Features**: full TypeScript support with type inference, multi-datasource, plugin ecosystem, advanced customization API, Cloud and self-hosted deployment.
   </Card>
   <Card title="Ruby" icon="gem" href="/reference/agent-api/ruby">
-    `forest_admin_agent` — ActiveRecord and Mongoid support, Rails integration.
+    `forest_admin_agent`, ActiveRecord and Mongoid support, Rails integration.
 
     **Features**: ActiveRecord and Mongoid datasources, Rails integration, custom actions and fields, approval workflows.
   </Card>
@@ -42,15 +42,15 @@ Forest UI   MCP server
             AI agents
 ```
 
-The agent is the only component with direct access to your data. Everything else — the UI, the API gateway, AI agents — talks to the agent over HTTPS.
+The agent is the only component with direct access to your data. Everything else, the UI, the API gateway, AI agents, talks to the agent over HTTPS.
 
 ## Core concepts
 
 | Concept | What it is |
 | --- | --- |
 | Datasources | Connections to your databases, APIs, or custom sources. Multiple per agent. |
-| Collections | Each table or model becomes a collection — what operators browse, search, and act on. |
-| Customizations | Smart Actions, computed fields, segments, relationships, hooks, plugins. Defined in code. |
+| Collections | Each table or model becomes a collection, what operators browse, search, and act on. |
+| Customizations | Actions, computed fields, segments, relationships, hooks, plugins. Defined in code. |
 | Hooks | Intercept and modify CRUD operations to enforce business rules. |
 | MCP server | Exposes your collections, actions, and workflows to AI agents under the same permissions and audit trail. |
 | Authentication | Forest handles SSO, SAML, 2FA, SCIM provisioning, and role-based permissions. |
@@ -73,7 +73,7 @@ If you're using a legacy agent (`forest-express-sequelize`, `forest-express-mong
     Step-by-step migration from v1 to the current generation.
   </Card>
   <Card title="Legacy reference" icon="clock-rotate-left" href="/legacy/agents-overview">
-    Reference for v1 agents — maintained for migration purposes only.
+    Reference for v1 agents, maintained for migration purposes only.
   </Card>
 </CardGroup>
 
@@ -81,7 +81,7 @@ If you're using a legacy agent (`forest-express-sequelize`, `forest-express-mong
 
 <Steps>
   <Step title="Choose your agent">
-    Node.js or Ruby — pick the one that matches your stack.
+    Node.js or Ruby, pick the one that matches your stack.
   </Step>
   <Step title="Install the package">
     Add `@forestadmin/agent` (npm) or `forest_admin_agent` (gem) to your project.
@@ -90,7 +90,7 @@ If you're using a legacy agent (`forest-express-sequelize`, `forest-express-mong
     Connect your databases, APIs, or custom sources.
   </Step>
   <Step title="Add customizations">
-    Build Smart Actions, computed fields, segments, and workflows in code.
+    Build actions, computed fields, and segments in code.
   </Step>
   <Step title="Deploy">
     Run the agent in your infrastructure (self-hosted) or have Forest host it (Cloud).

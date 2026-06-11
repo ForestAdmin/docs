@@ -1,9 +1,9 @@
 ---
-title: "Example: Incident management workspace"
+title: "Example 2: Incident Management"
 description: Build a support triage workspace that lets agents review, resolve, and escalate incidents in one place.
 ---
 
-This guide walks through building an Incident Management Workspace — a focused interface where support representatives can see pending incidents, review the context, and resolve or escalate them without switching between views.
+This guide walks through building an Incident Management Workspace, a focused interface where support representatives can see pending incidents, review the context, and resolve or escalate them without switching between views.
 
 **What operators will be able to do:**
 - See a live breakdown of incident types at a glance
@@ -24,7 +24,7 @@ Name it something clear: **"Incident Queue"** or **"Support Triage"**. Rename it
 Drag a **Text** component onto the canvas. Use Templating to personalize it:
 
 ```
-Incident Queue — {{currentUser.firstName}}'s shift
+Incident Queue - {{currentUser.firstName}}'s shift
 ```
 
 This helps orient the operator and makes handoffs easier when team members are reviewing the same workspace.
@@ -38,7 +38,7 @@ Add a **Chart** component to give operators a quick overview of what's in the qu
 - **Group by:** category (or type)
 - **Filter:** `status = "To Review"`
 
-This shows the mix of incident types — billing issues vs. driver complaints vs. app errors — so operators can prioritize their work.
+This shows the mix of incident types, billing issues vs. driver complaints vs. app errors, so operators can prioritize their work.
 
 ## 4. Add the Issues Collection
 
@@ -57,16 +57,16 @@ Setting "Select a record" on row click is what connects the collection to the de
 Create a section to the right of the issue list. Add a **Text** component with Templating:
 
 ```
-Reviewing: {{collection1.selectedRecord.category}} — {{collection1.selectedRecord.id}}
+Reviewing: {{collection1.selectedRecord.category}} - {{collection1.selectedRecord.id}}
 ```
 
 Then add **Field** components for the key information operators need:
 
-- **Description** — what happened
-- **Reported by** — user or driver
-- **Created at** — when it was reported
-- **Priority** — urgency level
-- **Assigned to** — current owner
+- **Description**, what happened
+- **Reported by**, user or driver
+- **Created at**, when it was reported
+- **Priority**, urgency level
+- **Assigned to**, current owner
 
 For each field:
 1. Drag a **Field** component from the sidebar's "Data" section
@@ -90,13 +90,13 @@ If incidents are linked to user accounts or trips, add a second **Collection** w
 - **Collection:** User (or Trip)
 - **Filter:** `id = {{collection1.selectedRecord.user_id}}`
 
-This second panel updates automatically when the operator selects an issue — showing the user's history, other recent reports, or relevant context without any navigation.
+This second panel updates automatically when the operator selects an issue, showing the user's history, other recent reports, or relevant context without any navigation.
 
 ## 8. Add action buttons
 
 Drag **Button** components for the core actions:
 
-| Button label | Smart Action | Purpose |
+| Button label | Action | Purpose |
 |-------------|-------------|---------|
 | ✓ Resolve | `resolve_incident` | Marks incident as resolved |
 | ↑ Escalate | `escalate_to_tier2` | Moves to escalation queue |
@@ -104,7 +104,7 @@ Drag **Button** components for the core actions:
 
 Configure each button:
 - **Source:** Collection 1 (Issue)
-- **Action:** Select the corresponding Smart Action
+- **Action:** Select the corresponding action
 
 The buttons appear active only when a row is selected, preventing accidental actions.
 
@@ -112,12 +112,12 @@ The buttons appear active only when a row is selected, preventing accidental act
 
 Click **"Exit builder"** to switch to operator view. Walk through the workflow:
 
-1. Click an incident row — the detail panel should update
+1. Click an incident row, the detail panel should update
 2. Review the related user/trip information
-3. Click "Resolve" — the Smart Action form should open
-4. Submit the form — the incident should disappear from the queue
+3. Click "Resolve", the action form should open
+4. Submit the form, the incident should disappear from the queue
 
-If the resolved incident still appears, verify your segment filter is based on a status field that the Smart Action updates.
+If the resolved incident still appears, verify your segment filter is based on a status field that the action updates.
 
 ## The result
 
@@ -131,10 +131,10 @@ Incidents resolve in seconds instead of minutes. No tab-switching, no hunting fo
 
 ## Common customizations
 
-**Color-code priority** — Use the Status Badge widget for the priority field and map `high → red`, `medium → yellow`, `low → green`.
+**Color-code priority**, Use the Status Badge widget for the priority field and map `high → red`, `medium → yellow`, `low → green`.
 
-**Add an SLA timer** — Use the Relative Time widget on `created_at` to show how long the incident has been open. Add a warning badge for incidents older than your SLA threshold.
+**Add an SLA timer**, Use the Relative Time widget on `created_at` to show how long the incident has been open. Add a warning badge for incidents older than your SLA threshold.
 
-**Show agent notes** — Add a Field component for a `notes` text field so agents can see what previous agents have done before acting.
+**Show agent notes**, Add a Field component for a `notes` text field so agents can see what previous agents have done before acting.
 
-**Add a search box** — Drag a **Search** component linked to the Issues collection so operators can find a specific incident by ID or keyword.
+**Add a search box**, Drag a **Search** component linked to the Issues collection so operators can find a specific incident by ID or keyword.

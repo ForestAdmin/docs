@@ -3,7 +3,7 @@ title: ".forestadmin-schema.json"
 description: "Reference for the auto-generated schema file describing your collections and customizations."
 ---
 
-The `.forestadmin-schema.json` file is the canonical description of your agent's data model — the collections it exposes, the fields and their types, the relationships, and the customizations applied. It's auto-generated, versioned with your code, and read by the Forest API to render the UI for each environment.
+The `.forestadmin-schema.json` file is the canonical description of your agent's data model, the collections it exposes, the fields and their types, the relationships, and the customizations applied. It's auto-generated, versioned with your code, and read by the Forest API to render the UI for each environment.
 
 <Note>
   The filename is `.forestadmin-schema.json` (the legacy naming is preserved to avoid breaking existing deployments). Treat it as a Forest-managed file.
@@ -14,11 +14,12 @@ The `.forestadmin-schema.json` file is the canonical description of your agent's
 In **development environments only**, the agent regenerates `.forestadmin-schema.json` on every startup. It reflects:
 
 - The state of your data sources (collections, fields, types, relationships)
-- Your agent's customizations (Smart Actions, computed fields, segments, hooks)
+- Your agent's customizations (actions, computed fields, segments, hooks)
 
-The agent decides whether to regenerate based on the `isProduction` option passed to `createAgent`:
+In Node.js, the agent decides whether to regenerate based on the `isProduction` option passed to `createAgent`. In Ruby, generation is tied to the Rails environment, and you can also generate the file explicitly with a rake task.
 
-```typescript
+<CodeGroup>
+```typescript Node.js
 const agent = createAgent({
   authSecret: process.env.FOREST_AUTH_SECRET,
   envSecret: process.env.FOREST_ENV_SECRET,
@@ -26,10 +27,21 @@ const agent = createAgent({
 });
 ```
 
-| `isProduction` value | Behavior |
+```bash Ruby
+# In development, the schema is regenerated when the server boots.
+# In production, the agent uses the committed file and never regenerates it.
+# Generate it explicitly (without booting the server) with the rake task:
+rails forest_admin:schema:generate
+
+# Add debug=true to troubleshoot generation:
+rails forest_admin:schema:generate debug=true
+```
+</CodeGroup>
+
+| Environment | Behavior |
 | --- | --- |
-| `false` (development) | Regenerates `.forestadmin-schema.json` on every restart |
-| `true` (production) | Never regenerates — uses the schema file deployed alongside the code |
+| Development | Regenerates `.forestadmin-schema.json` on every restart |
+| Remote / production | Never regenerates, uses the schema file deployed alongside the code |
 
 <Frame caption="The schema file is generated on every restart in dev, then frozen and deployed alongside production code">
   <img src="/images/schema/under-the-hood-versioning.png" alt="Schema file versioning lifecycle" />
@@ -43,7 +55,7 @@ In **remote and production environments**, the agent does NOT regenerate the sch
 - You must deploy it alongside your agent code to every remote environment
 - The file is the contract between your agent and the Forest API for that environment
 
-If you change your data sources or customizations and don't redeploy the schema file, the production environment will keep serving the old schema — your changes won't show up in the UI.
+If you change your data sources or customizations and don't redeploy the schema file, the production environment will keep serving the old schema, your changes won't show up in the UI.
 
 <Warning>
   Do not edit `.forestadmin-schema.json` manually. Wrong syntax will break the UI.
@@ -53,20 +65,6 @@ If you change your data sources or customizations and don't redeploy the schema 
 
 Beyond keeping environments in sync, committing the schema file lets you:
 
-- **Review schema changes in pull requests** — diffs show every collection, field, and relationship change before merge
-- **Roll back schema regressions** — if a bad change breaks production, revert the commit
-- **Audit historical schemas** — Git history shows the data model state at any past point
-
-## Related
-
-<CardGroup cols={3}>
-  <Card title="Development workflow" href="/guides/deployment/development-workflow">
-    How layout and code changes flow from dev to production.
-  </Card>
-  <Card title="CLI: schema:diff" href="/reference/cli/overview">
-    Compare schemas between environments.
-  </Card>
-  <Card title="Agent SDK reference" href="/reference/agent-api/overview">
-    The agent that generates the schema file.
-  </Card>
-</CardGroup>
+- **Review schema changes in pull requests**, diffs show every collection, field, and relationship change before merge
+- **Roll back schema regressions**, if a bad change breaks production, revert the commit
+- **Audit historical schemas**, Git history shows the data model state at any past point

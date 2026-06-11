@@ -3,14 +3,14 @@ title: "Layout versioning"
 description: "Manage, version, and deploy your Forest layout configurations across environments using branches."
 ---
 
-Every layout change you make in Forest — column ordering, field visibility, segments, custom views — is versioned. This lets you iterate safely in development, test in staging, and promote to production without disrupting your operators.
+Every layout change you make in Forest, column ordering, field visibility, segments, custom views, is versioned. This lets you iterate safely in development, test in staging, and promote to production without disrupting your operators.
 
 ## How layout versioning works
 
 A Forest project has two independently versioned parts:
 
-- **Agent code** — your backend customizations (datasources, Smart Actions, computed fields, hooks). Versioned with Git.
-- **Layout** — your UI configuration (field visibility, columns, segments, forms, dashboards). Versioned with Forest branches.
+- **Agent code**, your backend customizations (datasources, actions, computed fields, hooks). Versioned with Git.
+- **Layout**, your UI configuration (field visibility, columns, segments, forms, dashboards). Versioned with Forest branches.
 
 Branches are isolated copies of a layout. You create one, make changes, test them, then deploy when ready. The production layout is never touched until you explicitly deploy.
 
@@ -20,11 +20,11 @@ Each environment has its own layout:
 
 | Environment | Typical use |
 | --- | --- |
-| Development | Your personal branch — safe to experiment |
+| Development | Your personal branch, safe to experiment |
 | Remote (staging) | Test layout changes with your team before production |
 | Production | Live layout seen by all operators |
 
-When you enter Layout Editor mode in your development environment, changes are saved to your current branch — not immediately deployed anywhere.
+When you enter Layout Editor mode in your development environment, changes are saved to your current branch, not immediately deployed anywhere.
 
 ## Creating a branch
 
@@ -42,7 +42,7 @@ forest switch my-feature-layout
 
 ## Making layout changes
 
-With your branch active, open the Forest UI in your browser. Enter Layout Editor mode and make your changes — reorder columns, create segments, configure forms. All changes are saved automatically to your branch.
+With your branch active, open the Forest UI in your browser. Enter Layout Editor mode and make your changes, reorder columns, create segments, configure forms. All changes are saved automatically to your branch.
 
 ## Comparing layouts
 
@@ -81,7 +81,7 @@ forest environments:reset --environment staging --from production
 ```
 
 <Note>
-  Layout rollbacks only affect the UI configuration — your agent code and database are not touched.
+  Layout rollbacks only affect the UI configuration, your agent code and database are not touched.
 </Note>
 
 ## Team collaboration
@@ -89,13 +89,13 @@ forest environments:reset --environment staging --from production
 When multiple people work on the same project:
 
 - Each developer works on their own named branch
-- Branches are isolated — one developer's changes don't affect another's view
+- Branches are isolated, one developer's changes don't affect another's view
 - Changes are only visible to others after a push or deploy
 - The CLI `forest branch` command lists all active branches
 
 ## Avoiding conflicts
 
-Layout branches don't support merging — deploying one branch's changes overwrites the target. To collaborate safely:
+Layout branches don't support merging, deploying one branch's changes overwrites the target. To collaborate safely:
 
 - Communicate which collections or features each person is working on
 - Work on distinct parts of the layout to avoid overlap
@@ -117,17 +117,3 @@ Layout branches don't support merging — deploying one branch's changes overwri
     Read every change before pushing. The diff is the last review gate before operators see the change.
   </Accordion>
 </AccordionGroup>
-
-## Related
-
-<CardGroup cols={3}>
-  <Card title="Development workflow" href="/guides/deployment/development-workflow">
-    The full branch → push → deploy flow.
-  </Card>
-  <Card title="Environments" href="/guides/deployment/environments">
-    Create and manage environments.
-  </Card>
-  <Card title="CLI reference" href="/reference/cli/overview">
-    All `forest` commands.
-  </Card>
-</CardGroup>

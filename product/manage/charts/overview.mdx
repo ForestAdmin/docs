@@ -3,12 +3,12 @@ title: Charts
 description: Visualize your data with KPI cards, time-based trends, distributions, and more.
 ---
 
-**Charts** in Forest let you build visual data representations directly from your collections — without writing custom code. Use them to monitor KPIs, track trends, and create dashboards your operations team can act on.
+**Charts** in Forest let you build visual data representations directly from your collections, without writing custom code. Use them to monitor KPIs, track trends, and create dashboards your operations team can act on.
 
 Charts can be displayed in two places:
 
-- The **Dashboard** tab — a shared dashboard visible to your team.
-- The **Analytics** tab of a specific record — charts scoped to a single record's data.
+- The **Dashboard** tab, a shared dashboard visible to your team.
+- The **Analytics** tab of a specific record, charts scoped to a single record's data.
 
 ## Chart types
 
@@ -41,11 +41,11 @@ For Repartition charts, only the top 5 categories are shown individually. All ot
 
 In **Simple mode**, configure your chart by selecting:
 
-- **Collection** — which data source to query.
-- **Aggregate function** — `count`, `sum`, `average`, `min`, `max`.
-- **Group by field** — the dimension to group results by.
-- **Time frame** — for time-based charts: day, week, month, or year.
-- **Filters** — optional conditions to restrict which records are included.
+- **Collection**, which data source to query.
+- **Aggregate function**, `count`, `sum`, `average`, `min`, `max`.
+- **Group by field**, the dimension to group results by.
+- **Time frame**, for time-based charts: day, week, month, or year.
+- **Filters**, optional conditions to restrict which records are included.
 
 ### Query mode (SQL)
 
@@ -66,20 +66,20 @@ Each chart type expects specific column names in the query result:
 | Objective | `value`, `objective` |
 | Leaderboard | `key`, `value` (with `LIMIT`) |
 
-**Example — Single value:**
+**Example, Single value:**
 ```sql
 SELECT COUNT(*) AS value
 FROM customers;
 ```
 
-**Example — Repartition:**
+**Example, Repartition:**
 ```sql
 SELECT status AS key, COUNT(*) AS value
 FROM orders
 GROUP BY status;
 ```
 
-**Example — Time-based:**
+**Example, Time-based:**
 ```sql
 SELECT DATE_TRUNC('month', created_at) AS key, COUNT(*) AS value
 FROM signups
@@ -87,7 +87,7 @@ GROUP BY key
 ORDER BY key;
 ```
 
-**Example — Leaderboard:**
+**Example, Leaderboard:**
 ```sql
 SELECT companies.name AS key, SUM(transactions.amount) AS value
 FROM transactions

@@ -201,13 +201,13 @@ await agent.restart(): Promise<void>;
 
 ### agent.addAi(provider)
 
-Configure an AI provider to power Forest's AI features (natural language search, smart actions, etc.).
+Configure an AI provider to power Forest's AI features (natural language search, actions, etc.).
 
 ```typescript
 agent.addAi(provider: AiProviderDefinition): Agent;
 ```
 
-Can only be called once — calling it a second time throws an error.
+Can only be called once, calling it a second time throws an error.
 
 **Example:**
 
@@ -293,7 +293,7 @@ Methods available when customizing a collection through `agent.customizeCollecti
 
 ### collection.addAction(name, definition)
 
-Add a Smart Action to the collection.
+Add an action to the collection.
 
 ```typescript
 collection.addAction(

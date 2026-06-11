@@ -5,7 +5,7 @@ description: Understand how fields and widgets work together to display and edit
 
 Every piece of data in Forest is represented by a **field**. Every field is rendered using a **widget**. Understanding this distinction helps you configure exactly how your data looks and behaves for operators.
 
-A **field** is a data definition — it comes from your database schema or is computed by your agent. Fields have a name, a type (`String`, `Number`, `Date`, `Boolean`, etc.), and a value.
+A **field** is a data definition, it comes from your database schema or is computed by your agent. Fields have a name, a type (`String`, `Number`, `Date`, `Boolean`, etc.), and a value.
 
 A **widget** is the UI component used to display or edit that field. The same field can be rendered differently depending on where it appears and what you want operators to do with it. Widgets come in two categories: **display widgets** (used in table views, detail views, and Workspaces) and **edit widgets** (used in create and edit forms).
 
@@ -31,125 +31,125 @@ A field can have different widgets for display and edit. For example, a date fie
 ### Text
 
 **Display widgets:**
-- **Text** — the default for string fields. Renders the raw value as plain text. Best for identifiers, names, and short labels.
-- **Long Text** — for multi-line text content. Displays the first line in table view with a "show more" toggle in the detail view.
-- **Rich Text** — renders HTML or markdown with formatting (bold, lists, headings). Use for fields that store formatted content like descriptions or notes.
-- **Code** — displays the value in a monospace code block with syntax highlighting. Useful for JSON snippets, SQL queries, or scripts.
-- **Email** — renders the value as a clickable `mailto:` link.
-- **URL** — renders the value as a clickable external link that opens in a new tab.
-- **Phone** — formats and displays phone numbers. On mobile, renders as a `tel:` link for direct dialing.
+- **Text**, the default for string fields. Renders the raw value as plain text. Best for identifiers, names, and short labels.
+- **Long Text**, for multi-line text content. Displays the first line in table view with a "show more" toggle in the detail view.
+- **Rich Text**, renders HTML or markdown with formatting (bold, lists, headings). Use for fields that store formatted content like descriptions or notes.
+- **Code**, displays the value in a monospace code block with syntax highlighting. Useful for JSON snippets, SQL queries, or scripts.
+- **Email**, renders the value as a clickable `mailto:` link.
+- **URL**, renders the value as a clickable external link that opens in a new tab.
+- **Phone**, formats and displays phone numbers. On mobile, renders as a `tel:` link for direct dialing.
 
 **Edit widgets:**
-- **Text Input** — the default for short string fields. A single-line input.
-- **Textarea** — a multi-line text input for longer content. Configure the number of visible rows.
-- **Rich Text Editor** — a WYSIWYG editor with formatting controls. Stores content as HTML.
-- **Code Editor** — a syntax-highlighted code editor with line numbers. Select the language mode for appropriate highlighting.
-- **Email Input** — a text input with email format validation.
-- **URL Input** — a text input with URL format validation.
-- **Phone Input** — a text input with phone number formatting and a country code selector.
-- **Password Input** — a masked text input. Value is never pre-filled in edit mode.
+- **Text Input**, the default for short string fields. A single-line input.
+- **Textarea**, a multi-line text input for longer content. Configure the number of visible rows.
+- **Rich Text Editor**, a WYSIWYG editor with formatting controls. Stores content as HTML.
+- **Code Editor**, a syntax-highlighted code editor with line numbers. Select the language mode for appropriate highlighting.
+- **Email Input**, a text input with email format validation.
+- **URL Input**, a text input with URL format validation.
+- **Phone Input**, a text input with phone number formatting and a country code selector.
+- **Password Input**, a masked text input. Value is never pre-filled in edit mode.
 
 ### Number
 
 **Display widgets:**
-- **Number** — displays the raw number with optional thousands separators.
-- **Currency** — displays a number with a currency symbol and appropriate decimal places (e.g. `$1,234.56`).
-- **Percentage** — displays a number as a percentage (e.g. `73.5%`). Assumes the raw value is 0–100 or 0–1 (configurable).
-- **Duration** — converts a number (in seconds, minutes, or milliseconds) to a human-readable duration like `2h 34m`.
-- **Progress Bar** — renders a visual progress bar. Requires a min and max value to calculate the fill.
+- **Number**, displays the raw number with optional thousands separators.
+- **Currency**, displays a number with a currency symbol and appropriate decimal places (e.g. `$1,234.56`).
+- **Percentage**, displays a number as a percentage (e.g. `73.5%`). Assumes the raw value is 0–100 or 0–1 (configurable).
+- **Duration**, converts a number (in seconds, minutes, or milliseconds) to a human-readable duration like `2h 34m`.
+- **Progress Bar**, renders a visual progress bar. Requires a min and max value to calculate the fill.
 
 **Edit widgets:**
-- **Number Input** — the default for numeric fields. Shows increment/decrement buttons. Configure min, max, and step values.
-- **Currency Input** — a number input with a currency symbol prefix.
-- **Slider** — a draggable slider for selecting a value within a defined range.
-- **Stepper** — increment/decrement buttons without a text input. Best for small integer values.
+- **Number Input**, the default for numeric fields. Shows increment/decrement buttons. Configure min, max, and step values.
+- **Currency Input**, a number input with a currency symbol prefix.
+- **Slider**, a draggable slider for selecting a value within a defined range.
+- **Stepper**, increment/decrement buttons without a text input. Best for small integer values.
 
 ### Date & Time
 
 **Display widgets:**
-- **Date** — displays a date value formatted according to your locale setting. Time portion is hidden.
-- **DateTime** — displays both date and time (e.g. `Mar 15, 2024 at 14:32`).
-- **Time** — displays only the time portion of a timestamp.
-- **Relative Time** — displays how long ago (or how far in the future) the value is, relative to now (e.g. `3 days ago`). Automatically updates as time passes.
+- **Date**, displays a date value formatted according to your locale setting. Time portion is hidden.
+- **DateTime**, displays both date and time (e.g. `Mar 15, 2024 at 14:32`).
+- **Time**, displays only the time portion of a timestamp.
+- **Relative Time**, displays how long ago (or how far in the future) the value is, relative to now (e.g. `3 days ago`). Automatically updates as time passes.
 
 <Info>
   Hover over a relative time widget to see the full absolute date and time.
 </Info>
 
 **Edit widgets:**
-- **Date Picker** — a calendar popup for selecting a date. Supports min/max date constraints.
-- **DateTime Picker** — combines a calendar with a time selector. Configure timezone handling.
-- **Time Picker** — a time-only input for time-of-day fields not associated with a specific date.
-- **Date Range Picker** — two date pickers for selecting a start and end date. Best used in filters and Smart Action forms.
+- **Date Picker**, a calendar popup for selecting a date. Supports min/max date constraints.
+- **DateTime Picker**, combines a calendar with a time selector. Configure timezone handling.
+- **Time Picker**, a time-only input for time-of-day fields not associated with a specific date.
+- **Date Range Picker**, two date pickers for selecting a start and end date. Best used in filters and action forms.
 
 ### Boolean
 
 **Display widgets:**
-- **Checkbox (read-only)** — displays a checked or unchecked checkbox.
-- **Badge** — renders the boolean as a colored badge — green for `true`, red for `false`. Labels are customizable.
-- **Icon** — displays a checkmark (✓) or cross (✗) icon. More compact for table views with many boolean columns.
+- **Checkbox (read-only)**, displays a checked or unchecked checkbox.
+- **Badge**, renders the boolean as a colored badge, green for `true`, red for `false`. Labels are customizable.
+- **Icon**, displays a checkmark (✓) or cross (✗) icon. More compact for table views with many boolean columns.
 
 **Edit widgets:**
-- **Checkbox** — a simple checkbox — checked means `true`.
-- **Toggle Switch** — a toggle that switches between on and off states. More prominent than a checkbox.
+- **Checkbox**, a simple checkbox, checked means `true`.
+- **Toggle Switch**, a toggle that switches between on and off states. More prominent than a checkbox.
 
 ### Enum and selection
 
 **Display widgets:**
-- **Text** — renders the raw enum value as plain text.
-- **Status Badge** — a flexible badge widget for enum/string fields. Map specific values to colors (e.g. `active → green`, `pending → yellow`, `blocked → red`). Configure value-to-color mappings in the widget settings panel.
+- **Text**, renders the raw enum value as plain text.
+- **Status Badge**, a flexible badge widget for enum/string fields. Map specific values to colors (e.g. `active → green`, `pending → yellow`, `blocked → red`). Configure value-to-color mappings in the widget settings panel.
 
 **Edit widgets:**
-- **Dropdown** — a select menu with predefined options. Options can be static (defined manually) or dynamic (loaded from another collection via a Smart Action).
-- **Radio Buttons** — shows all options at once as radio buttons. Best when there are 2–5 options.
-- **Multi-select** — like Dropdown but allows selecting multiple values. Stores as an array.
-- **Autocomplete** — a text input that searches and filters options as you type. Best for large option lists.
-- **Tags Input** — lets operators type values and press Enter to create tags. Values are stored as an array of strings. No predefined list required.
+- **Dropdown**, a select menu with predefined options. Options can be static (defined manually) or dynamic (loaded from another collection via an action).
+- **Radio Buttons**, shows all options at once as radio buttons. Best when there are 2–5 options.
+- **Multi-select**, like Dropdown but allows selecting multiple values. Stores as an array.
+- **Autocomplete**, a text input that searches and filters options as you type. Best for large option lists.
+- **Tags Input**, lets operators type values and press Enter to create tags. Values are stored as an array of strings. No predefined list required.
 
 ### File and image
 
 **Display widgets:**
-- **Image** — renders the field value (a URL or base64 string) as an inline image thumbnail. Clicking the thumbnail opens the full-size image.
-- **File** — renders a download link for a file URL. Displays the filename and a download icon.
-- **Video** — embeds a video player inline.
-- **Audio** — embeds an audio player with play/pause controls.
+- **Image**, renders the field value (a URL or base64 string) as an inline image thumbnail. Clicking the thumbnail opens the full-size image.
+- **File**, renders a download link for a file URL. Displays the filename and a download icon.
+- **Video**, embeds a video player inline.
+- **Audio**, embeds an audio player with play/pause controls.
 
 **Edit widgets:**
-- **File Uploader** — a file upload input. Operators can browse or drag and drop. Configure accepted file types and max file size.
-- **Image Uploader** — like File Uploader but restricted to image types, with a preview before saving. Supports cropping if configured.
-- **Drag & Drop Uploader** — a large drop zone that accepts one or multiple files.
+- **File Uploader**, a file upload input. Operators can browse or drag and drop. Configure accepted file types and max file size.
+- **Image Uploader**, like File Uploader but restricted to image types, with a preview before saving. Supports cropping if configured.
+- **Drag & Drop Uploader**, a large drop zone that accepts one or multiple files.
 
 ### Relationship
 
 **Display widgets:**
-- **BelongsTo** — displays the related record as a clickable link that opens the record's detail view. Shows the related record's summary field.
-- **HasMany Count** — displays the number of related records as a badge (e.g. `12 orders`). Clicking opens the filtered list.
-- **Link** — a custom link widget for manually constructed URLs using field values (e.g. `https://app.example.com/users/{{id}}`).
+- **BelongsTo**, displays the related record as a clickable link that opens the record's detail view. Shows the related record's summary field.
+- **HasMany Count**, displays the number of related records as a badge (e.g. `12 orders`). Clicking opens the filtered list.
+- **Link**, a custom link widget for manually constructed URLs using field values (e.g. `https://app.example.com/users/{{id}}`).
 
 **Edit widgets:**
-- **BelongsTo Selector** — a searchable dropdown that lets operators pick a related record. Searches by the related collection's summary field.
-- **HasMany Editor** — displays existing related records in a list, with options to add new records or remove existing associations.
-- **Search & Select** — an autocomplete input that searches across a related collection as the operator types. Better suited for large related collections with many records.
+- **BelongsTo Selector**, a searchable dropdown that lets operators pick a related record. Searches by the related collection's summary field.
+- **HasMany Editor**, displays existing related records in a list, with options to add new records or remove existing associations.
+- **Search & Select**, an autocomplete input that searches across a related collection as the operator types. Better suited for large related collections with many records.
 
 ### JSON
 
 **Display widgets:**
-- **JSON Viewer** — renders a JSON value as a collapsible, syntax-highlighted tree structure.
+- **JSON Viewer**, renders a JSON value as a collapsible, syntax-highlighted tree structure.
 
 **Edit widgets:**
-- **JSON Editor** — a code editor pre-configured for JSON, with syntax validation.
+- **JSON Editor**, a code editor pre-configured for JSON, with syntax validation.
 
 ### Special
 
 **Display widgets:**
-- **Color** — displays a color swatch alongside the hex or RGB value.
-- **Rating** — displays a star rating (e.g. ★★★☆☆) based on a numeric value.
+- **Color**, displays a color swatch alongside the hex or RGB value.
+- **Rating**, displays a star rating (e.g. ★★★☆☆) based on a numeric value.
 
 **Edit widgets:**
-- **Color Picker** — a color selector with a swatch palette and hex input. Stores the value as a hex code or RGB string.
-- **Rating Input** — star rating input where operators click to set a value. Configure max stars and whether half-stars are allowed.
-- **Address Input** — a structured address form with separate inputs for street, city, zip code, country, etc.
-- **Location Picker** — an embedded map that lets operators pin a location. Stores latitude and longitude coordinates.
+- **Color Picker**, a color selector with a swatch palette and hex input. Stores the value as a hex code or RGB string.
+- **Rating Input**, star rating input where operators click to set a value. Configure max stars and whether half-stars are allowed.
+- **Address Input**, a structured address form with separate inputs for street, city, zip code, country, etc.
+- **Location Picker**, an embedded map that lets operators pin a location. Stores latitude and longitude coordinates.
 
 ## Configuring widgets
 
@@ -177,4 +177,4 @@ Most edit widgets support built-in validation options:
 | **Pattern** | Regex validation for custom formats |
 | **Custom error message** | Override the default validation error text |
 
-Validation runs client-side for immediate feedback, and Smart Action hooks can also enforce it server-side.
+Validation runs client-side for immediate feedback, and action hooks can also enforce it server-side.

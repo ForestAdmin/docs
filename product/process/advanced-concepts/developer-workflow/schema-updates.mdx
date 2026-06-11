@@ -9,7 +9,7 @@ When you add a table, rename a column, or change a relationship in your database
 
 ## What is the schema?
 
-Forest introspects your database at startup and builds an internal representation of your data model — the **schema**. This schema drives everything: which collections appear, what fields are available, and how relationships are represented.
+Forest introspects your database at startup and builds an internal representation of your data model, the **schema**. This schema drives everything: which collections appear, what fields are available, and how relationships are represented.
 
 For self-hosted agents, the schema is also saved to a local file called `.forestadmin-schema.json`. This file acts as a cache and allows Forest to detect changes between restarts.
 
@@ -51,12 +51,12 @@ You can also trigger a sync from the **quick access icon** in the left navigatio
 This file is auto-generated and lives in your project root. It contains a snapshot of your data model as Forest sees it.
 
 **Do:**
-- Commit it to your repository — it ensures schema consistency across team members and environments
+- Commit it to your repository, it ensures schema consistency across team members and environments
 - Review changes in pull requests to catch unexpected schema drift
 
 **Don't:**
-- Edit it manually — changes will be overwritten on the next agent start
-- Delete it unless troubleshooting — the agent will regenerate it, but this forces a full re-introspection
+- Edit it manually, changes will be overwritten on the next agent start
+- Delete it unless troubleshooting, the agent will regenerate it, but this forces a full re-introspection
 
 ## Common scenarios
 
@@ -74,20 +74,20 @@ After adding a column to an existing table:
 
 1. Restart your agent
 2. The new field appears in the collection's configuration
-3. It's hidden by default — enable it in the [Layout Editor](/product/build/layout-editor) if needed
+3. It's hidden by default, enable it in the [Layout Editor](/product/build/layout-editor) if needed
 
 ### Renaming a column
 
 Renaming a column is treated as **removing the old field and adding a new one**. This means:
 
-- Any widget configuration, segments, or Smart Actions referencing the old name will break
+- Any widget configuration, segments, or actions referencing the old name will break
 - You'll need to update your Forest configuration to reference the new name
 
 To minimize disruption, consider adding a database view or alias that preserves the old column name temporarily.
 
 ### Removing a column
 
-After dropping a column from your database and restarting your agent, the field disappears from Forest. If it was referenced in segments, actions, or custom code, you'll see errors — clean those up first.
+After dropping a column from your database and restarting your agent, the field disappears from Forest. If it was referenced in segments, actions, or custom code, you'll see errors, clean those up first.
 
 ### Changing a column type
 
@@ -116,7 +116,7 @@ See [Relationships](/product/process/relationships/overview) for how to define r
 
 ## Best practices
 
-- **Run migrations before deploying agent changes** — the agent should start against the already-migrated database
-- **Test schema changes in a development branch** — use [Environments & branches](/product/process/advanced-concepts/developer-workflow/environments-and-branches) to validate layout impact before hitting production
-- **Commit `.forestadmin-schema.json`** — keeps all team members on the same schema version
-- **Review the schema diff in PRs** — catching an unintended table rename in review is much easier than debugging it in production
+- **Run migrations before deploying agent changes**, the agent should start against the already-migrated database
+- **Test schema changes in a development branch**, use [Environments & branches](/product/process/advanced-concepts/developer-workflow/environments-and-branches) to validate layout impact before hitting production
+- **Commit `.forestadmin-schema.json`**, keeps all team members on the same schema version
+- **Review the schema diff in PRs**, catching an unintended table rename in review is much easier than debugging it in production

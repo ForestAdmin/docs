@@ -11,8 +11,8 @@ When an operator types in the search bar, Forest sends a query to your agent wit
 
 Two search modes exist:
 
-- **Normal search** — searches fields in the current collection
-- **Extended search** — also searches fields in directly related collections. Operators can trigger extended search from the footer when normal results are empty.
+- **Normal search**, searches fields in the current collection
+- **Extended search**, also searches fields in directly related collections. Operators can trigger extended search from the footer when normal results are empty.
 
 ## Default Search Behavior
 
@@ -26,28 +26,22 @@ By default, Forest searches only specific field types:
 | `UUID` | Field equals the search string |
 | Other types | Field is ignored |
 
-## Configuring Searchable Fields (No-Code)
+## Replacing the Search Handler
 
-For basic control over which fields are searched, go to your collection settings in the Layout Editor:
-
-1. Enter **Layout Editor** mode
-2. Click the gear icon next to the collection
-3. Open the **Search** tab
-4. Enable or disable individual fields
-
-This lets you include or exclude specific fields without writing code.
+Use `replaceSearch` in your agent configuration to define exactly how search strings are translated into filters.
 
 <Info>
   For large datasets, limit searchable fields to columns with database indexes. Searching unindexed fields causes full table scans.
 </Info>
 
-## Replacing the Search Handler (Code)
-
-For full control, use `replaceSearch` in your agent configuration. This lets you define exactly how search strings are translated into filters.
+<Note>
+  In Node.js and Python, the handler receives a `context` with the `generateSearchFilter` helper. In Ruby, the `replace_search` block receives `(search_string, extended_search)` and returns a [condition tree](/get-started/connect/relationships-schema) directly: there is no `generate_search_filter` helper, so you build the tree yourself.
+</Note>
 
 ### Restricting Which Fields Are Searched
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 agent.customizeCollection('people', collection => {
   collection.replaceSearch((searchString, extendedMode, context) => {
     return context.generateSearchFilter(searchString, {
@@ -58,7 +52,22 @@ agent.customizeCollection('people', collection => {
 });
 ```
 
-```python
+```ruby Ruby
+include ForestAdmin::Types
+
+@create_agent.customize_collection('people') do |collection|
+  collection.replace_search do |search_string, extended_search|
+    {
+      aggregator: 'Or',
+      conditions: ['firstName', 'lastName', 'email'].map do |field|
+        { field: field, operator: Operators::I_CONTAINS, value: search_string }
+      end
+    }
+  end
+end
+```
+
+```python Python
 def search_in_people(search_string, extended_search, context):
     return context.generate_search_filter(
         search_string,
@@ -68,18 +77,7 @@ def search_in_people(search_string, extended_search, context):
 
 agent.customize_collection("people").replace_search(search_in_people)
 ```
-
-```ruby
-@create_agent.customize_collection('people') do |collection|
-  collection.replace_search do |search_string, extended_search, context|
-    context.generate_search_filter(
-      search_string,
-      extended: extended_search,
-      only_fields: ['firstName', 'lastName', 'email']
-    )
-  end
-end
-```
+</CodeGroup>
 
 ### Excluding Fields from Default Search
 
@@ -98,7 +96,8 @@ agent.customizeCollection('people', collection => {
 
 Different search logic depending on what the operator is searching for:
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 const referenceRegexp = /^[a-f]{16}$/i;
 const barcodeRegexp = /^[0-9]{10}$/;
 
@@ -120,11 +119,35 @@ agent.customizeCollection('products', collection => {
 });
 ```
 
+```ruby Ruby
+include ForestAdmin::Types
+
+REFERENCE_REGEXP = /\A[a-f]{16}\z/i
+BARCODE_REGEXP = /\A[0-9]{10}\z/
+
+@create_agent.customize_collection('products') do |collection|
+  collection.replace_search do |search_string, extended_search|
+    next { field: 'reference', operator: Operators::EQUAL, value: search_string } if REFERENCE_REGEXP.match?(search_string)
+    next { field: 'barCode', operator: Operators::EQUAL, value: search_string } if BARCODE_REGEXP.match?(search_string)
+
+    fields = extended_search ? ['name', 'description', 'brand:name'] : ['name']
+    {
+      aggregator: 'Or',
+      conditions: fields.map do |field|
+        { field: field, operator: Operators::I_CONTAINS, value: search_string }
+      end
+    }
+  end
+end
+```
+</CodeGroup>
+
 ### Integrating an External Search Engine
 
 If your data is indexed in Algolia, Elasticsearch, or another service, call it directly in the search handler:
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 const algoliasearch = require('algoliasearch');
 const client = algoliasearch('APPLICATION_ID', 'API_KEY');
 const index = client.initIndex('products');
@@ -141,7 +164,21 @@ agent.customizeCollection('products', collection =>
 );
 ```
 
-```python
+```ruby Ruby
+require 'algolia'
+
+client = Algolia::Search::Client.create('APPLICATION_ID', 'API_KEY')
+index = client.init_index('products')
+
+@create_agent.customize_collection('products') do |collection|
+  collection.replace_search do |search_string, extended_search|
+    hits = index.search(search_string, { attributesToRetrieve: ['id'], hitsPerPage: 50 })['hits']
+    { field: 'id', operator: 'In', value: hits.map { |hit| hit['id'] } }
+  end
+end
+```
+
+```python Python
 from algoliasearch.search_client import SearchClient
 
 client = SearchClient.create("APPLICATION_ID", "API_KEY")
@@ -154,25 +191,28 @@ async def search_products(search_string, extended_search, context):
 
 agent.customize_collection("products").replace_search(search_products)
 ```
+</CodeGroup>
 
 ## Disabling Search
 
 To remove the search bar from a collection entirely:
 
-```javascript
+<CodeGroup>
+```javascript Node.js / Cloud
 agent.customizeCollection('products', collection => {
   collection.disableSearch();
 });
 ```
 
-```python
-agent.customize_collection("products").disable_search()
-```
-
-```ruby
+```ruby Ruby
 @create_agent.customize_collection('products') do |collection|
   collection.disable_search
 end
 ```
 
-This is useful for collections where free-text search doesn't apply — for example, collections that only display computed or joined data.
+```python Python
+agent.customize_collection("products").disable_search()
+```
+</CodeGroup>
+
+This is useful for collections where free-text search doesn't apply, for example, collections that only display computed or joined data.

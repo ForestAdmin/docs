@@ -24,23 +24,23 @@ Workspaces are built with a **drag-and-drop editor**, no code required for most 
   <iframe id="gkyvev6f4k" src="https://app.guideflow.com/embed/mk60x69u6k" width="100%" height="100%" style={{overflow: "hidden", position: "absolute", border: "none"}} allow="clipboard-read; clipboard-write" allowFullScreen allowTransparency />
 </div>
 
-**Step 1 — Create a new workspace**
+**Step 1, Create a new workspace**
 
 Click on `+ Add New` in the left sidebar, select **Workspace**, and give it a descriptive name that reflects the use case (e.g. "Customer Onboarding", "KYC Review").
 
-**Step 2 — Add a Collection component**
+**Step 2, Add a Collection component**
 
 Drag a **Collection** from the sidebar onto the canvas. Select which collection to display and optionally apply a segment. Set the row click behavior to **"Select a record"** to enable dynamic updates across all connected components.
 
-**Step 3 — Add context with Field components**
+**Step 3, Add context with Field components**
 
 Drag **Field** components onto the canvas. Link them to your Collection and select which fields to display. When an operator clicks a row, these fields update to show the selected record's values.
 
-**Step 4 — Add Actions**
+**Step 4, Add Actions**
 
-Drag an **Action** and link it to your Collection. Now operators can click a row and immediately trigger the right action — no need to open the record detail.
+Drag an **Action** and link it to your Collection. Now operators can click a row and immediately trigger the right action, no need to open the record detail.
 
-**Step 5 — Exit the builder and test it**
+**Step 5, Exit the builder and test it**
 
 Click "Exit builder" to switch to the operator view. Test the workflow by clicking rows and triggering actions.
 
@@ -56,7 +56,7 @@ Components to structure your workspace and guide operators through it.
 
 | Component | Purpose |
 |-----------|---------|
-| **Text** | Headers, instructions, labels — supports [templating](#templating) |
+| **Text** | Headers, instructions, labels, supports [templating](#templating) |
 | **Section** | Groups related components; visibility can be controlled as a unit |
 | **Tabs** | Tabbed area holding up to 10 tabs; only the active tab's components are rendered |
 | **Link** | Link to a record detail page, external URL, or another workspace |
@@ -80,9 +80,9 @@ Source components set the data context for the rest of the workspace. Data & Act
 
 The Dropdown component has three modes:
 
-- **Static** — You hardcode a list of values. Reorder them with drag handles.
-- **Dynamic > Simple** — Choose a collection and a field; the dropdown is populated from your data, with an optional filter.
-- **Dynamic > Smart** — Fetches values from an external endpoint. The expected response format is:
+- **Static**, You hardcode a list of values. Reorder them with drag handles.
+- **Dynamic > Simple**, Choose a collection and a field; the dropdown is populated from your data, with an optional filter.
+- **Dynamic > Smart**, Fetches values from an external endpoint. The expected response format is:
   ```json
   {
     "data": ["value1", "value2"]
@@ -93,7 +93,7 @@ Enable the **"Search"** option on any mode to add a search input, useful when th
 
 #### Date Picker
 
-Set minimum and/or maximum selectable dates — hardcoded or using [templating](#templating):
+Set minimum and/or maximum selectable dates, hardcoded or using [templating](#templating):
 
 ```
 Minimum: {{currentDate.subtract.days.1}}
@@ -124,7 +124,7 @@ The **Field** component supports all [display widgets](/product/build/fields-and
 
 | Component | Purpose |
 |-----------|---------|
-| **Chart** | Embeds any chart — single value, distribution, time-based, etc. |
+| **Chart** | Embeds any chart, single value, distribution, time-based, etc. |
 | **Metabase** | Embeds a Metabase dashboard |
 
 #### Metabase component setup
@@ -168,7 +168,7 @@ Charts in a workspace can be filtered using other components' values. In the cha
 company_id = {{collection1.selectedRecord.id}}
 ```
 
-Templating also works inside **SQL Query** mode charts. You can use it in the **Timeframe** property of time-based charts — for example, a Dropdown with values _Day_, _Week_, _Month_, _Year_ can dynamically change a chart's timeframe.
+Templating also works inside **SQL Query** mode charts. You can use it in the **Timeframe** property of time-based charts, for example, a Dropdown with values _Day_, _Week_, _Month_, _Year_ can dynamically change a chart's timeframe.
 
 ---
 
@@ -179,8 +179,8 @@ Every component has a **Visible** option at the bottom of its settings panel.
 | Option | Behavior |
 |--------|----------|
 | **Always** | Component is always visible. Filters using undefined templating values are silently ignored. |
-| **Only when a component is visible** | Component appears only when another specified component is also visible — useful for dividers and section titles. |
-| **Only when dynamic variables are defined** | Component appears only when all its templating variables have a value — prevents showing empty states. |
+| **Only when a component is visible** | Component appears only when another specified component is also visible, useful for dividers and section titles. |
+| **Only when dynamic variables are defined** | Component appears only when all its templating variables have a value, prevents showing empty states. |
 
 Example: a related Collection filtered on `{{collection1.selectedRecord.id}}` with visibility set to "Only when dynamic variables are defined" will stay hidden until an operator selects a row in `collection1`.
 
@@ -192,15 +192,4 @@ Workspaces are available to all operators in your project by default. Use [Roles
 
 Operators can share a Workspace URL with a pre-applied filter state, letting them hand off specific work items directly.
 
----
-
-## Examples
-
-<CardGroup cols={2}>
-  <Card title="KYC Onboarding" icon="id-card" href="/guides/workspaces/kyc-onboarding">
-    Review companies, assess missing documents, and complete gaps in one interface
-  </Card>
-  <Card title="Incident Management" icon="triangle-exclamation" href="/guides/workspaces/incident-management">
-    Track, triage, and resolve incidents without leaving Forest
-  </Card>
-</CardGroup>
+For complete, step-by-step examples, see [Example 1: KYC](/product/build/workspaces/kyc) and [Example 2: Incident Management](/product/build/workspaces/incident-management).
