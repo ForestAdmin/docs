@@ -1,27 +1,25 @@
 ---
-title: Forest Admin
-
-description: >-
-  Forest Admin is an all-in-one internal tool builder to efficiently manage your
-  operations.
+title: Ruby on Rails agent (legacy)
+description: Reference documentation for the legacy forest_liana (Ruby on Rails) agent v9.
 ---
 
-# Forest Admin
+<Warning>
+  **Do not start new projects with this agent.** `forest_liana` (Ruby on Rails) v9 reached
+  End-of-Support in December 2024. This section is preserved for teams maintaining existing
+  deployments and as a reference during migration.
+</Warning>
 
-Forest Admin instantly provides all common admin tasks such as CRUD operations, simple chart rendering, user group management, and [WYSIWYG](https://en.wikipedia.org/wiki/WYSIWYG) interface editor. That’s what makes Forest Admin a quick and easy solution to get your admin interface started.
+This section documents the legacy `forest_liana` gem for Ruby on Rails (v9).
 
-This **documentation** assists developers and managers in having the admin completely tailored to cater to their specific needs. We’ve developed Forest Admin so that your admin is 100% customizable. It means that you have full control over your data, your back-end business logic and the UI.
+It has been replaced by [`forest_admin_rails`](/reference/agent-api/ruby) — ActiveRecord and Mongoid support, actively maintained.
 
-Forest Admin provides a **very simple** API-based framework to handle all parts of your admin back-end configuration. You should be good to go in no time, with virtually no investments of time and resources.
+## Where to start
 
-### Latest versions
-
-Sequelize: [version 9](https://github.com/ForestAdmin/forest-express-sequelize)
-
-Mongoose: [version 9](https://github.com/ForestAdmin/forest-express-mongoose)
-
-Rails: [version 9](https://github.com/ForestAdmin/forest-rails)
-
-Django: [version 1](https://github.com/ForestAdmin/django-forestadmin)
-
-Laravel: [version 1](https://github.com/ForestAdmin/laravel-forestadmin)
+<CardGroup cols={2}>
+  <Card title="Migrate to the current agent" icon="arrow-right-arrow-left" href="/guides/migration/from-v1/overview">
+    Step-by-step migration. Run v1 and v2 in parallel with zero downtime.
+  </Card>
+  <Card title="Setup guide" icon="wrench" href="/legacy/ruby-agent/getting-started/setup-guide">
+    Install and configure the legacy Rails agent.
+  </Card>
+</CardGroup>

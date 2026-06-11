@@ -407,7 +407,6 @@
               {
                 "group": "How it works",
                 "pages": [
-                  "legacy/javascript-agents/reference-guide/how-it-works/overview",
                   "legacy/javascript-agents/reference-guide/how-it-works/environments",
                   {
                     "group": "Developing on Forest Admin",
@@ -728,7 +727,6 @@
               {
                 "group": "How it works",
                 "pages": [
-                  "legacy/ruby-agent/reference-guide/how-it-works/overview",
                   "legacy/ruby-agent/reference-guide/how-it-works/environments",
                   {
                     "group": "Developing on Forest Admin",
