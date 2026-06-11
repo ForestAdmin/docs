@@ -82,6 +82,34 @@ architecture-beta
     be:B --> T:log
 ```
 
+### D — Forest brand palette (from forestadmin.com) + emojis ⭐
+
+Real brand colors: dark-teal hero node with lime text, chartreuse for Forest services, warm cream for external, brand red for the denied path. Emojis kept.
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#d0ee89','primaryBorderColor':'#1a2208',
+  'primaryTextColor':'#1f2223','lineColor':'#5c5c49'
+}}}%%
+flowchart LR
+    AI["🤖 AI agent"] -->|request| EP(["🔌 /mcp endpoint"])
+    EP --> Gate{"🔐 permissions<br/>+ role"}
+    Gate -->|allowed| BE(["🌳 Forest back-end"])
+    Gate -->|denied| X["⛔ blocked"]
+    BE --> DB[("🗄️ your data")]
+    BE -.->|writes| Log[["📋 audit log"]]
+
+    classDef forest   fill:#d0ee89,stroke:#1a2208,stroke-width:1.5px,color:#1f2223;
+    classDef core     fill:#093344,stroke:#031f2a,stroke-width:2px,color:#d0ee89;
+    classDef external fill:#f6f5ee,stroke:#bab9a9,stroke-width:1.5px,color:#1f2223;
+    classDef audit    fill:#e9e6df,stroke:#5c5c49,color:#1f2223;
+    classDef danger   fill:#fde8e8,stroke:#ef4444,color:#7a1f1f;
+    class EP,Gate forest; class BE core; class AI,DB external; class Log audit; class X danger;
+    linkStyle 2 stroke:#3f6212,stroke-width:2.5px;
+    linkStyle 3 stroke:#ef4444,stroke-width:1.5px,stroke-dasharray:4 3;
+```
+
 ---
 
 ## 1. Hooks lifecycle
