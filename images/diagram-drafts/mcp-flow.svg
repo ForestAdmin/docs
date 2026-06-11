@@ -8,35 +8,38 @@
     </marker>
   </defs>
 
-  <!-- background -->
+  <!-- uniform off-white canvas -->
   <rect x="0" y="0" width="1200" height="400" rx="4" fill="#f6f5ee"/>
   <rect x="0" y="0" width="1200" height="400" rx="4" fill="url(#dots)"/>
 
-  <!-- edges: orthogonal, light (#686c62 @0.7), square endpoints -->
+  <!-- meaningful zone: the control plane -->
+  <rect x="494" y="116" width="212" height="168" rx="2" fill="#ece9e0"/>
+  <text x="506" y="137" font-size="11" font-weight="600" letter-spacing="1.5" fill="#686c62">CONTROL PLANE</text>
+
+  <!-- edges: orthogonal, light (#686c62 @0.7), square endpoints flush to nodes -->
   <g stroke="#686c62" stroke-opacity="0.7" stroke-width="1.5" fill="none">
-    <path d="M232 200 H298" marker-end="url(#sq)"/>
-    <path d="M452 200 H514" marker-end="url(#sq)"/>
-    <path d="M684 176 H722 L746 135 H754" marker-end="url(#sq)"/>
-    <path d="M684 226 H722 L746 307 H754" stroke-dasharray="4 4" marker-end="url(#sq)"/>
-    <path d="M972 124 H1028" marker-end="url(#sq)"/>
-    <path d="M972 160 H1000 V229 H1028" stroke-dasharray="3 4" marker-end="url(#sq)"/>
+    <path d="M232 200 H302" marker-end="url(#sq)"/>
+    <path d="M452 200 H520" marker-end="url(#sq)"/>
+    <path d="M682 176 H720 L744 135 H756" marker-end="url(#sq)"/>
+    <path d="M682 216 H720 L744 307 H756" stroke-dasharray="4 4" marker-end="url(#sq)"/>
+    <path d="M972 124 H1030" marker-end="url(#sq)"/>
+    <path d="M972 160 H1000 V229 H1030" stroke-dasharray="3 4" marker-end="url(#sq)"/>
   </g>
 
   <!-- edge labels -->
   <g font-size="13" fill="#686c62">
     <text x="265" y="192" text-anchor="middle">request</text>
-    <text x="724" y="128" font-weight="600">allowed</text>
-    <text x="724" y="290" font-weight="600">denied</text>
+    <text x="726" y="128" font-weight="600">allowed</text>
+    <text x="726" y="290" font-weight="600">denied</text>
     <text x="1006" y="200" font-style="italic">writes</text>
   </g>
 
   <!-- AI agent -->
   <g>
     <rect x="60" y="160" width="172" height="80" rx="2" fill="#ffffff"/>
-    <rect x="79" y="187" width="26" height="26" rx="2" fill="#e3f68b"/>
-    <text x="92" y="205" text-anchor="middle" font-size="14">🤖</text>
-    <text x="118" y="196" font-size="15" font-weight="600" fill="#262d1e">AI agent</text>
-    <text x="118" y="216" font-size="12" fill="#686c62">Claude, Cursor…</text>
+    <rect x="80" y="180" width="14" height="14" rx="2" fill="#e3f68b"/>
+    <text x="104" y="192" font-size="15" font-weight="600" fill="#262d1e">AI agent</text>
+    <text x="80" y="220" font-size="12" fill="#686c62">Claude, Cursor…</text>
   </g>
 
   <!-- /mcp endpoint -->
@@ -45,26 +48,25 @@
     <text x="377" y="205" text-anchor="middle" font-size="15" font-weight="600" fill="#262d1e">/mcp endpoint</text>
   </g>
 
-  <!-- permissions gate -->
+  <!-- permissions gate (inside the control plane) -->
   <g>
-    <rect x="516" y="150" width="168" height="100" rx="2" fill="#262d1e"/>
-    <text x="600" y="192" text-anchor="middle" font-size="15" font-weight="600" fill="#e3f68b">permissions</text>
-    <text x="600" y="214" text-anchor="middle" font-size="15" font-weight="600" fill="#e3f68b">+ role</text>
+    <rect x="520" y="150" width="162" height="92" rx="2" fill="#262d1e"/>
+    <text x="601" y="190" text-anchor="middle" font-size="15" font-weight="600" fill="#e3f68b">permissions</text>
+    <text x="601" y="212" text-anchor="middle" font-size="15" font-weight="600" fill="#e3f68b">+ role</text>
   </g>
 
   <!-- Forest back-end (hero) -->
   <g>
     <rect x="756" y="90" width="216" height="92" rx="2" fill="#3f5b1e"/>
-    <rect x="774" y="122" width="28" height="28" rx="2" fill="#ddf327"/>
-    <text x="788" y="142" text-anchor="middle" font-size="15">🌳</text>
-    <text x="814" y="131" font-size="17" font-weight="700" fill="#f6f5ee">Forest back-end</text>
-    <text x="814" y="153" font-size="12" fill="#d0ee89">your infrastructure</text>
+    <rect x="776" y="110" width="14" height="14" rx="2" fill="#ddf327"/>
+    <text x="800" y="122" font-size="17" font-weight="700" fill="#f6f5ee">Forest back-end</text>
+    <text x="776" y="152" font-size="12" fill="#d0ee89">your infrastructure</text>
   </g>
 
-  <!-- blocked (greyed, no red, no border) -->
+  <!-- blocked (greyed, no red, no border, no emoji) -->
   <g>
     <rect x="756" y="280" width="160" height="54" rx="2" fill="#d9d9d9"/>
-    <text x="836" y="312" text-anchor="middle" font-size="15" font-weight="600" fill="#686c62">⛔ blocked</text>
+    <text x="836" y="312" text-anchor="middle" font-size="15" font-weight="600" fill="#686c62">blocked</text>
   </g>
 
   <!-- your data -->
@@ -78,7 +80,7 @@
   <g>
     <rect x="1030" y="200" width="160" height="58" rx="2" fill="#e9e6df"/>
     <rect x="1030" y="200" width="6" height="58" fill="#3f5b1e"/>
-    <text x="1112" y="226" text-anchor="middle" font-size="14" font-weight="600" fill="#262d1e">📋 audit log</text>
-    <text x="1112" y="244" text-anchor="middle" font-size="11" fill="#686c62">every action traced</text>
+    <text x="1052" y="226" font-size="14" font-weight="600" fill="#262d1e">audit log</text>
+    <text x="1052" y="244" font-size="11" fill="#686c62">every action traced</text>
   </g>
 </svg>
