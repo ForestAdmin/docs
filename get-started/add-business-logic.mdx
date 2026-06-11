@@ -7,37 +7,45 @@ Forest's real power comes from the business logic you add on top of your data. T
 
 ## Create your first action
 
-Actions are custom operations your team can trigger from the UI, refunding an order, sending an email, flagging a record for review.
+Actions are custom operations your team can trigger from the UI, refunding an order, sending an email, flagging a record for review. You define them in your back-end code, so they can call external APIs, update multiple tables, or trigger any side effect you need.
 
-The easiest way to create an action is with the **AI action generator**:
+Add an action to a collection in your back-end:
 
-1. Open a collection in your back-office
-2. Click **Actions** → **New action**
-3. Describe what you want the action to do in plain language
-4. Review and adjust the generated code
-5. Click **Save**, the action is immediately available in your back-office
+```javascript
+agent.customizeCollection('orders', collection =>
+  collection.addAction('Mark as reviewed', {
+    scope: 'Single',
+    execute: async (context, resultBuilder) => {
+      await context.collection.update(context.filter, { status: 'reviewed' });
+      return resultBuilder.success('Order marked as reviewed');
+    },
+  }),
+);
+```
 
-Actions run as code in your agent, so they can call external APIs, update multiple tables, or trigger any side effect you need.
+Restart your back-end and the action appears in the collection's **Actions** menu.
 
 <Info>
-Actions can have forms with dynamic fields, approval workflows, and granular permissions. See [Actions](/product/process/actions/overview) for the full reference.
+Actions can have forms with dynamic fields, approval workflows, and granular permissions. See [Code-based actions](/product/process/actions/custom-actions/overview) for the full reference.
 </Info>
 
 ## Create a computed field
 
 Computed fields let you display values that don't exist directly in your database, a full name from first and last name, a status derived from multiple columns, a formatted price.
 
-To create a computed field, add it to your agent code:
+Add a computed field the same way:
 
 ```javascript
-collection.addField('fullName', {
-  columnType: 'String',
-  dependencies: ['firstName', 'lastName'],
-  getValues: (records) => records.map(r => `${r.firstName} ${r.lastName}`),
-});
+agent.customizeCollection('customers', collection =>
+  collection.addField('fullName', {
+    columnType: 'String',
+    dependencies: ['firstName', 'lastName'],
+    getValues: records => records.map(r => `${r.firstName} ${r.lastName}`),
+  }),
+);
 ```
 
-Restart your agent and the field will appear in your back-office like any other field.
+Restart your back-end and the field appears in your back-office like any other field.
 
 <Info>
 Computed fields can also be made writable, filterable, and sortable. See [Fields](/product/process/fields/computed).

@@ -3,29 +3,43 @@ title: "Introduction"
 description: "What Forest is, how it works, and what you'll build in this guide."
 ---
 
-Forest is the operational infrastructure for regulated operations. It runs alongside your existing systems and gives your team, and your AI agents, one place to execute compliance workflows, business operations, and supplier coordination, with full governance and decision traces by default.
+Forest is the operational infrastructure for regulated operations. It runs alongside your existing systems and gives your team, and your AI agents, one place to execute workflows with full governance and decision traces.
 
-You keep full control of your data and infrastructure. Forest hosts the UI and configuration; the agent runs in your environment and your data never leaves your network.
+You keep control of your data and infrastructure: the Forest back-end runs in your environment and your data never leaves your network. Forest hosts only the UI and configuration.
+
+This guide covers the **self-hosted Node.js back-end**, the recommended path for most teams.
 
 ## How it works
 
-Forest runs through an **agent**, a lightweight backend you deploy alongside your application. The agent connects to your databases, exposes your business logic and workflows, and serves the API that the Forest UI (and any AI agents you connect) consume.
+Forest runs through a **back-end**, a lightweight service you deploy alongside your application. The Forest back-end connects to your databases, exposes your business logic and workflows, and serves the API that the Forest UI (and any AI agents you connect) consume.
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'primaryColor':'#B0D030',
+  'primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00',
+  'lineColor':'#698000',
+  'fontFamily':'Inter, system-ui, sans-serif'
+}}}%%
 graph LR
     DB[("Your databases & APIs")]
-    Agent["Forest Agent<br/>(your infrastructure)"]
+    Backend["Forest back-end<br/>(your infrastructure)"]
     UI["Forest UI<br/>(hosted by Forest)"]
     MCP["AI agents<br/>(via MCP)"]
 
-    DB --> Agent
-    Agent --> UI
-    Agent --> MCP
+    DB --> Backend
+    Backend --> UI
+    Backend --> MCP
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,stroke-width:1px,color:#3A3F33;
+    class Backend,UI forest;
+    class DB,MCP external;
 ```
 
-The agent does three things:
+The Forest back-end does three things:
 
-1. **Connects to your data**, SQL, MongoDB, ActiveRecord, Mongoose, Sequelize, APIs, custom datasources. Multiple sources in one agent are supported by default.
+1. **Connects to your data**, SQL, MongoDB, ActiveRecord, Mongoose, Sequelize, APIs, custom datasources. Multiple sources in one back-end are supported by default.
 2. **Runs your business logic**, custom actions, computed fields, hooks, validations. Defined in code, executed where your data lives.
 3. **Exposes everything safely**, to your operations team via the Forest UI, and to AI agents via the built-in MCP server. Same permissions, same audit trail, regardless of who or what is asking.
 
@@ -33,22 +47,22 @@ The agent does three things:
 
 By the end of this guide you'll have:
 
-- A self-hosted agent running in production, connected to your database
+- A self-hosted Forest back-end running in production, connected to your database
 - A configured Forest UI your team can use daily
 - Custom actions and computed fields tied to your business logic
 - Workflows and workspaces formalizing your operations
-- An MCP server exposing your data and workflows to AI agents under the same governance
+- An MCP server exposing your data and actions to AI agents under the same governance
 - Your team invited with the right permissions
 
 ## Prerequisites
 
 Before you start:
 
-- Node.js 18+ installed (or Ruby 3.0+ if you're using the Ruby agent)
+- Node.js 18+ installed
 - A database with a connection URI ready (PostgreSQL, MySQL, MongoDB, SQL Server, etc.)
 - A Forest account, [sign up here](https://app.forestadmin.com/signup) if you don't have one
 - Comfortable with a terminal
 
 <Card title="Start with the Quickstart" icon="rocket" href="/get-started/quickstart">
-  Get your agent running in 10 minutes.
+  Get your Forest back-end running in 15 minutes.
 </Card>

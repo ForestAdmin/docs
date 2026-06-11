@@ -1,0 +1,76 @@
+---
+title: "Expose to AI agents"
+description: "Turn on the MCP server so AI agents can act on your data under the same governance"
+---
+
+The data, actions, and workflows you've built aren't just for the Forest UI. Forest ships an **MCP server** that exposes the same capabilities to AI agents like [Claude](/product/embed/claude), enforcing the exact same permissions and writing the same audit trail, regardless of whether a human or an AI agent is acting.
+
+## What the MCP server exposes
+
+Through the Model Context Protocol, connected AI agents can:
+
+- Browse your collections and their schemas
+- Query and filter records across collections
+- Execute actions on records, including approval workflows
+
+Every operation runs with the permissions of the authenticated Forest user and is logged just like a UI action.
+
+## Turn on the MCP server
+
+With the Node.js back-end, mount the MCP server when you create the back-end in your `index.js`:
+
+```javascript
+const agent = createAgent(options)
+  .addDataSource(/* ... */)
+  .mountAiMcpServer();
+```
+
+Restart your back-end. You should see:
+
+```
+info: [MCP] Server initialized successfully
+```
+
+Your MCP endpoint is now available at `<your-back-end-url>/mcp`.
+
+<Info>
+You can find your back-end URL in **Project Settings → Environments**. Each environment has its own back-end URL, and therefore its own MCP endpoint.
+</Info>
+
+## Restrict which tools are exposed
+
+By default all tools are enabled. To expose only a subset, pass `enabledTools`, new tools added in future releases stay off until you opt in:
+
+```javascript
+agent.mountAiMcpServer({
+  enabledTools: ['describeCollection', 'list', 'listRelated'],
+});
+```
+
+<Info>
+`describeCollection` is always enabled, it's required for the server to function.
+</Info>
+
+## Connect Claude
+
+Point your AI assistant at the MCP endpoint. On first connection, a browser window opens for you to log in with your Forest credentials, the assistant then operates with that user's permissions.
+
+```bash
+claude mcp add --transport http forest-admin <your-back-end-url>/mcp
+```
+
+<Info>
+Use the transport type `http` (the Forest MCP server uses Streamable HTTP). For other clients (Claude Desktop, Cursor, VS Code, Codex) and the standalone deployment option, see the [Forest MCP Server reference](/product/embed/mcp-server).
+</Info>
+
+<Warning>
+Only grant MCP access to trusted AI tools and users. The server can perform any operation the authenticated user can perform.
+</Warning>
+
+## What's next
+
+Your operations are now available to your team and your AI agents. Time to move everything to production.
+
+<Card title="Next: Deploy →" icon="arrow-right" href="/get-started/deploy">
+  Deploy your Forest back-end to production
+</Card>

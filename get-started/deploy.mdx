@@ -1,25 +1,25 @@
 ---
 title: "Deploy"
-description: "Move your agent to production and set up your development workflow"
+description: "Move your Forest back-end to production and set up your development workflow"
 ---
 
-So far you've been working locally. This step covers deploying your agent to production and understanding how Forest's development workflow keeps your environments in sync.
+So far you've been working locally. This step covers deploying your Forest back-end to production and understanding how Forest's development workflow keeps your environments in sync.
 
 ## Understand environments and branches
 
 Forest distinguishes between **environments** (your local dev, staging, production) and **branches** (layout and configuration changes in progress).
 
 - Your **production environment** is the live back-office your team uses
-- Your **development environment** is your local agent
+- Your **development environment** is your local Forest back-end
 - **Branches** let you make layout changes without affecting production until you're ready to deploy
 
 This means you can iterate on your back-office configuration safely, then push changes to production when they're ready.
 
-## Deploy your agent
+## Deploy your back-end
 
 <Steps>
-  <Step title="Deploy your agent to your infrastructure">
-    Host your agent on any platform that can run a Node.js application (AWS, Heroku, GCP, your own servers, etc.).
+  <Step title="Deploy your back-end to your infrastructure">
+    Host your Forest back-end on any platform that can run a Node.js application (AWS, Heroku, GCP, your own servers, etc.).
 
     Make sure to set the environment variables (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`) in your hosting platform.
   </Step>
@@ -27,17 +27,7 @@ This means you can iterate on your back-office configuration safely, then push c
   <Step title="Create a production environment in Forest">
     In Forest, go to **Project Settings** → **Environments** → **Add environment**.
 
-    Give it a name (e.g. "Production") and enter the URL where your agent is running.
-  </Step>
-
-  <Step title="Push your schema to production">
-    From your local project, run:
-
-    ```bash
-    forest push
-    ```
-
-    This pushes your agent's schema (collections, fields, actions) to the production environment.
+    Give it a name (e.g. "Production") and enter the URL where your back-end is running.
   </Step>
 
   <Step title="Deploy your layout">

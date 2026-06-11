@@ -7,7 +7,7 @@ Forest includes a free-text search bar on every collection's table view. By defa
 
 ## How Search Works
 
-When an operator types in the search bar, Forest sends a query to your agent with the search string. The agent applies it as a filter against your data source and returns matching records.
+When an operator types in the search bar, Forest sends a query to your back-end with the search string. The back-end applies it as a filter against your data source and returns matching records.
 
 Two search modes exist:
 
@@ -28,7 +28,7 @@ By default, Forest searches only specific field types:
 
 ## Replacing the Search Handler
 
-Use `replaceSearch` in your agent configuration to define exactly how search strings are translated into filters.
+Use `replaceSearch` in your back-end configuration to define exactly how search strings are translated into filters.
 
 <Info>
   For large datasets, limit searchable fields to columns with database indexes. Searching unindexed fields causes full table scans.

@@ -1,6 +1,6 @@
 ---
 title: "Example 2: Incident Management"
-description: Build a support triage workspace that lets agents review, resolve, and escalate incidents in one place.
+description: Build a support triage workspace that lets back-ends review, resolve, and escalate incidents in one place.
 ---
 
 This guide walks through building an Incident Management Workspace, a focused interface where support representatives can see pending incidents, review the context, and resolve or escalate them without switching between views.
@@ -100,7 +100,7 @@ Drag **Button** components for the core actions:
 |-------------|-------------|---------|
 | ✓ Resolve | `resolve_incident` | Marks incident as resolved |
 | ↑ Escalate | `escalate_to_tier2` | Moves to escalation queue |
-| → Reassign | `reassign_incident` | Sends to another agent |
+| → Reassign | `reassign_incident` | Sends to another back-end |
 
 Configure each button:
 - **Source:** Collection 1 (Issue)
@@ -135,6 +135,6 @@ Incidents resolve in seconds instead of minutes. No tab-switching, no hunting fo
 
 **Add an SLA timer**, Use the Relative Time widget on `created_at` to show how long the incident has been open. Add a warning badge for incidents older than your SLA threshold.
 
-**Show agent notes**, Add a Field component for a `notes` text field so agents can see what previous agents have done before acting.
+**Show back-end notes**, Add a Field component for a `notes` text field so back-ends can see what previous back-ends have done before acting.
 
 **Add a search box**, Drag a **Search** component linked to the Issues collection so operators can find a specific incident by ID or keyword.

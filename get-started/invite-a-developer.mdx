@@ -8,15 +8,15 @@ When a new developer joins the project, they need their own local environment co
 ## Invite them to the project
 
 1. Go to **Project Settings** → **Users**
-2. Invite the developer with the **Admin** or **Editor** role so they can manage their environment
+2. Invite the developer with the **Developer** or **Admin** permission level so they can manage their environment
 
-## They set up their local agent
+## They set up their local back-end
 
-The developer clones the agent repository and installs dependencies:
+The developer clones the back-end repository and installs dependencies:
 
 ```bash
-git clone <your-agent-repo>
-cd <your-agent>
+git clone <your-back-end-repo>
+cd <your-back-end>
 npm install
 ```
 
@@ -37,13 +37,13 @@ FOREST_AUTH_SECRET=<same-as-production>
 DATABASE_URL=<their-local-or-staging-db>
 ```
 
-## Start the agent
+## Start the back-end
 
 ```bash
 npm start
 ```
 
-Their local agent is now connected to their own Forest environment, isolated from production.
+Their local back-end is now connected to their own Forest environment, isolated from production.
 
 ## Work with branches
 

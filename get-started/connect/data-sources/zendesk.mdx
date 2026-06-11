@@ -30,7 +30,7 @@ end
 
 ## Configuration
 
-The datasource authenticates against Zendesk using an [API token](https://support.zendesk.com/hc/en-us/articles/4408889192858-Managing-access-to-the-Zendesk-API). All three options are mandatory; the agent fails fast with a `ForestAdminDatasourceZendesk::ConfigurationError` if any of them is missing or blank.
+The datasource authenticates against Zendesk using an [API token](https://support.zendesk.com/hc/en-us/articles/4408889192858-Managing-access-to-the-Zendesk-API). All three options are mandatory; the back-end fails fast with a `ForestAdminDatasourceZendesk::ConfigurationError` if any of them is missing or blank.
 
 | Option      | Description                                                                                     |
 | ----------- | ----------------------------------------------------------------------------------------------- |
@@ -82,7 +82,7 @@ The column is read-only, comments are added by writing to `ZendeskTicket.descrip
 
 ### Custom fields
 
-Custom fields configured in your Zendesk account are introspected at agent boot and added to the matching collection's schema:
+Custom fields configured in your Zendesk account are introspected at back-end boot and added to the matching collection's schema:
 
 - Ticket custom fields are exposed as `custom_<zendesk_id>` columns on `ZendeskTicket`.
 - User and organization custom fields are exposed using their Zendesk `key` (or `custom_<zendesk_id>` if no key is set) on `ZendeskUser` / `ZendeskOrganization`.

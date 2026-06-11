@@ -9,7 +9,7 @@ When Forest has no built-in connector for your system (a proprietary database, a
 
 | | [Translation](/get-started/connect/data-sources/custom-datasources/translation) | [Replication](/get-started/connect/data-sources/custom-datasources/replication) |
 |---|---|---|
-| **How it works** | Translates Forest's query interface into your API's query language and calls the source live on every request | Maintains a local copy (replica) of the source data in a cache controlled by the agent, and queries that copy |
+| **How it works** | Translates Forest's query interface into your API's query language and calls the source live on every request | Maintains a local copy (replica) of the source data in a cache controlled by the back-end, and queries that copy |
 | **Data freshness** | Always live: every request hits the source | Eventually consistent: refreshed on a schedule, by polling, or via push/webhooks |
 | **Query translation** | You implement it (filters, sort, pagination, aggregation) | None: filtering, sorting, search, and charts work out of the box against the cache |
 | **Effort** | High: a full-featured translation layer often exceeds 1000 lines | Lower: you mostly implement how data is fetched and (optionally) written back |

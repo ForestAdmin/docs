@@ -6,7 +6,7 @@ A Segment is a subset of a Collection: it's a saved filter of your Collection.
 
 Segments are designed for those who want to _systematically_ visualize data according to specific sets of filters. It allows you to save filter configurations so users don't have to do repetitive actions every day.
 
-## From your agent
+## From your back-end
 
 Sometimes, Segment filters are complicated and closely tied to your business. Forest allows you to code how the Segment is computed.
 
@@ -20,7 +20,7 @@ For instance, you might implement a Segment on the `products` collection to allo
   As Forest does not impose any restriction on the handler, you are free to call external APIs or query your database directly instead.
 </Info>
 
-The only requirement when implementing a Segment from your agent is to return a valid `ConditionTree`.
+The only requirement when implementing a Segment from your back-end is to return a valid `ConditionTree`.
 
 <CodeGroup>
 ```javascript Node.js / Cloud

@@ -16,7 +16,7 @@ To make everything work as expected, you need to:
 
 ## Usage
 
-Register the datasource from inside the agent's setup hook (`ForestAdminRails::CreateAgent.setup!` for Rails apps), the same place where you would register an Active Record or Mongoid source:
+Register the datasource from inside the back-end's setup hook (`ForestAdminRails::CreateAgent.setup!` for Rails apps), the same place where you would register an Active Record or Mongoid source:
 
 ```ruby
 module ForestAdminRails
@@ -58,7 +58,7 @@ conn_str: "DRIVER={Snowflake};" \
           "Schema=#{ENV.fetch('SNOWFLAKE_SCHEMA', 'PUBLIC')}"
 ```
 
-The agent process must have read access to the `PRIV_KEY_FILE` path. `EXTERNALBROWSER` (SSO) and `OAUTH` flows work the same way, set the relevant `AUTHENTICATOR=` and supporting parameters per the driver docs.
+The back-end process must have read access to the `PRIV_KEY_FILE` path. `EXTERNALBROWSER` (SSO) and `OAUTH` flows work the same way, set the relevant `AUTHENTICATOR=` and supporting parameters per the driver docs.
 
 ## Automatic schema discovery
 
@@ -84,7 +84,7 @@ If any of the metadata queries fail (typically because the connecting role lacks
 
 ### Restricting the imported tables
 
-Use the standard agent-level `include:` / `exclude:` options when registering the datasource. The data source itself exposes every readable user-schema table; the agent decides which ones to publish.
+Use the standard agent-level `include:` / `exclude:` options when registering the datasource. The data source itself exposes every readable user-schema table; the back-end decides which ones to publish.
 
 ```ruby
 ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(
@@ -166,7 +166,7 @@ Discovery runs unconditionally: a `SHOW IMPORTED KEYS IN SCHEMA` query at boot a
 If the introspection query fails (typically because the connecting role lacks the privilege), the failure is logged and skipped, the rest of the data source remains usable.
 
 <Info>
-Auto-discovery only handles relations defined **inside Snowflake**. Cross-data-source relations, for example a Snowflake `BILLING_USAGE.CUSTOMER_ID` pointing at a Postgres `customers.id`, cannot be discovered (Snowflake has no concept of an FK to another database). Wire those manually in the agent layer with `add_many_to_one_relation` / `add_one_to_many_relation`.
+Auto-discovery only handles relations defined **inside Snowflake**. Cross-data-source relations, for example a Snowflake `BILLING_USAGE.CUSTOMER_ID` pointing at a Postgres `customers.id`, cannot be discovered (Snowflake has no concept of an FK to another database). Wire those manually in the back-end layer with `add_many_to_one_relation` / `add_one_to_many_relation`.
 </Info>
 
 ## Connection pool

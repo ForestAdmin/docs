@@ -23,8 +23,8 @@ The Forest MCP Server also enables other third party apps to embed and access Fo
 
 There are 2 ways to configure the Forest MCP Server:
 
-- **Standalone**: the Forest MCP Server runs as an standalone service, pointing to your existing node.js or ruby agent
-- **Mounted**: the Forest MCP Server runs as part of your node.js agent
+- **Standalone**: the Forest MCP Server runs as an standalone service, pointing to your existing node.js or ruby back-end
+- **Mounted**: the Forest MCP Server runs as part of your node.js back-end
 
 ## Standalone Forest MCP Server
 
@@ -34,7 +34,7 @@ To run your Forest MCP Server as a standalone service, you will first need to do
 npm install @forestadmin/mcp-server
 ```
 
-You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET variables to start the Forest MCP Server, to ensure it can authenticate and access the right agent, corresponding to your project and environment of choice:
+You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET variables to start the Forest MCP Server, to ensure it can authenticate and access the right back-end, corresponding to your project and environment of choice:
 
 ```text
 FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
@@ -45,16 +45,16 @@ Your Forest MCP Server will be accessible at this URL: `{your-standalone-server-
 ## Mounted Forest MCP Server
 
 <Note>
-  This is only available with the node.js agent. For other agents, refer to the Standalone method further down.
+  This is only available with the node.js agent. For other back-ends, refer to the Standalone method further down.
 </Note>
 
-In your node.js's `index.js` file, simply call the `mountAiMcpServer()` method when creating the agent, for example:
+In your node.js's `index.js` file, simply call the `mountAiMcpServer()` method when creating the back-end, for example:
 
 ```text
 const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer();
 ```
 
-Upon restarting your agent, the Forest MCP Server will automatically start, as confirmed by the following console log:
+Upon restarting your back-end, the Forest MCP Server will automatically start, as confirmed by the following console log:
 
 ```text
 info: [MCP] Server initialized successfully
@@ -63,9 +63,9 @@ info: [MCP] Server initialized successfully
 Your Forest MCP Server URL will be `{your-agent-url}/mcp`
 
 <Note>
-  Your agent URL can be found in the Forest Admin UI's Project Settings, under the Environments tab.
+  Your back-end URL can be found in the Forest Admin UI's Project Settings, under the Environments tab.
 
-  Note that each Environment has its own Agent URL, and therefore its own Forest MCP Server URL.
+  Note that each Environment has its own Back-end URL, and therefore its own Forest MCP Server URL.
 </Note>
 
 # Available tools

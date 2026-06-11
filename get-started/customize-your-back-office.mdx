@@ -1,9 +1,24 @@
 ---
-title: "Customize your back-office"
-description: "Organize your collections, rename fields, and create your first segment"
+title: "Browse & customize your data"
+description: "Explore your records, then shape collections and fields into a back-office your team can actually use"
 ---
 
-Forest generates a default layout from your database schema. This step is about making it useful for the people who'll work in it every day.
+Out of the box, every table in your database is surfaced as a collection with full browse, search, and edit. This step is about exploring what you have, then making it useful for the people who'll work in it every day.
+
+## Browse and search your data
+
+Open any collection from the left sidebar to get a table view of its records. From there you can:
+
+- **Search** across the collection's main fields
+- **Filter** on any field (status, date ranges, related records) and combine conditions
+- **Sort** by any column
+- Click a row to open the **record detail**, with its fields, related data, and available actions
+
+This is the default operator experience, no configuration required. Everything below is about tailoring it.
+
+<Info>
+For the full set of browsing controls, filters, sorting, and exports, see [Browse](/product/execute/browse).
+</Info>
 
 ## Organize your collections and fields
 
@@ -12,11 +27,24 @@ Open the **Layout Editor** (the pencil icon in the top bar) to enter edit mode. 
 - **Rename** collections and fields to match your business vocabulary (e.g. `users` → `Customers`)
 - **Reorder** fields in the detail view to surface the most important information first
 - **Hide** fields that are irrelevant for your team's daily work
+- **Group** fields into sections so long records stay readable
 
 Changes in the Layout Editor are saved as configuration, they don't affect your database schema.
 
 <Info>
-The Layout Editor is only available to users with the **Admin** role. [Learn more about roles](/get-started/control/roles-permissions).
+The Layout Editor is available to users with the **Editor** permission level or higher. [Learn more about permission levels](/get-started/control/roles-permissions).
+</Info>
+
+## Configure a collection
+
+Beyond the layout, each collection has settings that shape how it behaves:
+
+- **Display name** and **summary field** (the value shown when the record is referenced elsewhere)
+- Which **fields** appear, and the **widget** used to display or edit each one (text, date picker, image, JSON, related-record selector…)
+- Default **sort** and **search** behavior
+
+<Info>
+See [Collection configuration](/product/build/collection-configuration) and [Fields & widgets](/product/build/fields-and-widgets/overview) for the full list of options.
 </Info>
 
 ## Create a segment
@@ -37,7 +65,7 @@ You can also create **smart segments** with custom backend logic for more comple
 
 ## What's next
 
-You now have a clean, readable back-office. The next step is adding custom business logic, actions your team can trigger directly from the UI.
+You now have a clean, readable back-office your team can navigate. The next step is adding custom business logic, actions your team can trigger directly from the UI.
 
 <Card title="Next: Add business logic →" icon="arrow-right" href="/get-started/add-business-logic">
   Create actions and computed fields

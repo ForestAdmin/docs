@@ -9,33 +9,35 @@ Your back-office is in production. This step is about giving your team access, w
 
 1. Go to **Project Settings** → **Users**
 2. Click **Invite user**
-3. Enter their email address and select a role
+3. Enter their email address and select a **permission level**
 
 The user will receive an invitation email and can access the back-office immediately after signing up.
 
-## Understand roles
+## Permission levels
 
-Forest has three built-in permission levels:
+A user's **permission level** sets what they can do with the Forest platform itself, configuration, environments, administration. Forest has five built-in levels, each adding capabilities on top of the previous:
 
-| Role | What they can do |
+| Level | Adds the ability to |
 |---|---|
-| **Admin** | Full access, manage settings, layouts, users, and data |
-| **Editor** | Edit layouts and configurations, but can't manage users or billing |
-| **User** | Access data only, no configuration access |
+| **User** | Browse data, view/create/update/delete records, execute actions |
+| **Manager** | Manage the inbox and notifications |
+| **Editor** | Customize layouts, Smart Views, workspaces, dashboards, and workflows |
+| **Developer** | Manage environments and deploy between them |
+| **Admin** | Manage teams, users, roles, and project settings |
 
-Roles control access to the Forest interface itself. For granular control over what data each person can see or edit, use **Teams** and **Permissions**.
+## Roles and teams
 
-## Create a team
+Permission levels are separate from **roles**. Where a permission level governs platform capabilities, a **role** governs *data access*, which collections a user can read or edit, which actions they can trigger, down to field level and conditional rules.
 
-Teams let you group users and apply specific permissions to the group, for example, a Support team that can only view customer data, or a Finance team that can trigger refund actions.
+Roles are assigned through teams: group users into a team (e.g. Support, Finance), then attach a role that scopes exactly what that team can touch.
 
 1. Go to **Project Settings** → **Teams**
 2. Click **New team** and give it a name
 3. Add users to the team
-4. Configure the team's permissions: which collections they can access, which actions they can trigger, which fields are visible
+4. Attach a role defining which collections, actions, and fields the team can access
 
 <Info>
-For advanced permission setups, scopes, field-level visibility, action restrictions, see [Roles & Permissions](/get-started/control/roles-permissions).
+For the full breakdown of roles, collection and action permissions, conditional rules, and approval workflows, see [Roles & Permissions](/get-started/control/roles-permissions).
 </Info>
 
 ## What's next

@@ -2,9 +2,9 @@
 title: Environments & branches
 ---
 
-One of the goals of Forest is enabling technical teams to achieve more in less time. Your Forest back-office is composed of 2 parts, the frontend (UI) and the backend, and for each one, you need the right tools:
+One of the goals of Forest is enabling technical teams to achieve more in less time. Your Forest back-office is composed of 2 parts, the frontend (UI) and the back-end, and for each one, you need the right tools:
 
-The **Admin backend** is part of your codebase. You'll be using your favorite tools to customize it:
+The **Admin back-end** is part of your codebase. You'll be using your favorite tools to customize it:
 - Editing: your favorite IDE
 - Versioning: your favorite versioning tool (git, svn, mercurial, etc.)
 
@@ -20,12 +20,12 @@ Forest is meant to help you manage your operations: this can only happen if your
 
 Click "Deploy to production" on the top banner or in the "Environments" tab of your Project settings.
 
-#### Deploy your Agent
+#### Deploy your Back-end
 
-In the first step, you need to input your Agent's URL. This is the URL of the server onto which you have deployed (or will soon deploy) your Agent's codebase.
+In the first step, you need to input your Back-end's URL. This is the URL of the server onto which you have deployed (or will soon deploy) your Back-end's codebase.
 
 <Warning>
-  For security reasons, your agent must use the **HTTPS** protocol. The URL must not end with a trailing `/`.
+  For security reasons, your back-end must use the **HTTPS** protocol. The URL must not end with a trailing `/`.
 </Warning>
 
 #### Connect to your database
@@ -155,7 +155,7 @@ forest deploy
 <Warning>
   Deploy with care as such action cannot be reverted.
 
-  Don't forget to **deploy your backend changes** (if any) before the `deploy` command.
+  Don't forget to **deploy your back-end changes** (if any) before the `deploy` command.
 </Warning>
 
 ### Testing your changes on a remote environment: `push`

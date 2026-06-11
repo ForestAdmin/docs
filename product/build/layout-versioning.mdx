@@ -9,7 +9,7 @@ Every layout change you make in Forest, column ordering, field visibility, segme
 
 A Forest project has two independently versioned parts:
 
-- **Agent code**, your backend customizations (datasources, actions, computed fields, hooks). Versioned with Git.
+- **Back-end code**, your back-end customizations (datasources, actions, computed fields, hooks). Versioned with Git.
 - **Layout**, your UI configuration (field visibility, columns, segments, forms, dashboards). Versioned with Forest branches.
 
 Branches are isolated copies of a layout. You create one, make changes, test them, then deploy when ready. The production layout is never touched until you explicitly deploy.
@@ -81,7 +81,7 @@ forest environments:reset --environment staging --from production
 ```
 
 <Note>
-  Layout rollbacks only affect the UI configuration, your agent code and database are not touched.
+  Layout rollbacks only affect the UI configuration, your back-end code and database are not touched.
 </Note>
 
 ## Team collaboration

@@ -18,7 +18,7 @@ Add two options to your `createAgent` call:
 - `typingsPath`, where to write the generated file (e.g. `'./typings.ts'`)
 - `typingsMaxDepth`, how deep to introspect relationships (default `5` is usually sufficient)
 
-The file is generated automatically on agent startup. **Do not edit it manually**, it will be overwritten on the next restart.
+The file is generated automatically on back-end startup. **Do not edit it manually**, it will be overwritten on the next restart.
 
 ## TypeScript setup
 
@@ -139,7 +139,7 @@ WebStorm has built-in TypeScript support. Open your project and the IDE will aut
 ### The typings file isn't being generated
 
 - Make sure `typingsPath` is set in your `createAgent` call
-- Check that the agent starts without errors, introspection failures prevent typings generation
+- Check that the back-end starts without errors, introspection failures prevent typings generation
 - Verify the directory in `typingsPath` exists (e.g. if you set `'./src/typings.ts'`, the `src/` directory must exist)
 
 ### Collection names aren't being suggested
@@ -150,4 +150,4 @@ WebStorm has built-in TypeScript support. Open your project and the IDE will aut
 
 ### Type errors after a schema change
 
-The typings file is regenerated on agent restart. If you added or removed fields and see type errors, restart your agent and the typings will update automatically.
+The typings file is regenerated on back-end restart. If you added or removed fields and see type errors, restart your back-end and the typings will update automatically.

@@ -5,7 +5,7 @@ description: Code your own custom charts when no-code chart types aren't enough.
 
 The no-code chart types (Single, Distribution, Time-based, Cohort, Leaderboard, Objective) cover most needs. When you want full control over how data is displayed, custom visualizations, external libraries, complex layouts, use **Smart Charts**.
 
-With Smart Charts you write the data source on the agent and the rendering component in the UI editor. There's no limit to what you can render: D3.js, custom SVG, embedded iframes, anything you can write in JavaScript.
+With Smart Charts you write the data source on the back-end and the rendering component in the UI editor. There's no limit to what you can render: D3.js, custom SVG, embedded iframes, anything you can write in JavaScript.
 
 ## Creating a Smart Chart
 
@@ -31,9 +31,9 @@ Click **Run code** at any time to preview the chart. When you're done, click **C
   When creating a Smart Chart on a specific record (record's Analytics tab), the `record` object is directly accessible via `this.args.record` in the component or `@record` in the template.
 </Note>
 
-## Defining the data source on the agent
+## Defining the data source on the back-end
 
-A Smart Chart pulls its data from a custom endpoint you expose on the agent with `addChart`. The handler returns any shape your component expects.
+A Smart Chart pulls its data from a custom endpoint you expose on the back-end with `addChart`. The handler returns any shape your component expects.
 
 <CodeGroup>
 ```javascript Node.js
@@ -95,7 +95,7 @@ For collection charts, `context` also exposes `context.recordId`, `context.compo
 
 ## Example: table chart
 
-A minimal table chart in three steps: agent endpoint, component fetch, template.
+A minimal table chart in three steps: back-end endpoint, component fetch, template.
 
 <Frame caption="A custom table Smart Chart">
   <img src="/images/charts/smart-chart-table.png" alt="Smart Chart rendered as a table" />
@@ -153,7 +153,7 @@ Smart Charts can load any external library. This bar chart uses [D3.js](https://
   <img src="/images/charts/smart-chart-bar.png" alt="Smart Chart rendered as a D3 bar chart" />
 </Frame>
 
-**Agent:**
+**Back-end:**
 
 ```javascript
 agent.addChart('alphabetfrequency', async (context, resultBuilder) => {
@@ -209,7 +209,7 @@ A retention table with shaded cells, also using D3.js.
   <img src="/images/charts/smart-chart-cohort.png" alt="Cohort retention chart with shaded cells" />
 </Frame>
 
-The agent returns the cohort matrix; the component computes percentages and renders shaded cells; the template wraps the result.
+The back-end returns the cohort matrix; the component computes percentages and renders shaded cells; the template wraps the result.
 
 ```javascript
 agent.addChart('cohort', async (context, resultBuilder) => {

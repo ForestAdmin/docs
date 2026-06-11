@@ -9,14 +9,14 @@ Forest is built with security and privacy at its core. Your data never transits 
 
 ### Private by design
 
-Forest implements a **privacy-first architecture** where your data flows directly between your Agent and user browsers, never passing through Forest servers.
+Forest implements a **privacy-first architecture** where your data flows directly between your Back-end and user browsers, never passing through Forest servers.
 
 **How it works:**
 
 When users access the Forest UI, their browser establishes two separate connections:
 
 1. **Forest servers:** Retrieves layout configuration, UI settings, and metadata
-2. **Your Agent:** Retrieves actual data from your database
+2. **Your Back-end:** Retrieves actual data from your database
 
 <Frame caption="The Forest privacy architecture: data flows directly between your agent and the user's browser">
   <img src="/images/security/security-privacy-architecture.png" alt="Forest security and privacy architecture diagram" />
@@ -52,7 +52,7 @@ Forest guarantees data privacy across all plan levels:
 
 ### Token-based authentication
 
-Forest uses a **dual-token authentication system** to secure both UI access and Agent communication.
+Forest uses a **dual-token authentication system** to secure both UI access and Back-end communication.
 
 <Frame caption="The dual-token authentication flow">
   <img src="/images/security/security-privacy-credentials.png" alt="Forest authentication credentials flow" />
@@ -60,10 +60,10 @@ Forest uses a **dual-token authentication system** to secure both UI access and 
 
 #### FOREST_ENV_SECRET
 
-Authenticates requests between your Agent and Forest servers.
+Authenticates requests between your Back-end and Forest servers.
 
 **Purpose:**
-- Links your Agent to your Forest project
+- Links your Back-end to your Forest project
 - Authenticates layout and configuration requests
 - Required for all architectures (Cloud, Self-Hosted, On-Premise)
 
@@ -84,11 +84,11 @@ Never commit `FOREST_ENV_SECRET` to version control. Always use environment vari
 
 #### FOREST_AUTH_SECRET
 
-Authenticates requests between user browsers and your Agent (Self-Hosted and On-Premise only).
+Authenticates requests between user browsers and your Back-end (Self-Hosted and On-Premise only).
 
 **Purpose:**
 - Signs JWT tokens for user authentication
-- Validates requests to your Agent
+- Validates requests to your Back-end
 - **Your choice** - Forest never knows this secret
 
 **Security notes:**
@@ -112,7 +112,7 @@ FOREST_AUTH_SECRET=your-secure-random-string-at-least-32-characters-long
 </CodeGroup>
 
 <Info>
-**Cloud architecture:** `FOREST_AUTH_SECRET` is not needed because authentication is handled by Forest servers. Your data still flows directly from your Agent to browsers without passing through Forest.
+**Cloud architecture:** `FOREST_AUTH_SECRET` is not needed because authentication is handled by Forest servers. Your data still flows directly from your Back-end to browsers without passing through Forest.
 </Info>
 
 ### JWT token structure
@@ -133,7 +133,7 @@ Both tokens are JSON Web Tokens (JWT) containing user context:
 - Permissions
 
 **Use cases for token data:**
-- Custom authorization logic in your Agent
+- Custom authorization logic in your Back-end
 - Audit logging
 - Dynamic filtering based on user context
 - Integration with your internal systems
@@ -167,15 +167,15 @@ end
 
 ### Infrastructure flexibility
 
-You maintain **complete control** over your Agent deployment:
+You maintain **complete control** over your Back-end deployment:
 
 <Frame caption="Deploying the Forest agent behind a DMZ or VPN">
   <img src="/images/security/security-privacy-dmz-vpn.png" alt="Forest agent deployment behind DMZ and VPN" />
 </Frame>
 
 **Deployment options:**
-- **DMZ (Demilitarized Zone):** Deploy Agent in isolated network segment
-- **VPN:** Require VPN connection to access Agent
+- **DMZ (Demilitarized Zone):** Deploy Back-end in isolated network segment
+- **VPN:** Require VPN connection to access Back-end
 - **Private Cloud:** Deploy within your private cloud infrastructure
 - **On-Premise:** Keep everything within your data center
 
@@ -186,7 +186,7 @@ You maintain **complete control** over your Agent deployment:
 - Use TLS/SSL for all connections
 
 <Tip>
-**Best practice:** Deploy your Agent behind a VPN or firewall to add an additional layer of security. Even if an attacker obtains valid credentials, they would still need network access to reach your Agent.
+**Best practice:** Deploy your Back-end behind a VPN or firewall to add an additional layer of security. Even if an attacker obtains valid credentials, they would still need network access to reach your Agent.
 </Tip>
 
 ### HTTPS/TLS encryption
@@ -194,10 +194,10 @@ You maintain **complete control** over your Agent deployment:
 All communication is encrypted:
 
 - **Browser ↔ Forest:** HTTPS with TLS 1.2+
-- **Browser ↔ Your Agent:** HTTPS (you configure)
-- **Agent ↔ Forest:** HTTPS with TLS 1.2+
+- **Browser ↔ Your Back-end:** HTTPS (you configure)
+- **Back-end ↔ Forest:** HTTPS with TLS 1.2+
 
 <Warning>
-Always deploy your Agent with HTTPS enabled in production. Never use HTTP for sensitive data.
+Always deploy your Back-end with HTTPS enabled in production. Never use HTTP for sensitive data.
 </Warning>
 

@@ -1,9 +1,9 @@
 ---
 title: "Quickstart"
-description: "Get your agent running locally in 10 minutes."
+description: "Get your Forest back-end running locally in 15 minutes."
 ---
 
-You'll have a working Forest agent connected to your database, with the Forest UI open and ready to configure, in about 10 minutes.
+You'll have a working Forest back-end connected to your database, with the Forest UI open and ready to configure, in about 15 minutes.
 
 ## Prerequisites
 
@@ -18,13 +18,13 @@ You'll have a working Forest agent connected to your database, with the Forest U
     Go to [app.forestadmin.com](https://app.forestadmin.com), create a new project, and choose **Self-Hosted**.
   </Step>
   <Step title="Follow the onboarding">
-    The onboarding flow asks for your database URI and generates a ready-to-run agent project with your environment variables pre-configured.
+    The onboarding flow asks for your database URI and generates a ready-to-run back-end project with your environment variables pre-configured.
 
     <Warning>
       Never commit your `.env` file to version control. Add it to `.gitignore`.
     </Warning>
   </Step>
-  <Step title="Start your agent">
+  <Step title="Start your back-end">
     In the generated project directory, run:
 
     ```bash
@@ -44,11 +44,11 @@ You'll have a working Forest agent connected to your database, with the Forest U
 
 ## What you have now
 
-A connected agent with every table from your database surfaced as a collection. Operators can browse, search, edit, and delete records. From here, the typical path:
+A connected Forest back-end with every table from your database surfaced as a collection. Operators can browse, search, edit, and delete records. From here, the typical path:
 
 <CardGroup cols={2}>
-  <Card title="Customize what operators see" href="/get-started/customize-your-back-office">
-    Rename collections, hide internal fields, group fields into sections, create your first segment.
+  <Card title="Browse & customize your data" href="/get-started/customize-your-back-office">
+    Explore records, then rename collections, hide internal fields, and create your first segment.
   </Card>
   <Card title="Add business logic" href="/get-started/add-business-logic">
     Actions, computed fields, custom forms, define your operations layer in code.
@@ -64,7 +64,7 @@ A connected agent with every table from your database surfaced as a collection. 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Agent not starting">
+  <Accordion title="Back-end not starting">
     - Check that your `.env` file is present and loaded
     - Ensure port 3310 is not already in use
     - Run `curl http://localhost:3310/forest`, should return Forest metadata
@@ -72,16 +72,14 @@ A connected agent with every table from your database surfaced as a collection. 
   <Accordion title="No tables showing up">
     - Verify your `DATABASE_URL` is correct and the database is reachable from your machine
     - Check that the database user has read permissions on the relevant tables
-    - For SQL databases, the agent needs access to `information_schema` for introspection
+    - For SQL databases, the back-end needs access to `information_schema` for introspection
   </Accordion>
 </AccordionGroup>
 
-## Other deployment options
+## Need a hand?
 
-Self-hosted is the recommended path for most teams. Forest also offers a fully-managed **Cloud** option and **on-premise** deployments. [Contact us](https://www.forestadmin.com/contact) to find the right fit for your needs.
-
-<Card title="Need help choosing or getting started?" icon="envelope" href="mailto:support@forestadmin.com">
-  Reach out to our team, we'll help you pick the right architecture and walk through setup.
+<Card title="Get help from our team" icon="envelope" href="mailto:support@forestadmin.com">
+  Stuck on setup? Reach out, we'll help you get your Forest back-end running.
 </Card>
 
 <Card title="Next: Customize your interface" icon="arrow-right" href="/get-started/customize-your-back-office">

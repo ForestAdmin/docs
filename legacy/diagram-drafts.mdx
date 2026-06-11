@@ -1,0 +1,361 @@
+---
+title: "Diagram drafts (internal)"
+description: "Scratch board to preview and validate all the branded mermaid diagrams before moving them to their real pages. Not linked from the product docs."
+---
+
+<Warning>
+**Internal draft.** This page is a staging area to review the branded diagrams in Mermaid. Each block notes its destination page. Once validated, diagrams move to those pages and this page is deleted.
+</Warning>
+
+House style: `%%{init}%%` block forces the Forest palette; semantic `classDef`s — 🟩 `forest` (Forest components) · ⬜ `external` (your infra / external) · 🟧 `audit` (governance) · 🟥 `danger` (blocked/error).
+
+---
+
+## 1. Hooks lifecycle
+
+**Destination:** [product/process/advanced-concepts/hooks/overview](/product/process/advanced-concepts/hooks/overview) · type: flowchart
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart LR
+    Req["📥 Request"] --> Before(["Before hook<br/>validate · mutate · abort"])
+    Before --> Op{"Collection operation<br/>List · Create · Update · Delete"}
+    Op --> After(["After hook<br/>enrich · side-effects"])
+    After --> Res["📤 Response"]
+    Before -.->|throw| Abort["⛔ Aborted"]
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
+    classDef danger fill:#FBE9E7,stroke:#C0492F,color:#7A2E1F;
+    class Before,After,Op forest; class Req,Res external; class Abort danger;
+```
+
+---
+
+## 2. Approval flow
+
+**Destination:** [collaborate/approval-workflows](/product/collaborate/approval-workflows) **and** [control/roles-permissions §approval](/get-started/control/roles-permissions) (one shared diagram). Two candidate views below.
+
+### 2a. Lifecycle (stateDiagram)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'lineColor':'#698000','primaryTextColor':'#1F2A00'
+}}}%%
+stateDiagram-v2
+    [*] --> Pending: operator triggers
+    Pending --> Approved: approver approves
+    Pending --> Cancelled: approver rejects
+    Approved --> Executed: action runs
+    Executed --> [*]
+    Cancelled --> [*]
+```
+
+### 2b. Actors (sequenceDiagram)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'actorBkg':'#B0D030','actorBorder':'#698000','actorTextColor':'#1F2A00',
+  'signalColor':'#698000','signalTextColor':'#1F2A00',
+  'noteBkgColor':'#FFF6E5','noteBorderColor':'#E0A93D'
+}}}%%
+sequenceDiagram
+    autonumber
+    actor Op as Operator
+    participant F as Forest
+    actor Ap as Approver
+    Op->>F: Trigger action
+    Note over F: status = pending
+    F-->>Ap: Notify
+    Ap->>F: Approve / Reject
+    alt Approved
+        F->>F: Execute action
+    else Rejected
+        F->>F: Cancel
+    end
+    F-->>Op: Result + audit entry
+```
+
+---
+
+## 3. Replication strategies
+
+**Destination:** [connect/data-sources/custom-datasources/replication](/get-started/connect/data-sources/custom-datasources/replication) · type: flowchart
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart LR
+    API["🌐 Target API"]
+    subgraph fa["Forest back-end"]
+        Cache[("🗄️ Replica cache")]
+        Q(["Queries hit the replica"])
+    end
+    API -->|"① scheduled rebuild — pullDump on a timer"| Cache
+    API -->|"② change polling — pullDelta"| Cache
+    API -.->|"③ change push — webhooks / events"| Cache
+    Cache --> Q
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
+    class Cache,Q forest; class API external;
+    style fa fill:#F4F5EE,stroke:#9CA88A,stroke-dasharray:4 3,color:#3A3F33;
+```
+
+---
+
+## 4. MCP server — standalone vs mounted
+
+**Destination:** [embed/mcp-server §enabling](/product/embed/mcp-server) · type: two flowcharts
+
+### 4a. Standalone (separate service)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart LR
+    AI["🤖 AI agent"] -->|/mcp| MCP(["MCP server<br/>(standalone service)"])
+    MCP -->|FOREST_ENV_SECRET| BE(["🌳 Forest back-end"])
+    BE --> DB[("🗄️ your data")]
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
+    class MCP,BE forest; class AI,DB external;
+```
+
+### 4b. Mounted (inside the back-end)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart LR
+    AI["🤖 AI agent"] -->|/mcp| BE(["🌳 Forest back-end<br/>+ mounted MCP server"])
+    BE --> DB[("🗄️ your data")]
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
+    class BE forest; class AI,DB external;
+```
+
+---
+
+## 5. SCIM provisioning
+
+**Destination:** [control/authentication/scim](/get-started/control/authentication/scim) · type: sequenceDiagram (replaces the ASCII art)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'actorBkg':'#B0D030','actorBorder':'#698000','actorTextColor':'#1F2A00',
+  'signalColor':'#698000','signalTextColor':'#1F2A00',
+  'noteBkgColor':'#FFF6E5','noteBorderColor':'#E0A93D'
+}}}%%
+sequenceDiagram
+    autonumber
+    participant IdP as Identity provider (Okta, Entra…)
+    participant F as Forest SCIM API
+    IdP->>F: POST /Users — provision new user
+    F-->>IdP: 201 Created
+    IdP->>F: PATCH /Users/{id} — update / group change
+    F-->>IdP: 200 OK
+    IdP->>F: DELETE /Users/{id} — deprovision
+    F-->>IdP: 204 No Content
+    Note over IdP,F: Forest mirrors the IdP as source of truth
+```
+
+---
+
+# Earlier-planned diagrams
+
+## 6. MCP governance flow
+
+**Destination:** [get-started/expose-to-ai-agents](/get-started/expose-to-ai-agents) · type: flowchart
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart LR
+    AI["🤖 AI agent"] -->|request| EP(["/mcp endpoint"])
+    EP --> Gate{"permissions<br/>+ role"}
+    Gate -->|allowed| BE(["🌳 Forest back-end"])
+    Gate -->|denied| X["⛔ blocked"]
+    BE --> DB[("🗄️ your data")]
+    BE --> Log[["📋 audit log"]]
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
+    classDef audit fill:#FFF6E5,stroke:#E0A93D,color:#5A4300;
+    classDef danger fill:#FBE9E7,stroke:#C0492F,color:#7A2E1F;
+    class EP,BE forest; class AI,DB external; class Log audit; class X danger;
+```
+
+## 7. Permission levels vs roles
+
+**Destination:** [get-started/invite-your-team](/get-started/invite-your-team) · type: flowchart
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart TB
+    U(("👤 A user"))
+    subgraph PL["Permission level — what they can do on the platform"]
+        direction LR
+        a[User] --> b[Manager] --> c[Editor] --> d[Developer] --> e[Admin]
+    end
+    subgraph RO["Role, via a team — what data they can touch"]
+        direction LR
+        r1["Collections<br/>read · write · export"]
+        r2["Actions<br/>trigger · approve"]
+        r3["Conditional<br/>rules"]
+    end
+    U --> PL
+    U --> RO
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    class a,b,c,d,e forest;
+    style PL fill:#F8FBEC,stroke:#698000,color:#1F2A00;
+    style RO fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
+```
+
+## 8. Environments & branches
+
+**Destination:** [get-started/deploy](/get-started/deploy) (align with the [guides/deployment](/guides/deployment/development-workflow) versions) · type: flowchart
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000'
+}}}%%
+flowchart LR
+    subgraph dev["Development"]
+        LBE(["🌳 Local back-end"])
+        BR["Layout branch"]
+    end
+    subgraph prod["Production"]
+        PBE(["🌳 Back-end (your infra)"])
+        UI["Live back-office"]
+    end
+    LBE -->|forest branch| BR
+    BR -->|"forest push → review → deploy"| UI
+    LBE -. code deploy .-> PBE
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
+    class LBE,PBE forest; class BR,UI external;
+    style dev fill:#F8FBEC,stroke:#698000,stroke-dasharray:4 3,color:#1F2A00;
+    style prod fill:#F4F5EE,stroke:#9CA88A,stroke-dasharray:4 3,color:#3A3F33;
+```
+
+---
+
+# Rebrands of existing diagrams
+
+## 9. Architecture (reference style — already live in the Introduction)
+
+**Destination:** [get-started/intro-to-forest-admin](/get-started/intro-to-forest-admin) (already applied)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'primaryColor':'#B0D030','primaryBorderColor':'#698000',
+  'primaryTextColor':'#1F2A00','lineColor':'#698000',
+  'fontFamily':'Inter, system-ui, sans-serif'
+}}}%%
+graph LR
+    DB[("Your databases & APIs")]
+    Backend["Forest back-end<br/>(your infrastructure)"]
+    UI["Forest UI<br/>(hosted by Forest)"]
+    MCP["AI agents<br/>(via MCP)"]
+
+    DB --> Backend
+    Backend --> UI
+    Backend --> MCP
+
+    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
+    classDef external fill:#F4F5EE,stroke:#9CA88A,stroke-width:1px,color:#3A3F33;
+    class Backend,UI forest;
+    class DB,MCP external;
+```
+
+## 10. SSO login (rebrand of the existing sequence)
+
+**Destination:** [control/authentication/sso](/get-started/control/authentication/sso)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'actorBkg':'#B0D030','actorBorder':'#698000','actorTextColor':'#1F2A00',
+  'signalColor':'#698000','signalTextColor':'#1F2A00',
+  'noteBkgColor':'#FFF6E5','noteBorderColor':'#E0A93D'
+}}}%%
+sequenceDiagram
+    actor User
+    participant Forest as Forest (app.forestadmin.com)
+    participant IdP as Your identity provider
+    User->>Forest: Click "Login with SSO" + organization name
+    Forest->>IdP: Redirect with SAML auth request
+    User->>IdP: Authenticate (MFA if required)
+    IdP->>Forest: Signed SAML assertion (NameID = email)
+    Forest->>Forest: Validate assertion, open session
+    Forest->>User: Access granted
+```
+
+## 11. Self-hosted data flow (rebrand + "Your Agent" → "Your Forest back-end")
+
+**Destination:** [connect/architectures/self-hosted](/get-started/connect/architectures/self-hosted)
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {
+  'fontFamily':'Inter, system-ui, sans-serif',
+  'actorBkg':'#B0D030','actorBorder':'#698000','actorTextColor':'#1F2A00',
+  'signalColor':'#698000','signalTextColor':'#1F2A00',
+  'noteBkgColor':'#FFF6E5','noteBorderColor':'#E0A93D'
+}}}%%
+sequenceDiagram
+    box Behind your firewall
+        participant user as User
+        participant browser as Browser
+        participant be as Your Forest back-end
+        participant db as Database
+    end
+    box Public endpoints on the Internet
+        participant app as app.forestadmin.com
+        participant api as api.forestadmin.com
+    end
+    user->>browser: Open Forest
+    browser->>app: Load UI
+    app-->>browser: Forest UI
+    browser->>api: Get project config
+    api-->>browser: Config & schema metadata
+    browser->>api: Get access rights
+    api-->>browser: User permissions
+    Note over browser,be: All data requests go to YOUR back-end
+    browser->>be: Get collection data
+    be->>db: SELECT * FROM users
+    db-->>be: Query results (actual data)
+    be-->>browser: Data
+    browser-->>user: Display data
+    Note over db,api: Your data NEVER goes to Forest servers
+```

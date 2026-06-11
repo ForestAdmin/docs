@@ -27,7 +27,7 @@ agent.addDataSource(
 
 ## Schema introspection
 
-Since MongoDB lacks a predefined schema, the agent samples documents from each collection during startup to infer the structure. You can control this behavior:
+Since MongoDB lacks a predefined schema, the back-end samples documents from each collection during startup to infer the structure. You can control this behavior:
 
 ```javascript
 createMongoDataSource({
@@ -41,7 +41,7 @@ createMongoDataSource({
 ```
 
 <Info>
-Setting sample sizes too high may slow agent startup times.
+Setting sample sizes too high may slow back-end startup times.
 </Info>
 
 ## Filtering collections
@@ -80,7 +80,7 @@ createMongoDataSource({
 
 ## Data navigation
 
-When customizing your agent, navigate paths using these separators:
+When customizing your back-end, navigate paths using these separators:
 
 - **Nested fields**: Use `@@@` to access nested properties
 - **Related data**: Use `:` to navigate relationships
