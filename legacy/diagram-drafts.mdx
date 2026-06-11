@@ -19,6 +19,7 @@ Same diagram, three rendering ceilings. Compare which one Mintlify actually rend
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -34,8 +35,8 @@ flowchart LR
     classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
     classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
     classDef audit fill:#FFF6E5,stroke:#E0A93D,color:#5A4300;
-    classDef danger fill:#FBE9E7,stroke:#C0492F,color:#7A2E1F;
-    class EP,BE forest; class AI,DB external; class Log audit; class X danger;
+    classDef danger fill:#f6f5ee,stroke:#ef4444,color:#7A2E1F;
+    class EP,Gate,BE forest; class AI,DB external; class Log audit; class X danger;
 ```
 
 ### B — ELK layout + refined palette / shapes / curves / colored edges (the realistic mermaid ceiling)
@@ -44,6 +45,7 @@ Changes vs A: ELK renderer (clean orthogonal routing), `curve: basis`, a decisio
 
 ```mermaid
 %%{init: {'theme':'base', 'flowchart':{'defaultRenderer':'elk','curve':'basis'}, 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -59,7 +61,7 @@ flowchart LR
     classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
     classDef external fill:#FFFFFF,stroke:#9CA88A,stroke-width:1.5px,color:#3A3F33;
     classDef audit fill:#FFF6E5,stroke:#E0A93D,color:#5A4300;
-    classDef danger fill:#FBE9E7,stroke:#C0492F,color:#7A2E1F;
+    classDef danger fill:#f6f5ee,stroke:#ef4444,color:#7A2E1F;
     classDef gate fill:#F8FBEC,stroke:#698000,stroke-width:1.5px,color:#1F2A00;
     class EP,BE forest; class AI,DB external; class Log audit; class X danger; class Gate gate;
     linkStyle 2 stroke:#2E7D32,stroke-width:2.5px;
@@ -88,6 +90,7 @@ Real brand colors: dark-teal hero node with lime text, chartreuse for Forest ser
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#d0ee89','primaryBorderColor':'#1a2208',
   'primaryTextColor':'#1f2223','lineColor':'#5c5c49'
@@ -104,7 +107,7 @@ flowchart LR
     classDef core     fill:#093344,stroke:#031f2a,stroke-width:2px,color:#d0ee89;
     classDef external fill:#f6f5ee,stroke:#bab9a9,stroke-width:1.5px,color:#1f2223;
     classDef audit    fill:#e9e6df,stroke:#5c5c49,color:#1f2223;
-    classDef danger   fill:#fde8e8,stroke:#ef4444,color:#7a1f1f;
+    classDef danger   fill:#f6f5ee,stroke:#ef4444,color:#7a1f1f;
     class EP,Gate forest; class BE core; class AI,DB external; class Log audit; class X danger;
     linkStyle 2 stroke:#3f6212,stroke-width:2.5px;
     linkStyle 3 stroke:#ef4444,stroke-width:1.5px,stroke-dasharray:4 3;
@@ -118,6 +121,7 @@ flowchart LR
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -131,7 +135,7 @@ flowchart LR
 
     classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
     classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
-    classDef danger fill:#FBE9E7,stroke:#C0492F,color:#7A2E1F;
+    classDef danger fill:#f6f5ee,stroke:#ef4444,color:#7A2E1F;
     class Before,After,Op forest; class Req,Res external; class Abort danger;
 ```
 
@@ -145,6 +149,7 @@ flowchart LR
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'lineColor':'#698000','primaryTextColor':'#1F2A00'
@@ -162,6 +167,7 @@ stateDiagram-v2
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'actorBkg':'#B0D030','actorBorder':'#698000','actorTextColor':'#1F2A00',
   'signalColor':'#698000','signalTextColor':'#1F2A00',
@@ -192,6 +198,7 @@ sequenceDiagram
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -223,6 +230,7 @@ flowchart LR
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -241,6 +249,7 @@ flowchart LR
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -262,6 +271,7 @@ flowchart LR
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'actorBkg':'#B0D030','actorBorder':'#698000','actorTextColor':'#1F2A00',
   'signalColor':'#698000','signalTextColor':'#1F2A00',
@@ -290,6 +300,7 @@ sequenceDiagram
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -305,8 +316,8 @@ flowchart LR
     classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
     classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
     classDef audit fill:#FFF6E5,stroke:#E0A93D,color:#5A4300;
-    classDef danger fill:#FBE9E7,stroke:#C0492F,color:#7A2E1F;
-    class EP,BE forest; class AI,DB external; class Log audit; class X danger;
+    classDef danger fill:#f6f5ee,stroke:#ef4444,color:#7A2E1F;
+    class EP,Gate,BE forest; class AI,DB external; class Log audit; class X danger;
 ```
 
 ## 7. Permission levels vs roles
@@ -315,6 +326,7 @@ flowchart LR
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -346,6 +358,7 @@ flowchart TB
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000'
@@ -380,6 +393,7 @@ flowchart LR
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'primaryColor':'#B0D030','primaryBorderColor':'#698000',
   'primaryTextColor':'#1F2A00','lineColor':'#698000',
   'fontFamily':'Inter, system-ui, sans-serif'
@@ -406,6 +420,7 @@ graph LR
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'actorBkg':'#B0D030','actorBorder':'#698000','actorTextColor':'#1F2A00',
   'signalColor':'#698000','signalTextColor':'#1F2A00',
@@ -429,6 +444,7 @@ sequenceDiagram
 
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {
+  'mainBkg':'#f6f5ee','secondaryColor':'#e9e6df','tertiaryColor':'#f6f5ee',
   'fontFamily':'Inter, system-ui, sans-serif',
   'actorBkg':'#B0D030','actorBorder':'#698000','actorTextColor':'#1F2A00',
   'signalColor':'#698000','signalTextColor':'#1F2A00',
