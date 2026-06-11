@@ -77,6 +77,8 @@
                   "get-started/connect/data-sources/rpc",
                   "get-started/connect/data-sources/graphql-hasura",
                   "get-started/connect/data-sources/cosmosdb",
+                  "get-started/connect/data-sources/snowflake",
+                  "get-started/connect/data-sources/zendesk",
                   {
                     "group": "Custom datasources",
                     "pages": [
@@ -166,7 +168,16 @@
                 "group": "Advanced Concepts",
                 "pages": [
                   "product/process/advanced-concepts/hooks/overview",
-                  "product/process/advanced-concepts/plugins/overview",
+                  {
+                    "group": "Plugins",
+                    "pages": [
+                      "product/process/advanced-concepts/plugins/overview",
+                      "product/process/advanced-concepts/plugins/active-storage",
+                      "product/process/advanced-concepts/plugins/zendesk"
+                    ]
+                  },
+                  "product/process/advanced-concepts/self-hosted-ai",
+                  "product/process/advanced-concepts/testing",
                   {
                     "group": "Developer Workflow",
                     "pages": [

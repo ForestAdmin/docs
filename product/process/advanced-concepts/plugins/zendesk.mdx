@@ -1,0 +1,142 @@
+---
+title: "Zendesk plugins"
+description: "Surface Zendesk operations as actions on any collection (create and close tickets)"
+---
+
+The `forest_admin_datasource_zendesk` gem ships two plugins that surface Zendesk operations as actions on any host collection of your agent, typically a collection that already carries the Zendesk requester's identity (an `email` column) or the Zendesk ticket id (a column like `last_zendesk_ticket_id`).
+
+Both plugins require the [Zendesk datasource](/get-started/connect/data-sources/zendesk) to be registered on your agent: they need the `Datasource` instance to reach the Zendesk API client.
+
+## Usage
+
+Nothing is registered automatically. Opt each plugin in per collection through the standard customizer DSL:
+
+```ruby
+@agent.collection :Customer do |collection|
+  collection.use(
+    ForestAdminDatasourceZendesk::Plugins::CreateTicketWithNotification,
+    datasource: zendesk_datasource
+  )
+
+  collection.use(
+    ForestAdminDatasourceZendesk::Plugins::CloseTicket,
+    datasource: zendesk_datasource,
+    ticket_id_field: 'last_zendesk_ticket_id'
+  )
+end
+```
+
+Both plugins take the `Datasource` instance you registered earlier as the required `datasource:` option. You can attach the same plugin to multiple collections (e.g. `Customer` and `Order`) with different option sets.
+
+## `CreateTicketWithNotification`
+
+A `Single`-scope action that opens a Zendesk ticket from the selected host record. The host record does not need to be related to Zendesk, the requester is identified by an email entered (or pre-filled) in the form, and Zendesk creates the user record on the fly if it does not already exist (the action derives the user's name from the email's local-part, e.g. `john.doe@acme.com → john.doe`, to satisfy Zendesk's non-empty-name validation).
+
+```ruby
+@agent.collection :Customer do |collection|
+  collection.use(
+    ForestAdminDatasourceZendesk::Plugins::CreateTicketWithNotification,
+    datasource: zendesk_datasource,
+    action_name: 'Open a support ticket',
+    default_subject: 'Refund for {{record.email}}',
+    default_message: '<p>Hi {{record.name}},</p>',
+    requester_email_default: ->(record) { record['email'] },
+    sender_email: 'support@acme.com',
+    priority_override: 'high',
+    ticket_id_field: 'last_zendesk_ticket_id'
+  )
+end
+```
+
+| Option                    | Description                                                                                                                                                                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `datasource`              | **Required.** The `ForestAdminDatasourceZendesk::Datasource` instance.                                                                                                                                                             |
+| `action_name`             | Overrides the action label. Defaults to `'Create ticket and notify'`.                                                                                                                                                              |
+| `default_subject`         | String used to pre-fill the "Subject" field. Supports `{{record.<field>}}` tokens resolved against the selected record when the form opens.                                                                                        |
+| `default_message`         | String used to pre-fill the "Message" field. Same token syntax; rendered through a RichText widget and shipped as `html_body`. Token _values_ are HTML-escaped. **Ignored when `email_templates` is set** (the wizard takes over). |
+| `email_templates`         | Array of `{ title:, content: }` hashes. When non-empty, the form becomes a two-page wizard (see below).                                                                                                                            |
+| `requester_email_default` | Default for the "Requester email" form field. Accepts a String (supports the same `{{record.<field>}}` tokens as Subject/Message) or a `record -> email_string` Proc evaluated against the selected record when the form opens.    |
+| `sender_email`            | Maps to Zendesk's `recipient` on the created ticket, the support address replies are sent FROM. When unset, Zendesk uses the account's default support address.                                                                   |
+| `priority_override`       | When set, the "Priority" dropdown is removed from the form and this value is forced in the payload (e.g. `'high'`).                                                                                                                |
+| `type_override`           | Same idea for the "Type" dropdown (e.g. `'incident'`).                                                                                                                                                                             |
+| `show_internal_note`      | When truthy, adds the "Send as internal note" checkbox to the form. Hidden by default, tickets are public unless this is opt-in.                                                                                                  |
+| `ticket_id_field`         | Writable column on the host collection that receives the freshly-created ticket id. Best-effort: a writeback failure is logged and surfaced in the success message without rolling back the ticket.                                |
+
+The form exposes the following fields by default:
+
+| Field                 | Type     | Notes                                                                                                                                                                       |
+| --------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Requester email       | String   | Required. Pre-filled by `requester_email_default`.                                                                                                                          |
+| Subject               | String   | Required. Default supports `{{record.<field>}}` tokens.                                                                                                                     |
+| Message               | RichText | Required. Sent as the ticket's first comment (`html_body`). Token _values_ inside the default are HTML-escaped.                                                             |
+| Priority              | Enum     | Defaults to `normal`. Values: `low`, `normal`, `high`, `urgent`. **Removed from the form when `priority_override` is set.**                                                 |
+| Type                  | Enum     | Optional. Values: `problem`, `incident`, `question`, `task`. **Removed from the form when `type_override` is set.**                                                         |
+| Send as internal note | Boolean  | **Hidden by default.** Surfaces only when `show_internal_note: true` is set. When checked, the first comment is private and no notification email is sent to the requester. |
+
+The default form always creates a public comment, which triggers Zendesk's default notification email to the requester. When `sender_email` is set, that address is used as the support recipient (the From address of the outbound email).
+
+### Email-templates wizard
+
+When `email_templates` is set, the form becomes a two-page wizard:
+
+1. **Page 1, Template.** A `Template` dropdown lists each template's `title` plus a sentinel `"No template"` entry. Selecting an entry pre-fills the Message on page 2.
+2. **Page 2, Body.** The same fields as above, with the Message pre-filled from the selected template's `content`. Picking a different template (then clicking back) re-fills the Message; typing into Message in between is preserved across re-fetches of the same template selection.
+
+Template `content` supports the same `{{record.<field>}}` token syntax as `default_message`, and the interpolated values are HTML-escaped before being injected into the RichText editor. Picking `"No template"` yields an empty Message, `default_message` is intentionally ignored in wizard mode so the strict opt-in stays predictable.
+
+```ruby
+collection.use(
+  ForestAdminDatasourceZendesk::Plugins::CreateTicketWithNotification,
+  datasource: zendesk_datasource,
+  email_templates: [
+    { title: 'Refund confirmation',
+      content: '<p>Hi {{record.first_name}}, your refund has been processed.</p>' },
+    { title: 'Shipping delay',
+      content: '<p>Hi {{record.first_name}}, we apologise for the delay shipping order #{{record.order_id}}.</p>' }
+  ]
+)
+```
+
+## `CloseTicket`
+
+Registers actions that transition a Zendesk ticket to `solved` or `closed`. The plugin reads the ticket id from a configurable column on the host record(s), so you can close a Zendesk ticket directly from a `Customer` row that stores `last_zendesk_ticket_id`, without having to navigate to the `ZendeskTicket` collection.
+
+```ruby
+@agent.collection :Customer do |collection|
+  collection.use(
+    ForestAdminDatasourceZendesk::Plugins::CloseTicket,
+    datasource: zendesk_datasource,
+    ticket_id_field: 'last_zendesk_ticket_id'
+  )
+end
+```
+
+| Option            | Description                                                                                                 |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- |
+| `datasource`      | **Required.** The `ForestAdminDatasourceZendesk::Datasource` instance.                                      |
+| `ticket_id_field` | **Required.** Name of the column on the host record that holds the Zendesk ticket id.                       |
+| `statuses`        | Subset of `%w[solved closed]`. Defaults to both. Accepts symbols (`%i[solved]`) or strings interchangeably. |
+| `scopes`          | Subset of `%i[single bulk]`. Defaults to both. Accepts symbols or strings interchangeably.                  |
+
+`statuses` and `scopes` are orthogonal, the plugin registers one action per `(status, scope)` pair, so the full default registers four actions on the host collection:
+
+| Status   | Single-scope label              | Bulk-scope label                          |
+| -------- | ------------------------------- | ----------------------------------------- |
+| `solved` | "Mark Zendesk ticket as solved" | "Mark selected Zendesk tickets as solved" |
+| `closed` | "Mark Zendesk ticket as closed" | "Mark selected Zendesk tickets as closed" |
+
+Pick subsets to register fewer variants, e.g. `statuses: %w[closed], scopes: %i[bulk]` registers a single bulk-close action.
+
+### Status semantics
+
+- **`solved`** is the standard "resolved" workflow; the requester can still reopen the ticket during Zendesk's reopen window.
+- **`closed`** is terminal. Zendesk rejects further updates to a closed ticket and sometimes rejects the direct `open → closed` transition.
+
+The plugin recognises Zendesk's "closed prevents ticket update" error and translates it to a clean outcome:
+
+- Targeting `closed` on an already-closed ticket → **success** (counted as "was already closed").
+- Targeting `solved` on an already-closed ticket → **failure** ("ticket is already closed (cannot reopen to mark as solved)").
+
+### Bulk behaviour
+
+Each id is processed independently, a single rejected transition does not abort the rest of the run. The success message reports succeeded, already-closed and failed ids so partial successes are visible. If every id fails the action surfaces as an error rather than a partial success.

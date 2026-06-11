@@ -201,7 +201,7 @@ await agent.restart(): Promise<void>;
 
 ### agent.addAi(provider)
 
-Configure an AI provider to power Forest's AI features (natural language search, actions, etc.).
+Route Forest's AI features (natural language search, actions, etc.) through your own agent so your data never leaves your infrastructure. Pass a provider built with `createAiProvider` (from `@forestadmin/ai-proxy`); `openai` and `anthropic` are supported. See [Self-hosted AI](/product/process/advanced-concepts/self-hosted-ai) for the full guide.
 
 ```typescript
 agent.addAi(provider: AiProviderDefinition): Agent;
@@ -213,16 +213,20 @@ Can only be called once, calling it a second time throws an error.
 
 ```typescript
 import { createAgent } from '@forestadmin/agent';
+import { createAiProvider } from '@forestadmin/ai-proxy';
 
 const agent = createAgent({
   authSecret: process.env.FOREST_AUTH_SECRET,
   envSecret: process.env.FOREST_ENV_SECRET,
 })
-  .addAi({
-    provider: 'openai',
-    apiKey: process.env.OPENAI_API_KEY,
-    model: 'gpt-4o',
-  });
+  .addAi(
+    createAiProvider({
+      name: 'my-assistant',
+      provider: 'anthropic',
+      apiKey: process.env.ANTHROPIC_API_KEY,
+      model: 'claude-sonnet-4-5',
+    }),
+  );
 ```
 
 ---

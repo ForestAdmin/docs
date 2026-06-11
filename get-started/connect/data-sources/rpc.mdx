@@ -1,19 +1,17 @@
 ---
 title: "RPC"
-description: "Connect via RPC to Forest"
+description: "Connect agents over RPC: expose a remote data source, or distribute one agent across microservices"
 ---
 
-<Note>Only available for Node.js.</Note>
+The RPC datasource connects Forest Admin agents to each other over RPC (Remote Procedure Call). Use it to expose a remote data source in your back-office, or to split one agent across multiple services (microservices) that a main agent aggregates into a single admin panel.
 
-The RPC datasource allows you to connect to remote data sources via RPC (Remote Procedure Call), exposing their data and operations in your Forest back-office.
+## Node.js
 
-## Installation
+In Node.js, the RPC datasource connects to a remote data source and exposes its data and operations in your back-office.
 
 ```bash
 npm install @forestadmin-experimental/datasource-rpc
 ```
-
-## Basic usage
 
 ```javascript
 import { createAgent } from '@forestadmin/agent';
@@ -23,15 +21,176 @@ const agent = createAgent(options);
 
 agent.addDataSource(
   createRpcDataSource({
-    url: process.env.RPC_SERVER_URL
-  })
+    url: process.env.RPC_SERVER_URL,
+  }),
 );
 ```
 
+## Ruby (distributed agents)
+
+In Ruby, the RPC datasource lets you distribute your Forest Admin agent across multiple microservices. Each service runs its own RPC agent, and a **main agent** aggregates them into a unified admin panel.
+
+**Why use RPC?**
+
+- **Microservices architecture**: your application is split into multiple services, each owning its data.
+- **Team isolation**: each team manages their own Forest Admin configuration.
+- **Independent deployment**: update one service without redeploying the entire admin panel.
+- **Scalability**: distribute load across multiple agents.
+
+<Frame caption="A main agent aggregates several service-specific RPC agents">
+  <img src="/images/datasources/rpc-schema.jpg" alt="RPC architecture: a main agent connected to several RPC agents" />
+</Frame>
+
+### Main agent
+
+The main agent aggregates multiple RPC agents into a single Forest Admin interface. It behaves exactly like a classic agent with multiple datasources: once connected, you can define relations across datasources transparently.
+
+```ruby
+# Gemfile
+gem 'forest_admin_datasource_rpc'
+```
+
+```ruby
+# app/lib/forest_admin_rails/create_agent.rb
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      @agent = ForestAdminAgent::Builder::AgentFactory.instance
+
+      # Add RPC datasources
+      @agent.add_datasource(
+        ForestAdminDatasourceRpc.build(uri: 'http://customers-app:3002')
+      )
+
+      @agent.add_datasource(
+        ForestAdminDatasourceRpc.build(
+          uri: 'http://billing-app:3003',
+          auth_secret: 'YOUR-SHARED-AUTH-SECRET'
+        )
+      )
+
+      # You can also add local datasources
+      @agent.add_datasource(ForestAdminDatasourceMongoid.build)
+
+      @agent.use(ForestAdminDatasourceRpc::ReconciliateRpc)
+
+      @agent.build
+    end
+  end
+end
+```
+
+<Info>
+The `auth_secret` option is optional. If not specified, it defaults to your Forest Admin project's `auth_secret`. Override it to use a different shared secret for RPC communication.
+</Info>
+
+The `ReconciliateRpc` plugin must be added **in the main agent**. It relies on collection names matching across all agents, so if you rename collections in your RPC agents, keep all agents synchronized.
+
+#### Introspection caching
+
+By default, the main agent introspects each RPC agent at startup. Caching the introspection schema makes startup faster, lets the main agent boot even if an RPC agent is temporarily unavailable, and supports asynchronous deployments. RPC agents automatically generate a `.forestadmin-rpc-schema.json` file in development mode; pass it when adding a datasource:
+
+```ruby
+schema = JSON.parse(
+  File.read(Rails.root.join('.forestadmin-rpc-schema.json')),
+  symbolize_names: true
+)
+
+@agent.add_datasource(
+  ForestAdminDatasourceRpc.build(
+    uri: 'http://customers-app:3002',
+    introspection: schema
+  )
+)
+```
+
+Regenerate the cached schema when an RPC agent's collections change.
+
+### RPC agent
+
+An RPC agent exposes its collections to the main agent via the RPC protocol.
+
+```ruby
+# Gemfile
+gem 'forest_admin_rpc_agent'
+```
+
+Run the installation command with the `auth_secret` from your main Forest Admin project:
+
+```bash
+forest_admin_rpc_agent install YOUR_AUTH_SECRET
+```
+
+This creates `config/initializers/forest_admin_rpc_agent.rb`, `lib/forest_admin_rpc_agent/create_rpc_agent.rb`, and mounts the RPC routes in `config/routes.rb`. The generated agent looks like:
+
+```ruby
+module ForestAdminRpcAgent
+  class CreateRpcAgent
+    def self.setup!
+      datasource = ForestAdminDatasourceActiveRecord::Datasource.new(Rails.env.to_sym)
+      @agent = ForestAdminRpcAgent::Agent.instance.add_datasource(datasource)
+
+      @agent.build
+    end
+  end
+end
+```
+
+You can use all standard customization methods (computed fields, actions, segments, etc.) on your RPC agent collections.
+
+### Cross-RPC relations
+
+When an RPC agent needs to reference collections from another RPC agent, import them by adding an RPC datasource that references the other agent, then use `mark_collections_as_rpc: true` to indicate those collections are provisioned elsewhere.
+
+```ruby
+module ForestAdminRpcAgent
+  class CreateRpcAgent
+    def self.setup!
+      # 1. Local datasource
+      datasource = ForestAdminDatasourceActiveRecord::Datasource.new(Rails.env.to_sym)
+      @agent = ForestAdminRpcAgent::Agent.instance.add_datasource(datasource)
+
+      # 2. Remote RPC datasource, marked as RPC
+      @agent.add_datasource(
+        ForestAdminDatasourceRpc.build(uri: 'http://customers-app:3002'),
+        mark_collections_as_rpc: true
+      )
+
+      # 3. Cross-RPC relations (here in the Billing agent:
+      #    'Invoice' is local, 'User' is imported from the Customers agent)
+      @agent.customize_collection('Invoice') do |collection|
+        collection.add_many_to_one_relation(
+          'user', 'User', { foreign_key: 'user_id', foreign_key_target: 'id' }
+        )
+      end
+
+      @agent.customize_collection('User') do |collection|
+        collection.add_one_to_many_relation(
+          'invoices', 'Invoice', { origin_key: 'user_id', origin_key_target: 'id' }
+        )
+      end
+
+      @agent.build
+    end
+  end
+end
+```
+
+For finer control over which collections are marked, call `mark_collections_as_rpc` manually:
+
+```ruby
+# Mark specific collections
+@agent.mark_collections_as_rpc('User', 'Address')
+
+# Or use a regex to match a pattern of collections
+@agent.mark_collections_as_rpc(/^admin_/)
+```
+
+Supported cross-RPC relation types: `add_many_to_one_relation`, `add_one_to_many_relation`, `add_one_to_one_relation`, and `add_many_to_many_relation`.
+
 ## Source code
 
-[github.com/ForestAdmin/forestadmin-experimental, datasource-rpc](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-rpc)
+This connector is open source. Browse the code or contribute on GitHub:
 
-## Source code
-
-This connector is open source. Browse the code or contribute on GitHub: [`@forestadmin-experimental/datasource-rpc`](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-rpc).
+- Node.js: [`@forestadmin-experimental/datasource-rpc`](https://github.com/ForestAdmin/forestadmin-experimental/tree/main/packages/datasource-rpc)
+- Ruby: [`forest_admin_datasource_rpc`](https://github.com/ForestAdmin/agent-ruby/tree/main/packages/forest_admin_datasource_rpc)

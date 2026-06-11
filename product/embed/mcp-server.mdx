@@ -90,6 +90,80 @@ The Forest MCP server exposes the following capabilities:
 - **Business rules**: Access validation rules and constraints
 - **User permissions**: Check what operations are allowed
 
+## Restrict tools
+
+You can restrict which tools the MCP server exposes using `enabledTools`. Only the tools you list will be available, and **new tools added in future releases will NOT be automatically enabled**, so your configuration stays safe over time.
+
+<CodeGroup>
+```javascript Mounted on agent
+agent.mountAiMcpServer({
+  enabledTools: ['describeCollection', 'list', 'listRelated'],
+});
+```
+
+```bash Standalone
+FOREST_MCP_ENABLED_TOOLS="describeCollection,list,listRelated" \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+```
+</CodeGroup>
+
+When `enabledTools` is not set, all tools are enabled by default.
+
+<Info>
+`describeCollection` is always enabled, even if omitted from the list, as it is required for the MCP server to function properly.
+</Info>
+
+## Connect your AI assistant
+
+Your MCP endpoint is available at `/mcp` (`<your-agent-url>/mcp` when mounted, `<your-standalone-server-url>/mcp` when standalone). On first connection, a browser window opens for you to log in with your Forest Admin credentials; the assistant then operates with that user's permissions.
+
+<CodeGroup>
+```bash Claude Code
+claude mcp add --transport http forest-admin <your-mcp-endpoint>
+```
+
+```json Claude Desktop
+{
+  "mcpServers": {
+    "forest-admin": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "<your-mcp-endpoint>"]
+    }
+  }
+}
+```
+
+```json Cursor
+{
+  "mcpServers": {
+    "forest-admin": {
+      "url": "<your-mcp-endpoint>"
+    }
+  }
+}
+```
+
+```json VS Code
+{
+  "servers": {
+    "forest-admin": {
+      "type": "http",
+      "url": "<your-mcp-endpoint>"
+    }
+  }
+}
+```
+
+```toml Codex (OpenAI)
+[mcp_servers.forest-admin]
+url = "<your-mcp-endpoint>"
+```
+</CodeGroup>
+
+<Info>
+Use the MCP transport type `"http"` (not `"sse"` or `"url"`): the Forest MCP server uses Streamable HTTP. Your URL should still use `https://`. Clients that rely on `mcp-remote` (Claude Desktop, Windsurf, JetBrains) require Node.js 18+ (some versions need 20+).
+</Info>
+
 ## Use cases
 
 ### AI-assisted operations

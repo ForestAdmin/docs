@@ -1,0 +1,170 @@
+---
+title: "Zendesk"
+description: "Surface a Zendesk Support account (tickets, users, organizations) as Forest Admin collections"
+---
+
+The Zendesk data source surfaces a Zendesk Support account as Forest Admin collections. It exposes tickets, users and organizations (with each ticket carrying its comment thread inline) on top of the [Zendesk REST API](https://developer.zendesk.com/api-reference/ticketing/introduction/), so you can browse and edit them from your Forest Admin project alongside your other data sources.
+
+<Note>
+This is the Zendesk **data source** (Zendesk data inside Forest). If you want to embed Forest data and actions inside Zendesk tickets instead, see the [Zendesk app](/product/embed/zendesk).
+</Note>
+
+To make everything work as expected, you need to install the gem `forest_admin_datasource_zendesk`.
+
+```ruby
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      datasource = ForestAdminDatasourceZendesk::Datasource.new(
+        subdomain: ENV['ZENDESK_SUBDOMAIN'],
+        username: ENV['ZENDESK_USERNAME'],
+        token: ENV['ZENDESK_API_TOKEN']
+      )
+      @create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(datasource, {})
+      customize
+      @create_agent.build
+    end
+  end
+end
+```
+
+## Configuration
+
+The datasource authenticates against Zendesk using an [API token](https://support.zendesk.com/hc/en-us/articles/4408889192858-Managing-access-to-the-Zendesk-API). All three options are mandatory; the agent fails fast with a `ForestAdminDatasourceZendesk::ConfigurationError` if any of them is missing or blank.
+
+| Option      | Description                                                                                     |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| `subdomain` | The subdomain of your Zendesk account (e.g. `acme` for `https://acme.zendesk.com`).             |
+| `username`  | The email address associated with the API token (typically a Zendesk admin/agent account).      |
+| `token`     | A Zendesk API token generated from `Admin Center → Apps and integrations → APIs → Zendesk API`. |
+
+The `forest_admin_datasource_zendesk` gem also ships two action plugins (`CreateTicketWithNotification` and `CloseTicket`) that you can attach to any host collection. See [the Zendesk plugins page](/product/process/advanced-concepts/plugins/zendesk) for details.
+
+## Provided collections
+
+Once the data source is registered, three collections are added to your Forest Admin project:
+
+| Collection            | Primary endpoint                                      | Notes                                                                                            |
+| --------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `ZendeskTicket`       | Search API (`/api/v2/search?query=type:ticket`)       | Full read/write. Embeds `requester`, `assignee`, `organization` and an inline `comments` thread. |
+| `ZendeskUser`         | Search API (`/api/v2/search?query=type:user`)         | Full read/write.                                                                                 |
+| `ZendeskOrganization` | Search API (`/api/v2/search?query=type:organization`) | Full read/write.                                                                                 |
+
+### Relationships
+
+The following relationships are exposed automatically:
+
+- `ZendeskTicket.requester` → `ZendeskUser` (foreign key `requester_id`)
+- `ZendeskTicket.assignee` → `ZendeskUser` (foreign key `assignee_id`)
+- `ZendeskTicket.organization` → `ZendeskOrganization` (foreign key `organization_id`)
+- `ZendeskUser.organization` → `ZendeskOrganization`
+- `ZendeskUser.requested_tickets` → `ZendeskTicket`
+- `ZendeskOrganization.users` → `ZendeskUser`
+- `ZendeskOrganization.tickets` → `ZendeskTicket`
+
+### Comments
+
+Zendesk has no standalone `/comments/{id}` endpoint, so comments are not exposed as their own collection. Instead, each `ZendeskTicket` carries a structured `comments` array column that is fetched lazily from `/api/v2/tickets/{id}/comments` only when the projection asks for it (i.e. when `comments` is rendered on the detail view or referenced in a custom action).
+
+Each entry has the following shape:
+
+| Field          | Type      | Source                                                                      |
+| -------------- | --------- | --------------------------------------------------------------------------- |
+| `id`           | `Number`  | Zendesk comment id                                                          |
+| `body`         | `String`  | Plain-text body                                                             |
+| `html_body`    | `String`  | HTML-formatted body                                                         |
+| `public`       | `Boolean` | `true` for public replies, `false` for internal notes                       |
+| `author_email` | `String`  | Resolved through a single `users/show_many` call across all visible authors |
+| `author_name`  | `String`  | Same                                                                        |
+| `created_at`   | `Date`    | Comment creation timestamp                                                  |
+
+The column is read-only, comments are added by writing to `ZendeskTicket.description` on creation (Zendesk converts the description into the first comment).
+
+### Custom fields
+
+Custom fields configured in your Zendesk account are introspected at agent boot and added to the matching collection's schema:
+
+- Ticket custom fields are exposed as `custom_<zendesk_id>` columns on `ZendeskTicket`.
+- User and organization custom fields are exposed using their Zendesk `key` (or `custom_<zendesk_id>` if no key is set) on `ZendeskUser` / `ZendeskOrganization`.
+
+The Forest column type is derived from the Zendesk field type:
+
+| Zendesk field type                                | Forest column type |
+| ------------------------------------------------- | ------------------ |
+| `text`, `textarea`, `regexp`, `partialcreditcard` | `String`           |
+| `integer`, `decimal`, `lookup`                    | `Number`           |
+| `date`                                            | `Dateonly`         |
+| `checkbox`                                        | `Boolean`          |
+| `dropdown`, `tagger`                              | `Enum`             |
+| `multiselect`                                     | `Json`             |
+
+Inactive fields, system ticket fields (which already exist as native columns) and unrecognized types are skipped.
+
+<Note>
+If introspection fails (network error, missing scope, …) the datasource degrades gracefully: the corresponding collection is still registered without the custom fields, and a warning is logged.
+</Note>
+
+## Capabilities
+
+### Filters
+
+The condition tree is translated into a Zendesk Search API query. The following operators are supported:
+
+| Operator                                       | Translation                    |
+| ---------------------------------------------- | ------------------------------ |
+| `EQUAL`, `NOT_EQUAL`                           | `field:value` / `-field:value` |
+| `IN`, `NOT_IN`                                 | repeated `field:value` clauses |
+| `GREATER_THAN`, `LESS_THAN`, `BEFORE`, `AFTER` | `field>value` / `field<value`  |
+| `PRESENT`, `BLANK`                             | `field:*` / `-field:*`         |
+
+Notes:
+
+- Only the `AND` aggregator is supported. Mixing `OR` between conditions raises `UnsupportedOperatorError`. The Zendesk Search API has no general `OR` operator, so silently rewriting an `OR` filter would return wrong results.
+- An empty `IN` / `NOT_IN` raises `UnsupportedOperatorError` rather than matching everything.
+- A nil value passed with `EQUAL` / `NOT_EQUAL` / `IN` raises an explicit error: use `PRESENT` / `BLANK` to filter for absence.
+- Filtering `ZendeskTicket.requester_email = "x@y.z"` is rewritten to Zendesk's `requester:x@y.z` operator.
+- `Date` filter values are interpreted at start-of-day in the caller's timezone before being sent to Zendesk.
+
+### Sorting
+
+Only fields that the Zendesk Search API can sort on are honoured. Other sort directives are silently ignored:
+
+- `ZendeskTicket`: `created_at`, `updated_at`, `priority`, `status`, `ticket_type`
+- `ZendeskUser`: `created_at`, `updated_at`, `name`
+- `ZendeskOrganization`: `created_at`, `updated_at`, `name`
+
+### Pagination
+
+Forest's offset/limit pagination is translated to Zendesk's `page` / `per_page`. The Search API caps `per_page` at 100; larger limits are clamped.
+
+### Aggregations
+
+Only `Count` aggregation without grouping is supported. Any other aggregation raises a `ForestException`, the Zendesk Search API has no group-by primitive.
+
+### Search
+
+The free-text search bar is enabled on `ZendeskTicket`, `ZendeskUser` and `ZendeskOrganization`. The search term is appended to the query that is built from the active filters, so the count badge and the rendered list always agree.
+
+### Writes
+
+Create, update and delete are supported on `ZendeskTicket`, `ZendeskUser` and `ZendeskOrganization`. Custom fields are folded into the appropriate Zendesk payload structure (`custom_fields` for tickets, `user_fields` / `organization_fields` for users and organizations).
+
+A few fields are intentionally read-only:
+
+- `id`, `url`, `created_at` and `updated_at` are ignored on writes.
+- On `ZendeskTicket`, `description` is only written on creation (where Zendesk turns it into the first comment); it is silently dropped on update because Zendesk exposes no write endpoint for it.
+- `ZendeskTicket.requester_email` is computed at read time from the requester's profile and cannot be written directly.
+
+## Logging
+
+The datasource uses `Rails.logger` when available, and falls back to `Logger.new($stderr)`. You can override it explicitly:
+
+```ruby
+ForestAdminDatasourceZendesk.logger = MyLogger.new
+```
+
+Best-effort enrichment paths (bulk user/organization lookups, comment-author resolution, schema introspection) log a warning and degrade to a safe default rather than failing the whole page render. Critical paths (search, count, ticket bulk fetch, ticket comment fetch, writes) raise a `ForestAdminDatasourceZendesk::APIError` that wraps the underlying Zendesk error.
+
+## Source code
+
+This connector is open source. Browse the code or contribute on GitHub: [`forest_admin_datasource_zendesk`](https://github.com/ForestAdmin/agent-ruby/tree/main/packages/forest_admin_datasource_zendesk).

@@ -1,0 +1,187 @@
+---
+title: "Testing your agent"
+description: "Test your Forest Admin customizations locally without connecting to Forest Admin servers"
+---
+
+Test your Forest Admin customizations locally without connecting to Forest Admin servers.
+
+<Note>
+The testing library is available for the `@forestadmin/agent` Node.js agent.
+</Note>
+
+## Installation
+
+```bash
+npm install --save-dev @forestadmin/agent-testing
+```
+
+## Quick start
+
+The testing library provides two main functions:
+
+- **`createForestServerSandbox(port)`** starts a local mock server that simulates Forest Admin servers.
+- **`createAgentTestClient(options)`** creates a test client to interact with your agent.
+
+```typescript
+import {
+  createAgentTestClient,
+  createForestServerSandbox,
+} from '@forestadmin/agent-testing';
+
+describe('My Agent', () => {
+  let sandbox, client;
+
+  beforeAll(async () => {
+    // Start mock server
+    sandbox = await createForestServerSandbox(3001);
+    // Connect test client
+    client = await createAgentTestClient({
+      serverUrl: 'http://localhost:3001',
+      agentUrl: 'http://localhost:3310',
+      agentSchemaPath: './.forestadmin-schema.json',
+      agentForestEnvSecret: process.env.FOREST_ENV_SECRET,
+      agentForestAuthSecret: process.env.FOREST_AUTH_SECRET,
+    });
+  });
+
+  afterAll(async () => {
+    await sandbox?.stop();
+  });
+
+  it('should list users', async () => {
+    const users = await client.collection('users').list();
+    expect(users.length).toBeGreaterThan(0);
+  });
+
+  it('should execute action', async () => {
+    const action = await client
+      .collection('orders')
+      .action('Apply discount', { recordId: 1 });
+    await action.getFieldNumber('discount').fill(10);
+    const result = await action.execute();
+    expect(result.success).toBe(true);
+  });
+});
+```
+
+## Collections
+
+Test CRUD operations and hooks.
+
+### List
+
+Test that filters return the correct records.
+
+```typescript
+// Fetch admins
+const admins = await client.collection('users').list({
+  filters: { field: 'role', operator: 'Equal', value: 'admin' },
+});
+// Check all have role 'admin'
+expect(admins.every(u => u.role === 'admin')).toBe(true);
+```
+
+### Create
+
+```typescript
+// Create user
+const user = await client.collection('users').create({ email: 'john@example.com' });
+// Fetch to verify
+const [created] = await client.collection('users').list({
+  filters: { field: 'id', operator: 'Equal', value: user.id },
+});
+expect(created.email).toBe('john@example.com');
+```
+
+### Update
+
+```typescript
+// Update email
+await client.collection('users').update(userId, { email: 'new@example.com' });
+const [user] = await client.collection('users').list({
+  filters: { field: 'id', operator: 'Equal', value: userId },
+});
+expect(user.email).toBe('new@example.com');
+```
+
+### Delete
+
+```typescript
+// Delete user
+await client.collection('users').delete(userId);
+const users = await client.collection('users').list({
+  filters: { field: 'id', operator: 'Equal', value: userId },
+});
+expect(users).toHaveLength(0);
+```
+
+## Actions
+
+Test actions and form behavior.
+
+```typescript
+// Get action
+const action = await client.collection('orders').action('Refund', { recordId: 1 });
+// Fill form
+await action.getFieldNumber('amount').fill(100);
+await action.getFieldString('reason').fill('Customer request');
+// Execute
+const result = await action.execute();
+expect(result.success).toBe(true);
+```
+
+### Dynamic forms
+
+Test fields that appear based on other field values.
+
+```typescript
+const action = await client.collection('orders').action('Refund', { recordId: 1 });
+// Check field is hidden
+expect(action.doesFieldExist('manager_approval')).toBe(false);
+// Fill amount > threshold
+await action.getFieldNumber('amount').fill(500);
+// Check field now appears
+expect(action.doesFieldExist('manager_approval')).toBe(true);
+```
+
+### Field properties
+
+Test field validation rules.
+
+```typescript
+const action = await client.collection('users').action('Update', { recordId: 1 });
+// Check required
+expect(action.getFieldString('email').isRequired()).toBe(true);
+// Check read-only
+expect(action.getFieldNumber('age').isReadOnly()).toBe(false);
+```
+
+## Computed fields
+
+```typescript
+// Fetch user
+const [user] = await client.collection('users').list<{ fullName: string }>();
+// Check computed value
+expect(user.fullName).toBe('John Doe');
+```
+
+## Segments
+
+```typescript
+// Fetch from segment
+const minors = await client.collection('users').segment('minors').list();
+// Check filter works
+expect(minors.every(u => u.age < 18)).toBe(true);
+```
+
+## Charts
+
+```typescript
+// Fetch value chart
+const chart = await client.valueChart('totalRevenue');
+expect(chart.countCurrent).toBeGreaterThan(0);
+
+// Fetch distribution chart
+const distribution = await client.distributionChart('ordersByStatus');
+expect(distribution).toContainEqual({ key: 'pending', value: expect.any(Number) });
+```

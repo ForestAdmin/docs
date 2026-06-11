@@ -1,0 +1,225 @@
+---
+title: "Snowflake"
+description: "Connect Snowflake tables and views to Forest Admin (read-only, via ODBC)"
+---
+
+The Snowflake data source allows importing tables and views from a Snowflake account into Forest Admin via ODBC. It does **not** rely on ActiveRecord, Forest connects to Snowflake directly through the `ruby-odbc` driver, translates Forest filters/projections/aggregations into parameterised SQL, and streams the results back as plain Ruby objects.
+
+This data source is **read-only**. Every Forest column is emitted with `is_read_only: true`, so the schema emitter sets the collection-level `isReadOnly: true` and the UI hides create/edit/delete actions. Direct calls to `create`, `update`, or `delete` raise a `ForestException` with an explicit read-only message as a defence-in-depth guard.
+
+## Installation
+
+To make everything work as expected, you need to:
+
+- install the gem `forest_admin_datasource_snowflake`.
+- have the **unixODBC** system library and the **Snowflake ODBC driver** installed on the host running the agent. On Ubuntu/Debian: `apt-get install unixodbc-dev`, then install [Snowflake's ODBC driver](https://docs.snowflake.com/en/developer-guide/odbc/odbc) and reference it from your `odbcinst.ini`.
+
+## Usage
+
+Register the datasource from inside the agent's setup hook (`ForestAdminRails::CreateAgent.setup!` for Rails apps), the same place where you would register an Active Record or Mongoid source:
+
+```ruby
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      datasource = ForestAdminDatasourceSnowflake::Datasource.new(
+        conn_str: "DRIVER={Snowflake};" \
+                  "Server=#{ENV.fetch('SNOWFLAKE_ACCOUNT')}.snowflakecomputing.com;" \
+                  "UID=#{ENV.fetch('SNOWFLAKE_USER')};" \
+                  "PWD=#{ENV.fetch('SNOWFLAKE_PASSWORD')};" \
+                  "Warehouse=#{ENV.fetch('SNOWFLAKE_WAREHOUSE')};" \
+                  "Database=#{ENV.fetch('SNOWFLAKE_DATABASE')};" \
+                  "Schema=#{ENV.fetch('SNOWFLAKE_SCHEMA', 'PUBLIC')}"
+      )
+      @create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(datasource, {})
+      customize
+      @create_agent.build
+    end
+  end
+end
+```
+
+The snippets below that pass options to `add_datasource` (e.g. `include:` / `exclude:`) drop into the same `setup!` body in place of the `add_datasource(datasource, {})` call.
+
+### Authentication
+
+The data source doesn't interpret authentication options, `conn_str` is parsed as `key=value;...` and the resulting attributes are handed straight to the Snowflake ODBC driver. Any [parameter the driver accepts](https://docs.snowflake.com/en/developer-guide/odbc/odbc-parameters) works, including the production-friendly key-pair / JWT flow:
+
+```ruby
+conn_str: "DRIVER={Snowflake};" \
+          "Server=#{ENV.fetch('SNOWFLAKE_ACCOUNT')}.snowflakecomputing.com;" \
+          "UID=#{ENV.fetch('SNOWFLAKE_USER')};" \
+          "AUTHENTICATOR=SNOWFLAKE_JWT;" \
+          "PRIV_KEY_FILE=#{ENV.fetch('SNOWFLAKE_PRIV_KEY_FILE')};" \
+          # Optional, only when the private key is encrypted:
+          "PRIV_KEY_FILE_PWD=#{ENV.fetch('SNOWFLAKE_PRIV_KEY_PWD')};" \
+          "Warehouse=#{ENV.fetch('SNOWFLAKE_WAREHOUSE')};" \
+          "Database=#{ENV.fetch('SNOWFLAKE_DATABASE')};" \
+          "Schema=#{ENV.fetch('SNOWFLAKE_SCHEMA', 'PUBLIC')}"
+```
+
+The agent process must have read access to the `PRIV_KEY_FILE` path. `EXTERNALBROWSER` (SSO) and `OAUTH` flows work the same way, set the relevant `AUTHENTICATOR=` and supporting parameters per the driver docs.
+
+## Automatic schema discovery
+
+By default, every user-schema, non-system table reachable by the configured Snowflake user is exposed as a Forest collection. System tables and the `INFORMATION_SCHEMA` views are filtered out automatically.
+
+At boot, the data source issues a small fixed set of metadata queries, independent of how many tables you expose:
+
+- one ODBC `tables` call to enumerate the readable tables and views.
+- one bulk `INFORMATION_SCHEMA.COLUMNS` query that returns every column for the schema in a single round-trip. Each Forest collection reads its slice from the pre-fetched result, so introspection cost no longer scales with table count.
+- one `SHOW PRIMARY KEYS IN SCHEMA` query to recover declared primary keys (composite keys preserved, ordered by `key_sequence`).
+- one `SHOW IMPORTED KEYS IN SCHEMA` query to recover declared foreign keys (see [Foreign-key auto-discovery](#foreign-key-auto-discovery)).
+
+The primary key for each collection is resolved in the following order:
+
+1. an operator-supplied [`primary_keys:`](#overriding-the-primary-key) override,
+2. any Snowflake-declared primary key (via `SHOW PRIMARY KEYS IN SCHEMA`),
+3. a column literally named `id` (case-insensitive),
+4. the first column as a last resort.
+
+Snowflake doesn't expose primary key information through ODBC's standard column metadata, hence the multi-step resolution.
+
+If any of the metadata queries fail (typically because the connecting role lacks the privilege), the failure is logged to stderr with a `[forest_admin_datasource_snowflake]` prefix and skipped. The result is cached so the broken query isn't re-issued on every collection lookup.
+
+### Restricting the imported tables
+
+Use the standard agent-level `include:` / `exclude:` options when registering the datasource. The data source itself exposes every readable user-schema table; the agent decides which ones to publish.
+
+```ruby
+ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(
+  ForestAdminDatasourceSnowflake::Datasource.new(conn_str: ENV.fetch('SNOWFLAKE_CONN_STR')),
+  include: ['BILLING_USAGE', 'USAGE_ANOMALIES', 'CURRENCY_RATES']
+)
+
+# or, equivalently:
+ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(
+  ForestAdminDatasourceSnowflake::Datasource.new(conn_str: ENV.fetch('SNOWFLAKE_CONN_STR')),
+  exclude: ['INTERNAL_LOG']
+)
+```
+
+This is the same pattern used by the other Forest Admin data sources, so collection filtering stays consistent across your agent.
+
+### Targeting a specific schema
+
+A datasource instance always represents a **single Snowflake schema**, Forest collection names are unqualified, so two tables with the same name in different schemas would collide. To expose tables from multiple schemas, instantiate one datasource per schema.
+
+The active schema is resolved as follows:
+
+- if `Schema=` is set in the connection string, it wins. The datasource parses it (case-insensitive) at construction time and issues `USE SCHEMA "<schema>"` on every new connection so the session, the table-list filter, and all introspection queries stay aligned.
+- if `Schema=` is omitted, the datasource snapshots `CURRENT_SCHEMA()` once at boot (whatever default the Snowflake user/role exposes) and uses that as the active schema for the rest of its lifetime.
+- if `Schema=` is omitted **and** `CURRENT_SCHEMA()` is null (the role has no default), the datasource raises `ForestAdminDatasourceSnowflake::Error` at boot with a message asking you to set `Schema=` explicitly.
+
+```ruby
+ForestAdminDatasourceSnowflake::Datasource.new(
+  conn_str: "DRIVER={Snowflake};...;Schema=ANALYTICS"
+)
+```
+
+### Overriding the primary key
+
+For tables where the primary key cannot be auto-resolved, for example, a table without a Snowflake-declared PK, no `id` column, and where the first column isn't really the key, pass an explicit `primary_keys:` mapping. The lookup is case-insensitive on the table name. Pass an array to declare a composite key.
+
+```ruby
+ForestAdminDatasourceSnowflake::Datasource.new(
+  conn_str: ENV.fetch('SNOWFLAKE_CONN_STR'),
+  primary_keys: {
+    'CUSTOMER_EVENTS' => 'EVENT_UUID',
+    'orders'          => 'ORDER_ID',
+    'usage_quotas'    => %w[CUSTOMER_ID EVENT_TYPE]
+  }
+)
+```
+
+This override sits at the top of the resolution chain and takes precedence over any Snowflake-declared PK or fallback. If a declared column name does not match any column on the target table, the data source raises `ForestAdminDatasourceSnowflake::Error` at boot, silent fallback would otherwise mask configuration typos.
+
+## Type mapping
+
+Column types are resolved from the Snowflake-native `DATA_TYPE` returned by `INFORMATION_SCHEMA.COLUMNS`.
+
+| Snowflake type                                                                               | Forest type |
+| -------------------------------------------------------------------------------------------- | ----------- |
+| `BOOLEAN`                                                                                    | `Boolean`   |
+| `NUMBER`, `DECIMAL`, `NUMERIC`, `INT`, `INTEGER`, `BIGINT`, `SMALLINT`, `TINYINT`, `BYTEINT` | `Number`    |
+| `FLOAT`, `FLOAT4`, `FLOAT8`, `DOUBLE`, `DOUBLE PRECISION`, `REAL`                            | `Number`    |
+| `VARCHAR`, `CHAR`, `CHARACTER`, `STRING`, `TEXT`                                             | `String`    |
+| `DATE`                                                                                       | `Dateonly`  |
+| `TIME`                                                                                       | `Time`      |
+| `DATETIME`, `TIMESTAMP`, `TIMESTAMP_NTZ`, `TIMESTAMP_LTZ`, `TIMESTAMP_TZ`                    | `Date`      |
+| `VARIANT`, `OBJECT`, `ARRAY`                                                                 | `Json`      |
+| `BINARY`, `VARBINARY`                                                                        | `Binary`    |
+| `GEOGRAPHY`, `GEOMETRY`, `VECTOR`                                                            | `String`    |
+
+Any type not in the table above falls back to `String`.
+
+`VARIANT` / `OBJECT` / `ARRAY` columns are JSON-parsed at projection time so the Forest UI receives structured data, not raw strings.
+
+`TIMESTAMP_LTZ` and `TIMESTAMP_TZ` are normalised at the session level via `ALTER SESSION SET TIMEZONE = 'UTC'`, so all three TIMESTAMP variants serialise consistently as UTC. This avoids subtle bugs where rows render with different offsets depending on the column variant.
+
+## Foreign-key auto-discovery
+
+Snowflake foreign keys are not enforced by the engine, they exist purely as documentation. If you have defined them in your warehouse, the data source picks them up automatically at boot and exposes them as Forest `ManyToOne` relations.
+
+Discovery runs unconditionally: a `SHOW IMPORTED KEYS IN SCHEMA` query at boot adds a relation field on the source collection for each FK it returns. The relation name is `{source_column}_{target_table}` (downcased).
+
+If the introspection query fails (typically because the connecting role lacks the privilege), the failure is logged and skipped, the rest of the data source remains usable.
+
+<Info>
+Auto-discovery only handles relations defined **inside Snowflake**. Cross-data-source relations, for example a Snowflake `BILLING_USAGE.CUSTOMER_ID` pointing at a Postgres `customers.id`, cannot be discovered (Snowflake has no concept of an FK to another database). Wire those manually in the agent layer with `add_many_to_one_relation` / `add_one_to_many_relation`.
+</Info>
+
+## Connection pool
+
+The data source uses [`connection_pool`](https://github.com/mperham/connection_pool) under the hood. By default the pool is sized at 5 with a 5-second checkout timeout. Tune via `pool_size:` and `pool_timeout:` if you expect concurrent traffic.
+
+```ruby
+ForestAdminDatasourceSnowflake::Datasource.new(
+  conn_str: ENV.fetch('SNOWFLAKE_CONN_STR'),
+  pool_size: 10,
+  pool_timeout: 10
+)
+```
+
+`with_connection` automatically retries the block once after a connection-lost ODBC error (communication failures, expired sessions, expired Snowflake auth tokens, etc.), cycling the pool between attempts so stale handles get closed before re-checkout. Persistent failures bubble up to the caller.
+
+## Statement timeout
+
+To cap any single Forest-driven Snowflake query, pass `statement_timeout:` (in seconds). The data source issues `ALTER SESSION SET STATEMENT_TIMEOUT_IN_SECONDS = N` on each new connection.
+
+```ruby
+ForestAdminDatasourceSnowflake::Datasource.new(
+  conn_str: ENV.fetch('SNOWFLAKE_CONN_STR'),
+  statement_timeout: 60
+)
+```
+
+This is recommended in production: a runaway aggregate query won't be able to pin a pool slot indefinitely.
+
+## Full reference
+
+```ruby
+ForestAdminDatasourceSnowflake::Datasource.new(
+  # Required: ODBC connection string, DRIVER, Server, UID, PWD, Warehouse,
+  # Database, Schema, plus any Snowflake-specific options.
+  conn_str: ENV.fetch('SNOWFLAKE_CONN_STR'),
+
+  # Optional: explicit primary key per table when auto-resolution can't find the
+  # right one. Case-insensitive on the table name. Pass an array for composite
+  # keys. Sits at the top of the resolution chain (above SHOW PRIMARY KEYS,
+  # the 'id' column, and the first-column fallback). Raises at boot if a
+  # declared column name doesn't match any column on the table.
+  primary_keys: { 'orders' => 'ORDER_ID', 'usage_quotas' => %w[CUSTOMER_ID EVENT_TYPE] },
+
+  # Optional: connection pool tuning. Defaults: 5 connections, 5s checkout timeout.
+  pool_size: 5,
+  pool_timeout: 5,
+
+  # Optional: cap any one query at N seconds via ALTER SESSION.
+  statement_timeout: 60
+)
+```
+
+## Source code
+
+This connector is open source. Browse the code or contribute on GitHub: [`forest_admin_datasource_snowflake`](https://github.com/ForestAdmin/agent-ruby/tree/main/packages/forest_admin_datasource_snowflake).

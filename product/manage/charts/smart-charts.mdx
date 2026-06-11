@@ -60,6 +60,27 @@ end
 
 The component then fetches `/forest/_charts/mytablechart` and passes the data to the template.
 
+### Passing extra parameters
+
+The chart handler's `context` exposes any custom query-string or body parameters sent to the chart endpoint via `context.parameters`, alongside `context.caller` (the current user). Use them to make a chart depend on a filter, a date range, or the current record:
+
+```javascript
+agent.addChart('example', async (context, resultBuilder) => {
+  // Current user
+  const { email, timezone } = context.caller;
+  // Custom parameters from the request
+  const { startDate } = context.parameters;
+
+  const rows = await context.dataSource
+    .getCollection('orders')
+    .aggregate({}, { operation: 'Count' });
+
+  return resultBuilder.value(rows[0]?.value ?? 0);
+});
+```
+
+For collection charts, `context` also exposes `context.recordId`, `context.compositeRecordId`, and `context.getRecord(fields)`.
+
 ## Example: table chart
 
 A minimal table chart in three steps: agent endpoint, component fetch, template.

@@ -1,0 +1,67 @@
+---
+title: "Self-hosted AI"
+description: "Route Forest Admin AI features through your own agent (OpenAI or Anthropic) so your data never leaves your infrastructure"
+---
+
+By default, AI features in Forest Admin are processed by Forest Admin servers. To keep your data private, you can route AI requests through your own agent using the `addAi` method, your data never leaves your infrastructure.
+
+<Note>
+Self-hosted AI is available for the `@forestadmin/agent` Node.js agent.
+</Note>
+
+## Installation
+
+```bash
+npm install @forestadmin/ai-proxy
+```
+
+## Configuration
+
+Pass a provider built with `createAiProvider` to `addAi`:
+
+<CodeGroup>
+```javascript OpenAI
+import { createAiProvider } from '@forestadmin/ai-proxy';
+
+const agent = createAgent(options)
+  .addDataSource(/* ... */)
+  .addAi(
+    createAiProvider({
+      name: 'my-assistant',
+      provider: 'openai',
+      apiKey: process.env.OPENAI_API_KEY,
+      model: 'gpt-4o',
+    }),
+  );
+```
+
+```javascript Anthropic
+import { createAiProvider } from '@forestadmin/ai-proxy';
+
+const agent = createAgent(options)
+  .addDataSource(/* ... */)
+  .addAi(
+    createAiProvider({
+      name: 'my-assistant',
+      provider: 'anthropic',
+      apiKey: process.env.ANTHROPIC_API_KEY,
+      model: 'claude-sonnet-4-5',
+    }),
+  );
+```
+</CodeGroup>
+
+## Options
+
+| Option     | Type                        | Required | Description                                                           |
+| ---------- | --------------------------- | -------- | --------------------------------------------------------------------- |
+| `name`     | `string`                    | Yes      | Unique identifier for this AI configuration                           |
+| `provider` | `'openai'` \| `'anthropic'` | Yes      | AI provider                                                           |
+| `model`    | `string`                    | Yes      | Model to use (see supported models below)                             |
+| `apiKey`   | `string`                    | No       | API key (defaults to `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` env var) |
+
+All provider-specific options are also supported: [ChatOpenAI options](https://docs.langchain.com/oss/javascript/integrations/chat/openai) (`configuration`, `temperature`, `maxTokens`, etc.) and [ChatAnthropic options](https://docs.langchain.com/oss/javascript/integrations/chat/anthropic) (`anthropicApiUrl`, `temperature`, `maxTokens`, `topK`, etc.).
+
+## Supported models
+
+Any model with function/tool calling support works. See the [list of unsupported models](https://github.com/ForestAdmin/agent-nodejs/blob/main/packages/ai-proxy/src/supported-models.ts) for details.
