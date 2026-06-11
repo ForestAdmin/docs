@@ -52,4 +52,18 @@ ForestAdmin.customize do
   end
 end
 ```
+
+```ruby Ruby DSL
+@create_agent.collection :products do |collection|
+  collection.segment 'mostPurchased' do |context|
+    # Query the ids of the 10 most ordered products.
+    rows = context.datasource
+      .get_collection('orders')
+      .aggregate({}, { operation: 'Count', groups: [{ field: 'product_id' }] }, 10)
+
+    # Return a condition tree which matches those records
+    { field: 'id', operator: 'In', value: rows.map { |r| r['product_id'] } }
+  end
+end
+```
 </CodeGroup>

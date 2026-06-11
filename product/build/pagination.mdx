@@ -50,6 +50,12 @@ agent.customizeCollection('orders', collection => {
 end
 ```
 
+```ruby Ruby DSL
+@create_agent.collection :orders do |collection|
+  collection.disable_count
+end
+```
+
 ```python Python
 agent.customize_collection("orders").disable_count()
 ```

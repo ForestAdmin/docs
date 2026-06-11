@@ -89,6 +89,34 @@ forest_agent.customize_collection('companies') do |collection|
   )
 end
 ```
+
+```ruby Ruby DSL
+@create_agent.collection :companies do |collection|
+  collection.action 'Mark as Live', scope: :single do
+    description 'Mark the company as live'
+
+    form do
+      field :live_date, type: :date, is_required: true
+      field :notes, type: :string, widget: 'TextArea'
+    end
+
+    execute do
+      # Access form values
+      live_date = form_value(:live_date)
+      notes = form_value(:notes)
+
+      # Access selected record
+      company = record(['id', 'name'])
+
+      # Perform business logic
+      mark_company_as_live(company['id'], live_date, notes)
+
+      # Return result
+      success "#{company['name']} is now live!"
+    end
+  end
+end
+```
 </CodeGroup>
 
 ## Common examples
@@ -269,6 +297,24 @@ collection.add_action(
     result_builder.success("Updated #{ids.length} orders to #{new_status}")
   end
 )
+```
+
+```ruby Ruby DSL
+collection.action 'Update Status', scope: :bulk do
+  form do
+    field :new_status, type: :enum, enum_values: ['pending', 'approved', 'rejected'], is_required: true
+  end
+
+  execute do
+    orders = records(['id'])
+    new_status = form_value(:new_status)
+
+    ids = orders.map { |o| o['id'] }
+    Order.where(id: ids).update_all(status: new_status)
+
+    success "Updated #{ids.length} orders to #{new_status}"
+  end
+end
 ```
 </CodeGroup>
 

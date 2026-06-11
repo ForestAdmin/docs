@@ -56,6 +56,18 @@ agent.addChart('mytablechart', async (context, resultBuilder) => {
   )
 end
 ```
+
+```ruby Ruby DSL
+@create_agent.chart :mytablechart do
+  # `context` is available implicitly
+  smart(
+    [
+      { username: 'Darth Vader', points: 1_500_000 },
+      { username: 'Luke Skywalker', points: 2 },
+    ]
+  )
+end
+```
 </CodeGroup>
 
 The component then fetches `/forest/_charts/mytablechart` and passes the data to the template.

@@ -80,6 +80,23 @@ transaction.add_hook('Before', 'Update') do |context|
   end
 end
 ```
+
+```ruby Ruby DSL
+@create_agent.collection :transactions do |collection|
+  collection.before :update do |context|
+    # context.caller contains information about the current user, the defined
+    # timezone, etc.
+    # In this case, context.caller.email is the email used in Forest by the user
+    # that initiated the call
+    is_allowed = my_function_to_check_if_user_is_allowed(context.caller.email)
+    unless is_allowed
+      # Raising an error here will prevent the execution of the update function,
+      # as well as any other hooks that may be defined afterwards.
+      context.raise_forbidden_error("#{context.caller.email} is not allowed!")
+    end
+  end
+end
+```
 </CodeGroup>
 
 Another good example: each time a new `User` is created in the database, send them a welcome email.
@@ -106,6 +123,20 @@ user.add_hook('After', 'Create') do |context|
     to: user_email,
     message: 'Hey, a new account was created with this email.'
   )
+end
+```
+
+```ruby Ruby DSL
+@create_agent.collection :users do |collection|
+  collection.after :create do |context|
+    # The result of the create function always returns an array of records
+    user_email = context.records[0]&.dig('email')
+    MyEmailSender.send_email(
+      from: 'erlich@bachman.com',
+      to: user_email,
+      message: 'Hey, a new account was created with this email.'
+    )
+  end
 end
 ```
 </CodeGroup>

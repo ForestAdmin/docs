@@ -94,6 +94,28 @@ forest_agent.customize_collection('customers') do |collection|
   )
 end
 ```
+
+```ruby Ruby DSL
+@create_agent.collection :customers do |collection|
+  collection.action 'Charge credit card', scope: :single do
+    form do
+      field :amount, type: :number, description: 'Amount in USD (e.g., 42.50)', is_required: true
+      field :description, type: :string, widget: 'TextArea'
+    end
+
+    execute do
+      customer = record(['stripeId'])
+      amount = form_value(:amount)
+      description = form_value(:description)
+
+      # Charge the credit card
+      # ...
+
+      success 'Charged successfully!'
+    end
+  end
+end
+```
 </CodeGroup>
 
 ## Field types

@@ -37,6 +37,15 @@ collection.add_action(
   end
 )
 ```
+
+```ruby Ruby DSL
+collection.action 'Send email', scope: :single do
+  execute do
+    user = record(['email', 'name'])
+    # Process single user
+  end
+end
+```
 </CodeGroup>
 
 **Use when:**
@@ -72,6 +81,15 @@ collection.add_action(
     # Process all selected orders
   end
 )
+```
+
+```ruby Ruby DSL
+collection.action 'Archive selected', scope: :bulk do
+  execute do
+    orders = records(['id'])
+    # Process all selected orders
+  end
+end
 ```
 </CodeGroup>
 
@@ -112,6 +130,15 @@ collection.add_action(
     # Process import for entire collection
   end
 )
+```
+
+```ruby Ruby DSL
+collection.action 'Import data', scope: :global do
+  execute do
+    file = form_value(:file)
+    # Process import for entire collection
+  end
+end
 ```
 </CodeGroup>
 

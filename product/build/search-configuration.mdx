@@ -67,6 +67,21 @@ include ForestAdmin::Types
 end
 ```
 
+```ruby Ruby DSL
+include ForestAdmin::Types
+
+@create_agent.collection :people do |collection|
+  collection.replace_search do |search_string, extended_search|
+    {
+      aggregator: 'Or',
+      conditions: ['firstName', 'lastName', 'email'].map do |field|
+        { field: field, operator: Operators::I_CONTAINS, value: search_string }
+      end
+    }
+  end
+end
+```
+
 ```python Python
 def search_in_people(search_string, extended_search, context):
     return context.generate_search_filter(
@@ -140,6 +155,28 @@ BARCODE_REGEXP = /\A[0-9]{10}\z/
   end
 end
 ```
+
+```ruby Ruby DSL
+include ForestAdmin::Types
+
+REFERENCE_REGEXP = /\A[a-f]{16}\z/i
+BARCODE_REGEXP = /\A[0-9]{10}\z/
+
+@create_agent.collection :products do |collection|
+  collection.replace_search do |search_string, extended_search|
+    next { field: 'reference', operator: Operators::EQUAL, value: search_string } if REFERENCE_REGEXP.match?(search_string)
+    next { field: 'barCode', operator: Operators::EQUAL, value: search_string } if BARCODE_REGEXP.match?(search_string)
+
+    fields = extended_search ? ['name', 'description', 'brand:name'] : ['name']
+    {
+      aggregator: 'Or',
+      conditions: fields.map do |field|
+        { field: field, operator: Operators::I_CONTAINS, value: search_string }
+      end
+    }
+  end
+end
+```
 </CodeGroup>
 
 ### Integrating an External Search Engine
@@ -178,6 +215,20 @@ index = client.init_index('products')
 end
 ```
 
+```ruby Ruby DSL
+require 'algolia'
+
+client = Algolia::Search::Client.create('APPLICATION_ID', 'API_KEY')
+index = client.init_index('products')
+
+@create_agent.collection :products do |collection|
+  collection.replace_search do |search_string, extended_search|
+    hits = index.search(search_string, { attributesToRetrieve: ['id'], hitsPerPage: 50 })['hits']
+    { field: 'id', operator: 'In', value: hits.map { |hit| hit['id'] } }
+  end
+end
+```
+
 ```python Python
 from algoliasearch.search_client import SearchClient
 
@@ -206,6 +257,12 @@ agent.customizeCollection('products', collection => {
 
 ```ruby Ruby
 @create_agent.customize_collection('products') do |collection|
+  collection.disable_search
+end
+```
+
+```ruby Ruby DSL
+@create_agent.collection :products do |collection|
   collection.disable_search
 end
 ```

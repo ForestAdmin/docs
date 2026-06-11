@@ -56,6 +56,17 @@ ForestAdmin.customize do
   end
 end
 ```
+
+```ruby Ruby DSL
+# "user" Collection has the following structure: { id, firstName, lastName }
+@create_agent.collection :user do |collection|
+  collection.computed_field :displayName,
+    type: 'String',
+    depends_on: [:firstName, :lastName] do |records|
+      records.map { |r| "#{r['firstName']} #{r['lastName']}" }
+    end
+end
+```
 </CodeGroup>
 
 ### Adding a field that depends on another computed field
@@ -102,6 +113,25 @@ ForestAdmin.customize do
         values: proc { |records| records.map { |r| r['displayName'].upcase } }
       ))
   end
+end
+```
+
+```ruby Ruby DSL
+# "user" Collection has the following structure: { id, firstName, lastName }
+@create_agent.collection :user do |collection|
+  # Create a field which is computed by concatenating the first and last names
+  collection.computed_field :displayName,
+    type: 'String',
+    depends_on: [:firstName, :lastName] do |records|
+      records.map { |r| "#{r['firstName']} #{r['lastName']}" }
+    end
+
+  # Create another field which is computed by uppercasing the first field
+  collection.computed_field :displayNameCaps,
+    type: 'String',
+    depends_on: [:displayName] do |records| # You can depend on other computed fields
+      records.map { |r| r['displayName'].upcase }
+    end
 end
 ```
 </CodeGroup>
@@ -151,6 +181,23 @@ ForestAdmin.customize do
       }
     ))
   end
+end
+```
+
+```ruby Ruby DSL
+# Structure:
+# User    { id, addressId, firstName, lastName }
+# Address { id, city }
+
+@create_agent.collection :user do |collection|
+  collection.computed_field :displayName,
+    type: 'String',
+    # We added 'address:city' in the list of dependencies,
+    # which tells forest to fetch the related record
+    depends_on: [:firstName, :lastName, 'address:city'] do |records|
+      # The address is now available in the parameters
+      records.map { |r| "#{r['firstName']} #{r['lastName']} (from #{r['address']['city']})" }
+    end
 end
 ```
 </CodeGroup>
@@ -223,6 +270,31 @@ ForestAdmin.customize do
   end
 end
 ```
+
+```ruby Ruby DSL
+# Structure
+# User  { id }
+# Order { id, customer_id, amount }
+
+@create_agent.collection :user do |collection|
+  collection.computed_field :totalSpending,
+    type: 'Number',
+    depends_on: [:id] do |records, context|
+      record_ids = records.map { |r| r['id'] }
+
+      # We're using Forest's query interface
+      # (use an ORM or a plain SQL query)
+      filter = { condition_tree: { field: 'customer_id', operator: 'In', value: record_ids } }
+      aggregation = { operation: 'Sum', field: 'amount', groups: [{ field: 'customer_id' }] }
+      rows = context.datasource.get_collection('order').aggregate(filter, aggregation)
+
+      records.map do |record|
+        row = rows.find { |r| r[:group]['customer_id'] == record['id'] }
+        row ? row[:value] : 0
+      end
+    end
+end
+```
 </CodeGroup>
 
 ### Adding a field fetching data from an API
@@ -275,6 +347,24 @@ ForestAdmin.customize do
       }
     ))
   end
+end
+```
+
+```ruby Ruby DSL
+# "User" Collection has the following structure: { id, email }
+@create_agent.collection :user do |collection|
+  collection.computed_field :emailDeliverable,
+    type: 'Boolean',
+    depends_on: [:email] do |records, context|
+      # Call the API to verify emails
+      response = EmailVerificationClient.verify_emails(records.map { |r| r['email'] })
+
+      # Return values in the same order than the source records
+      records.map do |r|
+        check = response[r['email']]
+        check[:domain_valid] && (!check[:username_checked] || check[:username_valid])
+      end
+    end
 end
 ```
 </CodeGroup>
