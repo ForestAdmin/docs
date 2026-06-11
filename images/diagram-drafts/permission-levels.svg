@@ -1,0 +1,41 @@
+<svg width="980" height="280" viewBox="0 0 980 280" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#d4d2c6"/></pattern>
+    <marker id="sq" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="0" markerUnits="userSpaceOnUse"><rect x="0.5" y="0.5" width="7" height="7" fill="#f6f5ee" stroke="#bcbcb4" stroke-width="1"/></marker>
+  </defs>
+  <rect width="980" height="280" rx="4" fill="#f6f5ee"/>
+  <rect width="980" height="280" rx="4" fill="url(#dots)"/>
+
+  <!-- user -->
+  <rect x="40" y="110" width="120" height="70" rx="2" fill="#262d1e"/>
+  <text x="100" y="150" text-anchor="middle" font-size="15" font-weight="700" fill="#e3f68b">a user</text>
+
+  <g stroke="#686c62" stroke-opacity="0.7" stroke-width="1.5" fill="none">
+    <path d="M160 130 H190 V85 H218" marker-end="url(#sq)"/>
+    <path d="M160 160 H190 V205 H218" marker-end="url(#sq)"/>
+    <path d="M362 95 H378" marker-end="url(#sq)"/>
+    <path d="M492 95 H508" marker-end="url(#sq)"/>
+    <path d="M622 95 H638" marker-end="url(#sq)"/>
+    <path d="M752 95 H768" marker-end="url(#sq)"/>
+  </g>
+
+  <!-- zone: permission level -->
+  <rect x="220" y="40" width="720" height="92" rx="2" fill="#ece9e0"/>
+  <text x="234" y="62" font-size="11" font-weight="600" letter-spacing="1" fill="#686c62">PERMISSION LEVEL — platform capabilities</text>
+  <g font-size="13" font-weight="600" text-anchor="middle">
+    <rect x="244" y="75" width="118" height="40" rx="2" fill="#ffffff"/><text x="303" y="100" fill="#262d1e">User</text>
+    <rect x="378" y="75" width="114" height="40" rx="2" fill="#ffffff"/><text x="435" y="100" fill="#262d1e">Manager</text>
+    <rect x="508" y="75" width="114" height="40" rx="2" fill="#ffffff"/><text x="565" y="100" fill="#262d1e">Editor</text>
+    <rect x="638" y="75" width="114" height="40" rx="2" fill="#ffffff"/><text x="695" y="100" fill="#262d1e">Developer</text>
+    <rect x="768" y="75" width="148" height="40" rx="2" fill="#3f5b1e"/><text x="842" y="100" fill="#f6f5ee">Admin</text>
+  </g>
+
+  <!-- zone: role -->
+  <rect x="220" y="158" width="720" height="92" rx="2" fill="#ece9e0"/>
+  <text x="234" y="180" font-size="11" font-weight="600" letter-spacing="1" fill="#686c62">ROLE (via a team) — data access</text>
+  <g font-size="13" font-weight="600" text-anchor="middle" fill="#262d1e">
+    <rect x="244" y="193" width="210" height="40" rx="2" fill="#ffffff"/><text x="349" y="218">Collections r / w / export</text>
+    <rect x="470" y="193" width="180" height="40" rx="2" fill="#ffffff"/><text x="560" y="218">Actions trigger / approve</text>
+    <rect x="666" y="193" width="170" height="40" rx="2" fill="#ffffff"/><text x="751" y="218">Conditional rules</text>
+  </g>
+</svg>

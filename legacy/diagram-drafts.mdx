@@ -145,6 +145,10 @@ flowchart LR
     class Before,After,Op forest; class Req,Res external; class Abort danger;
 ```
 
+**SVG version:**
+
+<img src="/images/diagram-drafts/hooks.svg" alt="Hooks lifecycle" width="100%" />
+
 ---
 
 ## 2. Approval flow
@@ -168,6 +172,10 @@ stateDiagram-v2
     Executed --> [*]
     Cancelled --> [*]
 ```
+
+**SVG version:**
+
+<img src="/images/diagram-drafts/approval-state.svg" alt="Approval lifecycle" width="100%" />
 
 ### 2b. Actors (sequenceDiagram)
 
@@ -195,6 +203,10 @@ sequenceDiagram
     end
     F-->>Op: Result + audit entry
 ```
+
+**SVG version:**
+
+<img src="/images/diagram-drafts/approval-seq.svg" alt="Approval sequence" width="100%" />
 
 ---
 
@@ -226,6 +238,10 @@ flowchart LR
     style fa fill:#F4F5EE,stroke:#9CA88A,stroke-dasharray:4 3,color:#3A3F33;
 ```
 
+**SVG version:**
+
+<img src="/images/diagram-drafts/replication.svg" alt="Replication strategies" width="100%" />
+
 ---
 
 ## 4. MCP server — standalone vs mounted
@@ -251,6 +267,10 @@ flowchart LR
     class MCP,BE forest; class AI,DB external;
 ```
 
+**SVG version:**
+
+<img src="/images/diagram-drafts/mcp-standalone.svg" alt="MCP standalone" width="100%" />
+
 ### 4b. Mounted (inside the back-end)
 
 ```mermaid
@@ -268,6 +288,10 @@ flowchart LR
     classDef external fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
     class BE forest; class AI,DB external;
 ```
+
+**SVG version:**
+
+<img src="/images/diagram-drafts/mcp-mounted.svg" alt="MCP mounted" width="100%" />
 
 ---
 
@@ -295,6 +319,10 @@ sequenceDiagram
     F-->>IdP: 204 No Content
     Note over IdP,F: Forest mirrors the IdP as source of truth
 ```
+
+**SVG version:**
+
+<img src="/images/diagram-drafts/scim.svg" alt="SCIM provisioning" width="100%" />
 
 ---
 
@@ -325,6 +353,10 @@ flowchart LR
     classDef danger fill:#f6f5ee,stroke:#ef4444,color:#7A2E1F;
     class EP,Gate,BE forest; class AI,DB external; class Log audit; class X danger;
 ```
+
+**SVG version:**
+
+<img src="/images/diagram-drafts/mcp-flow.svg" alt="MCP governance flow" width="100%" />
 
 ## 7. Permission levels vs roles
 
@@ -358,6 +390,10 @@ flowchart TB
     style RO fill:#F4F5EE,stroke:#9CA88A,color:#3A3F33;
 ```
 
+**SVG version:**
+
+<img src="/images/diagram-drafts/permission-levels.svg" alt="Permission levels vs roles" width="100%" />
+
 ## 8. Environments & branches
 
 **Destination:** [get-started/deploy](/get-started/deploy) (align with the [guides/deployment](/guides/deployment/development-workflow) versions) · type: flowchart
@@ -388,6 +424,10 @@ flowchart LR
     style dev fill:#F8FBEC,stroke:#698000,stroke-dasharray:4 3,color:#1F2A00;
     style prod fill:#F4F5EE,stroke:#9CA88A,stroke-dasharray:4 3,color:#3A3F33;
 ```
+
+**SVG version:**
+
+<img src="/images/diagram-drafts/environments.svg" alt="Environments and branches" width="100%" />
 
 ---
 
@@ -420,6 +460,10 @@ graph LR
     class DB,MCP external;
 ```
 
+**SVG version:**
+
+<img src="/images/diagram-drafts/architecture.svg" alt="Architecture" width="100%" />
+
 ## 10. SSO login (rebrand of the existing sequence)
 
 **Destination:** [control/authentication/sso](/get-started/control/authentication/sso)
@@ -443,6 +487,10 @@ sequenceDiagram
     Forest->>Forest: Validate assertion, open session
     Forest->>User: Access granted
 ```
+
+**SVG version:**
+
+<img src="/images/diagram-drafts/sso.svg" alt="SSO login" width="100%" />
 
 ## 11. Self-hosted data flow (rebrand + "Your Agent" → "Your Forest back-end")
 
@@ -482,3 +530,7 @@ sequenceDiagram
     browser-->>user: Display data
     Note over db,api: Your data NEVER goes to Forest servers
 ```
+
+**SVG version:**
+
+<img src="/images/diagram-drafts/self-hosted.svg" alt="Self-hosted data flow" width="100%" />

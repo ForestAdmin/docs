@@ -1,0 +1,37 @@
+<svg width="920" height="300" viewBox="0 0 920 300" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#d4d2c6"/></pattern>
+    <marker id="sq" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="0" markerUnits="userSpaceOnUse"><rect x="0.5" y="0.5" width="7" height="7" fill="#f6f5ee" stroke="#bcbcb4" stroke-width="1"/></marker>
+  </defs>
+  <rect width="920" height="300" rx="4" fill="#f6f5ee"/>
+  <rect width="920" height="300" rx="4" fill="url(#dots)"/>
+
+  <!-- back-end zone -->
+  <rect x="300" y="40" width="580" height="230" rx="2" fill="#ece9e0"/>
+  <text x="314" y="64" font-size="11" font-weight="600" letter-spacing="1.5" fill="#686c62">FOREST BACK-END</text>
+
+  <g stroke="#686c62" stroke-opacity="0.7" stroke-width="1.5" fill="none">
+    <path d="M190 120 H350" marker-end="url(#sq)"/>
+    <path d="M190 150 H350" marker-end="url(#sq)"/>
+    <path d="M190 180 H350" stroke-dasharray="4 4" marker-end="url(#sq)"/>
+    <path d="M520 150 H600" marker-end="url(#sq)"/>
+  </g>
+  <g font-size="11" fill="#686c62" text-anchor="middle">
+    <text x="270" y="113">① scheduled rebuild</text>
+    <text x="270" y="143">② change polling</text>
+    <text x="270" y="173">③ change push</text>
+  </g>
+
+  <g>
+    <rect x="40" y="110" width="150" height="80" rx="2" fill="#ffffff"/>
+    <text x="115" y="155" text-anchor="middle" font-size="15" font-weight="600" fill="#262d1e">Target API</text>
+  </g>
+  <g>
+    <rect x="350" y="110" width="170" height="80" rx="2" fill="#3f5b1e"/>
+    <text x="435" y="155" text-anchor="middle" font-size="15" font-weight="700" fill="#f6f5ee">replica cache</text>
+  </g>
+  <g>
+    <rect x="600" y="110" width="230" height="80" rx="2" fill="#ffffff"/>
+    <text x="715" y="155" text-anchor="middle" font-size="14" font-weight="600" fill="#262d1e">queries hit the replica</text>
+  </g>
+</svg>

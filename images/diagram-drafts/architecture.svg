@@ -1,0 +1,38 @@
+<svg width="980" height="300" viewBox="0 0 980 300" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#d4d2c6"/></pattern>
+    <marker id="sq" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="0" markerUnits="userSpaceOnUse"><rect x="0.5" y="0.5" width="7" height="7" fill="#f6f5ee" stroke="#bcbcb4" stroke-width="1"/></marker>
+  </defs>
+  <rect width="980" height="300" rx="4" fill="#f6f5ee"/>
+  <rect width="980" height="300" rx="4" fill="url(#dots)"/>
+
+  <rect x="40" y="40" width="520" height="230" rx="2" fill="#ece9e0"/>
+  <text x="54" y="64" font-size="11" font-weight="600" letter-spacing="1.5" fill="#686c62">YOUR INFRASTRUCTURE</text>
+  <rect x="650" y="40" width="300" height="110" rx="2" fill="#ece9e0"/>
+  <text x="664" y="64" font-size="11" font-weight="600" letter-spacing="1.5" fill="#686c62">HOSTED BY FOREST</text>
+
+  <g stroke="#686c62" stroke-opacity="0.7" stroke-width="1.5" fill="none">
+    <path d="M220 150 H300" marker-end="url(#sq)"/>
+    <path d="M520 130 H600 V100 H678" marker-end="url(#sq)"/>
+    <path d="M520 170 H600 V225 H678" marker-end="url(#sq)"/>
+  </g>
+  <g font-size="11.5" fill="#686c62" text-anchor="middle">
+    <text x="640" y="93">REST API</text>
+    <text x="640" y="218">MCP</text>
+  </g>
+
+  <rect x="70" y="110" width="150" height="80" rx="2" fill="#ffffff"/>
+  <text x="145" y="146" text-anchor="middle" font-size="13" font-weight="600" fill="#262d1e">your databases</text>
+  <text x="145" y="164" text-anchor="middle" font-size="13" font-weight="600" fill="#262d1e">&amp; APIs</text>
+
+  <rect x="300" y="100" width="220" height="100" rx="2" fill="#3f5b1e"/>
+  <rect x="320" y="120" width="14" height="14" rx="2" fill="#ddf327"/>
+  <text x="344" y="132" font-size="16" font-weight="700" fill="#f6f5ee">Forest back-end</text>
+  <text x="320" y="164" font-size="12" fill="#d0ee89">runs in your network</text>
+
+  <rect x="678" y="70" width="240" height="60" rx="2" fill="#262d1e"/>
+  <text x="798" y="105" text-anchor="middle" font-size="14" font-weight="700" fill="#e3f68b">Forest UI</text>
+
+  <rect x="678" y="195" width="240" height="62" rx="2" fill="#ffffff"/>
+  <text x="798" y="232" text-anchor="middle" font-size="14" font-weight="600" fill="#262d1e">AI agents (via MCP)</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg width="720" height="290" viewBox="0 0 720 290" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#d4d2c6"/></pattern>
+    <marker id="sq" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="0" markerUnits="userSpaceOnUse"><rect x="0.5" y="0.5" width="7" height="7" fill="#f6f5ee" stroke="#bcbcb4" stroke-width="1"/></marker>
+  </defs>
+  <rect width="720" height="290" rx="4" fill="#f6f5ee"/>
+  <rect width="720" height="290" rx="4" fill="url(#dots)"/>
+
+  <g stroke="#686c62" stroke-opacity="0.7" stroke-width="1.5" fill="none">
+    <path d="M54 141 H80" marker-end="url(#sq)"/>
+    <path d="M210 141 H270" marker-end="url(#sq)"/>
+    <path d="M400 141 H460" marker-end="url(#sq)"/>
+    <path d="M600 141 H650" marker-end="url(#sq)"/>
+    <path d="M145 167 V215" stroke-dasharray="4 4" marker-end="url(#sq)"/>
+  </g>
+  <g font-size="11.5" fill="#686c62" text-anchor="middle">
+    <text x="240" y="133">approves</text>
+    <text x="430" y="133">action runs</text>
+    <text x="180" y="197" text-anchor="start">rejects</text>
+  </g>
+  <text x="47" y="120" text-anchor="middle" font-size="11" fill="#686c62">trigger</text>
+
+  <rect x="40" y="134" width="14" height="14" rx="2" fill="#262d1e"/>
+  <rect x="650" y="134" width="14" height="14" rx="2" fill="#262d1e"/>
+  <rect x="655" y="139" width="4" height="4" fill="#f6f5ee"/>
+
+  <rect x="80" y="115" width="130" height="52" rx="2" fill="#ffffff"/>
+  <text x="145" y="146" text-anchor="middle" font-size="14" font-weight="600" fill="#262d1e">Pending</text>
+
+  <rect x="270" y="115" width="130" height="52" rx="2" fill="#d0ee89"/>
+  <text x="335" y="146" text-anchor="middle" font-size="14" font-weight="600" fill="#262d1e">Approved</text>
+
+  <rect x="460" y="115" width="140" height="52" rx="2" fill="#3f5b1e"/>
+  <text x="530" y="146" text-anchor="middle" font-size="14" font-weight="700" fill="#f6f5ee">Executed</text>
+
+  <rect x="80" y="215" width="130" height="48" rx="2" fill="#d9d9d9"/>
+  <text x="145" y="244" text-anchor="middle" font-size="14" font-weight="600" fill="#686c62">Cancelled</text>
+</svg>

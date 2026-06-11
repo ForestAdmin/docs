@@ -1,0 +1,54 @@
+<svg width="1240" height="480" viewBox="0 0 1240 480" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#d4d2c6"/></pattern>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L7 3L0 6Z" fill="#686c62"/></marker>
+  </defs>
+  <rect width="1240" height="480" rx="4" fill="#f6f5ee"/>
+  <rect width="1240" height="480" rx="4" fill="url(#dots)"/>
+
+  <g stroke="#686c62" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="3 4">
+    <line x1="180" y1="70" x2="180" y2="452"/>
+    <line x1="420" y1="70" x2="420" y2="452"/>
+    <line x1="620" y1="70" x2="620" y2="452"/>
+    <line x1="880" y1="70" x2="880" y2="452"/>
+    <line x1="1080" y1="70" x2="1080" y2="452"/>
+  </g>
+
+  <g font-size="13" font-weight="700" text-anchor="middle">
+    <rect x="110" y="22" width="140" height="46" rx="2" fill="#ffffff"/><text x="180" y="50" fill="#262d1e">Browser</text>
+    <rect x="350" y="22" width="140" height="46" rx="2" fill="#3f5b1e"/><text x="420" y="50" fill="#f6f5ee">app.forestadmin</text>
+    <rect x="550" y="22" width="140" height="46" rx="2" fill="#3f5b1e"/><text x="620" y="50" fill="#f6f5ee">api.forestadmin</text>
+    <rect x="800" y="22" width="160" height="46" rx="2" fill="#262d1e"/><text x="880" y="50" fill="#e3f68b">Forest back-end</text>
+    <rect x="1010" y="22" width="140" height="46" rx="2" fill="#ffffff"/><text x="1080" y="50" fill="#262d1e">Database</text>
+  </g>
+
+  <!-- notes -->
+  <rect x="180" y="288" width="700" height="24" rx="2" fill="#ece9e0"/>
+  <text x="530" y="305" text-anchor="middle" font-size="11" font-weight="600" fill="#686c62">all data requests go to YOUR back-end</text>
+
+  <g stroke="#686c62" stroke-opacity="0.8" stroke-width="1.5" fill="none">
+    <line x1="180" y1="100" x2="420" y2="100" marker-end="url(#arr)"/>
+    <line x1="420" y1="132" x2="180" y2="132" stroke-dasharray="4 4" marker-end="url(#arr)"/>
+    <line x1="180" y1="168" x2="620" y2="168" marker-end="url(#arr)"/>
+    <line x1="620" y1="200" x2="180" y2="200" stroke-dasharray="4 4" marker-end="url(#arr)"/>
+    <line x1="180" y1="236" x2="620" y2="236" marker-end="url(#arr)"/>
+    <line x1="620" y1="268" x2="180" y2="268" stroke-dasharray="4 4" marker-end="url(#arr)"/>
+    <line x1="180" y1="340" x2="880" y2="340" marker-end="url(#arr)"/>
+    <line x1="880" y1="372" x2="1080" y2="372" marker-end="url(#arr)"/>
+    <line x1="1080" y1="404" x2="880" y2="404" stroke-dasharray="4 4" marker-end="url(#arr)"/>
+    <line x1="880" y1="436" x2="180" y2="436" stroke-dasharray="4 4" marker-end="url(#arr)"/>
+  </g>
+  <g font-size="12" fill="#262d1e" text-anchor="middle">
+    <text x="300" y="94">Load UI</text>
+    <text x="300" y="126" fill="#686c62">Forest UI</text>
+    <text x="400" y="162">Get project config</text>
+    <text x="400" y="194" fill="#686c62">config &amp; schema metadata</text>
+    <text x="400" y="230">get access rights</text>
+    <text x="400" y="262" fill="#686c62">user permissions</text>
+    <text x="530" y="334">get collection data</text>
+    <text x="980" y="366">SELECT * FROM users</text>
+    <text x="980" y="398" fill="#686c62">rows (actual data)</text>
+    <text x="530" y="430" fill="#686c62">data</text>
+  </g>
+  <text x="620" y="468" text-anchor="middle" font-size="12" font-style="italic" fill="#686c62">Your data never goes to Forest servers</text>
+</svg>
