@@ -14,27 +14,34 @@ In order for your intercom integration to work properly, you will have to use th
 
 First, add the intercom client as a dependency to your project:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```bash
 npm install intercom-client@2.11
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```
 npm install intercom-client@2.11
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 gem 'intercom'
 ```
 
+  </Tab>
+</Tabs>
+
 Then, you need to add the intercom integration:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 ...
@@ -61,7 +68,8 @@ module.exports = async function (app) {
 };
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 ...
@@ -88,7 +96,8 @@ module.exports = async function (app) {
 };
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 ForestLiana.integrations = {
@@ -99,6 +108,9 @@ ForestLiana.integrations = {
   }
 }
 ```
+
+  </Tab>
+</Tabs>
 
 - `intercom` is used to pass the intercom client version. To do so, you have to require the previously installed client, as in the example.
 - `accessToken` should be defined in your environment variable and is provided by intercom.

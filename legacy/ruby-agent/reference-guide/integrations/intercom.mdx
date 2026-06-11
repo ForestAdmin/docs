@@ -14,15 +14,16 @@ In order for your intercom integration to work properly, you will have to use th
 
 First, add the intercom client as a dependency to your project:
 
-### Rails
+<Tabs>
+<Tab title="Rails">
 
 ```ruby
 gem 'intercom'
 ```
 
 Then, you need to add the intercom integration:
-
-### Rails
+</Tab>
+<Tab title="Rails">
 
 ```ruby
 ForestLiana.integrations = {
@@ -33,6 +34,8 @@ ForestLiana.integrations = {
   }
 }
 ```
+</Tab>
+</Tabs>
 
 - `intercom` is used to pass the intercom client version. To do so, you have to require the previously installed client, as in the example.
 - `accessToken` should be defined in your environment variable and is provided by intercom.

@@ -14,7 +14,8 @@ On the Live Demo example, we have an **order** which `belongsTo` a **customer** 
 
 A BelongsTo Smart Relationship is created like a [Smart Field](/legacy/javascript-agents/reference-guide/smart-fields/overview#what-is-a-smart-field) with the `reference` option to indicate on which collection the Smart Relationship points to. You will also need to code the logic of the search query.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -45,7 +46,8 @@ collection('orders', {
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -83,7 +85,8 @@ collection('Order', {
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Order
@@ -103,8 +106,8 @@ class Forest::Order
 end
 ```
 
-### Django
-
+  </Tab>
+  <Tab title="Django">
 
 Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
 
@@ -125,10 +128,12 @@ class ProductForest(Collection):
 Collection.register(ProductForest, Product)
 ```
 
-### Laravel
+  </Tab>
+</Tabs>
 
+<Tabs>
+  <Tab title="SQL">
 
-### SQL
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/products/:product_id/relationships/buyers`.
 
 **Option 1: using Sequelize ORM**
@@ -245,7 +250,9 @@ If your primary key column name (`customer_id`) is different than the model fiel
 Ex: `SELECT customers.*, customers.customer_id AS “customerId”`
 </Warning>
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
+
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/Product/:product_id/relationships/buyers`.
 
 We use the `$lookup` operator of the **aggregate** pipeline. Since there's a many-to-many relationship between `Product` and `Customer`, the `$lookup` operator needs to look into orders which is an array we have to flatten first using `$unwind`.
@@ -349,7 +356,9 @@ router.get('/Product/:product_id/relationships/buyers', (req, res, next) => {
 module.exports = router;
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
+
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/Product/:product_id/buyers`.
 
 We’ve built the right SQL query using [Active Record](http://guides.rubyonrails.org/active_record_basics.html) to **count** and **find all** customers who bought the current product.
@@ -383,7 +392,9 @@ class Forest::ProductsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
+
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/app_product/:product_pk/relationships/buyers`.\
 \
 You will have to declare this route in your app **urls.py** file
@@ -398,7 +409,9 @@ Then, you should handle pagination in order to avoid performance issue. The API 
 
 Finally, you don’t have to serialize the data yourself. The Forest Admin agent already knows how to serialize your collection (`Customer` in this example, with the table name `app_customer`). You can access to the serializer through the `Schema().dump` function (using [marshmallow-jsonapi](https://marshmallow-jsonapi.readthedocs.io/en/latest/) internally).
 
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
+
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/product/{id}/relationships/buyers`.
 
 We’ve built the right SQL query using [Active Record](http://guides.rubyonrails.org/active_record_basics.html) to **count** and **find all** customers who bought the current product.
@@ -407,5 +420,7 @@ Then, you should handle pagination in order to avoid performance issue. The API 
 
 Finally, you don’t have to serialize the data yourself. The Forest Admin agent already knows how to serialize your collection (`Customer` in this example). You can access to the serializer through the `render()` function of JsonApi facade.
 
+  </Tab>
+</Tabs>
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 11.02.40.png>)

@@ -33,11 +33,11 @@
             "group": "Guide",
             "pages": [
               "get-started/intro-to-forest-admin",
-              "get-started/features-overview",
               "get-started/quickstart",
               "get-started/customize-your-back-office",
               "get-started/add-business-logic",
               "get-started/set-up-operations",
+              "get-started/expose-to-ai-agents",
               "get-started/deploy",
               "get-started/invite-your-team",
               "get-started/invite-a-developer"
@@ -382,58 +382,23 @@
             "group": "Overview",
             "pages": [
               "legacy/agents-overview",
-              "legacy/migration-guides"
-            ]
-          },
-          {
-            "group": "Migrating from v1",
-            "pages": [
-              "guides/migration/overview",
-              "guides/migration/from-v1/overview",
-              "guides/migration/from-v1/steps/datasources",
-              "guides/migration/from-v1/steps/smart-actions",
-              "guides/migration/from-v1/steps/smart-fields",
-              "guides/migration/from-v1/steps/smart-relationships",
-              "guides/migration/from-v1/steps/smart-segments",
-              "legacy/javascript-agents/how-tos/releases-support/README"
+              {
+                "group": "Migration guide",
+                "pages": [
+                  "guides/migration/from-v1/overview",
+                  "guides/migration/from-v1/steps/datasources",
+                  "guides/migration/from-v1/steps/smart-actions",
+                  "guides/migration/from-v1/steps/smart-fields",
+                  "guides/migration/from-v1/steps/smart-relationships",
+                  "guides/migration/from-v1/steps/smart-segments"
+                ]
+              },
+              "legacy/javascript-agents/how-tos/releases-support/overview"
             ]
           },
           {
             "group": "JavaScript Agents",
             "pages": [
-              "legacy/javascript-agents/README",
-              "legacy/javascript-agents/getting-started/setup-guide",
-              "legacy/javascript-agents/getting-started/development-workflow",
-              {
-                "group": "How it works",
-                "pages": [
-                  "legacy/javascript-agents/reference-guide/how-it-works/environments",
-                  {
-                    "group": "Developing on Forest Admin",
-                    "pages": [
-                      "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/overview",
-                      "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/using-branches",
-                      "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/deploying-your-changes",
-                      {
-                        "group": "Forest CLI commands",
-                        "pages": [
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/overview",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/init",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/login",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/branch",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/switch",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/set-origin",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/push",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/environments-reset",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/environments-create",
-                          "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/deploy"
-                        ]
-                      },
-                      "legacy/javascript-agents/reference-guide/how-it-works/developing-on-forest-admin/express-packages"
-                    ]
-                  }
-                ]
-              },
               {
                 "group": "Models",
                 "pages": [
@@ -720,38 +685,6 @@
           {
             "group": "Ruby Agent",
             "pages": [
-              "legacy/ruby-agent/README",
-              "legacy/ruby-agent/getting-started/setup-guide",
-              "legacy/ruby-agent/getting-started/development-workflow",
-              {
-                "group": "How it works",
-                "pages": [
-                  "legacy/ruby-agent/reference-guide/how-it-works/environments",
-                  {
-                    "group": "Developing on Forest Admin",
-                    "pages": [
-                      "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/overview",
-                      "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/using-branches",
-                      "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/deploying-your-changes",
-                      {
-                        "group": "Forest CLI commands",
-                        "pages": [
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/overview",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/init",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/login",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/branch",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/switch",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/set-origin",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/push",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/environments-reset",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/environments-create",
-                          "legacy/ruby-agent/reference-guide/how-it-works/developing-on-forest-admin/forest-cli-commands/deploy"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
               {
                 "group": "Models",
                 "pages": [
@@ -1030,8 +963,7 @@
                   "legacy/ruby-agent/how-tos/settings/include-exclude-models",
                   "legacy/ruby-agent/how-tos/settings/display-extensive-logs"
                 ]
-              },
-              "legacy/ruby-agent/how-tos/releases-support/README"
+              }
             ]
           }
         ]

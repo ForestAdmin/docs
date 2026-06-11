@@ -30,17 +30,22 @@ If you're upgrading from an older version, please make sure you've also read the
 
 Once you're done with the above steps, run the following:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```
 npm install "forest-express-sequelize@^9.0.0"
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```
 npm install "forest-express-mongoose@^9.0.0"
 ```
+
+  </Tab>
+</Tabs>
 
 <Info>
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.

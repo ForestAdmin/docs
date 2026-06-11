@@ -14,8 +14,6 @@ Here are a few examples:
 
 #### Use extended search by default
 
-### Rails
-
 ```ruby
 if ForestLiana::UserSpace.const_defined?('CompanyController')
   ForestLiana::UserSpace::CompanyController.class_eval do
@@ -37,12 +35,6 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 With this snippet, only the `companies` collection would use extended search by default.
 
 <Warning>
@@ -50,8 +42,6 @@ Using extended search is less performant than default search. Use this wisely.
 </Warning>
 
 #### Protect a specific record
-
-### Rails
 
 ```ruby
 if ForestLiana::UserSpace.const_defined?('CompanyController')
@@ -68,17 +58,9 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 ### Replacing Forest Admin's behavior
 
 To achieve this, simply remove the `next()` statement of any route:
-
-### Rails
 
 ```ruby
 if ForestLiana::UserSpace.const_defined?('CompanyController')
@@ -91,15 +73,7 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 For instance, if you have a `Users` collection, you might want to create your users via your own api:
-
-### Rails
 
 ```ruby
 require 'net/http'
@@ -121,10 +95,4 @@ if ForestLiana::UserSpace.const_defined?('UserController')
   end
 end
 ```
-
-### Django
-
-
-### Laravel
-
 

@@ -73,7 +73,8 @@ To paginate tables properly, Forest Admin triggers a separate request to fetch t
 
 In certain conditions, usually, when your database reaches a point where it has a lot of records, this request can decrease your loading performance. In this case, you can choose to disable it...
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
 
 - creating a controller in the repository `lib/forest_liana/controllers` for override the count action
 
@@ -93,19 +94,23 @@ namespace :forest do
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 ..adding the following middleware in settings.py and set the collection(s) to deactivate.
 
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 
 
 adding a route in `app/routes/web.php`
 
+  </Tab>
+</Tabs>
 
 To disable the count request in the table of a relationship (Related data section):
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::BookCompaniesController < ForestLiana::AssociationsController
@@ -127,18 +132,16 @@ namespace :forest do
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 
 
 Furthermore, if you want to disable on all relationships at once:
 
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 You can also disable the count request in a collection only in certain conditions. For instance, you can disable the count if you're using a filter:
-
-### Rails
 
 ```ruby
 class Forest::BooksController < ForestLiana::ResourcesController
@@ -153,15 +156,7 @@ class Forest::BooksController < ForestLiana::ResourcesController
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 One more example: you may want to deactivate the pagination count request for a specific team:
-
-### Rails
 
 ```ruby
 class Forest::BooksController < ForestLiana::ResourcesController
@@ -175,9 +170,6 @@ class Forest::BooksController < ForestLiana::ResourcesController
   end
 end
 ```
-
-### Laravel
-
 
 ### Database Indexing
 

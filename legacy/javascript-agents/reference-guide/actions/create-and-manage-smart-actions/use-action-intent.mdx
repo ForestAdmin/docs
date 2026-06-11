@@ -37,7 +37,8 @@ Here is an example of all of these parameters combined:
 
 Your parameters provided to the action intent will be passed to your agent over change and load hooks, allowing you to compute any value for your fields based on the provided parameters. You can access those parameters like such:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -75,7 +76,8 @@ collection('aCollection', {
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -113,7 +115,8 @@ collection('aCollection', {
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::ACollection
@@ -149,6 +152,9 @@ class Forest::ACollection
     ...
 end
 ```
+
+  </Tab>
+</Tabs>
 
 ### How to use actionIntentIds
 

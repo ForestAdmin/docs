@@ -20,7 +20,9 @@ In the following example, we have created a **Smart Collection** called `custome
 
 ### Creating a Smart Collection
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
+
 First, we declare the `customer_stats` collection in the `forest/` directory.
 
 In this Smart Collection, we want to display for each customer its email address, the number of orders made (in a field `orders_count`) and the sum of the price of all those orders (in a field `total_amount`).
@@ -60,10 +62,14 @@ collection('customer_stats', {
 The option`isSearchable: true` added to your collection allows to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic.
 </Info>
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
+
 _Work in progress - this section will soon be released_
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
+
 First, we declare the `CustomerStat` collection in the `lib/forest-liana/collections/` directory.
 
 In this Smart Collection, we want to display for each customer its email address, the number of orders made (in a field `orders_count`) and the sum of the price of all those orders (in a field `total_amount`).
@@ -165,14 +171,17 @@ Rails.application.routes.draw do
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
+
 First we will add the right path to the **urls.py** file
 
 
 Then we will create the pertained view
 
+  </Tab>
+  <Tab title="Laravel">
 
-### Laravel
 Create a controller `CustomerStatsController`
 
 
@@ -184,3 +193,6 @@ Now we are all set, we can access the Smart Collection as any other collection.
 <Info>
 In this example we have only implemented the **GET all records** action but you can also add the following actions: **GET specific records**, **PUT, DELETE** and **POST**. These are shown in the next page explaining how a Smart Collection can be used to access and manipulate data stored in Amazon S3.
 </Info>
+
+  </Tab>
+</Tabs>

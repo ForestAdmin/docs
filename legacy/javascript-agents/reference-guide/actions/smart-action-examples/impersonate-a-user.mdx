@@ -20,7 +20,8 @@ It can be useful to help your customers debug an issue or to get a better unders
 
 This directory contains the `users.js` file where the model is declared.
 
-### Sequelize
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 module.exports = (sequelize, DataTypes) => {
@@ -46,7 +47,8 @@ module.exports = (sequelize, DataTypes) => {
 };
 ```
 
-### Mongoose
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const mongoose = require('mongoose');
@@ -62,11 +64,15 @@ const schema = mongoose.Schema({
 module.exports = mongoose.model('users', schema, 'users');
 ```
 
+  </Tab>
+</Tabs>
+
 ### **Directory: /forest**
 
 This directory contains the `users.js` file where the Smart Action `Impersonate`is declared.
 
-### Sequelize
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -81,7 +87,8 @@ collection('users', {
 });
 ```
 
-### Mongoose
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -96,11 +103,15 @@ collection('users', {
 });
 ```
 
+  </Tab>
+</Tabs>
+
 ### **Directory: /routes**
 
 This directory contains the `users.js` file where the implementation of the route is handled. The `POST /forest/actions/impersonate` API call is triggered when you click on the Smart Action in the Forest UI.&#x20;
 
-### Sequelize
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 router.post('/actions/impersonate',
@@ -125,7 +136,8 @@ router.post('/actions/impersonate',
 module.exports = router;
 ```
 
-### Mongoose
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 router.post('/actions/impersonate', (req, res) => {
@@ -149,6 +161,9 @@ router.post('/actions/impersonate', (req, res) => {
 
 module.exports = router;
 ```
+
+  </Tab>
+</Tabs>
 
 <Info>
 This is useful for authentication using cookies. By using this example, you're performing the login request directly from the browser. Thus, the cookies will be automatically sent from your own service to the browser (as you'd normally do with your own app).

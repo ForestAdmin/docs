@@ -8,7 +8,9 @@ Configuring the Stripe integration for Forest allows you to have your **customer
 
 ![](</images/legacy/javascript-agents/image (67).png>)
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
+
 On our Live Demo, we’ve configured the Stripe integration on the `customers` collection. The Stripe Customer ID is already stored on the database under the field `stripe_id`.
 
 ```javascript
@@ -35,7 +37,9 @@ module.exports = function (app) {
 };
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
+
 On our Live Demo, we’ve configured the Stripe integration on the `customers` collection. The Stripe Customer ID is already stored on the database under the field `stripe_id`.
 
 ```javascript
@@ -62,7 +66,9 @@ module.exports = function (app) {
 };
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
+
 On our Live Demo, we’ve configured the Stripe integration on the `Customer` collection. The Stripe Customer ID is already stored on the database under the field `stripe_id`.
 
 ```ruby
@@ -76,6 +82,9 @@ ForestLiana.integrations = {
   }
 }
 ```
+
+  </Tab>
+</Tabs>
 
 #### Available options
 

@@ -21,17 +21,22 @@ As for any dependency upgrade, it's very important to **test this upgrade** **in
 
 To upgrade to v5, simply run:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```bash
 npm install forest-express-sequelize@^5.0.0
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```bash
 npm install forest-express-mongoose@^5.0.0
 ```
+
+  </Tab>
+</Tabs>
 
 <Info>
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.
@@ -45,7 +50,8 @@ If your Forest Admin configuration contains Smart Actions using POST or PUT meth
 
 Here is an example of Smart Action to adapt:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const Liana = require('forest-express-sequelize');
@@ -61,7 +67,8 @@ Liana.collection('companies', {
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const Liana = require('forest-express-mongoose');
@@ -77,7 +84,11 @@ Liana.collection('companies', {
 });
 ```
 
-### SQL
+  </Tab>
+</Tabs>
+
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const express = require('express');
@@ -102,7 +113,8 @@ router.post(
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const express = require('express');
@@ -126,6 +138,9 @@ router.post(
 
 module.exports = router;
 ```
+
+  </Tab>
+</Tabs>
 
 To make sure it doesn't break when you upgrade to v5, you must use the`bodyParser.json()` middleware in the route configuration:
 
@@ -135,7 +150,8 @@ router.post('/my-custom-route/mark-as-live', Liana.ensureAuthenticated, bodyPars
 
 The v5-compatible result would look like this:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const express = require('express');
@@ -162,7 +178,8 @@ router.post(
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const express = require('express');
@@ -188,6 +205,9 @@ router.post(
 
 module.exports = router;
 ```
+
+  </Tab>
+</Tabs>
 
 ## Important Notice
 

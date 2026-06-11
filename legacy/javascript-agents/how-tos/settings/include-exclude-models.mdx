@@ -10,7 +10,8 @@ You can exclude some of them from the analysis to never send their metadata to F
 
 To do so, add the following code to **either** define which models are included **or** excluded.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 #### Include models
 
@@ -44,7 +45,8 @@ app.use(require('forest-express-sequelize').init({
 ...
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 #### Include models
 
@@ -78,7 +80,8 @@ app.use(require('forest-express-mongoose').init({
 ...
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 ForestLiana.env_secret = Rails.application.secrets.forest_env_secret
@@ -95,7 +98,8 @@ ForestLiana.included_models = ['Customer'];
 ForestLiana.excluded_models = ['Document', 'Transaction'];
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 
 ```python
 # ...
@@ -109,6 +113,6 @@ FOREST = {
 }
 ```
 
-### Laravel
-
+  </Tab>
+</Tabs>
 

@@ -18,7 +18,8 @@ If you're looking for information on native actions (CRUD), check out [this page
 
 In order to create a Smart action, you will first need to **declare it in your code** for a specific collection. Here we declare a _Mark as Live_ Smart action for the `companies` collection.
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Company
@@ -30,14 +31,13 @@ class Forest::Company
 end
 ```
 
-### Django
-
+  </Tab>
+  <Tab title="Django">
 
 Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
 
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 After declaring it, your Smart action will appear in the Smart actions tab within your collection settings.
 
@@ -57,7 +57,9 @@ The **Smart Action behavior** is implemented separately from the declaration.
 
 In the following example, we've implemented the _Mark as live_ Smart Action, which simply changes a company's status to `live`.
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
+
 The route declaration takes place in `config/routes.rb`.
 
 ```javascript
@@ -92,7 +94,9 @@ You must make sure that all your Smart Actions controllers extend from the `Fore
 You may have to [add CORS headers](/legacy/ruby-agent/how-tos/setup/configuring-cors-headers) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:3000_).
 </Info>
 
-### Django
+  </Tab>
+  <Tab title="Django">
+
 Make sure your **project** `urls.py` file include you app urls with the `forest` prefix.
 
 ```javascript
@@ -129,12 +133,16 @@ Note that Forest Admin takes care of the authentication thanks to the `ActionVie
 You may have to [add CORS headers](/legacy/ruby-agent/how-tos/setup/configuring-cors-headers) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:8000_).
 </Info>
 
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
+
 The route declaration takes place in `routes/web.php`.
 
 
 The business logic in this Smart Action is extremely simple. We only update here the attribute `status` of the companies to the value `live`:
 
+  </Tab>
+</Tabs>
 
 #### What's happening under the hood?
 
@@ -266,8 +274,6 @@ We will see a success message in the browser:
 
 If we return a 200 status code with an object `{ success: '...' }` as the payload like this…
 
-### Rails
-
 ```ruby
 class Forest::CompaniesController < ForestLiana::SmartActionsController
   def mark_as_live
@@ -277,12 +283,6 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 … the success notification will look like this:
 
 ![](/images/legacy/javascript-agents/toastr-success-custom.png)
@@ -290,8 +290,6 @@ end
 #### Custom error notification
 
 Finally, returning a 400 status code allows you to return errors properly.
-
-### Rails
 
 ```ruby
 class Forest::CompaniesController < ForestLiana::SmartActionsController
@@ -302,12 +300,6 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 ![](/images/legacy/javascript-agents/toastr-error.png)
 
 #### Custom HTML response
@@ -315,8 +307,6 @@ end
 You can also return a HTML page as a response to give more feedback to the admin user who has triggered your Smart Action. To do this, you just need to return a 200 status code with an object `{ html: '...' }`.
 
 On our Live Demo example, we’ve created a `Charge credit card` Smart Action on the Collection `customers`that returns a custom HTML response.
-
-### Rails
 
 ```ruby
 class Forest::Customer
@@ -385,17 +375,9 @@ EOF
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 <img src="/images/legacy/javascript-agents/actions-html-response-success.png" alt="" />
 
 You can either respond with an HTML page in case of error. The user will be able to go back to his smart action's form by using the cross icon at the top right of the panel.
-
-### Rails
 
 ```ruby
 class Forest::Customer
@@ -458,12 +440,6 @@ end
 
 ```
 
-### Django
-
-
-### Laravel
-
-
 <img src="/images/legacy/javascript-agents/actions-html-response-error.png" alt="" />
 
 ### Setting up a webhook
@@ -471,8 +447,6 @@ end
 After a smart action you can set up a HTTP (or HTTPS) callback - a webhook - to forward information to other applications.\
 \
 To set up a webhook all you have to do is to add a `webhook`object in the response of your action.
-
-### Rails
 
 ```ruby
 render json: {
@@ -487,12 +461,6 @@ render json: {
 }
 ```
 
-### Django
-
-
-### Laravel
-
-
 <Info>
 Webhooks are commonly used to perform smaller requests and tasks, like sending emails or [impersonating a user](https://docs.forestadmin.com/woodshop/how-tos/impersonate-a-user).
 </Info>
@@ -503,7 +471,9 @@ Another interesting use of this is automating SSO authentication into your exter
 
 ### Downloading a file
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
+
 On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
 
 <Warning>
@@ -555,20 +525,26 @@ class Forest::CustomersController < ForestLiana::SmartActionsController
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
+
 On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
 
 <Warning>
 Don’t forget to expose the `Content-Disposition` header in the CORS configuration (as shown in the code below) to be able to customize the filename to download.
 </Warning>
 
+  </Tab>
+  <Tab title="Laravel">
 
-### Laravel
 On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
 
 <Info>
 Want to upload your files to Amazon S3? Check out this this [Woodshop tutorial](https://docs.forestadmin.com/woodshop/how-tos/upload-files-to-s3).
 </Info>
+
+  </Tab>
+</Tabs>
 
 ### Refreshing your related data
 
@@ -576,7 +552,9 @@ If you want to create an action accessible from the details or the summary view 
 
 In the example below, the “Add new transaction” action is accessible from the summary view. This action creates a new transaction and automatically refreshes the “Emitted transactions” related data section to see the new transaction.
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
+
 Below is the sample code. We use the `gem 'faker'` to easily generate fake data. Remember to add this gem to your `Gemfile` and install it (`bundle install`) if you wish to use it.
 
 ```ruby
@@ -647,13 +625,18 @@ Rails.application.routes.draw do
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
+
 Below is the sample code. We use the python Faker package to easily generate fake data. Remember to add this package to your `requirements.txt` and install it if you wish to use it.
 
+  </Tab>
+  <Tab title="Laravel">
 
-### Laravel
 Below is the sample code. We use the Faker package to easily generate fake data. Remember to add this package to your `composer.json` and install it if you wish to use it.
 
+  </Tab>
+</Tabs>
 
 ### Redirecting to a different page on success
 
@@ -668,8 +651,6 @@ The redirection works both for **internal** (`*.forestadmin.com` pages) and **ex
 </Info>
 
 Here's a working example for both cases:
-
-### Rails
 
 ```ruby
 class Forest::Company
@@ -714,12 +695,6 @@ end
 
 ...
 ```
-
-### Django
-
-
-### Laravel
-
 
 <Warning>
 Your **external** links must use the `http` or `https` protocol.

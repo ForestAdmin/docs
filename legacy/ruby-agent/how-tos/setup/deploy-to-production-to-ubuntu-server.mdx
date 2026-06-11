@@ -284,7 +284,7 @@ forest_demo=> \d
 
 You must export the environment variables `FOREST_ENV_SECRET` `FOREST_AUTH_SECRET` and `DATABASE_URL`. To do so, open and edit the file `/etc/environment`:
 
-The `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` environment variables will be given by Forest after creating a production environment from the interface. [See how to get them here](/legacy/ruby-agent/reference-guide/how-it-works/environments#deploying-to-production).
+The `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` environment variables will be given by Forest after creating a production environment from the interface. [See how to create a production environment](/guides/deployment/environments).
 
 ```bash
 sudo vim /etc/environment
@@ -377,5 +377,5 @@ We now require that you configure **HTTPS** (port 443) on your admin backend ser
 </Warning>
 
 <Warning>
-Once you've completed the above steps, it does **not** mean your project is deployed to production on Forest Admin. To deploy to production, check out [this section](/legacy/ruby-agent/reference-guide/how-it-works/environments#deploying-to-production).
+Once you've completed the above steps, it does **not** mean your project is deployed to production on Forest Admin. To deploy to production, check out [Environments](/guides/deployment/environments).
 </Warning>

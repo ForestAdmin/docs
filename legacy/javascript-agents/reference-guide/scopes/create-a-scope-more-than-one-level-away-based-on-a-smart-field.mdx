@@ -14,7 +14,8 @@ The objective is to implement scopes on all tables, filtering on`companies` to m
 
 ### **Step 1: Create a smart field and the filter for the `users` table**
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -75,7 +76,8 @@ collection('users', {
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Customer
@@ -102,8 +104,8 @@ class Forest::Customer
 end
 ```
 
-### Laravel
-
+  </Tab>
+</Tabs>
 
 ### **Step 2: Configure the scope in the UI**
 

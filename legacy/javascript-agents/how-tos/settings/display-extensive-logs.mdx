@@ -8,7 +8,8 @@ For debugging purposes your might want to display extensive logs from your Admin
 \
 To do so, simply add the following in your code:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 ...
@@ -16,13 +17,17 @@ To do so, simply add the following in your code:
 NODE_ENV=development
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 ...
 
 mongoose.set('debug', true);
 ```
+
+  </Tab>
+</Tabs>
 
 <Info>
 This can be useful to understand how queries are executed to display your collections or relationships.

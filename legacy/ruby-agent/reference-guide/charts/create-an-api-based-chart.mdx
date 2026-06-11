@@ -16,7 +16,6 @@ Forest Admin will make the HTTP call to Smart Chart URL when retrieving the char
 
 On our Live Demo, we have a `MRR` value chart which computes our Monthly Recurring Revenue. This chart queries the Stripe API to get all charges made in the current month (in March for this example).
 
-### Rails
 When serializing the data, we use the `serialize_model()` method. Check the `value` syntax below.
 
 ```
@@ -55,19 +54,14 @@ class Forest::ChartsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-
-
-### Laravel
-
-
 ![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.09.27.png>)
 
 ### Repartition API-based Chart
 
 On our Live Demo, we have a `Charges` repartition chart which shows a repartition chart distributed by credit card country. This chart queries the Stripe API to get all charges made in the current month (in March for this example) and check the credit card country.
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
 When serializing the data, we use the `serialize_model()` method. Check the `value` syntax below.
 
 ```
@@ -121,10 +115,8 @@ class Forest::ChartsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 
 ```
 {
@@ -138,6 +130,8 @@ end
 }
 ```
 
+  </Tab>
+</Tabs>
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.33.41.png>)
 
@@ -145,7 +139,8 @@ end
 
 On our Live Demo, we have a `Charges` time-based chart which shows the number of charges per day. This chart queries the Stripe API to get all charges made in the current month (in March for this example) and group data by day.
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
 When serializing the data, we use the `serialize_model()` method. Check the `value` syntax below.
 
 ```
@@ -198,10 +193,8 @@ class Forest::ChartsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 
 ```
 {
@@ -215,6 +208,8 @@ end
 }
 ```
 
+  </Tab>
+</Tabs>
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.38.29.png>)
 
@@ -237,7 +232,8 @@ This endpoint must return data with the following format:
 
 Here's how you could implement it:
 
-### Rails
+<Tabs>
+  <Tab title="Rails">
 
 ```ruby
 ...
@@ -266,10 +262,8 @@ end
 ...
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 
 ```
 {
@@ -280,4 +274,6 @@ end
 }
 ```
 
+  </Tab>
+</Tabs>
 

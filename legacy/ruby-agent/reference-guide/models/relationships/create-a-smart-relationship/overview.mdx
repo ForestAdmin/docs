@@ -14,7 +14,8 @@ On the Live Demo example, we have an **order** which `belongsTo` a **customer** 
 
 A BelongsTo Smart Relationship is created like a [Smart Field](/legacy/ruby-agent/reference-guide/smart-fields/overview#what-is-a-smart-field) with the `reference` option to indicate on which collection the Smart Relationship points to. You will also need to code the logic of the search query.
 
-### Rails
+<Tabs>
+<Tab title="Rails">
 
 ```ruby
 class Forest::Order
@@ -33,17 +34,16 @@ class Forest::Order
   end
 end
 ```
-
-### Django
-
+</Tab>
+<Tab title="Django">
 
 Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
-
-
-### Laravel
-
+</Tab>
+<Tab title="Laravel">
 
 ![](/images/legacy/javascript-agents/live-demo-collection-smart-relationship.png)
+</Tab>
+</Tabs>
 
 ### Create a HasMany Smart Relationship
 
@@ -51,7 +51,8 @@ On the Live Demo example, we have a **product** `hasMany` **orders** and an **or
 
 A HasMany Smart Relationship is created like a [Smart Field](https://docs.forestadmin.com/documentation/reference-guide/fields/create-and-manage-smart-fields) with the `reference` option to indicates on which collection the Smart Relationship points to.
 
-### Rails
+<Tabs>
+<Tab title="Rails">
 
 ```ruby
 class Forest::Product
@@ -62,14 +63,8 @@ class Forest::Product
   has_many :buyers, type: ['String'], reference: 'Customer.id'
 end
 ```
-
-### Django
-
-
-### Laravel
-
-
-### Rails
+</Tab>
+<Tab title="Rails">
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/Product/:product_id/buyers`.
 
 We’ve built the right SQL query using [Active Record](http://guides.rubyonrails.org/active_record_basics.html) to **count** and **find all** customers who bought the current product.
@@ -102,8 +97,8 @@ class Forest::ProductsController < ForestLiana::ApplicationController
   end
 end
 ```
-
-### Django
+</Tab>
+<Tab title="Django">
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/app_product/:product_pk/relationships/buyers`.\
 \
 You will have to declare this route in your app **urls.py** file
@@ -117,8 +112,8 @@ We’ve built the right SQL query using [Django ORM](https://docs.djangoproject.
 Then, you should handle pagination in order to avoid performance issue. The API call has a querystring available which gives you all the necessary parameters you need to enable pagination.
 
 Finally, you don’t have to serialize the data yourself. The Forest Admin agent already knows how to serialize your collection (`Customer` in this example, with the table name `app_customer`). You can access to the serializer through the `Schema().dump` function (using [marshmallow-jsonapi](https://marshmallow-jsonapi.readthedocs.io/en/latest/) internally).
-
-### Laravel
+</Tab>
+<Tab title="Laravel">
 Upon browsing, an API call is triggered when accessing the data of the HasMany relationships in order to fetch them asynchronously. In the following example, the API call is a GET on `/product/{id}/relationships/buyers`.
 
 We’ve built the right SQL query using [Active Record](http://guides.rubyonrails.org/active_record_basics.html) to **count** and **find all** customers who bought the current product.
@@ -126,6 +121,8 @@ We’ve built the right SQL query using [Active Record](http://guides.rubyonrail
 Then, you should handle pagination in order to avoid performance issue. The API call has a querystring available which gives you all the necessary parameters you need to enable pagination.
 
 Finally, you don’t have to serialize the data yourself. The Forest Admin agent already knows how to serialize your collection (`Customer` in this example). You can access to the serializer through the `render()` function of JsonApi facade.
+</Tab>
+</Tabs>
 
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 11.02.40.png>)

@@ -11,7 +11,8 @@ We've just introduced Smart actions: they're great because you can execute virtu
 Very often, you will need to ask user inputs before triggering the logic behind a Smart Action.\
 For example, you might want to specify a reason if you want to block a user account. Or set the amount to charge a user’s credit card.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 On our Live Demo example, we’ve defined 4 input fields on the Smart Action `Upload Legal Docs` on the collection `companies`.
 
 ```javascript
@@ -94,7 +95,8 @@ router.post('/actions/upload-legal-docs', permissionMiddlewareCreator.smartActio
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 On our Live Demo example, we’ve defined 4 input fields on the Smart Action `Upload Legal Docs` on the collection `companies`.
 
 ```javascript
@@ -163,7 +165,8 @@ router.post('/actions/upload-legal-docs',
 module.exports = router;
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 On our Live Demo example, we’ve defined 4 input fields on the Smart Action `Upload Legal Docs` on the collection `Company`.
 
 ```ruby
@@ -250,19 +253,23 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 On our Live Demo example, we’ve defined 4 input fields on the Smart Action `Upload Legal Docs` on the collection `Company`.
 
 
 Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
 
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 On our Live Demo example, we’ve defined 4 input fields on the Smart Action `Upload Legal Docs` on the collection `Company`.
 
 <Info>
 The 2nd parameter of the `SmartAction` method is not required. If you don't fill it, the name of your smartAction will be the name of your method that wrap it.
 </Info>
+
+  </Tab>
+</Tabs>
 
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.34.41.png>)
@@ -447,7 +454,8 @@ collection('customers', {
 
 Forest Admin allows you to set default values of your form. In this example, we will prefill the form with data coming from the record itself **(1)**, with just a few extra lines of code.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -493,7 +501,8 @@ collection('Customers', {
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -539,7 +548,8 @@ collection('Customers', {
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Customers
@@ -584,10 +594,8 @@ class Forest::Customers
 end
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+</Tabs>
 
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.40.08.png>)
@@ -652,7 +660,8 @@ This feature is only available from **version 8.0.0** (`forest-express-sequelize
 
 Here's a typical example: Selecting a **City** within a list of cities from the **Country** you just selected. Then selecting a **Zip code** within a list of zip codes located in the **City** you just selected.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { getEnumsFromDatabaseForThisRecord } = require('./my-own-helper');
@@ -723,7 +732,8 @@ collection('customers', {
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { getEnumsFromDatabaseForThisRecord } = require('./my-own-helper');
@@ -794,7 +804,8 @@ collection('customers', {
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```javascript
 actions 'Send invoice',
@@ -858,10 +869,8 @@ actions 'Send invoice',
   }
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+</Tabs>
 
 
 #### How does it work?
@@ -887,28 +896,32 @@ If you want to use a widget inside of a hook, you'll need to use the following s
 
 To dynamically change a property within a `load` or `change` [hook](/legacy/javascript-agents/reference-guide/actions/create-and-manage-smart-actions/use-a-smart-action-form#making-a-form-dynamic-with-hooks), just set it! For instance, setting a new _description_ for the field `city`:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const city = fields.find((field) => field.field === 'city');
 city.description = 'Please enter the name of your favorite city';
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const city = fields.find((field) => field.field === 'city');
 city.description = 'Please enter the name of your favorite city';
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```javascript
 city = context[:fields].find{|field| field[:field] == 'city'}
 city[:description] = "Please enter the name of your favorite city"
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 
 ```python
     'hooks': {
@@ -922,7 +935,8 @@ def send_invoice_load(fields, request, *args, **kwargs):
     return fields
 ```
 
-### Laravel
+  </Tab>
+</Tabs>
 
 
 ### Add/remove fields dynamically
@@ -933,7 +947,8 @@ This feature is only available from [**version 8.0.0**](/legacy/javascript-agent
 
 You can add a `field` dynamically inside the `fields` array, like so:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 [...]
@@ -952,7 +967,8 @@ hooks: {
 [...]
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 [...]
@@ -971,7 +987,8 @@ hooks: {
 [...]
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 :hooks => {
@@ -988,7 +1005,8 @@ hooks: {
 }
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 
 ```python
     'hooks': {
@@ -1012,14 +1030,16 @@ def on_another_field_change(self, fields, request, changed_field, *args, **kwarg
     return fields
 ```
 
-### Laravel
+  </Tab>
+</Tabs>
 
 
 ### Get selected records with bulk action
 
 When using hooks with a bulk Smart action, you'll probably need te get the values or ids of the selected records. See below how this can be achieved.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection, RecordsGetter } = require('forest-express-sequelize');
@@ -1072,7 +1092,8 @@ collection('customers', {
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection, RecordsGetter } = require('forest-express-mongoose');
@@ -1125,7 +1146,8 @@ collection('customers', {
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Customers
@@ -1168,9 +1190,6 @@ class Forest::Customers
 end
 ```
 
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 

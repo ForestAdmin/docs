@@ -13,7 +13,8 @@ Extending a route is a clean way to achieve more by building on top of Forest Ad
 
 To extend a route, simply **add** **your own logic before the `next()` statement:**
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const express = require('express');
@@ -35,7 +36,8 @@ router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next)
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const express = require('express');
@@ -56,6 +58,9 @@ router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next)
 
 module.exports = router;
 ```
+
+  </Tab>
+</Tabs>
 
 ### Adding logic with an API call
 

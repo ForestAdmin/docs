@@ -14,7 +14,8 @@ Here are a few examples:
 
 #### Use extended search by default
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const express = require('express');
@@ -68,7 +69,8 @@ router.get(
 //...
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const express = require('express');
@@ -122,7 +124,8 @@ router.get(
 //...
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 if ForestLiana::UserSpace.const_defined?('CompanyController')
@@ -145,11 +148,8 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 With this snippet, only the `companies` collection would use extended search by default.
 
@@ -159,7 +159,8 @@ Using extended search is less performant than default search. Use this wisely.
 
 #### Protect a specific record
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 router.delete(
@@ -184,7 +185,8 @@ router.delete(
 );
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 router.delete(
@@ -209,7 +211,8 @@ router.delete(
 );
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 if ForestLiana::UserSpace.const_defined?('CompanyController')
@@ -226,17 +229,15 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 ### Replacing Forest Admin's behavior
 
 To achieve this, simply remove the `next()` statement of any route:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 ...
@@ -249,7 +250,8 @@ router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next)
 ...
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 ...
@@ -262,7 +264,8 @@ router.post('/companies', permissionMiddlewareCreator.create(), (req, res, next)
 ...
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 if ForestLiana::UserSpace.const_defined?('CompanyController')
@@ -275,15 +278,13 @@ if ForestLiana::UserSpace.const_defined?('CompanyController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 For instance, if you have a `Users` collection, you might want to create your users via your own api:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 ...
@@ -312,7 +313,8 @@ router.post('/users', permissionMiddlewareCreator.create(), (request, response, 
 });
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 ...
@@ -341,7 +343,8 @@ router.post('/users', permissionMiddlewareCreator.create(), (request, response, 
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 require 'net/http'
@@ -364,9 +367,6 @@ if ForestLiana::UserSpace.const_defined?('UserController')
 end
 ```
 
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 

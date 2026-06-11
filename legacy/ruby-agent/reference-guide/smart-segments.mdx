@@ -18,7 +18,8 @@ Sometimes, segment filters are complicated and closely tied to your business. Fo
 
 On our Live Demo example, we’ve implemented a Smart Segment on the collection `products` to allow admin users to see the bestsellers at a glance.
 
-### Rails
+<Tabs>
+<Tab title="Rails">
 
 ```ruby
 class Forest::Product
@@ -33,20 +34,20 @@ class Forest::Product
   end
 end
 ```
-
-### Django
-
+</Tab>
+<Tab title="Django">
 
 Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
-
-
-### Laravel
+</Tab>
+<Tab title="Laravel">
 <Info>
 The 2nd parameter of the `SmartSegment` method is not required. If you don't fill it, the name of your SmartSegment will be the name of your method that wrap it.
 </Info>
 
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 17.38.24.png>)
+</Tab>
+</Tabs>
 
 ### Setting up independent columns visibility
 

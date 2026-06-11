@@ -6,7 +6,9 @@ title: Mixpanel
 
 The Mixpanel integration allows you to fetch Mixpanel’s events and display them at a record level into Forest.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
+
 To benefit from Mixpanel integration, you need to add the package `mixpanel-data-export` before going further.
 
 Then, add the following code to your `app.js` file. In our example we will map the `customers.email` with the data coming from Mixpanel. You may replace by your own relevant collection(s).
@@ -39,7 +41,9 @@ module.exports = function (app) {
 };
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
+
 To benefit from Mixpanel integration, you need to add the package `mixpanel-data-export` before going further.
 
 Then, add the following code to your `app.js` file. In our example we will map the `customers.email` with the data coming from Mixpanel. You may replace by your own relevant collection(s).
@@ -72,7 +76,9 @@ module.exports = function (app) {
 };
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
+
 To benefit from Mixpanel integration, you need to add the `gem 'mixpanel_client'` to your Gemfile.
 
 Then, add the following code to your initializer. In our example we will map the `Customer.email` with the data coming from Mixpanel. You may replace by your own relevant collection(s).
@@ -92,6 +98,9 @@ ForestLiana.integrations = {
   }
 }
 ```
+
+  </Tab>
+</Tabs>
 
 You will then be able to see the Mixpanel events on a record, a `Customer` in our example.
 

@@ -21,17 +21,22 @@ As for any dependency upgrade, it's very important to **test this upgrade** **in
 
 To upgrade to v4, simply run:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 npm install forest-express-sequelize@4.0.2
 ```
 
-### Mongoose
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 npm install forest-express-mongoose@4.1.2
 ```
+
+  </Tab>
+</Tabs>
 
 <Info>
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent version 3 is the fastest way to restore your admin panel.

@@ -16,7 +16,8 @@ Forest Admin will make the HTTP call to Smart Chart URL when retrieving the char
 
 On our Live Demo, we have a `MRR` value chart which computes our Monthly Recurring Revenue. This chart queries the Stripe API to get all charges made in the current month (in March for this example).
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 When serializing the data, we use the `Liana.StatSerializer()` serializer. Check the `value` syntax below.
 
 ```
@@ -62,7 +63,8 @@ router.post('/stats/mrr', (req, res) => {
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 When serializing the data, we use the `Liana.StatSerializer()` serializer. Check the `value` syntax below.
 
 ```
@@ -108,7 +110,8 @@ router.post('/stats/mrr', (req, res) => {
 module.exports = router;
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 When serializing the data, we use the `serialize_model()` method. Check the `value` syntax below.
 
 ```
@@ -147,11 +150,8 @@ class Forest::ChartsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.09.27.png>)
 
@@ -159,7 +159,8 @@ end
 
 On our Live Demo, we have a `Charges` repartition chart which shows a repartition chart distributed by credit card country. This chart queries the Stripe API to get all charges made in the current month (in March for this example) and check the credit card country.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 When serializing the data, we use the `Liana.StatSerializer()` serializer. Check the `value` syntax below.
 
 ```
@@ -222,7 +223,8 @@ router.post(
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 When serializing the data, we use the `Liana.StatSerializer()` serializer. Check the `value` syntax below.
 
 ```
@@ -286,7 +288,8 @@ router.post(
 module.exports = router;
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 When serializing the data, we use the `serialize_model()` method. Check the `value` syntax below.
 
 ```
@@ -340,10 +343,8 @@ class Forest::ChartsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 
 ```
 {
@@ -357,6 +358,8 @@ end
 }
 ```
 
+  </Tab>
+</Tabs>
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.33.41.png>)
 
@@ -364,7 +367,8 @@ end
 
 On our Live Demo, we have a `Charges` time-based chart which shows the number of charges per day. This chart queries the Stripe API to get all charges made in the current month (in March for this example) and group data by day.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 When serializing the data, we use the `Liana.StatSerializer()` serializer. Check the `value` syntax below.
 
 ```
@@ -422,7 +426,8 @@ router.post('/stats/charges-per-day', (req, res) => {
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 When serializing the data, we use the `Liana.StatSerializer()` serializer. Check the `value` syntax below.
 
 ```
@@ -480,7 +485,8 @@ router.post('/stats/charges-per-day', (req, res) => {
 module.exports = router;
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 When serializing the data, we use the `serialize_model()` method. Check the `value` syntax below.
 
 ```
@@ -533,10 +539,8 @@ class Forest::ChartsController < ForestLiana::ApplicationController
 end
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 
 ```
 {
@@ -550,6 +554,8 @@ end
 }
 ```
 
+  </Tab>
+</Tabs>
 
 ![](</images/legacy/javascript-agents/screenshot 2019-07-02 at 15.38.29.png>)
 
@@ -572,7 +578,8 @@ This endpoint must return data with the following format:
 
 Here's how you could implement it:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 ​// [...]
@@ -595,7 +602,8 @@ router.post('/stats/some-objective', (req, res) => {
 }
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 ​// [...]
@@ -618,7 +626,8 @@ router.post('/stats/some-objective', (req, res) => {
 }
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 ...
@@ -647,10 +656,8 @@ end
 ...
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 
 ```
 {
@@ -661,4 +668,6 @@ end
 }
 ```
 
+  </Tab>
+</Tabs>
 

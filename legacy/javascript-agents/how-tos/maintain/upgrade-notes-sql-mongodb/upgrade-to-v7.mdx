@@ -34,17 +34,22 @@ As for any dependency upgrade, it's very important to **test this upgrade** **in
 
 To upgrade to v7, simply run:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```bash
 npm install forest-express-sequelize@^7.12.3
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```bash
 npm install forest-express-mongoose@^7.9.2
 ```
+
+  </Tab>
+</Tabs>
 
 <Info>
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.
@@ -102,7 +107,8 @@ module.exports = async function forestadmin(app) {
 
 The `models/index.js` file should be updated as well, in order to export `objectMapping` & `connections`
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const fs = require('fs');
@@ -150,7 +156,8 @@ db.connections = connections;
 module.exports = db;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const fs = require('fs');
@@ -189,11 +196,15 @@ db.connections = connections;
 module.exports = db;
 ```
 
+  </Tab>
+</Tabs>
+
 **Introducing database configuration**
 
 A `config/databases.js` file should be added as follows in order to declare the different database connections:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const path = require('path');
@@ -232,7 +243,8 @@ module.exports = [
 ];
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const path = require('path');
@@ -252,6 +264,9 @@ module.exports = [
   },
 ];
 ```
+
+  </Tab>
+</Tabs>
 
 <Warning>
 Calling `sequelize` with one of the 2 following syntaxes will not work anymore:

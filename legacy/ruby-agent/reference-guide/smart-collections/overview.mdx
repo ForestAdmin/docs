@@ -20,7 +20,8 @@ In the following example, we have created a **Smart Collection** called `custome
 
 ### Creating a Smart Collection
 
-### Rails
+<Tabs>
+<Tab title="Rails">
 First, we declare the `CustomerStat` collection in the `lib/forest-liana/collections/` directory.
 
 In this Smart Collection, we want to display for each customer its email address, the number of orders made (in a field `orders_count`) and the sum of the price of all those orders (in a field `total_amount`).
@@ -50,8 +51,8 @@ end
 <Info>
 The option`is_searchable: true` added to your collection allows to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic in your collection controller.
 </Info>
-
-### Django
+</Tab>
+<Tab title="Django">
 First, we declare the `CustomerStat` collection in the `app/forest/customer_stat.py` file.
 
 In this Smart Collection, we want to display for each customer its email address, the number of orders made (in a field `orders_count`) and the sum of the price of all those orders (in a field `total_amount`).
@@ -71,8 +72,8 @@ Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the
 <Info>
 The option`is_searchable = True` added to your collection allows to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic in your collection controller.
 </Info>
-
-### Laravel
+</Tab>
+<Tab title="Laravel">
 First, we declare the `CustomerStat` collection in the `app/Models/SmartCollections/CustomerStat.php` file.
 
 In this Smart Collection, we want to display for each customer its email address, the number of orders made (in a field `orders_count`) and the sum of the price of all those orders (in a field `total_amount`).
@@ -89,12 +90,15 @@ As we are using the _customer id_ in this example, we do not need to declare an 
 <Info>
 The option`is_searchable = True` added to your collection allows to display the search bar. Note that you will have to implement the search yourself by including it into your own `get` logic in your collection controller.
 </Info>
+</Tab>
+</Tabs>
 
 ### Implementing the GET (all records)
 
 At this time, there’s no Smart Collection Implementation because no route in your app handles the API call yet.
 
-### Rails
+<Tabs>
+<Tab title="Rails">
 In the repository `lib/forest_liana/controllers/`, we’ve created a controller file `customer_stats.rb` to implement API behind the Smart Collection.
 
 The logic here is to index all the customers that have made orders (with their email), to count the number of orders made and to sum up the price of all the orders.
@@ -193,20 +197,20 @@ Rails.application.routes.draw do
 
 end
 ```
-
-### Django
+</Tab>
+<Tab title="Django">
 First we will add the right path to the **urls.py** file
 
 
 Then we will create the pertained view
-
-
-### Laravel
+</Tab>
+<Tab title="Laravel">
 Create a controller `CustomerStatsController`
 
 
 Then add the route.
-
+</Tab>
+</Tabs>
 
 Now we are all set, we can access the Smart Collection as any other collection.
 

@@ -21,17 +21,22 @@ As for any dependency upgrade, it's very important to **test this upgrade** **in
 
 To upgrade to v6, simply run:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```bash
 npm install forest-express-sequelize@^6.0.0
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```bash
 npm install forest-express-mongoose@^6.0.0
 ```
+
+  </Tab>
+</Tabs>
 
 <Info>
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.

@@ -32,7 +32,8 @@ Below are some simple snippets showing you how to add relationships. However, sh
 
 In our [Live demo](https://app.forestadmin.com/Live%20Demo/Production/Operations/data/806052/index), a **customer** can have multiple **orders**. In that case, we have to use a `hasMany` relationship.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 module.exports = (sequelize, DataTypes) => {
@@ -48,7 +49,8 @@ module.exports = (sequelize, DataTypes) => {
 };
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 module.exports = (mongoose, Mongoose) => {
@@ -76,11 +78,15 @@ Once you've added your relationship(s) in your model(s), they will only be taken
 
 ![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LR7SWfEwsNtj_ZiSkSA%2F-Linf3OXMqwbdmu1bCUF%2F-LinfZ7RFMnv-1sEZZoZ%2FCapture%20d%E2%80%99e%CC%81cran%202019-07-02%20a%CC%80%2019.13.59.png?alt=media&token=b18bbf1c-3d3e-40c0-9c5b-746d3aa43096)
 
+  </Tab>
+</Tabs>
+
 ### Adding a `hasOne` relationship
 
 In case of a one-to-one relationship between 2 collections, the opposite of a `belongsTo` relationship is a `hasOne` relationship. Taking the same example as before, the opposite of "an **address** `belongsTo` a **customer**" is simply "a **customer**`hasOne` **address"**.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 module.exports = (sequelize, DataTypes) => {
@@ -96,7 +102,8 @@ module.exports = (sequelize, DataTypes) => {
 };
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 module.exports = (mongoose, Mongoose) => {
@@ -118,11 +125,15 @@ module.exports = (mongoose, Mongoose) => {
 Don't forget to **restart your server** for your newly added relationships to be taken into account.
 </Info>
 
+  </Tab>
+</Tabs>
+
 ### Adding a `belongsTo` relationship
 
 On our Live Demo example, the Address model has a foreignKey customer_id that points to the Customer. In other words, an **address**`belongsTo` a **customer**.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 module.exports = (sequelize, DataTypes) => {
@@ -138,7 +149,8 @@ module.exports = (sequelize, DataTypes) => {
 };
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 module.exports = (mongoose, Mongoose) => {
@@ -166,6 +178,9 @@ If this is not the case, check out the [section below](/legacy/javascript-agents
 <Info>
 Don't forget to **restart your server** for your newly added relationships to be taken into account.
 </Info>
+
+  </Tab>
+</Tabs>
 
 #### Declaring a foreign key (SQL only)
 
@@ -245,7 +260,9 @@ Projects.associate = (models) => {
 
 Forest Admin automatically generates most relationships, according to the below rules:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
+
 **BelongsTo**
 
 Detecting `belongsTo` is straight forward, we check if the referenced table of the foreign key is unique (unique constraint or primary key), then a `belongsTo` association can be set between the two tables.
@@ -262,7 +279,9 @@ If the foreign key also have a unique constraint or is used as the primary key o
 
 We detect Many-to-Many relationships when we detect a simple **junction table**. We are able to detect a junction table when it contains 2 foreign keys. It can optionally contain additional fields like a primary key and technical timestamps.
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
+
 **BelongsTo**
 
 When a document contains an ObjectID referring to another document, we create a `belongsTo` relationship to the corresponding collection.
@@ -278,4 +297,7 @@ Not automatically generated.
 **BelongsToMany**
 
 Not automatically generated.
+
+  </Tab>
+</Tabs>
 

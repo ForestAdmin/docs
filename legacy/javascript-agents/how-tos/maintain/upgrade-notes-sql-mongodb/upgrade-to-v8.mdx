@@ -32,17 +32,22 @@ As for any dependency upgrade, it's very important to **test this upgrade** **in
 
 To upgrade to v8, run the following and then update your project as shown in the [_Breaking Changes_](#breaking-changes) section below.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```
 npm install "forest-express-sequelize@^8.0.0"
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```
 npm install "forest-express-mongoose@^8.0.0"
 ```
+
+  </Tab>
+</Tabs>
 
 <Info>
 In case of a regression introduced in Production after the upgrade, a rollback to your previous agent is the fastest way to restore your admin panel.
@@ -320,7 +325,8 @@ hooks: {
 After
 </Check>
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { model } = require('../models');
@@ -343,7 +349,8 @@ hooks: {
 [...]
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { model } = require('../models');
@@ -365,4 +372,7 @@ hooks: {
 }
 [...]
 ```
+
+  </Tab>
+</Tabs>
 

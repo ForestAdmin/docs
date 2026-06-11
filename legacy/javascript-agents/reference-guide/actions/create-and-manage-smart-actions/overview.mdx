@@ -18,7 +18,8 @@ If you're looking for information on native actions (CRUD), check out [this page
 
 In order to create a Smart action, you will first need to **declare it in your code** for a specific collection. Here we declare a _Mark as Live_ Smart action for the `companies` collection.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -32,7 +33,8 @@ collection('companies', {
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -46,7 +48,10 @@ collection('companies', {
 });
 ```
 
-### Rails
+  </Tab>
+</Tabs>
+
+#### req.user
 
 ```javascript
 req.user content example
@@ -120,7 +125,8 @@ We will see a success message in the browser:
 
 If we return a 200 status code with an object `{ success: '...' }` as the payload like this…
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 ...
@@ -133,7 +139,8 @@ router.post('/actions/mark-as-live', permissionMiddlewareCreator.smartAction(), 
 ...
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 ...
@@ -146,7 +153,8 @@ router.post('/actions/mark-as-live', permissionMiddlewareCreator.smartAction(), 
 ...
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::CompaniesController < ForestLiana::SmartActionsController
@@ -157,10 +165,8 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
 end
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+</Tabs>
 
 
 … the success notification will look like this:
@@ -171,7 +177,8 @@ end
 
 Finally, returning a 400 status code allows you to return errors properly.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 ...
@@ -184,7 +191,8 @@ router.post('/actions/mark-as-live', permissionMiddlewareCreator.smartAction(), 
 ...
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 ...
@@ -197,7 +205,8 @@ router.post('/actions/mark-as-live', permissionMiddlewareCreator.smartAction(), 
 ...
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::CompaniesController < ForestLiana::SmartActionsController
@@ -208,10 +217,8 @@ class Forest::CompaniesController < ForestLiana::SmartActionsController
 end
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+</Tabs>
 
 
 ![](/images/legacy/javascript-agents/toastr-error.png)
@@ -222,7 +229,8 @@ You can also return a HTML page as a response to give more feedback to the admin
 
 On our Live Demo example, we’ve created a `Charge credit card` Smart Action on the Collection `customers`that returns a custom HTML response.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -294,7 +302,8 @@ router.post('/actions/charge-credit-card', permissionMiddlewareCreator.smartActi
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -366,7 +375,8 @@ router.post('/actions/charge-credit-card', (req, res) => {
 module.exports = router;
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Customer
@@ -435,17 +445,16 @@ EOF
 end
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+</Tabs>
 
 
 <img src="/images/legacy/javascript-agents/actions-html-response-success.png" alt="" />
 
 You can either respond with an HTML page in case of error. The user will be able to go back to his smart action's form by using the cross icon at the top right of the panel.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -513,7 +522,8 @@ router.post('/actions/charge-credit-card', permissionMiddlewareCreator.smartActi
 module.exports = router;
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -581,7 +591,8 @@ router.post('/actions/charge-credit-card', (req, res) => {
 module.exports = router;
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Customer
@@ -644,10 +655,8 @@ end
 
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+</Tabs>
 
 
 <img src="/images/legacy/javascript-agents/actions-html-response-error.png" alt="" />
@@ -658,7 +667,8 @@ After a smart action you can set up a HTTP (or HTTPS) callback - a webhook - to 
 \
 To set up a webhook all you have to do is to add a `webhook`object in the response of your action.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 response.send({
@@ -675,7 +685,8 @@ response.send({
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 response.send({
@@ -692,7 +703,8 @@ response.send({
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 render json: {
@@ -707,7 +719,8 @@ render json: {
 }
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 
 ```python
 from django_forest.utils.collection import Collection
@@ -723,13 +736,16 @@ class CustomerForest(Collection):
 Collection.register(CustomerForest, Customer)
 ```
 
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
 
 <Info>
 Want to upload your files to Amazon S3? Check out this this [Woodshop tutorial](https://docs.forestadmin.com/woodshop/how-tos/upload-files-to-s3).
 </Info>
+
+  </Tab>
+</Tabs>
 
 ### Refreshing your related data
 
@@ -737,7 +753,8 @@ If you want to create an action accessible from the details or the summary view 
 
 In the example below, the “Add new transaction” action is accessible from the summary view. This action creates a new transaction and automatically refreshes the “Emitted transactions” related data section to see the new transaction.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 Below is the sample code. We use faker to generate random data in our example. Remember to install it if you wish to use it (`npm install faker`).
 
 ```javascript
@@ -800,7 +817,8 @@ router.post('/actions/add-new-transaction', permissionMiddlewareCreator.smartAct
 });
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 Below is the sample code. We use faker to generate random data in our example. Remember to install it if you wish to use it (`npm install faker`).
 
 ```javascript
@@ -869,7 +887,8 @@ router.post(
 );
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 Below is the sample code. We use the `gem 'faker'` to easily generate fake data. Remember to add this gem to your `Gemfile` and install it (`bundle install`) if you wish to use it.
 
 ```ruby
@@ -940,12 +959,16 @@ Rails.application.routes.draw do
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 Below is the sample code. We use the python Faker package to easily generate fake data. Remember to add this package to your `requirements.txt` and install it if you wish to use it.
 
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 Below is the sample code. We use the Faker package to easily generate fake data. Remember to add this package to your `composer.json` and install it if you wish to use it.
+
+  </Tab>
+</Tabs>
 
 
 ### Redirecting to a different page on success
@@ -962,7 +985,8 @@ The redirection works both for **internal** (`*.forestadmin.com` pages) and **ex
 
 Here's a working example for both cases:
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -1007,7 +1031,8 @@ router.post('/actions/show-some-activity', permissionMiddlewareCreator.smartActi
 module.exports = router;
 ```
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -1052,7 +1077,8 @@ router.post('/actions/show-some-activity', Liana.ensureAuthenticated,
 module.exports = router;
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Company
@@ -1098,10 +1124,8 @@ end
 ...
 ```
 
-### Django
-
-
-### Laravel
+  </Tab>
+</Tabs>
 
 
 <Warning>

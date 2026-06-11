@@ -14,7 +14,8 @@ A Smart Field is a column that displays processed-on-the-fly data. It can be as 
 
 ### Creating a Smart Field
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 On our Live Demo, the very simple Smart Field `fullname` is available on the `customers` collection.
 
 ```javascript
@@ -36,7 +37,8 @@ collection('customers', {
 \
 Very often, the business logic behind the Smart Field is more complex and must be asynchronous. To do that, please have a look at [this section](/legacy/javascript-agents/reference-guide/smart-fields/overview#createadvancedsmartfield).
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 On our Live Demo, the very simple Smart Field `fullname` is available on the `customers` collection.
 
 ```javascript
@@ -58,7 +60,8 @@ collection('customers', {
 \
 Very often, the business logic behind the Smart Field is more complex and must be asynchronous. To do that, please have a look at [this section](/legacy/javascript-agents/reference-guide/smart-fields/overview#createadvancedsmartfield).
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` collection.
 
 ```ruby
@@ -88,14 +91,15 @@ class Forest::Customer
 end
 ```
 
-### Django
+  </Tab>
+  <Tab title="Django">
 On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` collection.
 
 
 Ensure the file app/forest/\_\_init\_\_.py exists and contains the import of the previous defined class :
 
-
-### Laravel
+  </Tab>
+  <Tab title="Laravel">
 On our Live Demo, the very simple Smart Field `fullname` is available on the `Customer` model.
 
 
@@ -106,9 +110,13 @@ Very often, the business logic behind the Smart Field is more complex and must i
 The collection name must be the same as the **model name**.
 </Warning>
 
+  </Tab>
+</Tabs>
+
 ### Updating a Smart Field
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the `set` method should always return the object it’s working on**. In the example hereunder, the `customer` object is returned including only the modified data.
 
 ```javascript
@@ -167,7 +175,8 @@ collection('customers', {
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
 </Info>
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the `set` method should always return the object it’s working on**. In the example hereunder, the `customer` record is returned.
 
 ```javascript
@@ -224,7 +233,8 @@ collection('customers', {
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
 </Info>
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the set method should always return the object it’s working on**. In the example hereunder, the `user_params` is returned is returned including only the modified data.
 
 ```ruby
@@ -252,18 +262,19 @@ end
 For security reasons, the `fullname` Smart field will remain **read-only**, even after you implement the `set` method. To edit it, disable read-only mode in the field settings.
 </Info>
 
-### Django
+  </Tab>
+  <Tab title="Django">
 By default, your Smart Field is considered as read-only. If you want to update a Smart Field, you just need to write the logic to “unzip” the data. **Note that the `set` method should always return the object it’s working on**. In the example hereunder, the `customer` object is returned including only the modified data.
 
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 ### Searching, Sorting and Filtering on a Smart Field
 
 To perform a search on a Smart Field, you also need to write the logic to “unzip” the data, then the search query which is specific to your zipping. In the example hereunder, the `firstname` and `lastname` are searched separately after having been unzipped.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -302,7 +313,8 @@ collection('customers', {
 For **case insensitive** search using PostgreSQL database use `iLike` operator. See [Sequelize operators documentation](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators).
 </Info>
 
-### Mongodb
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -328,7 +340,8 @@ collection('customers', {
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Customer
@@ -351,11 +364,8 @@ class Forest::Customer
 end
 ```
 
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 #### Filtering
 
@@ -367,7 +377,8 @@ To perform a filter on a Smart Field, you need to write the filter query logic, 
 
 In the example hereunder, the `fullname` is filtered by checking conditions on the `firstname` and `lastname` depending on the filter operator selected.
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -421,7 +432,8 @@ collection('customers', {
 });
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -471,7 +483,8 @@ collection('customer', {
 });
 ```
 
-### Rails
+  </Tab>
+  <Tab title="Rails">
 
 ```ruby
 class Forest::Customer
@@ -502,11 +515,8 @@ class Forest::Customer
 end
 ```
 
-### Django
-
-
-### Laravel
-
+  </Tab>
+</Tabs>
 
 <Info>
 Make sure you set the option `isFilterable: true` in the field definition of your code. Then, you will be able to toggle the "Filtering enabled" option in the browser, in your **Fields Settings**.
@@ -547,7 +557,8 @@ Implement them using the DataLoader which is a generic utility to be used as par
 
 #### Smart field declaration
 
-### SQL
+<Tabs>
+  <Tab title="SQL">
 
 ```javascript
 const DataLoader = require('dataloader');
@@ -579,7 +590,8 @@ collection('posts', {
 });
 ```
 
-### MongoDB
+  </Tab>
+  <Tab title="Mongoose">
 
 ```javascript
 const { collection } = require('forest-express-mongoose');
@@ -615,5 +627,8 @@ collection('customers', {
   }]
 });
 ```
+
+  </Tab>
+</Tabs>
 
 ####

@@ -22,8 +22,6 @@ To do so, add the following code to **either** define which models are included 
 #### Exclude models
 
 
-### Rails
-
 ```ruby
 ForestLiana.env_secret = Rails.application.secrets.forest_env_secret
 ForestLiana.auth_secret = Rails.application.secrets.forest_auth_secret
@@ -38,10 +36,4 @@ ForestLiana.included_models = ['Customer'];
 # in the [] you may add the precise list of all models you do not want to see in Forest
 ForestLiana.excluded_models = ['Document', 'Transaction'];
 ```
-
-### Django
-
-
-### Laravel
-
 
