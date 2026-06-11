@@ -965,12 +965,6 @@
                 ]
               }
             ]
-          },
-          {
-            "group": "Diagram drafts",
-            "pages": [
-              "legacy/diagram-drafts"
-            ]
           }
         ]
       }

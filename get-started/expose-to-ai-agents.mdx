@@ -5,6 +5,8 @@ description: "Turn on the MCP server so AI agents can act on your data under the
 
 The data, actions, and workflows you've built aren't just for the Forest UI. Forest ships an **MCP server** that exposes the same capabilities to AI agents like [Claude](/product/embed/claude), enforcing the exact same permissions and writing the same audit trail, regardless of whether a human or an AI agent is acting.
 
+<img src="/images/diagrams/mcp-flow.svg" alt="An AI agent request hits the /mcp endpoint, passes the same permissions and role check as a human (allowed or blocked), reaches the Forest back-end, and every action is written to the audit log" width="100%" />
+
 ## What the MCP server exposes
 
 Through the Model Context Protocol, connected AI agents can:

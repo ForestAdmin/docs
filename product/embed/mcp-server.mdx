@@ -42,11 +42,15 @@ FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
 
 Your Forest MCP Server will be accessible at this URL: `{your-standalone-server-url}/mcp` 
 
+<img src="/images/diagrams/mcp-standalone.svg" alt="Standalone: the AI agent hits the MCP server running as a separate service, which talks to your Forest back-end and your data" width="100%" />
+
 ## Mounted Forest MCP Server
 
 <Note>
-  This is only available with the node.js agent. For other back-ends, refer to the Standalone method further down.
+  This is only available with the node.js back-end. For other back-ends, refer to the Standalone method further down.
 </Note>
+
+<img src="/images/diagrams/mcp-mounted.svg" alt="Mounted: the AI agent hits the /mcp endpoint mounted directly inside your Forest back-end, which talks to your data" width="100%" />
 
 In your node.js's `index.js` file, simply call the `mountAiMcpServer()` method when creating the back-end, for example:
 

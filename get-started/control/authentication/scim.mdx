@@ -11,39 +11,7 @@ SCIM (System for Cross-domain Identity Management) is an open standard for autom
 
 SCIM enables bidirectional communication between your IdP and Forest:
 
-```
-┌──────────────────┐                    ┌──────────────────┐
-│   Identity       │                    │   Forest   │
-│   Provider       │                    │                  │
-│  (Okta, Azure)   │                    │                  │
-└────────┬─────────┘                    └────────┬─────────┘
-         │                                       │
-         │  1. User created in IdP               │
-         ├──────────────────────────────────────>│
-         │     SCIM POST /Users                  │
-         │                                       │
-         │  2. Forest creates user         │
-         │<──────────────────────────────────────┤
-         │     200 OK                            │
-         │                                       │
-         │  3. User updated in IdP               │
-         ├──────────────────────────────────────>│
-         │     SCIM PATCH /Users/{id}            │
-         │                                       │
-         │  4. Forest updates user         │
-         │<──────────────────────────────────────┤
-         │     200 OK                            │
-         │                                       │
-         │  5. User disabled in IdP              │
-         ├──────────────────────────────────────>│
-         │     SCIM PATCH /Users/{id}            │
-         │     { active: false }                 │
-         │                                       │
-         │  6. Forest disables user        │
-         │<──────────────────────────────────────┤
-         │     200 OK                            │
-         │                                       │
-```
+<img src="/images/diagrams/scim.svg" alt="SCIM provisioning sequence between your identity provider and the Forest SCIM API: POST to provision, PATCH to update, DELETE to deprovision" width="100%" />
 
 ### User lifecycle events
 

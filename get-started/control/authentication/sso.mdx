@@ -11,19 +11,7 @@ SSO is configured once, at the **organization** level, by an **organization owne
 
 Forest uses a standard SP-initiated SAML 2.0 flow: the user starts at Forest, authenticates against your IdP, and is redirected back with a signed assertion.
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Forest as Forest (app.forestadmin.com)
-    participant IdP as Your identity provider
-
-    User->>Forest: Click "Login with SSO" and enter the organization name
-    Forest->>IdP: Redirect with a SAML authentication request
-    User->>IdP: Authenticate (with MFA if your IdP requires it)
-    IdP->>Forest: Signed SAML assertion (NameID = email) to the callback URL
-    Forest->>Forest: Validate the assertion and open a session
-    Forest->>User: Access granted
-```
+<img src="/images/diagrams/sso.svg" alt="SP-initiated SAML 2.0 flow: the user starts at Forest, authenticates against the identity provider, and is redirected back with a signed assertion" width="100%" />
 
 ## Forest SAML settings
 

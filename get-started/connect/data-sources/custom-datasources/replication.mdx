@@ -123,6 +123,8 @@ Use these approaches independently or combine them:
 2. **Change polling** - Uses Forest events to detect modifications
 3. **Change pushing** - Leverages target API events via webhooks
 
+<img src="/images/diagrams/replication.svg" alt="The target API feeds a replica cache held by the Forest back-end via three update methods — scheduled rebuild, change polling, and change pushing — and Forest queries the replica" width="100%" />
+
 ## Scheduled rebuilds
 
 Scheduled rebuilds represent the simplest approach for updating replica data by fetching all records from a target API at regular intervals. This method works with any API but is less efficient for large datasets since it requires fetching all records regardless of changes.

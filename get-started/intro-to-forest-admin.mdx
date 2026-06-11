@@ -13,29 +13,7 @@ This guide covers the **self-hosted Node.js back-end**, the recommended path for
 
 Forest runs through a **back-end**, a lightweight service you deploy alongside your application. The Forest back-end connects to your databases, exposes your business logic and workflows, and serves the API that the Forest UI (and any AI agents you connect) consume.
 
-```mermaid
-%%{init: {'theme':'base', 'themeVariables': {
-  'primaryColor':'#B0D030',
-  'primaryBorderColor':'#698000',
-  'primaryTextColor':'#1F2A00',
-  'lineColor':'#698000',
-  'fontFamily':'Inter, system-ui, sans-serif'
-}}}%%
-graph LR
-    DB[("Your databases & APIs")]
-    Backend["Forest back-end<br/>(your infrastructure)"]
-    UI["Forest UI<br/>(hosted by Forest)"]
-    MCP["AI agents<br/>(via MCP)"]
-
-    DB --> Backend
-    Backend --> UI
-    Backend --> MCP
-
-    classDef forest fill:#B0D030,stroke:#698000,stroke-width:2px,color:#1F2A00;
-    classDef external fill:#F4F5EE,stroke:#9CA88A,stroke-width:1px,color:#3A3F33;
-    class Backend,UI forest;
-    class DB,MCP external;
-```
+<img src="/images/diagrams/architecture.svg" alt="Your databases & APIs connect to the Forest back-end in your infrastructure, which serves the Forest UI (hosted by Forest) and AI agents via MCP" width="100%" />
 
 The Forest back-end does three things:
 

@@ -16,6 +16,8 @@ Forest provides extensive customization options for your collections, allowing y
 
 Collection hooks allow you to execute custom code before or after CRUD operations, giving you the ability to enforce business rules, or integrate with external services.
 
+<img src="/images/diagrams/hooks.svg" alt="A request passes through the Before hook (validate, mutate, or abort), then the collection operation (List, Create, Update, Delete), then the After hook (enrich, side-effects), then the response; a Before hook that throws aborts the operation" width="100%" />
+
 ### Features
 
 - **Pre** and **Post** operation execution: Execute custom logic before or after a specific collection operation.
