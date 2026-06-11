@@ -2,8 +2,6 @@
 title: GetIdsFromRequest
 ---
 
-# GetIdsFromRequest
-
 In recent versions of our agents, you may have noticed a new helper, which is `getIdsFromRequest`. This helper comes alongside the ['Select All' feature](https://docs.forestadmin.com/documentation/how-tos/maintain/upgrade-notes-sql-mongodb/upgrade-to-v6#select-all-feature), allowing you to trigger a Smart Action on more records than those displayed in the UI.
 
 Unfortunately, this helper is not compatible with Smart Actions triggered on Smart Relationships. This is due to the Smart Relationship concept. When you create a [HasMany Smart Relationship](https://docs.forestadmin.com/documentation/reference-guide/relationships/create-a-smart-relationship#creating-a-hasmany-smart-relationship), you become the owner of the way your data are linked together by overriding the routes. Forest can't retrieve the logic to link the data, this is why you also need to code your own `getIdsFromRequest` helper. This documentation will guide you through the steps you need to create your own helper.

@@ -2,8 +2,6 @@
 title: PHP Agent Documentation (End of Life)
 ---
 
-# PHP Agent Documentation (End of Life)
-
 > **Status:** END OF LIFE
 >
 > **Audience:** Legacy PHP users

@@ -2,8 +2,6 @@
 title: Agent v1 Documentation (Deprecated)
 ---
 
-# Agent v1 Documentation (Deprecated)
-
 > **Status:** DEPRECATED
 >
 > **End of Life:** [Date TBD]
