@@ -395,7 +395,8 @@
               "guides/migration/from-v1/steps/smart-actions",
               "guides/migration/from-v1/steps/smart-fields",
               "guides/migration/from-v1/steps/smart-relationships",
-              "guides/migration/from-v1/steps/smart-segments"
+              "guides/migration/from-v1/steps/smart-segments",
+              "legacy/javascript-agents/how-tos/releases-support/README"
             ]
           },
           {
@@ -714,8 +715,7 @@
                   "legacy/javascript-agents/how-tos/settings/include-exclude-models",
                   "legacy/javascript-agents/how-tos/settings/display-extensive-logs"
                 ]
-              },
-              "legacy/javascript-agents/how-tos/releases-support/README"
+              }
             ]
           },
           {

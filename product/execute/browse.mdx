@@ -16,15 +16,57 @@ When you open a collection, records are displayed in a **table view** with one r
 
 ## Searching
 
-The **search bar** at the top of any collection lets you filter records by keyword.
+The **search bar** at the top of any collection lets you filter records by keyword. Matching text is highlighted within the results.
 
-- Forest searches across the fields configured as searchable for that collection (configured by your developers in the agent).
-- Search supports **contains** matching by default.
-- To search by exact value, check with your admin whether extended search mode is enabled.
+By default, Forest searches across the fields configured as searchable for that collection (configured by your developers in the agent), and matches on **contains**.
 
 <Info>
 Developers can configure which fields are included in search using the `searchable` option in the agent configuration.
 </Info>
+
+### Extended search
+
+By default, only the collection's own fields are searched. Reference fields of `belongsTo` records are ignored. **Extended search** also looks inside the reference fields of related records. It is not the default because it is slower.
+
+### Advanced search syntax
+
+<Info>
+Advanced search syntax is supported on Node.js agents (`@forestadmin/agent`) from version 1.36.18.
+</Info>
+
+Combine these operators to search precisely:
+
+| Syntax | Matches |
+| --- | --- |
+| `-term` | records that do **not** contain `term` |
+| `property:term` | records with `term` in the `property` field |
+| `relation.childProperty:term` | records with `term` in `childProperty` of the `relation` relation |
+| `term1 OR term2` | records with `term1` or `term2` |
+| `term1 AND term2` | records with both (same as `term1 term2`) |
+| `property:NULL` | records whose `property` is the technical value `NULL` |
+| `"multiple quoted words"` | the exact phrase, without splitting into separate terms |
+
+All of these can be nested, for example `(property:term OR -term2) AND (property1:NULL OR relation.childProperty:term3)`.
+
+`NULL`, `OR` and `AND` must be written in capital letters to be read as operators.
+
+### Focused search on one property
+
+`property:searchedTerm` searches only inside `property`; `relation.childProperty:searchedTerm` searches inside a relation's field.
+
+<Info>
+The property name matches the technical name in the database. Forest Admin ignores casing and separators like `-` and `_`, so `property_name` matches a technical `propertyName`.
+</Info>
+
+Focused search combines with the operators below, for example `property:>20`.
+
+**Text fields** match with the first operator your database supports, in order: contains (case insensitive), contains (case sensitive), then equal. So searching `Term` matches `TERM` and `abcTERMdef` on a case-insensitive database.
+
+**Number fields** support `>42`, `>=42`, `<42`, `<=42` (for example `property:>42`).
+
+**Date fields** support partial dates (`2020`, `2020-01`, `2020-01-01`) and the comparison operators (for example `property:>2020-01-01`, `property:<=2020`). Dates use the timezone configured in Forest Admin.
+
+**Boolean fields** accept `true`/`1` and `false`/`0` (case insensitive).
 
 ## Filtering
 

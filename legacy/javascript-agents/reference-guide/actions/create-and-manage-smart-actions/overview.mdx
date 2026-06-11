@@ -727,9 +727,6 @@ Collection.register(CustomerForest, Customer)
 ### Laravel
 On our Live Demo, the collection `Customer` has a Smart Action `Generate invoice`. In this use case, we want to download the generated PDF invoice after clicking on the action. To indicate a Smart Action returns something to download, you have to enable the option `download`.
 
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.52.05 (2).png>)
-
 <Info>
 Want to upload your files to Amazon S3? Check out this this [Woodshop tutorial](https://docs.forestadmin.com/woodshop/how-tos/upload-files-to-s3).
 </Info>
@@ -738,9 +735,7 @@ Want to upload your files to Amazon S3? Check out this this [Woodshop tutorial](
 
 If you want to create an action accessible from the details or the summary view of a record involving related data, this section may interest you.
 
-In the example below, the “Add new transaction” action **(1)** is accessible from the summary view. This action creates a new transaction and automatically refresh the “Emitted transactions” related data section **(2)** to see the new transaction.
-
-![](</images/legacy/javascript-agents/screenshot 2019-07-01 at 14.57.58.png>)
+In the example below, the “Add new transaction” action is accessible from the summary view. This action creates a new transaction and automatically refreshes the “Emitted transactions” related data section to see the new transaction.
 
 ### SQL
 Below is the sample code. We use faker to generate random data in our example. Remember to install it if you wish to use it (`npm install faker`).
