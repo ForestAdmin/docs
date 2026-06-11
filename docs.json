@@ -92,6 +92,7 @@
               {
                 "group": "Integrations",
                 "pages": [
+                  "get-started/connect/integrations/overview",
                   "get-started/connect/integrations/mcp-servers",
                   "product/embed/zendesk",
                   "product/embed/n8n"

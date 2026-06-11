@@ -1,0 +1,88 @@
+---
+title: "All integrations"
+description: "Every third-party tool Forest Admin connects to: data sources, action plugins, embeds, and AI assistants."
+---
+
+Forest Admin integrates with third-party tools in several ways: as a **data source** (browse and edit the tool's data inside Forest), as an **action plugin** (trigger the tool from a Forest action), as an **embed** (surface Forest inside another product), or as an **AI assistant** connection.
+
+This page lists everything Forest Admin connects to today and where to find it. Looking for a tool that isn't here? [Contact us](mailto:support@forestadmin.com), most APIs can be connected with a [custom data source](/get-started/connect/data-sources/custom-datasources/overview).
+
+## Support & ticketing
+
+<Card title="Zendesk" icon="headset">
+  - **Browse & edit** tickets, users and organizations: [Zendesk data source](/get-started/connect/data-sources/zendesk)
+  - **Create & close tickets** from a Forest action: [Zendesk plugins](/product/process/advanced-concepts/plugins/zendesk)
+  - **Embed Forest** inside Zendesk tickets: [Zendesk app](/product/embed/zendesk)
+</Card>
+
+## Payments & billing
+
+<Columns cols={2}>
+  <Card title="Stripe" icon="credit-card" href="/get-started/connect/data-sources/stripe">
+    Connect Stripe customers, charges and subscriptions as collections.
+  </Card>
+</Columns>
+
+## CRM & marketing
+
+<Columns cols={2}>
+  <Card title="HubSpot" icon="bullhorn" href="/get-started/connect/data-sources/hubspot">
+    Connect HubSpot objects (contacts, companies, deals) as collections.
+  </Card>
+</Columns>
+
+## Data, search & storage
+
+<Columns cols={2}>
+  <Card title="Snowflake" icon="snowflake" href="/get-started/connect/data-sources/snowflake">
+    Import Snowflake tables and views (read-only, via ODBC).
+  </Card>
+  <Card title="Elasticsearch" icon="magnifying-glass" href="/get-started/connect/data-sources/elasticsearch">
+    Expose Elasticsearch indices as searchable collections.
+  </Card>
+  <Card title="Amazon S3" icon="aws" href="/product/process/advanced-concepts/plugins/active-storage">
+    Manage file attachments backed by S3 (and other backends) with the Active Storage plugin, or the AWS S3 plugin (see [Plugins](/product/process/advanced-concepts/plugins/overview)).
+  </Card>
+  <Card title="Airtable" icon="table" href="/get-started/connect/data-sources/airtable">
+    Connect Airtable bases as collections.
+  </Card>
+  <Card title="Azure Cosmos DB" icon="microsoft" href="/get-started/connect/data-sources/cosmosdb">
+    Connect a Cosmos DB account as collections.
+  </Card>
+  <Card title="GraphQL / Hasura" icon="diagram-project" href="/get-started/connect/data-sources/graphql-hasura">
+    Connect a GraphQL or Hasura endpoint as collections.
+  </Card>
+</Columns>
+
+## Automation
+
+<Columns cols={2}>
+  <Card title="n8n" icon="diagram-next" href="/product/embed/n8n">
+    Read and act on Forest data from n8n workflows with the Forest node.
+  </Card>
+</Columns>
+
+## AI assistants
+
+<Columns cols={2}>
+  <Card title="Forest MCP Server" icon="plug" href="/product/embed/mcp-server">
+    Expose your data and actions to AI assistants over the Model Context Protocol.
+  </Card>
+  <Card title="Claude" icon="robot" href="/product/embed/claude">
+    Connect Claude (Desktop, Code) to your Forest project via MCP.
+  </Card>
+  <Card title="Dust" icon="robot" href="/product/embed/untitled-page">
+    Connect Dust assistants to your Forest data via MCP.
+  </Card>
+  <Card title="Self-hosted AI" icon="shield-halved" href="/product/process/advanced-concepts/self-hosted-ai">
+    Route Forest's AI features through your own OpenAI or Anthropic keys.
+  </Card>
+</Columns>
+
+## Databases & ORMs
+
+Forest Admin connects natively to most SQL and NoSQL databases, as well as to your existing ORM models (Sequelize, Mongoose, Active Record, Mongoid). See the [data sources overview](/get-started/connect/data-sources/overview) for the full list.
+
+## Build your own
+
+Need a tool that isn't listed here? Wrap any REST or internal API as a Forest collection with a [custom data source](/get-started/connect/data-sources/custom-datasources/overview), or factor a repeated customization into a [plugin](/product/process/advanced-concepts/plugins/overview).
