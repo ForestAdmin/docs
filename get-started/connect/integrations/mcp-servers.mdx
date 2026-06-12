@@ -1,25 +1,92 @@
 ---
 title: "MCP Connectors"
-description: "Connect external tools and APIs to Forest using the Model Context Protocol"
+description: "Connect external tools to Forest using the Model Context Protocol — native connectors and custom servers."
 ---
 
-**MCP (Model Context Protocol)** is a standardized way to connect external tools, APIs, and data sources to Forest. By connecting MCP servers, extend Forest's capabilities with custom integrations. MCP servers are used in workflows to trigger external actions, fetch data from external systems, and build complex multi-step processes that span multiple systems.
+**MCP (Model Context Protocol)** is a standardized way to connect external tools, APIs, and data sources to Forest. Forest ships **native connectors** for popular tools, and lets you plug in **any custom MCP server**. MCP connectors are used inside workflows to trigger external actions, fetch data from external systems, and build multi-step processes that span several tools.
 
 ## What is MCP?
 
-The Model Context Protocol is an open standard for connecting AI assistants and applications to external tools and data sources. In Forest, MCP servers enable you to:
+The Model Context Protocol is an open standard for connecting AI assistants and applications to external tools and data sources. In Forest, an MCP connector exposes a third-party tool's **tools** (its callable operations) so you can use them in your workflows.
 
-- **Extend workflows** - Use external tools within Forest workflows (currently in beta)
-- **Access external data** - Query APIs and services directly from Forest
-- **Integrate third-party services** - Connect to tools like Slack, GitHub, monitoring systems, and more
-- **Build custom integrations** - Create your own MCP servers for proprietary systems
+Each native connector wraps the tool's **official MCP server** — Forest handles the connection and authentication, and the operations available are the ones that vendor's MCP server exposes. For the exhaustive list of operations a connector provides, follow the vendor reference linked in each connector below.
 
-## Connecting an MCP server
+## Native MCP Connectors
 
-To connect an MCP server to your Forest project:
+Connect any of these from **Project Settings → Integrations → Add MCP Server**, then pick the connector instead of entering a URL.
 
-1. Navigate to **Project Settings** → **Integrations**
-2. Click **Add MCP Server**
+### Payments & billing
+
+<Columns cols={2}>
+  <Card title="Stripe">Payments, customers, subscriptions, refunds.</Card>
+  <Card title="Square">Payments, orders, catalog, customers.</Card>
+</Columns>
+
+### CRM & support
+
+<Columns cols={2}>
+  <Card title="HubSpot">Contacts, companies, deals, tickets.</Card>
+  <Card title="Intercom">Conversations, contacts, articles.</Card>
+  <Card title="Zendesk">Tickets, users, organizations.</Card>
+</Columns>
+
+### Productivity & docs
+
+<Columns cols={2}>
+  <Card title="Microsoft 365">Mail, calendar, files, Teams.</Card>
+  <Card title="Notion">Pages, databases, search.</Card>
+  <Card title="Monday.com">Boards, items, updates.</Card>
+</Columns>
+
+### Communication
+
+<Columns cols={2}>
+  <Card title="Slack">Messages, channels, users.</Card>
+</Columns>
+
+### Analytics & data
+
+<Columns cols={2}>
+  <Card title="Amplitude">Events, charts, cohorts.</Card>
+  <Card title="Snowflake">Query tables and views.</Card>
+</Columns>
+
+### Automation
+
+<Columns cols={2}>
+  <Card title="n8n">Trigger and run n8n workflows.</Card>
+  <Card title="Zapier">Trigger Zaps.</Card>
+  <Card title="Workato">Trigger recipes.</Card>
+</Columns>
+
+### Other
+
+<Columns cols={2}>
+  <Card title="Kolar">Kolar operations.</Card>
+  <Card title="Orias">Orias registry lookups.</Card>
+</Columns>
+
+<Note>
+  The exact operations available come from each vendor's MCP server and can change without notice — that's why Forest doesn't duplicate the full tool list here. After connecting, the **"Confirm the exposed tools"** step shows you exactly what's available for your account and plan.
+</Note>
+
+### Example: Stripe
+
+Each native connector follows the same flow. For Stripe:
+
+1. Go to **Project Settings → Integrations → Add MCP Server**.
+2. Select **Stripe**.
+3. Complete the connector's authentication.
+4. Confirm the exposed tools, then save.
+
+**What it unlocks** — read and act on customers, charges, subscriptions, invoices and refunds from your workflows. For the full operation reference, see the [Stripe MCP documentation](https://docs.stripe.com/mcp).
+
+## Connect a custom MCP server
+
+If a tool isn't in the list above, connect any MCP server by URL:
+
+1. Navigate to **Project Settings → Integrations**.
+2. Click **Add MCP Server**.
 3. Enter your MCP server URL and configuration:
    ```json
    {
@@ -28,7 +95,7 @@ To connect an MCP server to your Forest project:
      "apiKey": "your-api-key"
    }
    ```
-4. Check if all the tools are exposed
-5. Save your configuration
+4. Check that all the expected tools are exposed.
+5. Save your configuration.
 
-Learn more about MCP servers in the [Claude MCP documentation](https://docs.claude.com/en/docs/agents-and-tools/remote-mcp-servers).
+Learn more about building and hosting MCP servers in the [Claude MCP documentation](https://docs.claude.com/en/docs/agents-and-tools/remote-mcp-servers).

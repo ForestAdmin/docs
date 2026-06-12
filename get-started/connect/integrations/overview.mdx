@@ -3,7 +3,7 @@ title: "All integrations"
 description: "Every third-party tool Forest connects to: data sources, action plugins, embeds, and AI assistants."
 ---
 
-Forest integrates with third-party tools in several ways: as a **data source** (browse and edit the tool's data inside Forest), as an **action plugin** (trigger the tool from a Forest action), as an **embed** (surface Forest inside another product), or as an **AI assistant** connection.
+Forest integrates with third-party tools in several ways: as a **data source** (browse and edit the tool's data inside Forest), as an **action plugin** (trigger the tool from a Forest action), as an **embed** (surface Forest inside another product), as an **MCP connector** (call the tool from a Forest workflow), or as an **AI assistant** connection. A tool can offer more than one path — see the [MCP Connectors](/get-started/connect/integrations/mcp-servers) catalog for the full list of workflow connectors.
 
 This page lists everything Forest connects to today and where to find it. Looking for a tool that isn't here? [Contact us](mailto:support@forestadmin.com), most APIs can be connected with a [custom data source](/get-started/connect/data-sources/custom-datasources/overview).
 
@@ -13,29 +13,28 @@ This page lists everything Forest connects to today and where to find it. Lookin
   - **Browse & edit** tickets, users and organizations: [Zendesk data source](/get-started/connect/data-sources/zendesk)
   - **Create & close tickets** from a Forest action: [Zendesk plugins](/product/process/advanced-concepts/plugins/zendesk)
   - **Embed Forest** inside Zendesk tickets: [Zendesk app](/product/embed/zendesk)
+  - **Call Zendesk from workflows**: [Zendesk MCP Connector](/get-started/connect/integrations/mcp-servers)
 </Card>
 
 ## Payments & billing
 
-<Columns cols={2}>
-  <Card title="Stripe" icon="credit-card" href="/get-started/connect/data-sources/stripe">
-    Connect Stripe customers, charges and subscriptions as collections.
-  </Card>
-</Columns>
+<Card title="Stripe" icon="credit-card">
+  - **Browse & edit** customers, charges and subscriptions as collections: [Stripe data source](/get-started/connect/data-sources/stripe)
+  - **Call Stripe from workflows**: [Stripe MCP Connector](/get-started/connect/integrations/mcp-servers)
+</Card>
 
 ## CRM & marketing
 
-<Columns cols={2}>
-  <Card title="HubSpot" icon="bullhorn" href="/get-started/connect/data-sources/hubspot">
-    Connect HubSpot objects (contacts, companies, deals) as collections.
-  </Card>
-</Columns>
+<Card title="HubSpot" icon="bullhorn">
+  - **Browse & edit** objects (contacts, companies, deals) as collections: [HubSpot data source](/get-started/connect/data-sources/hubspot)
+  - **Call HubSpot from workflows**: [HubSpot MCP Connector](/get-started/connect/integrations/mcp-servers)
+</Card>
 
 ## Data, search & storage
 
 <Columns cols={2}>
-  <Card title="Snowflake" icon="snowflake" href="/get-started/connect/data-sources/snowflake">
-    Import Snowflake tables and views (read-only, via ODBC).
+  <Card title="Snowflake" icon="snowflake">
+    Import tables and views (read-only, via ODBC) as a [data source](/get-started/connect/data-sources/snowflake), or query Snowflake from workflows with the [MCP Connector](/get-started/connect/integrations/mcp-servers).
   </Card>
   <Card title="Elasticsearch" icon="magnifying-glass" href="/get-started/connect/data-sources/elasticsearch">
     Expose Elasticsearch indices as searchable collections.
@@ -57,8 +56,8 @@ This page lists everything Forest connects to today and where to find it. Lookin
 ## Automation
 
 <Columns cols={2}>
-  <Card title="n8n" icon="diagram-next" href="/product/embed/n8n">
-    Read and act on Forest data from n8n workflows with the Forest node.
+  <Card title="n8n" icon="diagram-next">
+    Read and act on Forest data from n8n with the [Forest node](/product/embed/n8n), or trigger n8n workflows from Forest with the [MCP Connector](/get-started/connect/integrations/mcp-servers).
   </Card>
 </Columns>
 
