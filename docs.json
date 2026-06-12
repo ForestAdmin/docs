@@ -27,61 +27,6 @@
         ]
       },
       {
-        "tab": "Home 2",
-        "groups": [
-          {
-            "group": "Welcome",
-            "pages": [
-              "index2"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Home 3",
-        "groups": [
-          {
-            "group": "Welcome",
-            "pages": [
-              "index3"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Home 4",
-        "groups": [
-          {
-            "group": "Welcome",
-            "pages": [
-              "index4"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Home 5",
-        "groups": [
-          {
-            "group": "Welcome",
-            "pages": [
-              "index5"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Home 6",
-        "groups": [
-          {
-            "group": "Welcome",
-            "pages": [
-              "index6"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "Get Started",
         "groups": [
           {
