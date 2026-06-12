@@ -185,7 +185,7 @@ See [Action forms](/product/process/actions/custom-actions/forms) for the full A
 
 ## Approval workflows
 
-If your legacy action used the approval system, the configuration moves from the action declaration to **Project Settings → Roles**. The action code itself doesn't need changes — Forest's UI handles the approval gating around your `execute` function.
+If your legacy action used the approval system, the configuration moves from the action declaration to **Project Settings → Roles**. The action code itself doesn't need changes. Forest's UI handles the approval gating around your `execute` function.
 
 ## Bulk and global actions
 
@@ -210,7 +210,7 @@ Bulk actions can use `context.getRecordIds()` to retrieve every selected record'
     v1 used `Liana.ensureAuthenticated` middleware and custom permission checks. v2 uses the standard role and team permission system configured in the UI. For dynamic checks (e.g. only the assigned rep can run an action), use action visibility conditions or check inside `execute` and return `resultBuilder.error(...)`.
   </Accordion>
   <Accordion title="Action that triggers a webhook">
-    Direct port — `execute` calls your webhook URL the same way the v1 route handler did. The `axios.post(...)` (or `Net::HTTP.post(...)`) line is unchanged.
+    Direct port: `execute` calls your webhook URL the same way the v1 route handler did. The `axios.post(...)` (or `Net::HTTP.post(...)`) line is unchanged.
   </Accordion>
 </AccordionGroup>
 

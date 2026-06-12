@@ -191,10 +191,10 @@ After swapping the datasource:
     On first start in development, the agent writes a `.forestadmin-schema.json` file. Confirm every collection you expect is listed.
   </Step>
   <Step title="Smoke-test the API">
-    Hit `http://localhost:3001/forest` — should return Forest metadata.
+    Hit `http://localhost:3001/forest`, which should return Forest metadata.
   </Step>
   <Step title="Point a test environment at the new agent">
-    Update the agent URL in your Forest test environment. Browse collections — every collection should appear with the same fields.
+    Update the agent URL in your Forest test environment. Browse collections. Every collection should appear with the same fields.
   </Step>
   <Step title="Continue with customizations">
     Once data flows correctly, move on to migrating Smart Actions, Smart Fields, and the rest.
@@ -208,7 +208,7 @@ After swapping the datasource:
     Some legacy agents auto-converted snake_case to camelCase. The new agent preserves database column names by default. Use the `rename` option or the field-rename customization API to align names.
   </Accordion>
   <Accordion title="A relationship I had isn't appearing automatically">
-    Foreign keys defined in the database are detected automatically. Relationships defined only in your ORM models (`belongsTo`, `hasMany`) are detected when you use the ORM-backed datasources (`datasource-sequelize`, `datasource-mongoose`, `datasource-active-record`). Relationships that exist only in code paths the agent doesn't see won't be detected — declare them explicitly with `addManyToOneRelation`, `addOneToManyRelation`, etc.
+    Foreign keys defined in the database are detected automatically. Relationships defined only in your ORM models (`belongsTo`, `hasMany`) are detected when you use the ORM-backed datasources (`datasource-sequelize`, `datasource-mongoose`, `datasource-active-record`). Relationships that exist only in code paths the agent doesn't see won't be detected. Declare them explicitly with `addManyToOneRelation`, `addOneToManyRelation`, etc.
   </Accordion>
   <Accordion title="The agent fails to connect to the database">
     Verify that `DATABASE_URL` is set on the agent server, that the user has read permissions, and that SSL is configured if your database requires it. For SQL datasources, check `sslMode`.

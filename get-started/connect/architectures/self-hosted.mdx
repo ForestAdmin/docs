@@ -61,7 +61,7 @@ This architecture provides a cleaner separation of concerns. Your application co
 
 The self-hosted architecture is built with privacy as a core principle. Here's how data flows when a user accesses Forest:
 
-<img src="/images/diagrams/self-hosted.svg" alt="When a user opens Forest, the browser loads UI and config from Forest's public endpoints, but all data requests go directly to your Forest back-end behind your firewall — your data never reaches Forest servers" width="100%" />
+<img src="/images/diagrams/self-hosted.svg" alt="When a user opens Forest, the browser loads UI and config from Forest's public endpoints, but all data requests go directly to your Forest back-end behind your firewall, so your data never reaches Forest servers" width="100%" />
 
 **The key principle:** Forest's servers (`app.forestadmin.com`, `api.forestadmin.com`) only send configuration and UI code to your browser. All data requests go directly from your browser to your back-end behind your firewall, and your data never leaves your infrastructure.
 

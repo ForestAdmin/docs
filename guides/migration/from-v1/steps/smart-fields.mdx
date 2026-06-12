@@ -29,7 +29,7 @@ Smart fields were flexible but often a performance bottleneck. Before migrating,
 
 ### Dependencies are explicit
 
-You now need to declare a `dependencies` array — the field names that your `getValues` function needs. Unlike the legacy agent, the new agent will not automatically fetch the whole record.
+You now need to declare a `dependencies` array: the field names that your `getValues` function needs. Unlike the legacy agent, the new agent will not automatically fetch the whole record.
 
 ### Fields work in batches
 
@@ -38,8 +38,8 @@ The `get` function is now called `getValues`: it takes an **array of records** a
 ### Other API changes
 
 - `type` was renamed to `columnType`
-- The `field` property no longer exists — the field name is the first argument of `addField`
-- `reference` no longer exists — use [smart relationships](/guides/migration/from-v1/steps/smart-relationships)
+- The `field` property no longer exists. The field name is the first argument of `addField`
+- `reference` no longer exists. Use [smart relationships](/guides/migration/from-v1/steps/smart-relationships)
 - `enums` was renamed to `enumValues`
 
 ### Example

@@ -1,6 +1,6 @@
 ---
 title: "MCP Connectors"
-description: "Connect external tools to Forest using the Model Context Protocol — native connectors and custom servers."
+description: "Connect external tools to Forest using the Model Context Protocol: native connectors and custom servers."
 ---
 
 **MCP (Model Context Protocol)** is a standardized way to connect external tools, APIs, and data sources to Forest. Forest ships **native connectors** for popular tools, and lets you plug in **any custom MCP server**. MCP connectors are used inside workflows to trigger external actions, fetch data from external systems, and build multi-step processes that span several tools.
@@ -9,7 +9,7 @@ description: "Connect external tools to Forest using the Model Context Protocol 
 
 The Model Context Protocol is an open standard for connecting AI assistants and applications to external tools and data sources. In Forest, an MCP connector exposes a third-party tool's **tools** (its callable operations) so you can use them in your workflows.
 
-Each native connector wraps the tool's **official MCP server** — Forest handles the connection and authentication, and the operations available are the ones that vendor's MCP server exposes. For the exhaustive list of operations a connector provides, follow the vendor reference linked in each connector below.
+Each native connector wraps the tool's **official MCP server**. Forest handles the connection and authentication, and the operations available are the ones that vendor's MCP server exposes. For the exhaustive list of operations a connector provides, follow the vendor reference linked in each connector below.
 
 ## Native MCP Connectors
 
@@ -67,7 +67,7 @@ Connect any of these from **Project Settings → Integrations → Add MCP Server
 </Columns>
 
 <Note>
-  The exact operations available come from each vendor's MCP server and can change without notice — that's why Forest doesn't duplicate the full tool list here. After connecting, the **"Confirm the exposed tools"** step shows you exactly what's available for your account and plan.
+  The exact operations available come from each vendor's MCP server and can change without notice, which is why Forest doesn't duplicate the full tool list here. After connecting, the **"Confirm the exposed tools"** step shows you exactly what's available for your account and plan.
 </Note>
 
 ### Example: Stripe
@@ -79,7 +79,7 @@ Each native connector follows the same flow. For Stripe:
 3. Complete the connector's authentication.
 4. Confirm the exposed tools, then save.
 
-**What it unlocks** — read and act on customers, charges, subscriptions, invoices and refunds from your workflows. For the full operation reference, see the [Stripe MCP documentation](https://docs.stripe.com/mcp).
+**What it unlocks**: read and act on customers, charges, subscriptions, invoices and refunds from your workflows. For the full operation reference, see the [Stripe MCP documentation](https://docs.stripe.com/mcp).
 
 ## Connect a custom MCP server
 

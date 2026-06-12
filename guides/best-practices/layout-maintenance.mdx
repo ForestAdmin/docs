@@ -11,11 +11,11 @@ This page covers practical habits for keeping your back-office healthy.
 
 Before cleaning up, audit what exists. Common issues to look for:
 
-- **Hidden fields that haven't been used in months** — they still load but no one sees them
-- **Duplicate segments** — multiple segments with the same or overlapping filters
-- **Orphaned Smart Actions** — actions whose backend logic was removed but the button still appears
-- **Outdated collection names** — labels that no longer reflect what the data represents
-- **Unused relationships** — related collections shown in detail views that operators never scroll to
+- **Hidden fields that haven't been used in months**: they still load but no one sees them
+- **Duplicate segments**: multiple segments with the same or overlapping filters
+- **Orphaned Smart Actions**: actions whose backend logic was removed but the button still appears
+- **Outdated collection names**: labels that no longer reflect what the data represents
+- **Unused relationships**: related collections shown in detail views that operators never scroll to
 
 To audit your layout, enter Layout Editor mode and review each collection systematically.
 
@@ -30,7 +30,7 @@ Fields hidden in the Layout Editor still exist in the schema and are returned by
 3. Deploy your changes
 
 <Warning>
-  Don't remove fields that are still referenced in segments, Smart Actions, or custom views — even if hidden from the main layout.
+  Don't remove fields that are still referenced in segments, Smart Actions, or custom views, even if hidden from the main layout.
 </Warning>
 
 ### Cleaning up segments
@@ -66,7 +66,7 @@ Layout issues can cause slow page loads even when the database is fast.
 Some widget types are more expensive than others. For table views on large collections:
 
 - Prefer lightweight display widgets (plain text, badge, date) over complex ones (file viewer, rich text renderer)
-- Avoid showing relationship fields in table view columns — they trigger additional queries per row
+- Avoid showing relationship fields in table view columns, as they trigger additional queries per row
 
 ### Relationship panel limits
 
@@ -82,7 +82,7 @@ A lightweight recurring review prevents layout debt from accumulating:
 
 | Frequency | Task |
 |-----------|------|
-| **Monthly** | Review new fields added since last deployment — configure widgets and visibility |
+| **Monthly** | Review new fields added since last deployment; configure widgets and visibility |
 | **Quarterly** | Audit segments and remove unused ones |
 | **Per release** | Check if any removed features left orphaned actions or smart fields |
 | **Annually** | Full layout audit across all collections and teams |
@@ -97,7 +97,7 @@ When Forest releases updates that affect layout behavior:
 
 ## Permission audits
 
-Layouts interact with permissions — a field visible in the layout but restricted by permissions creates confusion ("why can't I see this?"). Periodically review:
+Layouts interact with permissions. A field visible in the layout but restricted by permissions creates confusion ("why can't I see this?"). Periodically review:
 
 - Fields visible in layouts but restricted for most roles
 - Actions shown in the UI but denied at the permission level

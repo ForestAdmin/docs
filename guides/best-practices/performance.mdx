@@ -7,7 +7,7 @@ description: "Tips and patterns to optimize your Forest agent"
 
 ### Use the `dependencies` option instead of inline queries
 
-A common pattern in legacy agents was to make database queries inside the `get` function. In the new agent, the `dependencies` option lets you declare which related fields you need — the agent will fetch them automatically via JOIN, which is much faster.
+A common pattern in legacy agents was to make database queries inside the `get` function. In the new agent, the `dependencies` option lets you declare which related fields you need, and the agent will fetch them automatically via JOIN, which is much faster.
 
 <Tabs>
   <Tab title="Slow (inline query)">
@@ -18,7 +18,7 @@ A common pattern in legacy agents was to make database queries inside the `get` 
         dependencies: ['authorId'],
         getValues: posts =>
           posts.map(async post => {
-            // One query per post — very slow with many records
+            // One query per post, very slow with many records
             const author = await models.authors.findOne({ where: { id: post.authorId } });
             return `${author.firstName} ${author.lastName}`;
           }),
@@ -31,7 +31,7 @@ A common pattern in legacy agents was to make database queries inside the `get` 
     agent.customizeCollection('post', postCollection => {
       postCollection.addField('authorFullName', {
         columnType: 'String',
-        // Agent performs a single JOIN — much faster
+        // Agent performs a single JOIN, much faster
         dependencies: ['author:firstName', 'author:lastName'],
         getValues: posts =>
           posts.map(post => `${post.author.firstName} ${post.author.lastName}`),

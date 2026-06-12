@@ -30,7 +30,7 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
     Export your current Forest project layout. While the layout is preserved across the agent swap, having a baseline is good practice.
   </Step>
   <Step title="Plan parallel running">
-    Both agents can run side by side during migration — see [Migration overview](/guides/migration/overview#run-v1-and-v2-in-parallel).
+    Both agents can run side by side during migration.
   </Step>
 </Steps>
 
@@ -76,7 +76,7 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
     Update segments to use condition trees instead of ORM-specific queries. See [Smart Segments](/guides/migration/from-v1/steps/smart-segments).
   </Step>
   <Step title="Test side by side">
-    Run both agents simultaneously. Point a test environment at the new agent and verify behavior matches v1 — especially actions, computed fields, and segments.
+    Run both agents simultaneously. Point a test environment at the new agent and verify behavior matches v1, especially actions, computed fields, and segments.
   </Step>
   <Step title="Switch your environment URL">
     Once you're confident, update your Forest environment URL to point at the new agent. The UI configuration is preserved.
@@ -118,10 +118,10 @@ These all live in Forest's UI configuration and continue to work as long as the 
     The new agent treats field names as case-sensitive and prefers camelCase by convention. If your legacy code used snake_case, you can either rename the fields or use the `rename` option on the datasource to keep the original names exposed.
   </Accordion>
   <Accordion title="A Smart Action's form behaves differently">
-    The Smart Action form API is more structured in v2 — fields are declared explicitly. See [Smart Actions](/guides/migration/from-v1/steps/smart-actions) for the new form syntax.
+    The Smart Action form API is more structured in v2. Fields are declared explicitly. See [Smart Actions](/guides/migration/from-v1/steps/smart-actions) for the new form syntax.
   </Accordion>
   <Accordion title="A computed field is slow">
-    The new agent supports batched computed fields — `getValues` receives an array of records. If you naively port a v1 `get` function inside a `.map(async ...)`, you'll keep the same N+1 problem. Aggregate the underlying query.
+    The new agent supports batched computed fields: `getValues` receives an array of records. If you naively port a v1 `get` function inside a `.map(async ...)`, you'll keep the same N+1 problem. Aggregate the underlying query.
   </Accordion>
   <Accordion title="A relationship doesn't appear in the UI">
     The new relationship API requires you to declare both sides. If you only declared one direction, the UI may not surface it. See [Smart Relationships](/guides/migration/from-v1/steps/smart-relationships).
