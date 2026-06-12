@@ -375,15 +375,7 @@
             "pages": [
               "reference/agent-api/overview",
               "reference/agent-api/nodejs",
-              "reference/agent-api/ruby",
-              {
-                "group": "Deprecated",
-                "pages": [
-                  "reference/agent-api/deprecated/overview",
-                  "reference/agent-api/deprecated/forest-express-sequelize",
-                  "reference/agent-api/deprecated/forest-express-mongoose"
-                ]
-              }
+              "reference/agent-api/ruby"
             ]
           },
           {
