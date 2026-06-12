@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Forest Documentation",
   "colors": {
-    "primary": "#698000",
-    "light": "#B0D030",
-    "dark": "#698000"
+    "primary": "#3F5B1E",
+    "light": "#DDF327",
+    "dark": "#3F5B1E"
   },
   "favicon": "/favicon.svg",
   "modeToggle": {
