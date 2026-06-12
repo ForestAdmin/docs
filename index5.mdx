@@ -1,0 +1,86 @@
+---
+title: "Forest for developers"
+description: "Your data, your code, your infrastructure. Forest hosts the UI."
+mode: "frame"
+---
+
+Forest is an agent you run in your own infrastructure. You define the data model, the business logic, and the actions in code; Forest renders the operations UI and enforces governance on top. Your data never leaves your network.
+
+```bash Install
+npm install @forestadmin/agent
+```
+
+```ts agent.ts
+import { createAgent } from '@forestadmin/agent';
+
+const agent = createAgent({ authSecret, envSecret })
+  .addDataSource(/* SQL, Mongo, Stripe, … */)
+  .customizeCollection('transactions', collection =>
+    collection.addAction('Flag for review', {
+      scope: 'Single',
+      execute: async (context, result) => {
+        // your logic, your audit trail
+      },
+    }),
+  );
+
+agent.mountOnStandalone().start();
+```
+
+## The model
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="server" href="/get-started/connect/architectures/self-hosted">
+    You run the agent; Forest hosts the UI and config. Data stays in your network.
+  </Card>
+  <Card title="Schema format" icon="diagram-project" href="/reference/overview">
+    How collections, fields, and relationships are described.
+  </Card>
+</CardGroup>
+
+## Common tasks
+
+<AccordionGroup>
+  <Accordion title="Connect a data source" icon="plug">
+    SQL (via Sequelize or native), Mongoose, MongoDB, ActiveRecord, Mongoid, plus Stripe, HubSpot, Elasticsearch, Airtable, Snowflake, GraphQL/Hasura, and RPC.
+
+    <Card title="Data sources" icon="plug" href="/get-started/connect/data-sources/overview">
+      Full list and connection guides.
+    </Card>
+  </Accordion>
+  <Accordion title="Add business logic" icon="code">
+    Computed fields, field/record validation, custom actions, and lifecycle hooks, in Node.js or Ruby.
+
+    <Card title="Add business logic" icon="code" href="/get-started/add-business-logic">
+      Patterns and the SDK reference.
+    </Card>
+  </Accordion>
+  <Accordion title="Expose to AI agents over MCP" icon="robot">
+    Stand up an MCP server over your collections and actions. Agents inherit your permission model and the audit trail.
+
+    <Card title="MCP server" icon="robot" href="/product/embed/mcp-server">
+      Configure and secure the MCP endpoint.
+    </Card>
+  </Accordion>
+  <Accordion title="Migrate from a v1 agent" icon="arrow-right-arrow-left">
+    Moving off `forest-express-sequelize`, `forest-express-mongoose`, `forest-rails`, or `django-forestadmin`.
+
+    <Card title="Migration guide" icon="arrow-right-arrow-left" href="/guides/migration/from-v1/overview">
+      Step-by-step path to the current generation.
+    </Card>
+  </Accordion>
+</AccordionGroup>
+
+## Reference
+
+<CardGroup cols={3}>
+  <Card title="Agent SDK" icon="book" href="/reference/overview">
+    Node.js and Ruby.
+  </Card>
+  <Card title="Public API" icon="code" href="/reference/overview">
+    REST endpoints and auth.
+  </Card>
+  <Card title="GitHub" icon="github" href="https://github.com/ForestAdmin">
+    Source, examples, community packages.
+  </Card>
+</CardGroup>
