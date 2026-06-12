@@ -2,12 +2,12 @@
 title: Extend a route
 
 description: >-
-  ⚠️ This page is relevant only if you installed Forest Admin directly on a
+  ⚠️ This page is relevant only if you installed Forest directly on a
   database (SQL/Mongodb). If you installed in a Rails app, check the "Override a
   route" page.
 ---
 
-Extending a route is a clean way to achieve more by building on top of Forest Admin's existing routes.
+Extending a route is a clean way to achieve more by building on top of Forest's existing routes.
 
 To extend a route, simply **add** **your own logic before the `next()` statement:**
 
@@ -64,7 +64,7 @@ module.exports = router;
 
 The most simple way to trigger your business app's (or any external app's) logic is with an API call!
 
-In the following example, we override the `CREATE` route so that a credit card is created whenever a new customer is created in Forest Admin:
+In the following example, we override the `CREATE` route so that a credit card is created whenever a new customer is created in Forest:
 
 <img src="/images/legacy/javascript-agents/extend_a_route_1.jpg" alt="" />
 
@@ -77,13 +77,13 @@ const superagent = require('superagent');
 ...
 
 router.post('/customers', permissionMiddlewareCreator.create(), (req, res, next) => {
-  // Prepare the API call using the Forest Admin's posted data
+  // Prepare the API call using the Forest's posted data
   superagent
     .post('https://my-company/create-card')
     // Don't forget to authenticate your request using the relevant authentication method
     .set('X-API-Key', '**********')
     .end((err, res) => {
-      // Call next() to execute Forest Admin's default behavior
+      // Call next() to execute Forest's default behavior
       next();
     });
 });
@@ -109,7 +109,7 @@ const amqp = require('amqplib/callback_api');
 ...
 
 router.put('/orders/:orderId', permissionMiddlewareCreator.update(), (req, res, next) => {
-    // Prepare your message from Forest Admin's updated data
+    // Prepare your message from Forest's updated data
 	var orderId = req.body.data.id;
 	var orderStatus = req.body.data.attributes.shipping_status;
 	var message = 'Order ' + orderId + ' shipping status is now: ' + orderStatus;
@@ -134,7 +134,7 @@ router.put('/orders/:orderId', permissionMiddlewareCreator.update(), (req, res, 
 	    }, 500);
 	});
 
-  // Call next() to execute Forest Admin's default behavior
+  // Call next() to execute Forest's default behavior
   next();
 });
 
@@ -143,8 +143,8 @@ router.put('/orders/:orderId', permissionMiddlewareCreator.update(), (req, res, 
 module.exports = router;
 ```
 
-### Adding logic after Forest Admin's default behavior
+### Adding logic after Forest's default behavior
 
-At some point, you may want to trigger your remote logic **after** Forest Admin's logic.
+At some point, you may want to trigger your remote logic **after** Forest's logic.
 
 To achieve this, you can manually recreate `next()`'s behavior by using the snippets of [default routes](/legacy/javascript-agents/reference-guide/routes/default-routes), then append your own logic.

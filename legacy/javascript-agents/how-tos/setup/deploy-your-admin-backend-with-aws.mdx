@@ -34,7 +34,7 @@ First, please ensure you have an AWS account. You can sign up [here](https://aws
 ### 3. Set up your instance:
 
 <Info>
-The command lines in this step demonstrate how to install a Node.js agent. If you are running Forest Admin on another agent, please adapt the following to your specific stack.
+The command lines in this step demonstrate how to install a Node.js agent. If you are running Forest on another agent, please adapt the following to your specific stack.
 </Info>
 
 - Update the instance:
@@ -68,7 +68,7 @@ cd your-repo-directory
 npm install
 ```
 
-- Set up all the necessary environment variables provided by the Forest Admin environment creation wizard.
+- Set up all the necessary environment variables provided by the Forest environment creation wizard.
 
 - Add the `APPLICATION_PORT` environment variable to be able to contact the server from outside. In this example, we will choose `APPLICATION_PORT=3310`. If you choose another port, please adapt the next steps accordingly.
 
@@ -131,7 +131,7 @@ npm run start:watch
 
 ### 9. Finalize:
 
-Check your domain. You should be able to access your Forest Admin panel environment hosted on AWS. 🎉
+Check your domain. You should be able to access your Forest panel environment hosted on AWS. 🎉
 
 <Info>
 This is a basic setup, and there are many optimizations and security enhancements (like using RDS, tightening security groups, etc.) that can be done for a production-ready deployment. Please refer to the [AWS documentation](https://docs.aws.amazon.com/index.html) to go deeper.

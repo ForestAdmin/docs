@@ -125,7 +125,7 @@ urlpatterns = [
 The business logic in this Smart Action is extremely simple. We only update here the attribute `status` of the companies to the value `live`:
 
 
-Note that Forest Admin takes care of the authentication thanks to the `ActionView` parent class view.
+Note that Forest takes care of the authentication thanks to the `ActionView` parent class view.
 
 <Info>
 You may have to [add CORS headers](/legacy/ruby-agent/how-tos/setup/configuring-cors-headers) to enable the domain `app.forestadmin.com` to trigger API call on your Application URL, which is on a different domain name (e.g. _localhost:8000_).
@@ -181,7 +181,7 @@ Here is the list of available options to customize your Smart Action:
 
 | Name                | Type             | Description                                                                                                                                                          |
 | ------------------- | ---------------- |	---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name                | string           | Label of the action displayed in Forest Admin.                                                                                                                       |
+| name                | string           | Label of the action displayed in Forest.                                                                                                                       |
 | type                | string           | (optional) [Type](/legacy/ruby-agent/reference-guide/actions/overview#triggering-different-types-of-actions) of the action. Can be `bulk`, `global` or `single`. Default is `bulk`.                                  |
 | fields              | array of objects | (optional) Check the [handling input values](/legacy/ruby-agent/reference-guide/actions/create-and-manage-smart-actions/use-a-smart-action-form#handling-input-values) section.                                                              |
 | download            | boolean          | (optional) If `true`, the action triggers a file download in the Browser. Default is `false`                                                                         |
@@ -704,7 +704,7 @@ Sometimes, your Smart Action only makes sense depending on the state of your rec
 
 ### Restrict a smart action to specific roles
 
-When using Forest Admin collaboratively with clear roles defined it becomes relevant to restrict a smart action only to a select few. This functionality is accessible through Smart Actions Permissions in the Role section of your Project Settings.
+When using Forest collaboratively with clear roles defined it becomes relevant to restrict a smart action only to a select few. This functionality is accessible through Smart Actions Permissions in the Role section of your Project Settings.
 
 ### Require approval for a Smart action
 

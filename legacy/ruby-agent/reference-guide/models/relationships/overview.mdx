@@ -6,16 +6,16 @@ title: Relationships
 
 A relationship is a connection between two collections.
 
-Relationships are visible and actionable in Forest Admin:
+Relationships are visible and actionable in Forest:
 
 - `hasMany` **(1)**
 - `belongsTo` or `hasOne`**(2)**
 
 ![](/images/legacy/javascript-agents/live-demo-collection-relationship.png)
 
-If you installed Forest Admin within a **Rails** app, then all the relationships defined in your ActiveRecord models are supported out of the box. Check the official [Rails documentation](https://guides.rubyonrails.org/association_basics.html) to create new ones.
+If you installed Forest within a **Rails** app, then all the relationships defined in your ActiveRecord models are supported out of the box. Check the official [Rails documentation](https://guides.rubyonrails.org/association_basics.html) to create new ones.
 
-If you installed Forest Admin directly on a database, then most relationships should have been [automatically generated](/legacy/ruby-agent/reference-guide/models/relationships/overview#lumber-relationship-generation-rules). However, depending on your database nature and structure, you may have to add some manually.
+If you installed Forest directly on a database, then most relationships should have been [automatically generated](/legacy/ruby-agent/reference-guide/models/relationships/overview#lumber-relationship-generation-rules). However, depending on your database nature and structure, you may have to add some manually.
 
 ## Adding relationships (databases only)
 
@@ -95,6 +95,6 @@ Projects.associate = (models) => {
 
 ## Relationship generation rules
 
-Forest Admin automatically generates most relationships, according to the below rules:
+Forest automatically generates most relationships, according to the below rules:
 
 

@@ -67,7 +67,7 @@ end
 This feature is only available if you're using the `forest-express-sequelize` (v8.5.3+)`,` `forest-express-mongoose` (v8.6.5+), `forest-rails` (v7.5.0+) or `django-forestadmin` (v1.2.0+) agent.
 </Info>
 
-To paginate tables properly, Forest Admin triggers a separate request to fetch the number of records.
+To paginate tables properly, Forest triggers a separate request to fetch the number of records.
 
 In certain conditions, usually, when your database reaches a point where it has a lot of records, this request can decrease your loading performance. In this case, you can choose to disable it...
 
@@ -171,7 +171,7 @@ end
 
 ### Database Indexing
 
-**Indexes** are a powerful tool used in the background of a database to speed up querying. It power queries by providing a method to quickly lookup the requested data. As Forest Admin generates SQL queries to fetch your data, creating indexes can improve the query response time.
+**Indexes** are a powerful tool used in the background of a database to speed up querying. It power queries by providing a method to quickly lookup the requested data. As Forest generates SQL queries to fetch your data, creating indexes can improve the query response time.
 
 5\. Index the Primary and Unique Key Columns
 

@@ -6,7 +6,7 @@ title: Interact with your Elasticsearch data
 
 Let's take a simple example from Kibana, we will use [a set of fictitious accounts with randomly generated data.](https://download.elastic.co/demos/kibana/gettingstarted/accounts.zip) You can easily import the data using Kibana Home page section **Ingest your data**.
 
-When it's done we can start looking at how to play with those data in Forest Admin.
+When it's done we can start looking at how to play with those data in Forest.
 
 ### forest-express-sequelize
 First, we declare the `bank-accounts` collection in the `forest/` directory. In this Smart Collection, all fields are related to document mapping attributes except the field `id` that is computed using the document `_id`.&#x20;
@@ -256,7 +256,7 @@ module.exports = router;
 
 ### Implementing the DELETE
 
-Now we are able to see all the bank accounts on Forest Admin, it’s time to implement the DELETE HTTP method in order to remove the documents on Elasticsearch when the authorized user needs it.
+Now we are able to see all the bank accounts on Forest, it’s time to implement the DELETE HTTP method in order to remove the documents on Elasticsearch when the authorized user needs it.
 
 #### Delete a list a single record
 

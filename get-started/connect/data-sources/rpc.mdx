@@ -3,7 +3,7 @@ title: "RPC"
 description: "Connect back-ends over RPC: expose a remote data source, or distribute one back-end across microservices"
 ---
 
-The RPC datasource connects Forest Admin back-ends to each other over RPC (Remote Procedure Call). Use it to expose a remote data source in your back-office, or to split one back-end across multiple services (microservices) that a main back-end aggregates into a single admin panel.
+The RPC datasource connects Forest back-ends to each other over RPC (Remote Procedure Call). Use it to expose a remote data source in your back-office, or to split one back-end across multiple services (microservices) that a main back-end aggregates into a single admin panel.
 
 ## Node.js
 
@@ -28,12 +28,12 @@ agent.addDataSource(
 
 ## Ruby (distributed back-ends)
 
-In Ruby, the RPC datasource lets you distribute your Forest Admin back-end across multiple microservices. Each service runs its own RPC back-end, and a **main back-end** aggregates them into a unified admin panel.
+In Ruby, the RPC datasource lets you distribute your Forest back-end across multiple microservices. Each service runs its own RPC back-end, and a **main back-end** aggregates them into a unified admin panel.
 
 **Why use RPC?**
 
 - **Microservices architecture**: your application is split into multiple services, each owning its data.
-- **Team isolation**: each team manages their own Forest Admin configuration.
+- **Team isolation**: each team manages their own Forest configuration.
 - **Independent deployment**: update one service without redeploying the entire admin panel.
 - **Scalability**: distribute load across multiple agents.
 
@@ -43,7 +43,7 @@ In Ruby, the RPC datasource lets you distribute your Forest Admin back-end acros
 
 ### Main back-end
 
-The main back-end aggregates multiple RPC back-ends into a single Forest Admin interface. It behaves exactly like a classic back-end with multiple datasources: once connected, you can define relations across datasources transparently.
+The main back-end aggregates multiple RPC back-ends into a single Forest interface. It behaves exactly like a classic back-end with multiple datasources: once connected, you can define relations across datasources transparently.
 
 ```ruby
 # Gemfile
@@ -81,7 +81,7 @@ end
 ```
 
 <Info>
-The `auth_secret` option is optional. If not specified, it defaults to your Forest Admin project's `auth_secret`. Override it to use a different shared secret for RPC communication.
+The `auth_secret` option is optional. If not specified, it defaults to your Forest project's `auth_secret`. Override it to use a different shared secret for RPC communication.
 </Info>
 
 The `ReconciliateRpc` plugin must be added **in the main back-end**. It relies on collection names matching across all back-ends, so if you rename collections in your RPC back-ends, keep all back-ends synchronized.
@@ -115,7 +115,7 @@ An RPC back-end exposes its collections to the main back-end via the RPC protoco
 gem 'forest_admin_rpc_agent'
 ```
 
-Run the installation command with the `auth_secret` from your main Forest Admin project:
+Run the installation command with the `auth_secret` from your main Forest project:
 
 ```bash
 forest_admin_rpc_agent install YOUR_AUTH_SECRET

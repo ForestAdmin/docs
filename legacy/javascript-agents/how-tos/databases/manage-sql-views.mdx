@@ -9,7 +9,7 @@ In SQL, a view is a virtual table based on the result-set of an SQL statement. V
 - act as aggregated tables, where the database engine aggregates data (sum, average etc.) and presents the calculated results as part of the data.
 
 <Info>
-Forest Admin natively supports SQL views. If you have already implemented views, simply add [the associated models](https://docs.forestadmin.com/documentation/reference-guide/models/enrich-your-models#declaring-a-new-model) to display them on your interface.
+Forest natively supports SQL views. If you have already implemented views, simply add [the associated models](https://docs.forestadmin.com/documentation/reference-guide/models/enrich-your-models#declaring-a-new-model) to display them on your interface.
 </Info>
 
 ## Creating the SQL View
@@ -34,7 +34,7 @@ CREATE VIEW customer_stats AS
 
 ## Adding the model
 
-To display the SQL view on your Forest Admin interface, you must add the associated Sequelize model in your application.
+To display the SQL view on your Forest interface, you must add the associated Sequelize model in your application.
 
 ```javascript
 'use strict';

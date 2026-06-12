@@ -46,7 +46,7 @@ Sometimes, searching in all fields is not relevant and may even result in big pe
 
 <Tabs>
   <Tab title="SQL">
-In this example, we configure Forest Admin to only search on the fields `name` and `industry` of our collection `companies`.
+In this example, we configure Forest to only search on the fields `name` and `industry` of our collection `companies`.
 
 ```javascript
 const { collection } = require('forest-express-sequelize');
@@ -230,7 +230,7 @@ end
 
 ### Database Indexing
 
-**Indexes** are a powerful tool used in the background of a database to speed up querying. It power queries by providing a method to quickly lookup the requested data. As Forest Admin generates SQL queries to fetch your data, creating indexes can improve the query response time.
+**Indexes** are a powerful tool used in the background of a database to speed up querying. It power queries by providing a method to quickly lookup the requested data. As Forest generates SQL queries to fetch your data, creating indexes can improve the query response time.
 
 5\. Index the Primary and Unique Key Columns
 

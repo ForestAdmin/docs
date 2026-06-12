@@ -8,7 +8,7 @@ title: PHP Agent Documentation (End of Life)
 
 ## End of Life Notice
 
-**The Forest Admin PHP agent has reached End of Life and is no longer supported.**
+**The Forest PHP agent has reached End of Life and is no longer supported.**
 
 - ❌ No security updates
 - ❌ No bug fixes
@@ -42,9 +42,9 @@ If you have a mixed stack or can add a Node.js service:
 ### Option 2: Maintain PHP Application, Use Node.js for Admin
 
 - Keep your PHP application as-is
-- Deploy separate Node.js service for Forest Admin
+- Deploy separate Node.js service for Forest
 - Both connect to same database
-- Forest Admin traffic goes through Node.js agent
+- Forest traffic goes through Node.js agent
 
 ### Option 3: Fully Migrate to Supported Platform
 

@@ -6,7 +6,7 @@ This example shows you how to integrate [Slack incoming webhooks](https://api.sl
 
 Demo
 
-## Create your Forest Admin slack app
+## Create your Forest slack app
 
 Follow Slack's guide to [create a new app](https://api.slack.com/messaging/webhooks) in your workspace and start sending messages using Incoming Webhooks.
 
@@ -111,7 +111,7 @@ const permissionMiddlewareCreator = new PermissionMiddlewareCreator(
 );
 const url = process.env.SLACK_WEBHOOK_URL;
 
-// This file contains the logic of every route in Forest Admin for the collection companies:
+// This file contains the logic of every route in Forest for the collection companies:
 // - Native routes are already generated but can be extended/overridden - Learn how to extend a route here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/extend-a-route
 // - Smart action routes will need to be added as you create new Smart Actions - Learn how to create a Smart Action here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/actions/create-and-manage-smart-actions
 
@@ -146,7 +146,7 @@ router.post(
 
     // Trigger Slack webhook
     await webhook.send({
-      text: 'An action has been triggered from Forest Admin',
+      text: 'An action has been triggered from Forest',
       channel: 'C01CFGCADGF', // replace by your Slack channel ID
       blocks: [
         {

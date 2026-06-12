@@ -1,9 +1,9 @@
 ---
 title: "Testing your back-end"
-description: "Test your Forest Admin customizations locally without connecting to Forest Admin servers"
+description: "Test your Forest customizations locally without connecting to Forest servers"
 ---
 
-Test your Forest Admin customizations locally without connecting to Forest Admin servers.
+Test your Forest customizations locally without connecting to Forest servers.
 
 <Note>
 The testing library is available for the `@forestadmin/agent` Node.js agent.
@@ -19,7 +19,7 @@ npm install --save-dev @forestadmin/agent-testing
 
 The testing library provides two main functions:
 
-- **`createForestServerSandbox(port)`** starts a local mock server that simulates Forest Admin servers.
+- **`createForestServerSandbox(port)`** starts a local mock server that simulates Forest servers.
 - **`createAgentTestClient(options)`** creates a test client to interact with your agent.
 
 ```typescript

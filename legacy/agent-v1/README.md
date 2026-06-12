@@ -27,7 +27,7 @@ We strongly recommend migrating to Agent v2 to continue receiving:
 Agent v2 provides:
 - **Better Performance** - Optimized queries and caching
 - **Modern Architecture** - Improved code structure and TypeScript support
-- **New Features** - Latest Forest Admin capabilities
+- **New Features** - Latest Forest capabilities
 - **Active Support** - Ongoing updates and security patches
 
 ## Legacy Documentation Access
@@ -61,7 +61,7 @@ The Agent v1 documentation remains accessible in the original repository:
 
 4. **API Reference**
    - v1 Agent API
-   - Forest Admin API
+   - Forest API
 
 ## Support Timeline
 

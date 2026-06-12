@@ -63,7 +63,7 @@ All of these can be nested, for example `(property:term OR -term2) AND (property
 `property:searchedTerm` searches only inside `property`; `relation.childProperty:searchedTerm` searches inside a relation's field.
 
 <Info>
-The property name matches the technical name in the database. Forest Admin ignores casing and separators like `-` and `_`, so `property_name` matches a technical `propertyName`.
+The property name matches the technical name in the database. Forest ignores casing and separators like `-` and `_`, so `property_name` matches a technical `propertyName`.
 </Info>
 
 Focused search combines with the operators below, for example `property:>20`.
@@ -72,7 +72,7 @@ Focused search combines with the operators below, for example `property:>20`.
 
 **Number fields** support `>42`, `>=42`, `<42`, `<=42` (for example `property:>42`).
 
-**Date fields** support partial dates (`2020`, `2020-01`, `2020-01-01`) and the comparison operators (for example `property:>2020-01-01`, `property:<=2020`). Dates use the timezone configured in Forest Admin.
+**Date fields** support partial dates (`2020`, `2020-01`, `2020-01-01`) and the comparison operators (for example `property:>2020-01-01`, `property:<=2020`). Dates use the timezone configured in Forest.
 
 **Boolean fields** accept `true`/`1` and `false`/`0` (case insensitive).
 

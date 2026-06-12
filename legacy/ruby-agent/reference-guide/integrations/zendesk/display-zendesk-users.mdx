@@ -51,7 +51,7 @@ async function getUser(request, response, next) {
     )
     .then(async (resp) => {
       let record = resp.data.user;
-      // Serialize the result using the Forest Admin format
+      // Serialize the result using the Forest format
       const recordSerializer = new RecordSerializer({ name: 'zendesk_users' });
       const recordSerialized = await recordSerializer.serialize(record);
       response.send(recordSerialized);

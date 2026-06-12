@@ -8,7 +8,7 @@ A route is simply the mapping between an API endpoint and the business logic beh
 
 ### Default routes
 
-Forest Admin comes packaged with a set of existing routes, which execute Forest Admin's default logic. The most common ones are :
+Forest comes packaged with a set of existing routes, which execute Forest's default logic. The most common ones are :
 
 | Route                                      | Default behavior              |
 | ------------------------------------------ | ----------------------------- |
@@ -20,7 +20,7 @@ Forest Admin comes packaged with a set of existing routes, which execute Forest 
 | `router.get('/companies/count', …`         | Count the number of companies |
 | `router.get('/companies.csv', …`           | Export all companies          |
 
-Very often, you’ll need to call business logic from another backend application. This is why in Forest Admin, **all your admin backend's routes are extendable**.&#x20;
+Very often, you’ll need to call business logic from another backend application. This is why in Forest, **all your admin backend's routes are extendable**.&#x20;
 
 At installation, they are generated in `/routes`.
 
@@ -28,7 +28,7 @@ At installation, they are generated in `/routes`.
 Note that for any collection added **after** installation, you will have to create a new `your_collection_name.js` file in `/routes`.
 </Warning>
 
-The generated routes use `next()` to call Forest Admin's default behavior.&#x20;
+The generated routes use `next()` to call Forest's default behavior.&#x20;
 
 If you need more details on what each default route does, check out this page:
 
@@ -37,5 +37,5 @@ To learn **how to extend a route's behavior**, read this page:
 To learn **how to override a route's behavior**, read this page:
 
 <Info>
-If you want to trigger logic unrelated to Forest Admin's basic routes (create, update, etc), head over to our [Smart actions](/legacy/ruby-agent/reference-guide/actions/create-and-manage-smart-actions/overview#what-is-a-smart-action) page.
+If you want to trigger logic unrelated to Forest's basic routes (create, update, etc), head over to our [Smart actions](/legacy/ruby-agent/reference-guide/actions/create-and-manage-smart-actions/overview#what-is-a-smart-action) page.
 </Info>

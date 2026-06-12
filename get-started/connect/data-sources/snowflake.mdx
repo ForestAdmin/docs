@@ -1,9 +1,9 @@
 ---
 title: "Snowflake"
-description: "Connect Snowflake tables and views to Forest Admin (read-only, via ODBC)"
+description: "Connect Snowflake tables and views to Forest (read-only, via ODBC)"
 ---
 
-The Snowflake data source allows importing tables and views from a Snowflake account into Forest Admin via ODBC. It does **not** rely on ActiveRecord, Forest connects to Snowflake directly through the `ruby-odbc` driver, translates Forest filters/projections/aggregations into parameterised SQL, and streams the results back as plain Ruby objects.
+The Snowflake data source allows importing tables and views from a Snowflake account into Forest via ODBC. It does **not** rely on ActiveRecord, Forest connects to Snowflake directly through the `ruby-odbc` driver, translates Forest filters/projections/aggregations into parameterised SQL, and streams the results back as plain Ruby objects.
 
 This data source is **read-only**. Every Forest column is emitted with `is_read_only: true`, so the schema emitter sets the collection-level `isReadOnly: true` and the UI hides create/edit/delete actions. Direct calls to `create`, `update`, or `delete` raise a `ForestException` with an explicit read-only message as a defence-in-depth guard.
 
@@ -99,7 +99,7 @@ ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(
 )
 ```
 
-This is the same pattern used by the other Forest Admin data sources, so collection filtering stays consistent across your agent.
+This is the same pattern used by the other Forest data sources, so collection filtering stays consistent across your agent.
 
 ### Targeting a specific schema
 

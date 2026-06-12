@@ -10,17 +10,17 @@ title: Troubleshooting
 
 #### Docker
 
-🙋‍♂️I can’t connect to Postgres DB inside another docker container. I'm trying to install Forest Admin using docker but my database is running inside a different container and I'm using a custom port. I can access it without any problems via `psql` but then I get an error.
+🙋‍♂️I can’t connect to Postgres DB inside another docker container. I'm trying to install Forest using docker but my database is running inside a different container and I'm using a custom port. I can access it without any problems via `psql` but then I get an error.
 
 ✅ Such an issue has been solved on our community forum. [Check it out.](https://community.forestadmin.com/t/cant-connect-to-postgres-db-inside-another-docker-container/725)
 
-🙋🏾‍♂️ After installing Forest Admin with Docker, I expect to see my visual data. Instead, I'm getting such error:
+🙋🏾‍♂️ After installing Forest with Docker, I expect to see my visual data. Instead, I'm getting such error:
 
 ![onboarding error](/images/legacy/javascript-agents/onboarding-error.png)
 
 ✅ Such an issue has been solved on our community forum. [Check it out](https://community.forestadmin.com/t/your-server-encountered-an-error-getaddrinfo-enotfound-postgres-postgres-5432/1798).
 
-🙋🏻 When I want to pull data from my MongoDB database when installing Forest Admin with Docker, I keep getting an error even when I changed to all access.
+🙋🏻 When I want to pull data from my MongoDB database when installing Forest with Docker, I keep getting an error even when I changed to all access.
 
 ✅ Such an issue has been solved on our community forum. [Check it out](https://community.forestadmin.com/t/getting-error-mongoserverselectionerror-connection-monitor-to-54-71-237-255-27017-closed/3146).
 
@@ -32,7 +32,7 @@ I suspect a problem on DB, but I cannot find any details or logs about this even
 
 {/* markdown-link-check-disable */}
 
-🙋🏾 I was able to link my data to Forest admin (with docker, on port 5433). When I run [http://localhost:3310](http://localhost:3310) it says my app is running but when I want to log to Forest Admin on [http://app.forestadmin.com/](http://app.forestadmin.com/) I first have to log in and it then says _Your server encountered an error_.
+🙋🏾 I was able to link my data to Forest admin (with docker, on port 5433). When I run [http://localhost:3310](http://localhost:3310) it says my app is running but when I want to log to Forest on [http://app.forestadmin.com/](http://app.forestadmin.com/) I first have to log in and it then says _Your server encountered an error_.
 
 {/* markdown-link-check-enable */}
 
@@ -56,6 +56,6 @@ _Please verify that your admin backend is correctly configured and running._
 
 ### Deployment
 
-🙋🏽‍♀️ When I try to deploy Forest Admin to Heroku, it tells me the app crashed after running either `npm start` or `docker compose` up in the project directory.
+🙋🏽‍♀️ When I try to deploy Forest to Heroku, it tells me the app crashed after running either `npm start` or `docker compose` up in the project directory.
 
 ✅ Such an issue has been solved on our community forum. [Check it out](https://community.forestadmin.com/t/h10-error-when-deploying-to-heroku/547).
