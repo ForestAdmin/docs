@@ -40,9 +40,17 @@ You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET 
 FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
 ```
 
+<Note>
+  Follow [this guide](/get-started/connect/environment-variables) to retrieve your AUTH and ENV secrets for the relevant environment.
+</Note>
+
 Your Forest MCP Server will be accessible at this URL: `{your-standalone-server-url}/mcp`
 
-<img src="/images/diagrams/mcp-standalone.svg" alt="Standalone: the AI agent hits the MCP server running as a separate service, which talks to your Forest back-end and your data" width="100%" />
+<img
+  src="/images/diagrams/mcp-standalone.svg"
+  alt="Standalone: the AI agent hits the MCP server running as a separate service, which talks to your Forest back-end and your data"
+  width="100%"
+/>
 
 ## Mounted Forest MCP Server
 
@@ -50,7 +58,11 @@ Your Forest MCP Server will be accessible at this URL: `{your-standalone-server-
   This is only available with the node.js back-end. For other back-ends, refer to the Standalone method further down.
 </Note>
 
-<img src="/images/diagrams/mcp-mounted.svg" alt="Mounted: the AI agent hits the /mcp endpoint mounted directly inside your Forest back-end, which talks to your data" width="100%" />
+<img
+  src="/images/diagrams/mcp-mounted.svg"
+  alt="Mounted: the AI agent hits the /mcp endpoint mounted directly inside your Forest back-end, which talks to your data"
+  width="100%"
+/>
 
 In your node.js's `index.js` file, simply call the `mountAiMcpServer()` method when creating the back-end, for example:
 
@@ -99,6 +111,7 @@ The Forest MCP server exposes the following capabilities:
 You can restrict which tools the MCP server exposes using `enabledTools`. Only the tools you list will be available, and **new tools added in future releases will NOT be automatically enabled**, so your configuration stays safe over time.
 
 <CodeGroup>
+
 ```javascript Mounted on agent
 agent.mountAiMcpServer({
   enabledTools: ['describeCollection', 'list', 'listRelated'],
@@ -109,12 +122,13 @@ agent.mountAiMcpServer({
 FOREST_MCP_ENABLED_TOOLS="describeCollection,list,listRelated" \
   FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
 ```
+
 </CodeGroup>
 
 When `enabledTools` is not set, all tools are enabled by default.
 
 <Info>
-`describeCollection` is always enabled, even if omitted from the list, as it is required for the MCP server to function properly.
+  `describeCollection` is always enabled, even if omitted from the list, as it is required for the MCP server to function properly.
 </Info>
 
 ## Connect your AI assistant
@@ -122,6 +136,7 @@ When `enabledTools` is not set, all tools are enabled by default.
 Your MCP endpoint is available at `/mcp` (`<your-agent-url>/mcp` when mounted, `<your-standalone-server-url>/mcp` when standalone). On first connection, a browser window opens for you to log in with your Forest credentials; the assistant then operates with that user's permissions.
 
 <CodeGroup>
+
 ```bash Claude Code
 claude mcp add --transport http forest-admin <your-mcp-endpoint>
 ```
@@ -162,10 +177,11 @@ claude mcp add --transport http forest-admin <your-mcp-endpoint>
 [mcp_servers.forest-admin]
 url = "<your-mcp-endpoint>"
 ```
+
 </CodeGroup>
 
 <Info>
-Use the MCP transport type `"http"` (not `"sse"` or `"url"`): the Forest MCP server uses Streamable HTTP. Your URL should still use `https://`. Clients that rely on `mcp-remote` (Claude Desktop, Windsurf, JetBrains) require Node.js 18+ (some versions need 20+).
+  Use the MCP transport type `"http"` (not `"sse"` or `"url"`): the Forest MCP server uses Streamable HTTP. Your URL should still use `https://`. Clients that rely on `mcp-remote` (Claude Desktop, Windsurf, JetBrains) require Node.js 18\+ (some versions need 20\+).
 </Info>
 
 ## Use cases
