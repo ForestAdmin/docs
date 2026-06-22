@@ -88,23 +88,30 @@ Your Forest MCP Server URL will be `{your-agent-url}/mcp`
 
 The Forest MCP server exposes the following capabilities:
 
-### Data access
+### Read
 
-- **Browse collections**: View available collections and their schemas
-- **Query records**: Search and filter records across collections
-- **Read relationships**: Access related data through relationships
+| Tool                 | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| `describeCollection` | Get schema of a collection (fields, types, relations) |
+| `list`               | Search and list records with filters and pagination   |
+| `listRelated`        | List related records                                  |
+
+### Write
+
+| Tool         | Description                     |
+| ------------ | ------------------------------- |
+| `create`     | Create a new record             |
+| `update`     | Update an existing record       |
+| `delete`     | Delete one or more records      |
+| `associate`  | Link records through a relation |
+| `dissociate` | Unlink records from a relation  |
 
 ### Actions
 
-- **Execute actions**: Run actions on records
-- **Bulk operations**: Perform operations on multiple records
-- **Approval workflows**: Interact with approval workflows
-
-### Context
-
-- **Schema information**: Get collection and field definitions
-- **Business rules**: Access validation rules and constraints
-- **User permissions**: Check what operations are allowed
+| Tool            | Description                        |
+| --------------- | ---------------------------------- |
+| `getActionForm` | Get form fields for a smart action |
+| `executeAction` | Execute a smart action             |
 
 ## Restrict tools
 
