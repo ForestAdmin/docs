@@ -1,43 +1,16 @@
-# Mintlify Starter Kit
+# Forest Admin Documentation
 
-Use the starter kit to get your docs deployed and ready to customize.
+This repository contains the source for the official Forest Admin documentation.
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+📖 **Read the docs at [docs.forest.app](https://docs.forest.app)**
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+## About Forest Admin
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+Forest Admin is an internal tool platform that gives your teams a ready-to-use admin panel on top of your databases and APIs. Connect your data sources, and get a powerful back-office to view, search, and edit your data, run business operations, and build custom workflows — all while keeping fine-grained control over permissions.
 
-## Development
+This documentation covers everything you need to install, configure, customize, and operate your Forest Admin project.
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+## Resources
 
-```
-npm i -g mint
-```
-
-Run the following command at the root of your documentation, where your `docs.json` is located:
-
-```
-mint dev
-```
-
-View your local preview at `http://localhost:3000`.
-
-## Publishing changes
-
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
-
-## Need help?
-
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+- Documentation — [docs.forest.app](https://docs.forest.app)
+- Website — [forest.app](https://www.forest.app)
