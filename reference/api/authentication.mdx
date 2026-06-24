@@ -1,6 +1,6 @@
 ---
-title: API Authentication
-description: Learn how to authenticate requests to the Forest Public API
+title: "API Authentication"
+description: "Learn how to authenticate requests to the Forest Public API"
 ---
 
 # API Authentication
@@ -18,35 +18,21 @@ Forest uses **Bearer token authentication** for API requests. Each token:
 
 ## Creating API Tokens
 
-### Step 1: Access Project Settings
+### Step 1: Access Account Settings
 
 1. Log in to your Forest account
-2. Navigate to your project
-3. Go to **Project Settings** > **API Access**
-4. Click **Generate New Token**
+2. Click on your User Profile avatar in the bottom left hand corner
+3. Click on **Account Settings**
 
-### Step 2: Configure Token
+### Step 2: Generate Token
 
-When creating a token, configure:
-
-- **Token Name** - A descriptive name to identify the token's purpose
-- **Permissions** - Read-only or Read-write access
-- **Expiration** - Optional expiration date for added security
-- **Scopes** - Specific endpoints the token can access
-
-**Example configuration:**
-
-```
-Name: Data Warehouse Integration
-Permissions: Read-only
-Scopes: Activity Logs, Admin Logs
-Expiration: 1 year
-```
+1. From the list of existing tokens, click on **Generate New Token**
+2. Give it a name, and click on **Generate Token**
 
 ### Step 3: Save Token
 
 <Warning>
-**Important:** Copy and save your token immediately. For security reasons, you won't be able to see it again. If you lose the token, you'll need to generate a new one.
+  **Important:** Copy and save your token immediately. For security reasons, you won't be able to see it again. If you lose the token, you'll need to generate a new one.
 </Warning>
 
 ## Using API Tokens
@@ -126,7 +112,7 @@ end
 ### Storing Tokens Securely
 
 <Tip>
-**Best Practice:** Store API tokens in environment variables or secure secrets management systems, never in code or version control.
+  **Best Practice:** Store API tokens in environment variables or secure secrets management systems, never in code or version control.
 </Tip>
 
 **Environment Variables:**
@@ -185,7 +171,7 @@ const apiToken = await secretsManager.getSecret('forest-api-token');
 
 ✅ **Rotate tokens regularly:**
 
-```
+```text
 Schedule: Every 90 days
 Process: Generate new → Update integrations → Revoke old
 ```
@@ -195,12 +181,14 @@ Process: Generate new → Update integrations → Revoke old
 ### Permission Levels
 
 **Read-Only:**
+
 - View activity logs
 - View admin logs
 - Read notes
 - Cannot create or modify data
 
 **Read-Write:**
+
 - All read permissions
 - Create and update notes
 - Perform write operations (where available)
@@ -210,7 +198,7 @@ Process: Generate new → Update integrations → Revoke old
 Limit token access to only the endpoints needed:
 
 | Scope | Access |
-|-------|--------|
+| --- | --- |
 | `activity_logs:read` | Read activity logs |
 | `admin_logs:read` | Read admin logs |
 | `notes:read` | Read notes |
@@ -219,7 +207,7 @@ Limit token access to only the endpoints needed:
 
 **Example: Audit-only token**
 
-```
+```text
 Scopes: activity_logs:read, admin_logs:read
 Permissions: Read-only
 Use case: Compliance reporting
@@ -229,7 +217,7 @@ Use case: Compliance reporting
 
 ### Listing Active Tokens
 
-View all active tokens in **Project Settings** > **API Access**:
+View all active tokens in **Project Settings** \> **API Access**:
 
 - Token name
 - Creation date
@@ -247,6 +235,7 @@ Regular token rotation improves security:
 4. Revoke the old token
 
 **Recommended rotation schedule:**
+
 - Production: Every 90 days
 - Development: Every 180 days
 - Testing: As needed
@@ -261,13 +250,14 @@ Immediately revoke a token if:
 - You detect suspicious activity
 
 **To revoke:**
-1. Go to **Project Settings** > **API Access**
+
+1. Go to **Project Settings** \> **API Access**
 2. Find the token
 3. Click **Revoke**
 4. Confirm revocation
 
 <Warning>
-Revoking a token immediately stops all integrations using it. Ensure you update integrations before revoking.
+  Revoking a token immediately stops all integrations using it. Ensure you update integrations before revoking.
 </Warning>
 
 ## Authentication Errors
@@ -286,6 +276,7 @@ Revoking a token immediately stops all integrations using it. Ensure you update 
 ```
 
 **Solutions:**
+
 - Verify token is included in Authorization header
 - Check token hasn't expired
 - Ensure token format is correct (`Bearer <token>`)
@@ -305,6 +296,7 @@ Revoking a token immediately stops all integrations using it. Ensure you update 
 ```
 
 **Solutions:**
+
 - Check token scopes include required permissions
 - Generate new token with appropriate scopes
 - Verify endpoint matches token permissions
@@ -323,6 +315,7 @@ Revoking a token immediately stops all integrations using it. Ensure you update 
 ```
 
 **Solution:**
+
 - Generate a new token
 - Update integration configuration
 - Consider longer expiration or no expiration for stable integrations
@@ -333,7 +326,7 @@ Revoking a token immediately stops all integrations using it. Ensure you update 
 
 Create separate tokens for each integration:
 
-```
+```text
 ✅ Good:
 - data-warehouse-sync (read-only, activity logs)
 - slack-notifications (read-write, notes)
@@ -363,7 +356,7 @@ const masterToken = {
 
 ### 3. Monitor Token Usage
 
-Track token activity in **Project Settings** > **API Access**:
+Track token activity in **Project Settings** \> **API Access**:
 
 - Last used timestamp
 - Request frequency
@@ -407,32 +400,19 @@ Regular security reviews:
 ## Next Steps
 
 <CardGroup cols={2}>
-  <Card
-    title="Rate Limits"
-    icon="gauge-high"
-    href="/reference/api/rate-limits"
-  >
+  <Card title="Rate Limits" icon="gauge-high" href="/reference/api/rate-limits">
     Understand API usage limits
   </Card>
-  <Card
-    title="Activity Logs"
-    icon="list-timeline"
-    href="/reference/api/endpoints/activity-logs"
-  >
+
+  <Card title="Activity Logs" icon="list-timeline" href="/reference/api/endpoints/activity-logs">
     Start using the Activity Logs API
   </Card>
-  <Card
-    title="API Introduction"
-    icon="book"
-    href="/reference/api/introduction"
-  >
+
+  <Card title="API Introduction" icon="book" href="/reference/api/introduction">
     Back to API overview
   </Card>
-  <Card
-    title="Security"
-    icon="shield"
-    href="/get-started/control/security/architecture"
-  >
+
+  <Card title="Security" icon="shield" href="/get-started/control/security/architecture">
     Learn about Forest security
   </Card>
 </CardGroup>
