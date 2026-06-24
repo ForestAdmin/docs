@@ -28,6 +28,7 @@ const agent = createAgent(options: AgentOptions): Agent;
 | `loggerLevel` | string | No | Log level: 'Debug', 'Info', 'Warn', 'Error' |
 | `prefix` | string | No | API prefix (default: '/forest') |
 | `schemaPath` | string | No | Path to .forestadmin-schema.json |
+| <code style={{whiteSpace: 'nowrap'}}>useUnsafeActionEndpoint</code> | boolean | No | Drop the positional index from Smart Action routes.<br />Default `false`. |
 
 **Example:**
 
@@ -38,6 +39,16 @@ const agent = createAgent({
   isProduction: process.env.NODE_ENV === 'production',
 });
 ```
+
+<Warning>
+  Only enable `useUnsafeActionEndpoint` if you specifically need index-free Smart
+  Action routes.<br />
+  It removes the positional index
+  (`/_actions/{collection}/{slug}` instead of `/_actions/{collection}/{index}/{slug}`),
+  which can make two action names collide on the same route.<br />
+  When enabled, the agent refuses to start if two actions on the same collection
+  resolve to the same slug.
+</Warning>
 
 ---
 
