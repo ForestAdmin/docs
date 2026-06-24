@@ -10,6 +10,38 @@ Forest Admin is an internal tool platform that gives your teams a ready-to-use a
 
 This documentation covers everything you need to install, configure, customize, and operate your Forest Admin project.
 
+## Local development
+
+This documentation is built with [Mintlify](https://mintlify.com).
+
+**Prerequisites:** Node.js 18 or later.
+
+1. Install the Mintlify CLI:
+
+   ```bash
+   npm i -g mint
+   ```
+
+2. From the repository root (where `docs.json` lives), start the dev server:
+
+   ```bash
+   mint dev
+   ```
+
+   The site is served at [http://localhost:3000](http://localhost:3000) with hot reload on `.mdx` edits. Use `mint dev --port <port>` if 3000 is taken.
+
+3. Keep the CLI up to date:
+
+   ```bash
+   npm i -g mint@latest
+   ```
+
+To catch broken internal links before opening a PR:
+
+```bash
+mint broken-links
+```
+
 ## Resources
 
 - Documentation — [docs.forest.app](https://docs.forest.app)
