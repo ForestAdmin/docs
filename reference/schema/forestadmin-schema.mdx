@@ -88,19 +88,14 @@ If a developer changes a data source or customization but forgets to commit `.fo
 
 Add a CI step that **regenerates the schema and fails if it differs from what's committed**. A red build then means "you forgot to commit your schema".
 
-This works the same way in **any stack**: the agent rewrites `.forestadmin-schema.json` whenever it boots outside production. Start your agent in CI so it regenerates the file, then diff it against the committed version.
-
-```bash
-# Start your agent in a non-production environment so it rewrites the schema,
-# then stop it once the file has been written (e.g. NODE_ENV=ci node ./index.js).
-
-# Fail the build if the committed schema is out of date.
-git diff --exit-code .forestadmin-schema.json
-```
+The agent writes `.forestadmin-schema.json` on boot regardless of language, but booting also contacts Forest, so you can't just run it offline to regenerate the file. In CI, boot it against a local Forest sandbox (`createForestServerSandbox`), which mocks those calls, generate the schema to a temporary path, and compare it against the committed file. See the full Node.js example in [Check the committed schema is up to date (CI)](/product/process/advanced-concepts/testing#check-the-committed-schema-is-up-to-date-ci).
 
 <Tip>
-  To regenerate the schema **without booting the full app** (and without sending it to the Forest API):
+  **Ruby (v2)** can skip the sandbox: the `rails forest_admin:schema:generate` rake task writes the file directly, without booting the server or contacting Forest. It introspects your tables, so the database must be up and migrated first.
 
-  - **Node.js**, assert it from your test suite with `@forestadmin/agent-testing`. See [Check the committed schema is up to date (CI)](/product/process/advanced-concepts/testing#check-the-committed-schema-is-up-to-date-ci).
-  - **Ruby (v2)**, run the `rails forest_admin:schema:generate` rake task. It introspects your tables, so the database must be up and migrated first.
+  ```bash
+  rails db:create db:migrate
+  rails forest_admin:schema:generate
+  git diff --exit-code .forestadmin-schema.json
+  ```
 </Tip>
