@@ -185,3 +185,63 @@ expect(chart.countCurrent).toBeGreaterThan(0);
 const distribution = await client.distributionChart('ordersByStatus');
 expect(distribution).toContainEqual({ key: 'pending', value: expect.any(Number) });
 ```
+
+## Check the committed schema is up to date (CI)
+
+The agent only regenerates [`.forestadmin-schema.json`](/reference/schema/forestadmin-schema) in development, production uses the committed file. A developer who changes a data source or customization but forgets to commit the regenerated schema (and typings) ships a stale schema, and the change silently never reaches the UI.
+
+Out of production (`isProduction: false`), the agent **regenerates the schema and typings** to the paths you configure. Start your agent against a [`createForestServerSandbox`](#quick-start) so it never reaches the real Forest servers, point its `schemaPath`/`typingsPath` at a temporary location, then compare what it generates with the committed files. Run this **only in CI**: it validates the committed state, which is irrelevant locally where the files are regenerated on every boot.
+
+```typescript
+import { createAgent } from '@forestadmin/agent';
+import { createForestServerSandbox } from '@forestadmin/agent-testing';
+import fs from 'fs/promises';
+import os from 'os';
+import path from 'path';
+
+import customizeAgent from './src/customize-agent'; // your real customizations
+
+const SCHEMA_PATH = './.forestadmin-schema.json';
+const TYPINGS_PATH = './typings.ts'; // match the typingsPath in your createAgent call
+
+// Only meaningful in CI, where it checks the committed files.
+const itInCI = process.env.CI ? it : it.skip;
+
+itInCI('schema and typings are committed and up to date', async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'forest-'));
+  const sandbox = await createForestServerSandbox(3001);
+
+  // Same agent as production, but in dev mode writing to temporary paths.
+  const agent = createAgent({
+    isProduction: false,
+    authSecret: process.env.FOREST_AUTH_SECRET,
+    envSecret: process.env.FOREST_ENV_SECRET,
+    forestServerUrl: 'http://localhost:3001',
+    schemaPath: path.join(tmp, 'schema.json'),
+    typingsPath: path.join(tmp, 'typings.ts'),
+  });
+  customizeAgent(agent);
+  await agent.start(); // regenerates schema + typings to the temp paths
+
+  const [generatedSchema, committedSchema, generatedTypings, committedTypings] =
+    await Promise.all([
+      fs.readFile(path.join(tmp, 'schema.json'), 'utf8'),
+      fs.readFile(SCHEMA_PATH, 'utf8'),
+      fs.readFile(path.join(tmp, 'typings.ts'), 'utf8'),
+      fs.readFile(TYPINGS_PATH, 'utf8'),
+    ]);
+
+  // A mismatch means someone forgot to commit the regenerated files.
+  expect(generatedSchema).toEqual(committedSchema);
+  expect(generatedTypings).toEqual(committedTypings);
+
+  await agent.stop();
+  await sandbox.stop();
+}, 60_000);
+```
+
+If the committed schema diverges from what the code generates, the test fails and the build turns red, surfacing the missing commit before merge.
+
+<Note>
+  In Ruby, regenerate with the `rails forest_admin:schema:generate` rake task and compare with `git diff --exit-code` instead. See [Catch an uncommitted schema in CI](/reference/schema/forestadmin-schema#catch-an-uncommitted-schema-in-ci).
+</Note>

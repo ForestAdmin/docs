@@ -68,3 +68,30 @@ Beyond keeping environments in sync, committing the schema file lets you:
 - **Review schema changes in pull requests**, diffs show every collection, field, and relationship change before merge
 - **Roll back schema regressions**, if a bad change breaks production, revert the commit
 - **Audit historical schemas**, Git history shows the data model state at any past point
+
+## Catch an uncommitted schema in CI
+
+Since the agent never regenerates the schema in production, a developer who changes a data source or customization but forgets to commit `.forestadmin-schema.json` ships a stale schema, the change silently never reaches the UI.
+
+Add a CI step that **regenerates the schema and fails if it differs from what's committed**. A red build then means "you forgot to commit your schema".
+
+The principle is the same in every language: regenerate, then diff against the committed file.
+
+### Ruby
+
+Regenerate the schema without booting the server with the rake task, then diff it against the committed file.
+
+```bash
+# Schema generation introspects your tables, so the DB must be up and migrated first.
+rails db:create db:migrate
+
+# Regenerate the schema (writes the file, does not send it to the Forest API).
+rails forest_admin:schema:generate
+
+# Fail the build if the committed schema is out of date.
+git diff --exit-code .forestadmin-schema.json
+```
+
+### Node.js
+
+There is no standalone generate command in Node.js, the schema is written when the agent boots. Assert the committed schema (and typings) in your test suite instead, using the `@forestadmin/agent-testing` library to regenerate them to a temporary path and compare against the committed files. See [Check the committed schema is up to date (CI)](/product/process/advanced-concepts/testing#check-the-committed-schema-is-up-to-date-ci).
