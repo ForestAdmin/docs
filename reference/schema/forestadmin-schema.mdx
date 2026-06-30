@@ -61,6 +61,17 @@ If you change your data sources or customizations and don't redeploy the schema 
   Do not edit `.forestadmin-schema.json` manually. Wrong syntax will break the UI.
 </Warning>
 
+### Why it isn't regenerated at runtime in production
+
+Generating the schema on the fly in production is deliberately disabled, it would be unstable:
+
+- **It can break your layout.** Your [layout](/guides/best-practices/layout-maintenance) (fields shown, column order, segments, Smart Actions, custom views) is built on top of the schema and references its collections and fields by name. A schema that shifts unexpectedly between boots can reset or break that layout.
+- **It diverges across instances.** Production usually runs several instances. If each regenerates and posts its own schema, they can compute slightly different results and overwrite each other on the Forest API, making the UI flip-flop. A committed file guarantees every instance serves the exact same schema.
+- **It couples startup to the database.** Generating means introspecting your tables, so the agent would need a live, migrated database just to boot.
+- **It hurts cold starts.** Introspection is expensive to redo on every instance startup.
+
+This is why the schema is generated once in development, committed, and deployed frozen, and why the [CI check below](#catch-an-uncommitted-schema-in-ci) only verifies the committed file is up to date.
+
 ## What versioning the schema gives you
 
 Beyond keeping environments in sync, committing the schema file lets you:
