@@ -77,21 +77,22 @@ Add a CI step that **regenerates the schema and fails if it differs from what's 
 
 The principle is the same in every language: regenerate, then diff against the committed file.
 
-### Ruby
+<Tabs>
+  <Tab title="Node.js">
+    There is no standalone generate command in Node.js, the schema is written when the agent boots. Assert the committed schema (and typings) in your test suite instead, using the `@forestadmin/agent-testing` library to regenerate them to a temporary path and compare against the committed files. See [Check the committed schema is up to date (CI)](/product/process/advanced-concepts/testing#check-the-committed-schema-is-up-to-date-ci).
+  </Tab>
+  <Tab title="Ruby">
+    Regenerate the schema without booting the server with the rake task, then diff it against the committed file.
 
-Regenerate the schema without booting the server with the rake task, then diff it against the committed file.
+    ```bash
+    # Schema generation introspects your tables, so the DB must be up and migrated first.
+    rails db:create db:migrate
 
-```bash
-# Schema generation introspects your tables, so the DB must be up and migrated first.
-rails db:create db:migrate
+    # Regenerate the schema (writes the file, does not send it to the Forest API).
+    rails forest_admin:schema:generate
 
-# Regenerate the schema (writes the file, does not send it to the Forest API).
-rails forest_admin:schema:generate
-
-# Fail the build if the committed schema is out of date.
-git diff --exit-code .forestadmin-schema.json
-```
-
-### Node.js
-
-There is no standalone generate command in Node.js, the schema is written when the agent boots. Assert the committed schema (and typings) in your test suite instead, using the `@forestadmin/agent-testing` library to regenerate them to a temporary path and compare against the committed files. See [Check the committed schema is up to date (CI)](/product/process/advanced-concepts/testing#check-the-committed-schema-is-up-to-date-ci).
+    # Fail the build if the committed schema is out of date.
+    git diff --exit-code .forestadmin-schema.json
+    ```
+  </Tab>
+</Tabs>
