@@ -48,7 +48,7 @@ You can also trigger a sync from the **quick access icon** in the left navigatio
 
 ## The `.forestadmin-schema.json` file
 
-This file is auto-generated and lives in your project root. It contains a snapshot of your data model as Forest sees it.
+This file is auto-generated and lives in your project root. It contains a snapshot of your data model as Forest sees it. See [`.forestadmin-schema.json`](/reference/schema/forestadmin-schema) for the full reference.
 
 **Do:**
 - Commit it to your repository, it ensures schema consistency across team members and environments
@@ -120,3 +120,4 @@ See [Relationships](/product/process/relationships/overview) for how to define r
 - **Test schema changes in a development branch**, use [Environments & branches](/product/process/advanced-concepts/developer-workflow/environments-and-branches) to validate layout impact before hitting production
 - **Commit `.forestadmin-schema.json`**, keeps all team members on the same schema version
 - **Review the schema diff in PRs**, catching an unintended table rename in review is much easier than debugging it in production
+- **Enforce the committed schema in CI**, fail the build when `.forestadmin-schema.json` is out of date so a forgotten commit can't ship a stale schema. See [Catch an uncommitted schema in CI](/reference/schema/forestadmin-schema#catch-an-uncommitted-schema-in-ci)
