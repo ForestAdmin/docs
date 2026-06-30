@@ -190,7 +190,7 @@ expect(distribution).toContainEqual({ key: 'pending', value: expect.any(Number) 
 
 The agent only regenerates [`.forestadmin-schema.json`](/reference/schema/forestadmin-schema) in development; in production it uses the committed file. If someone changes a data source or customization but forgets to commit the regenerated schema (and typings), the deployed agent serves a stale schema and the change never reaches the UI.
 
-Out of production (`isProduction: false`), the agent **regenerates the schema and typings** to the paths you configure. Start your agent against a [`createForestServerSandbox`](#quick-start) so it never reaches the real Forest servers, point its `schemaPath`/`typingsPath` at a temporary location, then compare what it generates with the committed files. Run this **only in CI**: it validates the committed state, which is irrelevant locally where the files are regenerated on every boot.
+Out of production (`isProduction: false`), the agent **regenerates the schema and typings** to the paths you configure when it boots. Booting also makes the agent call Forest (schema hash check, event subscription), so you must start it against a [`createForestServerSandbox`](#quick-start), a local mock that stands in for Forest's servers, with `forestServerUrl` pointing at it. Without the sandbox, `start()` would reach the real API (the default `forestServerUrl`) and either fail or push the schema to your real project. Point `schemaPath`/`typingsPath` at a temporary location, then compare what the agent generates with the committed files. Run this **only in CI**: it validates the committed state, which is irrelevant locally where the files are regenerated on every boot.
 
 ```typescript
 import { createAgent } from '@forestadmin/agent';
