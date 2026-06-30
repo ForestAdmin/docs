@@ -243,5 +243,5 @@ itInCI('schema and typings are committed and up to date', async () => {
 If the committed schema diverges from what the code generates, the test fails and the build turns red, surfacing the missing commit before merge.
 
 <Note>
-  In Ruby, regenerate with the `rails forest_admin:schema:generate` rake task and compare with `git diff --exit-code` instead. See [Catch an uncommitted schema in CI](/reference/schema/forestadmin-schema#catch-an-uncommitted-schema-in-ci).
+  This is the Node.js way to avoid booting the full app. The CI check itself works with any stack (boot the agent, then `git diff` the schema), and Ruby v2 offers a `rails forest_admin:schema:generate` rake task. See [Catch an uncommitted schema in CI](/reference/schema/forestadmin-schema#catch-an-uncommitted-schema-in-ci).
 </Note>

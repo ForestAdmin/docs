@@ -32,7 +32,7 @@ const agent = createAgent({
 ```bash Ruby
 # In development, the schema is regenerated when the server boots.
 # In production, the agent uses the committed file and never regenerates it.
-# Generate it explicitly (without booting the server) with the rake task:
+# Ruby v2 can also generate it explicitly, without booting the server:
 rails forest_admin:schema:generate
 
 # Add debug=true to troubleshoot generation:
@@ -88,24 +88,19 @@ If a developer changes a data source or customization but forgets to commit `.fo
 
 Add a CI step that **regenerates the schema and fails if it differs from what's committed**. A red build then means "you forgot to commit your schema".
 
-The principle is the same in every language: regenerate, then diff against the committed file.
+This works the same way in **any stack**: the agent rewrites `.forestadmin-schema.json` whenever it boots outside production. Start your agent in CI so it regenerates the file, then diff it against the committed version.
 
-<Tabs>
-  <Tab title="Node.js">
-    There is no standalone generate command in Node.js, the schema is written when the agent boots. Assert the committed schema (and typings) in your test suite instead, using the `@forestadmin/agent-testing` library to regenerate them to a temporary path and compare against the committed files. See [Check the committed schema is up to date (CI)](/product/process/advanced-concepts/testing#check-the-committed-schema-is-up-to-date-ci).
-  </Tab>
-  <Tab title="Ruby">
-    Regenerate the schema without booting the server with the rake task, then diff it against the committed file.
+```bash
+# Start your agent in a non-production environment so it rewrites the schema,
+# then stop it once the file has been written (e.g. NODE_ENV=ci node ./index.js).
 
-    ```bash
-    # Schema generation introspects your tables, so the DB must be up and migrated first.
-    rails db:create db:migrate
+# Fail the build if the committed schema is out of date.
+git diff --exit-code .forestadmin-schema.json
+```
 
-    # Regenerate the schema (writes the file, does not send it to the Forest API).
-    rails forest_admin:schema:generate
+<Tip>
+  To regenerate the schema **without booting the full app** (and without sending it to the Forest API):
 
-    # Fail the build if the committed schema is out of date.
-    git diff --exit-code .forestadmin-schema.json
-    ```
-  </Tab>
-</Tabs>
+  - **Node.js**, assert it from your test suite with `@forestadmin/agent-testing`. See [Check the committed schema is up to date (CI)](/product/process/advanced-concepts/testing#check-the-committed-schema-is-up-to-date-ci).
+  - **Ruby (v2)**, run the `rails forest_admin:schema:generate` rake task. It introspects your tables, so the database must be up and migrated first.
+</Tip>
