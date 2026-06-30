@@ -188,7 +188,7 @@ expect(distribution).toContainEqual({ key: 'pending', value: expect.any(Number) 
 
 ## Check the committed schema is up to date (CI)
 
-The agent only regenerates [`.forestadmin-schema.json`](/reference/schema/forestadmin-schema) in development, production uses the committed file. A developer who changes a data source or customization but forgets to commit the regenerated schema (and typings) ships a stale schema, and the change silently never reaches the UI.
+The agent only regenerates [`.forestadmin-schema.json`](/reference/schema/forestadmin-schema) in development; in production it uses the committed file. If someone changes a data source or customization but forgets to commit the regenerated schema (and typings), the deployed agent serves a stale schema and the change never reaches the UI.
 
 Out of production (`isProduction: false`), the agent **regenerates the schema and typings** to the paths you configure. Start your agent against a [`createForestServerSandbox`](#quick-start) so it never reaches the real Forest servers, point its `schemaPath`/`typingsPath` at a temporary location, then compare what it generates with the committed files. Run this **only in CI**: it validates the committed state, which is irrelevant locally where the files are regenerated on every boot.
 

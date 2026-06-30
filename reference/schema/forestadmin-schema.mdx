@@ -61,16 +61,16 @@ If you change your data sources or customizations and don't redeploy the schema 
   Do not edit `.forestadmin-schema.json` manually. Wrong syntax will break the UI.
 </Warning>
 
-### Why it isn't regenerated at runtime in production
+### Why it isn't regenerated at runtime
 
-Generating the schema on the fly in production is deliberately disabled, it would be unstable:
+Regenerating the schema live instead of shipping the committed file would be unstable:
 
 - **It can break your layout.** Your [layout](/guides/best-practices/layout-maintenance) (fields shown, column order, segments, Smart Actions, custom views) is built on top of the schema and references its collections and fields by name. A schema that shifts unexpectedly between boots can reset or break that layout.
-- **It diverges across instances.** Production usually runs several instances. If each regenerates and posts its own schema, they can compute slightly different results and overwrite each other on the Forest API, making the UI flip-flop. A committed file guarantees every instance serves the exact same schema.
+- **It flip-flops during deploys.** Production runs several instances, and during a rolling deploy old and new versions run side by side. If each regenerates and posts its own schema, they overwrite each other on the Forest API and the UI flips between versions. A committed file means every instance posts the same schema.
 - **It couples startup to the database.** Generating means introspecting your tables, so the agent would need a live, migrated database just to boot.
-- **It hurts cold starts.** Introspection is expensive to redo on every instance startup.
+- **It slows cold starts.** That introspection would run on every instance startup.
 
-This is why the schema is generated once in development, committed, and deployed frozen, and why the [CI check below](#catch-an-uncommitted-schema-in-ci) only verifies the committed file is up to date.
+So the schema is generated once in development, committed, and deployed frozen. The [CI check below](#catch-an-uncommitted-schema-in-ci) just verifies the committed file stays up to date.
 
 ## What versioning the schema gives you
 
@@ -82,7 +82,7 @@ Beyond keeping environments in sync, committing the schema file lets you:
 
 ## Catch an uncommitted schema in CI
 
-Since the agent never regenerates the schema in production, a developer who changes a data source or customization but forgets to commit `.forestadmin-schema.json` ships a stale schema, the change silently never reaches the UI.
+If a developer changes a data source or customization but forgets to commit `.forestadmin-schema.json`, the deployed agent serves a stale schema and the change never reaches the UI.
 
 Add a CI step that **regenerates the schema and fails if it differs from what's committed**. A red build then means "you forgot to commit your schema".
 
