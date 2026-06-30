@@ -3,13 +3,75 @@ title: "Zendesk plugins"
 description: "Surface Zendesk operations as actions on any collection (create and close tickets)"
 ---
 
-The `forest_admin_datasource_zendesk` gem ships two plugins that surface Zendesk operations as actions on any host collection of your back-end, typically a collection that already carries the Zendesk requester's identity (an `email` column) or the Zendesk ticket id (a column like `last_zendesk_ticket_id`).
+The Zendesk connector ships two plugins that surface Zendesk operations as actions on any host collection of your back-end, typically a collection that already carries the Zendesk requester's identity (an `email` column) or the Zendesk ticket id (a column like `last_zendesk_ticket_id`).
+
+<Tabs>
+<Tab title="Node.js">
+
+Both plugins need a way to reach the Zendesk API. They accept the same `ZendeskClientProvider` contract as the datasource factory: pass either an already-built `client`, **or** raw credentials (`subdomain`, `email`, `apiToken`) and the plugin builds one for you on the fly. Sharing the same `client` across the [Zendesk datasource](/get-started/connect/data-sources/zendesk) and the plugins is recommended (single auth setup, single logger), but not required.
+
+</Tab>
+<Tab title="Ruby">
 
 Both plugins require the [Zendesk datasource](/get-started/connect/data-sources/zendesk) to be registered on your back-end: they need the `Datasource` instance to reach the Zendesk API client.
 
+</Tab>
+</Tabs>
+
 ## Usage
 
-Nothing is registered automatically. Opt each plugin in per collection through the standard customizer DSL:
+Nothing is registered automatically. Opt each plugin in per collection:
+
+<Tabs>
+<Tab title="Node.js">
+
+```javascript
+import {
+  createZendeskClient,
+  createZendeskDataSource,
+  closeTicketPlugin,
+  createTicketWithNotificationPlugin,
+} from '@forestadmin/datasource-zendesk';
+
+const zendeskClient = createZendeskClient({
+  subdomain: process.env.ZENDESK_SUBDOMAIN,
+  email: process.env.ZENDESK_EMAIL,
+  apiToken: process.env.ZENDESK_API_TOKEN,
+});
+
+const agent = createAgent(options)
+  .addDataSource(createZendeskDataSource({ client: zendeskClient }))
+
+  .customizeCollection('customers', collection => {
+    collection.use(createTicketWithNotificationPlugin, {
+      client: zendeskClient,
+      requesterEmailDefault: record => String(record.email ?? ''),
+    });
+  })
+
+  .customizeCollection('orders', collection => {
+    collection.use(closeTicketPlugin, {
+      client: zendeskClient,
+      ticketIdField: 'last_zendesk_ticket_id',
+    });
+  });
+```
+
+If you'd rather not build a client up-front (for example when you install a single plugin on a project that does not register the Zendesk datasource), pass the credentials straight to the plugin instead:
+
+```javascript
+collection.use(closeTicketPlugin, {
+  subdomain: process.env.ZENDESK_SUBDOMAIN,
+  email: process.env.ZENDESK_EMAIL,
+  apiToken: process.env.ZENDESK_API_TOKEN,
+  ticketIdField: 'last_zendesk_ticket_id',
+});
+```
+
+You can attach the same plugin to multiple collections (e.g. `customers` and `orders`) with different option sets. Each plugin throws explicitly if installed at the datasource level — they only work on a collection.
+
+</Tab>
+<Tab title="Ruby">
 
 ```ruby
 @agent.collection :Customer do |collection|
@@ -28,9 +90,61 @@ end
 
 Both plugins take the `Datasource` instance you registered earlier as the required `datasource:` option. You can attach the same plugin to multiple collections (e.g. `Customer` and `Order`) with different option sets.
 
-## `CreateTicketWithNotification`
+</Tab>
+</Tabs>
 
-A `Single`-scope action that opens a Zendesk ticket from the selected host record. The host record does not need to be related to Zendesk, the requester is identified by an email entered (or pre-filled) in the form, and Zendesk creates the user record on the fly if it does not already exist (the action derives the user's name from the email's local-part, e.g. `john.doe@acme.com → john.doe`, to satisfy Zendesk's non-empty-name validation).
+## Create a ticket with notification
+
+A `Single`-scope action that opens a Zendesk ticket from the selected host record. The host record does not need to be related to Zendesk — the requester is identified by an email entered (or pre-filled) in the form, and Zendesk creates the user record on the fly if it does not already exist (the action derives the user's name from the email's local-part, e.g. `john.doe@acme.com → john.doe`, to satisfy Zendesk's non-empty-name validation).
+
+<Tabs>
+<Tab title="Node.js">
+
+```javascript
+collection.use(createTicketWithNotificationPlugin, {
+  client: zendeskClient,
+  actionName: 'Open a support ticket',
+  defaultSubject: 'Refund for {{ record.email }}',
+  defaultMessage: '<p>Hi {{ record.name }},</p>',
+  requesterEmailDefault: record => String(record.email ?? ''),
+  senderEmail: 'support@acme.com',
+  priorityOverride: 'high',
+  ticketIdField: 'last_zendesk_ticket_id',
+});
+```
+
+| Option                  | Type                                              | Description                                                                                                                                                                                                                                 |
+| ----------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `client`                | `ZendeskClient`                                   | The Zendesk client instance. **Required when `subdomain` / `email` / `apiToken` are not provided.**                                                                                                                                         |
+| `subdomain`             | `string`                                          | Zendesk subdomain. **Required when `client` is not provided** (the plugin then builds a client from these credentials).                                                                                                                     |
+| `email`                 | `string`                                          | Email associated with the API token. Required alongside `subdomain` and `apiToken`.                                                                                                                                                         |
+| `apiToken`              | `string`                                          | Zendesk API token. Required alongside `subdomain` and `email`.                                                                                                                                                                              |
+| `actionName`            | `string`                                          | Overrides the action label. Defaults to `'Create ticket and notify'`.                                                                                                                                                                       |
+| `defaultSubject`        | `string \| (record) => string`                    | Default value for the "Subject" field. As a string, supports `{{ record.<path> }}` tokens (dotted paths work). As a function, receives the loaded record and returns a string.                                                              |
+| `defaultMessage`        | `string \| (record) => string`                    | Default value for the "Message" field. Same token / function syntax. Rendered through a RichText widget and shipped as `html_body`. **Ignored when a non-empty `emailTemplates` is provided AND a real template is selected** (see wizard). |
+| `emailTemplates`        | `Array<{ title: string; content: string }>`       | When non-empty, the form becomes a two-page wizard (see below). `content` supports the same `{{ record.<path> }}` token syntax.                                                                                                             |
+| `requesterEmailDefault` | `string \| (record) => string`                    | Default for the "Requester email" form field. Supports the same token / function syntax as Subject / Message.                                                                                                                               |
+| `senderEmail`           | `string`                                          | Maps to Zendesk's `recipient` on the created ticket — the support address replies are sent FROM. When unset, Zendesk uses the account's default support address.                                                                            |
+| `priorityOverride`      | `'low' \| 'normal' \| 'high' \| 'urgent'`         | When set, the "Priority" dropdown is removed from the form and this value is forced in the payload.                                                                                                                                         |
+| `typeOverride`          | `'problem' \| 'incident' \| 'question' \| 'task'` | Same idea for the "Type" dropdown.                                                                                                                                                                                                          |
+| `showInternalNote`      | `boolean`                                         | When `true`, adds the "Send as internal note" checkbox to the form. Hidden by default — tickets are public unless this is opt-in.                                                                                                           |
+| `ticketIdField`         | `string`                                          | Writable column on the host collection that receives the freshly-created ticket id. Best-effort: a writeback failure is logged and surfaced in the success message without rolling back the ticket.                                         |
+
+The form exposes the following fields by default:
+
+| Field                 | Type / widget         | Notes                                                                                                                                                                     |
+| --------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Requester email       | `String`              | Required. Pre-filled by `requesterEmailDefault`.                                                                                                                          |
+| Subject               | `String`              | Required. Default supports `{{ record.<path> }}` tokens.                                                                                                                  |
+| Message               | `String` / `RichText` | Required. Sent as the ticket's first comment (`html_body`).                                                                                                               |
+| Priority              | `Enum`                | Defaults to `normal`. Values: `low`, `normal`, `high`, `urgent`. **Hidden when `priorityOverride` is set.**                                                               |
+| Type                  | `Enum`                | Optional. Values: `problem`, `incident`, `question`, `task`. **Hidden when `typeOverride` is set.**                                                                       |
+| Send as internal note | `Boolean`             | **Hidden by default.** Surfaces only when `showInternalNote: true` is set. When checked, the first comment is private and no notification email is sent to the requester. |
+
+The default form always creates a public comment, which triggers Zendesk's default notification email to the requester. When `senderEmail` is set, that address is used as the support recipient (the From address of the outbound email).
+
+</Tab>
+<Tab title="Ruby">
 
 ```ruby
 @agent.collection :Customer do |collection|
@@ -75,12 +189,49 @@ The form exposes the following fields by default:
 
 The default form always creates a public comment, which triggers Zendesk's default notification email to the requester. When `sender_email` is set, that address is used as the support recipient (the From address of the outbound email).
 
+</Tab>
+</Tabs>
+
 ### Email-templates wizard
 
-When `email_templates` is set, the form becomes a two-page wizard:
+When the `email_templates` / `emailTemplates` option is set, the form becomes a two-page wizard:
 
-1. **Page 1, Template.** A `Template` dropdown lists each template's `title` plus a sentinel `"No template"` entry. Selecting an entry pre-fills the Message on page 2.
-2. **Page 2, Body.** The same fields as above, with the Message pre-filled from the selected template's `content`. Picking a different template (then clicking back) re-fills the Message; typing into Message in between is preserved across re-fetches of the same template selection.
+1. **Page 1 — Template.** A `Template` field lists each template's `title` plus a sentinel `"No template"` entry. Selecting an entry drives the Message default on page 2.
+2. **Page 2 — Body.** The same fields as above, with the Message field recomputed from the page 1 selection.
+
+<Tabs>
+<Tab title="Node.js">
+
+- A real template selected → `interpolate(template.content, record)`.
+- `"No template"` selected → `defaultMessage` is honored (if set), otherwise the field is empty.
+
+Token interpolation supports `{{ record.<path> }}` with dotted paths (e.g. `{{ record.org.name }}`). Tokens that resolve to `null`/`undefined` become an empty string. **Token values are not HTML-escaped** — the form is RichText/HTML, so do not interpolate untrusted data into the message body.
+
+<Note>
+This is an intentional cross-runtime difference: the Ruby plugin escapes token values, and its wizard ignores `default_message` in template mode, whereas the Node.js plugin honors `defaultMessage` when "No template" is selected.
+</Note>
+
+```javascript
+collection.use(createTicketWithNotificationPlugin, {
+  client: zendeskClient,
+  emailTemplates: [
+    {
+      title: 'Refund confirmation',
+      content: '<p>Hi {{ record.first_name }}, your refund has been processed.</p>',
+    },
+    {
+      title: 'Shipping delay',
+      content:
+        '<p>Hi {{ record.first_name }}, we apologise for the delay shipping order #{{ record.order_id }}.</p>',
+    },
+  ],
+});
+```
+
+</Tab>
+<Tab title="Ruby">
+
+Picking a different template (then clicking back) re-fills the Message; typing into Message in between is preserved across re-fetches of the same template selection.
 
 Template `content` supports the same `{{record.<field>}}` token syntax as `default_message`, and the interpolated values are HTML-escaped before being injected into the RichText editor. Picking `"No template"` yields an empty Message, `default_message` is intentionally ignored in wizard mode so the strict opt-in stays predictable.
 
@@ -97,9 +248,44 @@ collection.use(
 )
 ```
 
-## `CloseTicket`
+</Tab>
+</Tabs>
 
-Registers actions that transition a Zendesk ticket to `solved` or `closed`. The plugin reads the ticket id from a configurable column on the host record(s), so you can close a Zendesk ticket directly from a `Customer` row that stores `last_zendesk_ticket_id`, without having to navigate to the `ZendeskTicket` collection.
+## Close a ticket
+
+Registers actions that transition a Zendesk ticket to `solved` or `closed`. The plugin reads the ticket id from a configurable column on the host record(s) — so you can close a Zendesk ticket directly from a host row that stores `last_zendesk_ticket_id`, without having to navigate to the ticket collection.
+
+<Tabs>
+<Tab title="Node.js">
+
+```javascript
+collection.use(closeTicketPlugin, {
+  client: zendeskClient,
+  ticketIdField: 'last_zendesk_ticket_id',
+});
+```
+
+| Option          | Type                          | Description                                                                                                             |
+| --------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `client`        | `ZendeskClient`               | The Zendesk client instance. **Required when `subdomain` / `email` / `apiToken` are not provided.**                     |
+| `subdomain`     | `string`                      | Zendesk subdomain. **Required when `client` is not provided** (the plugin then builds a client from these credentials). |
+| `email`         | `string`                      | Email associated with the API token. Required alongside `subdomain` and `apiToken`.                                     |
+| `apiToken`      | `string`                      | Zendesk API token. Required alongside `subdomain` and `email`.                                                          |
+| `ticketIdField` | `string`                      | **Required.** Name of the column on the host record that holds the Zendesk ticket id.                                   |
+| `statuses`      | `Array<'solved' \| 'closed'>` | Subset of the targeted statuses. Defaults to both (`['solved', 'closed']`).                                             |
+| `scopes`        | `Array<'Single' \| 'Bulk'>`   | Subset of registered scopes. Defaults to both (`['Single', 'Bulk']`).                                                   |
+
+`statuses` and `scopes` are orthogonal — the plugin registers one action per `(status, scope)` pair, so the full default registers four actions on the host collection:
+
+| Status   | Single-scope label              | Bulk-scope label                          |
+| -------- | ------------------------------- | ----------------------------------------- |
+| `solved` | "Mark Zendesk ticket as solved" | "Mark selected Zendesk tickets as solved" |
+| `closed` | "Mark Zendesk ticket as closed" | "Mark selected Zendesk tickets as closed" |
+
+Pick subsets to register fewer variants, e.g. `{ statuses: ['closed'], scopes: ['Bulk'] }` registers a single bulk-close action. You can also point the plugin directly at `zendesk_ticket` with `ticketIdField: 'id'` to get a native "close from the ticket detail" action.
+
+</Tab>
+<Tab title="Ruby">
 
 ```ruby
 @agent.collection :Customer do |collection|
@@ -127,16 +313,32 @@ end
 
 Pick subsets to register fewer variants, e.g. `statuses: %w[closed], scopes: %i[bulk]` registers a single bulk-close action.
 
+</Tab>
+</Tabs>
+
 ### Status semantics
 
 - **`solved`** is the standard "resolved" workflow; the requester can still reopen the ticket during Zendesk's reopen window.
 - **`closed`** is terminal. Zendesk rejects further updates to a closed ticket and sometimes rejects the direct `open → closed` transition.
 
-The plugin recognises Zendesk's "closed prevents ticket update" error and translates it to a clean outcome:
+The plugin recognises Zendesk's "closed prevents ticket update" error (HTTP 422 with a matching detail message) and translates it to a clean outcome:
 
 - Targeting `closed` on an already-closed ticket → **success** (counted as "was already closed").
-- Targeting `solved` on an already-closed ticket → **failure** ("ticket is already closed (cannot reopen to mark as solved)").
+- Targeting `solved` on an already-closed ticket → **failure** (Zendesk does not allow editing a closed ticket).
 
 ### Bulk behaviour
 
-Each id is processed independently, a single rejected transition does not abort the rest of the run. The success message reports succeeded, already-closed and failed ids so partial successes are visible. If every id fails the action surfaces as an error rather than a partial success.
+Each id is processed independently — a single rejected transition does not abort the rest of the run. The success message reports succeeded, already-closed and failed ids so partial successes are visible. If every id fails the action surfaces as an error rather than a partial success.
+
+<Tabs>
+<Tab title="Node.js">
+
+If no usable id can be read from the selected record(s) (e.g. `ticketIdField` is empty), the action returns an error with `No ticket id available on the selected record(s).` rather than calling Zendesk.
+
+</Tab>
+<Tab title="Ruby">
+
+If no usable id can be read from the selected record(s) (e.g. `ticket_id_field` is empty), the action returns an error rather than calling Zendesk.
+
+</Tab>
+</Tabs>
