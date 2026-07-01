@@ -64,7 +64,7 @@ X-RateLimit-Reset: 1640995200
 
 ```javascript
 const response = await axios.get(
-  'https://api.forestadmin.com/api/v1/activity-logs',
+  'https://public-api.forestadmin.com/v1/project/{projectName}/environment/{environmentName}/activity-logs',
   { headers: { 'Authorization': `Bearer ${token}` } }
 );
 
@@ -80,7 +80,7 @@ console.log(`Resets at: ${new Date(reset * 1000).toISOString()}`);
 
 ```python
 response = requests.get(
-    'https://api.forestadmin.com/api/v1/activity-logs',
+    'https://public-api.forestadmin.com/v1/project/{projectName}/environment/{environmentName}/activity-logs',
     headers={'Authorization': f'Bearer {token}'}
 )
 
@@ -224,7 +224,7 @@ const queue = new RateLimitedQueue(60);
 
 for (const id of recordIds) {
   queue.add(() =>
-    axios.get(`https://api.forestadmin.com/api/v1/records/${id}`, {
+    axios.get(`https://public-api.forestadmin.com/api/v1/records/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
   );
@@ -274,7 +274,7 @@ bucket = TokenBucket(rate=1, capacity=60)
 for record_id in record_ids:
     bucket.wait_for_token()
     response = requests.get(
-        f'https://api.forestadmin.com/api/v1/records/{record_id}',
+        f'https://public-api.forestadmin.com/api/v1/records/{record_id}',
         headers={'Authorization': f'Bearer {token}'}
     )
 ```
@@ -452,7 +452,7 @@ const axios = require('axios');
 class ForestAPIClient {
   constructor(token, requestsPerMinute = 60) {
     this.token = token;
-    this.baseURL = 'https://api.forestadmin.com';
+    this.baseURL = 'https://public-api.forestadmin.com';
     this.queue = [];
     this.processing = false;
     this.interval = 60000 / requestsPerMinute;
@@ -541,7 +541,7 @@ class ForestAPIClient {
 const client = new ForestAPIClient(process.env.FOREST_API_TOKEN, 60);
 
 async function fetchActivityLogs() {
-  const response = await client.request('/api/v1/activity-logs', {
+  const response = await client.request('/v1/project/{projectName}/environment/{environmentName}/activity-logs', {
     params: {
       start_date: '2024-01-01',
       limit: 100
@@ -553,7 +553,7 @@ async function fetchActivityLogs() {
 // Fetch multiple pages
 const allLogs = [];
 for (let page = 1; page <= 10; page++) {
-  const response = await client.request('/api/v1/activity-logs', {
+  const response = await client.request('/v1/project/{projectName}/environment/{environmentName}/activity-logs', {
     params: { page, limit: 100 }
   });
   allLogs.push(...response.data);
