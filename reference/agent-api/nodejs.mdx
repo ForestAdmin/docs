@@ -28,6 +28,7 @@ const agent = createAgent(options: AgentOptions): Agent;
 | `loggerLevel` | string | No | Log level: 'Debug', 'Info', 'Warn', 'Error' |
 | `prefix` | string | No | API prefix (default: '/forest') |
 | `schemaPath` | string | No | Path to .forestadmin-schema.json |
+| `typingsPath` | string | No | Path to the generated TypeScript typings file (written when set) |
 | <code style={{whiteSpace: 'nowrap'}}>useUnsafeActionEndpoint</code> | boolean | No | Drop the positional index from Smart Action routes.<br />Default `false`. |
 
 **Example:**
@@ -313,6 +314,9 @@ It writes to the `schemaPath` (and `typingsPath`, when set) you configured in `c
 **Example:**
 
 ```typescript
+import { createAgent } from '@forestadmin/agent';
+import { createSqlDataSource } from '@forestadmin/datasource-sql';
+
 const agent = createAgent({
   authSecret: process.env.FOREST_AUTH_SECRET,
   envSecret: process.env.FOREST_ENV_SECRET,
