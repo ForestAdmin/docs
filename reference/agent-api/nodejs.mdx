@@ -309,7 +309,11 @@ Build the schema (`.forestadmin-schema.json`) and the TypeScript typings and wri
 await agent.generateSchemaOnly(): Promise<void>;
 ```
 
-It writes to the `schemaPath` (and `typingsPath`, when set) you configured in `createAgent`. Unlike `agent.start()`, it always rebuilds the schema, even when `isProduction` is `true`, and it never contacts Forest, with one exception: if you enable experimental no-code customizations, it still fetches their configuration from the Forest API, so connectivity is required in that case.
+It takes no arguments: it reads `schemaPath`, `typingsPath` and `typingsMaxDepth` from the options you passed to `createAgent`. It always writes the schema to `schemaPath`, and **also writes the TypeScript typings to `typingsPath` in the same pass whenever that option is set** (if `typingsPath` is not set, only the schema is written). Unlike `agent.start()`, it always rebuilds the schema, even when `isProduction` is `true`, and it never contacts Forest, with one exception: if you enable experimental no-code customizations, it still fetches their configuration from the Forest API, so connectivity is required in that case.
+
+<Note>
+  Despite the name, `Only` means it *only generates the files* without starting the agent or sending the schema to Forest, not "the schema only". So with `typingsPath` set, a single call produces both the schema and the typings. If you want to regenerate **only** the typings, use `agent.updateTypesOnFileSystem()` (documented above) instead.
+</Note>
 
 **Example:**
 
