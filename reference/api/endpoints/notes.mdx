@@ -9,3 +9,9 @@ openapi: "/reference/api/openapi.json GET /v1/project/{projectName}/environment/
 <Warning>
   If your project uses SSO, the application token must be generated while logged in with SSO.
 </Warning>
+
+<Note>
+  Results are paginated. When `hasMore` is `true`, fetch the next page by
+  passing `createdAt.lt` set to the oldest `createdAt` in the current
+  response.
+</Note>
