@@ -43,6 +43,49 @@ Your team can now access the production back-office.
 For a full explanation of the development workflow, branches, schema updates, environment management, see [Developer Workflow](/product/process/advanced-concepts/developer-workflow/environments-and-branches).
 </Info>
 
+## Generate the schema at build time
+
+By default you commit `.forestadmin-schema.json` and deploy it alongside your code. As an alternative, you can generate it in your CI/CD pipeline and ship it inside your build artifact (for example, baked into a Docker image) instead of committing it. This avoids merge conflicts on the file and stale schemas when someone forgets to regenerate before deploying.
+
+Call [`agent.generateSchemaOnly()`](/reference/agent-api/nodejs) from a one-shot script instead of starting the agent. It writes the schema (and typings) to disk without starting the HTTP server or contacting Forest:
+
+```typescript
+// generate-schema.ts — run in CI before building the image
+import makeAgent from './agent'; // your existing createAgent(...).addDataSource(...).customizeCollection(...)
+
+await makeAgent().generateSchemaOnly();
+process.exit(0); // an open connection pool would otherwise keep the process alive
+```
+
+Then, in your pipeline, generate the file before building the image:
+
+```bash
+# the database must be reachable and migrated: generation introspects your tables
+node generate-schema.js
+# bake the generated .forestadmin-schema.json into your image, then deploy/promote it
+```
+
+<Note>
+Generation runs your customizations and introspects your data sources, so the database must be reachable and migrated first. If you use experimental no-code customizations, it also fetches their configuration from Forest, which requires connectivity.
+</Note>
+
+<Warning>
+Generate the schema against a database whose structure matches production. If your build database is behind or ahead of production (a pending migration), the shipped schema can diverge from what production expects, the same risk as deploying an out-of-date committed file.
+</Warning>
+
+## Catch an uncommitted schema in CI
+
+If you keep `.forestadmin-schema.json` committed instead, add a CI step that regenerates it and fails when it differs from what's committed. A red build then means "you forgot to commit your schema", rather than silently shipping a stale one.
+
+Point the same one-shot script at your committed `schemaPath` (e.g. `.forestadmin-schema.json`), then diff it:
+
+```bash
+# regenerate the committed schema in place (the database must be reachable and migrated)
+node generate-schema.js
+# fail the build if the committed schema is out of date
+git diff --exit-code .forestadmin-schema.json
+```
+
 ## What's next
 
 Production is live. Time to invite your team.
