@@ -64,7 +64,7 @@ X-RateLimit-Reset: 1640995200
 
 ```javascript
 const response = await axios.get(
-  'https://api.forestadmin.com/api/v1/activity-logs',
+  'https://public-api.forestadmin.com/api/v1/activity-logs',
   { headers: { 'Authorization': `Bearer ${token}` } }
 );
 
@@ -80,7 +80,7 @@ console.log(`Resets at: ${new Date(reset * 1000).toISOString()}`);
 
 ```python
 response = requests.get(
-    'https://api.forestadmin.com/api/v1/activity-logs',
+    'https://public-api.forestadmin.com/api/v1/activity-logs',
     headers={'Authorization': f'Bearer {token}'}
 )
 
@@ -224,7 +224,7 @@ const queue = new RateLimitedQueue(60);
 
 for (const id of recordIds) {
   queue.add(() =>
-    axios.get(`https://api.forestadmin.com/api/v1/records/${id}`, {
+    axios.get(`https://public-api.forestadmin.com/api/v1/records/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
   );
@@ -274,7 +274,7 @@ bucket = TokenBucket(rate=1, capacity=60)
 for record_id in record_ids:
     bucket.wait_for_token()
     response = requests.get(
-        f'https://api.forestadmin.com/api/v1/records/{record_id}',
+        f'https://public-api.forestadmin.com/api/v1/records/{record_id}',
         headers={'Authorization': f'Bearer {token}'}
     )
 ```
@@ -452,7 +452,7 @@ const axios = require('axios');
 class ForestAPIClient {
   constructor(token, requestsPerMinute = 60) {
     this.token = token;
-    this.baseURL = 'https://api.forestadmin.com';
+    this.baseURL = 'https://public-api.forestadmin.com';
     this.queue = [];
     this.processing = false;
     this.interval = 60000 / requestsPerMinute;
