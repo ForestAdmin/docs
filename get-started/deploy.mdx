@@ -86,7 +86,13 @@ Generate `.forestadmin-schema.json` in your CI pipeline without starting the age
   </Tab>
 </Tabs>
 
-Once you generate at build time, stop tracking the file in Git (add `.forestadmin-schema.json` to `.gitignore`) so a stale committed copy can't be shipped by mistake.
+Once you generate at build time, stop tracking the file in Git so a stale committed copy can't be shipped by mistake. Adding it to `.gitignore` is not enough on its own — an already-committed file stays tracked until you remove it from the index:
+
+```bash
+git rm --cached .forestadmin-schema.json
+echo '.forestadmin-schema.json' >> .gitignore
+git commit -m "Stop tracking .forestadmin-schema.json"
+```
 
 <Warning>
 Generate the schema against a database whose structure matches production. If your build database is behind or ahead of production (a pending migration), the shipped schema can diverge from what production expects — the same risk as deploying an out-of-date committed file.
