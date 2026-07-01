@@ -28,6 +28,7 @@ const agent = createAgent(options: AgentOptions): Agent;
 | `loggerLevel` | string | No | Log level: 'Debug', 'Info', 'Warn', 'Error' |
 | `prefix` | string | No | API prefix (default: '/forest') |
 | `schemaPath` | string | No | Path to .forestadmin-schema.json |
+| `typingsPath` | string | No | Path to the generated TypeScript typings file (written when set) |
 | <code style={{whiteSpace: 'nowrap'}}>useUnsafeActionEndpoint</code> | boolean | No | Drop the positional index from Smart Action routes.<br />Default `false`. |
 
 **Example:**
@@ -297,6 +298,39 @@ await agent.updateTypesOnFileSystem(
 ```typescript
 await agent.updateTypesOnFileSystem('./typings.ts', 5);
 ```
+
+---
+
+### agent.generateSchemaOnly()
+
+Build the schema (`.forestadmin-schema.json`) and the TypeScript typings and write them to disk **without** starting the agent or sending the schema to Forest. Useful for generating the schema at build time in a CI/CD pipeline, see [Generate the schema at build time](/get-started/deploy#generate-the-schema-at-build-time). Available since `@forestadmin/agent` 1.83.0.
+
+```typescript
+await agent.generateSchemaOnly(): Promise<void>;
+```
+
+It writes to the `schemaPath` (and `typingsPath`, when set) you configured in `createAgent`. Unlike `agent.start()`, it always rebuilds the schema, even when `isProduction` is `true`, and it never contacts Forest, with one exception: if you enable experimental no-code customizations, it still fetches their configuration from the Forest API, so connectivity is required in that case.
+
+**Example:**
+
+```typescript
+import { createAgent } from '@forestadmin/agent';
+import { createSqlDataSource } from '@forestadmin/datasource-sql';
+
+const agent = createAgent({
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  envSecret: process.env.FOREST_ENV_SECRET,
+  isProduction: true,
+  schemaPath: '.forestadmin-schema.json',
+  typingsPath: './typings.ts', // optional
+}).addDataSource(createSqlDataSource(process.env.DATABASE_URL));
+
+await agent.generateSchemaOnly();
+```
+
+<Note>
+This does not close your data source connections. In a one-shot script, close your data source (the SQL/Sequelize/Mongo client you passed in) or call `process.exit()` once it resolves, otherwise an open connection pool can keep the process alive.
+</Note>
 
 ---
 
