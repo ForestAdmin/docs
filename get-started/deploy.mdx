@@ -50,35 +50,43 @@ For a full explanation of the development workflow, branches, schema updates, en
 - **Commit the file (the default).** Schema changes show up in pull-request diffs and can be reverted in Git.
 - **Generate it at build time.** Reach for this if merge conflicts on `.forestadmin-schema.json` or forgotten regenerations are a recurring pain: you get a conflict-free, always-fresh file, at the cost of that reviewable diff.
 
-<Note>
-Using the Ruby agent? Run `rails forest_admin:schema:generate` in CI — same idea. The examples below use the Node.js agent.
-</Note>
-
 ### Generate the schema at build time
 
-Call [`agent.generateSchemaOnly()`](/reference/agent-api/nodejs) (available since `@forestadmin/agent` 1.83.0) from a one-shot script instead of starting the agent. It writes the schema (and typings) to disk without starting the HTTP server or contacting Forest.
+Generate `.forestadmin-schema.json` in your CI pipeline without starting the agent or contacting Forest, then bake it into your build artifact.
 
-Extract your agent setup into a shared factory that does **not** call `.start()`, so both your server and this script can import it:
+<Tabs>
+  <Tab title="Node.js">
+    Call [`agent.generateSchemaOnly()`](/reference/agent-api/nodejs) (available since `@forestadmin/agent` 1.83.0) from a one-shot script. Extract your agent setup into a shared factory that does **not** call `.start()`, so both your server and this script can import it:
 
-```typescript
-// generate-schema.ts — run in CI before building the image
-import makeAgent from './agent'; // export default () => createAgent({...}).addDataSource(...), without .start()
+    ```typescript
+    // generate-schema.ts — run in CI before building the image
+    import makeAgent from './agent'; // export default () => createAgent({...}).addDataSource(...), without .start()
 
-await makeAgent().generateSchemaOnly();
-process.exit(0); // an open connection pool would otherwise keep the process alive
-```
+    await makeAgent().generateSchemaOnly();
+    process.exit(0); // an open connection pool would otherwise keep the process alive
+    ```
 
-```bash
-# the database must be reachable and migrated: generation introspects your tables
-npx tsx generate-schema.ts
-# bake the generated .forestadmin-schema.json into your image, then deploy/promote it
-```
+    ```bash
+    # the database must be reachable and migrated: generation introspects your tables
+    npx tsx generate-schema.ts
+    # bake the generated .forestadmin-schema.json into your image, then deploy/promote it
+    ```
+
+    Your CI job needs the same environment variables as your deployed back-end (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`): `createAgent` requires the secrets even though generation is offline by default. If you use experimental no-code customizations, generation also fetches their configuration from Forest, which requires connectivity.
+  </Tab>
+  <Tab title="Ruby">
+    Run the `forest_admin:schema:generate` rake task, which writes the file without booting the server or sending it to Forest:
+
+    ```bash
+    # the database must be reachable and migrated: generation introspects your tables
+    rails db:migrate
+    rails forest_admin:schema:generate
+    # bake the generated .forestadmin-schema.json into your image, then deploy/promote it
+    ```
+  </Tab>
+</Tabs>
 
 Once you generate at build time, stop tracking the file in Git (add `.forestadmin-schema.json` to `.gitignore`) so a stale committed copy can't be shipped by mistake.
-
-<Note>
-Your CI job needs the same environment variables as your deployed back-end (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`): `createAgent` requires the secrets even though generation is offline by default. If you use experimental no-code customizations, generation also fetches their configuration from Forest, which requires connectivity.
-</Note>
 
 <Warning>
 Generate the schema against a database whose structure matches production. If your build database is behind or ahead of production (a pending migration), the shipped schema can diverge from what production expects — the same risk as deploying an out-of-date committed file.
@@ -88,14 +96,25 @@ Generate the schema against a database whose structure matches production. If yo
 
 If you keep `.forestadmin-schema.json` committed instead, add a CI step that regenerates it and fails when it differs from what's committed — so a forgotten commit turns the build red rather than silently shipping a stale schema.
 
-The same script already writes to the `schemaPath` set in `createAgent`, so just run it and diff:
+<Tabs>
+  <Tab title="Node.js">
+    The same script already writes to the `schemaPath` set in `createAgent`, so just run it and diff:
 
-```bash
-# regenerate the committed schema in place (the database must be reachable and migrated)
-npx tsx generate-schema.ts
-# fail the build if the committed schema is out of date
-git diff --exit-code .forestadmin-schema.json
-```
+    ```bash
+    # regenerate the committed schema in place (the database must be reachable and migrated)
+    npx tsx generate-schema.ts
+    git diff --exit-code .forestadmin-schema.json
+    ```
+  </Tab>
+  <Tab title="Ruby">
+    ```bash
+    # regenerate the committed schema in place (the database must be reachable and migrated)
+    rails db:migrate
+    rails forest_admin:schema:generate
+    git diff --exit-code .forestadmin-schema.json
+    ```
+  </Tab>
+</Tabs>
 
 ## What's next
 
