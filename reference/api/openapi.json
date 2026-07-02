@@ -1,0 +1,2249 @@
+{
+  "info": {
+    "title": "Forest Admin public API",
+    "version": "1.38.0"
+  },
+  "servers": [
+    {
+      "url": "https://public-api.forestadmin.com"
+    }
+  ],
+  "tags": [],
+  "openapi": "3.0.0",
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http",
+        "description": "Bearer authentication"
+      }
+    },
+    "schemas": {
+      "user-project": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "object": {
+                "type": "string",
+                "enum": [
+                  "user"
+                ]
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "The user email"
+              },
+              "id": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "username": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "object",
+              "email",
+              "id",
+              "username"
+            ],
+            "additionalProperties": false,
+            "description": "The user affected by the action"
+          },
+          "permissionLevel": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "editor",
+              "user",
+              "developer",
+              "manager"
+            ],
+            "description": "Permission level of the user"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Tags defined for the user"
+          },
+          "role": {
+            "type": "object",
+            "properties": {
+              "object": {
+                "type": "string",
+                "enum": [
+                  "role"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The name of the role"
+              }
+            },
+            "required": [
+              "object",
+              "name"
+            ],
+            "additionalProperties": false,
+            "description": "The role of the user"
+          },
+          "teams": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "object": {
+                  "type": "string",
+                  "enum": [
+                    "team"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The name of the team"
+                }
+              },
+              "required": [
+                "object",
+                "name"
+              ],
+              "additionalProperties": false,
+              "description": "The team associated to the user"
+            },
+            "description": "The list of teams of the user"
+          }
+        },
+        "required": [
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "role": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the role"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "team": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the team"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "environment": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The name of the environment"
+          },
+          "codeCustomizationVersion": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "codeCustomizationVersion"
+        ],
+        "additionalProperties": false
+      },
+      "resource": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/user-project"
+          },
+          {
+            "$ref": "#/components/schemas/role"
+          },
+          {
+            "$ref": "#/components/schemas/team"
+          },
+          {
+            "$ref": "#/components/schemas/environment"
+          }
+        ]
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/v1/project/{projectName}/environment/{environmentName}/activity-logs": {
+      "get": {
+        "operationId": "listActivityLogs",
+        "summary": "List activity logs",
+        "description": "Returns activity logs for a specific project and environment, sorted by `createdAt` in descending order (most recent first). Use the `createdAt` filter for pagination.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The **case sensitive** environment name"
+            },
+            "required": true,
+            "name": "environmentName",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The **case sensitive** project name"
+            },
+            "required": true,
+            "name": "projectName",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "exclusiveMinimum": true,
+              "maximum": 100,
+              "default": 10,
+              "description": "This specifies a limit on the number of objects to return, ranging between 1 and 100. Limit is set to 10 by default"
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "email",
+              "description": "The user email"
+            },
+            "required": false,
+            "name": "userEmail",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The user id"
+            },
+            "required": false,
+            "name": "userId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The team name"
+            },
+            "required": false,
+            "name": "teamName",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The collection name (same as in the schema)."
+            },
+            "required": false,
+            "name": "collectionName",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The record id"
+            },
+            "required": false,
+            "name": "recordId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "create",
+                "read",
+                "update",
+                "delete",
+                "action",
+                "search",
+                "filter",
+                "listRelatedData",
+                "describeCollection",
+                "index",
+                "select",
+                "dashboard",
+                "workspace",
+                "export",
+                "createNote",
+                "openNote",
+                "deleteNote",
+                "createMessage",
+                "createApproval",
+                "approveApproval",
+                "rejectApproval",
+                "ignoreApprovalWarning",
+                "markApprovalAsFailed",
+                "startProcessingInboxTask",
+                "completeInboxTask",
+                "cancelInboxTask",
+                "cancelInboxTaskNotTreated",
+                "autoCancelInboxTask",
+                "assignUserToInboxTask",
+                "unassignUserFromInboxTask",
+                "sendApprovalBackInReview",
+                "triggerWorkflow",
+                "abortWorkflow",
+                "completeWorkflow",
+                "selectWorkflowOption",
+                "completeWorkflowStep",
+                "reviseWorkflowStep",
+                "resumeWorkflow"
+              ],
+              "description": "The action performed"
+            },
+            "required": false,
+            "name": "action",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "read",
+                "write"
+              ],
+              "description": "The type of the activity log"
+            },
+            "required": false,
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Value to filter by"
+            },
+            "required": false,
+            "name": "createdAt.eq",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.lt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.lte",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.gt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.gte",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of activity logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hasMore": {
+                      "type": "boolean",
+                      "description": "Whether or not there are more elements available after this set. If false, this set comprises the end of the list."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "object": {
+                            "type": "string",
+                            "enum": [
+                              "activityLog"
+                            ]
+                          },
+                          "id": {
+                            "type": "string",
+                            "description": "ID of the activity log"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "read",
+                              "write"
+                            ],
+                            "description": "The type of the activity log"
+                          },
+                          "action": {
+                            "type": "string",
+                            "enum": [
+                              "create",
+                              "read",
+                              "update",
+                              "delete",
+                              "action",
+                              "search",
+                              "filter",
+                              "listRelatedData",
+                              "describeCollection",
+                              "index",
+                              "select",
+                              "dashboard",
+                              "workspace",
+                              "export",
+                              "createNote",
+                              "openNote",
+                              "deleteNote",
+                              "createMessage",
+                              "createApproval",
+                              "approveApproval",
+                              "rejectApproval",
+                              "ignoreApprovalWarning",
+                              "markApprovalAsFailed",
+                              "startProcessingInboxTask",
+                              "completeInboxTask",
+                              "cancelInboxTask",
+                              "cancelInboxTaskNotTreated",
+                              "autoCancelInboxTask",
+                              "assignUserToInboxTask",
+                              "unassignUserFromInboxTask",
+                              "sendApprovalBackInReview",
+                              "triggerWorkflow",
+                              "abortWorkflow",
+                              "completeWorkflow",
+                              "selectWorkflowOption",
+                              "completeWorkflowStep",
+                              "reviseWorkflowStep",
+                              "resumeWorkflow"
+                            ],
+                            "description": "The action performed"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "recordIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "The records' ids the activity log is related to"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the activity log was created"
+                          },
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "user"
+                                ]
+                              },
+                              "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "The user email"
+                              },
+                              "id": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "username": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "email",
+                              "id",
+                              "username"
+                            ],
+                            "additionalProperties": false,
+                            "description": "The user who performed the action"
+                          },
+                          "environment": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "environment"
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": "The name of the environment"
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "name"
+                            ],
+                            "additionalProperties": false,
+                            "description": "The environment the activity log is related to"
+                          },
+                          "collection": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "collection"
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": "The name of the collection"
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "name"
+                            ],
+                            "additionalProperties": false,
+                            "description": "The collection the activity log is related to"
+                          },
+                          "inbox": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "inbox"
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "The name of the inbox"
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "name"
+                            ],
+                            "description": "The inbox the activity log is related to, if the activity has been done in the context of an inbox"
+                          },
+                          "workflow": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "workflow"
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "The name of the workflow"
+                              },
+                              "runId": {
+                                "type": "string",
+                                "description": "ID corresponding to a single run of the workflow"
+                              },
+                              "stepName": {
+                                "type": "string",
+                                "description": "The name of the step within the workflow"
+                              },
+                              "optionName": {
+                                "type": "string",
+                                "description": "The name of the option selected on the step within the workflow"
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "name",
+                              "runId"
+                            ],
+                            "description": "The workflow the activity log is related to"
+                          },
+                          "team": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "team"
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": "The name of the team"
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "name"
+                            ],
+                            "additionalProperties": false,
+                            "description": "The team the activity log is related to"
+                          }
+                        },
+                        "required": [
+                          "object",
+                          "id",
+                          "type",
+                          "action",
+                          "createdAt",
+                          "user",
+                          "environment",
+                          "team"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "environmentName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The **case sensitive** environment name"
+                        },
+                        "projectName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The **case sensitive** project name"
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "exclusiveMinimum": true,
+                          "maximum": 100,
+                          "default": 10,
+                          "description": "This specifies a limit on the number of objects to return, ranging between 1 and 100. Limit is set to 10 by default"
+                        },
+                        "userEmail": {
+                          "type": "string",
+                          "format": "email",
+                          "description": "The user email"
+                        },
+                        "userId": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "description": "The user id"
+                        },
+                        "teamName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The team name"
+                        },
+                        "collectionName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The collection name (same as in the schema)."
+                        },
+                        "recordId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The record id"
+                        },
+                        "action": {
+                          "type": "string",
+                          "enum": [
+                            "create",
+                            "read",
+                            "update",
+                            "delete",
+                            "action",
+                            "search",
+                            "filter",
+                            "listRelatedData",
+                            "describeCollection",
+                            "index",
+                            "select",
+                            "dashboard",
+                            "workspace",
+                            "export",
+                            "createNote",
+                            "openNote",
+                            "deleteNote",
+                            "createMessage",
+                            "createApproval",
+                            "approveApproval",
+                            "rejectApproval",
+                            "ignoreApprovalWarning",
+                            "markApprovalAsFailed",
+                            "startProcessingInboxTask",
+                            "completeInboxTask",
+                            "cancelInboxTask",
+                            "cancelInboxTaskNotTreated",
+                            "autoCancelInboxTask",
+                            "assignUserToInboxTask",
+                            "unassignUserFromInboxTask",
+                            "sendApprovalBackInReview",
+                            "triggerWorkflow",
+                            "abortWorkflow",
+                            "completeWorkflow",
+                            "selectWorkflowOption",
+                            "completeWorkflowStep",
+                            "reviseWorkflowStep",
+                            "resumeWorkflow"
+                          ],
+                          "description": "The action performed"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "read",
+                            "write"
+                          ],
+                          "description": "The type of the activity log"
+                        },
+                        "createdAt.eq": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Value to filter by"
+                        },
+                        "createdAt.lt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.lte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.gt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.gte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        }
+                      },
+                      "required": [
+                        "environmentName",
+                        "projectName",
+                        "limit"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The parameters used to fetch the activity logs"
+                    }
+                  },
+                  "required": [
+                    "hasMore",
+                    "data",
+                    "parameters"
+                  ]
+                },
+                "example": {
+                  "hasMore": false,
+                  "parameters": {
+                    "projectName": "Forest",
+                    "environmentName": "Production",
+                    "limit": 10
+                  },
+                  "data": [
+                    {
+                      "object": "activityLog",
+                      "id": "rbCb98wCZ1y-_zv4wrXz",
+                      "type": "write",
+                      "action": "update",
+                      "label": "updated",
+                      "recordIds": [
+                        "42"
+                      ],
+                      "createdAt": "2024-03-14T15:09:26.535Z",
+                      "user": {
+                        "object": "user",
+                        "id": 1,
+                        "username": "alice",
+                        "email": "alice@forestadmin.com"
+                      },
+                      "environment": {
+                        "object": "environment",
+                        "name": "Production"
+                      },
+                      "collection": {
+                        "object": "collection",
+                        "name": "subscriptions"
+                      },
+                      "team": {
+                        "object": "team",
+                        "name": "Sales"
+                      }
+                    },
+                    {
+                      "object": "activityLog",
+                      "id": "fHCb9IXCZ1y_Pzv4wrXz",
+                      "type": "write",
+                      "action": "startProcessingInboxTask",
+                      "label": "assigned to",
+                      "recordIds": [
+                        "4242"
+                      ],
+                      "createdAt": "2024-03-14T15:09:26.535Z",
+                      "user": {
+                        "object": "user",
+                        "id": 2,
+                        "username": "bob",
+                        "email": "bob@forestadmin.com"
+                      },
+                      "environment": {
+                        "object": "environment",
+                        "name": "Production"
+                      },
+                      "collection": {
+                        "object": "collection",
+                        "name": "subscriptions"
+                      },
+                      "team": {
+                        "object": "team",
+                        "name": "Operations"
+                      },
+                      "inbox": {
+                        "object": "inbox",
+                        "name": "Ids check"
+                      }
+                    },
+                    {
+                      "object": "activityLog",
+                      "id": "vEgu7pYBRgCf1BhhPe83",
+                      "type": "write",
+                      "action": "completeWorkflow",
+                      "label": "completed the workflow \"KYC Process\"",
+                      "recordIds": [
+                        "74"
+                      ],
+                      "createdAt": "2025-05-20T14:52:09.909Z",
+                      "user": {
+                        "object": "user",
+                        "id": 2,
+                        "username": "bob",
+                        "email": "bob@forestadmin.com"
+                      },
+                      "environment": {
+                        "object": "environment",
+                        "name": "Production"
+                      },
+                      "collection": {
+                        "object": "collection",
+                        "name": "subscriptions"
+                      },
+                      "team": {
+                        "object": "team",
+                        "name": "Operations"
+                      },
+                      "workflow": {
+                        "object": "workflow",
+                        "name": "KYC Process",
+                        "runId": "26",
+                        "stepName": "Migrate user for next step"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "description": "The time in seconds after which the client can retry the request"
+                },
+                "required": true
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/project/{projectName}/admin-logs": {
+      "get": {
+        "operationId": "listAdminLogs",
+        "summary": "List admin logs",
+        "description": "Returns admin logs for a specific project, sorted by `createdAt` in descending order (most recent first). Use the `createdAt` filter for pagination.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The **case sensitive** project name"
+            },
+            "required": true,
+            "name": "projectName",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "exclusiveMinimum": true,
+              "maximum": 100,
+              "default": 10,
+              "description": "This specifies a limit on the number of objects to return, ranging between 1 and 100. Limit is set to 10 by default"
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "email",
+              "description": "The administrator email"
+            },
+            "required": false,
+            "name": "userEmail",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The administrator id"
+            },
+            "required": false,
+            "name": "userId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "add",
+                "remove",
+                "update",
+                "initial"
+              ],
+              "description": "The type of action performed"
+            },
+            "required": false,
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "administrator",
+                "identityProvider",
+                "forestAdmin"
+              ],
+              "description": "The entity that initiated the action"
+            },
+            "required": false,
+            "name": "initiator",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "user-project",
+                "role",
+                "team",
+                "environment"
+              ],
+              "description": "The resource affected by the action"
+            },
+            "required": false,
+            "name": "resource",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Value to filter by"
+            },
+            "required": false,
+            "name": "createdAt.eq",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.lt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.lte",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.gt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.gte",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of admin logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hasMore": {
+                      "type": "boolean",
+                      "description": "Whether or not there are more elements available after this set. If false, this set comprises the end of the list."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "object": {
+                            "type": "string",
+                            "enum": [
+                              "adminLog"
+                            ]
+                          },
+                          "id": {
+                            "type": "string",
+                            "description": "ID of the admin log"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "add",
+                              "remove",
+                              "update",
+                              "initial"
+                            ],
+                            "description": "The type of action performed"
+                          },
+                          "resource": {
+                            "type": "string",
+                            "enum": [
+                              "user-project",
+                              "role",
+                              "team",
+                              "environment"
+                            ],
+                            "description": "The resource affected by the action"
+                          },
+                          "initiator": {
+                            "type": "string",
+                            "enum": [
+                              "administrator",
+                              "identityProvider",
+                              "forestAdmin"
+                            ],
+                            "description": "The entity that initiated the action"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the admin log was created"
+                          },
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "user"
+                                ]
+                              },
+                              "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "The user email"
+                              },
+                              "id": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "username": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "email",
+                              "id",
+                              "username"
+                            ],
+                            "additionalProperties": false,
+                            "description": "The administrator who performed the action"
+                          },
+                          "newValue": {
+                            "$ref": "#/components/schemas/resource"
+                          },
+                          "previousValue": {
+                            "$ref": "#/components/schemas/resource"
+                          }
+                        },
+                        "required": [
+                          "object",
+                          "id",
+                          "type",
+                          "resource",
+                          "initiator",
+                          "createdAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "projectName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The **case sensitive** project name"
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "exclusiveMinimum": true,
+                          "maximum": 100,
+                          "default": 10,
+                          "description": "This specifies a limit on the number of objects to return, ranging between 1 and 100. Limit is set to 10 by default"
+                        },
+                        "userEmail": {
+                          "type": "string",
+                          "format": "email",
+                          "description": "The administrator email"
+                        },
+                        "userId": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "description": "The administrator id"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "add",
+                            "remove",
+                            "update",
+                            "initial"
+                          ],
+                          "description": "The type of action performed"
+                        },
+                        "initiator": {
+                          "type": "string",
+                          "enum": [
+                            "administrator",
+                            "identityProvider",
+                            "forestAdmin"
+                          ],
+                          "description": "The entity that initiated the action"
+                        },
+                        "resource": {
+                          "type": "string",
+                          "enum": [
+                            "user-project",
+                            "role",
+                            "team",
+                            "environment"
+                          ],
+                          "description": "The resource affected by the action"
+                        },
+                        "createdAt.eq": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Value to filter by"
+                        },
+                        "createdAt.lt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.lte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.gt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.gte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        }
+                      },
+                      "required": [
+                        "projectName"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The parameters used to fetch the admin logs"
+                    }
+                  },
+                  "required": [
+                    "hasMore",
+                    "data",
+                    "parameters"
+                  ]
+                },
+                "example": {
+                  "hasMore": false,
+                  "parameters": {
+                    "projectName": "Forest"
+                  },
+                  "data": [
+                    {
+                      "object": "adminLog",
+                      "id": "rbCb98wCZ1y-_zv4wrXz",
+                      "type": "update",
+                      "initiator": "administrator",
+                      "createdAt": "2024-03-14T15:09:26.535Z",
+                      "resource": "team",
+                      "newValue": {
+                        "name": "Managers UK"
+                      },
+                      "user": {
+                        "object": "user",
+                        "id": 40,
+                        "username": "Alice",
+                        "email": "alice@forestadmin.com"
+                      },
+                      "previousValue": {
+                        "name": "Managers"
+                      }
+                    },
+                    {
+                      "object": "adminLog",
+                      "id": "fHCb9IXCZ1y_Pzv4wrXz",
+                      "type": "add",
+                      "initiator": "administrator",
+                      "createdAt": "2024-03-14T15:11:28.148Z",
+                      "resource": "user-project",
+                      "newValue": {
+                        "user": {
+                          "object": "user",
+                          "id": 45,
+                          "username": "John",
+                          "email": "john@forestadmin.com"
+                        },
+                        "role": {
+                          "object": "role",
+                          "name": "everything allowed"
+                        },
+                        "teams": [
+                          {
+                            "object": "team",
+                            "name": "Managers UK"
+                          }
+                        ],
+                        "permissionLevel": "editor"
+                      },
+                      "user": {
+                        "object": "user",
+                        "id": 40,
+                        "username": "Alice",
+                        "email": "alice@forestadmin.com"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "description": "The time in seconds after which the client can retry the request"
+                },
+                "required": true
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/project/{projectName}/environment/{environmentName}/notes": {
+      "get": {
+        "operationId": "listNotes",
+        "summary": "List notes",
+        "description": "Returns notes and their messages for a specific project and environment, sorted by `id` in descending order (most recent first).",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The **case sensitive** environment name"
+            },
+            "required": true,
+            "name": "environmentName",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The **case sensitive** project name"
+            },
+            "required": true,
+            "name": "projectName",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "exclusiveMinimum": true,
+              "maximum": 100,
+              "default": 10,
+              "description": "This specifies a limit on the number of objects to return, ranging between 1 and 100. Limit is set to 10 by default"
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "email",
+              "description": "The user email"
+            },
+            "required": false,
+            "name": "userEmail",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The user id"
+            },
+            "required": false,
+            "name": "userId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The team name"
+            },
+            "required": false,
+            "name": "teamName",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The collection name (same as in the schema)."
+            },
+            "required": false,
+            "name": "collectionName",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The record id"
+            },
+            "required": false,
+            "name": "recordId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Value to filter by"
+            },
+            "required": false,
+            "name": "createdAt.eq",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.lt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.lte",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.gt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "createdAt.gte",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Value to filter by"
+            },
+            "required": false,
+            "name": "updatedAt.eq",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "updatedAt.lt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "updatedAt.lte",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "updatedAt.gt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "updatedAt.gte",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Value to filter by"
+            },
+            "required": false,
+            "name": "archivedAt.eq",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "archivedAt.lt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "archivedAt.lte",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "archivedAt.gt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+            },
+            "required": false,
+            "name": "archivedAt.gte",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of notes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hasMore": {
+                      "type": "boolean",
+                      "description": "Whether or not there are more elements available after this set. If false, this set comprises the end of the list."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "object": {
+                            "type": "string",
+                            "enum": [
+                              "note"
+                            ]
+                          },
+                          "id": {
+                            "type": "integer",
+                            "description": "ID of the note"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the note"
+                          },
+                          "recordId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "The record id the note is related to"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the note was created"
+                          },
+                          "collection": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "collection"
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": "The collection name (same as in the schema)."
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "name"
+                            ],
+                            "description": "The collection the note is related to. Notes created on a collection deleted before 2024-06-11 might be missing this value."
+                          },
+                          "messages": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "object": {
+                                  "type": "string",
+                                  "enum": [
+                                    "note-message"
+                                  ]
+                                },
+                                "content": {
+                                  "type": "string",
+                                  "description": "The content of the message"
+                                },
+                                "createdAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "description": "The date and time the message was created"
+                                },
+                                "user": {
+                                  "type": "object",
+                                  "properties": {
+                                    "object": {
+                                      "type": "string",
+                                      "enum": [
+                                        "user"
+                                      ]
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "format": "email",
+                                      "description": "The user email"
+                                    },
+                                    "id": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    },
+                                    "username": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "required": [
+                                    "object",
+                                    "email",
+                                    "id",
+                                    "username"
+                                  ],
+                                  "additionalProperties": false,
+                                  "description": "The user who created the message"
+                                }
+                              },
+                              "required": [
+                                "object",
+                                "content",
+                                "createdAt",
+                                "user"
+                              ]
+                            },
+                            "description": "The messages of the note"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the note was updated, or a message added to the note."
+                          },
+                          "archivedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "The date and time the note was archived."
+                          },
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "user"
+                                ]
+                              },
+                              "email": {
+                                "type": "string",
+                                "format": "email",
+                                "description": "The user email"
+                              },
+                              "id": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "username": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "email",
+                              "id",
+                              "username"
+                            ],
+                            "additionalProperties": false,
+                            "description": "The user who created the note"
+                          },
+                          "environment": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "environment"
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": "The name of the environment"
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "name"
+                            ],
+                            "additionalProperties": false,
+                            "description": "The environment the note is related to"
+                          },
+                          "team": {
+                            "type": "object",
+                            "properties": {
+                              "object": {
+                                "type": "string",
+                                "enum": [
+                                  "team"
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": "The name of the team"
+                              }
+                            },
+                            "required": [
+                              "object",
+                              "name"
+                            ],
+                            "additionalProperties": false,
+                            "description": "The team the note is related to"
+                          }
+                        },
+                        "required": [
+                          "object",
+                          "id",
+                          "title",
+                          "recordId",
+                          "createdAt",
+                          "messages",
+                          "updatedAt",
+                          "user",
+                          "environment",
+                          "team"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "environmentName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The **case sensitive** environment name"
+                        },
+                        "projectName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The **case sensitive** project name"
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "exclusiveMinimum": true,
+                          "maximum": 100,
+                          "default": 10,
+                          "description": "This specifies a limit on the number of objects to return, ranging between 1 and 100. Limit is set to 10 by default"
+                        },
+                        "userEmail": {
+                          "type": "string",
+                          "format": "email",
+                          "description": "The user email"
+                        },
+                        "userId": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "description": "The user id"
+                        },
+                        "teamName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The team name"
+                        },
+                        "collectionName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The collection name (same as in the schema)."
+                        },
+                        "recordId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "The record id"
+                        },
+                        "createdAt.eq": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Value to filter by"
+                        },
+                        "createdAt.lt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.lte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.gt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "createdAt.gte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "updatedAt.eq": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Value to filter by"
+                        },
+                        "updatedAt.lt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "updatedAt.lte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "updatedAt.gt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "updatedAt.gte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "archivedAt.eq": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Value to filter by"
+                        },
+                        "archivedAt.lt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "archivedAt.lte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "archivedAt.gt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Minimum value to filter by (exclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        },
+                        "archivedAt.gte": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Maximum value to filter by (inclusive). This filter supports date-time values in ISO 8601 format (YYYY-MM-DDTHH:MM), e.g., 2024-06-04T09:21:26.159Z."
+                        }
+                      },
+                      "required": [
+                        "environmentName",
+                        "projectName",
+                        "limit"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The parameters used to fetch the notes"
+                    }
+                  },
+                  "required": [
+                    "hasMore",
+                    "data",
+                    "parameters"
+                  ]
+                },
+                "example": {
+                  "hasMore": false,
+                  "parameters": {
+                    "projectName": "Forest",
+                    "environmentName": "Production",
+                    "limit": 10
+                  },
+                  "data": [
+                    {
+                      "object": "note",
+                      "id": 42,
+                      "title": "THE TITLE",
+                      "recordId": "10",
+                      "createdAt": "2024-02-20T10:35:54.685Z",
+                      "updatedAt": "2024-03-10T10:36:54.685Z",
+                      "archivedAt": "2024-05-22T14:01:23.015Z",
+                      "user": {
+                        "object": "user",
+                        "id": 1,
+                        "username": "alice1",
+                        "email": "alice@somewhere.com"
+                      },
+                      "environment": {
+                        "object": "environment",
+                        "name": "aName"
+                      },
+                      "team": {
+                        "object": "team",
+                        "name": "aName"
+                      },
+                      "collection": {
+                        "object": "collection",
+                        "name": "client"
+                      },
+                      "messages": [
+                        {
+                          "object": "note-message",
+                          "content": "<p>Needs to be verified</p>",
+                          "createdAt": "2024-02-20T10:35:54.685Z",
+                          "user": {
+                            "object": "user",
+                            "email": "alice@somewhere.com",
+                            "id": 1,
+                            "username": "alice"
+                          }
+                        },
+                        {
+                          "object": "note-message",
+                          "content": "<p>Ok</p>",
+                          "createdAt": "2024-02-20T11:15:32.461Z",
+                          "user": {
+                            "object": "user",
+                            "email": "bob@somewhere.com",
+                            "id": 1,
+                            "username": "bob"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "description": "The time in seconds after which the client can retry the request"
+                },
+                "required": true
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
