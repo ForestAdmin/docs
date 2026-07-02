@@ -71,6 +71,8 @@ Because the file is generated locally, someone can change a data source or custo
     git diff --exit-code .forestadmin-schema.json
     ```
 
+    If `typingsPath` is set, `generateSchemaOnly()` also rewrites the typings file. Add it to the diff when you commit it (`git diff --exit-code .forestadmin-schema.json typings.ts`) so a stale one fails CI too; if you don't commit the typings, leave them out of the diff so a regenerated local copy doesn't break the build.
+
     Your CI job needs the same environment variables as your back-end (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`): `createAgent` requires the secrets even though generation is offline by default. Experimental no-code customizations also fetch their configuration from Forest, which requires connectivity.
   </Tab>
   <Tab title="Ruby">
