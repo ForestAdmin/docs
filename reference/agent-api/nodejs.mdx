@@ -307,6 +307,10 @@ MCP clients discover these endpoints automatically from the metadata, so no clie
 The prefix applies to **all** routes, including the protocol endpoint — so `basePath: '/mcp'` yields `/mcp/mcp`. Use a distinct prefix such as `/ai` to avoid the repetition.
 </Note>
 
+<Note>
+Because the `.well-known` discovery documents must stay at the origin root, `basePath` requires the agent to be served at the **domain root**. If your agent's URL already includes a path (e.g. `https://host/api`), setting `basePath` throws at startup.
+</Note>
+
 You can also configure enabled tools via the `FOREST_MCP_ENABLED_TOOLS` environment variable (comma-separated tool names), or set the server port with `MCP_SERVER_PORT` (default: `3931`).
 
 ---

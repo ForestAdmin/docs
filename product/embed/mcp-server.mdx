@@ -93,7 +93,7 @@ Your Forest MCP Server URL will be `{your-agent-url}/mcp`
   const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer({ basePath: '/ai' });
   ```
 
-  Your Forest MCP Server URL then becomes `{your-agent-url}/ai/mcp`.
+  Your Forest MCP Server URL then becomes `{your-agent-url}/ai/mcp`. Because OAuth discovery must stay at the origin root, `basePath` requires your agent to be served at the domain root (it throws at startup if the agent URL already includes a path).
 </Warning>
 
 # Available tools
