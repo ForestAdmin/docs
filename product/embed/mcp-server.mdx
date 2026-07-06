@@ -94,6 +94,8 @@ Your Forest MCP Server URL will be `{your-agent-url}/mcp`
   ```
 
   Your Forest MCP Server URL then becomes `{your-agent-url}/ai/mcp`. Because OAuth discovery must stay at the origin root, `basePath` requires your agent to be served at the domain root (it throws at startup if the agent URL already includes a path).
+
+  The prefix applies to every route, including the protocol endpoint — so `basePath: '/mcp'` would make the endpoint `/mcp/mcp`. Prefer a distinct prefix such as `/ai` to avoid the repetition.
 </Warning>
 
 # Available tools

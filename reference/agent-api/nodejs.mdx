@@ -259,7 +259,7 @@ agent.mountAiMcpServer(options?: {
 | Option | Type | Description |
 |--------|------|-------------|
 | `enabledTools` | `ToolName[]` | Restrict which MCP tools are exposed. Defaults to all tools. |
-| `basePath` | `string` | Path prefix under which all MCP routes are mounted (e.g. `'/ai'`). Defaults to the host root. |
+| `basePath` | `string` | Path prefix under which the MCP OAuth and protocol routes are mounted (e.g. `'/ai'`). Defaults to the host root. |
 
 **Available tool names:** `'describeCollection'`, `'list'`, `'listRelated'`, `'create'`, `'update'`, `'delete'`, `'associate'`, `'dissociate'`, `'getActionForm'`, `'executeAction'`
 
