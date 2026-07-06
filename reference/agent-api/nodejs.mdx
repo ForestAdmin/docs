@@ -259,7 +259,7 @@ agent.mountAiMcpServer(options?: {
 | Option | Type | Description |
 |--------|------|-------------|
 | `enabledTools` | `ToolName[]` | Restrict which MCP tools are exposed. Defaults to all tools. |
-| `basePath` | `string` | Path prefix under which the MCP OAuth and protocol routes are mounted (e.g. `'/ai'`). Defaults to the host root. |
+| `basePath` | `string` | Path prefix for the MCP OAuth and protocol routes (e.g. `'/ai'`); the `.well-known` discovery documents stay at the origin root (prefix-suffixed). Requires the agent at the domain root. Defaults to the host root. |
 
 **Available tool names:** `'describeCollection'`, `'list'`, `'listRelated'`, `'create'`, `'update'`, `'delete'`, `'associate'`, `'dissociate'`, `'getActionForm'`, `'executeAction'`
 
@@ -276,13 +276,13 @@ By default, the MCP server registers its endpoints at the host root:
 | Endpoint | Purpose |
 |----------|---------|
 | `POST /mcp` | Main MCP protocol endpoint (Bearer token required) |
-| `POST /oauth/authorize` | OAuth authorization |
+| `GET`, `POST /oauth/authorize` | OAuth authorization |
 | `POST /oauth/token` | Token exchange |
 | `GET /.well-known/oauth-authorization-server` | Authorization server metadata |
 | `GET /.well-known/oauth-protected-resource/mcp` | Protected resource metadata |
 
 <Warning>
-When mounted inside an existing application, the MCP server takes over the `/oauth/authorize`, `/oauth/token`, `/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource/mcp` routes at the host root. **If your application already serves its own OAuth or matching `.well-known` routes, they will be shadowed and break.** Set `basePath` to scope the MCP routes under a dedicated prefix so the two coexist.
+When mounted inside an existing application, the MCP server intercepts the **entire** `/oauth/*` and `/.well-known/*` namespaces plus `/mcp` at the host root. Any request in those namespaces is captured by the MCP server — if it doesn't serve that exact route (or your app already does), the request gets a 404/405 **instead of reaching your app**. For example, your own `/oauth/callback` or `/.well-known/apple-app-site-association` would break, not just OAuth. Set `basePath` to narrow the MCP server to a dedicated prefix (and just two suffixed `.well-known` paths) so your routes are left untouched.
 </Warning>
 
 **Scoping under a prefix:**
@@ -296,7 +296,7 @@ With `basePath: '/ai'`, the OAuth and protocol routes move under the prefix. The
 | Endpoint | Purpose |
 |----------|---------|
 | `POST /ai/mcp` | Main MCP protocol endpoint |
-| `POST /ai/oauth/authorize` | OAuth authorization |
+| `GET`, `POST /ai/oauth/authorize` | OAuth authorization |
 | `POST /ai/oauth/token` | Token exchange |
 | `GET /.well-known/oauth-authorization-server/ai` | Authorization server metadata (root, prefix-suffixed) |
 | `GET /.well-known/oauth-protected-resource/ai/mcp` | Protected resource metadata (root, prefix-suffixed) |
@@ -308,7 +308,7 @@ The prefix applies to **all** routes, including the protocol endpoint — so `ba
 </Note>
 
 <Note>
-Because the `.well-known` discovery documents must stay at the origin root, `basePath` requires the agent to be served at the **domain root**. If your agent's URL already includes a path (e.g. `https://host/api`), setting `basePath` throws at startup.
+Because the `.well-known` discovery documents must stay at the origin root, `basePath` requires the agent to be served at the **domain root**. If your agent's URL already includes a path (e.g. `https://host/api`), setting `basePath` throws at startup. And root `/.well-known/*` requests must still reach the agent — a reverse proxy that forwards only `/<prefix>/*` will break discovery.
 </Note>
 
 You can also configure enabled tools via the `FOREST_MCP_ENABLED_TOOLS` environment variable (comma-separated tool names), or set the server port with `MCP_SERVER_PORT` (default: `3931`).
