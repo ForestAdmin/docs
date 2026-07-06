@@ -250,6 +250,7 @@ Enable a Model Context Protocol (MCP) server on the agent, allowing AI assistant
 ```typescript
 agent.mountAiMcpServer(options?: {
   enabledTools?: ToolName[];
+  basePath?: string;
 }): Agent;
 ```
 
@@ -258,6 +259,7 @@ agent.mountAiMcpServer(options?: {
 | Option | Type | Description |
 |--------|------|-------------|
 | `enabledTools` | `ToolName[]` | Restrict which MCP tools are exposed. Defaults to all tools. |
+| `basePath` | `string` | Path prefix under which all MCP routes are mounted (e.g. `'/ai'`). Defaults to the host root. |
 
 **Available tool names:** `'describeCollection'`, `'list'`, `'listRelated'`, `'create'`, `'update'`, `'delete'`, `'associate'`, `'dissociate'`, `'getActionForm'`, `'executeAction'`
 
@@ -269,14 +271,41 @@ agent.mountAiMcpServer({
 });
 ```
 
-The MCP server exposes HTTP endpoints for OAuth and protocol communication:
+By default, the MCP server registers its endpoints at the host root:
 
 | Endpoint | Purpose |
 |----------|---------|
 | `POST /mcp` | Main MCP protocol endpoint (Bearer token required) |
 | `POST /oauth/authorize` | OAuth authorization |
 | `POST /oauth/token` | Token exchange |
-| `GET /.well-known/oauth-protected-resource/mcp` | OAuth discovery |
+| `GET /.well-known/oauth-authorization-server` | Authorization server metadata |
+| `GET /.well-known/oauth-protected-resource/mcp` | Protected resource metadata |
+
+<Warning>
+When mounted inside an existing application, the MCP server takes over the `/oauth/authorize`, `/oauth/token` and `/.well-known/*` routes at the host root. **If your application already serves its own OAuth or `.well-known` routes, they will be shadowed and break.** Set `basePath` to move every MCP route under a dedicated prefix so the two coexist.
+</Warning>
+
+**Scoping under a prefix:**
+
+```typescript
+agent.mountAiMcpServer({ basePath: '/ai' });
+```
+
+With `basePath: '/ai'`, every route moves under the prefix, leaving your application's own routes untouched:
+
+| Endpoint | Purpose |
+|----------|---------|
+| `POST /ai/mcp` | Main MCP protocol endpoint |
+| `POST /ai/oauth/authorize` | OAuth authorization |
+| `POST /ai/oauth/token` | Token exchange |
+| `GET /.well-known/oauth-authorization-server/ai` | Authorization server metadata |
+| `GET /.well-known/oauth-protected-resource/ai/mcp` | Protected resource metadata |
+
+MCP clients discover these endpoints automatically from the metadata, so no client-side configuration is needed.
+
+<Note>
+The prefix applies to **all** routes, including the protocol endpoint — so `basePath: '/mcp'` yields `/mcp/mcp`. Use a distinct prefix such as `/ai` to avoid the repetition.
+</Note>
 
 You can also configure enabled tools via the `FOREST_MCP_ENABLED_TOOLS` environment variable (comma-separated tool names), or set the server port with `MCP_SERVER_PORT` (default: `3931`).
 
