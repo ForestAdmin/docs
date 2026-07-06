@@ -282,7 +282,7 @@ By default, the MCP server registers its endpoints at the host root:
 | `GET /.well-known/oauth-protected-resource/mcp` | Protected resource metadata |
 
 <Warning>
-When mounted inside an existing application, the MCP server takes over the `/oauth/authorize`, `/oauth/token` and `/.well-known/*` routes at the host root. **If your application already serves its own OAuth or `.well-known` routes, they will be shadowed and break.** Set `basePath` to move every MCP route under a dedicated prefix so the two coexist.
+When mounted inside an existing application, the MCP server takes over the `/oauth/authorize`, `/oauth/token`, `/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource/mcp` routes at the host root. **If your application already serves its own OAuth or matching `.well-known` routes, they will be shadowed and break.** Set `basePath` to scope the MCP routes under a dedicated prefix so the two coexist.
 </Warning>
 
 **Scoping under a prefix:**
@@ -291,15 +291,15 @@ When mounted inside an existing application, the MCP server takes over the `/oau
 agent.mountAiMcpServer({ basePath: '/ai' });
 ```
 
-With `basePath: '/ai'`, every route moves under the prefix, leaving your application's own routes untouched:
+With `basePath: '/ai'`, the OAuth and protocol routes move under the prefix. The `.well-known` discovery documents stay at the host root (as required by OAuth discovery, RFC 8414/9728) but are served at prefix-suffixed paths, so they no longer collide with your application's own root `.well-known` routes:
 
 | Endpoint | Purpose |
 |----------|---------|
 | `POST /ai/mcp` | Main MCP protocol endpoint |
 | `POST /ai/oauth/authorize` | OAuth authorization |
 | `POST /ai/oauth/token` | Token exchange |
-| `GET /.well-known/oauth-authorization-server/ai` | Authorization server metadata |
-| `GET /.well-known/oauth-protected-resource/ai/mcp` | Protected resource metadata |
+| `GET /.well-known/oauth-authorization-server/ai` | Authorization server metadata (root, prefix-suffixed) |
+| `GET /.well-known/oauth-protected-resource/ai/mcp` | Protected resource metadata (root, prefix-suffixed) |
 
 MCP clients discover these endpoints automatically from the metadata, so no client-side configuration is needed.
 

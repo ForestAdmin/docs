@@ -85,9 +85,9 @@ Your Forest MCP Server URL will be `{your-agent-url}/mcp`
 </Note>
 
 <Warning>
-  When mounted, the MCP server registers its OAuth and `.well-known` routes at your back-end's root, including `/oauth/authorize`, `/oauth/token` and `/.well-known/*`. **If your back-end already serves its own OAuth or `.well-known` routes, they will be shadowed and break.**
+  When mounted, the MCP server registers its OAuth and `.well-known` routes at your back-end's root, including `/oauth/authorize`, `/oauth/token`, `/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource/mcp`. **If your back-end already serves its own OAuth or matching `.well-known` routes, they will be shadowed and break.**
 
-  Pass a `basePath` to move every MCP route under a dedicated prefix so both coexist:
+  Pass a `basePath` to scope the MCP routes under a dedicated prefix so both coexist. The OAuth and protocol routes move under the prefix; the `.well-known` discovery documents stay at the root (as OAuth discovery requires) but are served at prefix-suffixed paths such as `/.well-known/oauth-authorization-server/ai`, so they no longer collide with your own root `.well-known` routes:
 
   ```text
   const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer({ basePath: '/ai' });
