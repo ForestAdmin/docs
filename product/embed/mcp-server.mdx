@@ -84,6 +84,20 @@ Your Forest MCP Server URL will be `{your-agent-url}/mcp`
   Note that each Environment has its own Back-end URL, and therefore its own Forest MCP Server URL.
 </Note>
 
+<Warning>
+  When mounted, the MCP server intercepts the **entire** `/oauth/*` and `/.well-known/*` namespaces plus `/mcp` at your back-end's root. Any request in those namespaces is captured by the MCP server — if it doesn't serve that exact route (or your back-end already does), the request gets a 404/405 **instead of reaching your back-end**. So your own `/oauth/callback` or `/.well-known/apple-app-site-association` would break, not just OAuth.
+
+  Pass a `basePath` to narrow the MCP server to a dedicated prefix so your routes are left untouched. The OAuth and protocol routes move under the prefix; the `.well-known` discovery documents stay at the root (as OAuth discovery requires) but are served at prefix-suffixed paths such as `/.well-known/oauth-authorization-server/ai`, narrowing the `.well-known` claim to just those two paths:
+
+  ```text
+  const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer({ basePath: '/ai' });
+  ```
+
+  Your Forest MCP Server URL then becomes `{your-agent-url}/ai/mcp`. Because OAuth discovery must stay at the origin root, `basePath` requires your agent to be served at the domain root (it throws at startup if the agent URL already includes a path), and root `/.well-known/*` requests must still reach the agent.
+
+  The prefix applies to every route, including the protocol endpoint — so `basePath: '/mcp'` would make the endpoint `/mcp/mcp`. Prefer a distinct prefix such as `/ai` to avoid the repetition.
+</Warning>
+
 # Available tools
 
 The Forest MCP server exposes the following capabilities:
