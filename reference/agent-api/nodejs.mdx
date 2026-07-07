@@ -251,6 +251,7 @@ Enable a Model Context Protocol (MCP) server on the agent, allowing AI assistant
 agent.mountAiMcpServer(options?: {
   enabledTools?: ToolName[];
   basePath?: string;
+  agentUrl?: string;
 }): Agent;
 ```
 
@@ -260,6 +261,7 @@ agent.mountAiMcpServer(options?: {
 |--------|------|-------------|
 | `enabledTools` | `ToolName[]` | Restrict which MCP tools are exposed. Defaults to all tools. |
 | `basePath` | `string` | Path prefix for the MCP OAuth and protocol routes (e.g. `'/ai'`); the `.well-known` discovery documents stay at the origin root (prefix-suffixed). Requires the agent at the domain root. Defaults to the host root. |
+| `agentUrl` | `string` | Internal URL the MCP tools use to call back into the agent's data layer (e.g. `'http://forest-agent.internal:3310'`). Defaults to the environment's public `api_endpoint`. Does not change the advertised OAuth URLs. |
 
 **Available tool names:** `'describeCollection'`, `'list'`, `'listRelated'`, `'create'`, `'update'`, `'delete'`, `'associate'`, `'dissociate'`, `'getActionForm'`, `'executeAction'`
 
@@ -311,7 +313,21 @@ The prefix applies to **all** routes, including the protocol endpoint — so `ba
 Because the `.well-known` discovery documents must stay at the origin root, `basePath` requires the agent to be served at the **domain root**. If your agent's URL already includes a path (e.g. `https://host/api`), setting `basePath` throws at startup. And root `/.well-known/*` requests must still reach the agent — a reverse proxy that forwards only `/<prefix>/*` will break discovery.
 </Note>
 
-You can also configure enabled tools via the `FOREST_MCP_ENABLED_TOOLS` environment variable (comma-separated tool names), or set the server port with `MCP_SERVER_PORT` (default: `3931`).
+**Keeping tool traffic on your internal network:**
+
+When a tool runs (`list`, `create`, `executeAction`…), the MCP server calls back into the agent's data layer over HTTP. By default it uses the environment's **public `api_endpoint`** (the URL Forest has on file), so this traffic leaves over the public internet — even when the MCP server is mounted inside the agent. In a self-hosted setup you can keep it on your private network with `agentUrl`:
+
+```typescript
+agent.mountAiMcpServer({ agentUrl: 'http://forest-agent.internal:3310' });
+```
+
+`agentUrl` only redirects the internal tool→agent calls. The advertised OAuth URLs (issuer, `.well-known` metadata, authorize/token endpoints) stay public, so external MCP clients still authenticate normally. An invalid value (non-`http(s)`, or one carrying a query string or fragment) throws at startup.
+
+<Note>
+`agentUrl` and `basePath` are independent: `basePath` changes where the MCP server's *inbound* routes are mounted, while `agentUrl` changes where the tools send their *outbound* callbacks to the agent.
+</Note>
+
+You can also configure enabled tools via the `FOREST_MCP_ENABLED_TOOLS` environment variable (comma-separated tool names), set the server port with `MCP_SERVER_PORT` (default: `3931`), or set the internal agent URL with `FOREST_AGENT_URL` (standalone MCP server).
 
 ---
 
