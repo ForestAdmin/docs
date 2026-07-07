@@ -44,6 +44,10 @@ FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
   Follow [this guide](/get-started/connect/environment-variables) to retrieve your AUTH and ENV secrets for the relevant environment.
 </Note>
 
+<Note>
+  By default the standalone server reaches your back-end at the environment's public URL. In a self-hosted setup, set `FOREST_AGENT_URL` to an internal address (e.g. `http://forest-agent.internal:3310`) to keep that traffic on your private network. It only affects how the server reaches your back-end; the OAuth URLs advertised to MCP clients are unchanged.
+</Note>
+
 Your Forest MCP Server will be accessible at this URL: `{your-standalone-server-url}/mcp`
 
 <img
