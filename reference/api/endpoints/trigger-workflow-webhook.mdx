@@ -128,7 +128,7 @@ The starting threshold is roughly **60 requests per minute per webhook**, and is
 
 | Status | Meaning |
 |---|---|
-| `400` | Invalid JSON body, missing `record_id`, or a malformed / tampered URL. |
+| `400` | Invalid JSON body, missing `record_id`, or a malformed, tampered, or superseded URL (e.g. an old URL after it was regenerated). |
 | `401` | Missing, expired, or invalid Bearer token. |
 | `403` | Token is valid, but its user is not authorized for the target organization, rendering, or workflow. |
 | `404` | Unknown webhook, no active workflow for the rendering, or the webhook trigger is disabled. |

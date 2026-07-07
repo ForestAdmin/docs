@@ -62,7 +62,7 @@ You have three independent levers to stop a webhook, without necessarily touchin
 | Lever | Effect | Calls then return |
 |---|---|---|
 | **Disable the Webhook toggle** | Turns the trigger off. URL and token are unchanged. | `404` |
-| **Generate a new URL** | Invalidates the current URL. | `400` (old URL) |
+| **Generate new URL** | Invalidates the current URL. | `400` (old URL) |
 | **Invalidate / expire the token** | Done by the token's user, from account settings. | `401` |
 
 Turning the toggle back on re-enables the *same* URL and token — it is a pause, not a reset.
