@@ -91,6 +91,10 @@ const response = await fetch(process.env.FOREST_WEBHOOK_URL, {
   body: JSON.stringify({ record_id: '42' }),
 });
 
+if (!response.ok) {
+  throw new Error(`Webhook request failed: ${response.status}`);
+}
+
 const { runId } = await response.json();
 ```
 
@@ -116,7 +120,7 @@ Only one run of a given workflow can be active on a given record at a time. If a
 }
 ```
 
-This makes the endpoint safe to retry: a caller that retries after a network error either starts the run (`202`) or learns it was already handled (`409`).
+This makes retries safe **while a run is still ongoing**: a caller that retries after a network error either starts the run (`202`) or learns one is already in progress (`409`). Note the `409` only holds for the duration of the active run — once it finishes, a new request on the same record starts a fresh run (`202`). Retry to recover from transient failures on the initial call, not to re-drive a record after its run has completed.
 
 ### Rate limiting
 
