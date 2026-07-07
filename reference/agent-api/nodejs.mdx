@@ -321,6 +321,8 @@ When a tool runs (`list`, `create`, `executeAction`…), the MCP server calls ba
 agent.mountAiMcpServer({ agentUrl: 'http://forest-agent.internal:3310' });
 ```
 
+Point it at the agent's own base URL, **including any mount prefix** (the tools reach the agent's `/forest/*` routes under it) — e.g. `http://forest-agent.internal:3310/backend` if the agent is mounted at `/backend`.
+
 `agentUrl` only redirects the internal tool→agent calls. The advertised OAuth URLs (issuer, `.well-known` metadata, authorize/token endpoints) stay public, so external MCP clients still authenticate normally. An invalid value (non-`http(s)`, or one carrying a query string or fragment) throws at startup.
 
 <Note>
