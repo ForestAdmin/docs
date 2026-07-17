@@ -1,0 +1,82 @@
+---
+title: Projects
+description: "Create Forest projects from a database or a zero-DB demo."
+---
+
+# Projects
+
+Create Forest projects from a database or a zero-DB demo.
+
+## forest projects:create:demo
+
+Create a new Forest Admin project with demo data — no database required.
+
+```bash
+forest projects:create:demo [APPLICATIONNAME] [options]
+```
+
+| Argument | Description |
+|---|---|
+| `APPLICATIONNAME` | Name of the project to create. |
+
+| Option | Description |
+|---|---|
+| `-H, --applicationHost=<value>` | Hostname of your admin backend application. |
+| `-P, --applicationPort=<value>` | Port of your admin backend application. |
+| `-l, --language=<option>` | Choose the language you want to use for your project. <options: javascript\|typescript> |
+
+## forest projects:create:sql
+
+Create a new Forest Admin project.
+
+```bash
+forest projects:create:sql [APPLICATIONNAME] [options]
+```
+
+| Argument | Description |
+|---|---|
+| `APPLICATIONNAME` | Name of the project to create. |
+
+| Option | Description |
+|---|---|
+| `-H, --applicationHost=<value>` | Hostname of your admin backend application. |
+| `-P, --applicationPort=<value>` | Port of your admin backend application. |
+| `-c, --databaseConnectionURL=<value>` | Enter the database credentials with a connection URL. |
+| `-d, --databaseDialect=<option>` | Enter your database dialect. <options: mssql\|mysql / mariadb\|postgres> |
+| `-h, --databaseHost=<value>` | Enter your database host. |
+| `-l, --language=<option>` | Choose the language you want to use for your project. <options: javascript\|typescript> |
+| `-n, --databaseName=<value>` | Enter your database name. |
+| `-p, --databasePort=<value>` | Enter your database port. |
+| `-s, --databaseSchema=<value>` | Enter your database schema. |
+| `-u, --databaseUser=<value>` | Enter your database user. |
+| `--databasePassword=<value>` | Enter your database password. |
+| `--databaseSSL` | Use SSL for database connection. |
+| `--databaseSslMode=<option>` | SSL mode. <options: preferred\|verify\|required\|disabled> |
+
+## forest projects:create:nosql
+
+Create a new Forest Admin project.
+
+```bash
+forest projects:create:nosql [APPLICATIONNAME] [options]
+```
+
+| Argument | Description |
+|---|---|
+| `APPLICATIONNAME` | Name of the project to create. |
+
+| Option | Description |
+|---|---|
+| `-H, --applicationHost=<value>` | Hostname of your admin backend application. |
+| `-P, --applicationPort=<value>` | Port of your admin backend application. |
+| `-c, --databaseConnectionURL=<value>` | Enter the database credentials with a connection URL. |
+| `-h, --databaseHost=<value>` | Enter your database host. |
+| `-l, --language=<option>` | Choose the language you want to use for your project. <options: javascript\|typescript> |
+| `-n, --databaseName=<value>` | Enter your database name. |
+| `-p, --databasePort=<value>` | Enter your database port. |
+| `-u, --databaseUser=<value>` | Enter your database user. |
+| `--databasePassword=<value>` | Enter your database password. |
+| `--databaseSSL` | Use SSL for database connection. |
+| `--databaseSslMode=<option>` | SSL mode. <options: preferred\|verify\|required\|disabled> |
+| `--mongoDBSRV` | Use SRV DNS record for mongoDB connection. |
+

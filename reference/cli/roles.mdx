@@ -1,0 +1,68 @@
+---
+title: Roles
+description: "Manage roles and permissions, including roles-as-code via CSV."
+---
+
+# Roles
+
+Manage roles and permissions, including roles-as-code via CSV.
+
+## forest roles:create
+
+Create a new role in a project.
+
+```bash
+forest roles:create [options]
+```
+
+| Option | Description |
+|---|---|
+| `-n, --name=<value>` | (required) Name of the role to create. |
+| `-p, --projectId=<value>` | Forest project ID. |
+
+## forest roles:apply
+
+Apply a wide-format CSV to update role permissions in an environment.
+
+```bash
+forest roles:apply [FILE] [options]
+```
+
+| Argument | Description |
+|---|---|
+| `FILE` | Path to the wide-format CSV file. |
+
+| Option | Description |
+|---|---|
+| `-F, --force` | Skip confirmation prompt. |
+| `-e, --env=<value>` | (required) Environment name to apply to. |
+| `-p, --projectId=<value>` | Forest project ID. |
+
+## forest roles:copy
+
+Copy role permissions from one environment to another.
+
+```bash
+forest roles:copy [options]
+```
+
+| Option | Description |
+|---|---|
+| `-f, --from=<value>` | (required) Source environment name. |
+| `-p, --projectId=<value>` | Forest project ID. |
+| `-t, --to=<value>` | (required) Destination environment name. |
+
+## forest roles:export
+
+Export all roles and their permissions to a wide CSV file.
+
+```bash
+forest roles:export [options]
+```
+
+| Option | Description |
+|---|---|
+| `-e, --env=<value>` | (required) Environment name to export permissions for. |
+| `-o, --output=<value>` | Output file path (default: stdout). |
+| `-p, --projectId=<value>` | Forest project ID. |
+

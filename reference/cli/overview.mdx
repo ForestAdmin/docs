@@ -62,66 +62,65 @@ forest init
 | [`forest push`](/reference/cli/push) | Push layout changes from your branch to its origin environment |
 | [`forest deploy`](/reference/cli/deploy) | Deploy layout changes to the production (reference) environment |
 
-### Environment management
+### [Environments](/reference/cli/environments)
 
 | Command | Description |
 |---|---|
 | `forest environments` | List all environments |
-| [`forest environments:create`](/reference/cli/environments-create) | Create a new environment |
-| [`forest environments:get`](/reference/cli/environments-get) | Get an environment's configuration |
-| [`forest environments:update`](/reference/cli/environments-update) | Update an environment |
-| [`forest environments:delete`](/reference/cli/environments-delete) | Delete an environment |
-| [`forest environments:reset`](/reference/cli/environments-reset) | Reset all layout changes on a remote environment |
+| `forest environments:create` | Create a new environment |
+| `forest environments:get` | Get an environment's configuration |
+| `forest environments:update` | Update an environment |
+| `forest environments:delete` | Delete an environment |
+| `forest environments:reset` | Reset all layout changes on a remote environment |
 
-### Project management
+### [Projects](/reference/cli/projects)
 
 | Command | Description |
 |---|---|
 | `forest projects` | List all projects |
 | `forest projects:get` | Get a project's configuration |
-| [`forest projects:create:demo`](/reference/cli/projects-create-demo) | Create a project with a zero-DB demo datasource |
-| [`forest projects:create:sql`](/reference/cli/projects-create-sql) | Create a project from a SQL database |
-| [`forest projects:create:nosql`](/reference/cli/projects-create-nosql) | Create a project from a NoSQL (Mongo) database |
+| `forest projects:create:demo` | Create a project with a zero-DB demo datasource |
+| `forest projects:create:sql` | Create a project from a SQL database |
+| `forest projects:create:nosql` | Create a project from a NoSQL (Mongo) database |
 
-### Layout
-
-| Command | Description |
-|---|---|
-| [`forest layout:pull`](/reference/cli/layout-pull) | Pull an environment's layout into a `forest-layout.json` file |
-| [`forest layout:diff`](/reference/cli/layout-diff) | Show the changes `layout:apply` would push |
-| [`forest layout:apply`](/reference/cli/layout-apply) | Apply a `forest-layout.json` to an environment |
-| [`forest layout:patch`](/reference/cli/layout-patch) | Patch the layout directly (single PATCH per domain, like the front) |
-
-### Workflows
+### [Layout](/reference/cli/layout)
 
 | Command | Description |
 |---|---|
-| [`forest workflow:apply`](/reference/cli/workflow-apply) | Create or update a workflow from a JSON `steps` spec (compiles to BPMN) |
+| `forest layout:pull` | Pull an environment's layout into a `forest-layout.json` file |
+| `forest layout:apply` | Apply a `forest-layout.json` to an environment |
+| `forest layout:patch` | Patch the layout directly (single PATCH per domain, like the front) |
 
-### Roles
-
-| Command | Description |
-|---|---|
-| [`forest roles:create`](/reference/cli/roles-create) | Create a role |
-| [`forest roles:apply`](/reference/cli/roles-apply) | Apply a wide-format CSV of role permissions to an environment |
-| [`forest roles:copy`](/reference/cli/roles-copy) | Copy roles between environments |
-| [`forest roles:export`](/reference/cli/roles-export) | Export an environment's roles to a CSV |
-
-### Teams
+### [Workflows](/reference/cli/workflows)
 
 | Command | Description |
 |---|---|
-| [`forest teams:create`](/reference/cli/teams-create) | Create a team |
-| [`forest teams:delete`](/reference/cli/teams-delete) | Delete a team |
-| [`forest teams:copy-layout`](/reference/cli/teams-copy-layout) | Copy a team's layout to another team |
+| `forest workflow:apply` | Create or update a workflow from a JSON `steps` spec (compiles to BPMN) |
 
-### Users
+### [Roles](/reference/cli/roles)
 
 | Command | Description |
 |---|---|
-| [`forest users:list`](/reference/cli/users-list) | List the users of a project |
-| [`forest users:invite`](/reference/cli/users-invite) | Invite users to a project |
-| [`forest users:edit`](/reference/cli/users-edit) | Edit a user's role, teams, or permission level |
+| `forest roles:create` | Create a role |
+| `forest roles:apply` | Apply a wide-format CSV of role permissions to an environment |
+| `forest roles:copy` | Copy roles between environments |
+| `forest roles:export` | Export an environment's roles to a CSV |
+
+### [Teams](/reference/cli/teams)
+
+| Command | Description |
+|---|---|
+| `forest teams:create` | Create a team |
+| `forest teams:delete` | Delete a team |
+| `forest teams:copy-layout` | Copy a team's layout to another team |
+
+### [Users](/reference/cli/users)
+
+| Command | Description |
+|---|---|
+| `forest users:list` | List the users of a project |
+| `forest users:invite` | Invite users to a project |
+| `forest users:edit` | Edit a user's role, teams, or permission level |
 
 ### Schema
 
