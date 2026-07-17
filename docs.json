@@ -305,6 +305,19 @@
         ]
       },
       {
+        "tab": "AI & MCP",
+        "groups": [
+          {
+            "group": "AI & MCP",
+            "pages": [
+              "ai/overview",
+              "ai/claude-code",
+              "ai/mcp"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Reference",
         "groups": [
           {

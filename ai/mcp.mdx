@@ -1,0 +1,53 @@
+---
+title: MCP
+description: Expose your Forest Admin project to AI agents over the Model Context Protocol — query and manipulate data, run actions, inspect the schema.
+---
+
+# MCP — the Forest MCP server
+
+The **Forest MCP server** exposes your Forest project to any [Model Context Protocol](https://modelcontextprotocol.io) client (Claude, IDE agents, your own tools). Where the [`forest` plugin](/ai/claude-code) *builds* your back-office, MCP lets an agent *operate* on it — the same data and actions your team uses, through a governed interface.
+
+## What an agent can do
+
+<CardGroup cols={2}>
+  <Card title="Read" icon="magnifying-glass">
+    List and search records, follow relationships, and read a single record.
+  </Card>
+  <Card title="Write" icon="pen">
+    Create, update, and delete records, and associate/dissociate relationships.
+  </Card>
+  <Card title="Act" icon="bolt">
+    Run your collection's **Smart Actions** — the same business operations exposed in the UI.
+  </Card>
+  <Card title="Understand" icon="sitemap">
+    Describe collections, fields, and relationships so the agent can reason about your schema.
+  </Card>
+</CardGroup>
+
+## Governed by your permissions
+
+The MCP server acts **within Forest's authorization model** — an agent only sees and does what the authenticated scope is allowed to. Roles, scopes and permissions apply exactly as they do in the app, so exposing Forest over MCP doesn't widen access.
+
+<Warning>
+Giving an agent write and action access to production data is powerful. Start against a non-production environment, and scope the agent to a role with the minimum permissions it needs.
+</Warning>
+
+## Connecting
+
+Add the Forest MCP server to your MCP client (for example, as a connector in Claude). It's distributed as the **`forest-mcp`** plugin in the Forest Admin marketplace:
+
+```bash
+/plugin marketplace add forestadmin/ai-marketplace
+/plugin install forest-mcp@forest-admin-ai
+```
+
+<Info>
+Setup specifics (authentication, selecting the project/environment) are covered by the `forest-mcp` plugin. This page describes what the server enables; follow the plugin for exact connection steps.
+</Info>
+
+## When to use MCP vs the plugin
+
+| Goal | Use |
+|---|---|
+| Let an agent **read/write data or run actions** on an existing back-office | **MCP** (this page) |
+| **Build or configure** the back-office itself (layout, workflows, roles, onboarding) | [`forest` plugin](/ai/claude-code) |

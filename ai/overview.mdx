@@ -1,0 +1,40 @@
+---
+title: AI & MCP
+description: Drive Forest Admin with AI — build and operate your back-office from Claude, and expose it to your own agents over MCP.
+---
+
+# AI & MCP
+
+Forest Admin is drivable by AI, in two complementary ways:
+
+<CardGroup cols={2}>
+  <Card title="Claude Code — the forest plugin" icon="wand-magic-sparkles" href="/ai/claude-code">
+    Describe what you want in plain language; Claude runs the Forest CLI to build it — onboarding, UI/layout, workflows, and administration. **Vibe-code your back-office.**
+  </Card>
+  <Card title="MCP — the Forest MCP server" icon="plug" href="/ai/mcp">
+    Expose your Forest project's data and actions to any MCP-compatible agent — query records, create/update/delete, run Smart Actions, inspect the schema.
+  </Card>
+</CardGroup>
+
+## Which one do I use?
+
+| You want to… | Use |
+|---|---|
+| **Build or configure** Forest (create a project, lay out a workspace, author a workflow, manage roles/teams) | **Claude Code** — the [`forest` plugin](/ai/claude-code) |
+| **Operate on your data** from an agent (read/write records, run actions) | **MCP** — the [Forest MCP server](/ai/mcp) |
+
+Both talk to Forest through interfaces you already have — the plugin orchestrates the [CLI](/reference/cli/overview); MCP speaks the Model Context Protocol. No UI required.
+
+## The idea
+
+Everything you do in the Forest UI can be done **headlessly** — and therefore **driven by an AI**:
+
+- **Layout as code** — collections display, workspaces (master→detail), dashboards, folders.
+- **Workflows as code** — author a process from a declarative `steps` spec; it compiles to BPMN.
+- **Administration as code** — roles (RBAC as CSV), users, teams, environments, deploy.
+
+Claude composes these from natural language; you review the result in the app. Because it all maps to CLI commands and JSON, it's **versionable, reviewable, and reproducible**.
+
+<Info>
+These capabilities are rolling out. The `forest` Claude Code plugin ships onboarding today, with layout, workflows and management skills in the same plugin.
+</Info>
