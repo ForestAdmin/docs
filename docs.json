@@ -343,10 +343,71 @@
               "reference/cli/overview",
               "reference/cli/init",
               "reference/cli/login",
-              "reference/cli/branch",
-              "reference/cli/push",
-              "reference/cli/deploy",
-              "reference/cli/switch"
+              {
+                "group": "Branches & deployment",
+                "pages": [
+                  "reference/cli/branch",
+                  "reference/cli/switch",
+                  "reference/cli/push",
+                  "reference/cli/deploy"
+                ]
+              },
+              {
+                "group": "Projects",
+                "pages": [
+                  "reference/cli/projects-create-demo",
+                  "reference/cli/projects-create-sql",
+                  "reference/cli/projects-create-nosql"
+                ]
+              },
+              {
+                "group": "Layout",
+                "pages": [
+                  "reference/cli/layout-pull",
+                  "reference/cli/layout-diff",
+                  "reference/cli/layout-apply",
+                  "reference/cli/layout-patch"
+                ]
+              },
+              {
+                "group": "Workflows",
+                "pages": ["reference/cli/workflow-apply"]
+              },
+              {
+                "group": "Environments",
+                "pages": [
+                  "reference/cli/environments-create",
+                  "reference/cli/environments-get",
+                  "reference/cli/environments-update",
+                  "reference/cli/environments-delete",
+                  "reference/cli/environments-reset"
+                ]
+              },
+              {
+                "group": "Roles",
+                "pages": [
+                  "reference/cli/roles-create",
+                  "reference/cli/roles-apply",
+                  "reference/cli/roles-copy",
+                  "reference/cli/roles-export"
+                ]
+              },
+              {
+                "group": "Teams",
+                "pages": [
+                  "reference/cli/teams-create",
+                  "reference/cli/teams-delete",
+                  "reference/cli/teams-copy-layout"
+                ]
+              },
+              {
+                "group": "Users",
+                "pages": [
+                  "reference/cli/users-list",
+                  "reference/cli/users-invite",
+                  "reference/cli/users-edit"
+                ]
+              }
             ]
           },
           {
