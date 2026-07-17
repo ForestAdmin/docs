@@ -29,8 +29,8 @@ For the full HTTP contract, request body, response codes, idempotency, and rate 
 Once enabled:
 
 - the endpoint **URL** is displayed inline with a **copy** button;
-- the associated **application token** is selectable and manageable, with its **expiry** surfaced and a way to **invalidate or regenerate** it;
-- the Start step panel shows a read-only summary of the active triggers.
+- a hint shows the JSON body to send, with the target record's `record_id`;
+- a **Generate new URL** button lets you rotate the URL (see [Regenerating the URL](#regenerating-the-url)).
 
 <Frame>
   <img src="/images/workflows/webhook-trigger-rows.png" alt="Process section with Manual and Webhook trigger rows beneath the version card" />
@@ -48,7 +48,7 @@ If a URL may have leaked, or you simply want to rotate it, generate a new one fr
 
 When you confirm:
 
-- the URL is updated inline, and **Copy URL** now copies the new one;
+- the URL is updated inline, and the **copy** button now copies the new one;
 - a confirmation toaster briefly appears.
 
 <Frame>
