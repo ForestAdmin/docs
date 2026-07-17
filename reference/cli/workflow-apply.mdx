@@ -1,23 +1,25 @@
 ---
-title: Workflows
-description: "Author workflows as code from a JSON steps spec."
+title: forest workflow:apply
+description: "Create or update a workflow from a JSON steps spec (compiles to BPMN and uploads it)"
 ---
 
-# Workflows
-
-Author workflows as code from a JSON `steps` spec.
-
-## forest workflow:apply
+# forest workflow:apply
 
 Create or update a workflow from a JSON steps spec (compiles to BPMN and uploads it). Reading the spec from stdin disables prompts: pass -p/-e/-t and --force explicitly.
+
+## Usage
 
 ```bash
 forest workflow:apply [FILE] [options]
 ```
 
+## Arguments
+
 | Argument | Description |
 |---|---|
 | `FILE` | JSON workflow spec ({ name, collection, steps, id?, segments?, position?, start?, version? }). "-" or omit to read stdin. |
+
+## Options
 
 | Option | Description |
 |---|---|
