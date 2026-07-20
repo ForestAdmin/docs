@@ -45,6 +45,7 @@ Forest Runtime ships as the `@forestadmin/workflow-executor` package and as a Do
 
 ```bash Docker
 docker run -d \
+  --add-host=host.docker.internal:host-gateway \
   -e FOREST_ENV_SECRET="your-env-secret" \
   -e FOREST_AUTH_SECRET="your-auth-secret" \
   -e AGENT_URL="http://host.docker.internal:3351" \
@@ -71,7 +72,7 @@ npx @forestadmin/workflow-executor
 | `DATABASE_URL` | yes* | Postgres connection string. *In production. |
 
 <Note>
-  When Forest Runtime runs in Docker and your agent runs on the host machine, use `host.docker.internal` instead of `localhost` in `AGENT_URL` and `DATABASE_URL`.
+  When Forest Runtime runs in Docker and your agent runs on the host machine, use `host.docker.internal` instead of `localhost` in `AGENT_URL` and `DATABASE_URL`. On Linux Docker Engine that hostname doesn't exist by default, so the `--add-host=host.docker.internal:host-gateway` flag above is required to resolve it (on Docker Desktop it's already provided and the flag is harmless).
 </Note>
 
 Confirm it's up:
