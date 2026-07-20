@@ -1,0 +1,116 @@
+---
+title: "Forest Runtime"
+description: "Run workflow steps on your own infrastructure so no client data ever leaves your network."
+---
+
+By default, Forest Workflows execute on Forest's orchestrator. **Forest Runtime** lets you run the step execution on your own infrastructure instead: it polls the Forest orchestrator for pending steps, runs them locally, and reports only the results back.
+
+Because it talks to your data through your own Forest agent, **no client data ever leaves your infrastructure** — the orchestrator only ever sees step outcomes, never the underlying records.
+
+<Note>
+  Forest Runtime is an optional, self-hosted deployment. If you don't run it, workflows keep running on Forest's managed orchestrator as usual.
+</Note>
+
+## When to use it
+
+Deploy Forest Runtime when your compliance or data-residency requirements forbid client data from transiting through Forest's infrastructure, or when a workflow step needs access to systems reachable only from within your own network.
+
+## How it works
+
+1. A user runs a workflow. The Forest orchestrator queues the pending steps.
+2. Forest Runtime polls the orchestrator and pulls the steps assigned to it.
+3. Each step runs locally, reaching your data and actions through your Forest agent.
+4. It reports the step outcome back to the orchestrator, which advances the workflow.
+
+## Prerequisites
+
+Make sure you are on the **latest version** of your Forest Admin agent (Node.js or Ruby), then point the agent at Forest Runtime with `workflowExecutorUrl`:
+
+```js
+createAgent({
+  // ...
+  workflowExecutorUrl: process.env.WORKFLOW_EXECUTOR_URL, // e.g. http://localhost:3400
+})
+```
+
+This is **required**: when `workflowExecutorUrl` is set, the agent mounts the route that forwards workflow requests to Forest Runtime (relaying the JWT for auth). If it is left unset, the agent returns `404` on those routes and Forest Runtime never receives any work.
+
+Drive the value from an environment variable so each deployment can target its own instance. When the agent and Forest Runtime run on separate hosts, use the internal address and make sure the agent can reach its HTTP port (default `3400`).
+
+## Running Forest Runtime
+
+Forest Runtime ships as the `@forestadmin/workflow-executor` package and as a Docker image. It requires a **PostgreSQL** database in production (state is persisted there).
+
+<CodeGroup>
+
+```bash Docker
+docker run -d \
+  -e FOREST_ENV_SECRET="your-env-secret" \
+  -e FOREST_AUTH_SECRET="your-auth-secret" \
+  -e AGENT_URL="http://host.docker.internal:3351" \
+  -e DATABASE_URL="postgres://user:pass@host.docker.internal:5432/mydb" \
+  -p 3400:3400 \
+  ghcr.io/forestadmin/workflow-executor:latest
+```
+
+```bash npx
+FOREST_ENV_SECRET="your-env-secret" \
+FOREST_AUTH_SECRET="your-auth-secret" \
+AGENT_URL="https://your-agent-url" \
+DATABASE_URL="postgres://user:pass@localhost:5432/mydb" \
+npx @forestadmin/workflow-executor
+```
+
+</CodeGroup>
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `FOREST_ENV_SECRET` | yes | Your environment secret — same value as your agent. Also in [app.forestadmin.com](https://app.forestadmin.com) → Settings → Environments. |
+| `FOREST_AUTH_SECRET` | yes | Your agent's auth secret (defined on your side only). |
+| `AGENT_URL` | yes | URL where your Forest Admin agent is running (e.g. `http://localhost:3351`). |
+| `DATABASE_URL` | yes* | Postgres connection string. *In production. |
+
+<Note>
+  When Forest Runtime runs in Docker and your agent runs on the host machine, use `host.docker.internal` instead of `localhost` in `AGENT_URL` and `DATABASE_URL`.
+</Note>
+
+Confirm it's up:
+
+```bash
+curl http://localhost:3400/health
+# {"state":"running"}
+```
+
+On first boot it auto-creates its `workflow_step_executions` table, then polls the orchestrator every 5 seconds (`POLLING_INTERVAL_S`) for work.
+
+## OAuth-protected MCP connectors
+
+If your workflows include [MCP Tasks](/product/process/workflows/overview) backed by OAuth-protected connectors, Forest Runtime stores each user's OAuth credentials in its database, encrypted at rest. Provide the encryption key:
+
+| Variable | Description |
+| --- | --- |
+| `FOREST_EXECUTOR_ENCRYPTION_KEY` | At-rest encryption key (AES-256-GCM) for stored OAuth credentials. Generate with `openssl rand -hex 32`. Use a **separate** secret from `FOREST_AUTH_SECRET`. |
+
+- Required **only** for OAuth-protected MCP connectors, and read lazily — an instance that stores no such credentials runs fine without it.
+- Use the **same value on every instance** that shares a database, or an instance won't decrypt credentials written by another.
+- Treat it as permanent: there is no managed rotation. Changing it forces every affected user to reconnect their connectors.
+
+## Observability
+
+The Docker image ships with [OpenTelemetry](https://opentelemetry.io/) APM built in, compatible with any OTLP backend (Datadog, Grafana Tempo, Jaeger, Honeycomb…). It is **off by default** and turns on as soon as you set `OTEL_EXPORTER_OTLP_ENDPOINT`. OpenTelemetry is bundled only in the Docker image, not the npm package.
+
+<Note>
+  For the complete list of environment variables (individual database parts, `DATABASE_SSL`, in-memory testing mode, OTel tuning), see the package [README on npm](https://www.npmjs.com/package/@forestadmin/workflow-executor).
+</Note>
+
+## Learn more
+
+<CardGroup cols={2}>
+  <Card title="Workflows overview" icon="diagram-project" href="/product/process/workflows/overview">
+    Build and manage workflows in the no-code editor
+  </Card>
+
+  <Card title="MCP Servers" icon="plug" href="/get-started/connect/integrations/mcp-servers">
+    Configure the connectors used by MCP Tasks
+  </Card>
+</CardGroup>

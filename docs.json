@@ -162,7 +162,8 @@
               {
                 "group": "Workflows",
                 "pages": [
-                  "product/process/workflows/overview"
+                  "product/process/workflows/overview",
+                  "product/process/workflows/forest-runtime"
                 ]
               },
               {
