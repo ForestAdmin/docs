@@ -24,16 +24,28 @@ Deploy Forest Runtime when your compliance or data-residency requirements forbid
 
 ## Prerequisites
 
-Make sure you are on the **latest version** of your Forest Admin agent (Node.js or Ruby), then point the agent at Forest Runtime with `workflowExecutorUrl`:
+Make sure you are on the **latest version** of your Forest Admin agent, then point the agent at Forest Runtime with the workflow executor URL:
 
-```js
+<CodeGroup>
+
+```js Node.js
 createAgent({
   // ...
   workflowExecutorUrl: process.env.WORKFLOW_EXECUTOR_URL, // e.g. http://localhost:3400
 })
 ```
 
-This is **required**: when `workflowExecutorUrl` is set, the agent mounts the route that forwards workflow requests to Forest Runtime (relaying the JWT for auth). If it is left unset, the agent returns `404` on those routes and Forest Runtime never receives any work.
+```ruby Ruby (Rails)
+# config/initializers/forest_admin_rails.rb
+ForestAdminRails.configure do |config|
+  # ...
+  config.workflow_executor_url = ENV['WORKFLOW_EXECUTOR_URL'] # e.g. http://localhost:3400
+end
+```
+
+</CodeGroup>
+
+This is **required**: when the workflow executor URL is set, the agent mounts the route that forwards workflow requests to Forest Runtime (relaying the JWT for auth). If it is left unset, the agent returns `404` on those routes and Forest Runtime never receives any work.
 
 Drive the value from an environment variable so each deployment can target its own instance. When the agent and Forest Runtime run on separate hosts, use the internal address and make sure the agent can reach its HTTP port (default `3400`).
 
