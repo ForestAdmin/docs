@@ -5,15 +5,19 @@ description: "Run workflow steps on your own infrastructure so no client data ev
 
 By default, Forest Workflows execute on Forest's orchestrator. **Forest Runtime** lets you run the step execution on your own infrastructure instead: it polls the Forest orchestrator for pending steps, runs them locally, and reports only the results back.
 
-Because it talks to your data through your own Forest agent, **no client data ever leaves your infrastructure** — the orchestrator only ever sees step outcomes, never the underlying records.
+Because it talks to your data through your own Forest agent, **the Forest orchestrator never sees your records** — it only receives step outcomes. Data read and written by data steps stays within your infrastructure.
 
 <Note>
   Forest Runtime is an optional, self-hosted deployment. If you don't run it, workflows keep running on Forest's managed orchestrator as usual.
 </Note>
 
+<Warning>
+  This boundary covers the orchestrator and data steps only. **AI-powered steps and MCP Tasks still send prompt content — which can include record data — to an external service:** an LLM provider (Forest's AI server by default, or Anthropic/OpenAI directly if you configure a local `AI_PROVIDER`) for AI steps, and the remote MCP tool for MCP Tasks. Forest Runtime keeps data steps local; it does not make workflows fully air-gapped.
+</Warning>
+
 ## When to use it
 
-Deploy Forest Runtime when your compliance or data-residency requirements forbid client data from transiting through Forest's infrastructure, or when a workflow step needs access to systems reachable only from within your own network.
+Deploy Forest Runtime when your compliance or data-residency requirements keep the records handled by data steps out of Forest's infrastructure, or when a workflow step needs access to systems reachable only from within your own network. Keep in mind the AI / MCP caveat below if your steps rely on those.
 
 ## How it works
 
@@ -24,7 +28,7 @@ Deploy Forest Runtime when your compliance or data-residency requirements forbid
 
 ## Prerequisites
 
-Make sure you are on the **latest version** of your Forest Admin agent, then point the agent at Forest Runtime with the workflow executor URL:
+You need a Forest Admin agent that supports the workflow executor URL: **`@forestadmin/agent` ≥ 1.79.0** on Node.js, or **`forest_admin_rails` ≥ 1.31.0** on Ruby. Point the agent at Forest Runtime with the workflow executor URL:
 
 <CodeGroup>
 
@@ -81,7 +85,7 @@ npx @forestadmin/workflow-executor
 | `FOREST_ENV_SECRET` | yes | Your environment secret — same value as your agent. Also in [app.forestadmin.com](https://app.forestadmin.com) → Settings → Environments. |
 | `FOREST_AUTH_SECRET` | yes | Your agent's auth secret (defined on your side only). |
 | `AGENT_URL` | yes | URL where your Forest Admin agent is running (e.g. `http://localhost:3351`). |
-| `DATABASE_URL` | yes* | Postgres connection string. *In production. |
+| `DATABASE_URL` | yes | Postgres connection string. Required unless you pass the `--in-memory` flag (testing only — state is lost on restart). |
 
 <Note>
   When Forest Runtime runs in Docker and your agent runs on the host machine, use `host.docker.internal` instead of `localhost` in `AGENT_URL` and `DATABASE_URL`. On Linux Docker Engine that hostname doesn't exist by default, so the `--add-host=host.docker.internal:host-gateway` flag above is required to resolve it (on Docker Desktop it's already provided and the flag is harmless).
@@ -94,7 +98,27 @@ curl http://localhost:3400/health
 # {"state":"running"}
 ```
 
-On first boot it auto-creates its `workflow_step_executions` table, then polls the orchestrator every 5 seconds (`POLLING_INTERVAL_S`) for work.
+<Note>
+  `/health` returns `200` when the instance is `running` **and** while it is `draining` (graceful shutdown, up to `STOP_TIMEOUT_S` — 30s by default), and `503` before it is ready. For **liveness** probes, treat any `200` as healthy. For **readiness** probes, route traffic only on `{"state":"running"}` so a draining instance stops receiving new work while it finishes in-flight steps.
+</Note>
+
+On first boot it auto-creates its `workflow_step_executions` table, then polls the orchestrator every 30 seconds (`POLLING_INTERVAL_S`) for work.
+
+## AI provider
+
+AI-powered steps (guidance, decisions, MCP Tasks, get/update data) need an LLM. By default Forest Runtime uses **Forest's AI server** — no configuration required, AI steps work out of the box.
+
+To keep AI calls off Forest's server and use your **own provider and key** instead, set all three variables together:
+
+| Variable | Description |
+| --- | --- |
+| `AI_PROVIDER` | `anthropic` or `openai`. |
+| `AI_MODEL` | Model name for that provider (e.g. `gpt-4.1`, `claude-sonnet-5`). |
+| `AI_API_KEY` | Your API key for that provider. |
+
+<Note>
+  This is **all-or-nothing**: set the three together to use your own provider, or leave all three unset to fall back to Forest's AI server. Setting only some of them fails at startup.
+</Note>
 
 ## OAuth-protected MCP connectors
 
@@ -112,8 +136,24 @@ If your workflows include [MCP Tasks](/product/process/workflows/overview) backe
 
 The Docker image ships with [OpenTelemetry](https://opentelemetry.io/) APM built in, compatible with any OTLP backend (Datadog, Grafana Tempo, Jaeger, Honeycomb…). It is **off by default** and turns on as soon as you set `OTEL_EXPORTER_OTLP_ENDPOINT`. OpenTelemetry is bundled only in the Docker image, not the npm package.
 
+## Tuning
+
+Beyond the required variables, these optional knobs have sensible defaults and rarely need changing:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `HTTP_PORT` | `3400` | Port the executor's HTTP server listens on. |
+| `POLLING_INTERVAL_S` | `30` | How often it polls the orchestrator for pending steps. |
+| `LOG_LEVEL` | `Info` | `Debug`, `Info`, `Warn`, or `Error`. |
+| `STEP_TIMEOUT_S` | `300` | Max duration of a single step. |
+| `AI_INVOKE_TIMEOUT_S` | `30` | Max duration of a single AI provider invocation. |
+| `STOP_TIMEOUT_S` | `30` | Grace period on shutdown to finish in-flight steps before exiting. |
+| `MAX_CHAIN_DEPTH` | `50` | Max steps auto-executed per run before yielding. |
+| `SCHEMA_CACHE_TTL_S` | `600` | Collection schema cache TTL. |
+| `FOREST_SERVER_URL` | `https://api.forestadmin.com` | Forest server the executor reports to (change only for non-default regions). |
+
 <Note>
-  For the complete list of environment variables (individual database parts, `DATABASE_SSL`, in-memory testing mode, OTel tuning), see the package [README on npm](https://www.npmjs.com/package/@forestadmin/workflow-executor).
+  For the remaining variables (individual database parts, `DATABASE_SSL`, in-memory testing mode, full OTel configuration), see the package [README on npm](https://www.npmjs.com/package/@forestadmin/workflow-executor).
 </Note>
 
 ## Learn more
