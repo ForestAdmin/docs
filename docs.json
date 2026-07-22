@@ -162,7 +162,9 @@
               {
                 "group": "Workflows",
                 "pages": [
-                  "product/process/workflows/overview"
+                  "product/process/workflows/overview",
+                  "product/process/workflows/triggers",
+                  "product/process/workflows/forest-runtime"
                 ]
               },
               {
@@ -332,7 +334,8 @@
                 "pages": [
                   "reference/api/endpoints/activity-logs",
                   "reference/api/endpoints/admin-logs",
-                  "reference/api/endpoints/notes"
+                  "reference/api/endpoints/notes",
+                  "reference/api/endpoints/trigger-workflow-webhook"
                 ]
               }
             ]

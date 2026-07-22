@@ -1,0 +1,89 @@
+---
+title: "Workflow triggers"
+description: "Choose how a workflow starts, manually from the interface, or automatically from an external system via a webhook."
+---
+
+A workflow can be started in two independent ways. Both are configured in the **Process** section of the workflow settings page, beneath the version card. Each trigger type has its own row with an on/off toggle, and the two can be enabled independently.
+
+- **Manual** — users start the workflow from a matching record in the interface (List View, Summary/Details, or a Workspace). This is the default. See [Executing workflows](/product/execute/workflows).
+- **Webhook** — external systems start the workflow via an authenticated HTTP POST. **Disabled by default.**
+
+Webhook triggers are available on **all environments**, with no production-only restriction.
+
+## The webhook trigger
+
+When enabled, the webhook lets any external system, an ETL job, a partner service, a CRON in your own infrastructure, start a workflow run on a specific record by calling a stable URL.
+
+Two things are separated by design:
+
+- **The URL** identifies everything *fixed* about the trigger: which workflow runs, and against which rendering. The only per-call input is the target record.
+- **The token** carries authentication *and* the identity the run acts as. The run reads and writes data as the token's user, and the activity log attributes it to that user, so a webhook-triggered run can never do more than that user is allowed to.
+
+For the full HTTP contract, request body, response codes, idempotency, and rate limits, see the [Trigger a workflow via webhook](/reference/api/endpoints/trigger-workflow-webhook) API reference.
+
+## Enabling the webhook
+
+1. Open the workflow settings page and go to the **Process** section.
+2. Toggle **Webhook** on.
+
+Once enabled:
+
+- the endpoint **URL** is displayed inline with a **copy** button;
+- a hint shows the JSON body to send, with the target record's `record_id`;
+- a **Generate new URL** button lets you rotate the URL (see [Regenerating the URL](#regenerating-the-url)).
+
+<Frame>
+  <img src="/images/workflows/webhook-trigger-rows.png" alt="Process section with Manual and Webhook trigger rows beneath the version card" />
+</Frame>
+
+Copy the URL and use it from your external system with a valid application token. The workflow starts on the record you pass in the request body.
+
+## Regenerating the URL
+
+If a URL may have leaked, or you simply want to rotate it, generate a new one from the **Generate new URL** button below the current URL.
+
+<Warning>
+  Generating a new URL **immediately invalidates the current one**. Any integration still calling the old URL will start failing until you update it with the new URL.
+</Warning>
+
+When you confirm:
+
+- the URL is updated inline, and the **copy** button now copies the new one;
+- a confirmation toaster briefly appears.
+
+<Frame>
+  <img src="/images/workflows/webhook-regenerate-url.png" alt="Generate new URL button and the invalidation warning" />
+</Frame>
+
+## Revoking access
+
+You have three independent levers to stop a webhook, without necessarily touching the others:
+
+| Lever | Effect | Calls then return |
+|---|---|---|
+| **Disable the Webhook toggle** | Turns the trigger off. URL and token are unchanged. | `404` |
+| **Generate new URL** | Invalidates the current URL. | `400` (old URL) |
+| **Invalidate / expire the token** | Done by the token's user, from account settings. | `401` |
+
+Turning the toggle back on re-enables the *same* URL and token — it is a pause, not a reset.
+
+## Auditing
+
+Every webhook-triggered run is recorded in the workflow run history and in your **Activity Logs**, attributed to the token's user and marked as **webhook-triggered** so you can distinguish automated runs from manual ones.
+
+## Learn more
+
+<CardGroup cols={2}>
+  <Card title="Trigger via webhook (API)" icon="code" href="/reference/api/endpoints/trigger-workflow-webhook">
+    The HTTP contract: body, response codes, idempotency, rate limits.
+  </Card>
+  <Card title="Workflows overview" icon="diagram-project" href="/product/process/workflows/overview">
+    Build and manage workflows in the no-code editor.
+  </Card>
+  <Card title="Executing workflows" icon="play" href="/product/execute/workflows">
+    How operators run workflows from the interface.
+  </Card>
+  <Card title="Roles & permissions" icon="shield" href="/get-started/control/roles-permissions">
+    Control what a workflow run can access.
+  </Card>
+</CardGroup>

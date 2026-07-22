@@ -1,0 +1,160 @@
+---
+title: Trigger a workflow via webhook
+description: "Start a workflow run on a specific record from an external system, over authenticated HTTP."
+---
+
+## Trigger a workflow run
+
+Starts a run of a workflow on a specific record. External systems call the workflow's webhook URL to trigger it the same way an operator would from the interface, but over authenticated HTTP.
+
+```
+POST <webhook_url>
+```
+
+You do **not** build this URL yourself. Enable the webhook trigger on the workflow, then **copy the full URL** from its trigger settings — it already contains the signed identifier of the workflow and rendering. See [Workflow triggers](/product/process/workflows/triggers) for how editors enable the webhook, copy the URL, and manage the token.
+
+The run uses the **latest active workflow** for the target rendering. There is no published/draft distinction — "latest active" is the contract.
+
+### Authentication
+
+All requests require a Forest **application token** in the `Authorization` header, presented with the Bearer scheme. Generate one from [your account settings](https://app.forestadmin.com/user-settings).
+
+```
+Authorization: Bearer YOUR_APPLICATION_TOKEN
+```
+
+The token serves two purposes at once:
+
+- **Authentication** — it identifies the caller and grants (or denies) the call.
+- **Execution identity** — the run reads and writes data **as the token's user**, and the activity log attributes it to that user. Anything the user is not allowed to access, the run cannot access either.
+
+<Note>
+  The URL alone grants no authority. It carries a signed identifier of the workflow and rendering, but starts nothing without a token whose user can reach that rendering. Authority comes entirely from the token.
+</Note>
+
+<Warning>
+  If your project uses SSO, the application token must be generated while logged in with SSO.
+</Warning>
+
+### The webhook URL
+
+The URL is obtained by copying it from the workflow's trigger settings — you never assemble it from IDs. It is:
+
+- **Stable** — it does not change when the workflow is published again.
+- **Signed and tamper-evident** — it embeds the workflow and rendering; a forged or modified URL is rejected.
+- **Valid until the editor invalidates it** — regenerating the URL (or disabling the trigger) is how access is revoked. See [Revoking access](#revoking-access).
+
+Treat the URL as a credential and store it alongside the token.
+
+### Request body
+
+The body is JSON and is validated. Only known fields are extracted; unknown fields are ignored.
+
+```json
+{
+  "record_id": "42"
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `record_id` | string | The record the workflow runs on. Composite primary keys are supported in their packed form (e.g. `"123|456"`). |
+
+<Note>
+  The `record_id` is **not** verified when the run is created. If the record does not exist or is inaccessible to the token's user, the run is still created and fails at its first data step during execution — observable via the run state.
+</Note>
+
+Execution is **asynchronous**: the endpoint creates and queues the run, then returns immediately. The run is processed by the executor afterwards.
+
+### Example request
+
+Use the URL you copied from the workflow's trigger settings as-is. In the examples below, `FOREST_WEBHOOK_URL` holds that copied URL.
+
+**cURL:**
+
+```bash
+curl -X POST "$FOREST_WEBHOOK_URL" \
+  -H "Authorization: Bearer $FOREST_APPLICATION_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "record_id": "42" }'
+```
+
+**JavaScript (Node.js):**
+
+```javascript
+const response = await fetch(process.env.FOREST_WEBHOOK_URL, {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${process.env.FOREST_APPLICATION_TOKEN}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ record_id: '42' }),
+});
+
+if (!response.ok) {
+  throw new Error(`Webhook request failed: ${response.status}`);
+}
+
+const { runId } = await response.json();
+```
+
+### Response
+
+On success the endpoint returns `202 Accepted` with the id of the created run:
+
+```json
+{
+  "runId": "b1e6c2a4-7f3d-4e2a-9c1b-8d5f0a2e3c4d"
+}
+```
+
+Use `runId` to follow the run's progress and outcome.
+
+### Idempotency
+
+Only one run of a given workflow can be active on a given record at a time. If a run is already ongoing on the target record, the endpoint returns `409 Conflict` and does **not** start or resume a run:
+
+```json
+{
+  "error": "A run of this workflow is already ongoing on this record."
+}
+```
+
+This makes retries safe **while a run is still ongoing**: a caller that retries after a network error either starts the run (`202`) or learns one is already in progress (`409`). Note the `409` only holds for the duration of the active run — once it finishes, a new request on the same record starts a fresh run (`202`). Retry to recover from transient failures on the initial call, not to re-drive a record after its run has completed.
+
+### Rate limiting
+
+The endpoint is rate-limited **per webhook**, so one noisy integration cannot starve other webhooks. Exceeding the limit returns `429 Too Many Requests` with a `Retry-After` header (in seconds).
+
+The starting threshold is roughly **60 requests per minute per webhook**, and is configurable. Duplicate-record bursts are additionally absorbed by the single-run-per-record `409`.
+
+### Errors
+
+| Status | Meaning |
+|---|---|
+| `400` | Invalid JSON body, missing `record_id`, or a malformed, tampered, or superseded URL (e.g. an old URL after it was regenerated). |
+| `401` | Missing, expired, or invalid Bearer token. |
+| `403` | Token is valid, but its user is not authorized for the target organization, rendering, or workflow. |
+| `404` | Unknown webhook, no active workflow for the rendering, or the webhook trigger is disabled. |
+| `409` | A run of this workflow is already ongoing on this record (see [Idempotency](#idempotency)). |
+| `429` | Rate limit exceeded. The response includes a `Retry-After` header. |
+
+### Revoking access
+
+The webhook keeps working until an editor intervenes. Two independent levers, both from the workflow's trigger settings:
+
+- **Disable the webhook trigger** — the toggle is the revocation switch. The URL and token are unchanged, but calls return `404` while it is off.
+- **Regenerate the URL** — invalidates the current URL immediately; the old URL then returns `400`. Update your integration with the new URL.
+
+Independently, the **application token** can be expired or revoked by its user at any time, which makes calls return `401`.
+
+## Learn more
+
+<CardGroup cols={2}>
+  <Card title="Workflow triggers" icon="bolt" href="/product/process/workflows/triggers">
+    Enable and configure the webhook trigger from the workflow editor.
+  </Card>
+  <Card title="Authentication" icon="key" href="/reference/api/authentication">
+    Generate and manage application tokens.
+  </Card>
+</CardGroup>
