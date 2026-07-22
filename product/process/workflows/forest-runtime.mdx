@@ -150,6 +150,7 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 | `STOP_TIMEOUT_S` | `30` | Grace period on shutdown to finish in-flight steps before exiting. |
 | `MAX_CHAIN_DEPTH` | `50` | Max steps auto-executed per run before yielding. |
 | `SCHEMA_CACHE_TTL_S` | `600` | Collection schema cache TTL. |
+| `DATABASE_SCHEMA` | `forest` | Postgres schema the executor creates its tables in — set it to isolate them in a shared database. |
 | `FOREST_SERVER_URL` | `https://api.forestadmin.com` | Forest server the executor reports to (change only for non-default regions). |
 
 <Note>
