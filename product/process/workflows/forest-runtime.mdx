@@ -13,11 +13,9 @@ Because it talks to your data through your own Forest agent, **the Forest orches
 
 ## Do I need Forest Runtime?
 
-Yes — Forest Runtime is what runs your workflow steps. The orchestrator only coordinates runs; it never executes them, and there is no Forest-hosted runtime, so running Forest Workflows means deploying your own.
+Yes — Forest Runtime is what executes your workflow steps. **[Webhook-triggered workflows](/product/process/workflows/triggers) especially**: a webhook can fire at any time, with no guarantee anyone has Forest open in a browser, so they can only run server-side.
 
-**[Webhook-triggered workflows](/product/process/workflows/triggers) require it especially.** A webhook can fire at any time, with no guarantee anyone has Forest open in a browser — so these workflows can't run browser-side. Forest Runtime executes them server-side, whenever they're triggered.
-
-Because it runs on infrastructure you control, it also keeps the records handled by data steps out of Forest's infrastructure — decisive when you have compliance or data-residency requirements, or when a step needs access to systems reachable only from within your own network. Keep in mind the AI / MCP caveat above if your steps rely on those.
+Running on infrastructure you control also keeps the records handled by data steps out of Forest's infrastructure — decisive for compliance or data-residency requirements, or when a step needs access to systems reachable only from within your network.
 
 ## How it works
 
@@ -26,7 +24,20 @@ Because it runs on infrastructure you control, it also keeps the records handled
 3. Each step runs locally, reaching your data and actions through your Forest agent.
 4. It reports the step outcome back to the orchestrator, which advances the workflow.
 
+```mermaid
+flowchart LR
+  O["Forest orchestrator<br/>(coordinates)"] -- "pending steps" --> R["Forest Runtime<br/>(your infrastructure)"]
+  R -- "data & actions" --> A["Your Forest agent"] --> DB[("Your database")]
+  R -- "outcomes only, never records" --> O
+```
+
 ## Prerequisites
+
+Setting up Forest Runtime involves three roles:
+
+1. **Your developers** point the agent at Forest Runtime (below).
+2. **Your ops team** deploys the Forest Runtime container ([Running Forest Runtime](#running-forest-runtime)).
+3. **Forest** switches legacy environments over on request ([Migrating from browser execution](#migrating-from-browser-execution)).
 
 You need a Forest Admin agent that supports the workflow executor URL: **`@forestadmin/agent` ≥ 1.79.0** on Node.js, or **`forest_admin_rails` ≥ 1.31.0** on Ruby. Point the agent at Forest Runtime with the workflow executor URL:
 
@@ -83,7 +94,7 @@ npx @forestadmin/workflow-executor
 | Variable | Required | Description |
 | --- | --- | --- |
 | `FOREST_ENV_SECRET` | yes | Your environment secret — same value as your agent. Also in [app.forestadmin.com](https://app.forestadmin.com) → Settings → Environments. |
-| `FOREST_AUTH_SECRET` | yes | Your agent's auth secret (defined on your side only). |
+| `FOREST_AUTH_SECRET` | yes | The same `authSecret` value your agent is configured with — ask whoever operates the agent. |
 | `AGENT_URL` | yes | URL where your Forest Admin agent is running (e.g. `http://localhost:3351`). |
 | `DATABASE_URL` | yes | Postgres connection string. Required unless you pass the `--in-memory` flag (testing only — state is lost on restart). |
 
@@ -91,7 +102,19 @@ npx @forestadmin/workflow-executor
   When Forest Runtime runs in Docker and your agent runs on the host machine, use `host.docker.internal` instead of `localhost` in `AGENT_URL` and `DATABASE_URL`. On Linux Docker Engine that hostname doesn't exist by default, so the `--add-host=host.docker.internal:host-gateway` flag above is required to resolve it (on Docker Desktop it's already provided and the flag is harmless).
 </Note>
 
+### Network requirements
+
+| Direction | Flow | Purpose |
+| --- | --- | --- |
+| Inbound | Agent → Forest Runtime `:3400` | The agent forwards workflow requests. |
+| Outbound | Forest Runtime → `api.forestadmin.com` (HTTPS) | Polling the orchestrator for pending steps. |
+| Outbound | Forest Runtime → `AGENT_URL` | Data steps read/write through your agent. |
+| Outbound | Forest Runtime → your Postgres | State persistence. |
+| Outbound | Forest Runtime → LLM provider & remote MCP tools | AI steps and MCP Tasks (Forest's AI server by default, or your own provider — see [AI provider](#ai-provider)). |
+
 On first boot Forest Runtime auto-creates its `workflow_step_executions` table, then polls the orchestrator every 30 seconds (`POLLING_INTERVAL_S`) for work.
+
+Forest Runtime is stateless apart from its Postgres database: you can run several instances against the same database for high availability — each pending step is claimed by exactly one instance. If you use [OAuth-protected MCP connectors](#oauth-protected-mcp-connectors), give every instance the same encryption key.
 
 ### Health check
 
@@ -113,7 +136,7 @@ For **liveness** probes, treat any `200` as healthy. For **readiness** probes, r
 
 ## AI provider
 
-AI-powered steps (guidance, decisions, MCP Tasks, get/update data) need an LLM. By default Forest Runtime uses **Forest's AI server** — no configuration required, AI steps work out of the box.
+Several step types rely on an LLM: guidance, decisions, MCP Tasks, and AI-assisted data steps. By default Forest Runtime uses **Forest's AI server** — no configuration required, AI steps work out of the box.
 
 To keep AI calls off Forest's server and use your **own provider and key** instead, set all three variables together:
 
@@ -158,7 +181,6 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 | `MAX_CHAIN_DEPTH` | `50` | Max steps auto-executed per run before yielding. |
 | `SCHEMA_CACHE_TTL_S` | `600` | Collection schema cache TTL. |
 | `DATABASE_SCHEMA` | `forest` | Postgres schema Forest Runtime creates its tables in — set it to isolate them in a shared database. |
-| `FOREST_SERVER_URL` | `https://api.forestadmin.com` | Forest server Forest Runtime reports to (change only for non-default regions). |
 
 <Note>
   For the remaining variables (individual database parts, `DATABASE_SSL`, in-memory testing mode, full OTel configuration), see the package [README on npm](https://www.npmjs.com/package/@forestadmin/workflow-executor).
