@@ -34,7 +34,47 @@ flowchart LR
 
 ## Prerequisites
 
-You need a Forest Admin agent that supports the workflow executor URL: **`@forestadmin/agent` ≥ 1.79.0** on Node.js, or **`forest_admin_rails` ≥ 1.31.0** on Ruby. Point the agent at Forest Runtime with the workflow executor URL:
+- A recent **Forest Admin agent** — the minimum version depends on how you run Forest Runtime (below).
+- A **PostgreSQL** database for production: Forest Runtime persists its run state there. A database-free mode exists for testing only.
+
+## Running Forest Runtime
+
+Run Forest Runtime one of two ways:
+
+- **[Embedded in your Node.js agent](#embedded-in-the-nodejs-agent)** — one line in your agent, nothing separate to deploy. The simplest option.
+- **[Standalone](#standalone-docker-or-cli)** — a separate process (Docker or CLI), to scale it independently of your agent or to use it with a Ruby agent.
+
+### Embedded in the Node.js agent
+
+Requires **`@forestadmin/agent` ≥ 1.84.0**. Add one line — the executor runs inside the agent process, so there is nothing else to deploy:
+
+```js
+createAgent(options)
+  .addDataSource(/* ... */)
+  .addWorkflowExecutor({ database: { uri: process.env.DATABASE_URL } })
+  .start();
+```
+
+It inherits your agent's secrets and Forest connection, so you only configure:
+
+| Option | Description |
+| --- | --- |
+| `database` | Postgres connection — a URI or Sequelize options. Persists run state. Required unless `inMemory`. |
+| `inMemory` | `true` runs without a database (testing only — runs are lost on restart). |
+| `agentUrl` | How the executor reaches your agent. Auto-derived when the agent runs on its own server; **required** when the agent is mounted on Express, Fastify or NestJS. |
+| `port` | Loopback port the executor listens on internally (default `3400`). |
+| `pollingIntervalS` | How often it polls the orchestrator for pending steps (default `30`). |
+| `stepTimeoutS` | Per-step timeout in seconds (default `300`). |
+
+<Note>
+  The embedded executor takes its AI provider, observability and other settings from your agent. The environment variables in the sections below — including the [Tuning](#tuning) table — apply to a **standalone** deployment.
+</Note>
+
+### Standalone (Docker or CLI)
+
+Run Forest Runtime as its own service — required for Ruby agents, or when you want to scale or deploy it separately from your agent.
+
+**1. Point your agent at it** with the workflow executor URL. Requires **`@forestadmin/agent` ≥ 1.79.0** on Node.js, or **`forest_admin_rails` ≥ 1.31.0** on Ruby:
 
 <CodeGroup>
 
@@ -55,13 +95,9 @@ end
 
 </CodeGroup>
 
-This is **required**: when the workflow executor URL is set, the agent mounts the route that forwards workflow requests to Forest Runtime (relaying the JWT for auth). If it is left unset, the agent returns `404` on those routes and Forest Runtime never receives any work.
+If the workflow executor URL is left unset, the agent returns `404` on those routes and Forest Runtime never receives any work. When the agent and Forest Runtime run on separate hosts, use an internal address the agent can reach on Forest Runtime's HTTP port (default `3400`).
 
-Drive the value from an environment variable so each deployment can target its own instance. When the agent and Forest Runtime run on separate hosts, use the internal address and make sure the agent can reach Forest Runtime's HTTP port (default `3400`).
-
-## Running Forest Runtime
-
-Forest Runtime ships as the `@forestadmin/workflow-executor` package and as a Docker image. It requires a **PostgreSQL** database in production (state is persisted there).
+**2. Run the executor** as a Docker image or via the CLI:
 
 <CodeGroup>
 
@@ -98,6 +134,8 @@ npx @forestadmin/workflow-executor
 </Note>
 
 ### Network requirements
+
+A standalone Forest Runtime opens these connections (an embedded executor makes the same outbound calls from the agent process, with no extra inbound port):
 
 | Direction | Flow | Purpose |
 | --- | --- | --- |
