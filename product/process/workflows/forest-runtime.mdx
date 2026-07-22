@@ -156,6 +156,24 @@ Beyond the required variables, these optional knobs have sensible defaults and r
   For the remaining variables (individual database parts, `DATABASE_SSL`, in-memory testing mode, full OTel configuration), see the package [README on npm](https://www.npmjs.com/package/@forestadmin/workflow-executor).
 </Note>
 
+## Migrating from browser execution
+
+Environments created before the orchestrator ran workflow steps **in the browser tab** of the user who triggered them. Switching to the orchestrator makes runs faster and more reliable — they no longer depend on a browser staying open.
+
+Migrating takes two steps:
+
+1. **Install Forest Runtime** by following this page, and confirm it's up with the [health check](#running-forest-runtime).
+2. **Contact us** — we switch your environment to the new engine on our side. No deploy or downtime on yours.
+
+<Note>
+  The switch is safe by design:
+
+  - **Runs in progress are never interrupted.** A run always finishes on the engine it started on — only new runs start on the new engine.
+  - **You can roll back at any time.** Ask us and we switch your environment back to browser execution, with the same guarantee for runs in progress.
+
+  Your workflow definitions are untouched either way — nothing to rebuild or reconfigure.
+</Note>
+
 ## Learn more
 
 <CardGroup cols={2}>
