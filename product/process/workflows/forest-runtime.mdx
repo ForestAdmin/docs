@@ -3,13 +3,9 @@ title: "Forest Runtime"
 description: "Run workflow steps on your own infrastructure so no client data ever leaves your network."
 ---
 
-By default, Forest Workflows execute on Forest's orchestrator. **Forest Runtime** lets you run the step execution on your own infrastructure instead: it polls the Forest orchestrator for pending steps, runs them locally, and reports only the results back.
+Forest's orchestrator coordinates your workflows but never executes the steps itself — that runs on **Forest Runtime**, deployed on your own infrastructure. Forest Runtime polls the orchestrator for pending steps, runs them locally, and reports only the results back.
 
 Because it talks to your data through your own Forest agent, **the Forest orchestrator never sees your records** — it only receives step outcomes. Data read and written by data steps stays within your infrastructure.
-
-<Note>
-  Forest Runtime is an optional, self-hosted deployment. If you don't run it, workflows keep running on Forest's managed orchestrator as usual.
-</Note>
 
 <Warning>
   This boundary covers the orchestrator and data steps only. **AI-powered steps and MCP Tasks still send prompt content — which can include record data — to an external service:** an LLM provider (Forest's AI server by default, or Anthropic/OpenAI directly if you configure a local `AI_PROVIDER`) for AI steps, and the remote MCP tool for MCP Tasks. Forest Runtime keeps data steps local; it does not make workflows fully air-gapped.
@@ -169,9 +165,9 @@ Migrating takes two steps:
   The switch is safe:
 
   - **Runs already in progress finish uninterrupted.** Only new runs move to Forest Runtime — anything mid-flight completes the way it started.
-  - **You can roll back at any time.** Ask us to switch back to browser execution; runs in progress keep the same guarantee.
+  - **Your workflows themselves are untouched** — nothing to rebuild or reconfigure.
 
-  Your workflows themselves are untouched either way — nothing to rebuild or reconfigure.
+  Need to pause the migration? Contact us — but browser execution is being retired, so plan to complete the move.
 </Note>
 
 ## Learn more
