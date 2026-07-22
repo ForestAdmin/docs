@@ -59,7 +59,7 @@ It inherits your agent's secrets and Forest connection, so you only configure:
 
 | Option | Description |
 | --- | --- |
-| `database` | Postgres connection — a URI or Sequelize options. Persists run state. Required unless `inMemory`. |
+| `database` | Postgres connection — a URI or Sequelize options (pass a `schema` here to isolate its tables). Persists run state. Required unless `inMemory`. |
 | `inMemory` | `true` runs without a database (testing only — runs are lost on restart). |
 | `agentUrl` | How the executor reaches your agent. Auto-derived when the agent runs on its own server; **required** when the agent is mounted on Express, Fastify or NestJS. |
 | `port` | Loopback port the executor listens on internally (default `3400`). |
@@ -67,7 +67,7 @@ It inherits your agent's secrets and Forest connection, so you only configure:
 | `stepTimeoutS` | Per-step timeout in seconds (default `300`). |
 
 <Note>
-  These options are the complete embedded configuration. AI steps use Forest's AI server, and everything else runs on built-in defaults. To use **your own AI provider**, encrypt OAuth-protected MCP credentials, or tune the other settings (the environment variables in the sections below, including [Tuning](#tuning)), run Forest Runtime **standalone**.
+  These six options are the complete embedded surface. AI steps always use **Forest's AI server** — embedded can't target your own provider — and the [Tuning](#tuning) knobs (chain depth, schema cache, step and shutdown timeouts) run on their defaults; run **standalone** to change those. Two env-based settings still apply embedded: set `FOREST_EXECUTOR_ENCRYPTION_KEY` in the agent's environment for [OAuth-protected MCP connectors](#oauth-protected-mcp-connectors), and pass a Postgres `schema` inside `database`.
 </Note>
 
 ### Standalone (Docker or CLI)
