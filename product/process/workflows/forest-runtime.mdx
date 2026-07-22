@@ -65,7 +65,7 @@ It inherits your agent's secrets and Forest connection, so you only configure:
 | `port` | Loopback port the executor listens on internally (default `3400`). |
 | `ai` | Bring your own LLM instead of Forest's AI server: `{ provider: 'anthropic' \| 'openai', model, apiKey }` (all three required together). Omit to keep using Forest's server. |
 | `encryptionKey` | At-rest key (AES-256-GCM) for [OAuth-protected MCP connector](#oauth-protected-mcp-connectors) credentials. Generate with `openssl rand -hex 32`. Omit if you don't use them. |
-| `pollingIntervalS`, `stepTimeoutS`, `aiInvokeTimeoutS`, `stopTimeoutS`, `maxChainDepth`, `schemaCacheTtlS`, `loggerLevel` | The same tuning knobs as [standalone](#tuning), in camelCase — same defaults. |
+| `pollingIntervalS`, `stepTimeoutS`, `aiInvokeTimeoutS`, `stopTimeoutS`, `maxChainDepth`, `schemaCacheTtlS` | The same tuning knobs as [standalone](#tuning), in camelCase — same defaults. Log verbosity follows your agent's own logger, so there's no separate log-level option here. |
 
 <Note>
   Embedded has full configuration parity with standalone: your own AI provider (`ai`), the encryption key, and every tuning knob are all settable here. It only inherits your agent's secrets and Forest connection; set nothing and AI steps use Forest's AI server.
