@@ -27,7 +27,8 @@ Running on infrastructure you control also keeps the records handled by data ste
 ```mermaid
 flowchart LR
   O["Forest orchestrator<br/>(coordinates)"] -- "pending steps" --> R["Forest Runtime<br/>(your infrastructure)"]
-  R -- "data & actions" --> A["Your Forest agent"] --> DB[("Your database")]
+  R -- "data & actions" --> A["Your Forest agent"] --> DB[("Your business<br/>database")]
+  R -. "state (DATABASE_URL)" .-> P[("Forest Runtime's<br/>Postgres")]
   R -- "outcomes only, never records" --> O
 ```
 
