@@ -34,11 +34,10 @@ flowchart LR
 
 ## Prerequisites
 
-Setting up Forest Runtime involves three roles:
+Setting up Forest Runtime takes two roles on your side:
 
-1. **Your developers** point the agent at Forest Runtime (below).
-2. **Your ops team** deploys the Forest Runtime container ([Running Forest Runtime](#running-forest-runtime)).
-3. **Forest** switches legacy environments over on request ([Migrating from browser execution](#migrating-from-browser-execution)).
+1. **Your developers** point the agent at Forest Runtime (the `workflowExecutorUrl` below).
+2. **Your ops team** deploy and run the Forest Runtime container ([Running Forest Runtime](#running-forest-runtime)).
 
 You need a Forest Admin agent that supports the workflow executor URL: **`@forestadmin/agent` ≥ 1.79.0** on Node.js, or **`forest_admin_rails` ≥ 1.31.0** on Ruby. Point the agent at Forest Runtime with the workflow executor URL:
 
