@@ -67,7 +67,7 @@ It inherits your agent's secrets and Forest connection, so you only configure:
 | `stepTimeoutS` | Per-step timeout in seconds (default `300`). |
 
 <Note>
-  The embedded executor takes its AI provider, observability and other settings from your agent. The environment variables in the sections below — including the [Tuning](#tuning) table — apply to a **standalone** deployment.
+  These options are the complete embedded configuration. AI steps use Forest's AI server, and everything else runs on built-in defaults. To use **your own AI provider**, encrypt OAuth-protected MCP credentials, or tune the other settings (the environment variables in the sections below, including [Tuning](#tuning)), run Forest Runtime **standalone**.
 </Note>
 
 ### Standalone (Docker or CLI)
