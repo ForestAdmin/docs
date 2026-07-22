@@ -1,6 +1,6 @@
 ---
 title: "Forest Runtime"
-description: "Run workflow steps on your own infrastructure so no client data ever leaves your network."
+description: "Run your workflow steps on your own infrastructure — the Forest orchestrator never sees your records."
 ---
 
 Forest's orchestrator coordinates your workflows but never executes the steps itself — that runs on **Forest Runtime**, deployed on your own infrastructure. Forest Runtime polls the orchestrator for pending steps, runs them locally, and reports only the results back.
@@ -21,7 +21,7 @@ Because it runs on infrastructure you control, it also keeps the records handled
 
 ## How it works
 
-1. A user runs a workflow. The Forest orchestrator queues the pending steps.
+1. A workflow is triggered — by a user or a [webhook](/product/process/workflows/triggers). The Forest orchestrator queues the pending steps.
 2. Forest Runtime polls the orchestrator and pulls the steps assigned to it.
 3. Each step runs locally, reaching your data and actions through your Forest agent.
 4. It reports the step outcome back to the orchestrator, which advances the workflow.
@@ -51,7 +51,7 @@ end
 
 This is **required**: when the workflow executor URL is set, the agent mounts the route that forwards workflow requests to Forest Runtime (relaying the JWT for auth). If it is left unset, the agent returns `404` on those routes and Forest Runtime never receives any work.
 
-Drive the value from an environment variable so each deployment can target its own instance. When the agent and Forest Runtime run on separate hosts, use the internal address and make sure the agent can reach its HTTP port (default `3400`).
+Drive the value from an environment variable so each deployment can target its own instance. When the agent and Forest Runtime run on separate hosts, use the internal address and make sure the agent can reach Forest Runtime's HTTP port (default `3400`).
 
 ## Running Forest Runtime
 
@@ -91,6 +91,8 @@ npx @forestadmin/workflow-executor
   When Forest Runtime runs in Docker and your agent runs on the host machine, use `host.docker.internal` instead of `localhost` in `AGENT_URL` and `DATABASE_URL`. On Linux Docker Engine that hostname doesn't exist by default, so the `--add-host=host.docker.internal:host-gateway` flag above is required to resolve it (on Docker Desktop it's already provided and the flag is harmless).
 </Note>
 
+On first boot Forest Runtime auto-creates its `workflow_step_executions` table, then polls the orchestrator every 30 seconds (`POLLING_INTERVAL_S`) for work.
+
 ### Health check
 
 `GET /health` is public (no auth) and returns the runtime's current state:
@@ -108,8 +110,6 @@ curl http://localhost:3400/health
 | `stopped` | `503` | Shut down. |
 
 For **liveness** probes, treat any `200` as healthy. For **readiness** probes, route traffic only on `{"state":"running"}` so a draining instance stops receiving new work while it finishes in-flight steps.
-
-On first boot it auto-creates its `workflow_step_executions` table, then polls the orchestrator every 30 seconds (`POLLING_INTERVAL_S`) for work.
 
 ## AI provider
 
@@ -149,7 +149,7 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `HTTP_PORT` | `3400` | Port the executor's HTTP server listens on. |
+| `HTTP_PORT` | `3400` | Port Forest Runtime's HTTP server listens on. |
 | `POLLING_INTERVAL_S` | `30` | How often it polls the orchestrator for pending steps. |
 | `LOG_LEVEL` | `Info` | `Debug`, `Info`, `Warn`, or `Error`. |
 | `STEP_TIMEOUT_S` | `300` | Max duration of a single step. |
@@ -157,8 +157,8 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 | `STOP_TIMEOUT_S` | `30` | Grace period on shutdown to finish in-flight steps before exiting. |
 | `MAX_CHAIN_DEPTH` | `50` | Max steps auto-executed per run before yielding. |
 | `SCHEMA_CACHE_TTL_S` | `600` | Collection schema cache TTL. |
-| `DATABASE_SCHEMA` | `forest` | Postgres schema the executor creates its tables in — set it to isolate them in a shared database. |
-| `FOREST_SERVER_URL` | `https://api.forestadmin.com` | Forest server the executor reports to (change only for non-default regions). |
+| `DATABASE_SCHEMA` | `forest` | Postgres schema Forest Runtime creates its tables in — set it to isolate them in a shared database. |
+| `FOREST_SERVER_URL` | `https://api.forestadmin.com` | Forest server Forest Runtime reports to (change only for non-default regions). |
 
 <Note>
   For the remaining variables (individual database parts, `DATABASE_SSL`, in-memory testing mode, full OTel configuration), see the package [README on npm](https://www.npmjs.com/package/@forestadmin/workflow-executor).
