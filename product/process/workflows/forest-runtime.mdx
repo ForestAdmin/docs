@@ -73,28 +73,49 @@ It inherits your agent's secrets and Forest connection, so you only configure:
 
 ### Standalone (Docker or CLI)
 
-Run Forest Runtime as its own service — required for Ruby agents, or when you want to scale or deploy it separately from your agent.
+Run Forest Runtime as its own service — the way to run it with any agent other than the v2 Node.js one (which can also [embed](#embedded-in-the-nodejs-agent) it), and to scale or deploy it separately.
 
-**1. Point your agent at it** with the workflow executor URL. Requires **`@forestadmin/agent` ≥ 1.79.0** on Node.js, or **`forest_admin_rails` ≥ 1.31.0** on Ruby:
+**1. Point your agent at it** with the workflow executor URL, so the agent mounts the route that forwards workflow requests to Forest Runtime (relaying the JWT). It's supported across both agent generations:
+
+| Agent | Config | Min version |
+| --- | --- | --- |
+| `@forestadmin/agent` — Node.js (v2) | `createAgent({ workflowExecutorUrl })` | 1.79.0 |
+| `forest-express` — Node.js (v1, incl. `-sequelize` / `-mongoose`) | `Liana.init({ workflowExecutorUrl })` | 10.7.0 |
+| `forest_admin_rails` — Ruby (v2) | `config.workflow_executor_url` | 1.31.0 |
+| `forest-rails` — Ruby (v1) | `ForestLiana.workflow_executor_url` | 9.18.0 |
 
 <CodeGroup>
 
-```js Node.js
+```js Node.js (v2)
 createAgent({
   // ...
   workflowExecutorUrl: process.env.WORKFLOW_EXECUTOR_URL, // e.g. http://localhost:3400
 })
 ```
 
-```ruby Ruby (Rails)
+```js forest-express (v1)
+Liana.init({
+  // ...
+  workflowExecutorUrl: process.env.WORKFLOW_EXECUTOR_URL,
+})
+```
+
+```ruby forest_admin_rails (v2)
 # config/initializers/forest_admin_rails.rb
 ForestAdminRails.configure do |config|
   # ...
-  config.workflow_executor_url = ENV['WORKFLOW_EXECUTOR_URL'] # e.g. http://localhost:3400
+  config.workflow_executor_url = ENV['WORKFLOW_EXECUTOR_URL']
 end
 ```
 
+```ruby forest-rails (v1)
+# config/initializers/forest_liana.rb
+ForestLiana.workflow_executor_url = ENV['WORKFLOW_EXECUTOR_URL']
+```
+
 </CodeGroup>
+
+<Note>The Python agents (`agent-python`, `django-forestadmin`) don't support the workflow executor yet.</Note>
 
 If the workflow executor URL is left unset, the agent returns `404` on those routes and Forest Runtime never receives any work. When the agent and Forest Runtime run on separate hosts, use an internal address the agent can reach on Forest Runtime's HTTP port (default `3400`).
 
