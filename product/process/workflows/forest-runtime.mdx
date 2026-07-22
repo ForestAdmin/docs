@@ -15,6 +15,8 @@ Because it talks to your data through your own Forest agent, **the Forest orches
 
 Yes — Forest Runtime is what runs your workflow steps. The orchestrator only coordinates runs; it never executes them, and there is no Forest-hosted runtime, so running Forest Workflows means deploying your own.
 
+**Webhook-triggered workflows require it especially.** A webhook can fire at any time, with no guarantee anyone has Forest open in a browser — so these workflows can't run browser-side. Forest Runtime executes them server-side, whenever they're triggered.
+
 Because it runs on infrastructure you control, it also keeps the records handled by data steps out of Forest's infrastructure — decisive when you have compliance or data-residency requirements, or when a step needs access to systems reachable only from within your own network. Keep in mind the AI / MCP caveat above if your steps rely on those.
 
 ## How it works
