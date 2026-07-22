@@ -11,9 +11,11 @@ Because it talks to your data through your own Forest agent, **the Forest orches
   This boundary covers the orchestrator and data steps only. **AI-powered steps and MCP Tasks still send prompt content — which can include record data — to an external service:** an LLM provider (Forest's AI server by default, or Anthropic/OpenAI directly if you configure a local `AI_PROVIDER`) for AI steps, and the remote MCP tool for MCP Tasks. Forest Runtime keeps data steps local; it does not make workflows fully air-gapped.
 </Warning>
 
-## When to use it
+## Do I need Forest Runtime?
 
-Deploy Forest Runtime when your compliance or data-residency requirements keep the records handled by data steps out of Forest's infrastructure, or when a workflow step needs access to systems reachable only from within your own network. Keep in mind the AI / MCP caveat below if your steps rely on those.
+Yes — Forest Runtime is what runs your workflow steps. The orchestrator only coordinates runs; it never executes them, and there is no Forest-hosted runtime, so running Forest Workflows means deploying your own.
+
+Because it runs on infrastructure you control, it also keeps the records handled by data steps out of Forest's infrastructure — decisive when you have compliance or data-residency requirements, or when a step needs access to systems reachable only from within your own network. Keep in mind the AI / MCP caveat above if your steps rely on those.
 
 ## How it works
 
