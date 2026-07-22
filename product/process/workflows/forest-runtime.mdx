@@ -91,16 +91,23 @@ npx @forestadmin/workflow-executor
   When Forest Runtime runs in Docker and your agent runs on the host machine, use `host.docker.internal` instead of `localhost` in `AGENT_URL` and `DATABASE_URL`. On Linux Docker Engine that hostname doesn't exist by default, so the `--add-host=host.docker.internal:host-gateway` flag above is required to resolve it (on Docker Desktop it's already provided and the flag is harmless).
 </Note>
 
-Confirm it's up:
+### Health check
+
+`GET /health` is public (no auth) and returns the runtime's current state:
 
 ```bash
 curl http://localhost:3400/health
 # {"state":"running"}
 ```
 
-<Note>
-  `/health` returns `200` when the instance is `running` **and** while it is `draining` (graceful shutdown, up to `STOP_TIMEOUT_S` — 30s by default), and `503` before it is ready. For **liveness** probes, treat any `200` as healthy. For **readiness** probes, route traffic only on `{"state":"running"}` so a draining instance stops receiving new work while it finishes in-flight steps.
-</Note>
+| State | HTTP | Meaning |
+| --- | --- | --- |
+| `running` | `200` | Started and polling for work. |
+| `draining` | `200` | Graceful shutdown — finishing in-flight steps (up to `STOP_TIMEOUT_S`, 30s by default), no longer taking new runs. |
+| `idle` | `503` | Not started yet. |
+| `stopped` | `503` | Shut down. |
+
+For **liveness** probes, treat any `200` as healthy. For **readiness** probes, route traffic only on `{"state":"running"}` so a draining instance stops receiving new work while it finishes in-flight steps.
 
 On first boot it auto-creates its `workflow_step_executions` table, then polls the orchestrator every 30 seconds (`POLLING_INTERVAL_S`) for work.
 
@@ -163,7 +170,7 @@ Older environments run workflow steps **in the browser** of the user who trigger
 
 Migrating takes two steps:
 
-1. **Install Forest Runtime** by following this page, and confirm it's up with the [health check](#running-forest-runtime).
+1. **Install Forest Runtime** by following this page, and confirm it's up with the [health check](#health-check).
 2. **Contact us** — we switch your environment from browser to Forest Runtime on our side. Nothing to deploy and no downtime on your end.
 
 <Note>
