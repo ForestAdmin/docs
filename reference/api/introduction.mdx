@@ -13,6 +13,10 @@ The Forest public API exposes a subset of platform data and operations for progr
 | [Admin logs](/reference/api/endpoints/admin-logs) | Track configuration and administrative operations across the project |
 | [Notes](/reference/api/endpoints/notes) | Read and write [collaboration notes](/product/collaborate/notes) on records |
 
+<Note>
+  **Trigger a workflow via webhook** is also available over HTTP, but it does not follow the base URL and path convention below. Its URL is not assembled from your project and environment — you copy the full, signed URL from the workflow's trigger settings. See [Trigger a workflow via webhook](/reference/api/endpoints/trigger-workflow-webhook) for the contract and [Workflow triggers](/product/process/workflows/triggers) for how to generate the URL.
+</Note>
+
 If you need data access beyond what's exposed here, you have two options:
 
 - **Use the Forest Agent directly**, the agent serves your collections via its own REST API. See the [Node.js](/reference/agent-api/nodejs) or [Ruby](/reference/agent-api/ruby) agent reference.
