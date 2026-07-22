@@ -158,20 +158,20 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 
 ## Migrating from browser execution
 
-Environments created before the orchestrator ran workflow steps **in the browser tab** of the user who triggered them. Switching to the orchestrator makes runs faster and more reliable — they no longer depend on a browser staying open.
+Older environments run workflow steps **in the browser** of the user who triggers them, so a run pauses if that tab is closed. Moving execution to Forest Runtime removes that dependency and makes runs faster and more reliable.
 
 Migrating takes two steps:
 
 1. **Install Forest Runtime** by following this page, and confirm it's up with the [health check](#running-forest-runtime).
-2. **Contact us** — we switch your environment to the new engine on our side. No deploy or downtime on yours.
+2. **Contact us** — we switch your environment from browser to Forest Runtime on our side. Nothing to deploy and no downtime on your end.
 
 <Note>
-  The switch is safe by design:
+  The switch is safe:
 
-  - **Runs in progress are never interrupted.** A run always finishes on the engine it started on — only new runs start on the new engine.
-  - **You can roll back at any time.** Ask us and we switch your environment back to browser execution, with the same guarantee for runs in progress.
+  - **Runs already in progress finish uninterrupted.** Only new runs move to Forest Runtime — anything mid-flight completes the way it started.
+  - **You can roll back at any time.** Ask us to switch back to browser execution; runs in progress keep the same guarantee.
 
-  Your workflow definitions are untouched either way — nothing to rebuild or reconfigure.
+  Your workflows themselves are untouched either way — nothing to rebuild or reconfigure.
 </Note>
 
 ## Learn more
