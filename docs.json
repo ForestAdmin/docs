@@ -179,7 +179,6 @@
                       "product/process/advanced-concepts/plugins/zendesk"
                     ]
                   },
-                  "product/process/advanced-concepts/self-hosted-ai",
                   "product/process/advanced-concepts/testing",
                   {
                     "group": "Developer Workflow",
