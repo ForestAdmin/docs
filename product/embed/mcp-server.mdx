@@ -55,8 +55,8 @@ The standalone Forest MCP Server is configured entirely through environment vari
 | `MCP_SERVER_PORT` | No | `3931` | Port the standalone server listens on. |
 | `FOREST_MCP_ENABLED_TOOLS` | No | all tools | Comma-separated allowlist of tools to expose (see [Restrict tools](#restrict-tools)). |
 | `FOREST_AGENT_URL` | No | your environment's back-end URL | URL the MCP Server uses to reach your back-end's data layer. |
-| `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` | No | Forest Admin's own lifetime | Shortens the OAuth access token lifetime (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
-| `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` | No | Forest Admin's own lifetime | Shortens the time between two interactive logins (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
+| `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` | No | `3600` (1 hour) | Shortens the OAuth access token lifetime (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
+| `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` | No | `691200` (8 days) | Shortens the time between two interactive logins (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
 
 <Note>
   Set `FOREST_AGENT_URL` when the MCP Server runs next to a self-hosted back-end reachable at an internal address (e.g. `http://localhost:3310`), so tool calls hit it directly instead of the public back-end URL registered in Forest.
@@ -172,7 +172,7 @@ When `enabledTools` is not set, all tools are enabled by default.
 
 ## Token lifetimes
 
-The MCP server issues OAuth tokens whose lifetimes come from Forest Admin. You can shorten them with `tokenTtl`, to reduce how long a leaked token stays usable and to force users to log in again periodically.
+The MCP server issues OAuth tokens whose lifetimes come from Forest Admin: **1 hour** (3600s) for an access token, **8 days** (691200s) for a refresh token. You can shorten them with `tokenTtl`, to reduce how long a leaked token stays usable and to force users to log in again periodically.
 
 <CodeGroup>
 
@@ -195,10 +195,10 @@ FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS=900 \
 
 The two settings differ in what your users notice:
 
-| Setting               | What it bounds                                                  | Effect on the user                                             |
-| --------------------- | --------------------------------------------------------------- | -------------------------------------------------------------- |
-| `accessTokenSeconds`  | How long an issued access token stays usable                    | None — the AI assistant silently obtains a new one             |
-| `refreshTokenSeconds` | The time between two **interactive logins**                     | Once it elapses, the user logs in through the browser again    |
+| Setting               | Forest Admin default | What it bounds                                | Effect on the user                                          |
+| --------------------- | -------------------- | --------------------------------------------- | ----------------------------------------------------------- |
+| `accessTokenSeconds`  | 1 hour               | How long an issued access token stays usable  | None — the AI assistant silently obtains a new one          |
+| `refreshTokenSeconds` | 8 days               | The time between two **interactive logins**   | Once it elapses, the user logs in through the browser again |
 
 `refreshTokenSeconds` is measured from the login itself, not from the last refresh, so an assistant that keeps working cannot keep extending its own session.
 
