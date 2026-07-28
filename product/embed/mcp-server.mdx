@@ -197,13 +197,17 @@ The two settings differ in what your users notice:
 
 | Setting               | Forest default | What it bounds                                | Effect on the user                                          |
 | --------------------- | -------------------- | --------------------------------------------- | ----------------------------------------------------------- |
-| `accessTokenSeconds`  | 1 hour               | How long an issued access token stays usable  | None — the AI assistant silently obtains a new one          |
+| `accessTokenSeconds`  | 1 hour               | How long an issued access token drives the MCP server | None — the AI assistant silently obtains a new one   |
 | `refreshTokenSeconds` | unbounded            | The time between two **interactive logins**   | Once it elapses, the user logs in through the browser again |
 
 `refreshTokenSeconds` is measured from the login itself, not from the last refresh, so an assistant that keeps working cannot keep extending its own session. Refresh tokens issued before you enabled the option carry no login timestamp, so their window is measured from their last refresh instead — one longer session each, then bounded.
 
 <Warning>
   Both values are upper bounds: they can only **shorten** what Forest granted, never extend it. For `accessTokenSeconds`, a value above Forest's own token lifetime has no effect. `refreshTokenSeconds` bounds the whole session, which Forest otherwise re-extends on every refresh, so any value shortens it however large it is.
+</Warning>
+
+<Warning>
+  `accessTokenSeconds` bounds what a leaked token can do through the MCP server — its scopes stop applying and its calls stop being audited. It does **not** shorten the Forest token carried inside that JWT, which is signed rather than encrypted: treat a leak as a Forest token leak and revoke at the source.
 </Warning>
 
 <Info>
