@@ -203,7 +203,7 @@ The two settings differ in what your users notice:
 `refreshTokenSeconds` is measured from the login itself, not from the last refresh, so an assistant that keeps working cannot keep extending its own session.
 
 <Warning>
-  Both values are upper bounds: they can only **shorten** the lifetime Forest Admin granted, never extend it. Setting a value longer than Forest Admin's own lifetime has no effect.
+  Both values are upper bounds: they can only **shorten** what Forest Admin granted, never extend it. For `accessTokenSeconds`, a value above Forest Admin's own token lifetime has no effect. `refreshTokenSeconds` bounds the whole session, which Forest Admin otherwise re-extends on every refresh, so any value shortens it however large it is.
 </Warning>
 
 <Info>
