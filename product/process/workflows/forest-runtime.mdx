@@ -50,7 +50,8 @@ Run Forest Runtime one of two ways:
 
 Requirements:
 
-- **`@forestadmin/agent` ≥ 1.84.0**.
+- **`@forestadmin/agent`** — embedded mode arrived in **1.84.0**, but the options shown below (`schema`, `ai`, `encryptionKey`, the tuning knobs) landed in later releases, so use a **recent** version.
+- **Node.js ≥ 22.12.0** — required by the executor package.
 - **The executor package**, installed at the **exact version your agent pins**. It's an *optional peer dependency* the agent loads dynamically at runtime, so `tsc` won't flag it when it's missing — but `agent.start()` throws _"The embedded workflow executor requires the `@forestadmin/workflow-executor` package"_. The pin is exact (a `^` range conflicts), so install that specific version — find it in your lockfile or with `npm info @forestadmin/agent peerDependencies`:
   ```bash
   npm install @forestadmin/workflow-executor@<pinned-version>
