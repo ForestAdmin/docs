@@ -52,7 +52,7 @@ Requirements:
 
 - **`@forestadmin/agent`** — embedded mode arrived in **1.84.0**, but the options shown below (`schema`, `ai`, `encryptionKey`, the tuning knobs) landed in later releases, so use a **recent** version.
 - **Node.js ≥ 22.12.0** — required by the executor package.
-- **The executor package**, installed at the **exact version your agent pins**. It's an *optional peer dependency* the agent loads dynamically at runtime, so `tsc` won't flag it when it's missing — but `agent.start()` throws _"The embedded workflow executor requires the `@forestadmin/workflow-executor` package"_. The pin is exact (a `^` range conflicts), so install that specific version — find it in your lockfile or with `npm info @forestadmin/agent peerDependencies`:
+- **The executor package**, installed at the **exact version your agent pins**. It's an *optional peer dependency* the agent loads dynamically at runtime, so `tsc` won't flag it when it's missing — but `agent.start()` throws _"The embedded workflow executor requires the `@forestadmin/workflow-executor` package"_. The pin is exact (a `^` range conflicts), so install that specific version — find it in your lockfile or with `npm info @forestadmin/agent@<your-agent-version> peerDependencies` (pin the version you actually run — without it, npm answers for `latest`, whose pin may differ):
   ```bash
   npm install @forestadmin/workflow-executor@<pinned-version>
   ```
@@ -68,7 +68,9 @@ createAgent(options)
 ```
 
 <Note>
-  Safe to reuse the database your agent already reads: the executor keeps its tables in a dedicated **`forest`** Postgres schema (it creates it if needed), so they stay out of the `public` schema your datasource introspects and never show up as collections in your panel. Pass a `schema` if you'd rather name it differently.
+  Safe to reuse the database your agent already reads: the executor keeps its tables in a dedicated **`forest`** Postgres schema, so they stay out of the `public` schema your datasource introspects and never show up as collections in your panel. Pass a `schema` if you'd rather name it differently.
+
+  Creating that schema needs the `CREATE` privilege on the database. If your role doesn't have it, have an administrator create the schema and grant the role access to it — the executor checks whether the schema already exists before trying to create one, so a pre-created schema boots fine with schema-level privileges only.
 </Note>
 
 It inherits your agent's secrets and Forest connection, so you only configure:
