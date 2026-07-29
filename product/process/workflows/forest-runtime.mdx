@@ -5,6 +5,8 @@ description: "Run your workflow steps on your own infrastructure — the Forest 
 
 Forest's orchestrator coordinates your workflows but never executes the steps itself — that runs on **Forest Runtime**, deployed on your own infrastructure. Forest Runtime polls the orchestrator for pending steps, runs them locally, and reports only the results back.
 
+Setting it up is a **one-time addition, not a migration**: you deploy Forest Runtime and either point your agent at it or embed it in the agent — your collections and existing workflows are untouched.
+
 Because it talks to your data through your own Forest agent, **the Forest orchestrator never sees your records** — data read and written by data steps stays within your infrastructure.
 
 <Note>
@@ -46,14 +48,29 @@ Run Forest Runtime one of two ways:
 
 ### Embedded in the Node.js agent
 
-Requires **`@forestadmin/agent` ≥ 1.84.0**. Add one line — the executor runs inside the agent process, so there is nothing else to deploy:
+Requirements:
+
+- **`@forestadmin/agent` ≥ 1.84.0**.
+- **The executor package**, installed at the **exact version your agent pins**. It's an *optional peer dependency* the agent loads dynamically at runtime, so `tsc` won't flag it when it's missing — but `agent.start()` throws _"The embedded workflow executor requires the `@forestadmin/workflow-executor` package"_. The pin is exact (a `^` range conflicts), so install that specific version — find it in your lockfile or with `npm info @forestadmin/agent peerDependencies`:
+  ```bash
+  npm install @forestadmin/workflow-executor@<pinned-version>
+  ```
+- **TypeScript 5.5+** — the package bundles zod 4, which requires it. TypeScript 4.x can't even parse zod 4's typings, and `skipLibCheck` won't help (it suppresses type errors, not the syntax errors these typings trigger).
+
+Then add one line — the executor runs inside the agent process, so there's nothing else to deploy:
 
 ```js
 createAgent(options)
   .addDataSource(/* ... */)
-  .addWorkflowExecutor({ database: { uri: process.env.DATABASE_URL } })
+  .addWorkflowExecutor({
+    database: { uri: process.env.DATABASE_URL, schema: 'forest_workflows' },
+  })
   .start();
 ```
+
+<Warning>
+  Give the executor a dedicated `schema` (as above). If it shares the database your agent introspects and you leave `schema` unset, its `workflow_step_executions` table is created in `public` — where your SQL datasource picks it up, so it **shows up as a collection in your panel**. The executor creates the schema itself (`CREATE SCHEMA IF NOT EXISTS`), so a dedicated one just needs a name.
+</Warning>
 
 It inherits your agent's secrets and Forest connection, so you only configure:
 
