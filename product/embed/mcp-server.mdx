@@ -57,6 +57,7 @@ The standalone Forest MCP Server is configured entirely through environment vari
 | `FOREST_AGENT_URL` | No | your environment's back-end URL | URL the MCP Server uses to reach your back-end's data layer. |
 | `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` | No | `3600` (1 hour) | Shortens the OAuth access token lifetime (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
 | `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` | No | unbounded | Shortens the time between two interactive logins (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
+| `FOREST_MCP_ALLOWED_OAUTH_CLIENTS` | No | any registered client | Comma-separated domains of the OAuth clients allowed to connect (see [Restrict which AI clients can connect](#restrict-which-ai-clients-can-connect)). |
 
 <Note>
   Set `FOREST_AGENT_URL` when the MCP Server runs next to a self-hosted back-end reachable at an internal address (e.g. `http://localhost:3310`), so tool calls hit it directly instead of the public back-end URL registered in Forest.
@@ -169,6 +170,33 @@ When `enabledTools` is not set, all tools are enabled by default.
 <Info>
   `describeCollection` is always enabled, even if omitted from the list, as it is required for the MCP server to function properly.
 </Info>
+
+## Restrict which AI clients can connect
+
+By default, any OAuth client application can register against the MCP server through Dynamic Client Registration and, once one of your users signs in, obtain tokens. Use `allowedOAuthClients` (`@forestadmin/agent` ≥ 1.92.0, `@forestadmin/mcp-server` ≥ 1.21.0) to accept only approved client applications:
+
+<CodeGroup>
+
+```javascript Mounted on agent
+agent.mountAiMcpServer({
+  allowedOAuthClients: ['dust.tt'],
+});
+```
+
+```bash Standalone
+FOREST_MCP_ALLOWED_OAUTH_CLIENTS="dust.tt" \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+```
+
+</CodeGroup>
+
+A client is allowed only when **every** redirect URI it registered is an `http(s)` URI on a listed domain or one of its subdomains (`dust.tt` matches `eu.dust.tt`). Matching uses redirect URIs because they are the one piece of registration metadata an impostor cannot benefit from — the authorization code is only ever delivered there. Self-declared fields such as the client name are ignored, and custom (non-`http(s)`) scheme URIs are rejected even on an allowed domain, because they deliver the callback to whatever local application registered the scheme.
+
+Every other client is rejected with a standard OAuth `invalid_client` error telling the user to contact their administrator; the response does not reveal the allowed domains. Registration itself still succeeds — it happens on the Forest server — the client just cannot use it against your MCP server. Access tokens issued before you enabled the option stay valid until they expire (1 hour at most); refreshes are blocked immediately.
+
+<Warning>
+  Native desktop clients (Claude Desktop, MCP Inspector, ...) register `localhost` redirect URIs, so they are always rejected when the allowlist is set. There is deliberately no loopback exemption: allowing `localhost` would allow every local application. Omit the option in environments that need native clients (e.g. development).
+</Warning>
 
 ## Token lifetimes
 
@@ -294,6 +322,7 @@ The Forest MCP server:
 - Uses your environment's authentication
 - Logs all operations for audit purposes
 - Never exposes sensitive data without proper access
+- Lets you restrict which AI client applications can connect (see [Restrict which AI clients can connect](#restrict-which-ai-clients-can-connect))
 - Lets you shorten the OAuth token lifetimes (see [Token lifetimes](#token-lifetimes))
 
 <Warning>
