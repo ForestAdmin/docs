@@ -15,13 +15,13 @@ Because it talks to your data through your own Forest agent, **the Forest orches
 
 ## Do I need Forest Runtime?
 
-Yes — Forest Runtime is what executes your workflow steps. **[Webhook-triggered workflows](/product/process/workflows/triggers) especially**: a webhook can fire at any time, with no guarantee anyone has Forest open in a browser, so they can only run server-side.
+Yes — Forest Runtime is what executes your workflow steps. **[Automatically-triggered workflows](/product/process/workflows/triggers) especially**: a webhook call or an AI assistant can fire at any time, with no guarantee anyone has Forest open in a browser, so those runs can only execute server-side. Until Forest Runtime is installed, both automated triggers stay locked in the workflow's settings.
 
 Running on infrastructure you control also keeps the records handled by data steps out of Forest's infrastructure — decisive for compliance or data-residency requirements, or when a step needs access to systems reachable only from within your network.
 
 ## How it works
 
-1. A workflow is triggered — by a user or a [webhook](/product/process/workflows/triggers). The Forest orchestrator queues the pending steps.
+1. A workflow is [triggered](/product/process/workflows/triggers) — by a user, a webhook, or an AI assistant. The Forest orchestrator queues the pending steps.
 2. Forest Runtime polls the orchestrator and pulls the steps assigned to it.
 3. Each step runs locally, reaching your data and actions through your Forest agent.
 4. It reports the step outcome back to the orchestrator, which advances the workflow.
