@@ -99,3 +99,13 @@ If a tool isn't in the list above, connect any MCP server by URL:
 5. Save your configuration.
 
 Learn more about building and hosting MCP servers in the [Claude MCP documentation](https://docs.claude.com/en/docs/agents-and-tools/remote-mcp-servers).
+
+## A connector's tools don't load
+
+The tool list comes back empty, or a workflow step using the connector fails. Check, in order:
+
+1. **The server exposes the tools you expect.** Reopen the connector in **Project Settings → Integrations** — an empty list means the server answered but published nothing, which is a server-side configuration problem, not a connection one.
+2. **The credential is still valid.** A revoked or expired token fails the whole connector; reconnect it.
+3. **Forest Runtime can reach the server.** A self-hosted runtime must have network access to the server's URL — a private address behind your VPN is reachable only from inside it.
+
+If you [self-host Forest Runtime](/product/process/workflows/forest-runtime), its logs name which of these it was, per server, at the default log level.

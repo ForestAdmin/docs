@@ -239,6 +239,29 @@ If your workflows include [MCP Tasks](/product/process/workflows/overview) backe
 
 The Docker image ships with [OpenTelemetry](https://opentelemetry.io/) APM built in, compatible with any OTLP backend (Datadog, Grafana Tempo, Jaeger, Honeycomb…). It is **off by default** and turns on as soon as you set `OTEL_EXPORTER_OTLP_ENDPOINT`. OpenTelemetry is bundled only in the Docker image, not the npm package.
 
+### When an MCP step can't load its tools
+
+Forest Runtime logs the reason at `Error`, so it is in your logs without changing `LOG_LEVEL`:
+
+```json
+{
+  "level": "Error",
+  "message": "MCP servers failed to load tools",
+  "mcpServerName": "acme-crm",
+  "failures": [
+    { "server": "acme-crm", "kind": "connection", "error": "connect ECONNREFUSED 10.0.4.12:8080" }
+  ]
+}
+```
+
+`kind` tells you where to look:
+
+- `auth` — the server rejected the credential. Reconnect the connector, or renew its token.
+- `connection` — unreachable, refused, or slower than the 15-second per-server load timeout.
+- `unknown` — the server answered but the load failed anyway; `error` carries the reason.
+
+A server that answers but exposes no tools is not a failure: you get an empty tool list and no error.
+
 ## Tuning
 
 Beyond the required variables, these optional knobs have sensible defaults and rarely need changing:
@@ -247,7 +270,7 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 | --- | --- | --- |
 | `HTTP_PORT` | `3400` | Port Forest Runtime's HTTP server listens on. |
 | `POLLING_INTERVAL_S` | `30` | How often it polls the orchestrator for pending steps. |
-| `LOG_LEVEL` | `Info` | `Debug`, `Info`, `Warn`, or `Error`. |
+| `LOG_LEVEL` | `Info` | `Debug`, `Info`, `Warn`, or `Error`. `Debug` adds one line per MCP server with its tool count and load time. |
 | `STEP_TIMEOUT_S` | `300` | Max duration of a single step. |
 | `AI_INVOKE_TIMEOUT_S` | `30` | Max duration of a single AI provider invocation. |
 | `STOP_TIMEOUT_S` | `30` | Grace period on shutdown to finish in-flight steps before exiting. |
