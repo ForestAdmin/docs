@@ -10,6 +10,7 @@ CORS is the most common issue when setting up the Forest agent. Open your browse
 **Check:**
 
 - The Forest agent is mounted **before** any other middleware. In NestJS specifically, the Nest App Factory's CORS configuration can interfere with `@forestadmin/agent`. Configure it after mounting the agent.
+- If your application's own CORS middleware answers the preflight requests with an explicit header allow-list (`allowedHeaders`), include every header the Forest UI sends: `Authorization`, `Content-Type`, `Forest-Context-Url`, and `Forest-Projection`. A missing entry blocks the preflight of the requests that carry it — a missing `Forest-Projection` breaks the record details view.
 - Your server is up and running. Test it by calling the `/forest` endpoint: `curl http://localhost:3310/forest`
 
 ## 403 Forbidden errors after permission changes
