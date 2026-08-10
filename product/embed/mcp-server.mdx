@@ -300,7 +300,7 @@ flowchart LR
 
 1. **Discover** — `listWorkflows` returns the MCP-enabled workflows the connected user can reach, with the collection each one operates on. Pass `collectionName` to narrow it to the collection of the record in context.
 2. **Trigger** — `triggerWorkflow` starts a run on one record and returns its `runId`. The run continues server-side; nothing blocks.
-3. **Poll** — `getWorkflowRun` reports the run's state, the step it is on, whether it is waiting for a human, and, once terminal, its result or error.
+3. **Poll** — `getWorkflowRun` returns the full run: its state plus the complete step-by-step history, each step with its definition and outcome, so the assistant can see exactly where the run is and how it got there.
 
 ### `listWorkflows`
 
@@ -338,46 +338,85 @@ Starts a run of an MCP-enabled workflow on a specific record.
 `runId` is what every subsequent `getWorkflowRun` call needs. `runState` is only the state at that instant — it depends on the workflow's first step, and it moves on without further calls, so treat it as a starting point, not an outcome.
 
 <Note>
-  The record is **not** checked when the run is created — the orchestrator has no data access at that point. An id that does not exist, or that the user cannot read, produces a run that fails at its first data step; the assistant sees it through `getWorkflowRun`'s `error`, not as a trigger-time failure.
+  The record is **not** checked when the run is created — the orchestrator has no data access at that point. An id that does not exist, or that the user cannot read, produces a run that fails at its first data step; the assistant sees it through the failing step's `context.error` in `getWorkflowRun`'s history, not as a trigger-time failure.
 </Note>
 
 Only **one run per record** can be active at a time. Triggering a record that already has an ongoing run fails and does **not** resume it — the run in flight is left untouched.
 
 ### `getWorkflowRun`
 
-Reads the normalized status of a run, given the `runId` returned by `triggerWorkflow`.
+Reads the full run, given the `runId` returned by `triggerWorkflow`. The orchestrator holds no customer record data — that lives in the executor — so the whole run is returned, giving the assistant maximum context about where it is and what each step does.
 
 | Field | Description |
 |---|---|
 | `runState` | `pending` or `loading` while a step is queued or executing, `started` when the run is parked, `finished` on completion, `aborted` when stopped. |
-| `currentStep` | The step the run sits on — its `name` and `type` (plus a `taskType` on task steps). `null` once the run is finished. |
-| `waitingForHumanInput` | `true` when the run is parked on a step a person must handle. |
-| `result` | The step the run ended on, populated only once `runState` is `finished`. |
-| `error` | The failure recorded on the current step, including a first-data-step failure on an unreachable record. `null` otherwise. |
+| `triggerType` | Always `mcp` here — only MCP-started runs are readable through this tool. |
+| `workflowHistory` | The ordered steps the run has reached. Each entry pairs the step's resolved **definition** (`stepDefinition`: `type`, `title`, an optional `taskType` and `prompt`, and the `outgoing` branches) with its **outcome** (`done`, plus a `context` carrying the selected option, a manual completion, an escalation state, an awaiting-input reason, or an `error`). The last entry with `done: false` is where the run currently sits. |
+
+Identifying fields — `id`, `workflowId`, `collectionId`, `selectedRecordId`, timestamps — are returned too.
 
 <CodeGroup>
 
 ```json Parked on a human step
 {
+  "id": 1234,
+  "workflowId": "9f1b0c4e-2f7a-4d5b-9e31-6c0a8b7d1234",
+  "selectedRecordId": "42",
   "runState": "started",
-  "currentStep": {
-    "name": "Review the KYB documents",
-    "type": "task",
-    "taskType": "guideline"
-  },
-  "waitingForHumanInput": true,
-  "result": null,
-  "error": null
+  "triggerType": "mcp",
+  "workflowHistory": [
+    {
+      "stepName": "Review the KYB documents",
+      "stepIndex": 0,
+      "done": false,
+      "context": {},
+      "stepDefinition": {
+        "type": "task",
+        "taskType": "guideline",
+        "title": "Review the KYB documents",
+        "prompt": "Check the uploaded documents, then approve or reject",
+        "executionType": "manual",
+        "outgoing": [{ "stepId": "approved", "buttonText": "Approve" }]
+      }
+    }
+  ]
 }
 ```
 
 ```json Finished
 {
+  "id": 1234,
+  "workflowId": "9f1b0c4e-2f7a-4d5b-9e31-6c0a8b7d1234",
+  "selectedRecordId": "42",
   "runState": "finished",
-  "currentStep": null,
-  "waitingForHumanInput": false,
-  "result": { "name": "Customer approved", "type": "end", "context": {} },
-  "error": null
+  "triggerType": "mcp",
+  "workflowHistory": [
+    {
+      "stepName": "Review the KYB documents",
+      "stepIndex": 0,
+      "done": true,
+      "context": { "manuallyCompleted": true, "selectedOption": "Approve" },
+      "stepDefinition": {
+        "type": "task",
+        "taskType": "guideline",
+        "title": "Review the KYB documents",
+        "executionType": "manual",
+        "outgoing": []
+      }
+    },
+    {
+      "stepName": "Customer approved",
+      "stepIndex": 1,
+      "done": true,
+      "context": {},
+      "stepDefinition": {
+        "type": "end",
+        "title": "Customer approved",
+        "executionType": "fully-automated",
+        "outgoing": []
+      }
+    }
+  ]
 }
 ```
 
@@ -389,7 +428,7 @@ Reads the normalized status of a run, given the `runId` returned by `triggerWork
 
 ### Runs that need a human
 
-In this first version the assistant can *observe* a parked run but not answer it. When `waitingForHumanInput` is `true`, the run is waiting in the workflow's **fallback inbox**, and someone finishes it from the Forest UI. Relaying the step's question into the chat and submitting the answer through MCP is planned, not available yet.
+In this first version the assistant can *observe* a parked run but not answer it. When the run sits on a human step — an incomplete step (`done: false`) whose definition marks it manual — it is waiting in the workflow's **fallback inbox**, and someone finishes it from the Forest UI. Relaying the step's question into the chat and submitting the answer through MCP is planned, not available yet.
 
 ### Errors
 
