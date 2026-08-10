@@ -239,6 +239,35 @@ If your workflows include [MCP Tasks](/product/process/workflows/overview) backe
 
 The Docker image ships with [OpenTelemetry](https://opentelemetry.io/) APM built in, compatible with any OTLP backend (Datadog, Grafana Tempo, Jaeger, Honeycomb…). It is **off by default** and turns on as soon as you set `OTEL_EXPORTER_OTLP_ENDPOINT`. OpenTelemetry is bundled only in the Docker image, not the npm package.
 
+### When an MCP Task can't load its tools
+
+Forest Runtime logs the reason at `Error`, so it is in your logs without changing `LOG_LEVEL`. This is the JSON the Docker image writes to stdout; running in a terminal you get the same fields in the pretty single-line format instead.
+
+```json
+{
+  "level": "Error",
+  "message": "MCP servers failed to load tools",
+  "timestamp": "2026-08-10T09:14:22.031Z",
+  "requestedMcpServerId": "39",
+  "mcpServerName": "acme-crm",
+  "failures": [
+    { "server": "acme-crm", "kind": "connection", "error": "connect ECONNREFUSED 10.0.4.12:8080" }
+  ]
+}
+```
+
+`kind` tells you where to look:
+
+- `auth` — the server rejected the credential (HTTP 401). For an OAuth connector the runtime refreshes the token and retries once on its own, so act only if the failure repeats without a follow-up `MCP tools loaded after refreshing the credential` line. For a static credential, renew it in the connector's configuration.
+- `connection` — unreachable, refused, or slower than the 15-second per-server load timeout.
+- `unknown` — the server answered but the load failed anyway, including HTTP 403 permission or scope errors that no token refresh can fix; `error` carries the reason.
+
+A server that answers but exposes no tools is not a failure: you get an empty tool list and no error.
+
+<Note>
+  If your logs show a `failedConfigNames` list instead of `failures`, your runtime predates this change: it names which server failed but not why, and reports a healthy server exposing no tools as a failure. Upgrade to get the cause.
+</Note>
+
 ## Tuning
 
 Beyond the required variables, these optional knobs have sensible defaults and rarely need changing:
@@ -247,7 +276,7 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 | --- | --- | --- |
 | `HTTP_PORT` | `3400` | Port Forest Runtime's HTTP server listens on. |
 | `POLLING_INTERVAL_S` | `30` | How often it polls the orchestrator for pending steps. |
-| `LOG_LEVEL` | `Info` | `Debug`, `Info`, `Warn`, or `Error`. |
+| `LOG_LEVEL` | `Info` | `Debug`, `Info`, `Warn`, or `Error`. `Debug` adds one line per MCP server with its tool count and load time. |
 | `STEP_TIMEOUT_S` | `300` | Max duration of a single step. |
 | `AI_INVOKE_TIMEOUT_S` | `30` | Max duration of a single AI provider invocation. |
 | `STOP_TIMEOUT_S` | `30` | Grace period on shutdown to finish in-flight steps before exiting. |
