@@ -118,7 +118,7 @@ For the tool contracts and the discover → trigger → poll flow, see [Triggeri
 | Lever | Effect |
 |---|---|
 | **Disable the MCP toggle** | The workflow disappears from `listWorkflows` and can no longer be triggered through MCP. Manual and webhook starts are unaffected. |
-| **Restrict the MCP server's tools** | Drop `triggerWorkflow` from `enabledTools` to remove MCP triggering across *all* workflows at once. See [Restrict tools](/product/embed/mcp-server#restrict-tools). |
+| **Restrict the MCP server's tools** | Set an `enabledTools` allowlist that leaves `triggerWorkflow` out to remove MCP triggering across *all* workflows at once — when `enabledTools` is unset, every tool is enabled. See [Restrict tools](/product/embed/mcp-server#restrict-tools). |
 | **Revoke the user's access** | The assistant acts as its connected Forest user; removing that user's access to the rendering or the workflow stops its runs. |
 
 ## Auditing
