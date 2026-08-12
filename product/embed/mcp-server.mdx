@@ -413,7 +413,7 @@ The run is returned whole, not trimmed: identifying fields (`id` — the numeric
       "stepDefinition": {
         "type": "end",
         "title": "Customer approved",
-        "executionType": "fully-automated",
+        "executionType": "manual",
         "outgoing": []
       }
     }
@@ -480,7 +480,7 @@ The Forest MCP server:
 - Logs all operations for audit purposes
 - Never exposes sensitive data without proper access
 - Lets you shorten the OAuth token lifetimes (see [Token lifetimes](#token-lifetimes))
-- Exposes no workflow until an editor opts that workflow in (see [Triggering workflows](#triggering-workflows-from-an-ai-assistant))
+- Exposes no workflow until a workflow editor opts that workflow in (see [Triggering workflows](#triggering-workflows-from-an-ai-assistant))
 
 <Warning>
   Only provide MCP server access to trusted AI tools and users. The server can perform any operation that the authenticated user can perform.
