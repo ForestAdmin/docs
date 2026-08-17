@@ -353,7 +353,7 @@ Reads the full run, given the `runId` returned by `triggerWorkflow`. The run car
 | `triggerType` | Always `mcp` here — only MCP-started runs are readable through this tool. |
 | `workflowHistory` | The ordered steps the run has reached. Each entry pairs the step's resolved **definition** (`stepDefinition`: `type`, `title`, an `executionType` — `manual`, `automated-with-confirmation` or `fully-automated` — plus an optional `taskType` and `prompt`, and the `outgoing` branches) with its **outcome** (`stepName`, `stepIndex`, `done`, plus an optional `context` carrying the selected option, a manual completion, an escalation state, an awaiting-input reason, or an `error`). The last entry with `done: false` is where the run currently sits. |
 
-The run is returned whole, not trimmed: identifying fields (`id` — the numeric form of the `runId` string, `workflowId`, `collectionId`, `selectedRecordId`, the `createdAt`/`updatedAt` timestamps) and internal ones (`userId`, `renderingId`, `bpmnVersion`, `engine`, `lockedAt`) come with it. The examples below are trimmed to the load-bearing fields.
+The run is returned whole, not trimmed: identifying fields (`id` — the numeric form of the `runId` string, `workflowId`, `collectionId`, `selectedRecordId`, the `createdAt`/`updatedAt` timestamps) and internal ones (`userId`, `renderingId`, `bpmnVersion`, `engine`, `lockedAt`) come with it. History entries likewise carry an `isCardStep` flag, and every `stepDefinition` an `automaticCompletion` one. The examples below are trimmed to the load-bearing fields.
 
 <CodeGroup>
 
@@ -429,7 +429,7 @@ The run is returned whole, not trimmed: identifying fields (`id` — the numeric
 
 ### Runs that need a human
 
-In this first version the assistant can *observe* a parked run but not answer it. When the run sits on a human step — an incomplete step (`done: false`) whose `stepDefinition.executionType` is `manual` — it is routed to the workflow's **fallback inbox** (when one is configured), and someone finishes it from the Forest UI. Relaying the step's question into the chat and submitting the answer through MCP is not available in this version.
+In this first version the assistant can *observe* a parked run but not answer it. When the run sits on a step that needs a person — an incomplete step (`done: false`) whose `stepDefinition.executionType` is `manual` or `automated-with-confirmation` (automated, but awaiting a human confirmation) — it is routed to the workflow's **fallback inbox** (when one is configured), and someone finishes it from the Forest UI. Relaying the step's question into the chat and submitting the answer through MCP is not available in this version.
 
 ### Errors
 

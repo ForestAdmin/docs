@@ -109,7 +109,7 @@ That's it. Assistants connected to your Forest MCP server pick the workflow up o
 
 - It **can** start the workflow on a record and poll the run's state, current step, and outcome.
 - It **cannot** exceed the connected user's permissions on the data the run reads and writes — every data step is gated by [Roles & permissions](/get-started/control/roles-permissions). The trigger itself is bounded by the user's rendering and the MCP toggle only: the record id the assistant supplies is not checked at trigger time (see [the note on unvalidated records](/product/embed/mcp-server#triggerworkflow)).
-- It **cannot** answer a step that needs a human. A run parked on such a step is *reported* to the assistant, but finishing it happens in the Forest UI, from the fallback inbox.
+- It **cannot** answer a step that needs a human. A run parked on such a step is *reported* to the assistant, but finishing it happens in the Forest UI, from the fallback inbox (when one is configured).
 
 For the tool contracts and the discover → trigger → poll flow, see [Triggering workflows from an AI assistant](/product/embed/mcp-server#triggering-workflows-from-an-ai-assistant).
 
