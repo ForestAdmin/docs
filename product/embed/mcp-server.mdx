@@ -252,10 +252,14 @@ context window: the model asks for an upload destination, sends the bytes there 
 passes a signed reference — a *handle* — as the field value.
 
 ```
-1. requestActionFileUpload {filename, mimeType, sha256}  →  uploadUrl + fileHandle
-2. PUT the raw bytes to uploadUrl                        →  outside the MCP protocol
+1. requestActionFileUpload {filename, mimeType, sha256}  →  uploadUrl + method + headers + fileHandle
+2. send the bytes to uploadUrl, with that method and every returned header
 3. executeAction {Document: fileHandle}                   →  the action receives the real file
 ```
+
+Step 2 happens outside the MCP protocol, and the returned `method` and `headers` are not
+decoration: a pinned `sha256` is signed into a checksum header on S3, and the upload is rejected
+without it. Apply them as returned rather than assuming `PUT` with no headers.
 
 `fileHandle` is a string of the form `$uploadedFile:<signed token>` — pass it through unchanged,
 the prefix is already there.
@@ -310,9 +314,11 @@ Whether the client can make it depends on where it runs:
 
 ### Integrity
 
-- The upload URL is pre-authorized, expires after 15 minutes, and against the built-in in-memory
-  store accepts a **single** upload.
-- The handle is a signed token bound to the user who requested it; it expires after 45 minutes.
+- The upload URL is pre-authorized and expires after 15 minutes by default
+  (`fileUploads.uploadUrlTtlSeconds`); against the built-in in-memory store it accepts a **single**
+  upload.
+- The handle is a signed token bound to the user who requested it, expiring after 45 minutes by
+  default (`fileUploads.handleTtlSeconds`).
 - The AI is instructed to **pin the file's sha256**: the digest is re-verified when the action
   runs, so content substituted after the upload is rejected.
 - Files are capped at 20 MiB each by default (`fileUploads.maxBytes`).
