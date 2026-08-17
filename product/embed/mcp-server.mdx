@@ -37,11 +37,7 @@ npm install @forestadmin/mcp-server
 You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET variables to start the Forest MCP Server, to ensure it can authenticate and access the right back-end, corresponding to your project and environment of choice:
 
 ```text
-# local
 FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
-
-# deployed behind a public URL
-FOREST_MCP_SERVER_URL=https://mcp.example.com FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
 ```
 
 <Note>
@@ -50,13 +46,6 @@ FOREST_MCP_SERVER_URL=https://mcp.example.com FOREST_ENV_SECRET=xxx FOREST_AUTH_
 
 ### Standalone configuration
 
-<Warning>
-  Deploying the standalone server behind a public URL? Set `FOREST_MCP_SERVER_URL` to that URL
-  (an http(s) origin, no path). Without it the server advertises `localhost` in its OAuth
-  metadata and upload URLs — which works on the developer's machine and breaks for every remote
-  user.
-</Warning>
-
 The standalone Forest MCP Server is configured entirely through environment variables:
 
 | Variable | Required | Default | Description |
@@ -64,7 +53,6 @@ The standalone Forest MCP Server is configured entirely through environment vari
 | `FOREST_ENV_SECRET` | Yes | — | Your environment secret, used to authenticate and reach the right back-end. |
 | `FOREST_AUTH_SECRET` | Yes | — | Your authentication secret. Must match the one of the corresponding back-end. |
 | `MCP_SERVER_PORT` | No | `3931` | Port the standalone server listens on. |
-| `FOREST_MCP_SERVER_URL` | **Yes when deployed** | `http://localhost:<port>` | Public URL the server is reachable at — an http(s) origin, no path. Everything the server advertises to clients (OAuth endpoints, upload URLs) derives from it; left unset on a deployed server, clients are sent to their own `localhost`. |
 | `FOREST_MCP_ENABLED_TOOLS` | No | all tools | Comma-separated allowlist of tools to expose (see [Restrict tools](#restrict-tools)). |
 | `FOREST_AGENT_URL` | No | your environment's back-end URL | URL the MCP Server uses to reach your back-end's data layer. |
 | `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` | No | `3600` (1 hour) | Shortens the OAuth access token lifetime (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
@@ -159,7 +147,7 @@ The Forest MCP server exposes the following capabilities:
 | --------------- | ---------------------------------- |
 | `getActionForm` | Get form fields for a smart action |
 | `executeAction` | Execute a smart action             |
-| `requestActionFileUpload` | Get an upload destination for an action's File field |
+| `requestActionFileUpload` | Get an upload destination for an action's `File` or `FileList` field |
 
 ## Restrict tools
 
@@ -266,12 +254,17 @@ passes a signed reference — a *handle* — as the field value.
 ```
 1. requestActionFileUpload {filename, mimeType, sha256}  →  uploadUrl + fileHandle
 2. PUT the raw bytes to uploadUrl                        →  outside the MCP protocol
-3. executeAction {Document: "$uploadedFile:<handle>"}    →  the action receives the real file
+3. executeAction {Document: fileHandle}                   →  the action receives the real file
 ```
 
+`fileHandle` is a string of the form `$uploadedFile:<signed token>` — pass it through unchanged,
+the prefix is already there.
+
 Nothing to provision: by default the back-end holds uploaded files in memory and serves its own
-upload endpoint. That is correct for a **single back-end instance only** — with several replicas or
-on a serverless runtime, the upload and the action can land on different instances. Plug a storage
+upload endpoint at `<your-back-end-url>/mcp/uploads` — that host is the one to get allowed in the
+next section. Objects are lost on restart, and it is correct for a **single back-end instance
+only**: with several replicas or on a serverless runtime, the upload and the action can land on
+different instances. Plug a storage
 backend (S3 presigned URLs, GCS, Azure SAS) for those deployments, or turn the feature off:
 
 <CodeGroup>
@@ -289,8 +282,11 @@ agent.mountAiMcpServer({ fileUploads: false });
 ```
 
 ```bash Standalone
+# only 'true' or 'false' — any other value fails at startup
 FOREST_MCP_FILE_UPLOADS=false npx forest-mcp-server
-# or point it at a storage module:
+
+# or point it at a storage module. FOREST_MCP_FILE_UPLOADS=false wins over it,
+# so do not set both unless you mean to turn uploads off.
 FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js npx forest-mcp-server
 ```
 
@@ -320,6 +316,10 @@ Whether the client can make it depends on where it runs:
 - The AI is instructed to **pin the file's sha256**: the digest is re-verified when the action
   runs, so content substituted after the upload is rejected.
 - Files are capped at 20 MiB each by default (`fileUploads.maxBytes`).
+- The in-memory store holds 64 MiB across all pending uploads (`fileUploads.ephemeralMaxTotalBytes`).
+  Redeeming a file does not free it — it lives until the handle expires — so on the defaults that is
+  about **three max-size files per 45-minute window**, not a rolling 64 MiB. Past that, uploads are
+  refused with a `507`.
 
 <Note>
   The filename is whatever the AI client reports, and sandboxes have been observed normalizing it
@@ -329,8 +329,9 @@ Whether the client can make it depends on where it runs:
 
 <Info>
   This capability is **experimental**: the MCP specification is designing its own file transfer
-  story ([SEP-2631](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2631)), and
-  the tool may change to follow it once it lands.
+  story ([SEP-2631](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2631)). The
+  `UploadStorage` contract is expected to survive — safe to write an adapter against — but the
+  `requestActionFileUpload` tool and the handle format may change to follow the specification.
 </Info>
 
 ## Connect your AI assistant
