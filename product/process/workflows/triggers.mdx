@@ -95,7 +95,7 @@ There is nothing to copy or rotate here: **the toggle is the whole configuration
 
 Enabling MCP triggering is what makes the workflow visible to assistants at all:
 
-- `listWorkflows` returns only MCP-enabled workflows, and only those the connected user can reach in the rendering;
+- `listWorkflows` returns only the MCP-enabled workflows in the connected user's rendering;
 - `triggerWorkflow` on a workflow whose MCP toggle is off fails — even if the assistant already knows its id.
 
 ### Enabling MCP triggering
@@ -108,7 +108,7 @@ That's it. Assistants connected to your Forest MCP server pick the workflow up o
 ### What an assistant can and cannot do
 
 - It **can** start the workflow on a record and poll the run's state, current step, and outcome.
-- It **cannot** exceed the connected user's permissions — data and actions are gated by [Roles & permissions](/get-started/control/roles-permissions) exactly as in the interface.
+- It **cannot** exceed the connected user's permissions on the data the run reads and writes — every data step is gated by [Roles & permissions](/get-started/control/roles-permissions). The trigger itself is bounded by the user's rendering and the MCP toggle only: the record id the assistant supplies is not checked at trigger time (see [the note on unvalidated records](/product/embed/mcp-server#triggerworkflow)).
 - It **cannot** answer a step that needs a human. A run parked on such a step is *reported* to the assistant, but finishing it happens in the Forest UI, from the fallback inbox.
 
 For the tool contracts and the discover → trigger → poll flow, see [Triggering workflows from an AI assistant](/product/embed/mcp-server#triggering-workflows-from-an-ai-assistant).
@@ -119,11 +119,11 @@ For the tool contracts and the discover → trigger → poll flow, see [Triggeri
 |---|---|
 | **Disable the MCP toggle** | The workflow disappears from `listWorkflows` and can no longer be triggered through MCP. Manual and webhook starts are unaffected. |
 | **Restrict the MCP server's tools** | Set an `enabledTools` allowlist that leaves `triggerWorkflow` out to remove MCP triggering across *all* workflows at once — when `enabledTools` is unset, every tool is enabled. See [Restrict tools](/product/embed/mcp-server#restrict-tools). |
-| **Revoke the user's access** | The assistant acts as its connected Forest user; removing that user's access to the rendering or the workflow stops its runs. |
+| **Revoke the user's access** | The assistant acts as its connected Forest user; removing that user's access to the rendering or the workflow halts its runs — runs in flight are not aborted, but their next data step fails once the permissions are gone. |
 
 ## Auditing
 
-Every automated run is recorded in the workflow run history and in your **Activity Logs**, attributed to the user the run acted as, and labelled by channel — *via webhook* or *via MCP* — so you can tell automated runs from manual ones, and from each other.
+Every automated run is recorded in the workflow run history and in your **Activity Logs**, attributed to the user the run acted as, and labelled by channel — *via webhook* or *via MCP* — so you can tell automated runs from manual ones, and from each other. An MCP trigger writes two complementary entries, both labelled *via MCP*: one before the run starts (the audit that blocks the trigger if it cannot be written), and one attached to the run.
 
 ## Learn more
 
