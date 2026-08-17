@@ -46,6 +46,13 @@ FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
 
 ### Standalone configuration
 
+<Warning>
+  Deploying the standalone server behind a public URL? Set `FOREST_MCP_SERVER_URL` to that URL
+  (an http(s) origin, no path). Without it the server advertises `localhost` in its OAuth
+  metadata and upload URLs — which works on the developer's machine and breaks for every remote
+  user. Available from `@forestadmin/mcp-server` 1.22.1.
+</Warning>
+
 The standalone Forest MCP Server is configured entirely through environment variables:
 
 | Variable | Required | Default | Description |
