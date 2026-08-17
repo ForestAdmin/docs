@@ -145,6 +145,7 @@ The Forest MCP server exposes the following capabilities:
 | --------------- | ---------------------------------- |
 | `getActionForm` | Get form fields for a smart action |
 | `executeAction` | Execute a smart action             |
+| `requestActionFileUpload` | Get an upload destination for an action's File field |
 
 ## Restrict tools
 
@@ -240,6 +241,82 @@ The two settings differ in what your users notice:
 
 <Info>
   The minimum for either value is 60 seconds; a lower value is raised to it. An invalid value (zero, negative or fractional) stops the server at startup rather than silently leaving your tokens uncapped.
+</Info>
+
+## Action file uploads
+
+Actions with **File fields** work over MCP out of the box. The file never travels through the AI's
+context window: the model asks for an upload destination, sends the bytes there directly, and
+passes a signed reference — a *handle* — as the field value.
+
+```
+1. requestActionFileUpload {filename, mimeType, sha256}  →  uploadUrl + fileHandle
+2. PUT the raw bytes to uploadUrl                        →  outside the MCP protocol
+3. executeAction {Document: "$uploadedFile:<handle>"}    →  the action receives the real file
+```
+
+Nothing to provision: by default the back-end holds uploaded files in memory and serves its own
+upload endpoint. That is correct for a **single back-end instance only** — with several replicas or
+on a serverless runtime, the upload and the action can land on different instances. Plug a storage
+backend (S3 presigned URLs, GCS, Azure SAS) for those deployments, or turn the feature off:
+
+<CodeGroup>
+
+```javascript Storage backend
+agent.mountAiMcpServer({
+  // any object implementing createUploadUrl / download / getSize —
+  // see the @forestadmin/mcp-server README for the contract and an S3 example
+  fileUploads: { storage: myUploadStorage },
+});
+```
+
+```javascript Turn it off
+agent.mountAiMcpServer({ fileUploads: false });
+```
+
+```bash Standalone
+FOREST_MCP_FILE_UPLOADS=false npx forest-mcp-server
+# or point it at a storage module:
+FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js npx forest-mcp-server
+```
+
+</CodeGroup>
+
+### Client prerequisites
+
+The upload itself is an ordinary HTTPS request made by the AI client, outside the MCP protocol.
+Whether the client can make it depends on where it runs:
+
+| Client                            | Works when                                                                                                                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Claude Code                       | Always — its shell runs on the developer's machine, so even a `localhost` back-end is reachable                                  |
+| Claude Desktop, Claude.ai, Cowork | The upload host is **publicly reachable** (never `localhost`) and its domain is **allowed for outbound traffic** in the client's code-execution sandbox |
+
+<Warning>
+  On a managed (Team/Enterprise) Claude workspace, **two settings belong to the workspace admin,
+  not the end user**: the right to add a custom connector at all, and the sandbox's outbound domain
+  allowlist. Ask for both in the same request — one per Forest back-end (or storage) domain.
+</Warning>
+
+### Integrity
+
+- The upload URL is pre-authorized, expires after 15 minutes, and against the built-in in-memory
+  store accepts a **single** upload.
+- The handle is a signed token bound to the user who requested it; it expires after 45 minutes.
+- The AI is instructed to **pin the file's sha256**: the digest is re-verified when the action
+  runs, so content substituted after the upload is rejected.
+- Files are capped at 20 MiB each by default (`fileUploads.maxBytes`).
+
+<Note>
+  The filename is whatever the AI client reports, and sandboxes have been observed normalizing it
+  (a dropped hyphen) while the bytes stay exact. In your action code, treat `file.name` as a label,
+  not an identifier.
+</Note>
+
+<Info>
+  This capability is **experimental**: the MCP specification is designing its own file transfer
+  story ([SEP-2631](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2631)), and
+  the tool may change to follow it once it lands.
 </Info>
 
 ## Connect your AI assistant
