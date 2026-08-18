@@ -265,7 +265,7 @@ without it. Apply them as returned rather than assuming `PUT` with no headers.
 the prefix is already there.
 
 Nothing to provision: by default the back-end holds uploaded files in memory and serves its own
-upload endpoint at `<your-back-end-url>/mcp/uploads` — that host is the one to get allowed in the
+upload endpoint at `<your-agent-url>/mcp/uploads` — that host is the one to get allowed in the
 next section. Objects are lost on restart, and it is correct for a **single back-end instance
 only**: with several replicas or on a serverless runtime, the upload and the action can land on
 different instances. Plug a storage
@@ -296,6 +296,14 @@ FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js npx forest-mcp-server
 
 </CodeGroup>
 
+<Warning>
+  **On a deployed standalone server, configure a storage backend.** The in-memory store builds its
+  upload URLs from `http://localhost:<port>`, which is what the standalone server knows about
+  itself — so remote clients receive URLs pointing at their own machine. With a storage backend the
+  URL comes from that backend instead and the problem disappears. Mounted deployments are
+  unaffected: their upload URLs derive from the back-end URL registered in Forest.
+</Warning>
+
 ### Client prerequisites
 
 The upload itself is an ordinary HTTPS request made by the AI client, outside the MCP protocol.
@@ -324,8 +332,17 @@ Whether the client can make it depends on where it runs:
 - Files are capped at 20 MiB each by default (`fileUploads.maxBytes`).
 - The in-memory store holds 64 MiB across all pending uploads (`fileUploads.ephemeralMaxTotalBytes`).
   Redeeming a file does not free it — it lives until the handle expires — so on the defaults that is
-  about **three max-size files per 45-minute window**, not a rolling 64 MiB. Past that, uploads are
-  refused with a `507`.
+  about **three max-size files per 45-minute window**, not a rolling 64 MiB. Past that an upload is
+  refused with a `413` when it is what exceeds the total, or a `507` when the store was already
+  full — in both cases the response body names the store. A `413` alone does not distinguish this
+  from a file over `maxBytes`, so branch on the body, not the status.
+
+<Note>
+  The four `fileUploads.*` settings above are code-only — they are passed to `mountAiMcpServer`,
+  and there is no environment variable for any of them. On a standalone server they are set in the
+  module `FOREST_MCP_UPLOAD_STORAGE_MODULE` points at, which carries the whole `fileUploads` object
+  and not just the storage.
+</Note>
 
 <Note>
   The filename is whatever the AI client reports, and sandboxes have been observed normalizing it
