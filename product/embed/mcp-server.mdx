@@ -297,11 +297,12 @@ FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js npx forest-mcp-server
 </CodeGroup>
 
 <Warning>
-  **On a deployed standalone server, configure a storage backend.** The in-memory store builds its
-  upload URLs from `http://localhost:<port>`, which is what the standalone server knows about
-  itself — so remote clients receive URLs pointing at their own machine. With a storage backend the
-  URL comes from that backend instead and the problem disappears. Mounted deployments are
-  unaffected: their upload URLs derive from the back-end URL registered in Forest.
+  **A deployed standalone server cannot serve remote clients today.** Everything it advertises
+  derives from `http://localhost:<port>`, which is all the standalone server knows about itself:
+  the OAuth endpoints a client discovers, and the upload URLs of the in-memory store. Configuring a
+  storage backend fixes the upload URLs — they then come from the backend — but not OAuth
+  discovery, so remote clients still cannot connect. Mounted deployments are unaffected: their URLs
+  derive from the back-end URL registered in Forest.
 </Warning>
 
 ### Client prerequisites
