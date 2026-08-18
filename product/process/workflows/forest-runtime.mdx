@@ -15,9 +15,13 @@ Because it talks to your data through your own Forest agent, **the Forest orches
 
 ## Do I need Forest Runtime?
 
-Yes — Forest Runtime is what executes your workflow steps. **[Automatically-triggered workflows](/product/process/workflows/triggers) especially**: a webhook call or an AI assistant can fire at any time, with no guarantee anyone has Forest open in a browser, so those runs can only execute server-side. Until Forest Runtime is installed, both automated triggers stay locked in the workflow's settings.
+Yes — Forest Runtime is what executes your workflow steps. **[Automatically-triggered workflows](/product/process/workflows/triggers) especially**: a webhook call or an AI assistant can fire at any time, with no guarantee anyone has Forest open in a browser, so those runs can only execute server-side. Until a runtime has reported in, the workflow settings page shows a *"Your Forest Runtime can't be reached"* screen and neither automated trigger can be enabled.
 
 Running on infrastructure you control also keeps the records handled by data steps out of Forest's infrastructure — decisive for compliance or data-residency requirements, or when a step needs access to systems reachable only from within your network.
+
+<Warning>
+  **Upgrade Forest Runtime before you enable the MCP trigger.** A runtime older than the release that added MCP triggering rejects MCP-started runs when it validates them: the run is created, never picked up, and the assistant sees it sit in `pending` forever. Nothing warns you — the version check happens inside the runtime. Upgrade first, then turn the toggle on.
+</Warning>
 
 ## How it works
 

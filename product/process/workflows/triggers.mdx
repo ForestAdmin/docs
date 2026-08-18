@@ -25,10 +25,10 @@ Open the workflow settings page and go to the **Triggers** section. **Manual** s
 
 ### Before you can enable an automated trigger
 
-Both automated triggers (Webhook and MCP) share two prerequisites. Until both are met, their toggles stay locked, with a tooltip explaining which one is missing.
+Both automated triggers (Webhook and MCP) share two prerequisites.
 
-- **[Forest Runtime](/product/process/workflows/forest-runtime) must be installed.** An automated run can fire at any time, with nobody holding Forest open in a browser, so its steps can only run server-side. The tooltip reads *"Ask your tech team to install the Workflow Executor."*
-- **A fallback inbox must be selected.** When an automated run reaches a step that needs a human, there is no operator on the other end to hand it to — so the run is routed to that inbox for someone to pick up. See [Inboxes & escalations](/product/manage/inbox).
+- **[Forest Runtime](/product/process/workflows/forest-runtime) must be running.** An automated run can fire at any time, with nobody holding Forest open in a browser, so its steps can only run server-side. Until a runtime has reported in, the workflow settings page shows *"Your Forest Runtime can't be reached"* instead of the trigger rows. On an environment still configured for the legacy browser engine, the rows do show but both toggles are locked, with the tooltip *"Ask your tech team to install the Workflow Executor."*
+- **A fallback inbox must be selected.** Until one is picked, the Webhook and MCP toggles stay locked, with a tooltip saying so. When an automated run reaches a step that needs a human, there is no operator on the other end to hand it to — so the run is routed to that inbox for someone to pick up. See [Inboxes & escalations](/product/manage/inbox).
 
 <Note>
   A trigger that is already enabled stays actionable even if its fallback inbox is later cleared, so you can always turn it **off**. It re-locks once disabled.
