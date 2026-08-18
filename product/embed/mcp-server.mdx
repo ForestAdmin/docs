@@ -351,7 +351,7 @@ Reads the full run, given the `runId` returned by `triggerWorkflow`. The run car
 |---|---|
 | `runState` | `pending` or `loading` while a step is queued or executing, `started` when the run is parked, `finished` on completion, `aborted` when stopped. There is no dedicated *failed* state: a step failure surfaces in that step's `context.error`. |
 | `triggerType` | Always `mcp` here — only MCP-started runs are readable through this tool. |
-| `workflowHistory` | The ordered steps the run has reached. Each entry pairs the step's resolved **definition** (`stepDefinition`: `type`, `title`, an `executionType` — `manual`, `automated-with-confirmation` or `fully-automated` — plus an optional `taskType` and `prompt`, and the `outgoing` branches) with its **outcome** (`stepName`, `stepIndex`, `done`, plus an optional `context` carrying the selected option, a manual completion, an escalation state, an awaiting-input reason, or an `error`). The last entry with `done: false` is where the run currently sits. |
+| `workflowHistory` | The ordered steps the run has reached. Each entry pairs the step's resolved **definition** (`stepDefinition`: `type`, `title`, an `executionType` — `manual`, `automated-with-confirmation` or `fully-automated` — plus an optional `taskType` and `prompt`, and the `outgoing` branches) with its **outcome** (`stepName`, `stepIndex`, `done`, plus an optional `context` carrying the selected option, a manual completion, an escalation state, an awaiting-input reason, or an `error`). Read `runState` first to know whether the run is still live — the terminal `end` entry is never marked done, so a `finished` run still ends on a `done: false` entry. While the run is live, the last entry with `done: false` is where it sits. |
 
 The run is returned whole, not trimmed: identifying fields (`id` — the numeric form of the `runId` string, `workflowId`, `collectionId`, `selectedRecordId`, the `createdAt`/`updatedAt` timestamps) and internal ones (`userId`, `renderingId`, `bpmnVersion`, `engine`, `lockedAt`) come with it. History entries likewise carry an `isCardStep` flag, and every `stepDefinition` an `automaticCompletion` one. The examples below are trimmed to the load-bearing fields.
 
@@ -395,7 +395,7 @@ The run is returned whole, not trimmed: identifying fields (`id` — the numeric
       "stepName": "Review the KYB documents",
       "stepIndex": 0,
       "done": true,
-      "context": { "manuallyCompleted": true, "selectedOption": "Approve" },
+      "context": { "manuallyCompleted": true },
       "stepDefinition": {
         "type": "task",
         "taskType": "guideline",
@@ -408,7 +408,7 @@ The run is returned whole, not trimmed: identifying fields (`id` — the numeric
     {
       "stepName": "Customer approved",
       "stepIndex": 1,
-      "done": true,
+      "done": false,
       "context": {},
       "stepDefinition": {
         "type": "end",
@@ -429,7 +429,11 @@ The run is returned whole, not trimmed: identifying fields (`id` — the numeric
 
 ### Runs that need a human
 
-In this first version the assistant can *observe* a parked run but not answer it. When the run sits on a step that needs a person — an incomplete step (`done: false`) whose `stepDefinition.executionType` is `manual` or `automated-with-confirmation` (automated, but awaiting a human confirmation) — it is routed to the workflow's **fallback inbox** (when one is configured), and someone finishes it from the Forest UI. Relaying the step's question into the chat and submitting the answer through MCP is not available in this version.
+In this first version the assistant can *observe* a parked run but not answer it.
+
+A run is waiting on a person when `runState` is `started` and its last history entry carries no `context.error`. That covers two shapes: the step is still `done: false` and awaiting an answer, or it is already `done: true` and someone has to confirm before the run advances. Don't read `stepDefinition.executionType` as the signal — a terminal `end` step is `manual` too, and a `finished` run is not parked.
+
+A `started` run whose last entry *does* carry a `context.error` is a failed step rather than a question. Either way the run is routed to the workflow's **fallback inbox** (when one is configured), and someone finishes it from the Forest UI. Relaying the step's question into the chat and submitting the answer through MCP is not available in this version.
 
 ### Errors
 
