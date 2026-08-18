@@ -265,8 +265,9 @@ without it. Apply them as returned rather than assuming `PUT` with no headers.
 the prefix is already there.
 
 Nothing to provision: by default the back-end holds uploaded files in memory and serves its own
-upload endpoint at `<your-agent-url>/mcp/uploads` — that host is the one to get allowed in the
-next section. Objects are lost on restart, and it is correct for a **single back-end instance
+upload endpoint at `<your-agent-url>/mcp/uploads`, or `<your-agent-url>/<basePath>/mcp/uploads` if
+you passed `basePath` to `mountAiMcpServer` — that host is the one to get allowed in the next
+section. Objects are lost on restart, and it is correct for a **single back-end instance
 only**: with several replicas or on a serverless runtime, the upload and the action can land on
 different instances. Plug a storage
 backend (S3 presigned URLs, GCS, Azure SAS) for those deployments, or turn the feature off:
@@ -312,7 +313,7 @@ Whether the client can make it depends on where it runs:
 
 | Client                            | Works when                                                                                                                      |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Claude Code                       | Always — its shell runs on the developer's machine, so even a `localhost` back-end is reachable                                  |
+| Claude Code                       | The upload host is reachable from the machine running Claude Code — so a `localhost` back-end works, as long as it runs on that same machine                                  |
 | Claude Desktop, Claude.ai, Cowork | The upload host is **publicly reachable** (never `localhost`) and its domain is **allowed for outbound traffic** in the client's code-execution sandbox |
 
 <Warning>
