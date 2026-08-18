@@ -37,7 +37,12 @@ npm install @forestadmin/mcp-server
 You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET variables to start the Forest MCP Server, to ensure it can authenticate and access the right back-end, corresponding to your project and environment of choice:
 
 ```text
+# on your machine
 FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+
+# deployed: FOREST_MCP_SERVER_URL is what clients are told to use, and is required
+FOREST_MCP_SERVER_URL=https://mcp.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
 ```
 
 <Note>
