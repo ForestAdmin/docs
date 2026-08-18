@@ -449,6 +449,7 @@ Tool failures come back as tool errors with an explanatory message, so the assis
 | The `runId` is unknown, belongs to another user's rendering, or was not started through MCP | Not found |
 | An empty or out-of-bounds `recordId` or `runId` (e.g. a record id longer than 255 characters) | Invalid argument — rejected up front, nothing starts |
 | The environment's workflows still run in the browser engine | Conflict — automated triggering needs server-side execution ([Forest Runtime](/product/process/workflows/forest-runtime)) |
+| The workflow contains an MCP Task step targeting an OAuth2-protected connector | Unprocessable — that step type is not yet supported in server-side runs; nothing starts |
 
 ### Identity, auditing, and limits
 
