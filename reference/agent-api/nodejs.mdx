@@ -224,6 +224,7 @@ agent.mountAiMcpServer(options?: {
     accessTokenSeconds?: number;
     refreshTokenSeconds?: number;
   };
+  fileUploads?: false | FileUploadsOptions;
 }): Agent;
 ```
 
@@ -235,8 +236,9 @@ agent.mountAiMcpServer(options?: {
 | `basePath` | `string` | Path prefix for the MCP OAuth and protocol routes (e.g. `'/ai'`); the `.well-known` discovery documents stay at the origin root (prefix-suffixed). Requires the agent at the domain root. Defaults to the host root. |
 | `allowedOAuthClients` | `string[]` | Accept only OAuth clients whose registered redirect URIs are all `http(s)` URIs on the listed domains or their subdomains; every other client gets a standard `invalid_client` rejection. Must be non-empty when set (an empty array throws at startup). Defaults to accepting any registered client. See [Restrict which AI clients can connect](/product/embed/mcp-server#restrict-which-ai-clients-can-connect). Since `@forestadmin/agent` 1.92.0. |
 | `tokenTtl` | `{ accessTokenSeconds?: number; refreshTokenSeconds?: number }` | Shorten the OAuth token lifetimes issued by the MCP server (defaults: 1 hour for access tokens, unbounded session for refresh). Upper bounds only — they can never extend what Forest grants; minimum `60` seconds each. See [Token lifetimes](/product/embed/mcp-server#token-lifetimes). Since `@forestadmin/agent` 1.91.0. |
+| `fileUploads` | `false \| { storage?, maxBytes?, ... }` | Configure action file uploads, which are **on by default** with the files held in memory — pass `false` to turn the feature off, or an object to set a `storage` backend, size limits and TTLs. Experimental. See [Action file uploads](/product/embed/mcp-server#action-file-uploads). Since `@forestadmin/agent` 1.95.0. |
 
-**Available tool names:** `'describeCollection'`, `'list'`, `'listRelated'`, `'create'`, `'update'`, `'delete'`, `'associate'`, `'dissociate'`, `'getActionForm'`, `'executeAction'`
+**Available tool names:** `'describeCollection'`, `'list'`, `'listRelated'`, `'create'`, `'update'`, `'delete'`, `'associate'`, `'dissociate'`, `'getActionForm'`, `'executeAction'`, `'requestActionFileUpload'`
 
 **Example:**
 
