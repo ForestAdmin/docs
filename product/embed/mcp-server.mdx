@@ -39,6 +39,10 @@ You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET 
 
 ```text
 FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+
+# deployed
+FOREST_MCP_SERVER_URL=https://mcp.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
 ```
 
 <Note>
@@ -54,10 +58,14 @@ The standalone Forest MCP Server is configured entirely through environment vari
 | `FOREST_ENV_SECRET` | Yes | — | Your environment secret, used to authenticate and reach the right back-end. |
 | `FOREST_AUTH_SECRET` | Yes | — | Your authentication secret. Must match the one of the corresponding back-end. |
 | `MCP_SERVER_PORT` | No | `3931` | Port the standalone server listens on. |
+| `FOREST_MCP_SERVER_URL` | Yes, when deployed | `http://localhost:<port>` | Public URL the server is reachable at — an http(s) origin, no path. An invalid value fails at startup. |
 | `FOREST_MCP_ENABLED_TOOLS` | No | all tools | Comma-separated allowlist of tools to expose (see [Restrict tools](#restrict-tools)). |
 | `FOREST_AGENT_URL` | No | your environment's back-end URL | URL the MCP Server uses to reach your back-end's data layer. |
 | `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` | No | `3600` (1 hour) | Shortens the OAuth access token lifetime (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
 | `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` | No | unbounded | Shortens the time between two interactive logins (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
+| `FOREST_MCP_ALLOWED_OAUTH_CLIENTS` | No | any registered client | Comma-separated domains of the OAuth clients allowed to connect (see [Restrict which AI clients can connect](#restrict-which-ai-clients-can-connect)). |
+| `FOREST_MCP_FILE_UPLOADS` | No | on | `false` turns action file uploads off (see [Action file uploads](#action-file-uploads)). |
+| `FOREST_MCP_UPLOAD_STORAGE_MODULE` | No | in-memory store | Path to a module exporting the `fileUploads` options, for a real storage backend (see [Action file uploads](#action-file-uploads)). |
 
 <Note>
   Set `FOREST_AGENT_URL` when the MCP Server runs next to a self-hosted back-end reachable at an internal address (e.g. `http://localhost:3310`), so tool calls hit it directly instead of the public back-end URL registered in Forest.
@@ -145,6 +153,7 @@ The Forest MCP server exposes the following capabilities:
 | --------------- | ---------------------------------- |
 | `getActionForm` | Get form fields for a smart action |
 | `executeAction` | Execute a smart action             |
+| `requestActionFileUpload` | Get an upload destination for an action's `File` or `FileList` field |
 
 ### Workflows
 
@@ -182,6 +191,33 @@ When `enabledTools` is not set, all tools are enabled by default.
 <Info>
   `describeCollection` is always enabled, even if omitted from the list, as it is required for the MCP server to function properly.
 </Info>
+
+## Restrict which AI clients can connect
+
+By default, any OAuth client application can register against the MCP server through Dynamic Client Registration and, once one of your users signs in, obtain tokens. Use `allowedOAuthClients` (`@forestadmin/agent` ≥ 1.92.0, `@forestadmin/mcp-server` ≥ 1.21.0) to accept only approved client applications:
+
+<CodeGroup>
+
+```javascript Mounted on agent
+agent.mountAiMcpServer({
+  allowedOAuthClients: ['dust.tt'],
+});
+```
+
+```bash Standalone
+FOREST_MCP_ALLOWED_OAUTH_CLIENTS="dust.tt" \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+```
+
+</CodeGroup>
+
+A client is allowed only when **every** redirect URI it registered is an `http(s)` URI on a listed domain or one of its subdomains (`dust.tt` matches `eu.dust.tt`). Matching uses redirect URIs because they are the one piece of registration metadata an impostor cannot benefit from — the authorization code is only ever delivered there. Self-declared fields such as the client name are ignored, and custom (non-`http(s)`) scheme URIs are rejected even on an allowed domain, because they deliver the callback to whatever local application registered the scheme.
+
+Every other client is rejected with a standard OAuth `invalid_client` error telling the user to contact their administrator; the response does not reveal the allowed domains. Registration itself still succeeds — it happens on the Forest server — the client just cannot use it against your MCP server. Access tokens issued before you enabled the option stay valid until they expire (1 hour at most); refreshes are blocked immediately.
+
+<Warning>
+  Native desktop clients (Claude Desktop, MCP Inspector, ...) register `localhost` redirect URIs, so they are always rejected when the allowlist is set. There is deliberately no loopback exemption: allowing `localhost` would allow every local application. Omit the option in environments that need native clients (e.g. development).
+</Warning>
 
 ## Token lifetimes
 
@@ -225,6 +261,117 @@ The two settings differ in what your users notice:
 
 <Info>
   The minimum for either value is 60 seconds; a lower value is raised to it. An invalid value (zero, negative or fractional) stops the server at startup rather than silently leaving your tokens uncapped.
+</Info>
+
+## Action file uploads
+
+Actions with **File fields** work over MCP out of the box. The file never travels through the AI's
+context window: the model asks for an upload destination, sends the bytes there directly, and
+passes a signed reference — a *handle* — as the field value.
+
+```
+1. requestActionFileUpload {filename, mimeType, sha256}  →  uploadUrl + method + headers + fileHandle
+2. send the bytes to uploadUrl, with that method and every returned header
+3. executeAction {Document: fileHandle}                   →  the action receives the real file
+```
+
+Step 2 happens outside the MCP protocol, and the returned `method` and `headers` are not
+decoration: a pinned `sha256` is signed into a checksum header on S3, and the upload is rejected
+without it. Apply them as returned rather than assuming `PUT` with no headers.
+
+`fileHandle` is a string of the form `$uploadedFile:<signed token>` — pass it through unchanged,
+the prefix is already there.
+
+Nothing to provision: by default the back-end holds uploaded files in memory and serves its own
+upload endpoint at `<your-agent-url>/mcp/uploads`, or `<your-agent-url>/<basePath>/mcp/uploads` if
+you passed `basePath` to `mountAiMcpServer` — that host is the one to get allowed in the next
+section. Objects are lost on restart, and it is correct for a **single back-end instance
+only**: with several replicas or on a serverless runtime, the upload and the action can land on
+different instances. Plug a storage
+backend (S3 presigned URLs, GCS, Azure SAS) for those deployments, or turn the feature off:
+
+<CodeGroup>
+
+```javascript Storage backend
+agent.mountAiMcpServer({
+  // any object implementing createUploadUrl / download / getSize —
+  // see the @forestadmin/mcp-server README for the contract and an S3 example
+  fileUploads: { storage: myUploadStorage },
+});
+```
+
+```javascript Turn it off
+agent.mountAiMcpServer({ fileUploads: false });
+```
+
+```bash Standalone
+# only 'true' or 'false' — any other value fails at startup
+FOREST_MCP_FILE_UPLOADS=false npx forest-mcp-server
+
+# or point it at a storage module. FOREST_MCP_FILE_UPLOADS=false wins over it,
+# so do not set both unless you mean to turn uploads off.
+FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js npx forest-mcp-server
+```
+
+</CodeGroup>
+
+<Warning>
+  **A deployed standalone server must be told its public URL.** Set `FOREST_MCP_SERVER_URL`, or it
+  advertises `http://localhost:<port>` to clients and none of them can connect. Mounted deployments
+  are unaffected: their URLs derive from the back-end URL registered in Forest.
+</Warning>
+
+### Client prerequisites
+
+The upload itself is an ordinary HTTPS request made by the AI client, outside the MCP protocol.
+Whether the client can make it depends on where it runs:
+
+| Client                            | Works when                                                                                                                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Claude Code                       | The upload host is reachable from the machine running Claude Code — so a `localhost` back-end works, as long as it runs on that same machine                                  |
+| Claude Desktop, Claude.ai, Cowork | The upload host is **publicly reachable** (never `localhost`) and its domain is **allowed for outbound traffic** in the client's code-execution sandbox |
+
+<Warning>
+  On a managed (Team/Enterprise) Claude workspace, **two settings belong to the workspace admin,
+  not the end user**: the right to add a custom connector at all, and the sandbox's outbound domain
+  allowlist. Ask for both in the same request — one per Forest back-end (or storage) domain.
+</Warning>
+
+### Integrity
+
+- The upload URL is pre-authorized and expires after 15 minutes by default
+  (`fileUploads.uploadUrlTtlSeconds`); against the built-in in-memory store it accepts a **single**
+  upload.
+- The handle is a signed token bound to the user who requested it, expiring after 45 minutes by
+  default (`fileUploads.handleTtlSeconds`).
+- The AI is instructed to **pin the file's sha256**: the digest is re-verified when the action
+  runs, so content substituted after the upload is rejected.
+- Files are capped at 20 MiB each by default (`fileUploads.maxBytes`).
+- The in-memory store holds 64 MiB across all pending uploads (`fileUploads.ephemeralMaxTotalBytes`).
+  Redeeming a file does not free it — it lives until the handle expires — so on the defaults that is
+  about **three max-size files per 45-minute window**, not a rolling 64 MiB. Past that an upload is
+  refused with a `413` when it is what exceeds the total, or a `507` when the store was already
+  full — in both cases the response body names the store. A `413` alone does not distinguish this
+  from a file over `maxBytes`, so branch on the body, not the status.
+
+<Note>
+  The four `fileUploads.*` settings above are code-only — they are passed to `mountAiMcpServer`,
+  and there is no environment variable for any of them. On a standalone server they are set in the
+  module `FOREST_MCP_UPLOAD_STORAGE_MODULE` points at, which carries the whole `fileUploads` object
+  and not just the storage.
+</Note>
+
+<Note>
+  The filename is whatever the AI client reports, and sandboxes have been observed normalizing it
+  (a dropped hyphen) while the bytes stay exact. In your action code, treat `file.name` as a label,
+  not an identifier.
+</Note>
+
+<Info>
+  This capability is **experimental**: the MCP specification is designing its own file transfer
+  story ([SEP-2631](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2631)). The
+  `UploadStorage` contract is expected to survive — safe to write an adapter against — but the
+  `requestActionFileUpload` tool and the handle format may change to follow the specification.
 </Info>
 
 ## Connect your AI assistant
@@ -494,6 +641,7 @@ The Forest MCP server:
 - Logs every write, and every read except four tools, for audit purposes (see [Identity, auditing, and limits](#identity-auditing-and-limits))
 - Bounds what a run reads and writes by the connected user's permissions. Note this does not bound the *trigger*: neither the target record nor the workflow's segments are checked when a run is created
 - Carries no record payload out of your infrastructure — records stay in Forest Runtime. Identifiers (`selectedRecordId`) and step error messages (`context.error`) can still contain customer data, so treat a run's history as sensitive
+- Lets you restrict which AI client applications can connect (see [Restrict which AI clients can connect](#restrict-which-ai-clients-can-connect))
 - Lets you shorten the OAuth token lifetimes (see [Token lifetimes](#token-lifetimes))
 - Exposes no workflow until a workflow editor opts that workflow in (see [Triggering workflows](#triggering-workflows-from-an-ai-assistant))
 
