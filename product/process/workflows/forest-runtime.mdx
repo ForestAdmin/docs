@@ -20,7 +20,7 @@ Yes — Forest Runtime is what executes your workflow steps. **[Automatically-tr
 Running on infrastructure you control also keeps the records handled by data steps out of Forest's infrastructure — decisive for compliance or data-residency requirements, or when a step needs access to systems reachable only from within your network.
 
 <Warning>
-  **Upgrade Forest Runtime before you enable the MCP trigger.** A runtime older than the release that added MCP triggering rejects MCP-started runs when it validates them: the run is created, picked up, and immediately marked failed with a validation error on its first step — so every MCP trigger in the environment fails, and `getWorkflowRun` reports the error rather than a run in progress. Nothing warns you up front; the version check happens inside the runtime. Upgrade first, then turn the toggle on.
+  **Upgrade Forest Runtime before you enable the MCP trigger.** A runtime older than the release that added MCP triggering rejects MCP-started runs when it validates them: the run is created, picked up, and immediately errored — its first step carries a validation message, and `getWorkflowRun` reports that error rather than a run in progress. There is no dedicated failed state: the run stays in `started`, and it is routed to the fallback inbox, so that inbox fills up with runs that never began. Because `started` counts as active, **each affected record is then blocked from being triggered again on the same workflow until you abort its run**. Nothing warns you up front; the version check happens inside the runtime. Upgrade first, then turn the toggle on.
 </Warning>
 
 ## How it works

@@ -25,8 +25,9 @@ Open the workflow settings page and go to the **Triggers** section. **Manual** s
 
 ### Before you can enable an automated trigger
 
-Both automated triggers (Webhook and MCP) share two prerequisites.
+Both automated triggers (Webhook and MCP) share three prerequisites.
 
+- **You must be able to manage workflows.** All three trigger toggles — Manual included — are disabled below the **Admin**, **Process Owner** or **Developer** level, since turning an automated trigger on is what makes a workflow startable with nobody watching. This is enforced in the interface; the underlying layout permission is broader today, so the API still accepts the change from an Editor.
 - **[Forest Runtime](/product/process/workflows/forest-runtime) must be running.** An automated run can fire at any time, with nobody holding Forest open in a browser, so its steps can only run server-side. Until a runtime has reported in, the workflow settings page shows *"Your Forest Runtime can't be reached"* instead of the trigger rows. On an environment still configured for the legacy browser engine, the rows do show but both toggles are locked, with the tooltip *"This environment still runs workflows in the browser. Automated triggers need Forest Runtime."*
 - **A fallback inbox must be selected.** Until one is picked, the Webhook and MCP toggles stay locked, with a tooltip saying so. When an automated run reaches a step that needs a human, there is no operator on the other end to hand it to — so the run is routed to that inbox for someone to pick up. See [Inboxes & escalations](/product/manage/inbox).
 
@@ -123,7 +124,7 @@ For the tool contracts and the discover → trigger → poll flow, see [Triggeri
 |---|---|
 | **Disable the MCP toggle** | The workflow disappears from `listWorkflows` and can no longer be triggered through MCP. Manual and webhook starts are unaffected. |
 | **Restrict the MCP server's tools** | Set an `enabledTools` allowlist that leaves `triggerWorkflow` out to remove MCP triggering across *all* workflows at once — when `enabledTools` is unset, every tool is enabled. See [Restrict tools](/product/embed/mcp-server#restrict-tools). |
-| **Revoke the user's access** | The assistant acts as its connected Forest user. Removing that user's access to the rendering stops new triggers immediately. A run already in flight is not aborted: it keeps going until it next touches data, then fails on the permission check and stalls with the error recorded on the current step — allow up to 15 minutes for the agent's permission cache to expire. Abort a run explicitly if you need it stopped now. |
+| **Revoke the user's access** | The assistant acts as its connected Forest user. Removing that user's access to the rendering stops new triggers immediately — the assistant is told the workflow could not be resolved and that retrying will not help. A run already in flight is not aborted: it keeps going until it next touches data, then fails on the permission check and stalls with the error recorded on the current step — allow up to 15 minutes for the agent's permission cache to expire. Abort a run explicitly if you need it stopped now. |
 
 ## Auditing
 
