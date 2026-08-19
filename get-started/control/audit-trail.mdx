@@ -1,0 +1,255 @@
+---
+title: "Audit Trail"
+description: "Record who changed what, with before/after values, and read it back from the History tab"
+---
+
+Activity logs tell you **who did what, and when** — without the data. The **audit trail** adds the missing half: for every create, update and delete Forest performs through your agent, it records the **field-level before/after values** into a SQL database you own, and the record's **History** tab replays them.
+
+It has two halves:
+
+- **Capture & storage** — built into the agent. It instruments every collection through the collection hooks (so it is datasource-agnostic: SQL, Sequelize, Mongo, ActiveRecord, Mongoid…) and writes one row per changed record into a SQL database you provide.
+- **The History tab** — in Forest, on each record's detail page. It lists the record's activity logs and enriches each one with the field-level diff captured by your agent.
+
+<Note>
+The audit trail is **off until you configure a database** for it. No connection is opened, no route is exposed, and no hook is installed on your collections.
+
+It requires an agent version that ships the audit trail (`@forestadmin/agent` for Node.js, `forest_admin_agent` for Ruby) and a SQL database. The audit database is independent from your data: you can audit a **Mongo** datasource and store the trail in **Postgres**.
+</Note>
+
+## Enable it on your agent
+
+<Tabs>
+  <Tab title="Node.js">
+    Pass an `auditTrail` option to `createAgent`. Sequelize does not bundle database drivers, so install the one matching your connection string — e.g. `pg` and `pg-hstore` for PostgreSQL — even if your main datasource is not SQL.
+
+    ```javascript
+    import { createAgent } from '@forestadmin/agent';
+
+    const agent = createAgent({
+      // ...your usual options...
+      auditTrail: {
+        connectionString: process.env.AUDIT_TRAIL_DATABASE_URL,
+      },
+    });
+    ```
+
+    Gating it behind an environment variable lets you enable the audit trail per environment:
+
+    ```javascript
+    const agent = createAgent({
+      // ...your usual options...
+      auditTrail: process.env.AUDIT_TRAIL_DATABASE_URL
+        ? { connectionString: process.env.AUDIT_TRAIL_DATABASE_URL }
+        : null,
+    });
+    ```
+
+    | option | default | description |
+    |--------|---------|-------------|
+    | `connectionString` | _(required)_ | SQL connection string for the audit storage. **Setting it activates the audit trail.** |
+    | `schema` | `forest` | schema namespacing the Forest-owned table (ignored on dialects without schemas) |
+    | `tableName` | `audit_logs` | name of the audit table |
+    | `redact` | `{}` | `{ [collection]: string[] }` — field values to mask while still recording the change |
+    | `critical` | `false` | `true` refuses a write when recording its pending audit entry fails — no unaudited write ever happens. `false` logs the failure and lets the write proceed unaudited, same as before this option existed. |
+
+    The connection opens and pending migrations run during `agent.start()`, so a bad connection string or a failed migration **fails at startup**, not on the first audited write.
+  </Tab>
+  <Tab title="Ruby">
+    In a Rails app, set `audit_trail` on the initializer:
+
+    ```ruby
+    # config/initializers/forest_admin_rails.rb
+    ForestAdminRails.configure do |config|
+      config.auth_secret = ENV['FOREST_AUTH_SECRET']
+      config.env_secret  = ENV['FOREST_ENV_SECRET']
+
+      config.audit_trail = { database: ENV['AUDIT_TRAIL_DATABASE_URL'] }
+    end
+    ```
+
+    `database` also accepts a full ActiveRecord config hash:
+
+    ```ruby
+    config.audit_trail = {
+      database: {
+        adapter: 'postgresql', host: ENV['AUDIT_DB_HOST'], port: ENV['AUDIT_DB_PORT'],
+        username: ENV['AUDIT_DB_USER'], password: ENV['AUDIT_DB_PASSWORD'],
+        database: ENV['AUDIT_DB_NAME']
+      }
+    }
+    ```
+
+    Outside Rails, pass the same option to the agent factory:
+
+    ```ruby
+    ForestAdminAgent::Builder::AgentFactory.instance.setup(
+      auth_secret: ENV['FOREST_AUTH_SECRET'],
+      env_secret: ENV['FOREST_ENV_SECRET'],
+      # ...usual options...
+      audit_trail: { database: ENV['AUDIT_TRAIL_DATABASE_URL'] }
+    )
+    ```
+
+    | option | default | description |
+    |--------|---------|-------------|
+    | `database` | _(required)_ | ActiveRecord URL or config hash. **Setting it activates the audit trail.** |
+    | `schema` | `forest` | Postgres schema holding the table (ignored on other adapters) |
+    | `table_name` | `audit_logs` | name of the audit table |
+    | `redact` | `{}` | `{ 'collection_name' => ['field', ...] }` — field values masked while still recording the change |
+    | `critical` | `false` | `true` refuses a write when recording its pending audit entry fails — no unaudited write ever happens. `false` logs the failure and lets the write proceed unaudited, same as before this option existed. |
+
+    Storage uses ActiveRecord. Outside Rails, add `gem 'activerecord'` and your adapter gem to the Gemfile — nothing is loaded and no connection is opened while the feature is unconfigured. The schema and pending migrations are applied lazily, on the first audited write or read.
+  </Tab>
+</Tabs>
+
+### Masking sensitive fields
+
+A redacted field still produces an audit entry when it changes — the change is recorded, its value is not:
+
+<CodeGroup>
+```javascript Node.js
+auditTrail: {
+  connectionString: process.env.AUDIT_TRAIL_DATABASE_URL,
+  redact: { users: ['ssn', 'password'] },
+}
+```
+
+```ruby Ruby
+config.audit_trail = {
+  database: ENV['AUDIT_TRAIL_DATABASE_URL'],
+  redact: { 'users' => %w[ssn password] }
+}
+```
+</CodeGroup>
+
+Redaction applies to smart action form values too, keyed by collection.
+
+## What gets stored
+
+One row per audited change, in `forest.audit_logs`:
+
+| column | description |
+|--------|-------------|
+| `id` | auto-increment primary key — also returned in the API response, as `id` |
+| `timestamp` | when the change happened |
+| `operation` | `create` / `update` / `delete` / `action` / `action_failed` |
+| `collection` | audited collection name |
+| `record_id` | packed record id (primary keys joined with `\|`); `null` for a `create` row still `pending` — the record's id isn't assigned yet |
+| `user_id` | id of the Forest user who made the change |
+| `user_first_name`, `user_last_name`, `user_email` | that user's identity, captured **at the moment of the write** |
+| `action_name` | the smart action's name, for `action` / `action_failed` rows only (`null` otherwise) |
+| `correlation_key` | per-request id, grouping every change made within one request |
+| `previous_values` | values before the change (JSON) |
+| `new_values` | values after the change (JSON) |
+| `status` | `pending` from the moment the row is inserted until the write resolves, then `done` |
+
+The identity columns are copied from the caller **at write time**, not looked up live from the current user record: a row reflects who acted *then*, not who holds that user id today — a renamed, deleted or reassigned account doesn't rewrite history.
+
+`previous_values` / `new_values` hold **only what actually changed**: nested objects and arrays of objects are diffed structurally, so a change to one sub-field of a JSON column records that leaf alone rather than the whole document. A key present on only one side (a nested field that was added or removed) is simply **omitted** from the other side rather than filled with a placeholder. Only **writable** columns are audited — read-only, computed and database-managed fields are never written by Forest, so they never appear.
+
+The table is created and evolved through versioned migrations tracked in a dedicated `{table_name}_migration` table (e.g. `audit_logs_migration`), scoped per table name so several audit stores sharing one schema never share migration state. On Postgres they run under an advisory lock, so several agent instances booting at once apply them one after another instead of racing.
+
+### Write protocol
+
+Every row goes through two phases: it is inserted as `pending` **before** the write runs, carrying whatever is already known at that point (identity, `record_id` where it exists yet, the before-values); once the write resolves, that same row is updated to `status: done` with the values the write actually produced.
+
+This is what the `critical` option controls:
+
+- **`critical: false`** (default) — a failure recording the pending row is logged and swallowed; the write proceeds exactly as it would without the audit trail, just without an entry for it.
+- **`critical: true`** — the same failure instead refuses the write: nothing happens, no compensating action is taken.
+
+A row left `pending` means its write may or may not have landed — whatever would have flipped it to `done` never ran, for any reason (a crash, a dropped connection, the process being killed mid-write). That is deliberately left as-is rather than deleted or backfilled: its presence is itself the evidence that a write was attempted and never confirmed.
+
+A write that matches a record but changes nothing still confirms its row to `done` rather than leaving it `pending` or skipping it — the write itself resolved, so `previous_values`/`new_values` are simply both empty on that row.
+
+### Correlation with activity logs
+
+The agent generates one id per request, exposes it to the client in the `X-Forest-Correlation-Id` response header, and stores it as `correlation_key` on every row written during that request. That id is what lets Forest join an activity log ("who triggered what") to the audit rows ("which fields changed"). The agent sets up the header and its CORS exposure for you.
+
+## Smart actions
+
+Running a smart action records the invocation itself: one row per targeted record, or one row attached to no record (an empty `record_id`) for a global action or a select-all bulk run. `operation` is `action`, or `action_failed` when it raised or resolved with an error result. `action_name` records which action ran.
+
+`previous_values` holds the form the operator submitted (redacted per `redact`); `new_values` holds a summary of what the action answered once it resolved — its type, plus whichever of a message, a redirect path or a webhook's method/URL apply to that result. A result's HTML, a webhook's headers/body (which routinely carry credentials) and a file result's contents are deliberately dropped — none of that belongs in an audit table, and a URL's own credentials or query string are stripped before it is stored.
+
+Writes the action performs **through Forest** — `context.collection.update(...)`, `create`, `delete` — go through the same hooks as any other write and produce their usual field-level rows, sharing the action's `correlation_key`.
+
+<Warning>
+**A write that does not go through Forest's data layer is not audited.** An action doing a direct ORM write (`Customer.find(id).update!(...)`, `myModel.save()`) is invisible to the agent: only the invocation row above exists, with no field-level diff. Audit your existing actions before promising full coverage.
+</Warning>
+
+## The History tab
+
+Each record's detail page gets a **History** tab: a chronological, paginated timeline of every change made to that record.
+
+- An entry with audit data renders as a card with **field-level diffs** and an operation badge — *Created*, *Updated*, *Deleted*, *Action* or *Action failed*.
+- An entry without it (an older log, or an agent with no audit trail configured) falls back to a plain activity card.
+- Action entries show the **submitted form values** rather than a before/after diff — a failed action changed nothing, so showing its inputs as an "after" state would be a lie.
+- The filter panel narrows by **author** and **date range**, offers **free-text search** across the recorded values, and the sort toggle switches between newest-first (default) and oldest-first. All are applied server-side, so they filter the whole history, not the current page.
+- The author filter's options are populated from `meta.availableUsers` — no separate request needed.
+
+The tab is present on every record. Field-level diffs only appear for agents that have the audit trail configured; otherwise the timeline shows activity logs alone.
+
+<Info>
+**Bulk and global actions do not appear in a record's timeline.** They target no single record, so the agent records them with an empty `record_id`, which no record-scoped query matches.
+</Info>
+
+## HTTP routes
+
+When the audit trail is configured, the agent exposes these routes. They sit behind Forest's authentication and require read permission on the target collection. The History tab is their consumer; you can also query them directly.
+
+| route | returns |
+|-------|---------|
+| `GET /forest/_audit-trail/{collection}/{recordId}` | `{ data, meta: { count, availableUsers? } }` — one page of the record's history, the filtered total, and (first fetch only) the distinct authors matching the active filters |
+| `GET /forest/_audit-trail/{collection}/{recordId}/state?timestamp=…` | `{ data }` — the record as it stood at that instant, or `null` if it did not exist yet |
+| `GET /forest/_audit-trail/correlation/{correlationKey}` | `{ data }` — the operations recorded under one correlation key |
+| `GET`/`POST` /forest/_audit-trail/correlations | `{ data }` — a flat list for several correlation keys at once |
+
+`meta.availableUsers` — `[{ id, firstName, lastName, email }, ...]` — is only included when the request has no explicit `page[number]`; any later page omits the key entirely rather than sending an empty array, so a client is expected to keep the list it saw on the first fetch.
+
+The per-record history route accepts these optional filters, all combining with `AND`:
+
+| query param | format | effect |
+|-------------|--------|--------|
+| `userIds` | comma-separated integers, `12,45` | keep entries made by those users |
+| `startDate` | `YYYY-MM-DD`, or `YYYY-MM-DD HH:mm[:ss]` (a `T` separator works too) | keep entries from this bound onward (inclusive) |
+| `endDate` | same | keep entries up to this bound (inclusive) |
+| `fields` | comma-separated field names | keep entries whose diff touched one of them |
+| `search` | free text, trimmed; empty ⇒ ignored | keep entries matching the term — see below |
+
+Dates are read as **wall-clock time in the request `timezone`** and converted to a UTC instant before querying. A bare day snaps to the start of the day for `startDate` and to `23:59:59.999` for `endDate`; a datetime without seconds is completed the same way. A malformed date or timezone returns **400**; non-numeric `userIds` tokens are dropped.
+
+Pagination follows JSON:API — `page[number]` is 1-based, `page[size]` defaults to `20` and is capped at `100` — and `sort` accepts `-timestamp` (newest first, the default) or `timestamp`. Ties on equal timestamps fall back to insertion order, so paging stays deterministic.
+
+### Searching
+
+`search` matches, case-insensitively, as a substring:
+
+- `action_name`
+- `user_first_name`, `user_last_name`, `user_email`
+- the keys and the scalar values of `previous_values` and `new_values`, **at any depth** — searching `Lyon` finds `{"address":{"city":"Lyon"}}`
+
+It never matches `operation`, `correlation_key`, `record_id`, `collection`, `status` or `timestamp` — those are machine identifiers a user would never search, and matching them would produce confusing hits.
+
+A redacted value can never match a search for the real value: `redact` replaces it before the row is ever written, so the real value was never in the database to find.
+
+The match runs against the *serialized JSON text* of `previous_values`/`new_values`, not a structural walk of the parsed value — cheap, and correct for matching keys and scalar values, but two things follow from it: a punctuation-only term (`,`, `:`, `{`) matches almost any row whose diff has more than one key, since those characters are JSON structure rather than content; and a value containing a double quote or a backslash can't be found by searching for it literally (`5"` is stored as `5\"`, so searching `5"` never matches the row that holds it). Neither is severe, and both are inherent to matching the serialized form rather than the parsed value.
+
+### Reconstructing a past state
+
+The `/state` route rebuilds a record by taking it as it stands now and undoing every entry recorded **strictly after** the given timestamp — an entry stamped exactly at it counts as part of that state. It only restores **audited columns**: read-only, computed and database-managed fields were never recorded, so they cannot be reconstructed. A `pending` row (see [Write protocol](#write-protocol)) is excluded from the replay: its write may not have landed, so including it could revert a mutation that never actually happened.
+
+## Limitations
+
+- **Only writes going through Forest are audited.** Changes made by your own code outside the Forest data layer, by another application, or directly in the database leave no trace. Audit trail coverage is not database-level coverage.
+- **A concurrent overwrite can stale `previous_values`.** The hooks bracket a write as separate calls and the data layer exposes no lock (it spans SQL, Mongo, HTTP APIs), so two writes racing on the same record snapshot the same prior state. `new_values` is always exact and no row is ever lost — only the *before* image of an overlapping write can be stale. Exact before-images under concurrency need database triggers or CDC.
+- **A record-level scope only protects a record that still exists.** A scope can't be evaluated against a record that is gone, so once it is genuinely deleted, anyone with read permission on the collection can see that something happened to it, by whom and when — seeing what was deleted is much of the point of an audit trail. It stops short of the actual values, though: a `create` or `delete` row's captured values are withheld if they themselves would have failed the caller's scope, and an `update` row's values (only a partial diff, which can't be checked against a scope reliably) are withheld unconditionally in that situation.
+- **By default, a broken audit store doesn't block a write.** A failure recording the pending entry is logged and the write proceeds unaudited — set `critical: true` to refuse the write instead; see [Write protocol](#write-protocol).
+- **Auditing costs extra queries.** Updates and deletes snapshot the record before writing, so each mutating request adds database round-trips.
+- **A bulk update or delete audits at most 1000 records per operation.** Matching more logs a warning and audits only the first 1000, unless `critical: true` is set, in which case the whole operation is refused instead of running partially audited.
+- **A smart action's selection is capped at the same 1000.** Naming only a subset of a wider selection would misstate what the action covered, so instead of truncating, an over-cap run is recorded as one entry attached to no record (the same way a global or select-all run already is) — or refused before it runs when `critical: true` is set.
+- **On Node.js, a renamed record's history doesn't walk back past the rename.** The agent files an update under the record's new id when a writable primary key changes, but has no `previous_record_id` column to chain that update back to the old id. The Ruby agent does have one, so the same record shows a complete timeline there and a history beginning at the rename on Node.js, until this column is ported.
+
+<Info>
+See also [Audit & Activity Logs](/get-started/control/audit) for the activity log itself — including its export and its [public API](/reference/api/endpoints/activity-logs).
+</Info>
