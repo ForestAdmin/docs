@@ -247,6 +247,7 @@ The `/state` route rebuilds a record by taking it as it stands now and undoing e
 - **By default, a broken audit store doesn't block a write.** A failure recording the pending entry is logged and the write proceeds unaudited — set `critical: true` to refuse the write instead; see [Write protocol](#write-protocol).
 - **Auditing costs extra queries.** Updates and deletes snapshot the record before writing, so each mutating request adds database round-trips.
 - **A bulk update or delete audits at most 1000 records per operation.** Matching more logs a warning and audits only the first 1000, unless `critical: true` is set, in which case the whole operation is refused instead of running partially audited.
+- **A smart action's selection is capped at the same 1000.** Naming only a subset of a wider selection would misstate what the action covered, so instead of truncating, an over-cap run is recorded as one entry attached to no record (the same way a global or select-all run already is) — or refused before it runs when `critical: true` is set.
 - **On Node.js, a renamed record's history doesn't walk back past the rename.** The agent files an update under the record's new id when a writable primary key changes, but has no `previous_record_id` column to chain that update back to the old id. The Ruby agent does have one, so the same record shows a complete timeline there and a history beginning at the rename on Node.js, until this column is ported.
 
 <Info>
