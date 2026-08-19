@@ -16,7 +16,7 @@ The Forest MCP server lets AI tools like Claude, Dust, and others to:
 - Execute actions on records
 - Start [Workflows](/product/process/workflows/overview) on a record and follow their progress
 
-All of this while respecting the Roles & Permissions of your Forest project, and logging activity just like if it were performed through the UI — see [Identity, auditing, and limits](#identity-auditing-and-limits) for the three reads that are not logged.
+All of this while respecting the Roles & Permissions of your Forest project, and logging activity just like if it were performed through the UI — see [Identity, auditing, and limits](#identity-auditing-and-limits) for the four tools that are not logged.
 
 The Forest MCP Server also enables other third party apps to embed and access Forest data and actions, for example in [Zendesk](/product/embed/zendesk), or [n8n](/product/embed/n8n).
 
@@ -155,7 +155,7 @@ The Forest MCP server exposes the following capabilities:
 | `getWorkflowRun`  | Poll the status of a run started through MCP                 |
 
 <Note>
-  Workflows are **opt-in per workflow**: only those whose **MCP** trigger is enabled are visible to these tools. See [Triggering workflows from an AI assistant](#triggering-workflows-from-an-ai-assistant).
+  Workflows are **opt-in per workflow**: `listWorkflows` and `triggerWorkflow` only see those whose **MCP** trigger is enabled. Turning the toggle off stops discovery and new triggers, but a run already started through MCP stays readable with `getWorkflowRun` until it finishes. See [Triggering workflows from an AI assistant](#triggering-workflows-from-an-ai-assistant).
 </Note>
 
 ## Restrict tools
@@ -324,6 +324,8 @@ An empty array means nothing matched. Without `collectionName`, that means no wo
 
 Workflows whose collection was renamed or removed are left out, since they cannot be triggered.
 
+The listing is capped at **200 workflows** per call, and there is no pagination: the response is a bare array, so neither you nor the assistant can tell a full list from a truncated one. If a rendering can realistically pass 200 MCP-enabled workflows, use the `collectionName` filter to keep each call well inside the cap.
+
 ### `triggerWorkflow`
 
 Starts a run of an MCP-enabled workflow on a specific record.
@@ -334,10 +336,10 @@ Starts a run of an MCP-enabled workflow on a specific record.
 | `recordId` | The record to run on. Composite primary keys use the packed form, values joined by `\|` (e.g. `"123\|456"`). |
 
 ```json Returns
-{ "runId": "1234", "runState": "loading" }
+{ "runId": "1234", "runState": "pending" }
 ```
 
-`runId` is what every subsequent `getWorkflowRun` call needs. `runState` is only the state at that instant — it depends on the workflow's first step, and it moves on without further calls, so treat it as a starting point, not an outcome.
+`runId` is what every subsequent `getWorkflowRun` call needs. `runState` is only the state at that instant — it depends on the workflow's first step, and it moves on without further calls, so treat it as a starting point, not an outcome. In practice it is `pending` (the run is queued for Forest Runtime), and occasionally `started` or `finished` when the first step needs no execution. `loading` means a runtime has claimed the run, which cannot have happened yet at this point.
 
 <Note>
   The record is **not** checked when the run is created — the orchestrator has no data access at that point. An id that does not exist, or that the user cannot read, produces a run that fails at its first data step; the assistant sees it through the failing step's `context.error` in `getWorkflowRun`'s history, not as a trigger-time failure. Workflow segments are not enforced either: they control where the manual trigger appears in the interface, so an out-of-segment record is accepted — permission scopes still bound everything the run reads and writes.
@@ -355,7 +357,7 @@ Reads the full run, given the `runId` returned by `triggerWorkflow`. The run car
 | `triggerType` | Always `mcp` here — only MCP-started runs are readable through this tool. |
 | `workflowHistory` | The ordered steps the run has reached. Each entry pairs the step's resolved **definition** (`stepDefinition`: `type`, `title`, an `executionType` — `manual`, `automated-with-confirmation` or `fully-automated` — plus an optional `taskType` and `prompt`, and the `outgoing` branches) with its **outcome** (`stepName`, `stepIndex`, `done`, plus an optional `context` carrying the selected option, a manual completion, an escalation state, an awaiting-input reason, or an `error`). Read `runState` first to know whether the run is still live — the terminal `end` entry is never marked done, so a `finished` run still ends on a `done: false` entry. While the run is live, the last entry with `done: false` is where it sits. |
 
-The run is returned whole, not trimmed: identifying fields (`id` — the numeric form of the `runId` string, `workflowId`, `collectionId`, `selectedRecordId`, the `createdAt`/`updatedAt` timestamps) and internal ones (`userId`, `renderingId`, `bpmnVersion`, `engine`, `lockedAt`) come with it. History entries likewise carry an `isCardStep` flag, and every `stepDefinition` an `automaticCompletion` one. The examples below are trimmed to the load-bearing fields.
+The run comes back with every field the contract declares, and only those — Forest projects the response onto that list, so a field added server-side never reaches the assistant without a corresponding release. What you get: identifying fields (`id` — the numeric form of the `runId` string, `workflowId`, `collectionId`, `selectedRecordId`, the `createdAt`/`updatedAt` timestamps) and internal ones (`userId`, `renderingId`, `bpmnVersion`, `engine`, `lockedAt`) come with it. History entries likewise carry an `isCardStep` flag, and every `stepDefinition` an `automaticCompletion` one. The examples below are trimmed to the load-bearing fields.
 
 <CodeGroup>
 
@@ -444,19 +446,22 @@ Tool failures come back as tool errors with an explanatory message, so the assis
 | Situation | What the assistant gets |
 |---|---|
 | The workflow is unknown, its MCP trigger is off, or it is outside the user's rendering | Not found — with a hint to call `listWorkflows` |
-| The workflow's collection is unavailable (renamed or deleted — it may still appear in `listWorkflows` with a null `collectionName`) | Rejected up front, pointing at the workflow's configuration; nothing starts |
+| The workflow's collection is unavailable (renamed or deleted — `listWorkflows` hides these, so this only happens if the collection changed after the listing) | Rejected up front, pointing at the workflow's configuration; nothing starts |
 | A run of the same workflow is already ongoing on that record | Conflict; no run is started and none is resumed |
 | The `runId` is unknown, belongs to another user's rendering, or was not started through MCP | Not found |
-| An empty or out-of-bounds `recordId` or `runId` (e.g. a record id longer than 255 characters) | Invalid argument — rejected up front, nothing starts |
+| An empty `workflowId`, `recordId` or `runId` | Invalid argument — rejected before any call, nothing starts |
+| A `recordId` longer than 255 characters (the column bound) | Invalid argument — rejected before any call, nothing starts |
+| A `runId` that is not a positive integer within range | Invalid argument — the call reaches Forest and is refused there; nothing is read |
 | The environment's workflows still run in the browser engine | Conflict — automated triggering needs server-side execution ([Forest Runtime](/product/process/workflows/forest-runtime)) |
-| The workflow contains an MCP Task step targeting an OAuth2-protected connector | Unprocessable — that step type is not yet supported in server-side runs; nothing starts |
+| The workflow contains an MCP Task step targeting an OAuth2-protected connector, and the environment's [Forest Runtime](/product/process/workflows/forest-runtime) is older than 1.14.0 | Unprocessable — upgrade Forest Runtime to run these steps server-side; nothing starts |
 
 ### Identity, auditing, and limits
 
 - **Identity** — the run executes as the Forest user of the MCP session, established by the OAuth login. That user's permissions bound everything the run **reads and writes**. The trigger itself is gated only by the user's rendering and the workflow's MCP toggle: neither the target record nor the workflow's segments are checked when the run is created.
-- **Auditing** — each trigger is recorded in the run history and in your **Activity Logs**, attributed to that user and labelled *via MCP*, so MCP-started runs are distinguishable from manual and webhook ones. An MCP trigger writes two complementary log entries: one before the run starts (the audit that blocks the trigger if it cannot be written), and one attached to the run.
-- **Three reads are not audited** — `listWorkflows`, `getWorkflowRun` and `getActionForm` leave no Activity Logs entry, because the log route needs a resource these tools have no way to name. Every other tool, read or write, writes one. A write whose log cannot be created is blocked; a read proceeds with a warning, so an audit-store outage never takes the read surface down.
-- **Rate limiting** — the workflow tools have no dedicated limiter. They inherit the MCP server's authentication and limits; unlike the [webhook trigger](/reference/api/endpoints/trigger-workflow-webhook#rate-limiting), there is no separately exposed HTTP endpoint to protect — every call happens inside an authenticated MCP session. The one-run-per-workflow-per-record rule prevents duplicate runs on the *same* record, but nothing bounds how many records an assistant can trigger on — walking a list view opens one run per record, each consuming Forest Runtime capacity. `triggerWorkflow` is annotated as destructive so MCP clients ask the user to confirm each call; keep that confirmation on, and size the exposure with the `mcp` toggle, per workflow.
+- **Auditing** — each trigger is recorded in the run history and in your **Activity Logs**, attributed to that user and labelled *via MCP*, so MCP-started runs are distinguishable from manual and webhook ones. An MCP trigger writes two complementary log entries: one **before** the run starts, which blocks the trigger if it cannot be written, and one attached to the run once it exists. Only the first is guaranteed — the run-attached entry is best-effort, so a successful run can leave just the early entry.
+- **Four tools are not audited** — `listWorkflows`, `getWorkflowRun`, `getActionForm` and `requestActionFileUpload` leave no Activity Logs entry. For the two workflow reads the log route needs a resource they have no way to name; `getActionForm` and `requestActionFileUpload` predate this and are unaudited for historical reasons. `requestActionFileUpload` is worth calling out separately: it is not a read — it mints a pre-authorized upload, and it is enabled by default whenever file uploads are configured. Every other tool, read or write, writes an entry. Closing these gaps is tracked in PRD-967.
+- **When the audit log itself fails** — a **write** whose log cannot be created is blocked, so no side effect happens unaudited. A **read** proceeds with a warning, so an audit-store outage never takes the read surface down. An **authorization refusal** (the caller's identity was rejected) propagates either way — it is not an outage.
+- **Rate limiting** — the workflow tools have no dedicated limiter. They inherit the MCP server's authentication, and no per-call rate limit applies; unlike the [webhook trigger](/reference/api/endpoints/trigger-workflow-webhook#rate-limiting), there is no separately exposed HTTP endpoint to protect — every call happens inside an authenticated MCP session. The one-run-per-workflow-per-record rule prevents duplicate runs on the *same* record, but nothing bounds how many records an assistant can trigger on — walking a list view opens one run per record, each consuming Forest Runtime capacity. `triggerWorkflow` is annotated as destructive so MCP clients ask the user to confirm each call; keep that confirmation on, and size the exposure with the `mcp` toggle, per workflow.
 - **Turning it off** — disable a single workflow's MCP toggle, or set an [`enabledTools`](#restrict-tools) allowlist that leaves `triggerWorkflow` out to remove MCP triggering across all workflows (when `enabledTools` is unset, every tool is enabled — restricting means listing the tools you keep). Either way, manual and webhook starts of that workflow keep working. Revoking the connected user's access stops new triggers immediately; a run already in flight is not aborted, and keeps going until it next touches data — allow up to 15 minutes for the agent's permission cache to expire. Abort a run explicitly if you need it stopped now. See [Revoking MCP access](/product/process/workflows/triggers#revoking-mcp-access).
 
 ## Use cases
@@ -486,8 +491,9 @@ The Forest MCP server:
 
 - Respects all Forest permissions and roles
 - Uses your environment's authentication
-- Logs every write, and all but three reads, for audit purposes (see [Identity, auditing, and limits](#identity-auditing-and-limits))
-- Never exposes sensitive data without proper access
+- Logs every write, and every read except four tools, for audit purposes (see [Identity, auditing, and limits](#identity-auditing-and-limits))
+- Bounds what a run reads and writes by the connected user's permissions. Note this does not bound the *trigger*: neither the target record nor the workflow's segments are checked when a run is created
+- Carries no record payload out of your infrastructure — records stay in Forest Runtime. Identifiers (`selectedRecordId`) and step error messages (`context.error`) can still contain customer data, so treat a run's history as sensitive
 - Lets you shorten the OAuth token lifetimes (see [Token lifetimes](#token-lifetimes))
 - Exposes no workflow until a workflow editor opts that workflow in (see [Triggering workflows](#triggering-workflows-from-an-ai-assistant))
 
