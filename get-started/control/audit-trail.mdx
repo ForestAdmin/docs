@@ -203,7 +203,7 @@ When the audit trail is configured, the agent exposes these routes. They sit beh
 | `GET /forest/_audit-trail/{collection}/{recordId}` | `{ data, meta: { count, availableUsers? } }` — one page of the record's history, the filtered total, and (first fetch only) the distinct authors matching the active filters |
 | `GET /forest/_audit-trail/{collection}/{recordId}/state?timestamp=…` | `{ data }` — the record as it stood at that instant, or `null` if it did not exist yet |
 | `GET /forest/_audit-trail/correlation/{correlationKey}` | `{ data }` — the operations recorded under one correlation key |
-| `GET`/`POST /forest/_audit-trail/correlations` | `{ data }` — a flat list for several correlation keys at once |
+| `GET`/`POST` /forest/_audit-trail/correlations | `{ data }` — a flat list for several correlation keys at once |
 
 `meta.availableUsers` — `[{ id, firstName, lastName, email }, ...]` — is only included when the request has no explicit `page[number]`; any later page omits the key entirely rather than sending an empty array, so a client is expected to keep the list it saw on the first fetch.
 
