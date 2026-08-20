@@ -164,7 +164,7 @@ The Forest MCP server exposes the following capabilities:
 | `getWorkflowRun`  | Poll the status of a run started through MCP                 |
 
 <Note>
-  Workflows are **opt-in per workflow**: `listWorkflows` and `triggerWorkflow` only see those whose **MCP** trigger is enabled. Turning the toggle off stops discovery and new triggers, but a run already started through MCP stays readable with `getWorkflowRun` until it finishes. See [Triggering workflows from an AI assistant](#triggering-workflows-from-an-ai-assistant).
+  Workflows are **opt-in per workflow**: `listWorkflows` and `triggerWorkflow` only see those whose **MCP** trigger is enabled. Turning the toggle off stops discovery and new triggers, but a run already started through MCP stays readable with `getWorkflowRun` — including after it has finished, since the lookup is scoped to the run's rendering and trigger type, not to its state. See [Triggering workflows from an AI assistant](#triggering-workflows-from-an-ai-assistant).
 </Note>
 
 ## Restrict tools
@@ -508,6 +508,8 @@ Reads the full run, given the `runId` returned by `triggerWorkflow`. The run car
 
 The run comes back with every field the contract declares, and only those — Forest projects the response onto that list, so a field added server-side never reaches the assistant without a corresponding release. What you get: identifying fields (`id` — the numeric form of the `runId` string, `workflowId`, `collectionId`, `selectedRecordId`, the `createdAt`/`updatedAt` timestamps) and internal ones (`userId`, `renderingId`, `bpmnVersion`, `engine`, `lockedAt`) come with it. History entries likewise carry an `isCardStep` flag, and every `stepDefinition` an `automaticCompletion` one. The examples below are trimmed to the load-bearing fields.
 
+One naming trap: `stepName` and `outgoing[].stepId` are **BPMN element ids, not labels** — they come from the diagram, so they look like `Activity_ReviewKyb`, not like a sentence. They share one identifier space, so a step's `outgoing[].stepId` is the `stepName` of the entry that follows it. The human-readable name is `stepDefinition.title`.
+
 <CodeGroup>
 
 ```json Parked on a human step
@@ -519,7 +521,7 @@ The run comes back with every field the contract declares, and only those — Fo
   "triggerType": "mcp",
   "workflowHistory": [
     {
-      "stepName": "Review the KYB documents",
+      "stepName": "Activity_ReviewKyb",
       "stepIndex": 0,
       "done": false,
       "context": {},
@@ -529,7 +531,7 @@ The run comes back with every field the contract declares, and only those — Fo
         "title": "Review the KYB documents",
         "prompt": "Check the uploaded documents, then approve or reject",
         "executionType": "manual",
-        "outgoing": [{ "stepId": "approved", "buttonText": "Approve" }]
+        "outgoing": [{ "stepId": "Event_CustomerApproved", "buttonText": "Approve" }]
       }
     }
   ]
@@ -545,7 +547,7 @@ The run comes back with every field the contract declares, and only those — Fo
   "triggerType": "mcp",
   "workflowHistory": [
     {
-      "stepName": "Review the KYB documents",
+      "stepName": "Activity_ReviewKyb",
       "stepIndex": 0,
       "done": true,
       "context": { "manuallyCompleted": true },
@@ -555,11 +557,11 @@ The run comes back with every field the contract declares, and only those — Fo
         "title": "Review the KYB documents",
         "prompt": "Check the uploaded documents, then approve or reject",
         "executionType": "manual",
-        "outgoing": [{ "stepId": "approved", "buttonText": "Approve" }]
+        "outgoing": [{ "stepId": "Event_CustomerApproved", "buttonText": "Approve" }]
       }
     },
     {
-      "stepName": "Customer approved",
+      "stepName": "Event_CustomerApproved",
       "stepIndex": 1,
       "done": false,
       "context": {},
@@ -615,7 +617,7 @@ Tool failures come back as tool errors with an explanatory message, so the assis
   - *triggered the workflow "…" via MCP* — written once the run is committed, carrying its run id.
 
   Only the first is guaranteed: the run-attached entry is best-effort, so a successful trigger can leave just the request entry. Count *triggered* rows to count runs actually started, and *requested* rows to count what assistants asked for.
-- **Four tools are not audited** — `listWorkflows`, `getWorkflowRun`, `getActionForm` and `requestActionFileUpload` leave no Activity Logs entry. The Activity Logs route needs a collection to attach the entry to, and none of these four supply one: the two workflow reads operate on the orchestrator rather than a collection, and `requestActionFileUpload` is identified only by a filename and a checksum. `requestActionFileUpload` is worth calling out separately: it is not a read — it mints a pre-authorized upload URL — and it is enabled by default, including when no storage backend is configured. Every other tool, read or write, writes an entry. Closing these gaps is on the roadmap.
+- **Four tools are not audited** — `listWorkflows`, `getWorkflowRun`, `getActionForm` and `requestActionFileUpload` leave no Activity Logs entry. Three of them have nothing to attach an entry to, since the Activity Logs route needs a collection: the two workflow reads operate on the orchestrator rather than a collection, and `requestActionFileUpload` is identified only by a filename and a checksum. `getActionForm` is the exception — it does receive a collection and record ids, so nothing stands in the way of auditing it; it simply predates this work and was never wired to the audit path. `requestActionFileUpload` is worth calling out separately: it is not a read — it mints a pre-authorized upload URL — and it is enabled by default, including when no storage backend is configured. Every other tool, read or write, writes an entry. Closing these gaps is on the roadmap.
 - **When the audit log itself fails** — a **write** whose log cannot be created is blocked, so no side effect happens unaudited. A **read** proceeds with a warning, so an audit-store outage never takes the read surface down. An **authorization refusal** (the caller's identity was rejected) propagates either way — it is not an outage.
 - **Rate limiting** — the workflow tools have no dedicated limiter. They inherit the MCP server's authentication, and no per-call rate limit applies; unlike the [webhook trigger](/reference/api/endpoints/trigger-workflow-webhook#rate-limiting), there is no separately exposed HTTP endpoint to protect — every call happens inside an authenticated MCP session. The one-run-per-workflow-per-record rule prevents duplicate runs on the *same* record, but nothing bounds how many records an assistant can trigger on — walking a list view opens one run per record, each consuming Forest Runtime capacity. `triggerWorkflow` is annotated as destructive so MCP clients ask the user to confirm each call; keep that confirmation on, and size the exposure with the `mcp` toggle, per workflow.
 - **Turning it off** — disable a single workflow's MCP toggle, or set an [`enabledTools`](#restrict-tools) allowlist that leaves `triggerWorkflow` out to remove MCP triggering across all workflows (when `enabledTools` is unset, every tool is enabled — restricting means listing the tools you keep). Either way, manual and webhook starts of that workflow keep working. Revoking the connected user's access stops new triggers immediately, and the assistant is told not to retry; a run already in flight is not aborted, and keeps going until it next touches data — allow up to 15 minutes for the agent's permission cache to expire. Abort a run explicitly if you need it stopped now. See [Revoking MCP access](/product/process/workflows/triggers#revoking-mcp-access).
