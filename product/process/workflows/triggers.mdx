@@ -128,7 +128,7 @@ For the tool contracts and the discover → trigger → poll flow, see [Triggeri
 
 ## Auditing
 
-Every automated run is recorded in the workflow run history and in your **Activity Logs**, attributed to the user the run acted as, and labelled by channel — *via webhook* or *via MCP* — so you can tell automated runs from manual ones, and from each other. An MCP trigger writes two complementary entries, both labelled *via MCP*: one before the run starts (the audit that blocks the trigger if it cannot be written), and one attached to the run.
+Every automated run is recorded in the workflow run history and in your **Activity Logs**, attributed to the user the run acted as, and labelled by channel — *via webhook* or *via MCP* — so you can tell automated runs from manual ones, and from each other. An MCP trigger writes two complementary entries: *requested the workflow "…" via MCP* before the run starts (the audit that blocks the trigger if it cannot be written, with no run attached yet), and *triggered the workflow "…" via MCP* once the run exists. Only the first is guaranteed — the second is best-effort — so count *triggered* rows for runs actually started.
 
 ## Learn more
 
