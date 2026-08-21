@@ -15,13 +15,17 @@ Because it talks to your data through your own Forest agent, **the Forest orches
 
 ## Do I need Forest Runtime?
 
-Yes — Forest Runtime is what executes your workflow steps. **[Webhook-triggered workflows](/product/process/workflows/triggers) especially**: a webhook can fire at any time, with no guarantee anyone has Forest open in a browser, so they can only run server-side.
+Yes — Forest Runtime is what executes your workflow steps. **[Automatically-triggered workflows](/product/process/workflows/triggers) especially**: a webhook call or an AI assistant can fire at any time, with no guarantee anyone has Forest open in a browser, so those runs can only execute server-side. Until a runtime has reported in, the workflow settings page shows a *"Your Forest Runtime can't be reached"* screen and neither automated trigger can be enabled.
 
 Running on infrastructure you control also keeps the records handled by data steps out of Forest's infrastructure — decisive for compliance or data-residency requirements, or when a step needs access to systems reachable only from within your network.
 
+<Warning>
+  **Upgrade Forest Runtime before you enable the MCP trigger.** A runtime older than the release that added MCP triggering rejects MCP-started runs when it validates them: the run is created, picked up, and immediately errored — its first step carries a validation message, and `getWorkflowRun` reports that error rather than a run in progress. There is no dedicated failed state: the run stays in `started`, and it is routed to the fallback inbox, so that inbox fills up with runs that never began. Because `started` counts as active, **each affected record is then blocked from being triggered again on the same workflow until you abort its run**. Nothing warns you up front, and there is no version check: the older runtime simply rejects `triggerType: "mcp"` as an unknown value when it validates the step, so the message recorded there is the generic *"Internal validation error occurred while preparing the step. Please contact support."* — it names neither the version nor the trigger type. Upgrade first, then turn the toggle on.
+</Warning>
+
 ## How it works
 
-1. A workflow is triggered — by a user or a [webhook](/product/process/workflows/triggers). The Forest orchestrator queues the pending steps.
+1. A workflow is [triggered](/product/process/workflows/triggers) — by a user, a webhook, or an AI assistant. The Forest orchestrator queues the pending steps.
 2. Forest Runtime polls the orchestrator and pulls the steps assigned to it.
 3. Each step runs locally, reaching your data and actions through your Forest agent.
 4. It reports the step outcome back to the orchestrator, which advances the workflow.
