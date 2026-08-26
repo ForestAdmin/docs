@@ -7,7 +7,10 @@
     "light": "#DDF327",
     "dark": "#3F5B1E"
   },
-  "favicon": "/favicon.svg",
+  "favicon": {
+    "light": "/images/Standard.svg",
+    "dark": "/images/LIME.svg"
+  },
   "modeToggle": {
     "default": "light",
     "isHidden": true
@@ -963,8 +966,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/images/Standard.svg",
+    "dark": "/images/LIME.svg"
   },
   "navbar": {
     "links": [
