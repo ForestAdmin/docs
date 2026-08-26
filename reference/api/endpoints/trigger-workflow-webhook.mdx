@@ -58,7 +58,7 @@ The body is JSON and is validated. Only known fields are extracted; unknown fiel
 
 | Field | Type | Description |
 |---|---|---|
-| `record_id` | string | The record the workflow runs on. Composite primary keys are supported in their packed form (e.g. `"123|456"`). |
+| `record_id` | string | The record the workflow runs on. Composite primary keys are supported in their packed form (e.g. `"123\|456"`). |
 
 <Note>
   The `record_id` is **not** verified when the run is created. If the record does not exist or is inaccessible to the token's user, the run is still created and fails at its first data step during execution — observable via the run state.
