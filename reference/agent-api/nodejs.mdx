@@ -924,13 +924,15 @@ collection.replaceSearch(
 
 **Field selection.** Narrows the fields the default search reads. The agent knows which columns the search reads, so it checks them against the caller's `read` permission and extended search keeps working. Requires `@forestadmin/datasource-customizer` 1.71.3.
 
+On a collection whose datasource searches natively — one calling `enableSearch()`, which no Forest-maintained datasource does — a field selection does not narrow that native search: it replaces it with the agent's own per-column search restricted to the selection, so matching semantics change with it.
+
 | Option | Type | Description |
 |--------|------|-------------|
 | `onlyFields` | `string[]` | Replaces the default set with these fields |
 | `includeFields` | `string[]` | Adds these fields to the default set |
 | `excludeFields` | `string[]` | Removes these fields from the default set |
 
-Paths cross relations with a colon, at any depth. `extended` is absent on purpose: the caller owns that flag, and the agent forwards it from the request.
+Paths cross relations with a colon, at any depth. `ManyToOne`, `OneToOne` and `OneToMany` segments resolve; a `ManyToMany` segment does not, and a path crossing one is dropped from the selection without an error. `extended` is absent on purpose: the caller owns that flag, and the agent forwards it from the request.
 
 ```typescript
 collection.replaceSearch({
