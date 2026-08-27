@@ -914,19 +914,34 @@ collection.addHook('After', 'Update', async (context) => {
 
 ### collection.replaceSearch(definition)
 
-Replace the default search behavior.
+Replace the default search behavior, with a field selection or a handler.
 
 ```typescript
 collection.replaceSearch(
-  definition: SearchDefinition
+  definition: SearchFieldsDefinition | SearchHandlerDefinition
 ): CollectionCustomizer;
 ```
 
-**Example:**
+**Field selection.** Narrows the fields the default search reads. The agent knows which columns the search reads, so it checks them against the caller's `read` permission and extended search keeps working. Requires `@forestadmin/datasource-customizer` 1.71.3.
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `onlyFields` | `string[]` | Replaces the default set with these fields |
+| `includeFields` | `string[]` | Adds these fields to the default set |
+| `excludeFields` | `string[]` | Removes these fields from the default set |
+
+Paths cross relations with a colon, at any depth. `extended` is absent on purpose: the caller owns that flag, and the agent forwards it from the request.
 
 ```typescript
-collection.replaceSearch(async (searchString) => {
-  // Search in multiple fields
+collection.replaceSearch({
+  onlyFields: ['firstName', 'lastName', 'email'],
+});
+```
+
+**Handler.** Receives `(searchString, extended, context)` and returns a condition tree. Use it when the filter depends on the search string, an external service, or anything a field list cannot express.
+
+```typescript
+collection.replaceSearch(async searchString => {
   return {
     aggregator: 'Or',
     conditions: [
@@ -937,6 +952,10 @@ collection.replaceSearch(async (searchString) => {
   };
 });
 ```
+
+<Warning>
+  From `@forestadmin/agent` 1.97.3 on, a handler makes extended search return 403 on the collection: the agent cannot enumerate the fields a handler reads, so it cannot check them against the caller's `read` permission. Normal search is unaffected. See [Search Configuration](/product/build/search-configuration#replacing-the-search-handler).
+</Warning>
 
 ---
 
