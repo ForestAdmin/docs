@@ -14,6 +14,8 @@ Two search modes exist:
 - **Normal search**, searches fields in the current collection
 - **Extended search**, also searches fields in directly related collections. Operators can trigger extended search from the footer when normal results are empty.
 
+Extended search reaches columns outside the current collection, so the Node.js agent checks each related collection it reads against the operator's `read` permission. From version 1.97.3 on, the agent refuses an extended search whose fields it cannot enumerate ahead of the query. This governs how you replace the search handler — see [Replacing the Search Handler](#replacing-the-search-handler).
+
 ## Default Search Behavior
 
 By default, Forest searches only specific field types:
@@ -30,12 +32,32 @@ By default, Forest searches only specific field types:
 
 Use `replaceSearch` in your back-end configuration to define exactly how search strings are translated into filters.
 
+The Node.js agent accepts two forms, and they differ in what extended search does:
+
+| Form | Extended search | Read permissions on the fields it reads |
+|------|-----------------|------------------------------------------|
+| **Field selection** — an object listing the fields | Works | Checked per field; a field whose collection the operator cannot read is refused by name |
+| **Handler** — a function returning a condition tree | Returns 403 | Not checked on normal search |
+
+Reach for a field selection whenever the fields are a fixed list. Reach for a handler when the filter depends on the search string itself, on an external service, or on anything else a list cannot express — and accept that extended search stops working on that collection.
+
+<Warning>
+  **Node.js agent 1.97.3 and later refuse extended search on any collection with a handler.** The agent cannot enumerate which fields a handler reads, so it cannot check them against the operator's `read` permission, and it returns:
+
+  ```
+  You cannot run an extended search on the 'products' collection: the fields it reaches
+  cannot be determined, so they cannot be checked against your permissions.
+  ```
+
+  Normal search keeps working. Converting the handler to a field selection restores extended search, and requires `@forestadmin/datasource-customizer` 1.71.3 or later.
+</Warning>
+
 <Info>
   For large datasets, limit searchable fields to columns with database indexes. Searching unindexed fields causes full table scans.
 </Info>
 
 <Note>
-  In Node.js and Python, the handler receives a `context` with the `generateSearchFilter` helper. In Ruby, the `replace_search` block receives `(search_string, extended_search)` and returns a [condition tree](/get-started/connect/relationships-schema) directly: there is no `generate_search_filter` helper, so you build the tree yourself.
+  The field selection form exists in Node.js only. In Python, the handler receives a `context` with the `generate_search_filter` helper. In Ruby, the `replace_search` block receives `(search_string, extended_search)` and returns a [condition tree](/get-started/connect/relationships-schema) directly: there is no `generate_search_filter` helper, so you build the tree yourself. The Ruby and Python agents do not refuse extended search on a collection with a handler.
 </Note>
 
 ### Restricting Which Fields Are Searched
@@ -43,11 +65,8 @@ Use `replaceSearch` in your back-end configuration to define exactly how search 
 <CodeGroup>
 ```javascript Node.js / Cloud
 agent.customizeCollection('people', collection => {
-  collection.replaceSearch((searchString, extendedMode, context) => {
-    return context.generateSearchFilter(searchString, {
-      extended: extendedMode,
-      onlyFields: ['firstName', 'lastName', 'email'],
-    });
+  collection.replaceSearch({
+    onlyFields: ['firstName', 'lastName', 'email'],
   });
 });
 ```
@@ -98,18 +117,21 @@ agent.customize_collection("people").replace_search(search_in_people)
 
 ```javascript
 agent.customizeCollection('people', collection => {
-  collection.replaceSearch((searchString, extendedMode, context) => {
-    return context.generateSearchFilter(searchString, {
-      extended: extendedMode,
-      excludeFields: ['internalNotes', 'legacyId'],
-    });
+  collection.replaceSearch({
+    excludeFields: ['internalNotes', 'legacyId'],
   });
 });
 ```
 
+A field selection also accepts `includeFields`, which adds fields to the default set instead of replacing it. Paths cross relations with a colon, at any depth: `includeFields: ['company:owner:email']`. The agent checks the collection each path ends on — `companies` confers nothing here, `users` needs the `read` permission. A path crossing a `ManyToMany` relation does not resolve and is dropped from the selection without an error; `ManyToOne`, `OneToOne` and `OneToMany` segments all resolve.
+
+<Note>
+  A field selection narrows the fields on normal search as well as extended search, so the fields it names are checked against the operator's `read` permission on both. An operator who searches `people` without `read` on a collection an included path ends on receives a 403 where a handler returned results. Grant that permission, or drop the path from the selection.
+</Note>
+
 ### Context-Dependent Search
 
-Different search logic depending on what the operator is searching for:
+Different search logic depending on what the operator is searching for. This needs a handler, so extended search returns 403 on the collection:
 
 <CodeGroup>
 ```javascript Node.js / Cloud
@@ -179,9 +201,13 @@ end
 ```
 </CodeGroup>
 
+<Warning>
+  In Node.js the `extendedMode` branch of this example never runs from version 1.97.3 on: the agent refuses the extended search before the handler executes. The Ruby example still reaches its `extended_search` branch. To keep an extended search on a collection like this one, split the fixed part of the field list into a field selection and drop the handler, or accept normal search only.
+</Warning>
+
 ### Integrating an External Search Engine
 
-If your data is indexed in Algolia, Elasticsearch, or another service, call it directly in the search handler:
+If your data is indexed in Algolia, Elasticsearch, or another service, call it directly in the search handler. Extended search returns 403 on such a collection in Node.js, since the agent cannot know which columns the external index reads:
 
 <CodeGroup>
 ```javascript Node.js / Cloud
@@ -273,3 +299,23 @@ agent.customize_collection("products").disable_search()
 </CodeGroup>
 
 This is useful for collections where free-text search doesn't apply, for example, collections that only display computed or joined data.
+
+## Limitations
+
+**A handler gives up extended search in Node.js.** A field selection is the only form the agent can enumerate, so it is the only form that keeps extended search on the collection. A handler whose filter genuinely depends on the search string, on an external index, or on a runtime lookup has no equivalent field selection, and extended search stays refused there. Normal search is unaffected.
+
+**A field selection replaces a datasource's native search.** On a collection whose datasource searches natively — one calling `enableSearch()`, which no Forest-maintained datasource does — a field selection does not narrow that native search: the agent takes the search over and runs its own per-column one on the selected fields. Matching semantics change with it.
+
+**Version requirements.** The refusal starts at `@forestadmin/agent` 1.97.3. The field selection form requires `@forestadmin/datasource-customizer` 1.71.3, shipped in `@forestadmin/agent` 1.98.3.
+
+**Agents differ.** The table below states where each behavior applies today:
+
+| Agent | Field selection form | Extended search with a handler |
+|-------|---------------------|-------------------------------|
+| Node.js, from 1.98.3 | Available | Refused with a 403 |
+| Node.js, 1.97.3 to 1.98.2 | Not available | Refused with a 403 |
+| Node.js, before 1.97.3 | Not available | Served |
+| Ruby | Not available | Served |
+| Python | Not available | Served |
+
+**A handler is exempt from read permissions on normal search.** The operator supplies the text and the handler chooses the fields, so the agent cannot separate a field the customization intended from one the operator's role may not read. A handler pointing at a column of a collection the role cannot read lets that role test values against it, reading each answer from whether rows come back. Prefer a field selection wherever the fields are a fixed list.
