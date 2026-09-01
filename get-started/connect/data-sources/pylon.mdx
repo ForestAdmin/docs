@@ -35,7 +35,7 @@ end
 
 ## Configuration
 
-A single Bearer token is the whole configuration — an [API key](https://docs.usepylon.com/pylon-docs/developer/api/api-reference) created from your Pylon workspace settings. Nothing calls Pylon to validate it at boot: the token is checked by the first request that needs it, so a wrong key boots the agent and fails on the first list. `client.me` is there to check it yourself — `GET /me` returns the organization owning the token, which is enough to prove the credentials are usable.
+A single Bearer token is the whole configuration — an [API key](https://docs.usepylon.com/pylon-docs/developer/api/api-reference) created from your Pylon workspace settings. Nothing validates it at boot: the custom-field introspection does call Pylon, but it is best-effort, so a `401` there costs the custom columns and a log line rather than the boot. A wrong key therefore starts the agent and fails on the first list. `client.me` is the check to run yourself — `GET /me` returns the organization owning the token, which is enough to prove the credentials are usable.
 
 `api_key` is mandatory; the datasource fails fast with a `ForestAdminDatasourcePylon::ConfigurationError` when it is missing or blank. Everything else is optional and only exists to trade throughput, timeouts and rate-limit behaviour.
 
