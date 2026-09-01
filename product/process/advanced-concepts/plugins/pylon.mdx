@@ -18,7 +18,7 @@ Nothing is registered automatically. Opt each plugin in per collection:
 ```ruby
 # app/lib/forest_admin_rails/create_agent.rb
 pylon_datasource = ForestAdminDatasourcePylon::Datasource.new(api_key: ENV['PYLON_API_KEY'])
-ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(pylon_datasource, {})
+@agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(pylon_datasource, {})
 
 @agent.collection :Customer do |collection|
   collection.use(
@@ -65,7 +65,7 @@ end
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `datasource`              | **Required.** The `ForestAdminDatasourcePylon::Datasource` instance.                                                                                                                                                                |
 | `action_name`             | Overrides the action label. Defaults to `'Create Pylon issue and notify'`.                                                                                                                                                         |
-| `destination`             | Channel the first message is delivered through: `email` (default), `slack`, `in_app_chat`, `customer_portal`, `sms`, `whatsapp` or `internal`. An unknown value is refused at registration.                                        |
+| `destination`             | Channel the first message is delivered through: `email` (default), `slack`, `in_app_chat`, `customer_portal`, `sms` or `whatsapp`. `internal` is the absence of a delivery rather than a channel: the issue is created and the requester is not contacted. An unknown value is refused at registration. |
 | `sender_email`            | **Required when `destination` is `email`** — `POST /issues` refuses an email delivery that does not name the address it is sent from. Must be one of the addresses configured in your Pylon email app.                              |
 | `email_ccs` / `email_bccs` | Arrays of addresses copied on the outbound email. Only meaningful on an email delivery.                                                                                                                                            |
 | `default_subject`         | String used to pre-fill the "Subject" field. Supports `{{ record.<field> }}` tokens resolved against the selected record when the form opens.                                                                                       |

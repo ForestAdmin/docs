@@ -35,7 +35,7 @@ end
 
 ## Configuration
 
-A single Bearer token is the whole configuration — an [API key](https://docs.usepylon.com/pylon-docs/developer/api/api-reference) created from your Pylon workspace settings. `GET /me` is the health check: it returns the organization owning the token, which is enough to prove the credentials are usable.
+A single Bearer token is the whole configuration — an [API key](https://docs.usepylon.com/pylon-docs/developer/api/api-reference) created from your Pylon workspace settings. Nothing calls Pylon to validate it at boot: the token is checked by the first request that needs it, so a wrong key boots the agent and fails on the first list. `client.me` is there to check it yourself — `GET /me` returns the organization owning the token, which is enough to prove the credentials are usable.
 
 `api_key` is mandatory; the datasource fails fast with a `ForestAdminDatasourcePylon::ConfigurationError` when it is missing or blank. Everything else is optional and only exists to trade throughput, timeouts and rate-limit behaviour.
 
@@ -90,10 +90,10 @@ The following relationships are exposed automatically:
 
 Every one of those keys is filtered server-side by `/issues/search` or `/contacts/search`, so a related list costs one request and no in-memory pass.
 
-Two relations Pylon's shape does not allow:
+Two relations are not exposed, for two different reasons:
 
-- **Team membership.** Pylon nests its members inside a team and exposes no team id on a user, so the membership is a many-to-many with no key column to build it on. `PylonTeam.user_ids` carries the member ids as a `Json` column instead.
-- **Account owner.** `PylonAccount.owner_id` does point at a `PylonUser`, but is left as a plain column.
+- **Team membership**, which Pylon's shape does not allow. Pylon nests its members inside a team and exposes no team id on a user, so the membership is a many-to-many with no key column to build it on. `PylonTeam.user_ids` carries the member ids as a `Json` column instead.
+- **Account owner**, which it would allow. `PylonAccount.owner_id` points at a `PylonUser` and would be resolved like any other key, but is left as a plain column until something in the panel asks for the owner of an account.
 
 ### Conversation thread
 
@@ -221,6 +221,7 @@ Notes that apply to every collection:
 - **Custom fields** are filtered through their slug, with the operators of the column the introspection built: the equality and presence families, plus substring on a `String` and the bare comparisons on a date. A `Number` gets no comparison (Pylon documents `time_is_after` / `time_is_before` and nothing else, so a numeric range would travel as a time filter), and a `multiselect` gets nothing.
 - **Presence filters need a field that supports them.** Forest derives `PRESENT` / `BLANK` / `MISSING` from an equality filter above the datasource and rewrites them into a comparison with an empty value. Only a field carrying the presence family can answer one — Pylon matches an absent value through `is_set` / `is_unset` alone — so on every other field the translator refuses the rewritten condition and names the filter to change, rather than sending a comparison Pylon would answer as if the empty value were a value of its own.
 - **A condition on a relation is resolved by reading the foreign collection** for its keys and sending them as an `in`. Past `MAX_RELATION_KEYS` (**500**) the condition is refused rather than truncated. A resolution matching no foreign record answers with no record at all.
+- **`NOT_EQUAL` is offered wherever `NOT_IN` is**, although no table above lists it: the datasource declares the one spelling Pylon takes, and the agent republishes the other from it. The same rewrite is what puts `PRESENT` / `BLANK` / `MISSING` in front of the fields that carry them.
 - **`In` and `NotIn` are refused when empty** rather than matched against everything.
 - **Non-finite numbers are refused.** A `Number` filter the agent cast to `Infinity` or `NaN` is answered with a 400 naming the field.
 
