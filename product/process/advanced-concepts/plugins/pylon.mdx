@@ -1,0 +1,179 @@
+---
+title: "Pylon plugins"
+description: "Surface Pylon operations as actions on any collection (create and close issues)"
+---
+
+The Pylon connector ships two plugins that surface Pylon operations as actions on any host collection of your back-end — typically a collection that already carries the Pylon requester's identity (an `email` column) or a Pylon issue id (a column like `pylon_issue_id`).
+
+<Warning>
+The Pylon connector is only available for Ruby (gem `forest_admin_datasource_pylon`).
+</Warning>
+
+Both plugins require the [Pylon datasource](/get-started/connect/data-sources/pylon) to be registered on your back-end: they need the `Datasource` instance to reach the Pylon API client.
+
+## Usage
+
+Nothing is registered automatically. Opt each plugin in per collection:
+
+```ruby
+# app/lib/forest_admin_rails/create_agent.rb
+pylon_datasource = ForestAdminDatasourcePylon::Datasource.new(api_key: ENV['PYLON_API_KEY'])
+ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(pylon_datasource, {})
+
+@agent.collection :Customer do |collection|
+  collection.use(
+    ForestAdminDatasourcePylon::Plugins::CreateIssueWithNotification,
+    datasource: pylon_datasource,
+    sender_email: 'support@acme.com'
+  )
+end
+
+@agent.collection :Order do |collection|
+  collection.use(
+    ForestAdminDatasourcePylon::Plugins::CloseIssue,
+    datasource: pylon_datasource,
+    issue_id_field: 'pylon_issue_id'
+  )
+end
+```
+
+Both plugins take the `Datasource` instance you registered earlier as the required `datasource:` option, and both refuse to register without a collection — they only work at the collection level. You can attach the same plugin to several collections with different option sets.
+
+## Create an issue and notify
+
+A `Single`-scope action that opens a Pylon issue from the selected host record and delivers its first message to the requester. The host record does not need to be related to Pylon: the requester is identified by an email entered (or pre-filled) in the form, and Pylon creates the contact on the fly when it does not already exist (the action derives the contact's name from the email's local part, e.g. `john.doe@acme.com → john.doe`).
+
+Where a Zendesk notification is a side effect of a public comment, Pylon says it outright: `destination_metadata.destination` names the channel the issue's `body_html` is delivered through, and no metadata at all is what leaves the issue internal.
+
+```ruby
+@agent.collection :Customer do |collection|
+  collection.use(
+    ForestAdminDatasourcePylon::Plugins::CreateIssueWithNotification,
+    datasource: pylon_datasource,
+    action_name: 'Open a support issue',
+    default_subject: 'Refund for {{ record.email }}',
+    default_message: '<p>Hi {{ record.name }},</p>',
+    requester_email_default: ->(record) { record['email'] },
+    sender_email: 'support@acme.com',
+    priority_override: 'high',
+    issue_id_field: 'pylon_issue_id'
+  )
+end
+```
+
+| Option                    | Description                                                                                                                                                                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `datasource`              | **Required.** The `ForestAdminDatasourcePylon::Datasource` instance.                                                                                                                                                                |
+| `action_name`             | Overrides the action label. Defaults to `'Create Pylon issue and notify'`.                                                                                                                                                         |
+| `destination`             | Channel the first message is delivered through: `email` (default), `slack`, `in_app_chat`, `customer_portal`, `sms`, `whatsapp` or `internal`. An unknown value is refused at registration.                                        |
+| `sender_email`            | **Required when `destination` is `email`** — `POST /issues` refuses an email delivery that does not name the address it is sent from. Must be one of the addresses configured in your Pylon email app.                              |
+| `email_ccs` / `email_bccs` | Arrays of addresses copied on the outbound email. Only meaningful on an email delivery.                                                                                                                                            |
+| `default_subject`         | String used to pre-fill the "Subject" field. Supports `{{ record.<field> }}` tokens resolved against the selected record when the form opens.                                                                                       |
+| `default_message`         | String used to pre-fill the "Message" field. Same token syntax; rendered through a RichText widget and shipped as `body_html`. Token _values_ are HTML-escaped.                                                                     |
+| `email_templates`         | Array of `{ title:, content: }` hashes. When non-empty, the form becomes a two-page wizard (see below).                                                                                                                             |
+| `requester_email_default` | Default for the "Requester email" field. Accepts a String (same `{{ record.<field> }}` tokens) or a `record -> email_string` Proc evaluated against the selected record when the form opens.                                        |
+| `priority_override`       | One of `urgent`, `high`, `medium`, `low`. When set, the "Priority" dropdown is removed from the form and this value is forced in the payload. An unknown value is refused at registration.                                          |
+| `show_internal_note`      | When truthy, adds the "Send as internal note" checkbox to the form. Hidden by default — the requester is notified unless this is opt-in.                                                                                            |
+| `issue_id_field`          | Writable column on the host collection that receives the freshly-created issue id. Best-effort: a writeback failure is logged and surfaced in the success message without rolling back the issue, Pylon having no transaction.       |
+
+The form exposes the following fields:
+
+| Field                 | Type     | Notes                                                                                                                                                                                           |
+| --------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Requester email       | String   | Required. Pre-filled by `requester_email_default`. The Pylon contact is created on the fly when the address is unknown.                                                                          |
+| Subject               | String   | Required. Default supports `{{ record.<field> }}` tokens.                                                                                                                                       |
+| Message               | RichText | Required. Sent as the issue's `body_html`, and — unless it is an internal note — the message Pylon delivers to the requester. Token _values_ inside the default are HTML-escaped.                |
+| Priority              | Enum     | Optional. Values: `urgent`, `high`, `medium`, `low`. **Removed from the form when `priority_override` is set.**                                                                                  |
+| Send as internal note | Boolean  | **Hidden by default.** Surfaces only when `show_internal_note: true`. When checked, the issue is created without contacting the requester, whatever `destination` says — it is the operator's call on the record they are looking at. |
+
+There is no "Type" field, unlike the Zendesk form: `POST /issues` does not take one, Pylon accepting `type` on an update only.
+
+<Note>
+Pylon never returns the priority of an issue, so no column carries it: what the operator picks in the form is applied on creation and shown nowhere in Forest afterwards.
+</Note>
+
+### Email-templates wizard
+
+When `email_templates` is set, the form becomes a two-page wizard:
+
+1. **Page 1 — Template.** A `Template` field lists each template's `title` plus a sentinel `"No template"` entry.
+2. **Page 2 — Body.** The same fields as above, with the Message recomputed from the page 1 selection.
+
+Picking a template fills the Message with its interpolated `content`; taking it back (`"No template"`) restores `default_message` rather than emptying a required field. Typing into Message in between is preserved across re-renders of the same selection.
+
+```ruby
+collection.use(
+  ForestAdminDatasourcePylon::Plugins::CreateIssueWithNotification,
+  datasource: pylon_datasource,
+  sender_email: 'support@acme.com',
+  email_templates: [
+    { title: 'Refund confirmation',
+      content: '<p>Hi {{ record.first_name }}, your refund has been processed.</p>' },
+    { title: 'Shipping delay',
+      content: '<p>Hi {{ record.first_name }}, we apologise for the delay shipping order #{{ record.order_id }}.</p>' }
+  ]
+)
+```
+
+Template titles must be unique and cannot be `"No template"`: the title is what the enum carries and what the content is looked up by, so a duplicate would send one template's content under another's name. Both are refused at registration rather than discovered by whoever sends the wrong message.
+
+<Warning>
+The message body is HTML the operator writes and Pylon delivers to the requester, and the requester address is a free-text field. Restrict this action to the roles that should be able to send mail on your organization's behalf.
+</Warning>
+
+### Outcome
+
+- A Pylon `4xx` reaches the operator as the action's own error, with Pylon's message intact — it names what they filled in. Anything else stays a 500.
+- On success the message names the issue by its Pylon number, and says whether the requester was notified and through which channel, or that the issue is internal.
+- A failed `issue_id_field` writeback is appended to that success message as a warning; the issue exists either way.
+
+## Close an issue
+
+Registers actions that move the selected Pylon issues to a state — `closed` unless told otherwise. The ids are read either from the primary keys of the selected records (when the action sits on `PylonIssue` itself) or from a configurable column of the host record, so you can close a Pylon issue straight from a business row that stores `pylon_issue_id`.
+
+```ruby
+@agent.collection :Order do |collection|
+  collection.use(
+    ForestAdminDatasourcePylon::Plugins::CloseIssue,
+    datasource: pylon_datasource,
+    issue_id_field: 'pylon_issue_id'
+  )
+end
+```
+
+| Option             | Description                                                                                                                                                    |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `datasource`       | **Required.** The `ForestAdminDatasourcePylon::Datasource` instance.                                                                                            |
+| `issue_id_field`   | Column of the host record holding the Pylon issue id. **Omit it when the action sits on `PylonIssue` itself** — the ids are then the selected primary keys.     |
+| `state`            | State the issues are moved to. Defaults to `'closed'`. Accepts the slug of a custom Pylon status: it is not checked against the built-in ones, which would refuse the very workflow your organization built. Cannot be empty. |
+| `scopes`           | Subset of `%i[single bulk]`. Defaults to both. Accepts symbols or strings interchangeably.                                                                       |
+| `action_name`      | Label of the single-record action. Defaults to `'Close Pylon issue'`.                                                                                           |
+| `bulk_action_name` | Label of the bulk action. Defaults to `'Close selected Pylon issues'`.                                                                                          |
+
+One action is registered per requested scope:
+
+| Scope    | Default label                    |
+| -------- | -------------------------------- |
+| `single` | "Close Pylon issue"              |
+| `bulk`   | "Close selected Pylon issues"    |
+
+Pick a subset to register fewer variants, e.g. `scopes: %i[bulk]` registers a single bulk action. Registering both under the same name is refused at registration: a collection keys its actions by name, so the second would overwrite the first and answer with the wrong scope.
+
+Registering the plugin twice with two different `state` values on the same collection is how you offer several transitions — give each variant its own `action_name` / `bulk_action_name`.
+
+### Which scope bounds it
+
+The state is written straight through the Pylon client rather than through `PylonIssue`, because the action is registered on the host collection. But the ids were read **before** that write, through the collection the action sits on, and the agent intersects the operator's scope into the filter that read them. So what bounds this action is the scope of the **host** collection:
+
+- Mounted on `PylonIssue`, a scope or a segment on `PylonIssue` bounds exactly what it closes.
+- Mounted on a business collection with `issue_id_field`, what bounds it is the records the operator may see there, and the issue ids those records carry. **In that form the column is the authority** — an operator who can write it can name any Pylon issue — so treat it as one.
+
+### Batch behaviour
+
+The batch is capped at **20 issues** (`MAX_TARGETS`), the same budget a filter-driven write gets: Pylon takes one request per issue, so a wider selection is a long run of sequential writes the request may time out on, leaving the issues closed up to that point closed and reporting which ones to nobody. Past the cap the run is refused **before its first write**, with a message naming the count and the cap.
+
+The cap counts the issues named, not the records selected: a column of issue ids is not a key, so a hundred host records naming ten issues is a batch of ten (duplicates are collapsed, so no issue is written — or counted — twice).
+
+Within the batch, each id is processed independently: a single issue Pylon refuses (deleted, or outside the token's scope) does not abort the rest, and the success message names how many were moved and which ones failed. If every id fails, the action surfaces as an error rather than as a partial success.
+
+If no usable id can be read from the selection — an empty `issue_id_field`, a renamed column, a record the scope hides — the action answers `No Pylon issue id found in '<field>'.` rather than calling Pylon. A refusal coming from the datasource itself (a selection naming more issues by id than one page of lookups covers, for instance) travels to the operator with its own message instead: a selection they can see they made must never be reported as "nothing selected".

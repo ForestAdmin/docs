@@ -81,6 +81,7 @@
                   "get-started/connect/data-sources/graphql-hasura",
                   "get-started/connect/data-sources/cosmosdb",
                   "get-started/connect/data-sources/snowflake",
+                  "get-started/connect/data-sources/pylon",
                   "get-started/connect/data-sources/zendesk",
                   {
                     "group": "Custom datasources",
@@ -179,6 +180,7 @@
                     "pages": [
                       "product/process/advanced-concepts/plugins/overview",
                       "product/process/advanced-concepts/plugins/active-storage",
+                      "product/process/advanced-concepts/plugins/pylon",
                       "product/process/advanced-concepts/plugins/zendesk"
                     ]
                   },
