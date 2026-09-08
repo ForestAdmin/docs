@@ -51,8 +51,8 @@ Where a Zendesk notification is a side effect of a public comment, Pylon says it
     ForestAdminDatasourcePylon::Plugins::CreateIssueWithNotification,
     datasource: pylon_datasource,
     action_name: 'Open a support issue',
-    default_subject: 'Refund for {{ record.email }}',
-    default_message: '<p>Hi {{ record.name }},</p>',
+    default_subject: 'Refund for {{record.email}}',
+    default_message: '<p>Hi {{record.name}},</p>',
     requester_email_default: ->(record) { record['email'] },
     sender_email: 'support@acme.com',
     priority_override: 'high',
@@ -68,10 +68,10 @@ end
 | `destination`             | Channel the first message is delivered through: `email` (default), `slack`, `in_app_chat`, `customer_portal`, `sms` or `whatsapp`. `internal` is the absence of a delivery rather than a channel: the issue is created and the requester is not contacted. An unknown value is refused at registration. |
 | `sender_email`            | **Required when `destination` is `email`** — `POST /issues` refuses an email delivery that does not name the address it is sent from. Must be one of the addresses configured in your Pylon email app.                              |
 | `email_ccs` / `email_bccs` | Arrays of addresses copied on the outbound email. Only meaningful on an email delivery.                                                                                                                                            |
-| `default_subject`         | String used to pre-fill the "Subject" field. Supports `{{ record.<field> }}` tokens resolved against the selected record when the form opens.                                                                                       |
+| `default_subject`         | String used to pre-fill the "Subject" field. Supports `{{record.<field>}}` tokens resolved against the selected record when the form opens.                                                                                       |
 | `default_message`         | String used to pre-fill the "Message" field. Same token syntax; rendered through a RichText widget and shipped as `body_html`. Token _values_ are HTML-escaped.                                                                     |
 | `email_templates`         | Array of `{ title:, content: }` hashes. When non-empty, the form becomes a two-page wizard (see below).                                                                                                                             |
-| `requester_email_default` | Default for the "Requester email" field. Accepts a String (same `{{ record.<field> }}` tokens) or a `record -> email_string` Proc evaluated against the selected record when the form opens.                                        |
+| `requester_email_default` | Default for the "Requester email" field. Accepts a String (same `{{record.<field>}}` tokens) or a `record -> email_string` Proc evaluated against the selected record when the form opens.                                        |
 | `priority_override`       | One of `urgent`, `high`, `medium`, `low`. When set, the "Priority" dropdown is removed from the form and this value is forced in the payload. An unknown value is refused at registration.                                          |
 | `show_internal_note`      | When truthy, adds the "Send as internal note" checkbox to the form. Hidden by default — the requester is notified unless this is opt-in.                                                                                            |
 | `issue_id_field`          | Writable column on the host collection that receives the freshly-created issue id. Best-effort: a writeback failure is logged and surfaced in the success message without rolling back the issue, Pylon having no transaction.       |
@@ -81,7 +81,7 @@ The form exposes the following fields:
 | Field                 | Type     | Notes                                                                                                                                                                                           |
 | --------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Requester email       | String   | Required. Pre-filled by `requester_email_default`. The Pylon contact is created on the fly when the address is unknown.                                                                          |
-| Subject               | String   | Required. Default supports `{{ record.<field> }}` tokens.                                                                                                                                       |
+| Subject               | String   | Required. Default supports `{{record.<field>}}` tokens.                                                                                                                                       |
 | Message               | RichText | Required. Sent as the issue's `body_html`, and — unless it is an internal note — the message Pylon delivers to the requester. Token _values_ inside the default are HTML-escaped.                |
 | Priority              | Enum     | Optional. Values: `urgent`, `high`, `medium`, `low`. **Removed from the form when `priority_override` is set.**                                                                                  |
 | Send as internal note | Boolean  | **Hidden by default.** Surfaces only when `show_internal_note: true`. When checked, the issue is created without contacting the requester, whatever `destination` says — it is the operator's call on the record they are looking at. |
@@ -108,9 +108,9 @@ collection.use(
   sender_email: 'support@acme.com',
   email_templates: [
     { title: 'Refund confirmation',
-      content: '<p>Hi {{ record.first_name }}, your refund has been processed.</p>' },
+      content: '<p>Hi {{record.first_name}}, your refund has been processed.</p>' },
     { title: 'Shipping delay',
-      content: '<p>Hi {{ record.first_name }}, we apologise for the delay shipping order #{{ record.order_id }}.</p>' }
+      content: '<p>Hi {{record.first_name}}, we apologise for the delay shipping order #{{record.order_id}}.</p>' }
   ]
 )
 ```

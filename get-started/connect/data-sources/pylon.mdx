@@ -97,7 +97,7 @@ Two relations are not exposed, for two different reasons:
 
 ### Conversation thread
 
-Pylon has no way to read the threads of several issues at once, so messages are not exposed as their own collection. Instead, each issue carries a structured `messages` array column, fetched from `GET /issues/{id}/messages` only when the projection asks for it (i.e. when `messages` is rendered on the detail view or referenced in a custom action).
+Pylon has no way to read the threads of several issues at once, so messages are not exposed as their own collection. Instead, each issue carries a structured `messages` array column, fetched from `GET /issues/{id}/messages` only when the projection asks for it — in practice, when `messages` is rendered on the detail view. A custom action cannot read the thread: `ActionContext#get_records` lists with an empty projection whatever fields it is handed, so `context.get_record(['messages'])` comes back without the column.
 
 Each entry has the following shape:
 
@@ -192,7 +192,7 @@ Every other column of `PylonIssue` carries no filter operator at all, `POST /iss
 | `tags`     | `IN`, `NOT_IN`                                         |
 | `owner_id` | `EQUAL`, `IN`, `NOT_IN`, `PRESENT`, `BLANK`, `MISSING` |
 
-`name` gets no negated substring: the endpoint accepts `string_contains` but no negation of it. **No time field is filterable** — `created_at`, `updated_at` and `latest_customer_activity_time` are absent from the allow-list. `external_ids` is deliberately left out although the endpoint filters it: the API matches bare external-id strings while the column shows `{external_id, label}` objects, so the filter would run on something the operator cannot see. To reach an account by an external id, use it in place of the primary key — `GET /accounts/{id}` accepts one.
+`name` gets no negated substring: the endpoint accepts `string_contains` but no negation of it. **No time field is filterable** — `created_at`, `updated_at` and `latest_customer_activity_time` are absent from the allow-list. `external_ids` is deliberately left out although the endpoint filters it: the API matches bare external-id strings while the column shows `{external_id, label}` objects, so the filter would run on something the operator cannot see. There is no way to reach an account by an external id from Forest either: `GET /accounts/{id}` does accept one, but the record it answers carries Pylon's own UUID as its `id`, and a lookup keeps a record only when that matches the id it asked for — so the answer is dropped and the filter comes back empty.
 
 </Tab>
 <Tab title="PylonContact">
@@ -218,10 +218,10 @@ Scalar columns therefore advertise the operators the agent can evaluate in memor
 
 Notes that apply to every collection:
 
-- **Custom fields** are filtered through their slug, with the operators of the column the introspection built: the equality and presence families, plus substring on a `String` and the bare comparisons on a date. A `Number` gets no comparison (Pylon documents `time_is_after` / `time_is_before` and nothing else, so a numeric range would travel as a time filter), and a `multiselect` gets nothing.
-- **Presence filters need a field that supports them.** Forest derives `PRESENT` / `BLANK` / `MISSING` from an equality filter above the datasource and rewrites them into a comparison with an empty value. Only a field carrying the presence family can answer one — Pylon matches an absent value through `is_set` / `is_unset` alone — so on every other field the translator refuses the rewritten condition and names the filter to change, rather than sending a comparison Pylon would answer as if the empty value were a value of its own.
+- **Custom fields** are filtered through their slug, with the operators of the column the introspection built: the equality and presence families, plus the whole substring set on a `String` — negations included — and the bare comparisons on a date, which drops `IN` / `NOT_IN` in exchange (the toolkit's `Rules` grants a `Date` or a `Dateonly` column no array operator). A `Number` gets no comparison (Pylon documents `time_is_after` / `time_is_before` and nothing else, so a numeric range would travel as a time filter), and a `multiselect` gets nothing.
+- **Presence filters need a field that supports them.** `PRESENT` / `BLANK` / `MISSING` are advertised on every field carrying an equality or a membership filter: the agent derives them above the datasource and rewrites them into a comparison with an empty value. A field the tables above list them on answers through `is_set` / `is_unset` — the one way Pylon matches an absent value — and never through that rewritten comparison. On every other field the translator refuses it and names the filter to change, rather than sending a comparison Pylon would answer as if the empty value were a value of its own.
 - **A condition on a relation is resolved by reading the foreign collection** for its keys and sending them as an `in`. Past `MAX_RELATION_KEYS` (**500**) the condition is refused rather than truncated. A resolution matching no foreign record answers with no record at all.
-- **`NOT_EQUAL` is offered wherever `NOT_IN` is**, although no table above lists it: the datasource declares the one spelling Pylon takes, and the agent republishes the other from it. The same rewrite is what puts `PRESENT` / `BLANK` / `MISSING` in front of the fields that carry them.
+- **`NOT_EQUAL` is offered wherever `NOT_IN` is**, although no table above lists it: the datasource declares the one spelling Pylon takes, and the agent republishes the other from it. The same mechanism puts `PRESENT` / `BLANK` / `MISSING` in front of every field carrying an equality or a membership filter — the ones that cannot answer them included, which is what the bullet above is about.
 - **`In` and `NotIn` are refused when empty** rather than matched against everything.
 - **Non-finite numbers are refused.** A `Number` filter the agent cast to `Infinity` or `NaN` is answered with a 400 naming the field.
 
@@ -236,7 +236,7 @@ Two further refusals on this path:
 - **Combining free-text search with an `id` filter** is refused: search and id lookup are different endpoints, and neither can do the other's half.
 - A **nested** `AND` carrying an `id` is refused instead of resolved. It fails closed, and the agent flattens one level of grouping, so every shape the UI builds keeps its `id` at the top level.
 
-`PylonAccount` and `PylonContact` need none of this: their search endpoints filter `id` server-side.
+`PylonAccount` and `PylonContact` need none of this capping: their search endpoints filter `id` server-side, so a selection of any width costs one request. A record detail — `id equals X` alone — is still read through `GET /accounts/{id}` / `GET /contacts/{id}`, to spend the cheaper budget rather than because the search could not answer it.
 
 ### Sorting
 
@@ -246,7 +246,7 @@ Two further refusals on this path:
 
 ### Pagination
 
-Forest's offset/limit window is translated into Pylon's cursor pagination: the client walks the cursor until it has collected the window the caller asked for, capped at `MAX_PAGES` (**20**) pages and `MAX_RECORDS` (**5 000**) records per walk, with a page size clamped to `MAX_SEARCH_LIMIT` (**1 000**). A walk cut short by those caps logs a truncation warning.
+Forest's offset/limit window is translated into Pylon's cursor pagination: the client walks the cursor until it has collected the window the caller asked for, capped at `MAX_PAGES` (**20**) pages and `MAX_RECORDS` (**5000**) records per walk, with a page size clamped to `MAX_SEARCH_LIMIT` (**1000**). A walk cut short by those caps logs a truncation warning.
 
 A filter carrying no page asks for every record it matched, and travels as no limit at all rather than as a stand-in figure — so it cannot be mistaken for a window the caller asked for and truncated silently.
 
@@ -303,9 +303,11 @@ To meter on your own side instead, take the limiter out of the stack:
 ForestAdminDatasourcePylon::Datasource.new(api_key: ENV['PYLON_API_KEY'], rate_limiter: nil)
 ```
 
-Retries apply to `429`, `502`, `503` and `504`, plus timeouts and dropped connections. Only `GET`, `HEAD` and `OPTIONS` are replayed on a transport failure — a dropped connection on the way back from a `DELETE` Pylon did perform would otherwise be replayed into a 404 and reported as a deletion that failed when it landed. A `429` is retried on any verb, Pylon having rejected the request before processing it.
+Retries apply to `429`, `502`, `503` and `504`, plus timeouts and dropped connections. Only `GET`, `HEAD` and `OPTIONS` are replayed, and that restriction covers the `5xx` as much as the transport failures — a `502`, or a dropped connection, on the way back from a `DELETE` Pylon did perform would otherwise be replayed into a 404 and reported as a deletion that failed when it landed. A `502` answering `POST /issues/search` is therefore not replayed either. A `429` is retried on any verb, Pylon having rejected the request before processing it.
 
 ## Errors
+
+Every class below lives under `ForestAdminDatasourcePylon::`. The table drops the prefix for width, but a `rescue` needs it in full — `rescue ForestAdminDatasourcePylon::APIError`.
 
 | Class                     | Surfaces as | Raised by                                                                                                                       |
 | ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------- |
