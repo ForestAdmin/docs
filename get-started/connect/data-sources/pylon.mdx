@@ -229,7 +229,9 @@ Notes that apply to every collection:
 
 `POST /issues/search` has no `id` filter, so a primary-key lookup on `PylonIssue` is short-circuited to `GET /issues/{id}`, **one request per id**. Any `id` leaf of a top-level `AND` is taken — Forest sends `AND(id equal X, <scope>)` on a record detail as soon as a scope or a segment is set — and two of them are intersected, an `AND` naming the records all of its conditions name.
 
-That fan-out is capped **per page** at `MAX_ID_LOOKUPS` (**20**): the window is taken off the ids first, so a wider selection is read a page at a time rather than truncated at its first twenty. The one shape that cannot be paged that way is a lookup carrying a residual condition — which records the page holds could only be known by reading all of them — and it is refused past the cap.
+That fan-out is capped **per page** at `MAX_ID_LOOKUPS` (**20**): the window is taken off the ids before any of them is read, so a paginated read walks a wider selection a page at a time.
+
+A filter carrying **no page** has no window to take, though — what an action's own read goes through, and any API caller that sends none — and it is truncated at its first twenty ids, with a warning in the log. The one shape refused rather than truncated is a lookup carrying a residual condition: which records the page holds could only be known by reading all of them, so past the cap it is refused outright.
 
 Two further refusals on this path:
 
