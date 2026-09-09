@@ -98,9 +98,11 @@ Run Forest Runtime as its own service — the way to run it with any agent other
 | Agent | Config | Min version |
 | --- | --- | --- |
 | `@forestadmin/agent` — Node.js (v2) | `createAgent({ workflowExecutorUrl })` | 1.79.0 |
-| `forest-express` — Node.js (v1, incl. `-sequelize` / `-mongoose`) | `Liana.init({ workflowExecutorUrl })` | 10.7.0 |
+| `forest-express-sequelize` — Node.js (v1) | `Liana.init({ workflowExecutorUrl })` | 9.6.4 |
+| `forest-express-mongoose` — Node.js (v1) | `Liana.init({ workflowExecutorUrl })` | 9.6.3 |
+| `forest-express` — Node.js (v1, installed directly) | `Liana.init({ workflowExecutorUrl })` | 10.7.0 |
 | `forest_admin_rails` — Ruby (v2) | `config.workflow_executor_url` | 1.31.0 |
-| `forest-rails` — Ruby (v1) | `ForestLiana.workflow_executor_url` | 9.18.0 |
+| `forest_liana` — Ruby (v1) | `ForestLiana.workflow_executor_url` | 9.18.0 |
 
 <CodeGroup>
 
