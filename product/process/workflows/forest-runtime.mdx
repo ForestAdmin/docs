@@ -103,7 +103,7 @@ Run Forest Runtime as its own service — the way to run it with any agent other
 | `forest_admin_rails` — Ruby (v2) | `config.workflow_executor_url` | 1.31.0 |
 | `forest_liana` — Ruby (v1) | `ForestLiana.workflow_executor_url` | 9.18.0 |
 
-<Note>Both v1 Node.js packages get the route from their shared `forest-express` dependency, which they pin exactly — those minimums are the ones that pull in `forest-express` 10.7.0. If you audit a lockfile, that's the version to look for; `forest-express` isn't installed or configured on its own.</Note>
+<Note>The route itself lives in `forest-express`, which both wrappers pin to an exact version. The minimums above pull in `forest-express` 10.7.0, so that's the number to look for in a lockfile. You never install or configure it yourself.</Note>
 
 <CodeGroup>
 
