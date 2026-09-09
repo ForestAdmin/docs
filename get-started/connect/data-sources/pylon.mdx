@@ -1,0 +1,339 @@
+---
+title: "Pylon"
+description: "Surface a Pylon workspace (issues, accounts, contacts, users, teams) as Forest collections"
+---
+
+The Pylon datasource surfaces a [Pylon](https://usepylon.com) workspace as Forest collections. It exposes issues, accounts, contacts, users and teams on top of the [Pylon API](https://docs.usepylon.com/pylon-docs/developer/api/api-reference), with filters, free-text search, relations, the conversation thread of an issue, Pylon custom fields, CRUD writes and two action plugins.
+
+<Warning>
+The Pylon datasource is only available for Ruby (gem `forest_admin_datasource_pylon`). There is no Node.js equivalent yet.
+</Warning>
+
+## Installation
+
+Install the gem `forest_admin_datasource_pylon`.
+
+```ruby
+# Gemfile
+gem 'forest_admin_datasource_pylon'
+```
+
+```ruby
+# app/lib/forest_admin_rails/create_agent.rb
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      datasource = ForestAdminDatasourcePylon::Datasource.new(api_key: ENV['PYLON_API_KEY'])
+
+      @create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(datasource, {})
+      customize
+      @create_agent.build
+    end
+  end
+end
+```
+
+## Configuration
+
+A single Bearer token is the whole configuration — an [API key](https://docs.usepylon.com/pylon-docs/developer/api/api-reference) created from your Pylon workspace settings. Nothing validates it at boot: the custom-field introspection does call Pylon, but it is best-effort, so a `401` there costs the custom columns and a log line rather than the boot. A wrong key therefore starts the agent and fails on the first list. `client.me` is the check to run yourself — `GET /me` returns the organization owning the token, which is enough to prove the credentials are usable.
+
+`api_key` is mandatory; the datasource fails fast with a `ForestAdminDatasourcePylon::ConfigurationError` when it is missing or blank. Everything else is optional and only exists to trade throughput, timeouts and rate-limit behaviour.
+
+| Option              | Default                     | Description                                                                                                                                                                       |
+| ------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api_key`           | —                           | **Required.** Pylon API key, sent as a Bearer token.                                                                                                                              |
+| `base_url`          | `https://api.usepylon.com`  | Alternative base URL — an egress proxy, or a mock server. A base URL mounted under a subpath is supported (the subpath is stripped before the rate-limit table is consulted).      |
+| `open_timeout`      | `5`                         | Connection timeout, in seconds, for the requests a running agent makes.                                                                                                           |
+| `timeout`           | `30`                        | Read timeout, in seconds, for the requests a running agent makes.                                                                                                                 |
+| `retry_policy`      | `RetryPolicy.new`           | How a failed request is retried. See [Rate limits and retries](#rate-limits-and-retries).                                                                                         |
+| `rate_limiter`      | `RateLimiter.new`           | Proactive per-endpoint throttling. Pass `nil` to remove it and leave the 429 retry as the only rate-limit handling.                                                               |
+| `boot_open_timeout` | `3`                         | Connection timeout for the custom-field introspection that runs while the datasource is being built.                                                                              |
+| `boot_timeout`      | `10`                        | Read timeout for that same introspection.                                                                                                                                         |
+| `boot_retry_policy` | `RetryPolicy.boot`          | Retry policy for that same introspection: one retry, and a much tighter wait, since it sits in front of a Rails boot.                                                             |
+
+<Note>
+The API key never reaches an `inspect`: `Configuration`, `Client` and `Datasource` all mask it, and the base URL is printed with its user-info redacted (an egress proxy spelled `https://user:pass@proxy.internal` would otherwise leak a password onto a Rails error page).
+</Note>
+
+The `forest_admin_datasource_pylon` gem also ships two action plugins (`CloseIssue` and `CreateIssueWithNotification`) that you can attach to any host collection. See [the Pylon plugins page](/product/process/advanced-concepts/plugins/pylon) for details.
+
+## Provided collections
+
+Once the datasource is registered, five collections are added to your Forest project:
+
+| Collection      | Pylon resource | Read                                        | Write                    |
+| --------------- | -------------- | ------------------------------------------- | ------------------------ |
+| `PylonIssue`    | `/issues`      | `POST /issues/search`, cursor-paginated     | create / update / delete |
+| `PylonAccount`  | `/accounts`    | search + list, cursor-paginated             | create / update / delete |
+| `PylonContact`  | `/contacts`    | search + list, cursor-paginated             | create / update / delete |
+| `PylonUser`     | `/users`       | whole dataset, unpaginated                  | update                   |
+| `PylonTeam`     | `/teams`       | whole dataset, unpaginated                  | create / update          |
+
+`PylonUser` has no create and no delete (a Pylon agent is invited and deactivated from Pylon itself), and `PylonTeam` has no delete — Pylon exposes no such endpoints, and the datasource refuses those verbs rather than pretending to perform them.
+
+`PylonIssue`, `PylonAccount` and `PylonContact` also carry their Pylon [custom fields](#custom-fields), introspected at boot.
+
+### Relationships
+
+The following relationships are exposed automatically:
+
+- `PylonIssue.account` → `PylonAccount` (foreign key `account_id`)
+- `PylonIssue.requester` → `PylonContact` (foreign key `requester_id`)
+- `PylonIssue.assignee` → `PylonUser` (foreign key `assignee_id`)
+- `PylonIssue.team` → `PylonTeam` (foreign key `team_id`)
+- `PylonAccount.issues` → `PylonIssue` (origin key `account_id`)
+- `PylonAccount.contacts` → `PylonContact` (origin key `account_id`)
+- `PylonContact.account` → `PylonAccount` (foreign key `account_id`)
+- `PylonContact.requested_issues` → `PylonIssue` (origin key `requester_id`)
+- `PylonUser.assigned_issues` → `PylonIssue` (origin key `assignee_id`)
+- `PylonTeam.issues` → `PylonIssue` (origin key `team_id`)
+
+Every one of those keys is filtered server-side by `/issues/search` or `/contacts/search`, so a related list costs one request and no in-memory pass.
+
+Two relations are not exposed, for two different reasons:
+
+- **Team membership**, which Pylon's shape does not allow. Pylon nests its members inside a team and exposes no team id on a user, so the membership is a many-to-many with no key column to build it on. `PylonTeam.user_ids` carries the member ids as a `Json` column instead.
+- **Account owner**, which it would allow. `PylonAccount.owner_id` points at a `PylonUser` and would be resolved like any other key, but is left as a plain column until something in the panel asks for the owner of an account.
+
+### Conversation thread
+
+Pylon has no way to read the threads of several issues at once, so messages are not exposed as their own collection. Instead, each issue carries a structured `messages` array column, fetched from `GET /issues/{id}/messages` only when the projection asks for it — in practice, when `messages` is rendered on the detail view. A custom action cannot read the thread: `ActionContext#get_records` lists with an empty projection whatever fields it is handed, so `context.get_record(['messages'])` comes back without the column.
+
+Each entry has the following shape:
+
+| Field               | Type      | Source                                                     |
+| ------------------- | --------- | ---------------------------------------------------------- |
+| `id`                | `String`  | Pylon message id                                           |
+| `body_html`         | `String`  | HTML body (Pylon's `message_html`)                         |
+| `is_private`        | `Boolean` | `true` for an internal note                                |
+| `source`            | `String`  | Channel the message came through                           |
+| `thread_id`         | `String`  | Thread the message belongs to                              |
+| `file_urls`         | `Json`    | Attachments                                                |
+| `created_at`        | `Date`    | Message timestamp (Pylon's `timestamp`)                    |
+| `author_name`       | `String`  | Author, flattened from Pylon's nested author object        |
+| `author_email`      | `String`  | Same                                                       |
+| `author_avatar_url` | `String`  | Same                                                       |
+| `author_contact_id` | `String`  | Set when the author is a contact                           |
+| `author_user_id`    | `String`  | Set when the author is an agent                            |
+
+The column is read-only, and neither filterable nor sortable: `POST /issues/search` covers no message field, and the search payload does not even carry the thread.
+
+One thread is one request, and a thread is the whole conversation rather than a page of it, so a list view asking for more of them than `MAX_MESSAGE_EMBEDS` (**10**) reads the first ones and logs a warning. A row past that cap — and a row whose thread could not be read — is left at `nil` ("unknown"), never at an empty list, which would read as "this issue has no message".
+
+### Custom fields
+
+Custom fields defined in your Pylon workspace are introspected at boot, one `GET /custom-fields` call per object type (`issue`, `account`, `contact` — Pylon carries none on users and teams), and added to the matching collection's schema under **the Pylon slug verbatim**: the slug is both what a read payload indexes the values by and what a search filter sends.
+
+The Forest column type is derived from the Pylon field type:
+
+| Pylon field type | Forest column type |
+| ---------------- | ------------------ |
+| `text`, `url`    | `String`           |
+| `user`           | `String`           |
+| `number`         | `Number`           |
+| `decimal`        | `Number`           |
+| `boolean`        | `Boolean`          |
+| `date`           | `Dateonly`         |
+| `datetime`       | `Date`             |
+| `select`         | `Enum`             |
+| `multiselect`    | `Json`             |
+
+- An unrecognized type is **skipped and logged** rather than guessed at.
+- A column name colliding with a native column is skipped.
+- A `user` field holds a Pylon user id and stays a `String` rather than becoming a relation.
+- A `select` advertises the **slugs** of its options (Pylon reads and filters a select by slug, never by label). A select whose options were all removed falls back to a read-only `String`, so the column still shows what it holds.
+- Nothing is sortable (no Pylon endpoint takes a sort parameter) and nothing is groupable.
+- A custom field is writable only when Pylon flags it `is_read_only: false`. A definition carrying no flag at all is left read-only and reported once, because nothing can tell it apart from a field synced from an app — whose every save Pylon would reject.
+
+<Note>
+The introspection runs while the datasource is being constructed, in front of your Rails boot, which is why it uses its own short timeouts (`boot_open_timeout`, `boot_timeout`, `boot_retry_policy`).
+
+If it fails, it costs the custom columns and not the datasource: the agent boots on the native schema and says so in the log. The first failure also stands for the object types after it, rather than paying the same timeout three times over.
+</Note>
+
+## Capabilities
+
+Pylon is a ticketing API, not a database, and several things Forest asks for have no equivalent. Where that happens the datasource **refuses with a message naming the reason** rather than answering something that looks right and is not. All of these reach the operator as a `400` carrying that text.
+
+### Filters
+
+The condition tree is translated into the filter payload of the matching Pylon search endpoint. Each collection derives its columns' filter operators from the allow-list of its endpoint, so the UI never offers a filter of the collection's own that Pylon would refuse.
+
+<Tabs>
+<Tab title="PylonIssue">
+
+| Column                | Filter sent as               | Supported operators                                                                     |
+| --------------------- | ---------------------------- | --------------------------------------------------------------------------------------- |
+| `id`                  | _(short-circuited)_          | `EQUAL`, `IN` — see [Primary-key lookups](#primary-key-lookups)                         |
+| `state`               | `state`                      | `EQUAL`, `IN`, `NOT_IN`                                                                 |
+| `type`                | `issue_type`                 | `EQUAL`, `IN`, `NOT_IN`, `PRESENT`, `BLANK`, `MISSING`                                   |
+| `account_id`          | `account_id`                 | `EQUAL`, `IN`, `NOT_IN`, `PRESENT`, `BLANK`, `MISSING`                                   |
+| `requester_id`        | `requester_id`               | `EQUAL`, `IN`, `NOT_IN`, `PRESENT`, `BLANK`, `MISSING`                                   |
+| `assignee_id`         | `assignee_id`                | `EQUAL`, `IN`, `NOT_IN`, `PRESENT`, `BLANK`, `MISSING`                                   |
+| `team_id`             | `team_id`                    | `EQUAL`, `IN`, `NOT_IN`                                                                 |
+| `title`               | `title`                      | `CONTAINS`, `I_CONTAINS`, `NOT_CONTAINS`, `NOT_I_CONTAINS`                               |
+| `body_html`           | `body_html`                  | `CONTAINS`, `I_CONTAINS`, `NOT_CONTAINS`, `NOT_I_CONTAINS`                               |
+| `tags`                | `tags`                       | `IN`, `NOT_IN`                                                                          |
+| `created_at`          | `created_at`                 | `GREATER_THAN`, `LESS_THAN` (and everything the agent rewrites into them)                |
+| `updated_at`          | `updated_at`                 | Same                                                                                    |
+| `resolution_time`     | `resolved_at`                | Same                                                                                    |
+| `latest_message_time` | `latest_message_activity_at` | Same                                                                                    |
+
+Every other column of `PylonIssue` carries no filter operator at all, `POST /issues/search` covering nothing else.
+
+</Tab>
+<Tab title="PylonAccount">
+
+| Column     | Supported operators                                    |
+| ---------- | ------------------------------------------------------ |
+| `id`       | `EQUAL`, `IN`, `NOT_IN` (filtered server-side here)    |
+| `name`     | `EQUAL`, `IN`, `NOT_IN`, `CONTAINS`, `I_CONTAINS`      |
+| `domains`  | `IN`, `NOT_IN`                                         |
+| `tags`     | `IN`, `NOT_IN`                                         |
+| `owner_id` | `EQUAL`, `IN`, `NOT_IN`, `PRESENT`, `BLANK`, `MISSING` |
+
+`name` gets no negated substring: the endpoint accepts `string_contains` but no negation of it. **No time field is filterable** — `created_at`, `updated_at` and `latest_customer_activity_time` are absent from the allow-list. `external_ids` is deliberately left out although the endpoint filters it: the API matches bare external-id strings while the column shows `{external_id, label}` objects, so the filter would run on something the operator cannot see. There is no way to reach an account by an external id from Forest either: `GET /accounts/{id}` does accept one, but the record it answers carries Pylon's own UUID as its `id`, and a lookup keeps a record only when that matches the id it asked for — so the answer is dropped and the filter comes back empty.
+
+</Tab>
+<Tab title="PylonContact">
+
+| Column       | Supported operators                               |
+| ------------ | ------------------------------------------------- |
+| `id`         | `EQUAL`, `IN`, `NOT_IN` (filtered server-side)    |
+| `name`       | `EQUAL`, `IN`, `NOT_IN`, `CONTAINS`, `I_CONTAINS` |
+| `email`      | `EQUAL`, `IN`, `NOT_IN`, `CONTAINS`, `I_CONTAINS` |
+| `account_id` | `EQUAL`, `IN`, `NOT_IN`                           |
+
+`email` filters the primary address only, not the `emails` list. The contacts search offers nothing else: no presence check, no filter on the phone numbers, the portal role or the external ids.
+
+</Tab>
+<Tab title="PylonUser / PylonTeam">
+
+`GET /users` and `GET /teams` take no filter at all, so the whole response is filtered **in memory** — which is exact rather than approximate here, the records in hand being every record Pylon holds.
+
+Scalar columns therefore advertise the operators the agent can evaluate in memory (`EQUAL`, `NOT_EQUAL`, `IN`, `NOT_IN`, `PRESENT`, `BLANK`, `CONTAINS`, `I_CONTAINS`, `NOT_CONTAINS`, `STARTS_WITH`, `ENDS_WITH` on a `String`; the equality and presence family on a `Boolean`). `Json` columns (`emails`, `user_ids`) advertise none.
+
+</Tab>
+</Tabs>
+
+Notes that apply to every collection:
+
+- **Custom fields** are filtered through their slug, with the operators of the column the introspection built: the equality and presence families, plus the whole substring set on a `String` — negations included — and the bare comparisons on a date, which drops `IN` / `NOT_IN` in exchange (the toolkit's `Rules` grants a `Date` or a `Dateonly` column no array operator). A `Number` gets no comparison (Pylon documents `time_is_after` / `time_is_before` and nothing else, so a numeric range would travel as a time filter), and a `multiselect` gets nothing.
+- **Presence filters need a field that supports them.** `PRESENT` / `BLANK` / `MISSING` are advertised on every field carrying an equality or a membership filter: the agent derives them above the datasource and rewrites them into a comparison with an empty value. A field the tables above list them on answers through `is_set` / `is_unset` — the one way Pylon matches an absent value — and never through that rewritten comparison. On every other field the translator refuses it and names the filter to change, rather than sending a comparison Pylon would answer as if the empty value were a value of its own.
+- **A condition on a relation is resolved by reading the foreign collection** for its keys and sending them as an `in`. Past `MAX_RELATION_KEYS` (**500**) the condition is refused rather than truncated. A resolution matching no foreign record answers with no record at all.
+- **`NOT_EQUAL` is offered wherever `NOT_IN` is**, although no table above lists it: the datasource declares the one spelling Pylon takes, and the agent republishes the other from it. The same mechanism puts `PRESENT` / `BLANK` / `MISSING` in front of every field carrying an equality or a membership filter — the ones that cannot answer them included, which is what the bullet above is about.
+- **`In` and `NotIn` are refused when empty** rather than matched against everything.
+- **Non-finite numbers are refused.** A `Number` filter the agent cast to `Infinity` or `NaN` is answered with a 400 naming the field.
+
+#### Primary-key lookups
+
+`POST /issues/search` has no `id` filter, so a primary-key lookup on `PylonIssue` is short-circuited to `GET /issues/{id}`, **one request per id**. Any `id` leaf of a top-level `AND` is taken — Forest sends `AND(id equal X, <scope>)` on a record detail as soon as a scope or a segment is set — and two of them are intersected, an `AND` naming the records all of its conditions name.
+
+That fan-out is capped **per page** at `MAX_ID_LOOKUPS` (**20**): the window is taken off the ids before any of them is read, so a paginated read walks a wider selection a page at a time.
+
+A filter carrying **no page** has no window to take, though — what an action's own read goes through, and any API caller that sends none — and it is truncated at its first twenty ids, with a warning in the log. The one shape refused rather than truncated is a lookup carrying a residual condition: which records the page holds could only be known by reading all of them, so past the cap it is refused outright.
+
+Two further refusals on this path:
+
+- **Combining free-text search with an `id` filter** is refused: search and id lookup are different endpoints, and neither can do the other's half.
+- A **nested** `AND` carrying an `id` is refused instead of resolved. It fails closed, and the agent flattens one level of grouping, so every shape the UI builds keeps its `id` at the top level.
+
+`PylonAccount` and `PylonContact` need none of this capping: their search endpoints filter `id` server-side, so a selection of any width costs one request. A record detail — `id equals X` alone — is still read through `GET /accounts/{id}` / `GET /contacts/{id}`, to spend the cheaper budget rather than because the search could not answer it.
+
+### Sorting
+
+**No Pylon endpoint takes a sort parameter.** On `PylonIssue`, `PylonAccount` and `PylonContact` no column is advertised as sortable, and a requested order is reported in the log rather than silently swallowed — issues always come back newest first, accounts and contacts in whatever order the API imposes.
+
+`PylonUser` and `PylonTeam` are the exception: their endpoint hands back the whole dataset, so every scalar column is sortable and the sort is applied in memory over all of it (`Json` columns are not).
+
+### Pagination
+
+Forest's offset/limit window is translated into Pylon's cursor pagination: the client walks the cursor until it has collected the window the caller asked for, capped at `MAX_PAGES` (**20**) pages and `MAX_RECORDS` (**5000**) records per walk, with a page size clamped to `MAX_SEARCH_LIMIT` (**1000**). A walk cut short by those caps logs a truncation warning.
+
+A filter carrying no page asks for every record it matched, and travels as no limit at all rather than as a stand-in figure — so it cannot be mistaken for a window the caller asked for and truncated silently.
+
+For `PylonUser` and `PylonTeam`, the whole response is re-read on every list and the window is cut out of it in memory. `GET /users` is read with deactivated agents included, deliberately: a deactivated agent stays the assignee and the author of the issues they handled, and `is_deactivated` is exposed as a column so you can filter them out.
+
+### Aggregations
+
+**`PylonIssue`, `PylonAccount` and `PylonContact` cannot be aggregated at all.** Pylon exposes no aggregate endpoint and no total, and counting or grouping the pages a cursor walk collected would answer a fraction of a collection as if it were the whole of it. Every column is registered non-groupable so the UI never offers a group-by, and a chart built through the API anyway is refused with a message saying why. Those collections are not advertised as countable either, so the record count is not displayed.
+
+**`PylonUser` and `PylonTeam` are countable and groupable**, and exactly so: their endpoint hands back every record Pylon holds, so a count or a group over it is the figure a server-side aggregation would have given. That claim is checked rather than assumed — the read follows a cursor if Pylon ever advertises one, and **refuses outright** rather than answer over a fraction of the collection should it ever paginate past `MAX_COLLECTED_PAGES` (**10**) pages.
+
+### Search
+
+The free-text search bar is enabled on `PylonIssue`, `PylonAccount` and `PylonContact`: the search term travels to the matching `POST /*/search` endpoint alongside the filters, so the list is the one Pylon itself matched.
+
+`PylonUser` and `PylonTeam` are not searchable — their endpoint takes no search term — but every scalar column is filterable in memory instead.
+
+### Writes
+
+Create, update and delete are supported as the [collections table](#provided-collections) states. A write is **one record per request**, and everything below follows from that.
+
+- **A write reaching more records than one pass covers is refused up front**, at `MAX_WRITE_REQUESTS` (**20**) requests. On `PylonIssue`, where resolving the selection itself costs one `GET /issues/{id}` per record, the budget is divided accordingly — and never exceeds the primary-key page cap, so a resolution trimmed by paging cannot write to a subset of a selection while reporting the whole of it.
+- **A write that fails halfway reports exactly which records were written**, so a retry can target the untouched ones rather than performing the write twice (`PartialWriteError`).
+- **A read-only column sent alongside a real edit is dropped and the edit performed.** An edit naming *only* such columns is refused, naming them: it would write nothing, and the record the route reads back would show the operator their change reverting with no reason given.
+- **A field Pylon only accepts in one direction is refused in the other**, naming it. On `PylonIssue`, `body_html` and `author_unverified` are create-only (they are the first message of the thread, which `PATCH /issues/{id}` does not carry) while `state` and `type` are update-only (Pylon creates every issue as `new`, of the type it decides). On `PylonContact`, `email` is create-only and `emails` update-only. On `PylonAccount`, `is_disabled` is update-only — an account is created enabled.
+- **`Json` columns holding objects are read-only** even where the endpoint takes them, because the write shape is not the shape the column shows: `PylonAccount.external_ids` and `channels` / `crm_settings`, `PylonContact.phone_numbers` and `external_ids`. Writing one for the other would replace the data with something Pylon cannot read back.
+- **Two projections of the same value are never both writable.** `PylonAccount.domain` / `primary_domain` are read-only (`domains` is the list the API takes); `PylonContact.portal_role` and `PylonUser.role_name` are read-only, their ids being what is written.
+- **A Pylon 4xx on a write travels to the operator with Pylon's own message** (`WriteRejectedError`). A 5xx or a dropped connection is not the operator's to act on and stays an `APIError`.
+
+<Note>
+A foreign key is forced read-only in the emitted schema whatever the datasource says, so the detail view shows one relation editor rather than two — but `account_id`, `requester_id`, `assignee_id`, `team_id` on `PylonIssue` and `account_id` on `PylonContact` are writable, which is exactly what opens that editor.
+</Note>
+
+## Rate limits and retries
+
+Pylon meters **per endpoint**, not per token, from 30 to 300 requests a minute depending on the endpoint. The datasource ships the documented budget of every endpoint it calls and spaces requests out so each one is spent rather than exceeded — a sliding window per endpoint, in front of the 429 retry rather than instead of it. An endpoint absent from the table falls back to the lowest figure documented anywhere on the API (**30**/min), bucketed by its first path segment.
+
+The limiter is a smoother, not a guarantee: past `DEFAULT_MAX_WAIT` (**5s**) a request goes out anyway and the 429 retry takes over, with one log line per endpoint per window saying so. Under real saturation — several agents or processes on the same token — the retry is the defence.
+
+**The retry is bounded, deliberately.** A 429 carries a `Retry-After` of up to a full minute, and waiting one out on every attempt held the calling thread for minutes on a request the Forest server had already timed out. `RetryPolicy::DEFAULT_MAX_INTERVAL` (**12s**) caps what one attempt waits; past it the 429 surfaces as an error instead. So a saturated endpoint answers the operator with a message rather than with a page that arrives long after they gave up.
+
+Raise it — or lower `max_retries` — to trade the other way:
+
+```ruby
+ForestAdminDatasourcePylon::Datasource.new(
+  api_key: ENV['PYLON_API_KEY'],
+  retry_policy: ForestAdminDatasourcePylon::RetryPolicy.new(max_retries: 1, max_interval: 65)
+)
+```
+
+To meter on your own side instead, take the limiter out of the stack:
+
+```ruby
+ForestAdminDatasourcePylon::Datasource.new(api_key: ENV['PYLON_API_KEY'], rate_limiter: nil)
+```
+
+Retries apply to `429`, `502`, `503` and `504`, plus timeouts and dropped connections. Only `GET`, `HEAD` and `OPTIONS` are replayed, and that restriction covers the `5xx` as much as the transport failures — a `502`, or a dropped connection, on the way back from a `DELETE` Pylon did perform would otherwise be replayed into a 404 and reported as a deletion that failed when it landed. A `502` answering `POST /issues/search` is therefore not replayed either. A `429` is retried on any verb, Pylon having rejected the request before processing it.
+
+## Errors
+
+Every class below lives under `ForestAdminDatasourcePylon::`. The table drops the prefix for width, but a `rescue` needs it in full — `rescue ForestAdminDatasourcePylon::APIError`.
+
+| Class                     | Surfaces as | Raised by                                                                                                                       |
+| ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `ConfigurationError`      | boot failure | A missing or blank `api_key`, or a custom field declared on a collection that cannot carry one.                                 |
+| `UnsupportedOperatorError` | `400`      | A filter Pylon cannot express: an unsupported operator, an empty `In`, a relation condition past the cap, a refused id lookup.  |
+| `UnsupportedWriteError`    | `400`      | A verb Pylon has no endpoint for, a field it only accepts in the other direction, or a write reaching too many records.         |
+| `WriteRejectedError`       | `400`      | A write Pylon itself refused, carrying the reason it gave.                                                                      |
+| `PartialWriteError`        | `400`      | A write performed on some records and then failed, naming the ones already written.                                            |
+| `APIError`                 | `500`      | Any other failed Pylon call. Carries the HTTP `status` and the parsed response `body`.                                          |
+
+The four `400` classes descend from the toolkit's `ValidationError`, so the agent answers with their message intact: each one names something the operator did and can undo, and the message is the only place they learn which condition to change.
+
+## Logging
+
+The datasource uses `Rails.logger` when available, and falls back to `Logger.new($stderr)`. You can override it explicitly:
+
+```ruby
+ForestAdminDatasourcePylon.logger = MyLogger.new
+```
+
+Best-effort paths log a warning and degrade rather than failing the whole page render: custom-field introspection, a conversation thread that could not be read, a truncated cursor walk, an order no endpoint honours, a saturated rate-limit window, and the issue-id writeback of the `CreateIssueWithNotification` plugin.
+
+## Source code
+
+This connector is open source. Browse the code or contribute on GitHub:
+
+[`forest_admin_datasource_pylon`](https://github.com/ForestAdmin/agent-ruby/tree/main/packages/forest_admin_datasource_pylon)
