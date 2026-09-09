@@ -100,9 +100,10 @@ Run Forest Runtime as its own service — the way to run it with any agent other
 | `@forestadmin/agent` — Node.js (v2) | `createAgent({ workflowExecutorUrl })` | 1.79.0 |
 | `forest-express-sequelize` — Node.js (v1) | `Liana.init({ workflowExecutorUrl })` | 9.6.4 |
 | `forest-express-mongoose` — Node.js (v1) | `Liana.init({ workflowExecutorUrl })` | 9.6.3 |
-| `forest-express` — Node.js (v1, installed directly) | `Liana.init({ workflowExecutorUrl })` | 10.7.0 |
 | `forest_admin_rails` — Ruby (v2) | `config.workflow_executor_url` | 1.31.0 |
 | `forest_liana` — Ruby (v1) | `ForestLiana.workflow_executor_url` | 9.18.0 |
+
+<Note>Both v1 Node.js packages get the route from their shared `forest-express` dependency, which they pin exactly — those minimums are the ones that pull in `forest-express` 10.7.0. If you audit a lockfile, that's the version to look for; `forest-express` isn't installed or configured on its own.</Note>
 
 <CodeGroup>
 
@@ -113,7 +114,7 @@ createAgent({
 })
 ```
 
-```js forest-express (v1)
+```js forest-express-sequelize / -mongoose (v1)
 Liana.init({
   // ...
   workflowExecutorUrl: process.env.WORKFLOW_EXECUTOR_URL,
