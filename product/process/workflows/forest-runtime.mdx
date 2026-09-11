@@ -214,17 +214,29 @@ For **liveness** probes, treat any `200` as healthy. For **readiness** probes, r
 
 Several step types rely on an LLM: guidance, decisions, MCP Tasks, and AI-assisted data steps. By default Forest Runtime uses **Forest's AI server** — no configuration required, AI steps work out of the box.
 
-To keep AI calls off Forest's server and use your **own provider and key** instead, set all three variables together:
+To keep AI calls off Forest's server and use your **own provider** instead, set these variables together:
 
 | Variable | Description |
 | --- | --- |
-| `AI_PROVIDER` | `anthropic` or `openai`. |
-| `AI_MODEL` | Model name for that provider (e.g. `gpt-4.1`, `claude-sonnet-5`). |
-| `AI_API_KEY` | Your API key for that provider. |
+| `AI_PROVIDER` | `anthropic`, `openai` or `bedrock`. |
+| `AI_MODEL` | Model name for that provider (e.g. `gpt-4.1`, `claude-sonnet-5`, `us.anthropic.claude-sonnet-4-6-v1:0`). |
+| `AI_API_KEY` | Your API key for that provider. Not used with `bedrock`. |
 
 <Note>
-  This is **all-or-nothing**: set the three together to use your own provider, or leave all three unset to fall back to Forest's AI server. Setting only some of them fails at startup.
+  This is **all-or-nothing**: set them together to use your own provider, or leave them all unset to fall back to Forest's AI server. Setting only some of them fails at startup.
 </Note>
+
+### Amazon Bedrock
+
+With `AI_PROVIDER=bedrock`, Forest Runtime reaches the model through Amazon Bedrock, so the calls stay inside your AWS account. Set `AI_MODEL` to a Bedrock model id or inference profile id, and `AWS_REGION` to the region the model is enabled in.
+
+Bedrock takes **no** `AI_API_KEY`: credentials come from the standard AWS chain — the IAM role attached to your ECS/EKS task, `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`, or a shared profile. The role needs `bedrock:InvokeModel` on the models you use. Setting `AI_API_KEY` alongside `bedrock` fails at startup rather than being ignored.
+
+```bash
+AI_PROVIDER=bedrock
+AI_MODEL=us.anthropic.claude-sonnet-4-6-v1:0
+AWS_REGION=eu-west-3
+```
 
 ## OAuth-protected MCP connectors
 
