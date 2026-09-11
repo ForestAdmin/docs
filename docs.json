@@ -82,6 +82,7 @@
                   "get-started/connect/data-sources/cosmosdb",
                   "get-started/connect/data-sources/snowflake",
                   "get-started/connect/data-sources/pylon",
+                  "get-started/connect/data-sources/intercom",
                   "get-started/connect/data-sources/zendesk",
                   {
                     "group": "Custom datasources",
