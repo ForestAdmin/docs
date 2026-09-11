@@ -1,0 +1,518 @@
+---
+title: "Intercom"
+description: "Surface an Intercom workspace (conversations, tickets, contacts, companies, teammates, teams) as read-only Forest collections"
+---
+
+The Intercom datasource surfaces an [Intercom](https://www.intercom.com) workspace as Forest collections. It exposes conversations, tickets, contacts, companies, teammates, teams, ticket types and ticket states on top of the [Intercom REST API](https://developers.intercom.com/docs/references/rest-api/api.intercom.io/), with server-side filtering, free-text search, relations across the whole support graph, the conversation and ticket threads, and the custom attributes your workspace defines.
+
+<Warning>
+The Intercom datasource is only available for Ruby (gem `forest_admin_datasource_intercom`). There is no Node.js equivalent yet.
+</Warning>
+
+<Info>
+**This first version is read-only, deliberately.** Every collection and every column is published read-only: no create, no update, no delete, and no business action. Reading a support workspace correctly is the whole scope of this release — writes, actions, notes, tags and segments come next. See [What is not here yet](#what-is-not-here-yet).
+
+The other deliberate choice is that it **refuses rather than approximates**. Where Forest asks for something Intercom's API has no equivalent for, the datasource answers a `400` naming what to change instead of returning a page that looks filtered, sorted or counted and is not.
+</Info>
+
+## Installation
+
+Install the gem `forest_admin_datasource_intercom`.
+
+```ruby
+# Gemfile
+gem 'forest_admin_datasource_intercom'
+```
+
+```ruby
+# app/lib/forest_admin_rails/create_agent.rb
+module ForestAdminRails
+  class CreateAgent
+    def self.setup!
+      datasource = ForestAdminDatasourceIntercom::Datasource.new(
+        access_token: ENV['INTERCOM_ACCESS_TOKEN'],
+        region: :eu # :us (default), :eu or :au
+      )
+
+      @create_agent = ForestAdminAgent::Builder::AgentFactory.instance.add_datasource(datasource, {})
+      customize
+      @create_agent.build
+    end
+  end
+end
+```
+
+The token is the access token of a private app, created in Intercom's Developer Hub under *Configure › Authentication*. OAuth is out of scope: it belongs to a control plane distributing a connector, not to an agent reading one workspace.
+
+## Configuration
+
+`access_token` is mandatory; the datasource fails fast with a `ForestAdminDatasourceIntercom::ConfigurationError` when it is missing or blank. Everything else is optional and only exists to trade regions, timeouts and rate-limit behaviour.
+
+| Option              | Default              | Description                                                                                                                              |
+| ------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `access_token`      | —                    | **Required.** The private app's bearer token.                                                                                            |
+| `region`            | `:us`                | `:us`, `:eu` or `:au`. A workspace answers in its own region only.                                                                       |
+| `base_url`          | derived from `region` | Wins over `region`. For an egress proxy, or a mock server. A base URL mounted under a subpath is supported.                              |
+| `api_version`       | `'2.16'`             | Sent as the `Intercom-Version` header on every request.                                                                                  |
+| `open_timeout`      | `5`                  | Connection timeout, in seconds, for the requests a running agent makes.                                                                  |
+| `timeout`           | `30`                 | Read timeout, in seconds, for the requests a running agent makes.                                                                        |
+| `retry_policy`      | `RetryPolicy.new`    | How a failed request is retried. See [Rate limits and retries](#rate-limits-and-retries).                                                |
+| `rate_limiter`      | `RateLimiter.new`    | Proactive throttling driven by Intercom's own rate-limit headers. Pass `nil` to leave the 429 retry as the only rate-limit handling.     |
+| `boot_open_timeout` | `3`                  | Connection timeout for the four reads performed while the datasource is being built.                                                      |
+| `boot_timeout`      | `10`                 | Read timeout for those same reads.                                                                                                       |
+| `boot_retry_policy` | `RetryPolicy.boot`   | Retry policy for those same reads: one quick retry, since they sit in front of a Rails boot.                                             |
+
+<Note>
+The access token never reaches an `inspect`: `Configuration`, `Client` and `Datasource` all mask it, and the base URL is printed with its user-info redacted (an egress proxy spelled `https://user:pass@proxy.internal` would otherwise leak a password onto a Rails error page).
+</Note>
+
+**Pin the region explicitly.** `api.intercom.io` does route to the right one, but a workspace under GDPR wants its requests reaching the European host and nothing else.
+
+**The API version is pinned on purpose.** Without the header a request follows the workspace's own default version, which an operator can change on Intercom's side — and the payloads change shape underneath. Intercom echoes the version it served, so the boot compares the two and logs a warning when the pin was not honoured rather than raising: running against a version the datasource did not ask for still beats not running.
+
+### Token permissions
+
+A read-only token is enough, and is what to use for this version. A permission the token lacks costs **columns or a collection, never the boot of the agent**: the three boot-time introspections each degrade to no attribute column, a collection whose endpoint answers `403` fails its own page, and a token that cannot read `/admins` or `/teams` leaves the `admin_names` / `team_names` columns empty rather than failing the page they are on. A token denied contacts or companies costs those two collections and the `contact_name` column, and leaves everything else standing.
+
+<Warning>
+**A relation is the exception**, and it is worth knowing before scoping a token: resolving one reads the target endpoint, and that read is not guarded the way the denormalized name columns are. A token denied `/admins` fails any page projecting `admin_assignee:name`, and fails the related list behind `IntercomTeam.admins` — the failure lands on the collection being read, not on the one that was denied.
+
+Scope the token to the endpoints in the [collections table](#provided-collections), or to none of them.
+</Warning>
+
+## Provided collections
+
+Once the datasource is registered, nine collections are added to your Forest project. Every one of them is read-only.
+
+| Collection               | Endpoints                                                                            | Paginated  | Countable     |
+| ------------------------ | ------------------------------------------------------------------------------------ | ---------- | ------------- |
+| `IntercomConversation`   | `GET /conversations`, `POST /conversations/search`, `GET /conversations/{id}`         | cursor     | yes, exactly  |
+| `IntercomTicket`         | `POST /tickets/search`, `GET /tickets/{id}`                                          | cursor     | yes, exactly  |
+| `IntercomContact`        | `GET /contacts`, `POST /contacts/search`, `GET /companies/{id}/contacts`              | cursor     | yes, exactly  |
+| `IntercomCompany`        | `POST /companies/list`, `GET /companies?...`, `GET /companies/{id}`                   | **offset** | yes, exactly  |
+| `IntercomAdmin`          | `GET /admins`                                                                        | read whole | yes, exactly  |
+| `IntercomTeam`           | `GET /teams`                                                                         | read whole | yes, exactly  |
+| `IntercomTeamMembership` | `GET /teams`                                                                         | read whole | yes, exactly  |
+| `IntercomTicketType`     | `GET /ticket_types`                                                                  | read whole | yes, exactly  |
+| `IntercomTicketState`    | `GET /ticket_states`                                                                 | read whole | yes, exactly  |
+
+Three tiers, and they behave differently on purpose.
+
+**Read whole** — teammates, teams, team memberships, ticket types, ticket states. Their endpoints answer in one response, so filtering, sorting, paging and counting them in memory is *exact*: the records in hand are every record Intercom holds. These are the only collections that can be sorted and grouped, and the only ones a chart may group by. The cost is bandwidth, not correctness.
+
+**Cursor** — conversations, tickets and contacts. What is in hand is a page of something far larger, so nothing is filtered or sorted in memory. Three routes and no fourth: no condition walks the listing endpoint, `id equals X` reads the record through its own endpoint, and anything else is translated into Intercom's search DSL. What the translation cannot express is [refused by name](#filters).
+
+**Offset** — companies, and nothing else. `POST /companies/list` takes a **page number**, which is what a list view asks for: page 7 is one request rather than six pages walked to reach it, with no cap and no truncation warning. What it pays for that is filtering — there is no company search endpoint at all, so a filter on a company is a handful of exact lookups and nothing else. See [Companies](#companies).
+
+### Relationships
+
+Intercom joins nothing: a ticket carries an assignee id, and the teammate behind it is a second read of a second endpoint. The following relationships are exposed automatically:
+
+| Collection               | Relation                     | Target                                     | Filterable through           |
+| ------------------------ | ---------------------------- | ------------------------------------------ | ---------------------------- |
+| `IntercomConversation`   | `admin_assignee`, `closed_by` | `IntercomAdmin`                           | yes                          |
+| `IntercomConversation`   | `team_assignee`              | `IntercomTeam`                             | yes                          |
+| `IntercomConversation`   | `contact`                    | `IntercomContact`                          | yes                          |
+| `IntercomTicket`         | `admin_assignee`             | `IntercomAdmin`                            | yes                          |
+| `IntercomTicket`         | `team_assignee`              | `IntercomTeam`                             | yes                          |
+| `IntercomTicket`         | `ticket_type`                | `IntercomTicketType`                       | yes                          |
+| `IntercomTicket`         | `state`, `previous_state`    | `IntercomTicketState`                      | **no** — read and navigate only |
+| `IntercomTicket`         | `contact`                    | `IntercomContact`                          | unconfirmed, see below       |
+| `IntercomContact`        | `owner`                      | `IntercomAdmin`                            | yes                          |
+| `IntercomContact`        | `company`                    | `IntercomCompany`                          | **no** — read and navigate only |
+| `IntercomContact`        | `conversations`, `tickets`   | `IntercomConversation`, `IntercomTicket`   | no (one-to-many)             |
+| `IntercomCompany`        | `contacts`                   | `IntercomContact`                          | no (one-to-many)             |
+| `IntercomTeam`           | `admins`                     | `IntercomAdmin`                            | no (many-to-many)            |
+| `IntercomAdmin`          | `teams`                      | `IntercomTeam`                             | no (many-to-many)            |
+| `IntercomTeamMembership` | `team`, `admin`              | `IntercomTeam`, `IntercomAdmin`            | yes                          |
+
+**The full support graph is those contact rows.** From a ticket or a conversation, `contact` reaches the person who wrote in; from them, `conversations` and `tickets` list everything they ever opened, and `company` reaches their account, whose `contacts` lists their colleagues. Each of those lists is one request.
+
+Two caveats are worth reading before scoping a token or writing a segment. Whether `/tickets/search` filters on a contact id **is unmeasured**: the relation is navigable either way, and if the endpoint does not filter it the condition moves to the refusal list — exactly what happened to the ticket `state`. And the **company traversal is refused by name**: `/contacts/search` filters no company field, so `company:name` on a contact answers with a message saying to filter from the company side instead.
+
+**A conversation has several contacts, and the relation names the first of them** — the same one the `contact_name` column describes, next to a `contact_count`, so the column and the relation cannot disagree. The others are a hop away: open that contact and read their conversations.
+
+<Note>
+A relation reads its target **undecorated**, so a permission scope or a segment defined on the target does not narrow what a relation resolves — the same way a native datasource joins a table without applying the scopes of the collection mapped to it.
+
+And **a row whose foreign key is null matches no relation filter**, the way a join drops it, negated filters included. A ticket with no assignee is not "assigned to someone other than Marie".
+</Note>
+
+#### What a relation costs
+
+What makes these relations affordable is what the collection on the far end costs to read by id, and the three tiers do not cost the same:
+
+| Target                                                                         | Read by id        | A page of rows costs                        | Fan-out               |
+| ------------------------------------------------------------------------------ | ----------------- | ------------------------------------------- | --------------------- |
+| `IntercomAdmin`, `IntercomTeam`, `IntercomTicketState`, `IntercomTicketType`   | read whole        | **one request**, whatever the page holds    | unbounded             |
+| `IntercomContact`                                                              | `id IN [...]`, 100 at a time | one request per 100 distinct contacts | unbounded          |
+| `IntercomCompany`                                                              | `GET /companies/{id}` | **one request per distinct account**    | bounded, see below    |
+
+The price is per target *collection*, not per relation: a ticket's `state` and `previous_state` are one read of `/ticket_states`, over the ids both of them name.
+
+<Warning>
+**The one relation with a ceiling is `IntercomContact.company`.** There is no bulk read for a company — `/companies/scroll` is [deliberately rejected](#companies) — so each distinct account on the page costs a request, and past `MAX_RELATION_READS` (**100**) distinct accounts the read is **refused by name** rather than resolved for the first slice and left `nil` for the rest.
+
+Every page size a list view offers sits under that figure. An export, which batches a thousand rows at a time, or a segment resolved whole, does not — and the message says to leave the column out or read fewer rows at a time. A `nil` where an account exists is the one answer this datasource must not give.
+</Warning>
+
+"Read whole" is what the endpoint answers, with one more bound worth naming: the read stops after `MAX_COLLECTED_PAGES` (**10**) pages should Intercom ever paginate one of these on its own, and logs when it does. A workspace whose `/admins` or `/teams` runs past that cap resolves the relations pointing at the records it dropped as empty. The figure is sized for reference collections, which is what that tier is.
+
+#### Team membership
+
+**`IntercomTeamMembership` exists because Intercom's does not.** The workspace carries the membership on the team (`admin_ids`) and on the teammate (`team_ids`) both, and exposes no resource for the pair — while a many-to-many needs a collection to travel through. It is synthesized from `GET /teams`, one record per pair, keyed `teamId:adminId`. Without it, both sides read as an array of ids nobody can click. Intercom exposes no endpoint that writes a team membership at all.
+
+Two consequences of travelling through it are visible in the panel:
+
+- a **related list of teammates is ordered by the membership, not by the teammate**: the agent hands the through collection the columns of the collection the relation reaches, so an order on `name` or `email` cannot be resolved there and is logged rather than silently dropped;
+- an `admin_ids` entry naming a teammate `/admins` does not answer — one who left, one outside the token's reach — **drops out of the related list** instead of appearing as an empty row.
+
+Alongside it, a team names its teammates (`admin_names`) and a teammate its teams (`team_names`) on the row itself, so a list view reads without a join. They are read only when a projection asks for them, and a token that cannot read the other side costs the column and nothing else — never the page, and never the relation.
+
+### Conversation and ticket threads
+
+Both `IntercomConversation` and `IntercomTicket` carry a structured `timeline` column: who said what, when, and through which kind of event. Each entry has the following shape:
+
+| Field              | Type     | Source                                                     |
+| ------------------ | -------- | ---------------------------------------------------------- |
+| `id`               | `String` | Intercom part id                                           |
+| `part_type`        | `String` | The kind of event — a reply, an assignment, a note, a state change |
+| `created_at`       | `Date`   | Event timestamp                                            |
+| `author_type`      | `String` | `admin`, `user`, `bot`…                                    |
+| `author_name`      | `String` | Author, flattened from Intercom's nested author object     |
+| `author_email`     | `String` | Same                                                       |
+| `body`             | `String` | Message body, read as plain text                           |
+| `attachment_count` | `Number` | How many files ride along                                  |
+| `redacted`         | `Boolean` | Whether Intercom redacted the part                        |
+
+`part_type` is kept on every entry on purpose: an assignment, an internal note and a reply are not the same event, and a thread that flattens them reads as an exchange that never happened the way it did.
+
+<Warning>
+**The internal notes of the team are in the thread**, next to what the customer was told. That is what a thread is on Intercom, and publishing half of it would be the more surprising answer — but it is worth knowing before opening these collections to a role that should not read them. Restrict the column with Forest's field-level permissions where that matters.
+</Warning>
+
+The two collections differ in what a thread costs:
+
+- **A ticket's thread is free.** Intercom returns the parts inside the search response whether or not anything asks for them, so there is no request per row and no cap. An empty list therefore means an empty thread.
+- **A conversation's thread is not.** Intercom returns the parts only when retrieving a single conversation, so a record detail gets its timeline for free while a list view asking for the column pays one request per row, bounded to `MAX_TIMELINE_READS` (**10**). The rows past that keep a `nil`, which reads as *unknown* — never as an empty thread.
+
+**The conversation timeline opens on `source`, not on the parts.** The message that started the conversation lives there; a thread built from the parts alone opens on the first reply and loses what the customer actually asked.
+
+Both reads ask Intercom for `display_as=plaintext`: the bodies are HTML written by end customers, and rendering third-party markup inside Forest is neither safe nor useful.
+
+<Note>
+Intercom keeps the **500 most recent parts** of a conversation or a ticket. A very long thread is therefore partial, and says so nowhere but here — and that is the same truncation that can hide a ticket's [derived closure date](#tickets).
+</Note>
+
+### Custom attributes
+
+The attributes your workspace defines are introspected at boot and published as columns, typed from Intercom's own declaration:
+
+- `IntercomTicket` carries the attributes declared on its ticket types, read from `GET /ticket_types` and published as the **union** of every type's, keyed by name the way the payload is;
+- `IntercomContact` and `IntercomCompany` carry theirs, read from `GET /data_attributes?model=contact` and `?model=company`.
+
+All of them are **display-only**: they are neither filterable, sortable nor groupable, for two different reasons spelled out under [what is not filterable](#what-is-not-filterable-and-why). A payload carries the values of the attributes that record happens to have been given, never their definitions, which is why they cannot be discovered from the records and have to be read at boot.
+
+## Capabilities
+
+Intercom is a support API, not a database, and several things Forest asks for have no equivalent. Where that happens the datasource **refuses with a message naming the reason** rather than answering something that looks right and is not. All of these reach the operator as a `400` carrying that text, and a refusal costs no request: it is raised before anything leaves the process.
+
+### Filters
+
+`POST /conversations/search`, `POST /tickets/search` and `POST /contacts/search` answer the condition trees Forest sends, on the fields Intercom really filters and with the operators each endpoint really validates.
+
+#### What is filterable
+
+| Collection             | Filterable on                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `IntercomConversation` | `id`, `state`, `priority`, `open`, `read`, `title`, `admin_assignee_id`, `team_assignee_id`, `source_type`, `source_subject`, `source_body`, `source_delivered_as`, `source_author_email`, `closed_by_id`, `reopen_count`, `part_count`, `ai_agent_participated`, `contact_id`, and the dates `created_at`, `updated_at`, `waiting_since`, `snoozed_until`, `closed_at`, `first_closed_at`, `first_contact_reply_at`, `last_contact_reply_at`, `last_admin_reply_at` |
+| `IntercomTicket`       | `id`, `open`, `category`, `ticket_type_id`, `admin_assignee_id`, `team_assignee_id`, `contact_id`, `created_at`, `updated_at`                                                                                                                                                                                                                                                                                       |
+| `IntercomContact`      | `id`, `role`, `name`, `email`, `email_domain`, `phone`, `external_id`, `owner_id`, `unsubscribed_from_emails`, `has_hard_bounced`, `marked_email_as_spam`, `language_override`, `browser`, `browser_language`, `os`, `location_country`, `location_region`, `location_city`, and the dates `created_at`, `updated_at`, `signed_up_at`, `last_seen_at`, `last_contacted_at`, `last_replied_at`, `last_email_opened_at`, `last_email_clicked_at` |
+| `IntercomCompany`      | `id`, `company_id`, `name` — exact lookups and no search endpoint, see [Companies](#companies)                                                                                                                                                                                                                                                                                                                       |
+
+The collections read whole — teammates, teams, team memberships, ticket types, ticket states — filter in memory over every record Intercom holds, so every scalar column carries the operators the agent can evaluate there, exactly.
+
+**The primary key** is filterable like any other column, but a filter naming it *alone* is not answered by a search: `id equals X` and `id in [...]` read the record endpoint directly. Contacts read a hundred ids per request and up to 300 per filter; the other collections read one record per id, capped at `MAX_ID_READS` (**25**) with the truncation logged. The search answers the key only when something else is filtered alongside it — a permission scope, a segment, or a second filter.
+
+#### Where the table comes from, and why to run the probe
+
+The fields a search endpoint filters are not the fields its specification lists. Measured: `/tickets/search` refuses `company_id` with `invalid_field` although every ticket carries one. So the source of truth is a committed table shipped with the gem, one row per column, each carrying its provenance — `measured` (observed against a real workspace) or `spec` (read off Intercom's documentation, and therefore still a candidate).
+
+Every `filter_operators` a column publishes is **derived** from that table, so a column cannot advertise a filter the translator would then refuse, and a column the table does not carry advertises nothing at all.
+
+<Warning>
+**What the rows say today is mostly `spec`: 18 of 89 are measured, and no endpoint has been probed end to end.** The measured rows are the ones a spike went out of its way to check: the date operators on each endpoint, which disagree between them, `id IN` on `/contacts/search`, the contact id on `/conversations/search`, and the refusals a read confirmed.
+
+So the first thing to do against a customer's workspace is to run the probe. It ships with the gem, so `bundle install` puts it on the path of the application the datasource is mounted in:
+
+```bash
+INTERCOM_ACCESS_TOKEN=... bundle exec forest_admin_intercom_probe --endpoint tickets --out measured.yml
+```
+
+It sends one search per (field, operator) cell, reads Intercom's refusal codes — `invalid_field` for a field the endpoint does not filter, `data_invalid` for an operator it refuses on that field — and prints what the committed table promises that Intercom refuses, plus what Intercom accepts that the table does not know about.
+</Warning>
+
+The rows worth watching first, in the order they will hurt:
+
+1. **`admin_assignee_id` and `team_assignee_id`**, on both search endpoints. Typed as strings in the table; Intercom documents them as integers and answers `data_invalid` on a value whose type it does not accept. These carry the `admin_assignee` and `team_assignee` relations — the filter an ops team reaches for first;
+2. **the state of a ticket** — the table carries no filter on a state id at all, which is what keeps the `state` relation read-only. If the endpoint does filter one, a support queue becomes filterable by state;
+3. **the contact id on `/tickets/search`** — the contact relation of a ticket rests on it;
+4. **the operators Intercom answers on a contact or company custom attribute**, per data type, which is the only thing keeping those columns display-only.
+
+#### A date filter is day-granular, and the day is the UTC one
+
+Intercom truncates a date search to the day, at the **UTC** boundary — measured, and against its own documentation, which promises the workspace's timezone. `> V` answers from the start of the day *after* V; `< V` answers before the start of V's own day.
+
+Sent as they come, the two bounds an interval is rewritten into cancel each other out: `today` reaches the datasource as `> 00:00` and `< 23:59` of one day, which Intercom reads as "from tomorrow" *and* "before today" — no rows at all, to the most ordinary filter there is. So each bound is moved to the boundary that makes Intercom answer the day the filter named. What follows:
+
+- a bound naming a time of day matches **from the start of that day, or through the end of it**. It is the granularity the Intercom interface itself filters on;
+- a caller in UTC gets exactly the day they asked for;
+- a caller in another timezone gets the UTC days their window overlaps — up to a day wider at each end — and the agent logs that once per filter;
+- a date column publishes `>` and `<` only, and no equality. Everything an operator actually uses — `before`, `after`, `today`, `yesterday`, `past`, `future`, the whole `previous_*` family — is rewritten by the agent into a pair of those bounds. An equality on an instant is what stays out, and a day-granular filter could not have honoured it anyway.
+
+`/contacts/search` is narrower still — measured: it refuses `>=`, `<=` and `!=` on a date where the other two endpoints take them. Nothing is lost that an operator can see, a Date column publishing the two bounds alone everywhere in this datasource, but it is why the operator table is per endpoint.
+
+#### What is not filterable, and why
+
+- **every column of a company but two.** There is no `/companies/search`: Intercom looks a company up by `name`, by `company_id`, by tag or by segment, one exact value at a time, and the first two are the ones that name a column of the collection. Everything else — the industry, the plan, the monthly spend — is refused by name;
+- **a contact's `company_id`, `company_count`, `avatar` and `session_count`** — the endpoint filters none of them. Reach the contacts of an account from the account instead, through its `contacts` relation. See [Contacts](#contacts) for the one limit that route carries;
+- **a set of ids, counted.** `id in [...]` reads one record per id, so counting a set means reading it, and past what a bulk read fetches the count is refused rather than answered with the number the truncation left. A collection that advertises an exact count does not answer 25 to a question about forty records;
+- **the custom attributes of a contact or a company.** They would be filtered as `custom_attributes.{name}`, by name, but which operators Intercom answers on each data type has not been measured — and this datasource publishes no filter it has not seen work. The probe is what turns that around;
+- **the ticket attributes.** Intercom filters an attribute by id (`ticket_attribute.{id}`), and the same attribute carries a different id from one ticket type to the next — measured, `_default_title_` is `14162161` on one type and `14162165` on another. A union column has no single id to translate to, so filtering one would mean one collection per ticket type, and a schema that changes shape whenever the customer adds a type;
+- **the columns a ticket derives from its parts** — `closed_at`, `closed_by_name`, `last_reply_at`, `last_responder_name`, `last_responder_type`. They exist nowhere in Intercom;
+- **the account of a ticket** — `company_id`, refused by the endpoint itself with `invalid_field`;
+- **the state of a ticket** — the measured table carries no filter on a state id, so `state_id`, `previous_state_id` and the `state` relation are read and navigated rather than filtered;
+- **the tag names, the company name and the contact identity of a conversation** — read from somewhere the search endpoint does not filter, or filtered by an id the column does not hold;
+- **absence.** `present`, `blank` and `missing` are derived by the agent from an equality and rewritten into a comparison with an empty value. Intercom's search matches values and has no operator for the lack of one, so the rewritten condition is refused rather than sent as a comparison against the empty string;
+- **group-by**, on the cursor and offset collections. See [Aggregations](#aggregations).
+
+#### Free-text search
+
+The search bar is answered on two collections, each on the one column its endpoint matches text on:
+
+| Collection             | Searched on                                                       |
+| ---------------------- | ----------------------------------------------------------------- |
+| `IntercomConversation` | `source.body` — the message that opened the conversation          |
+| `IntercomContact`      | `email` — what an ops team types when they are looking for someone |
+
+Intercom matches **per word, not as a substring**: searching `fact` does not find `facture`, and searching `acme` does not find `camille@acme.test`. `IntercomTicket` exposes no text column its endpoint matches and refuses a search by name; `IntercomCompany` has no search endpoint at all.
+
+#### Through a relation
+
+A relation is published filterable as soon as *any* column of its target is — the agent decides that, not this datasource — so the interface offers `admin_assignee:name` the moment the relation exists. What Intercom is really filtered on is the foreign key: the **target says which of its records match**, over every record it holds rather than over a page, and the ids it names become the condition the search carries.
+
+That is exact, and it has four visible edges:
+
+- **The target is read one record past what a group may hold, and no further.** Against a collection read whole that costs nothing — every record is in hand — but contacts are a page of something far larger, and resolving `contact:email contains "@"` over a whole workspace to then refuse the fan-out it comes to would spend a full cursor walk on a filter that was never going to be answered. So the read is bounded, and the refusal says "more than fifteen" rather than a count it deliberately did not go and measure.
+- Intercom takes no membership operator on these fields, so several matches become **one equality per match**, inside an `OR` — which counts against the fifteen conditions a group allows. A relation condition matching more records than that is refused by name rather than sent and answered with a `400` naming neither the limit nor the filter that hit it. That `OR` is inlined into a parent that aggregates the same way wherever it fits, so it costs no level of nesting where it does not have to.
+- A condition the target matched **no record** with names no row, and the DSL cannot say so: the search is skipped entirely rather than sent as a filter that would come back with everything.
+- A relation whose foreign key the endpoint does not filter — the ticket `state`, a contact's `company` — is refused with a message saying which of the two it is: the relation is there to be read and navigated.
+
+On the collections read whole the same condition costs nothing: they filter in memory, so the ids go in as a plain membership and none of the DSL's limits apply.
+
+A **many-to-many is published unfilterable** — `admins` and `teams` — and a condition written on one anyway, in a scope or a segment, is refused before it reaches this datasource: the agent's own validator answers a `400` naming the field and its type.
+
+#### The limits of a search, checked before the request leaves
+
+Intercom nests a search **two levels** deep and takes **fifteen conditions per group**. Past either it answers a `400` whose body names neither the limit nor the part of the filter that reached it, so both are checked here and refused with a message naming what to simplify.
+
+Fifteen is reached without trying: a scope, a segment and an operator's own filter add up, and a condition naming several values arrives expanded into **one condition per value**, Intercom accepting no membership operator on these fields. Branches carrying a single condition are unwrapped and spend no level.
+
+### Sorting
+
+**One endpoint sorts, and it is `/contacts/search`.**
+
+| Collection                                                                                                      | Sortable on                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `IntercomContact`                                                                                               | `name`, `email`, `created_at`, `updated_at`, `signed_up_at`, `last_seen_at`, `last_contacted_at`, `last_replied_at`      |
+| `IntercomAdmin`, `IntercomTeam`, `IntercomTeamMembership`, `IntercomTicketType`, `IntercomTicketState`           | every scalar column, sorted in memory over the whole dataset — exactly                                                   |
+| `IntercomConversation`, `IntercomTicket`, `IntercomCompany`                                                      | nothing                                                                                                                  |
+
+`POST /companies/list` has no order parameter at all, and the other two search endpoints **accept a `sort` and ignore it** — measured, it raises nothing and changes nothing. Since that is undetectable at runtime, no column of those three is declared sortable and a requested order is reported in the log rather than silently swallowed.
+
+The contact set is deliberately narrower than Intercom's documentation implies: a sort the endpoint refuses is a list view that fails rather than one that comes back unordered. A sort on any other column, or on two columns at once, is reported in the log and the rows come back in the API's order — Intercom takes a single `{ field, order }`, and honouring the first clause of two would order the page by something nobody asked for. One route of contacts cannot carry a sort either: a read by id cuts the window in the order the ids were named, so ordering what comes back would order a slice picked by something else.
+
+An order is also what routes a plain contact list view through the search endpoint, the listing sorting nothing: the read then carries a predicate matching everything.
+
+### Pagination
+
+**Intercom hands out the page after a cursor and documents that jumping to page N is unsupported**, so reaching page 20 of a conversation, ticket or contact list costs 20 sequential requests. The walk is capped at `MAX_PAGES` (**50**) pages and `MAX_RECORDS` (**7 500**) records, with a page size clamped to `MAX_PER_PAGE` (**150**) — a larger `per_page` is refused with `invalid_per_page` and no silent downgrade, so the page size is bounded before the request leaves.
+
+Every route out of the walk that is short of what was asked for is **logged**, naming the window it stopped in: the two caps, and the two defensive stops — a page that advertises a next cursor and holds nothing, and a cursor already followed. Intercom does neither of the last two today, which is exactly why they are reported rather than taken for the end of the data.
+
+Two more things follow from cursor pagination:
+
+- **Tickets are bounded far lower: 25 per page.** The search response carries the whole timeline of every ticket and Intercom offers no field selection. The figure is provisional, pending measurement against real response sizes.
+- **Duplicates on a moving dataset.** Intercom documents that records modified between two paginated requests can be served twice; the walk deduplicates by id. The missed counterpart is inherent to cursor pagination and cannot be repaired — it is documented rather than papered over.
+
+`POST /companies/list` is the exception: it takes a page number, which is why companies escape the walker and its caps entirely.
+
+### Aggregations
+
+**Counting is free and exact on every collection.** Intercom's `total_count` counts what the query names rather than what a page held, so the record counter is one request. A listing Intercom ever answered without that total would be refused rather than counted over the pages the agent read.
+
+**Anything beyond a count is refused on the conversation, ticket, contact and company collections.** There is no aggregate endpoint, and grouping over the pages a walk collected would look exact while answering a fraction. Every column is registered non-groupable so the UI never offers a group-by, and a chart built through the API anyway is refused with a message saying why.
+
+**The collections read whole are groupable, and exactly so**: their endpoint hands back every record Intercom holds, so a group over it is the figure a server-side aggregation would have given.
+
+### Writes
+
+**Not supported, in this version.** Every collection and every column is published read-only: a create, an update or a delete is refused rather than half-performed, and the datasource ships no business action. See [What is not here yet](#what-is-not-here-yet).
+
+<Note>
+`api_writable` is read alongside each custom attribute at boot and kept, although every column is published read-only: it is what tells an attribute the API may write from one Intercom fills in itself, and reading it again later would be a second boot-time round trip.
+</Note>
+
+## Conversations
+
+The row carries what a queue is read for: state, priority, assignee and team ids, the company, the tags, and the lifecycle Intercom keeps in `statistics` — `closed_at`, `closed_by_id`, `first_contact_reply_at`, `last_contact_reply_at`, `last_admin_reply_at`, `reopen_count`.
+
+The contact's name is denormalized onto the row by **one bulk read per page**, not one per row, and only when the projection names it. A failure there costs that column, not the page. The e-mail address is a hop away, on the `contact` relation.
+
+See [Conversation and ticket threads](#conversation-and-ticket-threads) for the `timeline` column and what it costs on a list view.
+
+## Tickets
+
+A ticket carries **no `statistics` block** — measured against a workspace of 81 142 tickets — so neither a closure date nor a last responder exists as a field. Both are derived from the parts, which ride along in the search response whether or not anything asks for them, and therefore cost nothing:
+
+| Column                                                   | Derived from                                              |
+| -------------------------------------------------------- | --------------------------------------------------------- |
+| `closed_at`, `closed_by_name`                            | the last transition into a state of category `resolved`   |
+| `last_reply_at`, `last_responder_name`, `last_responder_type` | the last `comment` part                              |
+
+Four things to know about them:
+
+- a ticket is not "closed" on Intercom, it enters a **resolved** state;
+- the state-change event is matched on its **prefix**, not on the one variant `ticket_state_updated_by_admin`: a workspace running workflows closes tickets through other variants, and an invisible closure is worse than an absent column;
+- a transition whose target equals the previous state is ignored — measured, they exist;
+- **a resolved ticket showing no closure date may have been closed all the same**: past the 500-part ceiling the transition falls out of the window. That case is detected and logged, since a Date column cannot say "unknown".
+
+Both are **display-only**, and not temporarily: `/tickets/search` filters on neither and ignores a sort, so neither advertises an operator.
+
+There is **no `GET /tickets` at all** — even an unfiltered ticket list goes through `POST /tickets/search` with a predicate matching everything.
+
+<Warning>
+Ticket list pages carry customer message bodies whether or not anything asks for them: Intercom offers no field selection, and the timeline rides along in the search response. Restrict the body columns with Forest's field-level permissions where that matters.
+</Warning>
+
+## Contacts
+
+The people who write in, users and leads alike. Cursor-paginated like conversations and tickets, with two routes of its own and one thing no other collection has — [Intercom sorts this one](#sorting).
+
+**A set of ids is read in one request** — `id IN [...]`, which this endpoint answers and no other does — a hundred at a time rather than one request per record. It is what makes a related list of contacts affordable.
+
+**`company_id equals X` reads `GET /companies/{id}/contacts`.** The search filters no company field, so without that route the contacts of an account would be a refusal rather than a list. It is a bare equality only: an `and` also carrying a permission scope names a narrower set than the account does, and answering it with the account alone would serve contacts the scope excludes.
+
+<Warning>
+That is a limit worth knowing before scoping permissions, because it is not a slower route but no route at all: the account endpoint returns its contacts whole and narrows nothing, and the search filters no company field. So **a permission scope or a segment defined on `IntercomContact` turns the related list of an account into a refusal**, naming the condition it could not carry alongside the account.
+
+What would answer it is a read of the account's contact ids followed by `id IN [...]` plus the rest of the tree on `/contacts/search`, which that endpoint takes. It is not in this version.
+</Warning>
+
+One more thing the two routes do not agree on, and it is visible: the `company_id` column names **the first** of the accounts a contact belongs to, and the `company` relation resolves that same first one — while `company_id equals X` returns **every** contact of X. So an account's related list can show a contact whose `company` points somewhere else. The column is the payload's reading; the filter is the account endpoint's, and it is the more useful of the two.
+
+**A merged contact reads as gone, not as an error.** Intercom drops it from the listing and from the search, and the record lives on under the id it was merged into. A row pointing at the old id comes back empty rather than failing the page.
+
+## Companies
+
+The accounts contacts belong to, and the collection that behaves least like the others.
+
+**Paginated by offset**, which is the one tier that escapes the cursor walk and its caps. **Looked up, not searched**: `name` and `company_id` — the identifier the customer's own system gave the account, not Intercom's — are the two filters it publishes, each an exact equality, and anything else is refused by name. A record is read through `GET /companies/{id}`, and a set of ids one request each, capped at 25 with the truncation logged.
+
+`GET /companies/scroll` exists and is **deliberately rejected**: one open scroll per application, expiring after a minute, cannot serve two operators looking at a list at the same time.
+
+A contact carries its accounts as a list of ids and nothing else, so **projecting `company:name` on a contact list costs one request per distinct account on the page** — which is why that projection is [the one relation of the datasource with a ceiling](#what-a-relation-costs). Reading the account from the contact's record page, or listing contacts from the account, both cost one request.
+
+## Rate limits and retries
+
+Intercom meters the app and, above it, the whole workspace — 25 000 requests a minute shared with every other private app the customer runs — and allocates that budget in **10-second windows**: the measured `x-ratelimit-limit` is 1667, not 10 000. A burst therefore takes a `429` while the minute's budget is barely touched, which is why what matters is the instantaneous rate.
+
+The limiter is driven by the headers Intercom returns on every response rather than by a table: it waits out the reset when the window is spent, and counts its own in-flight requests down so several of them do not go out on the same stale figure. A reset further out than a window is a clock disagreement rather than a window emptying — the request goes through and the log says so, once per window. Past `DEFAULT_MAX_WAIT` (**12s**) a request goes out anyway and the retry takes over.
+
+It sits **in front of** the 429 retry, not instead of it: the retry remains the defence against the part of the workspace budget spent by traffic this process cannot see.
+
+**The retry is bounded, deliberately.** `RetryPolicy::DEFAULT_MAX_INTERVAL` (**12s**) caps what one attempt waits; past it the `429` surfaces as an error instead, so a saturated endpoint answers the operator with a message rather than with a page that arrives long after they gave up.
+
+Raise it — or lower `max_retries` — to trade the other way:
+
+```ruby
+ForestAdminDatasourceIntercom::Datasource.new(
+  access_token: ENV['INTERCOM_ACCESS_TOKEN'],
+  retry_policy: ForestAdminDatasourceIntercom::RetryPolicy.new(max_retries: 1, max_interval: 65)
+)
+```
+
+To meter on your own side instead, take the limiter out of the stack:
+
+```ruby
+ForestAdminDatasourceIntercom::Datasource.new(
+  access_token: ENV['INTERCOM_ACCESS_TOKEN'],
+  rate_limiter: nil
+)
+```
+
+Retries apply to `429`, `500`, `502`, `503` and `504`, plus timeouts and dropped connections. Only `GET`, `HEAD` and `OPTIONS` are replayed on a `5xx` or a transport failure — a `502` answering `POST /conversations/search` is therefore not replayed. A `429` is retried on any verb, Intercom having rejected the request before processing it.
+
+## Privacy
+
+The body of a conversation is raw personal data, and this datasource is built on that assumption.
+
+- **Nothing logs a body.** Logs carry the operation, the counts and Intercom's request id — never content. A response that fails to parse is reported by name, never quoted: a JSON parser opens its message with the characters it choked on, and on a `200` those are the payload.
+- **`display_as=plaintext` on every conversation and ticket read.** The bodies are HTML written by end customers; rendering third-party HTML inside Forest is neither safe nor useful.
+- **The regional host is configurable** so a workspace's data stays in its region.
+- **The internal notes of the team are in the thread**, and ticket list pages carry customer message bodies whether or not anything asks for them. Restrict the body columns with Forest's field-level permissions where that matters.
+
+## Boot-time introspection
+
+Constructing the datasource performs exactly **four** reads.
+
+Three are of one kind: `GET /ticket_types` for the attribute columns of `IntercomTicket`, and `GET /data_attributes?model=contact` and `?model=company` for those of `IntercomContact` and `IntercomCompany`.
+
+The fourth is `GET /me`, and it reads no column: Intercom echoes in a response header the API version it served, and it serves the workspace's own default when the pin is not honoured — whose payloads are shaped differently from the ones this expects. That echo is the only place the substitution shows, so it is checked while the agent starts and reported as a warning.
+
+<Note>
+All four run on the boot connection — short timeouts, one quick retry — so a slow Intercom cannot turn a Rails boot into minutes the operator sits through, and each degrades to a warning rather than to a failed boot: a token missing a permission costs the columns it could not read, or the version check, never the agent.
+
+Everything else is read when a collection is listed, so an agent boots whatever Intercom is doing.
+</Note>
+
+## What is not here yet
+
+The read-only scope is a starting point, not the destination. What comes next:
+
+| Coming                | What it brings                                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------------------------- |
+| Ticket and conversation writes | Reply, close, snooze, reopen, assign, tag, convert — as business actions on the two collections  |
+| Contact and company writes     | Create, update, archive, block, merge, attach and detach                                        |
+| Notes, tags, segments          | The three collections the current filters have to route around                                  |
+| Bounded group-by               | Charts on the cursor collections, and the reporting export                                      |
+
+Two questions this version leaves in the table rather than in an assumption, both for `forest_admin_intercom_probe` to answer against your workspace: whether `/tickets/search` filters on a contact id, and which operators `/contacts/search` answers on a custom attribute.
+
+## Errors
+
+Every class below lives under `ForestAdminDatasourceIntercom::`. The table drops the prefix for width, but a `rescue` needs it in full — `rescue ForestAdminDatasourceIntercom::APIError`.
+
+| Class                      | Surfaces as   | Raised by                                                                                                                                       |
+| -------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ConfigurationError`       | boot failure  | A missing or blank `access_token`, or a malformed search-field table.                                                                           |
+| `UnsupportedOperatorError` | `400`         | Anything Intercom cannot answer exactly: an operator its DSL refuses on that field, a tree deeper than two levels, a group past fifteen conditions, a relation fan-out past the cap, a group-by on a paginated collection, a count over more ids than one read fetches. |
+| `APIError`                 | `500`         | Any other failed Intercom call. Carries the HTTP `status` and the parsed response `body`.                                                        |
+
+`UnsupportedOperatorError` descends from the toolkit's `ValidationError`, so the agent answers with its message intact: each one names something the operator set and can change, and the message is the only place they learn which condition to fix.
+
+## Logging
+
+The datasource uses `Rails.logger` when available, and falls back to `Logger.new($stderr)`. You can override it explicitly:
+
+```ruby
+ForestAdminDatasourceIntercom.logger = MyLogger.new
+```
+
+Best-effort paths log a warning and degrade rather than failing the whole page render: the four boot reads, a denormalized name column the token could not read, a conversation thread past the embed cap, a truncated cursor walk, an order no endpoint honours, a date filter widened to the UTC day, a resolved ticket whose closure fell past the 500-part window, and a saturated rate-limit window.
+
+## Source code
+
+This connector is open source. Browse the code or contribute on GitHub:
+
+[`forest_admin_datasource_intercom`](https://github.com/ForestAdmin/agent-ruby/tree/main/packages/forest_admin_datasource_intercom)
