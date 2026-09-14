@@ -19,28 +19,60 @@ const agent = createAgent(options: AgentOptions): Agent;
 
 **Parameters:**
 
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `auditTrail` | object | No | `{ connectionString, schema?, tableName?, redact?, critical? }` — enables the [audit trail](/get-started/control/audit-trail) |
-| `authSecret` | string | Yes | Your FOREST_AUTH_SECRET |
-| `envSecret` | string | Yes | Your FOREST_ENV_SECRET |
-| `isProduction` | boolean | No | Enable production mode |
-| `logger` | function | No | Custom logger function |
-| `loggerLevel` | string | No | Log level: 'Debug', 'Info', 'Warn', 'Error' |
-| `prefix` | string | No | API prefix (default: '/forest') |
-| `schemaPath` | string | No | Path to .forestadmin-schema.json |
-| `typingsPath` | string | No | Path to the generated TypeScript typings file (written when set) |
-| <code style={{whiteSpace: 'nowrap'}}>useUnsafeActionEndpoint</code> | boolean | No | Drop the positional index from Smart Action routes.<br />Default `false`. |
+#### Required
 
-**Example:**
+| Option | Type | Description |
+|--------|------|-------------|
+| `authSecret` | string | Your `FOREST_AUTH_SECRET`. Any long random string. |
+| `envSecret` | string | Your `FOREST_ENV_SECRET`, a 64-character hexadecimal string retrieved from Forest Admin. |
+| `isProduction` | boolean | Production mode. When `true`, the schema is read from `schemaPath` instead of being rebuilt, typings are not regenerated, and error details and chart route URLs are no longer logged. |
 
-```typescript
-const agent = createAgent({
-  authSecret: process.env.FOREST_AUTH_SECRET,
-  envSecret: process.env.FOREST_ENV_SECRET,
-  isProduction: process.env.NODE_ENV === 'production',
-});
-```
+#### Connection and routing
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `prefix` | string | `''` | Path the Forest routes are mounted on (e.g. `/api/v1`). Only `-`, `~`, `/`, letters, digits and `_` are allowed. |
+
+#### Schema and typings
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `schemaPath` | string | `.forestadmin-schema.json` | Path of the schema file. Written on every start outside production, read at start in production. |
+| `typingsPath` | string \| null | `null` | Path of the generated TypeScript typings file. Nothing is written when unset, or when `isProduction` is `true`. |
+| `typingsMaxDepth` | number | `5` | How deep relationships are introspected when generating typings. |
+| `skipSchemaUpdate` | boolean | `false` | Never send the schema to Forest. Mainly used by Forest Cloud; logs a warning at start, and is incompatible with `experimental`. |
+| <code style={{whiteSpace: 'nowrap'}}>ignoreMissingSchemaElementErrors</code> | boolean | `false` | Do not throw when a customization targets a collection or a field that does not exist. Useful when the same code runs against databases with different schemas. |
+
+#### Logging and errors
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `logger` | `(level, data) => void` | `console.error` | Custom logger. Receives the level and the message or error. |
+| `loggerLevel` | string | `'Info'` | Minimum level passed to the default logger: `'Debug'`, `'Info'`, `'Warn'` or `'Error'`. Ignored when you provide your own `logger`. |
+| `customizeErrorMessage` | `(error: Error) => string \| null` | `null` | Rewrite the message sent to the UI for unexpected errors. Return `null` to fall back to the default message. |
+
+#### Permissions and caching
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `instantCacheRefresh` | boolean | `true` | Keep permissions in sync through a Server-Sent Events connection to Forest. Set it to `false` when your infrastructure does not support long-lived connections; the agent then falls back to a periodic refresh. |
+| <code style={{whiteSpace: 'nowrap'}}>permissionsCacheDurationInSeconds</code> | number | `900` | Permission cache lifetime when `instantCacheRefresh` is `false`. Values below `60` are raised to `60`. Ignored (with a warning) when `instantCacheRefresh` is `true`. |
+| <code style={{whiteSpace: 'nowrap'}}>skipRelationReadPermissions</code> | boolean | `false` | Serve columns of collections the caller has no `read` permission on when they are reached through a relation path (e.g. `holder:nationalId`) in a projection, filter, sort, search or chart, and drop the `browse` permission a `Count` leaderboard requires on the collection it counts. The `browse`/`read`/`export` check on the queried collection itself still runs. |
+| `maxRecordsForApproval` | number | `500` | Maximum number of records a "select all" approval-required action may target. Must not exceed the Forest server cap of `500`. |
+
+<Warning>
+  `skipRelationReadPermissions` widens what your users can read. The agent logs a
+  warning at startup when it is enabled.
+</Warning>
+
+#### HTTP and payloads
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `bodyParserOptions` | object | `{ jsonLimit: '50mb' }` | Forwarded to [`@koa/bodyparser`](https://github.com/koajs/bodyparser?tab=readme-ov-file#options). Accepts `jsonLimit` (number of bytes or size string) and `enableRawChecking`. |
+| `maxBodySize` | string | `'50mb'` | **Deprecated**, use `bodyParserOptions.jsonLimit` instead. |
+| `limitExportSize` | number | _unlimited_ | Maximum number of records a CSV export returns. |
+| <code style={{whiteSpace: 'nowrap'}}>useUnsafeActionEndpoint</code> | boolean | `false` | Drop the positional index from Smart Action routes. |
 
 <Warning>
   Only enable `useUnsafeActionEndpoint` if you specifically need index-free Smart
@@ -52,7 +84,24 @@ const agent = createAgent({
   resolve to the same slug.
 </Warning>
 
----
+#### Integrations
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `workflowExecutorUrl` | string \| null | `null` | Base URL of the [Forest Runtime](/product/process/workflows/forest-runtime) instance workflow requests are proxied to. The workflow routes return `404` while it is unset. |
+| `auditTrail` | object \| null | `null` | Record every create, update and delete into a SQL database and expose the record history routes. See [Audit trail](/get-started/control/audit-trail). |
+| `experimental` | object | `null` | Opt in to no-code customizations built in the Forest UI: `webhookCustomActions` and `updateRecordCustomActions`. Incompatible with `skipSchemaUpdate`. |
+| `forestAdminClient` | ForestAdminClient | _built from the options_ | Replace the client used to talk to the Forest API. Intended for tests and internal tooling. |
+
+**Example:**
+
+```typescript
+const agent = createAgent({
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  envSecret: process.env.FOREST_ENV_SECRET,
+  isProduction: process.env.NODE_ENV === 'production',
+});
+```
 
 ### agent.addDataSource(factory, options?)
 
