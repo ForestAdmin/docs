@@ -230,7 +230,20 @@ To keep AI calls off Forest's server and use your **own provider** instead, set 
 
 With `AI_PROVIDER=bedrock`, Forest Runtime reaches the model through Amazon Bedrock, so the calls stay inside your AWS account. Set `AI_MODEL` to a Bedrock model id or inference profile id, and `AWS_REGION` to the region the model is enabled in.
 
-Bedrock takes **no** `AI_API_KEY`: credentials come from the standard AWS chain — the IAM role attached to your ECS/EKS task, `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`, or a shared profile. The role needs `bedrock:InvokeModel` on the models you use. Setting `AI_API_KEY` alongside `bedrock` fails at startup rather than being ignored.
+Bedrock takes **no** `AI_API_KEY`: credentials come from the standard AWS chain, resolved by the AWS SDK itself. Whatever the chain accepts, Forest Runtime accepts. The role needs `bedrock:InvokeModel` on the models you use, and setting `AI_API_KEY` alongside `bedrock` fails at startup rather than being ignored.
+
+That includes [assuming a role](https://docs.aws.amazon.com/sdkref/latest/guide/access-assume-role.html), so you never have to hand long-lived keys to the container:
+
+| Setup | What to provide |
+| --- | --- |
+| Task role (ECS/EKS/EC2) | Nothing — the chain picks it up. |
+| Role assumed from a profile | Mount `~/.aws/config` with `role_arn` + `source_profile`, and set `AWS_PROFILE`. |
+| IRSA / service account (EKS) | `AWS_ROLE_ARN` and `AWS_WEB_IDENTITY_TOKEN_FILE`, both injected by the cluster. |
+| Static keys | `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. |
+
+<Warning>
+  `AWS_REGION` is required even when your profile already declares a `region` — the Bedrock client does not read the region from the profile. Forest Runtime refuses to start without it rather than failing on the first AI step.
+</Warning>
 
 ```bash
 AI_PROVIDER=bedrock
