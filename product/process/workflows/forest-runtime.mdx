@@ -230,6 +230,10 @@ To keep AI calls off Forest's server and use your **own provider** instead, set 
 
 With `AI_PROVIDER=bedrock`, Forest Runtime reaches the model through Amazon Bedrock, so the calls stay inside your AWS account. Set `AI_MODEL` to a Bedrock model id or inference profile id, and `AWS_REGION` to the region the model is enabled in.
 
+**Supported models: Anthropic Claude Sonnet, Haiku and Opus.** Other Bedrock models are refused at startup. Every AI step forces a tool call, and the rest of the catalogue is either unable to honour that or unverified on our side, so an unsupported id fails fast rather than mid-run.
+
+A cross-region inference profile id works and is the usual choice, since it keeps your data in one geography: `eu.` stays in the EU, `us.` in the US. Avoid the `global.` prefix if data residency is the reason you are on Bedrock, as it routes worldwide.
+
 Bedrock takes **no** `AI_API_KEY`: credentials come from the standard AWS chain, resolved by the AWS SDK itself. Whatever the chain accepts, Forest Runtime accepts. The role needs `bedrock:InvokeModel` on the models you use, and setting `AI_API_KEY` alongside `bedrock` fails at startup rather than being ignored.
 
 That includes [assuming a role](https://docs.aws.amazon.com/sdkref/latest/guide/access-assume-role.html), so you never have to hand long-lived keys to the container:
