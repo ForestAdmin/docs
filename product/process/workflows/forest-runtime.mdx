@@ -230,6 +230,8 @@ To keep AI calls off Forest's server and use your **own provider** instead, set 
 
 With `AI_PROVIDER=bedrock`, Forest Runtime reaches the model through Amazon Bedrock, so the calls stay inside your AWS account. Set `AI_MODEL` to a Bedrock model id, a cross-region inference profile id, or an inference profile ARN — and `AWS_REGION` to the region the model is enabled in.
 
+To find the id, open AWS's [Models at a glance](https://docs.aws.amazon.com/bedrock/latest/userguide/model-cards.html) and pick your Claude model: its page carries the model id, and an **Inference profile IDs** section with the `eu.` and `us.` ones. Either can be copied straight into `AI_MODEL`.
+
 **Supported models: Anthropic Claude Sonnet, Haiku and Opus.** Any other Bedrock model is refused at startup, with a message naming what is accepted. AI steps ask the model to answer in a strict, structured format, and the rest of the Bedrock catalogue either can't do that reliably or hasn't been tested on our side — so a model we can't vouch for is rejected immediately, rather than breaking halfway through a workflow.
 
 A cross-region inference profile id works and is the usual choice, since it keeps your data in one geography: `eu.` stays in the EU, `us.` in the US. Avoid the `global.` prefix if data residency is the reason you are on Bedrock, as it routes worldwide.
