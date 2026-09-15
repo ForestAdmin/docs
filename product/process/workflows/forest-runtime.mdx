@@ -81,7 +81,7 @@ It inherits your agent's secrets and Forest connection, so you only configure:
 | `inMemory` | `true` runs without a database (testing only — runs are lost on restart). |
 | `agentUrl` | How the executor reaches your agent. Auto-derived when the agent runs on its own server; **required** when the agent is mounted on Express, Fastify or NestJS. |
 | `port` | Loopback port the executor listens on internally (default `3400`). |
-| `ai` | Bring your own LLM instead of Forest's AI server: `{ provider: 'anthropic' \| 'openai', model, apiKey }`, or `{ provider: 'bedrock', model, region }` — Bedrock takes no `apiKey` and reads the [AWS credential chain](#amazon-bedrock), with `region` falling back to `AWS_REGION` / `AWS_DEFAULT_REGION`. Omit to keep using Forest's server. |
+| `ai` | Bring your own LLM instead of Forest's AI server: `{ provider: 'anthropic' \| 'openai', model, apiKey }`, or `{ provider: 'bedrock', model, region }`. [Bedrock](#amazon-bedrock) takes no `apiKey` — it signs in through AWS — and its `region` falls back to `AWS_REGION` / `AWS_DEFAULT_REGION`, one of which is required. Omit to keep using Forest's server. |
 | `encryptionKey` | At-rest key (AES-256-GCM) for [OAuth-protected MCP connector](#oauth-protected-mcp-connectors) credentials. Generate with `openssl rand -hex 32`. Omit if you don't use them. |
 | `pollingIntervalS`, `stepTimeoutS`, `aiInvokeTimeoutS`, `stopTimeoutS`, `maxChainDepth`, `schemaCacheTtlS` | The same tuning knobs as [standalone](#tuning), in camelCase — same defaults. Log verbosity follows your agent's own logger, so there's no separate log-level option here. |
 
@@ -214,39 +214,39 @@ For **liveness** probes, treat any `200` as healthy. For **readiness** probes, r
 
 Several step types rely on an LLM: guidance, decisions, MCP Tasks, and AI-assisted data steps. By default Forest Runtime uses **Forest's AI server** — no configuration required, AI steps work out of the box.
 
-To keep AI calls off Forest's server and use your **own provider** instead, set these variables together:
+To keep AI calls off Forest's server and use your **own provider** instead, set these variables:
 
 | Variable | Description |
 | --- | --- |
 | `AI_PROVIDER` | `anthropic`, `openai` or `bedrock`. |
 | `AI_MODEL` | Model name for that provider (e.g. `gpt-4.1`, `claude-sonnet-5`, `eu.anthropic.claude-sonnet-5`). |
-| `AI_API_KEY` | Your API key for that provider. Not used with `bedrock`. |
+| `AI_API_KEY` | Your API key for that provider. **Leave it unset for `bedrock`**, which signs in through AWS instead. |
 
 <Note>
-  This is **all-or-nothing**: set them together to use your own provider, or leave them all unset to fall back to Forest's AI server. Setting only some of them fails at startup.
+  `AI_PROVIDER` and `AI_MODEL` always go together. Add `AI_API_KEY` for `openai` and `anthropic`; leave it out for `bedrock` — setting it there stops Forest Runtime at startup instead of being ignored. Set none of them to keep using Forest's AI server.
 </Note>
 
 ### Amazon Bedrock
 
-With `AI_PROVIDER=bedrock`, Forest Runtime reaches the model through Amazon Bedrock, so the calls stay inside your AWS account. Set `AI_MODEL` to a Bedrock model id or inference profile id, and `AWS_REGION` to the region the model is enabled in.
+With `AI_PROVIDER=bedrock`, Forest Runtime reaches the model through Amazon Bedrock, so the calls stay inside your AWS account. Set `AI_MODEL` to a Bedrock model id, a cross-region inference profile id, or an inference profile ARN — and `AWS_REGION` to the region the model is enabled in.
 
-**Supported models: Anthropic Claude Sonnet, Haiku and Opus.** Other Bedrock models are refused at startup. Every AI step forces a tool call, and the rest of the catalogue is either unable to honour that or unverified on our side, so an unsupported id fails fast rather than mid-run.
+**Supported models: Anthropic Claude Sonnet, Haiku and Opus.** Any other Bedrock model is refused at startup, with a message naming what is accepted. AI steps ask the model to answer in a strict, structured format, and the rest of the Bedrock catalogue either can't do that reliably or hasn't been tested on our side — so a model we can't vouch for is rejected immediately, rather than breaking halfway through a workflow.
 
 A cross-region inference profile id works and is the usual choice, since it keeps your data in one geography: `eu.` stays in the EU, `us.` in the US. Avoid the `global.` prefix if data residency is the reason you are on Bedrock, as it routes worldwide.
 
-Bedrock takes **no** `AI_API_KEY`: credentials come from the standard AWS chain, resolved by the AWS SDK itself. Whatever the chain accepts, Forest Runtime accepts. The role needs `bedrock:InvokeModel` on the models you use, and setting `AI_API_KEY` alongside `bedrock` fails at startup rather than being ignored.
+Bedrock takes **no** `AI_API_KEY`. Forest Runtime signs in to AWS exactly the way the AWS CLI does, so whatever already works for your other AWS tools works here too — you don't configure anything specific to Forest. Whichever method you use, it needs permission to call `bedrock:InvokeModel` on the models you picked.
 
 That includes [assuming a role](https://docs.aws.amazon.com/sdkref/latest/guide/access-assume-role.html), so you never have to hand long-lived keys to the container:
 
 | Setup | What to provide |
 | --- | --- |
-| Task role (ECS/EKS/EC2) | Nothing — the chain picks it up. |
+| Task role (ECS/EKS/EC2) | Nothing — AWS provides the credentials automatically. |
 | Role assumed from a profile | Mount `~/.aws/config` with `role_arn` + `source_profile`, and set `AWS_PROFILE`. |
 | IRSA / service account (EKS) | `AWS_ROLE_ARN` and `AWS_WEB_IDENTITY_TOKEN_FILE`, both injected by the cluster. |
 | Static keys | `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. |
 
 <Warning>
-  `AWS_REGION` is required even when your profile already declares a `region` — the Bedrock client does not read the region from the profile. Forest Runtime refuses to start without it rather than failing on the first AI step.
+  Always set `AWS_REGION` (or `AWS_DEFAULT_REGION`), **even if your AWS profile already has a region** — that one isn't picked up here. Forest Runtime checks this at startup, so a missing region stops it right away instead of breaking the first workflow that uses AI.
 </Warning>
 
 ```bash
