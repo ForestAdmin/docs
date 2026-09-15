@@ -81,7 +81,7 @@ It inherits your agent's secrets and Forest connection, so you only configure:
 | `inMemory` | `true` runs without a database (testing only — runs are lost on restart). |
 | `agentUrl` | How the executor reaches your agent. Auto-derived when the agent runs on its own server; **required** when the agent is mounted on Express, Fastify or NestJS. |
 | `port` | Loopback port the executor listens on internally (default `3400`). |
-| `ai` | Bring your own LLM instead of Forest's AI server: `{ provider: 'anthropic' \| 'openai', model, apiKey }` (all three required together). Omit to keep using Forest's server. |
+| `ai` | Bring your own LLM instead of Forest's AI server: `{ provider: 'anthropic' \| 'openai', model, apiKey }`, or `{ provider: 'bedrock', model, region }` — Bedrock takes no `apiKey` and reads the [AWS credential chain](#amazon-bedrock), with `region` falling back to `AWS_REGION` / `AWS_DEFAULT_REGION`. Omit to keep using Forest's server. |
 | `encryptionKey` | At-rest key (AES-256-GCM) for [OAuth-protected MCP connector](#oauth-protected-mcp-connectors) credentials. Generate with `openssl rand -hex 32`. Omit if you don't use them. |
 | `pollingIntervalS`, `stepTimeoutS`, `aiInvokeTimeoutS`, `stopTimeoutS`, `maxChainDepth`, `schemaCacheTtlS` | The same tuning knobs as [standalone](#tuning), in camelCase — same defaults. Log verbosity follows your agent's own logger, so there's no separate log-level option here. |
 
