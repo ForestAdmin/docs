@@ -66,14 +66,74 @@ end
 
 **Configuration Options** (passed to `ForestAdminRails.configure`):
 
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `audit_trail` | Hash | No | `{ database:, schema:, table_name:, redact:, critical: }` — enables the [audit trail](/get-started/control/audit-trail) |
-| `auth_secret` | String | Yes | Your FOREST_AUTH_SECRET |
-| `env_secret` | String | Yes | Your FOREST_ENV_SECRET |
-| `forest_server_url` | String | No | Forest server URL (default: production) |
+#### Required
 
----
+| Option | Type | Description |
+|--------|------|-------------|
+| `auth_secret` | String | Your `FOREST_AUTH_SECRET`. Any long random string. |
+| `env_secret` | String | Your `FOREST_ENV_SECRET`, a 64-character hexadecimal string retrieved from Forest Admin. |
+
+Outside production an invalid secret only logs a warning and skips the schema sync; in production it raises.
+
+#### Connection and routing
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `prefix` | String | `nil` | Path the engine is mounted on. Read by `rails generate forest_admin_rails:install` when it writes the `mount` line in `config/routes.rb`, so changing it afterwards means editing that route yourself. |
+| `is_production` | Boolean | `Rails.env.production?` | Production mode. The schema is read from `schema_path` instead of being rebuilt, and schema-sync failures raise instead of being logged as warnings. |
+
+#### Schema
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `schema_path` | String | `.forestadmin-schema.json` in the working directory | Path of the schema file. Written on every boot outside production, required and read at boot in production. |
+| `append_schema_path` | String | `nil` | Path of an extra JSON schema whose `collections` are appended to the generated schema before it is sent. Raises at boot when the file cannot be read or parsed. |
+| `skip_schema_update` | Boolean | `false` | Never send the schema to Forest. Logs a warning at boot. |
+
+#### Logging and errors
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `logger` | Lambda | `nil` | Custom logger, called as `->(level, message)`. Falls back to a `MonoLogger` on `$stdout`. |
+| `logger_level` | String | `'info'` | Minimum level of the default logger: `'Debug'`, `'Info'`, `'Warn'`, `'Error'`, `'Fatal'` or `'Unknown'`. |
+| `customize_error_message` | Lambda | `nil` | Rewrite the message sent to the UI for unexpected errors, called as `->(error)`. Return `nil` to keep the default message. |
+| `debug` | Boolean | `true` | Disables TLS certificate verification on the OIDC authentication client and on the RPC datasource client. |
+
+<Warning>
+  `debug` defaults to `true`, which turns **off** TLS certificate verification for
+  authentication and RPC calls. Set `config.debug = false` in any environment
+  exposed to an untrusted network.
+</Warning>
+
+#### Permissions and caching
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `instant_cache_refresh` | Boolean | `Rails.env.production?` | Keep permissions in sync through a Server-Sent Events connection to Forest. Set it to `false` when your infrastructure does not support long-lived connections; the agent then relies on `permission_expiration` alone. |
+| `permission_expiration` | Integer | `900` | Lifetime in seconds of the permission and IP-whitelist caches. |
+| `cache_dir` | String | `tmp/cache/forest_admin` | Directory holding the on-disk caches (authentication issuer, permissions, IP whitelist). |
+| `skip_relation_read_permissions` | Boolean | `false` | Serve columns of collections the caller has no `read` permission on when they are reached through a relation path. The permission check on the queried collection itself still runs. Logs a warning at boot. |
+| `max_records_for_approval` | Integer | `500` | Maximum number of records a "select all" approval-required action may target. Capped at `500`; any value that is not a positive integer falls back to the default. |
+
+<Warning>
+  `skip_relation_read_permissions` widens what your users can read. The agent logs
+  a warning at boot when it is enabled.
+</Warning>
+
+#### Performance
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `disable_route_cache` | Boolean | `false` | Recompute the route table on every request instead of caching it at boot. |
+| `rpc_max_polling_threads` | Integer | `nil` | Size of the polling thread pool of the RPC datasource. Ignored when the value is not positive or when `forest_admin_datasource_rpc` is not loaded. |
+| `limit_export_size` | Integer | `nil` | Maximum number of records a CSV export returns. Unlimited when unset. |
+
+#### Integrations
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `workflow_executor_url` | String | `nil` | Base URL of the [Forest Runtime](/product/process/workflows/forest-runtime) instance workflow requests are proxied to. The workflow routes return `404` while it is unset. |
+| `audit_trail` | Hash | `nil` | Record every create, update and delete into a SQL database. See [Audit trail](/get-started/control/audit-trail). |
 
 ## Customizing Collections
 
