@@ -219,7 +219,7 @@ To keep AI calls off Forest's server and use your **own provider** instead, set 
 | Variable | Description |
 | --- | --- |
 | `AI_PROVIDER` | `anthropic`, `openai` or `bedrock`. |
-| `AI_MODEL` | Model name for that provider (e.g. `gpt-4.1`, `claude-sonnet-5`, `us.anthropic.claude-sonnet-4-6-v1:0`). |
+| `AI_MODEL` | Model name for that provider (e.g. `gpt-4.1`, `claude-sonnet-5`, `eu.anthropic.claude-sonnet-5`). |
 | `AI_API_KEY` | Your API key for that provider. Not used with `bedrock`. |
 
 <Note>
@@ -251,8 +251,8 @@ That includes [assuming a role](https://docs.aws.amazon.com/sdkref/latest/guide/
 
 ```bash
 AI_PROVIDER=bedrock
-AI_MODEL=us.anthropic.claude-sonnet-4-6-v1:0
-AWS_REGION=eu-west-3
+AI_MODEL=eu.anthropic.claude-sonnet-5
+AWS_REGION=eu-west-1
 ```
 
 ## OAuth-protected MCP connectors
