@@ -1,14 +1,14 @@
 ---
 title: "Audit Trail"
-description: "Record who changed what, with before/after values, and read it back from the History tab"
+description: "Record who changed what, with before/after values, and read it back from the record's Activity tab"
 ---
 
-Activity logs tell you **who did what, and when** — without the data. The **audit trail** adds the missing half: for every create, update and delete Forest performs through your agent, it records the **field-level before/after values** into a SQL database you own, and the record's **History** tab replays them.
+Activity logs tell you **who did what, and when** — without the data. The **audit trail** adds the missing half: for every create, update and delete Forest performs through your agent, it records the **field-level before/after values** into a SQL database you own, and the record's **Activity** tab replays them.
 
 It has two halves:
 
 - **Capture & storage** — built into the agent. It instruments every collection through the collection hooks (so it is datasource-agnostic: SQL, Sequelize, Mongo, ActiveRecord, Mongoid…) and writes one row per changed record into a SQL database you provide.
-- **The History tab** — in Forest, on each record's detail page. It lists the record's activity logs and enriches each one with the field-level diff captured by your agent.
+- **The Activity tab** — in Forest, on each record's detail page. It replaces the previous activity tab: it lists the record's activity logs and enriches each one with the field-level diff captured by your agent.
 
 <Note>
 The audit trail is **off until you configure a database** for it. No connection is opened, no route is exposed, and no hook is installed on your collections.
@@ -178,9 +178,9 @@ Writes the action performs **through Forest** — `context.collection.update(...
 **A write that does not go through Forest's data layer is not audited.** An action doing a direct ORM write (`Customer.find(id).update!(...)`, `myModel.save()`) is invisible to the agent: only the invocation row above exists, with no field-level diff. Audit your existing actions before promising full coverage.
 </Warning>
 
-## The History tab
+## The Activity tab
 
-Each record's detail page gets a **History** tab: a chronological, paginated timeline of every change made to that record.
+Each record's detail page keeps a single **Activity** tab — the new one replaces the previous activity tab — showing a chronological, paginated timeline of every change made to that record.
 
 - An entry with audit data renders as a card with **field-level diffs** and an operation badge — *Created*, *Updated*, *Deleted*, *Action* or *Action failed*.
 - An entry without it (an older log, or an agent with no audit trail configured) falls back to a plain activity card.
@@ -188,7 +188,7 @@ Each record's detail page gets a **History** tab: a chronological, paginated tim
 - The filter panel narrows by **author** and **date range**, offers **free-text search** across the recorded values, and the sort toggle switches between newest-first (default) and oldest-first. All are applied server-side, so they filter the whole history, not the current page.
 - The author filter's options are populated from `meta.availableUsers` — no separate request needed.
 
-The tab is present on every record. Field-level diffs only appear for agents that have the audit trail configured; otherwise the timeline shows activity logs alone.
+The tab is present on every record, whether or not the audit trail is on. Field-level diffs only appear for agents that have the audit trail configured; otherwise the timeline shows activity logs alone.
 
 <Info>
 **Bulk and global actions do not appear in a record's timeline.** They target no single record, so the agent records them with an empty `record_id`, which no record-scoped query matches.
@@ -196,7 +196,7 @@ The tab is present on every record. Field-level diffs only appear for agents tha
 
 ## HTTP routes
 
-When the audit trail is configured, the agent exposes these routes. They sit behind Forest's authentication and require read permission on the target collection. The History tab is their consumer; you can also query them directly.
+When the audit trail is configured, the agent exposes these routes. They sit behind Forest's authentication and require read permission on the target collection. The Activity tab is their consumer; you can also query them directly.
 
 | route | returns |
 |-------|---------|
