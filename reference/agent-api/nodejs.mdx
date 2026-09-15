@@ -21,6 +21,7 @@ const agent = createAgent(options: AgentOptions): Agent;
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
+| `auditTrail` | object | No | `{ connectionString, schema?, tableName?, redact?, critical? }` — enables the [audit trail](/get-started/control/audit-trail) |
 | `authSecret` | string | Yes | Your FOREST_AUTH_SECRET |
 | `envSecret` | string | Yes | Your FOREST_ENV_SECRET |
 | `isProduction` | boolean | No | Enable production mode |

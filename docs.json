@@ -263,6 +263,7 @@
               "get-started/control/teams",
               "get-started/control/scopes-and-visibility",
               "get-started/control/audit",
+              "get-started/control/audit-trail",
               {
                 "group": "Authentication",
                 "pages": [

@@ -68,6 +68,7 @@ end
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
+| `audit_trail` | Hash | No | `{ database:, schema:, table_name:, redact:, critical: }` — enables the [audit trail](/get-started/control/audit-trail) |
 | `auth_secret` | String | Yes | Your FOREST_AUTH_SECRET |
 | `env_secret` | String | Yes | Your FOREST_ENV_SECRET |
 | `forest_server_url` | String | No | Forest server URL (default: production) |
