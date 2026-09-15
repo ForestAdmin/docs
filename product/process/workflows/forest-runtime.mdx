@@ -243,13 +243,23 @@ That includes [assuming a role](https://docs.aws.amazon.com/sdkref/latest/guide/
 | Setup | What to provide |
 | --- | --- |
 | Task role (ECS/EKS/EC2) | Nothing — AWS provides the credentials automatically. |
-| Role assumed from a profile | Mount `~/.aws/config` with `role_arn` + `source_profile`, and set `AWS_PROFILE`. |
+| Role assumed from a profile | Mount your AWS config with `role_arn` + `source_profile`, and set `AWS_PROFILE`. In Docker, mount it to **`/home/node/.aws`** — see the note below. |
 | IRSA / service account (EKS) | `AWS_ROLE_ARN` and `AWS_WEB_IDENTITY_TOKEN_FILE`, both injected by the cluster. |
 | Static keys | `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. |
 
 <Warning>
   Always set `AWS_REGION` (or `AWS_DEFAULT_REGION`), **even if your AWS profile already has a region** — that one isn't picked up here. Forest Runtime checks this at startup, so a missing region stops it right away instead of breaking the first workflow that uses AI.
 </Warning>
+
+<Note>
+  **Mounting an AWS profile into Docker:** the image runs as the `node` user, so mount your AWS directory to `/home/node/.aws`, not `/root/.aws`. Mounting it to `/root/.aws` fails quietly — the container starts, and the first AI step reports that no credentials could be loaded.
+
+  ```bash
+  -v ~/.aws:/home/node/.aws:ro -e AWS_PROFILE=your-profile
+  ```
+
+  To mount somewhere else, point `AWS_CONFIG_FILE` and `AWS_SHARED_CREDENTIALS_FILE` at the files directly.
+</Note>
 
 ```bash
 AI_PROVIDER=bedrock
