@@ -7,7 +7,7 @@ Activity logs tell you **who did what, and when** — without the data. The **au
 
 It has two halves:
 
-- **Capture & storage** — built into the agent. It instruments every collection through the collection hooks (so it is datasource-agnostic: SQL, Sequelize, Mongo, ActiveRecord, Mongoid…) and writes one row per changed record into a SQL database you provide.
+- **Capture & storage** — built into the agent. It instruments every collection that has a primary key through the collection hooks (so it is datasource-agnostic: SQL, Sequelize, Mongo, ActiveRecord, Mongoid…) and writes one row per changed record into a SQL database you provide. A collection without one is skipped — there is nothing to file its rows under, and Node.js logs a warning naming it.
 - **The Activity tab** — in Forest, on each record's detail page. It replaces the previous activity tab: it lists the record's activity logs and enriches each one with the field-level diff captured by your agent.
 
 <Note>
@@ -216,8 +216,12 @@ The per-record history route accepts these optional filters, all combining with 
 | `userIds` | comma-separated integers, `12,45` | keep entries made by those users |
 | `startDate` | `YYYY-MM-DD`, or `YYYY-MM-DD HH:mm[:ss]` (a `T` separator works too) | keep entries from this bound onward (inclusive) |
 | `endDate` | same | keep entries up to this bound (inclusive) |
-| `fields` | comma-separated field names | keep entries whose diff touched one of them |
+| `fields` | comma-separated field names | keep entries whose diff touched one of them — see the adapter note below |
 | `search` | free text, trimmed; empty ⇒ ignored | keep entries matching the term — see below |
+
+<Warning>
+**`fields` and `search` depend on the audit database's adapter.** Both interrogate the stored JSON, which every engine spells differently, so an unsupported one makes the request **fail** rather than fall back to an unfiltered answer. `fields` works on PostgreSQL, SQLite and MySQL/MariaDB on both agents, plus SQL Server on Node.js (2022+, for `JSON_PATH_EXISTS`). `search` works on any dialect on Node.js, and on PostgreSQL, SQLite and MySQL/MariaDB on Ruby. Anywhere else, the two filters raise — the rest of the route, including the unfiltered history, is unaffected.
+</Warning>
 
 Dates are read as **wall-clock time in the request `timezone`** and converted to a UTC instant before querying. A bare day snaps to the start of the day for `startDate` and to `23:59:59.999` for `endDate`; a datetime without seconds is completed the same way. A malformed date or timezone returns **400**; non-numeric `userIds` tokens are dropped.
 
