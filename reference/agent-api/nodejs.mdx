@@ -355,7 +355,7 @@ NestJS needs no special handling as long as you mount before `listen()`.
 </Warning>
 
 <Warning>
-**Forest's IP whitelist does not apply to requests served under `/bff`.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate, since applying the whitelist would filter the browsers a third-party UI is made of, and the agent logs a warning at startup naming the exemption. Sign-in is still required.
+**Forest's IP whitelist does not apply to requests served under `/bff`.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate, since applying the whitelist would filter the browsers a third-party UI is made of, and the agent logs a warning at startup naming the exemption. Authentication is still required, either an OAuth sign-in or an `X-Forest-Bff-Key` API key.
 </Warning>
 
 <Note>

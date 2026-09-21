@@ -52,7 +52,7 @@ BFF_ALLOWED_ORIGINS=https://my-app.com \
 
 Embedded, the BFF answers under `/bff` on the agent's own port, so `{your-agent-url}/bff/agent/v1/...`. Standalone, it listens on its own port, `3450` by default. Embedding needs the Node.js agent; with a Ruby back-end, run it standalone.
 
-Prefer embedded for a single deployment, which is most of them. Standalone when several agents share one BFF, or when the BFF and the agent have to scale separately.
+Prefer embedded for a single deployment, which is most of them. Standalone when the BFF and the agent have to scale separately. A standalone BFF forwards to the single back-end `AGENT_URL` names, so several agents cannot share one.
 
 <Info>
   The full `agent.addBff()` signature, the body-parser ordering trap and the IP whitelist caveat live in the [Node.js agent reference](/reference/agent-api/nodejs).
@@ -173,9 +173,9 @@ A back-end that accepts the connection and then does not answer within `BFF_AGEN
 
 Over the rate limit, the BFF answers `429 too_many_requests` with a `Retry-After` and a `details.cause` saying whether the caller exceeded its budget or the limiter is saturated. A 429 raised by your back-end instead is relayed with its own payload, so it carries neither. Read both fields only when they are present.
 
-<Note>
-  Sessions are held in memory, in a single process. Running the BFF behind a load balancer without sticky sessions breaks them, so horizontal scaling needs a shared session store.
-</Note>
+<Warning>
+  Sessions live in memory, in one process, and so does the deduplication of in-flight token refreshes. There is no shared store to plug in, so horizontal scaling needs sticky sessions. Without them, two calls for one session landing on different nodes each refresh the Forest token, the second presents a refresh token the first already rotated, and that call fails with `session_expired`.
+</Warning>
 
 ## What's next
 
