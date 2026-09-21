@@ -21,14 +21,14 @@ Before installing the app, your tech team needs a Forest BFF that a browser can 
 2. **OAuth enabled on it**, which is what lets each Zendesk agent sign in with their Forest account.
 3. **The app's iframe origin allow-listed**, because the app calls your BFF from the browser.
 
-Allow-list `https://*.apps.zdusercontent.com`. Zendesk serves every app's iframe from that domain, one subdomain per app, and the Forest app's own is `https://1231469.apps.zdusercontent.com`, which you can allow-list instead when you want the narrower value.
+Allow-list `https://*.apps.zdusercontent.com`. Zendesk serves every app's iframe from that domain, one subdomain per app, and the Forest app's is `https://1231469.apps.zdusercontent.com`. That number is the Forest app's Marketplace id, not yours, so it is the same value on every Forest installation and nothing in it is yours to replace. Allow-list it instead of the wildcard when you want the narrower entry.
 
 <Warning>
   Neither form is your Zendesk URL, and the numeric subdomain is not a typo. A Zendesk app runs in an iframe served from Zendesk's own app domain, so the `Origin` the browser sends is that iframe's, never `https://your-subdomain.zendesk.com`. Allow-listing your tenant URL gets every call refused with `403 origin_not_allowed`.
 </Warning>
 
 <Note>
-  The wildcard form needs `@forestadmin/agent-bff` 1.31.0 or later, and it admits every other Zendesk app too, since Zendesk serves them all from that domain. On an older BFF, or when you want the narrowest allow-list, use the exact origin: the number is the Forest app's Marketplace id, the same for every Forest installation. To read it yourself, open a ticket with the Forest app in the sidebar and inspect that panel's iframe. See [Cross-origin access](/product/embed/bff#cross-origin-access).
+  The wildcard form needs `@forestadmin/agent-bff` 1.31.0 or later, and it admits every other Zendesk app too, since Zendesk serves them all from that domain. On an older BFF, or when you want the narrowest allow-list, use the exact origin. To read it off a running installation, open a ticket with the Forest app in the sidebar and inspect that panel's iframe. See [Cross-origin access](/product/embed/bff#cross-origin-access).
 </Note>
 
 <CodeGroup>
