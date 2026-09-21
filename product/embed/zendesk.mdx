@@ -10,7 +10,7 @@ The Forest Zendesk app lets you view and act on your data without leaving Zendes
 The app reaches your back-end through a [Forest BFF](/product/embed/bff), the REST gateway that lets a browser UI call a Forest back-end. Each Zendesk agent signs in with their own Forest account, and every call travels to your back-end as that person. Their roles, permissions and scopes apply exactly as they do in Forest.
 
 <Info>
-  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the BFF does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your BFF URL.
+  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the BFF does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your BFF URL. The setting was renamed at the same time, from `forestAgentUrl` to `forestBFFUrl`, so the update leaves the field empty and an admin has to enter the URL again before anyone can sign in.
 </Info>
 
 ## Prerequisites
