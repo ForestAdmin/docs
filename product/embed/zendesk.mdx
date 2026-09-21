@@ -10,7 +10,7 @@ The Forest Zendesk app lets you view and act on your data without leaving Zendes
 The app reaches your back-end through a [Forest BFF](/product/embed/bff), the REST gateway that lets a browser UI call a Forest back-end. Each Zendesk agent signs in with their own Forest account, and every call travels to your back-end as that person. Their roles, permissions and scopes apply exactly as they do in Forest.
 
 <Info>
-  Earlier versions of the app went through the Forest MCP Server. An installation configured that way points at an MCP URL and no longer works. Repoint it at your BFF URL.
+  Versions up to and including 1.1.1 went through the Forest MCP Server. An installation configured that way points at an MCP URL and no longer works. Repoint it at your BFF URL.
 </Info>
 
 ## Prerequisites
@@ -21,16 +21,14 @@ Before installing the app, your tech team needs a Forest BFF that a browser can 
 2. **OAuth enabled on it**, which is what lets each Zendesk agent sign in with their Forest account.
 3. **The app's iframe origin allow-listed**, because the app calls your BFF from the browser.
 
-The origin to allow-list is `https://1231469.apps.zdusercontent.com`.
+Allow-list `https://*.apps.zdusercontent.com`. Zendesk serves every app's iframe from that domain, one subdomain per app, and the Forest app's own is `https://1231469.apps.zdusercontent.com`, which you can allow-list instead when you want the narrower value.
 
 <Warning>
-  That is not a typo, and it is not your Zendesk URL. A Zendesk app runs in an iframe served from Zendesk's own app domain, so the `Origin` the browser sends is that iframe's, never `https://your-subdomain.zendesk.com`. Allow-listing your tenant URL gets every call refused with `403 origin_not_allowed`.
-
-  The number is the Forest app's Marketplace id, so the value is the same for every Forest installation. To read it yourself, open a ticket with the Forest app in the sidebar and inspect that panel's iframe, its origin is the value to allow-list.
+  Neither form is your Zendesk URL, and the numeric subdomain is not a typo. A Zendesk app runs in an iframe served from Zendesk's own app domain, so the `Origin` the browser sends is that iframe's, never `https://your-subdomain.zendesk.com`. Allow-listing your tenant URL gets every call refused with `403 origin_not_allowed`.
 </Warning>
 
 <Note>
-  On `@forestadmin/agent-bff` 1.31.0 or later you can write `https://*.apps.zdusercontent.com` instead of copying the id. That form also admits every other Zendesk app, since Zendesk serves them all from that domain, so the exact origin stays the narrower of the two. See [Cross-origin access](/product/embed/bff#cross-origin-access).
+  The wildcard form needs `@forestadmin/agent-bff` 1.31.0 or later, and it admits every other Zendesk app too, since Zendesk serves them all from that domain. On an older BFF, or when you want the narrowest allow-list, use the exact origin: the number is the Forest app's Marketplace id, the same for every Forest installation. To read it yourself, open a ticket with the Forest app in the sidebar and inspect that panel's iframe. See [Cross-origin access](/product/embed/bff#cross-origin-access).
 </Note>
 
 <CodeGroup>
@@ -39,7 +37,7 @@ The origin to allow-list is `https://1231469.apps.zdusercontent.com`.
 await createAgent(options)
   .addDataSource(/* ... */)
   .addBff({
-    allowedOrigins: ['https://1231469.apps.zdusercontent.com'],
+    allowedOrigins: ['https://*.apps.zdusercontent.com'],
     tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
   })
   .mountOnStandaloneServer(3351)
@@ -49,7 +47,7 @@ await createAgent(options)
 ```bash Standalone
 npm install @forestadmin/agent-bff
 
-BFF_ALLOWED_ORIGINS=https://1231469.apps.zdusercontent.com \
+BFF_ALLOWED_ORIGINS='https://*.apps.zdusercontent.com' \
   BFF_TOKEN_ENCRYPTION_KEY=xxx \
   AGENT_URL=https://your-agent.example.com \
   FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
@@ -91,12 +89,11 @@ Make a note of the URL your BFF answers on. You'll need it when installing the Z
     </Note>
   </Step>
   <Step title="Fill in the installation form">
-    - **Forest MCP URL** (`forestAgentUrl`): your Forest BFF URL, from the table above
-    - **contextField**: the Zendesk ticket field used to match the ticket sender with a record from your Forest data
+    - **Forest BFF URL** (`forestAgentUrl`): your Forest BFF URL, from the table above
     - Optionally, restrict which Zendesk roles and groups get access to the Forest app
 
     <Note>
-      The first field is still labelled **Forest MCP URL** and suggests a URL ending in `/mcp`. Enter your BFF URL there regardless, the label has not caught up with the app.
+      An installation still on 1.1.1 or earlier labels that field **Forest MCP URL** and suggests a URL ending in `/mcp`. Enter your BFF URL there regardless. Nothing else to configure: versions up to 1.0.2 also carried a `contextField` parameter, and it is gone. The app matches tickets from their own content.
     </Note>
   </Step>
   <Step title="Install">
@@ -136,17 +133,55 @@ There is nothing to pick. The project and environment come from the BFF your tec
   />
 </Frame>
 
+## How a ticket is matched to a record
+
+You configure nothing here. On every ticket the app reads the signals the ticket already carries, then searches your collections for them, with no model in the loop.
+
+It reads the requester's Zendesk id and email, plus the emails, URLs, UUIDs, `#12345` references and 6-digit-or-longer numbers it finds in the subject and description.
+
+It searches the fields your schema exposes, picked by name:
+
+| Field role | Recognized by | Score |
+| --- | --- | --- |
+| Email | a name containing `email` | 100 |
+| Zendesk user id | a name carrying `zendesk` or `external` plus a `user`, `requester` or `enduser` token before an `id` suffix, as in `zendeskUserId` | 95 |
+| Id | `id`, an `id` suffix, `uuid`, `externalId`, `referenceId` | 90 |
+| Reference | `slug`, `key`, `code`, `number`, `ref` | 70 |
+| Name | `name`, `fullName`, `title`, `label` | 40 |
+
+Exact hits outrank partial ones, join-like collections lose 30 points, and the best-scoring records surface in the Data tab. Each ticket is capped at 6 searches at once, 30 collections for the Zendesk id, 15 for emails, and 100 searches in total, so a wide schema does not fan out indefinitely.
+
+<Note>
+  A collection that stores the Zendesk user id under a name outside that convention, `crm_user_ref` or `support_id` for instance, is never searched for it. Expose a field whose name follows the convention, or rely on the email signal.
+</Note>
+
+## Where AI is used
+
+Two features call a model, both in the Actions tab, both through your BFF's `POST /agent/v1/ai/query`, which relays to Forest's AI proxy with the signed-in Zendesk agent's session. The BFF holds the Forest token, and the browser never sees it.
+
+| Feature | When it fires | What is sent |
+| --- | --- | --- |
+| Suggested actions | opening the Actions tab | ticket subject, description, requester email and name, plus the qualified names and types of the actions your schema exposes |
+| Draft customer reply | clicking **Generate response** on an action that ran | requester name, ticket subject, the action's name and its result, plus the first URL that result contains. The reply lands in the ticket's comment editor for the Zendesk agent to review and send |
+
+Suggested action names come back through a filter: the app keeps the ones that match a real action and drops the rest, so a hallucinated name never reaches a button. Every ticket field is sanitized before it leaves, with injection markers stripped and lengths capped. Records and relations browsed in the Data tab never reach the AI proxy, and neither does matching.
+
+<Note>
+  The AI relay is served whenever sign-in is configured on the BFF, which `GET {your-bff-url}/health` reports as `configured.ai`. Stay out of the Actions tab and nothing is sent: the Data tab, the search bar and the matching never call it.
+</Note>
+
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Zendesk agents cannot sign in">
     - Check `GET {your-bff-url}/health`, `configured.oauth` must be `true`
     - Confirm `forestAgentUrl` points at the BFF, not at the agent itself and not at an MCP URL
-    - On a `403 origin_not_allowed`, check the allow-list holds `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way
+    - On a `403 origin_not_allowed`, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way
   </Accordion>
   <Accordion title="A Zendesk agent sees no record on a ticket">
-    - Check that **contextField** names the ticket field carrying the sender's identity
     - Confirm their Forest role grants read access to the collection. The app shows what that person is allowed to see, nothing more
+    - Check that one of your collections carries the requester's email, or an id field [the naming convention](#how-a-ticket-is-matched-to-a-record) recognizes. Nothing is configured per installation, so a schema that stores the Zendesk id under an off-convention name stays invisible to the matcher
+    - Use the search bar to confirm the record exists and is readable: if search finds it but the ticket does not, the gap is in the signals, not in permissions
   </Accordion>
   <Accordion title="Actions are missing from the Actions tab">
     Actions the caller's permissions do not confirm are hidden. Check the role's action permissions in **Project Settings → Roles**.
