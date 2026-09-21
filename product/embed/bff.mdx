@@ -130,7 +130,7 @@ A request carrying no `Origin` at all is untouched, which is every server-to-ser
 
 ## Timezone
 
-On every route that reaches your back-end, the BFF forwards an explicit timezone, resolved in order: the `X-Forest-Timezone` header, then a `timezone` field in the body, then `BFF_DEFAULT_TIMEZONE`. None of the three gives `400 missing_timezone`, and a non-IANA value gives `400 invalid_timezone`.
+On every route that reaches your back-end, the BFF forwards an explicit timezone, resolved in order: the `X-Forest-Timezone` header, then a `timezone` field in the body, then the fallback the deployment configures. Standalone that fallback is `BFF_DEFAULT_TIMEZONE`. Embedded it is `defaultTimezone` in `addBff()`, and the environment variable is not read at all. None of the three gives `400 missing_timezone`, and a non-IANA value gives `400 invalid_timezone`.
 
 ## Checking a deployment
 
