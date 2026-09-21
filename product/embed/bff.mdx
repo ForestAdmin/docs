@@ -45,7 +45,7 @@ BFF_ALLOWED_ORIGINS=https://my-app.com \
   FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
   FOREST_SERVER_URL=https://api.forestadmin.com \
   FOREST_APP_URL=https://app.forestadmin.com \
-  forest-bff
+  npx forest-bff
 ```
 
 </CodeGroup>
@@ -95,6 +95,7 @@ Standalone deployments are configured entirely through environment variables. Em
 | `BFF_DEFAULT_TIMEZONE` | No | — | Fallback IANA timezone when a request carries none. |
 | `BFF_PUBLIC_URL` | No | — | The BFF's own external base URL, published in the OpenAPI document. |
 | `BFF_AGENT_TIMEOUT_MS` | No | `10000` | How long to wait for your back-end on a data or action call. |
+| `BFF_AI_TIMEOUT_MS` | No | `120000` | How long to wait for the Forest server on an AI query, `POST /agent/v1/ai/query`. |
 | `BFF_RATE_LIMIT_MAX_REQUESTS` | No | `300` | Requests allowed per caller per window. |
 | `BFF_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. |
 | `BFF_OPENAPI_ENABLED` | No | `true` | Serve the OpenAPI document over HTTP. `false` when embedded. |
@@ -107,7 +108,9 @@ A browser UI is cross-origin by definition, so `BFF_ALLOWED_ORIGINS` (or `allowe
 
 Matching is exact: scheme, host and port, case-insensitive, default ports normalized away, no trailing slash. An origin outside the list is refused outright with `403 origin_not_allowed`, rather than served without the header and left for the browser to discard.
 
-From `@forestadmin/agent-bff` 1.31.0, an entry may carry one wildcard label at the front of the host, `https://*.example.com`. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly, and the wildcard is only accepted in that position: anywhere else, more than once, or over a host with fewer than two remaining labels, the entry is refused at boot and named in the startup warning.
+From `@forestadmin/agent-bff` 1.31.0, an entry may carry one wildcard label at the front of the host, `https://*.example.com`. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly, and the wildcard is only accepted in that position: anywhere else in the host, more than once, or over a host with fewer than two remaining labels, the entry is refused at boot and named in the startup warning.
+
+One shape escapes that check. A `*` placed in the URL's userinfo rather than the host, as in `https://*@example.com`, is stripped when the entry is normalized, so the entry is accepted as the exact origin `https://example.com` and no warning names it. Mistyping `*.` as `*@` therefore allows the bare domain and none of its subdomains, which is narrower than intended but silent. Check the startup log lists the entries you expect.
 
 <Warning>
   Before 1.31.0 a wildcard entry fails quietly. A pattern such as `https://*.example.com` parses as a valid origin, enters the allow-list unchanged, and then matches nothing, so every call answers `403 origin_not_allowed` with no startup warning pointing at the cause. On those versions, list each origin in full.

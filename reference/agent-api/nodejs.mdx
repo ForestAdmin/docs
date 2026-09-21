@@ -300,6 +300,9 @@ Run a [Forest BFF](/product/embed/bff) inside the agent process, so a trusted br
 agent.addBff(options?: {
   allowedOrigins?: string[];
   tokenEncryptionKey?: string;
+  defaultTimezone?: string;
+  agentTimeoutMs?: number;
+  aiTimeoutMs?: number;
   openapiEnabled?: boolean;
 }): Agent;
 ```
@@ -316,6 +319,9 @@ npm install @forestadmin/agent-bff
 |--------|------|---------|-------------|
 | `allowedOrigins` | `string[]` | `[]` | Origins (scheme, host, port) allowed to call the BFF from a browser. Matching is exact, except for a single leading wildcard label from `@forestadmin/agent-bff` 1.31.0, `https://*.example.com`. Empty means no cross-origin access. See [Cross-origin access](/product/embed/bff#cross-origin-access). |
 | `tokenEncryptionKey` | `string` | — | Base64-encoded 32-byte key. Enables the sign-in routes; without it nobody can sign in from a browser UI. |
+| `defaultTimezone` | `string` | — | Fallback IANA timezone for a request that carries none. Without it, such a request answers `400 missing_timezone`; embedded there is no `BFF_DEFAULT_TIMEZONE`, so this option is the only way to set the fallback. |
+| `agentTimeoutMs` | `number` | `10000` | How long a data or action call to the agent may take. It bounds the wait and cancels nothing: a write cut off at the deadline still commits inside the agent, so a client retrying on the timeout can double a non-idempotent mutation. |
+| `aiTimeoutMs` | `number` | `120000` | How long the AI relay waits for the Forest server on `POST /bff/agent/v1/ai/query`. |
 | `openapiEnabled` | `boolean` | `false` | Serve the OpenAPI document over HTTP. Off by default when embedded. |
 
 **Example:**
@@ -331,7 +337,7 @@ await createAgent(options)
   .start();
 ```
 
-The secrets, the Forest URLs and the logger are inherited from the agent and cannot be overridden. Every option is a feature switch, so what you leave out stays off, and `GET /bff/health` reports which surfaces are on under `configured`.
+The secrets, the Forest URLs and the logger are inherited from the agent and cannot be overridden. The feature switches default to off, so what you leave out stays off, and `GET /bff/health` reports which surfaces are on under `configured`.
 
 The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST /bff/agent/v1/{collection}/list`, `GET /bff/health`. A host serving the agent under a sub-path of its own works too, and `app.use('/api', mounted)` puts the BFF at `/api/bff`.
 
