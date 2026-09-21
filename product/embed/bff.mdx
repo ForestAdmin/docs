@@ -78,6 +78,8 @@ To-one relations are not listable and answer `404 unknown_relation` by design.
 
 Errors use a type-first contract, `{ error: { type, status, message, details? } }`, so branch on `error.type` and never on message text.
 
+`POST /agent/v1/ai/query` is the one exception, because it relays the Forest server. Its own refusals follow the contract, and a non-JSON or `5xx` answer from upstream keeps that status but has its body replaced with a typed `upstream_error`. A JSON answer below `500`, however, is relayed verbatim with the upstream status and the upstream's own shape — a validation error arrives as `{ errors: [{ detail }] }`, with no `error.type` to branch on. Handle that route's `4xx` bodies as the Forest server's, not the BFF's.
+
 ## Configuration
 
 Standalone deployments are configured entirely through environment variables. Embedded, the secrets and Forest URLs are inherited from the agent, and only the feature switches are yours to set.
