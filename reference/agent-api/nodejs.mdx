@@ -319,7 +319,7 @@ npm install @forestadmin/agent-bff
 |--------|------|---------|-------------|
 | `allowedOrigins` | `string[]` | `[]` | Origins (scheme, host, port) allowed to call the BFF from a browser. Matching is exact, except for a single leading wildcard label from `@forestadmin/agent-bff` 1.31.0, `https://*.example.com`. Empty means no cross-origin access. See [Cross-origin access](/product/embed/bff#cross-origin-access). |
 | `tokenEncryptionKey` | `string` | — | Base64-encoded 32-byte key. Enables the sign-in routes; without it nobody can sign in from a browser UI. |
-| `defaultTimezone` | `string` | — | Fallback IANA timezone for a request that carries none. Without it, such a request answers `400 missing_timezone`; embedded there is no `BFF_DEFAULT_TIMEZONE`, so this option is the only way to set the fallback. |
+| `defaultTimezone` | `string` | — | Fallback IANA timezone for a request that carries none. Without it, such a request answers `400 missing_timezone`. Embedded there is no `BFF_DEFAULT_TIMEZONE` to fall back on, so this option is the only way to set it. |
 | `agentTimeoutMs` | `number` | `10000` | How long a data or action call to the agent may take. It bounds the wait and cancels nothing: a write cut off at the deadline still commits inside the agent, so a client retrying on the timeout can double a non-idempotent mutation. |
 | `aiTimeoutMs` | `number` | `120000` | How long the AI relay waits for the Forest server on `POST /bff/agent/v1/ai/query`. |
 | `openapiEnabled` | `boolean` | `false` | Serve the OpenAPI document over HTTP. Off by default when embedded. |

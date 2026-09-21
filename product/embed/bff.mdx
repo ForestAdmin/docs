@@ -68,7 +68,7 @@ The data routes live under `/agent/v1`. They are `POST`, and the filter, project
 | `/agent/v1/{collection}/relations/{relation}/list` · `/count` | `POST` | the same, through a to-many relation |
 | `/agent/v1/{collection}/actions/{action}/form` · `/execute` | `POST` | load an action's form, then run it |
 | `/agent/v1/context` | `GET` | the exposed schema: collections, typed fields, relations and actions |
-| `/agent/v1/permissions` | `GET` | display hints, as described above |
+| `/agent/v1/permissions` | `GET` | display hints, never an authorization decision |
 | `/agent/v1/ai/query` | `POST` | the AI relay, served only when the deployment configures it |
 | `/agent/openapi.json` | `GET` | the OpenAPI document, when enabled |
 
@@ -78,7 +78,7 @@ To-one relations are not listable and answer `404 unknown_relation` by design.
 
 Errors use a type-first contract, `{ error: { type, status, message, details? } }`, so branch on `error.type` and never on message text.
 
-`POST /agent/v1/ai/query` is the one exception, because it relays the Forest server. Its own refusals follow the contract, and a non-JSON or `5xx` answer from upstream keeps that status but has its body replaced with a typed `upstream_error`. A JSON answer below `500`, however, is relayed verbatim with the upstream status and the upstream's own shape — a validation error arrives as `{ errors: [{ detail }] }`, with no `error.type` to branch on. Handle that route's `4xx` bodies as the Forest server's, not the BFF's.
+`POST /agent/v1/ai/query` is the one exception, because it relays the Forest server. Its own refusals follow the contract, and a non-JSON or `5xx` answer from upstream keeps that status but has its body replaced with a typed `upstream_error`. A JSON answer below `500` is relayed verbatim, with the upstream status and the upstream's own shape, so a validation error arrives as `{ errors: [{ detail }] }` and carries no `error.type` to branch on. Read that route's `4xx` bodies as the Forest server's.
 
 ## Configuration
 
