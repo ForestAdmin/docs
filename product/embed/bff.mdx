@@ -21,7 +21,7 @@ The BFF forwards calls, your back-end decides them. Every call reaches your back
 
 ## Running it
 
-Both deployments serve the same REST contract, and only the base URL changes.
+Both deployments serve the same REST contract, and only the base URL changes. Embedded, `@forestadmin/agent-bff` is an optional peer dependency of `@forestadmin/agent`, so install it too or the agent throws on `start()`.
 
 <CodeGroup>
 
