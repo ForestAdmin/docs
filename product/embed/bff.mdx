@@ -102,7 +102,7 @@ Standalone deployments are configured entirely through environment variables. Em
 | `BFF_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. |
 | `BFF_OPENAPI_ENABLED` | No | `true` | Serve the OpenAPI document over HTTP. `false` when embedded. |
 
-A malformed value fails the boot with a clear error and never echoes the offending value. A required variable that is merely absent boots anyway and reports the gap through `/health`.
+A malformed value fails the boot with a clear error and never echoes the offending value. `BFF_ALLOWED_ORIGINS` is the exception: an entry that cannot be parsed is dropped, the boot carries on, and a startup warning names the entries it dropped. Read that warning, because a typo there leaves you with a narrower allow-list than you wrote, and the symptom only shows up later as `403 origin_not_allowed`. A required variable that is merely absent boots anyway and reports the gap through `/health`.
 
 ## Cross-origin access
 
