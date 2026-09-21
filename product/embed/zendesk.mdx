@@ -91,7 +91,7 @@ Make a note of the URL your BFF answers on. You'll need it when installing the Z
     </Note>
   </Step>
   <Step title="Fill in the installation form">
-    - **Forest BFF URL** (`forestAgentUrl`): your Forest BFF URL, from the table above
+    - **Forest BFF URL** (`forestBFFUrl`): your Forest BFF URL, from the table above
     - Optionally, restrict which Zendesk roles and groups get access to the Forest app
 
     <Note>
@@ -177,7 +177,7 @@ Suggested action names come back through a filter: the app keeps the ones that m
 <AccordionGroup>
   <Accordion title="Zendesk agents cannot sign in">
     - Check `GET {your-bff-url}/health`, `configured.oauth` must be `true`
-    - Confirm `forestAgentUrl` points at the BFF, not at the agent itself and not at an MCP URL
+    - Confirm `forestBFFUrl` points at the BFF, not at the agent itself and not at an MCP URL
     - On a `403 origin_not_allowed`, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way
   </Accordion>
   <Accordion title="A Zendesk agent sees no record on a ticket">
