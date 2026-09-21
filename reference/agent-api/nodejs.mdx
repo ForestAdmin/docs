@@ -292,6 +292,74 @@ When the MCP server runs standalone (`npx forest-mcp-server`), the same options 
 
 ---
 
+### agent.addBff(options?)
+
+Run a [Forest BFF](/product/embed/bff) inside the agent process, so a trusted browser UI can call your agent over REST without a second deployment and without a second port.
+
+```typescript
+agent.addBff(options?: {
+  allowedOrigins?: string[];
+  tokenEncryptionKey?: string;
+  openapiEnabled?: boolean;
+}): Agent;
+```
+
+Requires the `@forestadmin/agent-bff` package:
+
+```bash
+npm install @forestadmin/agent-bff
+```
+
+**Parameters:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `allowedOrigins` | `string[]` | `[]` | Origins (scheme, host, port) allowed to call the BFF from a browser. Matching is exact, except for a single leading wildcard label from `@forestadmin/agent-bff` 1.31.0, `https://*.example.com`. Empty means no cross-origin access. See [Cross-origin access](/product/embed/bff#cross-origin-access). |
+| `tokenEncryptionKey` | `string` | — | Base64-encoded 32-byte key. Enables the sign-in routes; without it nobody can sign in from a browser UI. |
+| `openapiEnabled` | `boolean` | `false` | Serve the OpenAPI document over HTTP. Off by default when embedded. |
+
+**Example:**
+
+```typescript
+await createAgent(options)
+  .addDataSource(/* ... */)
+  .addBff({
+    allowedOrigins: ['https://my-app.com'],
+    tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
+  })
+  .mountOnStandaloneServer(3351)
+  .start();
+```
+
+The secrets, the Forest URLs and the logger are inherited from the agent and cannot be overridden. Every option is a feature switch, so what you leave out stays off, and `GET /bff/health` reports which surfaces are on under `configured`.
+
+The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST /bff/agent/v1/{collection}/list`, `GET /bff/health`. A host serving the agent under a sub-path of its own works too, and `app.use('/api', mounted)` puts the BFF at `/api/bff`.
+
+<Warning>
+**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` answers `500 stream.not.readable`.
+
+```typescript
+const app = express();
+agent.mountOnExpress(app);  // first
+app.use(express.json());    // then yours
+await agent.start();
+```
+
+NestJS needs no special handling as long as you mount before `listen()`.
+</Warning>
+
+<Warning>
+**Forest's IP whitelist does not apply to requests served under `/bff`.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate, since applying the whitelist would filter the browsers a third-party UI is made of, and the agent logs a warning at startup naming the exemption. Sign-in is still required.
+</Warning>
+
+<Note>
+`addBff()` and `mountAiMcpServer({ basePath: '/bff' })` are mutually exclusive: the MCP server would claim `/bff/oauth` and `/bff/mcp`. Whichever you call second throws on the spot, at the builder call rather than from `start()`. Any `basePath` landing inside `/bff` counts, so mount the MCP server elsewhere.
+</Note>
+
+`addBff()` can be called once, and before `start()`. A mount is what opens a socket, and `start()` only builds the agent's router, so without a `mountOn*` call nothing is served, the BFF included. While the BFF is not serving, `/bff/*` answers `503`, with a different type at each end of the lifecycle: `bff_not_started` between `addBff()` and the end of `start()`, `bff_stopped` after `stop()`.
+
+---
+
 ### agent.updateTypesOnFileSystem(typingsPath, typingsMaxDepth)
 
 Update the TypeScript typings file generated from your datasources.

@@ -5,52 +5,120 @@ description: "Embed Forest data and actions inside Zendesk tickets and customer 
 
 The Forest Zendesk app lets you view and act on your data without leaving Zendesk. Access customer records, trigger actions, and see related data inline in ticket sidebars.
 
-# How it works
+## How it works
 
-The app uses the Forest MCP to surface your data and actions inside Zendesk. Install the app from the Zendesk marketplace, connect it to your Forest project, and configure which collections to display.
+The app reaches your back-end through a [Forest BFF](/product/embed/bff), the REST gateway that lets a browser UI call a Forest agent. Each Zendesk agent signs in with their own Forest account, and every call travels to your back-end as that person. Their roles, permissions and scopes apply exactly as they do in Forest.
 
-# Install Guide
+<Info>
+  Earlier versions of the app went through the Forest MCP Server. An installation configured that way points at an MCP URL and no longer works. Repoint it at your BFF URL, as described below.
+</Info>
 
-## Pre-requisites
+## Prerequisites
 
-The Forest Zendesk app uses the Forest MCP Server to securely access your Forest data and actions, it is therefore required to have it enabled to proceed with the installation of the Zendesk app.
+Before installing the app, your tech team needs a Forest BFF that a browser can reach:
 
-1. Ensure the Forest MCP Server has been enabled on your Forest project
-2. Make a note of your Forest MCP Server URL; you will need it when installing the Zendesk app
+1. **A BFF serving your Forest back-end**, either embedded in your Node.js agent or deployed standalone.
+2. **OAuth enabled on it**, which is what lets each Zendesk agent sign in with their Forest account.
+3. **The app's iframe origin allow-listed**, because the app calls your BFF from the browser.
 
-<Tip>
-  If you're not sure whether the Forest MCP Server has been enabled or which URL to access it on, ask your Tech team - they can simply follow [this guide](/product/embed/mcp-server) to set it up.
-</Tip>
+The origin to allow-list is `https://1231469.apps.zdusercontent.com`.
+
+<Warning>
+  That is not a typo, and it is not your Zendesk URL. A Zendesk app runs in an iframe served from Zendesk's own app domain, so the `Origin` the browser sends is that iframe's, never `https://your-subdomain.zendesk.com`. Allow-listing your tenant URL gets every call refused with `403 origin_not_allowed`.
+
+  The number is the Forest app's Marketplace id, so the value is the same for every Forest installation. To read it yourself, open a ticket with the Forest app in the sidebar and inspect that panel's iframe, its origin is the value to allow-list.
+</Warning>
+
+<Note>
+  From `@forestadmin/agent-bff` 1.31.0 you can write `https://*.apps.zdusercontent.com` instead of copying the id. That form also admits every other Zendesk app, since Zendesk serves them all from that domain, so the exact origin stays the narrower of the two. On earlier versions a wildcard matches nothing, so use the exact origin there. See [Cross-origin access](/product/embed/bff#cross-origin-access).
+</Note>
+
+<CodeGroup>
+
+```javascript Embedded in a Node.js back-end
+await createAgent(options)
+  .addDataSource(/* ... */)
+  .addBff({
+    allowedOrigins: ['https://1231469.apps.zdusercontent.com'],
+    tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
+  })
+  .mountOnStandaloneServer(3351)
+  .start();
+```
+
+```bash Standalone
+npm install @forestadmin/agent-bff
+
+BFF_ALLOWED_ORIGINS=https://1231469.apps.zdusercontent.com \
+  BFF_TOKEN_ENCRYPTION_KEY=xxx \
+  AGENT_URL=https://your-agent.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
+  FOREST_SERVER_URL=https://api.forestadmin.com \
+  FOREST_APP_URL=https://app.forestadmin.com \
+  forest-bff
+```
+
+</CodeGroup>
+
+<Note>
+  A build served locally with `zcli apps:server` runs from `http://localhost:4567`. Allow-list that origin too while you develop.
+</Note>
+
+Embedding needs the Node.js agent. With a Ruby back-end, run the BFF standalone.
+
+Make a note of the URL your BFF answers on. You'll need it when installing the Zendesk app:
+
+| Deployment | Your BFF URL |
+| --- | --- |
+| Embedded | `{your-agent-url}/bff` |
+| Standalone | the BFF's own base URL, port `3450` by default |
+
+<Warning>
+  Without `tokenEncryptionKey` (or `BFF_TOKEN_ENCRYPTION_KEY`), the BFF boots but its `/oauth/*` routes stay disabled, and nobody can sign in from Zendesk. `GET {your-bff-url}/health` reports `configured.oauth` so you can check before installing.
+</Warning>
 
 ## Installing the Zendesk app
 
-1. Find the [Forest app in the Zendesk Marketplace](https://www.zendesk.fr/marketplace/apps/support/1231469/forest-admin/?queryID=507953d20df1906a17dbad7341966557)
-2. Click on Install
-3. Enter your Zendesk URL and click on Next; you will be re-directed to your Zendesk Admin Center
-   <Note>
-     You will need to be an Admin in Zendesk to access the Admin Center.
-   </Note>
-4. In the Installation form, you will need to provide:
-   1. The forestAgentUrl: this is the URL of your Forest MCP Server (as mentioned in the Pre-requisites section)
-   2. The contextField: this is the Zendesk Ticket Field that will be used to match the Ticket Sender with a record from your Forest project data
-   3. Optionally, you can set restrictions on which Zendesk Roles and Groups to grant access to the Forest app
-5. Click on Install
+<Steps>
+  <Step title="Install from the Marketplace">
+    Find the [Forest app in the Zendesk Marketplace](https://www.zendesk.fr/marketplace/apps/support/1231469/forest-admin/?queryID=507953d20df1906a17dbad7341966557) and click **Install**.
+  </Step>
+  <Step title="Open your Zendesk Admin Center">
+    Enter your Zendesk URL and click **Next**. You are redirected to the Admin Center.
+
+    <Note>
+      You need to be an Admin in Zendesk to access the Admin Center.
+    </Note>
+  </Step>
+  <Step title="Fill in the installation form">
+    - **Forest MCP URL** (`forestAgentUrl`): your Forest BFF URL, from the table above
+    - **contextField**: the Zendesk ticket field used to match the ticket sender with a record from your Forest data
+    - Optionally, restrict which Zendesk roles and groups get access to the Forest app
+
+    <Note>
+      The first field is still labelled **Forest MCP URL** and suggests a URL ending in `/mcp`. Enter your BFF URL there regardless, the label has not caught up with the app.
+    </Note>
+  </Step>
+  <Step title="Install">
+    Click **Install**.
+  </Step>
+</Steps>
 
 <Check>
-  The Forest Zendesk app is now installed! It can now be added to your ticket sidebar, from the Apps tab.
+  The Forest Zendesk app is now installed. Add it to your ticket sidebar from the Apps tab.
 </Check>
 
 <Frame>
   ![Screenshot 2026 06 05 At 11 15 59](/images/Screenshot-2026-06-05-at-11.15.59.png)
 </Frame>
 
-## Configuring the Zendesk App
+## Signing in
 
-Now that the Forest app has been installed in your Zendesk project, your back-ends will simply need to configure it:
+Each Zendesk agent connects with their own Forest account, once:
 
-1. In the Forest app, click on "Connect with Forest"
+1. In the Forest app, click **Connect with Forest**
 2. Enter your Forest credentials, as you usually would to access your Forest project
-3. Select your Organization, Project, Environment, and Team, and click on Save changes
+3. Select your Organization, Project, Environment, and Team, and click **Save changes**
 
 <Frame>
   <img
@@ -63,7 +131,7 @@ Now that the Forest app has been installed in your Zendesk project, your back-en
 </Frame>
 
 <Card title="Your Forest app is now configured in Zendesk!" type="check">
-  It will now automatically analyze the customer request from the ticket,  find the relevant Customer, User, or Partner in your Forest data, and recommend relevant Data and Actions to solve the ticket.
+  It matches the ticket sender against your Forest data, surfaces the relevant Customer, User or Partner record, and suggests the actions that resolve the ticket.
 </Card>
 
 <Frame>
@@ -75,3 +143,20 @@ Now that the Forest app has been installed in your Zendesk project, your back-en
     style={{ width:"48%" }}
   />
 </Frame>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Zendesk agents cannot sign in">
+    - Check `GET {your-bff-url}/health`, `configured.oauth` must be `true`
+    - Confirm `forestAgentUrl` points at the BFF, not at the agent itself and not at an MCP URL
+    - On a `403 origin_not_allowed`, check the allow-list holds `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way
+  </Accordion>
+  <Accordion title="A Zendesk agent sees no record on a ticket">
+    - Check that **contextField** names the ticket field carrying the sender's identity
+    - Confirm their Forest role grants read access to the collection. The app shows what that person is allowed to see, nothing more
+  </Accordion>
+  <Accordion title="Actions are missing from the Actions tab">
+    Actions the caller's permissions do not confirm are hidden. Check the role's action permissions in **Project Settings → Roles**.
+  </Accordion>
+</AccordionGroup>

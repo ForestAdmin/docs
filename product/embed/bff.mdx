@@ -1,0 +1,184 @@
+---
+title: "Forest BFF"
+description: "Let a trusted browser UI call your Forest back-end over REST."
+---
+
+The Forest BFF is a REST gateway that sits between a browser UI and your Forest back-end. It gives a third-party interface a flat HTTP contract for listing records, browsing relations and running actions, without that interface having to learn MCP or JSON:API.
+
+It is what the [Zendesk app](/product/embed/zendesk) runs on.
+
+<Info>
+  Use the [Forest MCP Server](/product/embed/mcp-server) instead when you are building for an AI assistant. The BFF serves interfaces people click in, MCP serves tools models call.
+</Info>
+
+## Your back-end stays the authority
+
+The BFF forwards calls, your back-end decides them. Every call reaches your back-end as the person who made it, and comes back filtered exactly as it would for them in Forest. Roles, permissions and scopes apply unchanged, and a collection your schema no longer exposes is re-checked on every call.
+
+<Warning>
+  `GET /agent/v1/permissions` returns **display hints**, meant for graying out buttons an operator cannot use. It is never an authorization decision. A UI that treats it as one is not enforcing anything, your back-end is.
+</Warning>
+
+## Running it
+
+Both deployments serve the same REST contract, and only the base URL changes.
+
+<CodeGroup>
+
+```javascript Embedded in a Node.js back-end
+await createAgent(options)
+  .addDataSource(/* ... */)
+  .addBff({
+    allowedOrigins: ['https://my-app.com'],
+    tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
+  })
+  .mountOnStandaloneServer(3351)
+  .start();
+```
+
+```bash Standalone
+npm install @forestadmin/agent-bff
+
+BFF_ALLOWED_ORIGINS=https://my-app.com \
+  BFF_TOKEN_ENCRYPTION_KEY=xxx \
+  AGENT_URL=https://your-agent.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
+  FOREST_SERVER_URL=https://api.forestadmin.com \
+  FOREST_APP_URL=https://app.forestadmin.com \
+  forest-bff
+```
+
+</CodeGroup>
+
+Embedded, the BFF answers under `/bff` on the agent's own port, so `{your-agent-url}/bff/agent/v1/...`. Standalone, it listens on its own port, `3450` by default. Embedding needs the Node.js agent; with a Ruby back-end, run it standalone.
+
+Prefer embedded for a single deployment, which is most of them. Standalone when several agents share one BFF, or when the BFF and the agent have to scale separately.
+
+<Info>
+  The full `agent.addBff()` signature, the body-parser ordering trap and the IP whitelist caveat live in the [Node.js agent reference](/reference/agent-api/nodejs).
+</Info>
+
+## Routes
+
+The data routes live under `/agent/v1`. They are `POST`, and the filter, projection, sort, search and paging all travel in the body, never in the query string.
+
+| Route | Method | What it does |
+| --- | --- | --- |
+| `/agent/v1/{collection}/list` · `/count` | `POST` | list or count records of a collection |
+| `/agent/v1/{collection}/relations/{relation}/list` · `/count` | `POST` | the same, through a to-many relation |
+| `/agent/v1/{collection}/actions/{action}/form` · `/execute` | `POST` | load an action's form, then run it |
+| `/agent/v1/context` | `GET` | the exposed schema: collections, typed fields, relations and actions |
+| `/agent/v1/permissions` | `GET` | display hints, as described above |
+| `/agent/v1/ai/query` | `POST` | the AI relay, served only when the deployment configures it |
+| `/agent/openapi.json` | `GET` | the OpenAPI document, when enabled |
+
+`/health` sits outside the `/agent/v1` prefix, alongside `/agent/openapi.json`.
+
+To-one relations are not listable and answer `404 unknown_relation` by design.
+
+Errors use a type-first contract, `{ error: { type, status, message, details? } }`, so branch on `error.type` and never on message text.
+
+## Configuration
+
+Standalone deployments are configured entirely through environment variables. Embedded, the secrets and Forest URLs are inherited from the agent, and only the feature switches are yours to set.
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `FOREST_AUTH_SECRET` | Yes | — | Your authentication secret. Must match your back-end's. |
+| `FOREST_ENV_SECRET` | Yes | — | Your environment secret. |
+| `FOREST_SERVER_URL` | Yes | — | Forest API base URL. |
+| `FOREST_APP_URL` | Yes | — | Forest front base URL, used to build the sign-in redirect. |
+| `AGENT_URL` | Yes | — | The back-end the BFF calls. Unused when embedded, where the BFF reaches it in-process. |
+| `BFF_TOKEN_ENCRYPTION_KEY` | For sign-in | — | Base64-encoded 32-byte key. Until it is set, nobody can sign in from a browser UI. |
+| `HTTP_PORT` | No | `3450` | Server port. Unused when embedded, where the BFF answers on the agent's port. |
+| `BFF_ALLOWED_ORIGINS` | No | empty | Comma-separated allow-list of origins, exact or one leading wildcard label from 1.31.0. Empty means no cross-origin browser access. |
+| `BFF_DEFAULT_TIMEZONE` | No | — | Fallback IANA timezone when a request carries none. |
+| `BFF_PUBLIC_URL` | No | — | The BFF's own external base URL, published in the OpenAPI document. |
+| `BFF_AGENT_TIMEOUT_MS` | No | `10000` | How long to wait for your back-end on a data or action call. |
+| `BFF_RATE_LIMIT_MAX_REQUESTS` | No | `300` | Requests allowed per caller per window. |
+| `BFF_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. |
+| `BFF_OPENAPI_ENABLED` | No | `true` | Serve the OpenAPI document over HTTP. `false` when embedded. |
+
+A malformed value fails the boot with a clear error and never echoes the offending value. A required variable that is merely absent boots anyway and reports the gap through `/health`.
+
+## Cross-origin access
+
+A browser UI is cross-origin by definition, so `BFF_ALLOWED_ORIGINS` (or `allowedOrigins`) decides what reaches your data.
+
+Matching is exact: scheme, host and port, case-insensitive, default ports normalized away, no trailing slash. An origin outside the list is refused outright with `403 origin_not_allowed`, rather than served without the header and left for the browser to discard.
+
+From `@forestadmin/agent-bff` 1.31.0, an entry may carry one wildcard label at the front of the host, `https://*.example.com`. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly, and the wildcard is only accepted in that position: anywhere else, more than once, or over a host with fewer than two remaining labels, the entry is refused at boot and named in the startup warning.
+
+<Warning>
+  Before 1.31.0 a wildcard entry fails quietly. A pattern such as `https://*.example.com` parses as a valid origin, enters the allow-list unchanged, and then matches nothing, so every call answers `403 origin_not_allowed` with no startup warning pointing at the cause. On those versions, list each origin in full.
+</Warning>
+
+<Note>
+  A wildcard widens the allow-list to every host under that domain, including ones you do not control when the domain is shared. That is usually acceptable here, since the origin check is not the authentication boundary, a session or an API key is still required. Weigh it per domain rather than reaching for the wildcard by default.
+</Note>
+
+A request carrying no `Origin` at all is untouched, which is every server-to-server call. The opaque `Origin: null` is different: it counts as a present origin and is refused. A sandboxed iframe sends it, so give yours `allow-same-origin` if it has to reach the BFF.
+
+<Warning>
+  When your UI runs in an iframe, the `Origin` the browser sends is the **iframe's**, not the page hosting it. Allow-listing the host application's domain then refuses every call with `403 origin_not_allowed`. Read the `Origin` header off a failing request in your browser's network inspector rather than deriving it from the URL in the address bar.
+</Warning>
+
+<Note>
+  Browsers enforce this against `localhost` too, so add your dev origin (for example `http://localhost:4200`) while developing. There is no development bypass.
+</Note>
+
+## Timezone
+
+On every route that reaches your back-end, the BFF forwards an explicit timezone, resolved in order: the `X-Forest-Timezone` header, then a `timezone` field in the body, then `BFF_DEFAULT_TIMEZONE`. None of the three gives `400 missing_timezone`, and a non-IANA value gives `400 invalid_timezone`.
+
+## Checking a deployment
+
+```bash
+curl {your-bff-url}/health
+```
+
+```jsonc
+{
+  "status": "ok",
+  "version": "<package version>",
+  "configured": { "oauth": true, "ai": true, "cors": true, "openapi": true }
+}
+```
+
+`configured` says which optional surfaces this deployment was set up to serve, not that they work. A `503 degraded` means a required variable is missing. The body never names which keys are present, because that would leak your configuration to an unauthenticated probe. Missing keys are logged at startup for operators instead.
+
+## OpenAPI document
+
+`GET /agent/openapi.json` serves a document you can generate a typed client from. Exporting it without booting the server works too, which is what you want in CI:
+
+```bash
+forest-bff openapi > openapi.json
+forest-bff openapi --output docs/api.json
+```
+
+The document comes in two forms, and `info.description` says which one you are holding. An export that has your Forest configuration available is unfolded, with one path per exposed collection, to-many relation and action, each carrying its real field set. Without that configuration it is generic, one path per operation, with the collection, relation and action passed as path parameters and no field enumerated. The runtime routes stay generic either way, only the document unfolds.
+
+<Warning>
+  The served document is **not filtered per caller**: anyone who can reach it reads the name of every exposed collection, relation and field, whatever their role. Set `BFF_OPENAPI_ENABLED=false` if that surface must not be reachable over HTTP. Exporting with the CLI keeps working either way.
+</Warning>
+
+## Timeouts and failures
+
+A back-end that accepts the connection and then does not answer within `BFF_AGENT_TIMEOUT_MS` gives `504 agent_timeout`. A back-end that refuses the connection, whose host does not resolve, or that fails outright mid-flight gives `502 network_error`. The two are deliberately distinct, so a slow back-end and an unreachable one are not diagnosed as the same incident.
+
+Over the rate limit, the BFF answers `429 too_many_requests` with a `Retry-After` and a `details.cause` saying whether the caller exceeded its budget or the limiter is saturated. A 429 raised by your back-end instead is relayed with its own payload, so it carries neither. Read both fields only when they are present.
+
+<Note>
+  Sessions are held in memory, in a single process. Running the BFF behind a load balancer without sticky sessions breaks them, so horizontal scaling needs a shared session store.
+</Note>
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="Next: Zendesk app →" icon="arrow-right" href="/product/embed/zendesk">
+    The Forest app for Zendesk, which runs on a BFF you deploy.
+  </Card>
+  <Card title="agent.addBff() reference →" icon="arrow-right" href="/reference/agent-api/nodejs">
+    The embedded options, the body-parser ordering trap and the IP whitelist caveat.
+  </Card>
+</CardGroup>

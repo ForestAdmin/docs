@@ -252,6 +252,7 @@
             "group": "Embed",
             "pages": [
               "product/embed/mcp-server",
+              "product/embed/bff",
               "product/embed/zendesk",
               "product/embed/n8n"
             ]
