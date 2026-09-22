@@ -62,6 +62,7 @@
             "pages": [
               "get-started/connect/overview",
               "get-started/connect/architectures/self-hosted",
+              "get-started/connect/architectures/deployment-topology",
               {
                 "group": "Data Sources",
                 "pages": [

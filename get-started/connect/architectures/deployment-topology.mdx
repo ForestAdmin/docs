@@ -1,0 +1,96 @@
+---
+title: "Choosing a deployment topology"
+description: "Whether the Forest back-end runs in its own process or inside your application, and what each choice commits you to"
+---
+
+The [self-hosted architecture](/get-started/connect/architectures/self-hosted) leaves you one decision: does the Forest back-end run as its own service, or inside an application process you already have?
+
+**Run it standalone unless you need to reuse your ORM models.** That is the whole rule. The rest of this page is what each side of it costs.
+
+## Pick a side
+
+<Steps>
+  <Step title="Does a Forest datasource match the ORM you already use?">
+    `datasource-sequelize`, `datasource-mongoose` (Node.js), `datasource-active-record` and `datasource-mongoid` (Ruby) take the model definitions you have already written. If yours is one of these, in-app deployment lets Forest read them directly, and your scopes and associations come along.
+
+    If your ORM is anything else — TypeORM, Prisma, Drizzle, Knex, raw SQL — there is no datasource for it. You will use [`datasource-sql`](/get-started/connect/data-sources/sql), which opens its own connection and introspects the database from scratch. **It cannot read your entities**, so running in-app buys you nothing on this axis: you get a second, independent model layer over the same tables either way.
+  </Step>
+  <Step title="Does that reuse outweigh sharing a process with your application?">
+    In-app means the Forest back-end and your application share a process. That is not only memory and a connection pool — it is a lifecycle. See below.
+  </Step>
+</Steps>
+
+| | Standalone | In-app |
+| --- | --- | --- |
+| Reuses your ORM models | No | Yes, if a datasource matches your ORM |
+| Restarts when you deploy the application | No | Yes |
+| Competes for your application's event loop | No | Yes |
+| Can take the application down by crashing | No | Yes |
+| Deploys and scales independently | Yes | No |
+| Available for Ruby | No — [contact us](https://www.forestadmin.com/contact) | Yes |
+
+## What in-app actually shares
+
+Sharing a process shares four things, and only the first is obvious:
+
+- **Memory and connection budget.** Two connection pools against one database, each with its own ceiling. Set [`pool`](/get-started/connect/data-sources/sql#connection-pooling) deliberately rather than taking the default on both sides.
+- **The restart schedule.** Every deploy of your application restarts the agent, and every deploy of the agent restarts your application. A configuration toggle read at boot is a redeploy of both.
+- **The event loop.** Agent startup — [schema introspection](/get-started/connect/data-sources/sql#what-it-costs-at-boot), model building, schema generation — is synchronous work on the loop your application serves requests from. On a wide schema, requests in flight during a boot see the latency.
+- **The crash surface.** An error thrown out of agent construction that nothing catches exits the process, taking your application with it.
+
+None of this is hypothetical on a large schema, and none of it is visible on a small one — which is why it tends to be discovered in production rather than in staging.
+
+## A monorepo does not mean in-app
+
+Living in the same repository and running in the same process are different decisions, and the first does not force the second.
+
+Add the agent as its own workspace package with its own `package.json`, and start it with `mountOnStandaloneServer()`:
+
+```typescript
+// packages/forest-agent/src/index.ts
+import { createAgent } from '@forestadmin/agent';
+import { createSqlDataSource } from '@forestadmin/datasource-sql';
+import { readFileSync } from 'fs';
+
+const introspection = JSON.parse(readFileSync('./introspection.json', 'utf8'));
+
+createAgent({
+  authSecret: process.env.FOREST_AUTH_SECRET,
+  envSecret: process.env.FOREST_ENV_SECRET,
+  isProduction: process.env.NODE_ENV === 'production',
+})
+  .addDataSource(createSqlDataSource(process.env.DATABASE_URL, { introspection }))
+  .mountOnStandaloneServer(Number(process.env.PORT))
+  .start();
+```
+
+You keep shared tooling, shared CI and shared types. You do not keep the shared process. Deploy that package as its own service.
+
+If the agent genuinely needs your application's service layer — and not merely its models — that is a case for an internal API the agent calls, not for merging the two processes.
+
+## Running two agents at once
+
+During a [migration](/guides/migration/from-v1/overview) you may want the current agent and the new one live at the same time. They must not share a process, and if they share a host they must not share a path.
+
+An agent mounted at a prefix answers **every** request under it. Two agents on one host at the same prefix do not coexist — one wins silently, and the symptom is either the wrong agent answering with the wrong environment secret, or an environment that looks dead for no visible reason.
+
+Give the second agent its own hostname, or set [`prefix`](/reference/agent-api/nodejs) and change that environment's URL in Forest to match:
+
+```typescript
+createAgent({ ...options, prefix: '/forest-v2' })
+```
+
+<Warning>
+The two changes must land together. Setting `prefix` without updating the environment URL in Forest leaves the new agent unreachable; updating the URL without setting `prefix` gives a 404. Either half looks exactly like a broken deployment.
+</Warning>
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="Deploy" icon="arrow-right" href="/get-started/deploy">
+    Ship the back-end and keep its schema current.
+  </Card>
+  <Card title="Migrating from v1" icon="arrow-right" href="/guides/migration/from-v1/overview">
+    Where this decision belongs in a migration.
+  </Card>
+</CardGroup>
