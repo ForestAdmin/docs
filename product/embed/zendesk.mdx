@@ -164,7 +164,7 @@ Two features call a model, both in the Actions tab, both through your BFF's `POS
 | Feature | When it fires | What is sent |
 | --- | --- | --- |
 | Suggested actions | opening the Actions tab | ticket subject, description, requester email and name, plus the qualified names and types of the actions your schema exposes |
-| Draft customer reply | clicking **Generate response** on an action that ran | requester name, ticket subject, the action's name and its result, plus the first URL that result contains. The reply lands in the ticket's comment editor for the Zendesk agent to review and send |
+| Draft customer reply | clicking **Generate a response to this ticket** on an action that ran | requester name, ticket subject, the action's name and its result, plus the first URL that result contains. The reply lands in the ticket's comment editor for the Zendesk agent to review and send |
 
 Suggested action names come back through a filter: the app keeps the ones that match a real action and drops the rest, so a hallucinated name never reaches a button. Every ticket field is sanitized before it leaves, with injection markers stripped and lengths capped. Records and relations browsed in the Data tab never reach the AI proxy, and neither does matching.
 
@@ -178,7 +178,7 @@ Suggested action names come back through a filter: the app keeps the ones that m
   <Accordion title="Zendesk agents cannot sign in">
     - Check `GET {your-bff-url}/health`, `configured.oauth` must be `true`
     - Confirm `forestBFFUrl` points at the BFF, not at the agent itself and not at an MCP URL
-    - On a `403 origin_not_allowed`, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way
+    - On a CORS error in the browser console, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way. The rejected preflight answers `204` with no headers, so the `403 origin_not_allowed` never reaches the browser — the BFF logs `BFF preflight origin rejected` with the origin it refused
   </Accordion>
   <Accordion title="A Zendesk agent sees no record on a ticket">
     - Confirm their Forest role grants read access to the collection. The app shows what that person is allowed to see, nothing more

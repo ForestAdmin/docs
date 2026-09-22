@@ -69,10 +69,19 @@ The data routes live under `/agent/v1`. They are `POST`, and the filter, project
 | `/agent/v1/{collection}/actions/{action}/form` · `/execute` | `POST` | load an action's form, then run it |
 | `/agent/v1/context` | `GET` | the exposed schema: collections, typed fields, relations and actions |
 | `/agent/v1/permissions` | `GET` | display hints, never an authorization decision |
-| `/agent/v1/ai/query` | `POST` | the AI relay, served only when the deployment configures it |
+| `/agent/v1/ai/query` | `POST` | the AI relay, served only when the deployment configures it. Needs an OAuth session: an `X-Forest-Bff-Key` call answers `403 oauth_required` |
 | `/agent/openapi.json` | `GET` | the OpenAPI document, when enabled |
 
-`/health` sits outside the `/agent/v1` prefix, alongside `/agent/openapi.json`.
+Four routes sit outside the `/agent/v1` prefix:
+
+| Route | Method | What it does |
+| --- | --- | --- |
+| `/oauth/authorize` | `GET` | starts the browser sign-in, redirecting to the Forest front |
+| `/oauth/token` | `POST` | exchanges the authorization code, and refreshes the session |
+| `/health` | `GET` | the deployment probe |
+| `/docs` | `GET` | a Redoc viewer over the OpenAPI document, served on the same switch |
+
+The two `/oauth` routes are what sign-in runs on, so an ingress or WAF that allow-lists only `/agent/*` and `/health` breaks it. Embedded, all of them sit under the `/bff` prefix like the rest.
 
 To-one relations are not listable and answer `404 unknown_relation` by design.
 
@@ -82,7 +91,7 @@ Errors use a type-first contract, `{ error: { type, status, message, details? } 
 
 ## Configuration
 
-Standalone deployments are configured entirely through environment variables. Embedded, the secrets and Forest URLs are inherited from the agent, and only the feature switches are yours to set.
+Standalone deployments are configured entirely through environment variables. Embedded, the secrets and Forest URLs are inherited from the agent, and the rest is set through `addBff()` alone: the environment is not read at all, so a variable marked "Unused when embedded" below is ignored without a warning and the default stands.
 
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
@@ -95,11 +104,11 @@ Standalone deployments are configured entirely through environment variables. Em
 | `HTTP_PORT` | No | `3450` | Server port. Unused when embedded, where the BFF answers on the agent's port. |
 | `BFF_ALLOWED_ORIGINS` | No | empty | Comma-separated allow-list of origins, exact or one leading wildcard label. Empty means no cross-origin browser access. |
 | `BFF_DEFAULT_TIMEZONE` | No | — | Fallback IANA timezone when a request carries none. |
-| `BFF_PUBLIC_URL` | No | — | The BFF's own external base URL, published in the OpenAPI document. |
+| `BFF_PUBLIC_URL` | No | — | The BFF's own external base URL, published in the OpenAPI document. Unused when embedded. |
 | `BFF_AGENT_TIMEOUT_MS` | No | `10000` | How long to wait for your back-end on a data or action call. |
 | `BFF_AI_TIMEOUT_MS` | No | `120000` | How long to wait for the Forest server on an AI query, `POST /agent/v1/ai/query`. |
-| `BFF_RATE_LIMIT_MAX_REQUESTS` | No | `300` | Requests allowed per caller per window. |
-| `BFF_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. |
+| `BFF_RATE_LIMIT_MAX_REQUESTS` | No | `300` | Requests allowed per caller per window. Unused when embedded. |
+| `BFF_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. Unused when embedded. |
 | `BFF_OPENAPI_ENABLED` | No | `true` | Serve the OpenAPI document over HTTP. `false` when embedded. |
 
 A malformed value fails the boot with a clear error and never echoes the offending value. `BFF_ALLOWED_ORIGINS` is the exception: an entry that cannot be parsed is dropped, the boot carries on, and a startup warning names the entries it dropped. Read that warning, because a typo there leaves you with a narrower allow-list than you wrote, and the symptom only shows up later as `403 origin_not_allowed`. A required variable that is merely absent boots anyway and reports the gap through `/health`.
@@ -109,6 +118,10 @@ A malformed value fails the boot with a clear error and never echoes the offendi
 A browser UI is cross-origin by definition, so `BFF_ALLOWED_ORIGINS` (or `allowedOrigins`) decides what reaches your data.
 
 Matching is exact: scheme, host and port, case-insensitive, default ports normalized away, no trailing slash. An origin outside the list is refused outright with `403 origin_not_allowed`, rather than served without the header and left for the browser to discard.
+
+<Warning>
+  A browser rarely shows you that `403`. Every data route is a `POST` with a JSON body, so the browser sends a preflight first, and a rejected `OPTIONS` answers `204` with no CORS headers — the browser then reports a plain CORS error and never issues the request that would have carried the `403`. What names the cause is the BFF's own log line, `BFF preflight origin rejected`, with the origin it refused. Read it there, or replay the call with `curl -H 'Origin: ...'` to see the `403` body.
+</Warning>
 
 An entry may carry one wildcard label at the front of the host, `https://*.example.com`, which needs `@forestadmin/agent-bff` 1.31.0 or later. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly, and the wildcard is only accepted in that position: anywhere else in the host, more than once, or over a host with fewer than two remaining labels, the entry is refused at boot and named in the startup warning.
 
@@ -150,7 +163,7 @@ curl {your-bff-url}/health
 
 ## OpenAPI document
 
-`GET /agent/openapi.json` serves a document you can generate a typed client from. Exporting it without booting the server works too, which is what you want in CI:
+`GET /agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`; pass a session bearer or an `X-Forest-Bff-Key`. Exporting it without booting the server works too, which is what you want in CI:
 
 ```bash
 forest-bff openapi > openapi.json
@@ -167,7 +180,7 @@ The document comes in two forms, and `info.description` says which one you are h
 
 A back-end that accepts the connection and then does not answer within `BFF_AGENT_TIMEOUT_MS` gives `504 agent_timeout`. A back-end that refuses the connection, whose host does not resolve, or that fails outright mid-flight gives `502 network_error`. The two are deliberately distinct, so a slow back-end and an unreachable one are not diagnosed as the same incident.
 
-Over the rate limit, the BFF answers `429 too_many_requests` with a `Retry-After` and a `details.cause` saying whether the caller exceeded its budget or the limiter is saturated. A 429 raised by your back-end instead is relayed with its own payload, so it carries neither. Read both fields only when they are present.
+Over the rate limit, the BFF answers `429 too_many_requests` with a `Retry-After` and a `details.cause` saying whether the caller exceeded its budget or the limiter is saturated. Read both fields only when they are present: a 429 raised by your back-end instead is re-enveloped, keeping its status and its detail as the `message` but carrying neither field. Either way the body is the BFF's own `{ error: { type, status, message } }`, never your back-end's JSON:API `errors` array, so branch on `error.type` rather than parsing an upstream shape.
 
 <Warning>
   Sessions live in memory, in one process, and so does the deduplication of in-flight token refreshes. There is no shared store to plug in, so horizontal scaling needs sticky sessions. Without them, two calls for one session landing on different nodes each refresh the Forest token, the second presents a refresh token the first already rotated, and that call fails with `session_expired`.

@@ -294,7 +294,7 @@ When the MCP server runs standalone (`npx forest-mcp-server`), the same options 
 
 ### agent.addBff(options?)
 
-Run a [Forest BFF](/product/embed/bff) inside the agent process, so a trusted browser UI can call your agent over REST without a second deployment and without a second port.
+Run a [Forest BFF](/product/embed/bff) inside the agent process, so a trusted browser UI can call your agent over REST without a second deployment and without a second port. Since `@forestadmin/agent` 1.100.0 — on an earlier agent the call throws `agent.addBff is not a function`, whatever version of `@forestadmin/agent-bff` is installed.
 
 ```typescript
 agent.addBff(options?: {
@@ -321,7 +321,7 @@ npm install @forestadmin/agent-bff
 | `tokenEncryptionKey` | `string` | — | Base64-encoded 32-byte key. Enables the sign-in routes; without it nobody can sign in from a browser UI. |
 | `defaultTimezone` | `string` | — | Fallback IANA timezone for a request that carries none. Without it, such a request answers `400 missing_timezone`. Embedded there is no `BFF_DEFAULT_TIMEZONE` to fall back on, so this option is the only way to set it. |
 | `agentTimeoutMs` | `number` | `10000` | How long a data or action call to the agent may take. It bounds the wait and cancels nothing: a write cut off at the deadline still commits inside the agent, so a client retrying on the timeout can double a non-idempotent mutation. |
-| `aiTimeoutMs` | `number` | `120000` | How long the AI relay waits for the Forest server on `POST /bff/agent/v1/ai/query`. |
+| `aiTimeoutMs` | `number` | `120000` | How long the AI relay waits for the Forest server on `POST /bff/agent/v1/ai/query`. That route needs an OAuth session: called with an `X-Forest-Bff-Key` it answers `403 oauth_required`. |
 | `openapiEnabled` | `boolean` | `false` | Serve the OpenAPI document over HTTP. Off by default when embedded. |
 
 **Example:**
@@ -337,7 +337,7 @@ await createAgent(options)
   .start();
 ```
 
-The secrets, the Forest URLs and the logger are inherited from the agent and cannot be overridden. The feature switches default to off, so what you leave out stays off, and `GET /bff/health` reports which surfaces are on under `configured`.
+The secrets, the Forest URLs and the logger are inherited from the agent and cannot be overridden. These options are the only configuration channel: embedded, the BFF never reads the environment, so `BFF_RATE_LIMIT_MAX_REQUESTS`, `BFF_RATE_LIMIT_WINDOW_MS`, `BFF_PUBLIC_URL` and `HTTP_PORT` are ignored silently and their defaults stand. The feature switches default to off, so what you leave out stays off, and `GET /bff/health` reports which surfaces are on under `configured`.
 
 The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST /bff/agent/v1/{collection}/list`, `GET /bff/health`. A host serving the agent under a sub-path of its own works too, and `app.use('/api', mounted)` puts the BFF at `/api/bff`.
 
