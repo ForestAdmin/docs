@@ -3,7 +3,7 @@ title: "Workflow triggers"
 description: "Choose how a workflow starts, manually from the interface, or automatically from an external system via a webhook."
 ---
 
-A workflow can be started in two independent ways. Both are configured in the **Process** section of the workflow settings page, beneath the version card. Each trigger type has its own row with an on/off toggle, and the two can be enabled independently.
+A workflow can be started in three ways. Two of them are configured in the **Process** section of the workflow settings page, beneath the version card: each has its own row with an on/off toggle, and the two can be enabled independently. The third is configured elsewhere — see [From an inbox](#from-an-inbox) below.
 
 - **Manual** — users start the workflow from a matching record in the interface (List View, Summary/Details, or a Workspace). This is the default. See [Executing workflows](/product/execute/workflows).
 - **Webhook** — external systems start the workflow via an authenticated HTTP POST. **Disabled by default.**
@@ -66,6 +66,14 @@ You have three independent levers to stop a webhook, without necessarily touchin
 | **Invalidate / expire the token** | Done by the token's user, from account settings. | `401` |
 
 Turning the toggle back on re-enables the *same* URL and token — it is a pause, not a reset.
+
+## From an inbox
+
+An [inbox](/product/manage/inbox) backed by a segment can start a workflow by itself, on every record that enters it. Unlike the two above, it is configured **on the inbox**, not in the workflow's Process section — the workflow does not know it is being triggered this way.
+
+- It runs as a chosen account, so what the workflow can read and write is bounded by that account's permissions, like a webhook run.
+- It needs [Forest Runtime](/product/process/workflows/forest-runtime#automated-inboxes) on your infrastructure: Forest never reads your database itself, so something on your side has to watch the segment.
+- A record leaves the automation when it **leaves the segment**. A record whose workflow finished while it is still there is handed to a human in the workflow's fallback inbox rather than run again.
 
 ## Auditing
 
