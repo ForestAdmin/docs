@@ -117,7 +117,7 @@ A malformed value fails the boot with a clear error and never echoes the offendi
 
 A browser UI is cross-origin by definition, so `BFF_ALLOWED_ORIGINS` (or `allowedOrigins`) decides what reaches your data.
 
-Matching is exact: scheme, host and port, case-insensitive, default ports normalized away, no trailing slash. An origin outside the list is refused outright with `403 origin_not_allowed`, rather than served without the header and left for the browser to discard.
+Matching is exact: scheme, host and port, case-insensitive, default ports normalized away, no trailing slash. An origin outside the list never reaches your data, and how it is refused depends on the preflight. A request arriving without one answers `403 origin_not_allowed`, rather than running and then being served without the header for the browser to discard. A preflighted one is stopped one step earlier, at the `OPTIONS`, which is what the warning below is about.
 
 <Warning>
   A browser rarely shows you that `403`. Every data route is a `POST` with a JSON body, so the browser sends a preflight first, and a rejected `OPTIONS` answers `204` with no CORS headers — the browser then reports a plain CORS error and never issues the request that would have carried the `403`. What names the cause is the BFF's own log line, `BFF preflight origin rejected`, with the origin it refused. Read it there, or replay the call with `curl -H 'Origin: ...'` to see the `403` body.
