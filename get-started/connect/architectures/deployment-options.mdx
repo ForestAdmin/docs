@@ -1,9 +1,11 @@
 ---
-title: "Choosing a deployment topology"
+title: "Deployment options"
 description: "Whether the Forest back-end runs in its own process or inside your application, and what each choice commits you to"
 ---
 
-The [self-hosted architecture](/get-started/connect/architectures/self-hosted) leaves you one decision: does the Forest back-end run as its own service, or inside an application process you already have?
+[Architecture](/get-started/connect/architectures/self-hosted) describes the two ways to run the Forest back-end — in-app and standalone. This page is for choosing between them: which one your situation calls for, and what each commits you to afterwards.
+
+The decision is one question. Does the Forest back-end run as its own service, or inside an application process you already have?
 
 **Run it standalone unless you need to reuse your ORM models.** That is the whole rule. The rest of this page is what each side of it costs.
 

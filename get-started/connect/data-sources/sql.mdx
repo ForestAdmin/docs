@@ -47,7 +47,7 @@ Introspection reads the **whole schema**, every time the back-end starts:
 - Column, index and foreign-key metadata is fetched per table, concurrently and without a ceiling, so a wide schema issues hundreds of catalog queries at once.
 - Model and relation building then runs on the event loop of whatever process hosts the agent.
 
-On a small schema this is invisible. On a large one it is a measurable spike in database load and event-loop time on every boot, restart and redeploy — which is why [pre-computing the introspection](#pre-compute-the-introspection) is the recommended production setup, and why the agent belongs in [its own process](/get-started/connect/architectures/deployment-topology) when it sits next to an application serving live traffic.
+On a small schema this is invisible. On a large one it is a measurable spike in database load and event-loop time on every boot, restart and redeploy — which is why [pre-computing the introspection](#pre-compute-the-introspection) is the recommended production setup, and why the agent belongs in [its own process](/get-started/connect/architectures/deployment-options) when it sits next to an application serving live traffic.
 
 ## Configuration options
 

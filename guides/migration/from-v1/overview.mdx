@@ -24,7 +24,7 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
     Do this first, before any v2 work. A migration means repeated restarts of the legacy agent, and old releases handle a cold restart badly: `@forestadmin/forestadmin-client` before **1.36.2** caches failed permission lookups for the full 15-minute TTL, so one slow response during a restart locks users out of that environment until the cache expires. Bring the legacy agent up to date and you turn a possible outage into a blip.
   </Step>
   <Step title="Decide where the new agent will run">
-    Settle this before you write any code — it is the decision that is expensive to reverse, and the one most often taken by default. See [Choosing a deployment topology](/get-started/connect/architectures/deployment-topology).
+    Settle this before you write any code — it is the decision that is expensive to reverse, and the one most often taken by default. See [Deployment options](/get-started/connect/architectures/deployment-options).
 
     During the migration specifically, the two agents **must not share a process**, and if they share a host they need distinct prefixes or hostnames.
   </Step>
@@ -155,7 +155,7 @@ All of it is scoped to the **project**, not to the agent. Swapping the agent und
 | Smart Segments | Code | [Smart Segments](/guides/migration/from-v1/steps/smart-segments) |
 | Route overrides | Reimplemented as hooks | See [Hooks](/product/process/advanced-concepts/hooks/overview) |
 | ORM model callbacks | Reimplemented as hooks — Forest writes in bulk and does not trigger per-record callbacks | See [Hooks](/product/process/advanced-concepts/hooks/overview) |
-| Where the agent runs | Decided before you start | [Deployment topology](/get-started/connect/architectures/deployment-topology) |
+| Where the agent runs | Decided before you start | [Deployment options](/get-started/connect/architectures/deployment-options) |
 | Environment variables | `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` are reused | No change |
 | Database | No change | No change |
 
@@ -166,7 +166,7 @@ All of it is scoped to the **project**, not to the agent. Swapping the agent und
     Names are case-sensitive, and legacy agents often converted `snake_case` to `camelCase` on your behalf. Restore the old names with the `rename` option on `addDataSource` (collections) and `renameField` (fields) rather than editing the layout — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses).
   </Accordion>
   <Accordion title="My ORM has no datasource (TypeORM, Prisma, Drizzle...)">
-    Only Sequelize, Mongoose, ActiveRecord and Mongoid have a matching datasource. Every other ORM connects through [`datasource-sql`](/get-started/connect/data-sources/sql), which introspects the database and builds its own model layer — it cannot read your entities. That works, and it is the normal path, but two consequences follow: your application's model callbacks never fire on a write from Forest, and the agent pays a full-schema introspection at every boot. Both are covered in [deployment topology](/get-started/connect/architectures/deployment-topology).
+    Only Sequelize, Mongoose, ActiveRecord and Mongoid have a matching datasource. Every other ORM connects through [`datasource-sql`](/get-started/connect/data-sources/sql), which introspects the database and builds its own model layer — it cannot read your entities. That works, and it is the normal path, but two consequences follow: your application's model callbacks never fire on a write from Forest, and the agent pays a full-schema introspection at every boot. Both are covered in [deployment options](/get-started/connect/architectures/deployment-options).
   </Accordion>
   <Accordion title="A model callback stopped firing">
     Forest writes through bulk operations, so per-record ORM callbacks (`beforeCreate`, `after_save`, and friends) do not run — and with `datasource-sql` no callback of yours runs at all, since your models are never loaded. Triage them by one question: **must this fire when an operator edits the record in Forest?** If yes, reimplement it as an [agent hook](/product/process/advanced-concepts/hooks/overview), or have the hook call an internal endpoint in your application.

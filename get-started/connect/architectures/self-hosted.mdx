@@ -42,7 +42,7 @@ This approach is valuable when you want to leverage your existing ORM models. If
 If your ORM has no matching datasource — TypeORM, Prisma, Drizzle and others — Forest introspects the database instead and cannot read your entities. In-app then gains you nothing on model reuse while still sharing the process.
 
 <Warning>
-A shared process is also a shared restart schedule, event loop and crash surface with the application serving your users. Read [Choosing a deployment topology](/get-started/connect/architectures/deployment-topology) before committing to in-app.
+A shared process is also a shared restart schedule, event loop and crash surface with the application serving your users. Read [Deployment options](/get-started/connect/architectures/deployment-options) before committing to in-app.
 </Warning>
 
 <img src="/assets/deployment-in-app.svg" alt="In-app Deployment Architecture" />
@@ -60,7 +60,7 @@ This architecture provides a cleaner separation of concerns. Your application co
 <img src="/assets/deployment-standalone.svg" alt="Standalone Deployment Architecture" />
 
 <Info>
-**Recommendation**: We recommend **standalone deployment** for cleaner architecture and better separation of concerns. Use **in-app** only if you need to reuse your ORM models or existing business logic — see [Choosing a deployment topology](/get-started/connect/architectures/deployment-topology) for how to make that call, and how to stay standalone inside a monorepo.
+**Recommendation**: We recommend **standalone deployment** for cleaner architecture and better separation of concerns. Use **in-app** only if you need to reuse your ORM models or existing business logic — see [Deployment options](/get-started/connect/architectures/deployment-options) for how to make that call, and how to stay standalone inside a monorepo.
 </Info>
 
 ## Privacy by design
