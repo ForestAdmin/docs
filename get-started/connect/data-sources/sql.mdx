@@ -52,7 +52,7 @@ On a small schema this is invisible. On a large one it is a burst of concurrent 
 If that describes your database, two things help:
 
 - [**Pre-compute the introspection**](#pre-compute-the-introspection) to take the scan off the boot path. It works whatever your [deployment topology](/get-started/connect/architectures/deployment-options), and it is worth doing once the boot is long enough to notice — on a modest schema the default is fine and the extra file is not worth maintaining. The trade is that the file becomes a snapshot you have to regenerate on every migration; automate it alongside them rather than relying on anyone to remember.
-- **Run a large introspection off-peak.** Whether it is the run that generates the file, the first boot of a new back-end, or any later deploy that still introspects live, put it outside your busy hours rather than during them.
+- **Time the scans that still hit production.** A first boot of a new back-end, or a deploy that has not adopted the file, scans a database that is also serving your users — put those outside your busy hours. This applies to live scans only, not to generating the file.
 
 ## Configuration options
 
@@ -214,6 +214,8 @@ The introspection is JSON-serializable. Produce it once with the exported `intro
 <Steps>
   <Step title="Generate the file">
     Run this once, and again on **every** migration. Wire it into the step that runs your migrations, or a release script, so the file cannot fall behind the database — the agent never re-checks it against the live schema, so a file that is out of date is simply believed.
+
+    Nothing here needs a time window. The scan runs once per migration, against the database your pipeline just migrated, and replaces one that would otherwise run on every boot of every instance — so it belongs in continuous integration like any other build step. The exception is a pipeline that generates the file against production itself: treat that run as a live scan and keep it out of your busy hours.
 
     ```javascript
     // scripts/introspect.mjs
