@@ -52,7 +52,7 @@ On a small schema this is invisible. On a large one it is a burst of concurrent 
 If that describes your database, two things help:
 
 - [**Pre-compute the introspection**](#pre-compute-the-introspection) to take the scan off the boot path. It works whatever your [deployment topology](/get-started/connect/architectures/deployment-options), and it is worth doing once the boot is long enough to notice — on a modest schema the default is fine and the extra file is not worth maintaining.
-- **Run a large introspection off-peak.** Generating the file reads the whole catalog once, so schedule that run — and any deploy that still introspects live — outside your busy hours rather than during them.
+- **Run a large introspection off-peak.** Whether it is the run that generates the file, the first boot of a new back-end, or any later deploy that still introspects live, put it outside your busy hours rather than during them.
 
 ## Configuration options
 
