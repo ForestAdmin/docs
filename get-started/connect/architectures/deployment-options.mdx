@@ -30,9 +30,9 @@ The decision is one question. Does the Forest back-end run as its own service, o
   <Accordion title="Reusing your ORM models">
     Model reuse does not need a shared process. `createSequelizeDataSource` takes any Sequelize instance, so what it needs is your model definitions to be **importable** — a shared codebase, not a shared runtime. If yours already sit in a monorepo, [you can have the reuse and a separate process at once](#if-your-code-already-lives-in-a-monorepo).
 
-    The reuse is worth having. Scopes, associations and validations come across, and with [`datasource-sql`](/get-started/connect/data-sources/sql) you rebuild them by hand. It is simply not an argument for in-app.
+    The reuse is worth having. Scopes and associations come across, and with [`datasource-sql`](/get-started/connect/data-sources/sql) you rebuild them by hand. Model validations are the exception: Forest creates records through `bulkCreate`, which skips them, so they do not carry over even on a matched ORM — see [which hooks and validations run](/get-started/connect/data-sources/sequelize#which-hooks-run-on-a-write-from-forest). None of it is an argument for in-app.
 
-    Whether it is available to you at all depends on your ORM. Forest reads your data through a [datasource](/get-started/connect/overview), the connector between the back-end and a database, an API or an ORM. Four of them read an ORM's model definitions: Sequelize and Mongoose on Node.js, ActiveRecord and Mongoid on Ruby. Every other stack — TypeORM, Prisma, Drizzle, Knex, raw SQL — connects through [`datasource-sql`](/get-started/connect/data-sources/sql), which reads the database itself and builds its own model layer. There is then nothing to reuse either way, and the question drops out of the decision entirely.
+    Whether it is available to you at all depends on your ORM. Forest reads your data through a [datasource](/get-started/connect/overview), the connector between the back-end and a database, an API or an ORM. Four of them read an ORM's model definitions: Sequelize and Mongoose on Node.js, ActiveRecord and Mongoid on Ruby. TypeORM, Prisma on SQL, Drizzle, Knex and raw SQL connect through [`datasource-sql`](/get-started/connect/data-sources/sql), and Prisma on MongoDB through [`datasource-mongo`](/get-started/connect/data-sources/mongodb) — both read the database itself and build their own model layer. There is then nothing to reuse either way, and the question drops out of the decision entirely.
   </Accordion>
   <Accordion title="Introspection and boot cost">
     Standalone does not boot faster. It introspects exactly as much as in-app, and [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) removes that work from both.
@@ -95,16 +95,16 @@ createAgent({
   isProduction: process.env.NODE_ENV === 'production',
 })
   .addDataSource(createSequelizeDataSource(sequelize))
-  .mountOnStandaloneServer(Number(process.env.PORT))
+  .mountOnStandaloneServer()
   .start();
 ```
 
-Your scopes, associations and validations come across, and no introspection runs at boot because the models are already declared. The agent opens its own connection pool from those definitions, in its own process.
+Your scopes and associations come across, and no introspection runs at boot because the models are already declared. `mountOnStandaloneServer()` reads `PORT` itself and falls back to `3351`, so leave the argument off unless you are choosing the port in code. The agent opens its own connection pool from those definitions, in its own process.
 
 You keep shared tooling, shared CI and shared types. You do not keep the shared process. Deploy that package as its own service.
 
 <Note>
-On TypeORM, Prisma, Drizzle or any stack Forest reads through the database rather than your models, swap the import for [`createSqlDataSource`](/get-started/connect/data-sources/sql) with a pre-computed introspection. The rest of the shape is identical — the workspace package and the standalone mount are what matter here.
+On TypeORM, Prisma, Drizzle or any stack Forest reads through the database rather than your models, replace both the import and the datasource call: [`createSqlDataSource(process.env.DATABASE_URL, { introspection })`](/get-started/connect/data-sources/sql) takes the place of `createSequelizeDataSource(sequelize)`, and the model import goes away with it. The rest of the shape is identical — the workspace package and the standalone mount are what matter here.
 </Note>
 
 If the agent genuinely needs your application's service layer — and not merely its models — that is a case for an internal API the agent calls, not for merging the two processes.
