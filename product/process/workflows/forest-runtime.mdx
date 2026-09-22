@@ -83,7 +83,7 @@ It inherits your agent's secrets and Forest connection, so you only configure:
 | `port` | Loopback port the executor listens on internally (default `3400`). |
 | `ai` | Bring your own LLM instead of Forest's AI server: `{ provider: 'anthropic' \| 'openai', model, apiKey }`, or `{ provider: 'bedrock', model, region }`. [Bedrock](#amazon-bedrock) takes no `apiKey` — it signs in through AWS — and its `region` falls back to `AWS_REGION` / `AWS_DEFAULT_REGION`, one of which is required. Omit to keep using Forest's server. |
 | `encryptionKey` | At-rest key (AES-256-GCM) for [OAuth-protected MCP connector](#oauth-protected-mcp-connectors) credentials. Generate with `openssl rand -hex 32`. Omit if you don't use them. |
-| `pollingIntervalS`, `stepTimeoutS`, `aiInvokeTimeoutS`, `stopTimeoutS`, `maxChainDepth`, `schemaCacheTtlS` | The same tuning knobs as [standalone](#tuning), in camelCase — same defaults. Log verbosity follows your agent's own logger, so there's no separate log-level option here. |
+| `pollingIntervalS`, `automationPollingIntervalS`, `stepTimeoutS`, `aiInvokeTimeoutS`, `stopTimeoutS`, `maxChainDepth`, `schemaCacheTtlS` | The same tuning knobs as [standalone](#tuning), in camelCase — same defaults. Log verbosity follows your agent's own logger, so there's no separate log-level option here. |
 
 <Note>
   Embedded has full configuration parity with standalone: your own AI provider (`ai`), the encryption key, and every tuning knob are all settable here. It only inherits your agent's secrets and Forest connection; set nothing and AI steps use Forest's AI server.
@@ -267,6 +267,75 @@ AI_MODEL=eu.anthropic.claude-sonnet-5
 AWS_REGION=eu-west-1
 ```
 
+## Automated inboxes
+
+An [inbox](/product/manage/inbox) backed by a segment can start a workflow on its own, on every
+record that enters it, with no one clicking anything. Forest Runtime is what sweeps the segment.
+
+**It decides nothing.** It reads your data and reports what it saw; Forest starts the runs, applies
+the limit of concurrent runs, and refuses a record a workflow is already handling. A runtime that
+cannot reach Forest, or that you turn off, stops the automation — it never starts work twice.
+
+### How a sweep works
+
+Every `AUTOMATION_POLL_INTERVAL_S`, for each automated inbox:
+
+1. It asks Forest which automated inboxes to sweep, and which records are already being handled.
+2. It asks your agent whether the records whose workflow has finished are still in the segment.
+3. It asks your agent for the first page of the segment, to find records nobody has handled yet.
+4. It reports both answers back. Forest starts a workflow per new record.
+
+```mermaid
+flowchart LR
+  R["Forest Runtime<br/>(your infrastructure)"] -- "which inboxes?" --> O["Forest orchestrator"]
+  R -- "who is in the segment?" --> A["Your Forest agent"] --> DB[("Your business<br/>database")]
+  R -- "what I saw" --> O -- "starts the workflows" --> O
+```
+
+A record leaves the automation when it **leaves the segment**. That is the only signal that it was
+treated: a record whose workflow finished while it is still in the segment is handed to a human in
+the workflow's fallback inbox instead of being run again.
+
+### Requirements
+
+- Forest Runtime on the version that ships automated inboxes or above. An older one is not served
+  the configuration, and the inbox shows as configured but inactive in its settings.
+- A **segment-backed inbox**, with automation enabled on it. It is configured on the inbox, not in
+  the workflow's Process section.
+
+### Running several instances
+
+Nothing to configure. Each instance identifies itself and Forest hands the sweep to one of them, so
+several instances do not sweep the same segment in parallel.
+
+Two consequences worth knowing:
+
+- If Forest cannot run that election, every instance sweeps. That costs duplicate reads on your
+  database, and it is deliberate — the alternative would stop every automation silently. No record
+  is ever run twice.
+- After you restart or redeploy your runtime, the new process waits for the previous one's turn to
+  lapse before it starts sweeping. Expect up to ten minutes with no sweep.
+
+### What the sweep can read
+
+- **The service account's permissions apply.** The runtime reads the segment as the account the
+  automation runs as, so a restrictive scope on that account's role hides records from the sweep.
+- **Relative dates** in a segment filter (`previous 30 days`, `today`…) are evaluated in your
+  project's timezone, or UTC when it has none.
+- **SQL segments** need a connection name on agents that support several connections. On
+  `forest-rails` and `forest-express-sequelize`, which run the query against their single database,
+  none is needed.
+
+### In your logs
+
+| Line | Level | Meaning |
+| --- | --- | --- |
+| `Automated inbox polled` | `Info` | A sweep completed. Carries how many records were started, skipped or handed to a human. |
+| `Automated inbox poll failed` | `Error` | One inbox failed to sweep this cycle. The others are unaffected. |
+| `Could not reach the agent, reporting nothing for this inbox` | `Error` | Your agent did not answer. Nothing is reported, so the inbox reads as not swept rather than as swept with nothing to do. |
+| `Automated inbox no longer served, dropping it for this cycle` | `Info` | Forest stopped serving this inbox — disabled, or its configuration is no longer valid. |
+| `The orchestrator does not serve automated inboxes` | `Warn` | Said once. Expected if your runtime is newer than Forest; check `FOREST_SERVER_URL` if it persists. |
+
 ## OAuth-protected MCP connectors
 
 If your workflows include [MCP Tasks](/product/process/workflows/overview) backed by OAuth-protected connectors, Forest Runtime stores each user's OAuth credentials in its database, encrypted at rest. Provide the encryption key:
@@ -320,6 +389,7 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 | --- | --- | --- |
 | `HTTP_PORT` | `3400` | Port Forest Runtime's HTTP server listens on. |
 | `POLLING_INTERVAL_S` | `30` | How often it polls the orchestrator for pending steps. |
+| `AUTOMATION_POLL_INTERVAL_S` | `300` | How often it sweeps automated inboxes. Each sweep reads your database, so it runs an order of magnitude slower than the step poll. |
 | `LOG_LEVEL` | `Info` | `Debug`, `Info`, `Warn`, or `Error`. `Debug` adds one line per MCP server with its tool count and load time. |
 | `STEP_TIMEOUT_S` | `300` | Max duration of a single step. |
 | `AI_INVOKE_TIMEOUT_S` | `30` | Max duration of a single AI provider invocation. |
