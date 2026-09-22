@@ -26,7 +26,7 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
   <Step title="Decide where the new agent will run">
     Settle this before you write any code — it is the decision that is expensive to reverse, and the one most often taken by default. See [Deployment options](/get-started/connect/architectures/deployment-options).
 
-    During the migration specifically, the two agents **must not share a process**, and if they share a host they need distinct prefixes or hostnames.
+    During the migration specifically, run the two agents in **separate processes**, and if they share a host give them distinct prefixes or hostnames.
   </Step>
   <Step title="Migrate into a new environment, not a new project">
     Everything you have built in the UI — layouts, segments, dashboards, workspaces, roles, teams, scopes — belongs to the **project**, and nothing carries across project boundaries. A new project starts empty and has to be rebuilt by hand.
@@ -45,7 +45,9 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
 </Steps>
 
 <Warning>
-**Never run the legacy and the new agent in the same process**, even temporarily, even behind a feature flag. They then share a restart schedule, an event loop and a crash surface: a deploy or a flag toggle restarts both, and the new agent's startup work competes with the live one serving your users. Two processes, or two hosts.
+**Running both agents in one process defeats the point of parallel running.** Nothing stops you technically, but they then share a restart schedule, an event loop and a crash surface — so every deploy and every feature-flag toggle restarts the legacy agent too, exactly while you are redeploying the new one over and over. The stable fallback you set up stops being stable. Give them separate processes, and separate hosts if you can.
+
+The one hard constraint is routing: two agents answering the **same path on the same host** do not coexist, whatever process they run in. One of them silently takes all the traffic. Give the new agent its own hostname, or its own `prefix` with the environment URL in Forest changed to match.
 </Warning>
 
 ## Migration steps
