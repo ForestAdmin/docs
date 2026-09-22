@@ -49,10 +49,10 @@ Introspection reads the **whole schema**, every time the back-end starts:
 
 On a small schema this is invisible. On a large one it is a burst of concurrent catalog queries against your production database, repeated on every boot, restart and redeploy — enough to show up as a performance hit while the database is also serving traffic.
 
-Two things follow:
+If that describes your database, two things help:
 
-- [**Pre-compute the introspection**](#pre-compute-the-introspection) so the scan leaves the boot path entirely. This is the fix, and it works whatever your [deployment topology](/get-started/connect/architectures/deployment-options).
-- **On a large database, run the introspection off-peak.** Generating the file reads the whole catalog once, so schedule that run — and any deploy that still introspects live — outside your busy hours rather than during them.
+- [**Pre-compute the introspection**](#pre-compute-the-introspection) to take the scan off the boot path. It works whatever your [deployment topology](/get-started/connect/architectures/deployment-options), and it is worth doing once the boot is long enough to notice — on a modest schema the default is fine and the extra file is not worth maintaining.
+- **Run a large introspection off-peak.** Generating the file reads the whole catalog once, so schedule that run — and any deploy that still introspects live — outside your busy hours rather than during them.
 
 ## Configuration options
 
@@ -209,7 +209,7 @@ This is useful when your application uses soft deletes (e.g., `deleted_at` colum
 
 The introspection is JSON-serializable. Produce it once with the exported `introspect()` helper, commit the file, and hand it back to `createSqlDataSource` as its second argument. The datasource then skips the catalog scan entirely and builds its models from the file.
 
-**We recommend this as the standard production setup.** Forest Cloud already generates the introspection ahead of time; self-hosted back-ends are the ones paying the boot cost described [above](#what-it-costs-at-boot).
+**Worth adopting when the boot cost is real** — a wide schema, frequent deploys, a database under load, or a back-end sharing a process with your application. On a small schema the default introspection is fine, and a committed file is one more thing to keep current. Skipping the scan has been supported since the first release of `@forestadmin/datasource-sql`: the format is versioned, older files are migrated forward automatically, and Forest's own CLI builds its typings from an introspection rather than a live connection.
 
 <Steps>
   <Step title="Generate the file">
