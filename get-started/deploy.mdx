@@ -59,6 +59,10 @@ For a full explanation of the development workflow, branches, schema updates, en
 
 Because the file is generated locally, someone can change a data source or customization and forget to commit the regenerated schema, shipping a stale one. Add a CI step that regenerates it and fails when it differs from what's committed, so a forgotten commit turns the build red:
 
+<Warning>
+This check reads your data model the same way your agent does. If you supply a [pre-computed introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection), the regenerated schema comes from that file rather than from the database, so a stale introspection produces a matching stale schema and the check passes. Regenerate the introspection on every migration to close that gap.
+</Warning>
+
 <Tabs>
   <Tab title="Node.js">
     Call [`agent.generateSchemaOnly()`](/reference/agent-api/nodejs) (available since `@forestadmin/agent` 1.83.0) from a one-shot script that reuses your agent setup, then diff the result. Extract your agent into a shared factory that does **not** call `.start()`:
