@@ -82,7 +82,7 @@ Routing is the one hard constraint. Two agents answering the **same path on the 
   <Step title="Match the old names exactly — this is a gate">
     Your layout addresses every column, filter and action by **name**. If the new agent exposes `first_name` where the old one exposed `firstName`, nothing errors: the field is simply treated as new, and everything configured against the old name silently detaches. On a mature project that is hundreds of broken views discovered one at a time.
 
-    Whether anything moved depends on what the old agent read: `forest-rails` published your column names, `forest-express-sequelize` published your Sequelize attribute names, and the current agent publishes what the database holds. Close this before migrating any customization — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses) for the mapping, and for how to prove the match offline against your existing `.forestadmin-schema.json`.
+    Whether anything moved depends on what each side reads. `forest-rails` published your column names and `forest-express-sequelize` published your Sequelize attribute names; on the new side, the ORM datasources keep your attribute names while `datasource-sql` publishes the column. Close this before migrating any customization — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses) for the mapping, and for how to prove the match offline against your existing `.forestadmin-schema.json`.
   </Step>
   <Step title="Migrate Smart Actions">
     Convert each Smart Action to the new `addAction` API. See [Smart Actions](/guides/migration/from-v1/steps/smart-actions).
@@ -165,7 +165,7 @@ All of it is scoped to the **project**, not to the agent. Swapping the agent und
 
 <AccordionGroup>
   <Accordion title="Field names changed between v1 and v2">
-    Names are case-sensitive, and a Sequelize model that mapped a `camelCase` attribute onto a `snake_case` column was published under the attribute name by `forest-express-sequelize`. The current agent publishes the column. Restore the old names with the `rename` option on `addDataSource` (collections) and `renameField` (fields) rather than editing the layout — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses).
+    Names are case-sensitive, and a Sequelize model mapping a `camelCase` attribute onto a `snake_case` column was published under the attribute name by `forest-express-sequelize`. `datasource-sequelize` still is, so that pairing holds; `datasource-sql` publishes the column instead. Restore the old names with the `rename` option on `addDataSource` (collections) and `renameField` (fields) rather than editing the layout — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses).
   </Accordion>
   <Accordion title="My ORM has no datasource (TypeORM, Prisma, Drizzle...)">
     Only Sequelize, Mongoose, ActiveRecord and Mongoid have a matching datasource. Every other ORM connects through [`datasource-sql`](/get-started/connect/data-sources/sql), which introspects the database and builds its own model layer — it cannot read your entities. That works, and it is the normal path, but two consequences follow: your application's model callbacks never fire on a write from Forest, and the agent pays a full-schema introspection at every boot. Both are covered in [deployment options](/get-started/connect/architectures/deployment-options).

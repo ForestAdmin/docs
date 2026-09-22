@@ -189,12 +189,16 @@ Your existing layout — every column, filter, sort, segment and action configur
 
 A mismatch does not raise an error. The field simply reads as new, and everything configured against the old name detaches silently.
 
-Whether you have any renaming to do depends on what the old agent read, not on your language:
+Whether you have any renaming to do depends on what each side reads, not on your language. Both v1 agents published a name, and each v2 datasource publishes one:
 
-- **`forest-rails`** published the database column name, so a Rails project often has nothing to change here.
-- **`forest-express-sequelize`** published the *Sequelize attribute* name, which parts company with the column as soon as a model uses `underscored` or an explicit `field` mapping. A `firstName` attribute over a `first_name` column was exposed as `firstName`.
+| Reads | Publishes |
+| --- | --- |
+| `forest-rails` | the database column name |
+| `forest-express-sequelize` | the Sequelize **attribute** name, which parts company with the column as soon as a model uses `underscored` or an explicit `field` mapping |
+| `datasource-sequelize`, `datasource-mongoose`, `datasource-active-record` | the model's attribute keys, the same names your ORM already uses |
+| `datasource-sql`, `datasource-mongo` | the database column or field name, from introspection |
 
-[`datasource-sql`](/get-started/connect/data-sources/sql) introspects the database, so it exposes `first_name` either way. Where the two disagree, restore the old names explicitly:
+So a Sequelize project keeping its models through `datasource-sequelize` usually has nothing to rename: a `firstName` attribute over a `first_name` column was published as `firstName` before and still is. The same project moving to `datasource-sql` gets `first_name` and does. Where the two sides disagree, restore the old names explicitly:
 
 ```javascript
 // Collections: a function, or an explicit map
@@ -230,7 +234,9 @@ You do not need a running environment to check this. The new agent can build its
     ```javascript
     import { buildDisconnectedSequelizeInstance } from '@forestadmin/datasource-sql';
     import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
+    import { readFileSync } from 'fs';
 
+    const introspection = JSON.parse(readFileSync('./introspection.json', 'utf8'));
     const sequelize = await buildDisconnectedSequelizeInstance(introspection, () => {});
 
     await createAgent(options)
