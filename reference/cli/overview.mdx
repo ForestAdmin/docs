@@ -85,16 +85,20 @@ Move a rendering between environments as a file. Useful when you stand up a new 
 
 | Command | Description |
 |---|---|
-| `forest layout pull` | Pull one environment's layout into a `forest-layout.json` file |
-| `forest layout apply` | Apply a `forest-layout.json` to an environment as JSON-Patch changes |
-| `forest layout patch` | Send layout operations directly, without a pull/apply round trip |
+| `forest layout:pull` | Pull one environment's layout into a `forest-layout.json` file |
+| `forest layout:apply <file>` | Apply a layout file to an environment as JSON-Patch changes |
+| `forest layout:patch` | Send layout operations directly, without a pull/apply round trip |
 
 ```bash
-forest layout pull --env production --team Operations --with-workflows
-forest layout apply --env staging --team Operations --with-workflows --force
+forest layout:pull --env production --team Operations --with-workflows
+forest layout:apply forest-layout.json --env staging --team Operations --with-workflows --force
 ```
 
 `--env` (`-e`) and `--team` (`-t`) each resolve **one** environment and **one** team, so a project with several teams needs the pair run once per team — loop over your team names with `--force` to skip the prompt. `--with-workflows` carries each workflow's BPMN in sidecar files, on both ends of the round trip.
+
+<Warning>
+The colon is part of the command name. `forest layout pull`, with a space, matches no command: it prints the `layout` help and exits successfully without pulling anything, which a script will not notice.
+</Warning>
 
 ### Roles and teams
 

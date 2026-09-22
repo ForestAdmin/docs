@@ -37,7 +37,7 @@ You can deploy the Forest back-end in two ways, depending on your application ar
 
 With in-app deployment, the Forest back-end becomes part of your existing application. It runs in the same Node.js or Ruby process, sharing the same database connection pool and resources. When you deploy your application, the back-end deploys with it as a single unit.
 
-This approach is valuable when Forest needs your application's running code: an in-process service, a transaction to join, a singleton your business logic depends on. If you use Sequelize, Mongoose, ActiveRecord or Mongoid, Forest also reads your model definitions directly — though that alone does not require in-app, since importable models work from a separate process too.
+This approach is valuable when Forest needs your application's running code: an in-process service, a transaction to join, a singleton your business logic depends on. If you use Sequelize, Mongoose, ActiveRecord, Mongoid, Django or SQLAlchemy, Forest also reads your model definitions directly — though that alone does not require in-app, since importable models work from a separate process too.
 
 If your ORM has no matching datasource — TypeORM, Prisma, Drizzle and others — Forest introspects the database instead and cannot read your entities. In-app then gains you nothing on model reuse while still sharing the process.
 
