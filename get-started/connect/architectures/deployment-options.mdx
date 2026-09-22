@@ -7,29 +7,46 @@ description: "Whether the Forest back-end runs in its own process or inside your
 
 The decision is one question. Does the Forest back-end run as its own service, or inside an application process you already have?
 
-**Run it standalone unless you need to reuse your ORM models.** That is the whole rule. The rest of this page is what each side of it costs.
+**Default to standalone.** Not because it is faster — it does exactly the same work — but because it keeps the back-end's lifecycle out of the process serving your users. Go in-app when something on this page actually requires it.
 
-## Pick a side
+## What genuinely requires in-app
 
 <Steps>
-  <Step title="Does a Forest datasource match the ORM you already use?">
-    `datasource-sequelize`, `datasource-mongoose` (Node.js), `datasource-active-record` and `datasource-mongoid` (Ruby) take the model definitions you have already written. If yours is one of these, in-app deployment lets Forest read them directly, and your scopes and associations come along.
-
-    If your ORM is anything else — TypeORM, Prisma, Drizzle, Knex, raw SQL — there is no datasource for it. You will use [`datasource-sql`](/get-started/connect/data-sources/sql), which opens its own connection and introspects the database from scratch. **It cannot read your entities**, so running in-app buys you nothing on this axis: you get a second, independent model layer over the same tables either way.
+  <Step title="You are on Ruby">
+    The Ruby back-end ships as a Rails engine and mounts inside your application. Standalone is Node.js only, so on Ruby the decision is already made. [Talk to us](https://www.forestadmin.com/contact) if you need otherwise.
   </Step>
-  <Step title="Does that reuse outweigh sharing a process with your application?">
-    In-app means the Forest back-end and your application share a process. That is not only memory and a connection pool — it is a lifecycle. See below.
+  <Step title="Forest needs your application's live runtime">
+    Not your code — your *running* code. An in-process service you cannot reach over HTTP, a transaction the agent must join, an in-memory cache or singleton your business logic depends on. Sharing a process is the only way to share those.
+
+    If what you actually need is to call your business logic, an internal endpoint the agent calls gets you there without merging the processes.
   </Step>
 </Steps>
 
+## What does not require it
+
+<AccordionGroup>
+  <Accordion title="Reusing your ORM models">
+    A real advantage — scopes, associations and validations come across, and with [`datasource-sql`](/get-started/connect/data-sources/sql) you rebuild them — but it does not need a shared process. `createSequelizeDataSource` takes any Sequelize instance, so model reuse needs your model definitions to be **importable**, which is a shared codebase, not a shared runtime. A monorepo gives you both reuse and a separate process; see [below](#a-monorepo-does-not-mean-in-app).
+
+    What is true is the reverse: if your ORM has no datasource — TypeORM, Prisma, Drizzle, Knex, raw SQL — there is nothing to reuse either way, so this consideration drops out of the decision entirely.
+  </Accordion>
+  <Accordion title="Introspection and boot cost">
+    Standalone introspects exactly as much as in-app; the work is identical, and [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) removes it from both. Standalone does not buy you a cheaper boot. It buys you a boot that cannot slow down the application serving your users — which is the same fact seen from the side that matters.
+  </Accordion>
+  <Accordion title="Sharing a database connection">
+    Two processes against one database is normal. It costs you a second connection pool, which is a number to set deliberately, not an obstacle.
+  </Accordion>
+</AccordionGroup>
+
 | | Standalone | In-app |
 | --- | --- | --- |
-| Reuses your ORM models | No | Yes, if a datasource matches your ORM |
 | Restarts when you deploy the application | No | Yes |
 | Competes for your application's event loop | No | Yes |
 | Can take the application down by crashing | No | Yes |
 | Deploys and scales independently | Yes | No |
-| Available for Ruby | No — [contact us](https://www.forestadmin.com/contact) | Yes |
+| Can reuse your ORM models | Yes, from a shared codebase | Yes |
+| Can use your application's live runtime | No | Yes |
+| Available for Ruby | No | Yes |
 
 ## What in-app actually shares
 
@@ -44,29 +61,35 @@ None of this is hypothetical on a large schema, and none of it is visible on a s
 
 ## A monorepo does not mean in-app
 
-Living in the same repository and running in the same process are different decisions, and the first does not force the second.
+Living in the same repository and running in the same process are different decisions, and the first does not force the second. This is the combination most teams actually want: **your models, your own process.**
 
-Add the agent as its own workspace package with its own `package.json`, and start it with `mountOnStandaloneServer()`:
+Add the agent as its own workspace package with its own `package.json`, import the models from the package that defines them, and start it with `mountOnStandaloneServer()`:
 
 ```typescript
 // packages/forest-agent/src/index.ts
 import { createAgent } from '@forestadmin/agent';
-import { createSqlDataSource } from '@forestadmin/datasource-sql';
-import { readFileSync } from 'fs';
+import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
 
-const introspection = JSON.parse(readFileSync('./introspection.json', 'utf8'));
+// The same model definitions your application uses — imported, not shared at runtime.
+import sequelize from '@acme/models';
 
 createAgent({
   authSecret: process.env.FOREST_AUTH_SECRET,
   envSecret: process.env.FOREST_ENV_SECRET,
   isProduction: process.env.NODE_ENV === 'production',
 })
-  .addDataSource(createSqlDataSource(process.env.DATABASE_URL, { introspection }))
+  .addDataSource(createSequelizeDataSource(sequelize))
   .mountOnStandaloneServer(Number(process.env.PORT))
   .start();
 ```
 
+Your scopes, associations and validations come across, and no introspection runs at boot because the models are already declared. The agent opens its own connection pool from those definitions, in its own process.
+
 You keep shared tooling, shared CI and shared types. You do not keep the shared process. Deploy that package as its own service.
+
+<Note>
+On an ORM with no Forest datasource, swap the import for [`createSqlDataSource`](/get-started/connect/data-sources/sql) with a pre-computed introspection. The rest of the shape is identical — the workspace package and the standalone mount are what matter here.
+</Note>
 
 If the agent genuinely needs your application's service layer — and not merely its models — that is a case for an internal API the agent calls, not for merging the two processes.
 

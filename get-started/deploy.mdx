@@ -21,7 +21,7 @@ This means you can iterate on your back-office configuration safely, then push c
 
 <Steps>
   <Step title="Decide where it runs">
-    Its own service, or inside an application process you already have. We recommend a separate service unless you are reusing your ORM models — see [Deployment options](/get-started/connect/architectures/deployment-options).
+    Its own service, or inside an application process you already have. Default to a separate service, so the back-end's restarts and boot work never touch the process serving your users — you can still reuse your ORM models from a shared codebase. See [Deployment options](/get-started/connect/architectures/deployment-options).
   </Step>
 
   <Step title="Deploy your back-end to your infrastructure">
