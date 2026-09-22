@@ -3,75 +3,189 @@ title: "Zendesk App"
 description: "Embed Forest data and actions inside Zendesk tickets and customer profiles."
 ---
 
-The Forest Zendesk app lets you view and act on your data without leaving Zendesk. Access customer records, trigger actions, and see related data inline in ticket sidebars.
+The Forest Zendesk app lets you view and act on your data without leaving Zendesk. Access customer records, trigger actions and see related data inline in ticket sidebars.
 
-# How it works
+## How it works
 
-The app uses the Forest MCP to surface your data and actions inside Zendesk. Install the app from the Zendesk marketplace, connect it to your Forest project, and configure which collections to display.
+The app reaches your back-end through a [Forest BFF](/product/embed/bff), the REST gateway that lets a browser UI call a Forest back-end. Each Zendesk agent signs in with their own Forest account, and every call travels to your back-end as that person. Their roles, permissions and scopes apply exactly as they do in Forest.
 
-# Install Guide
+<Info>
+  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the BFF does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your BFF URL. The setting was renamed at the same time, from `forestAgentUrl` to `forestBFFUrl`, so the update leaves the field empty and an admin has to enter the URL again before anyone can sign in.
+</Info>
 
-## Pre-requisites
+## Prerequisites
 
-The Forest Zendesk app uses the Forest MCP Server to securely access your Forest data and actions, it is therefore required to have it enabled to proceed with the installation of the Zendesk app.
+Before installing the app, your tech team needs a Forest BFF that a browser can reach:
 
-1. Ensure the Forest MCP Server has been enabled on your Forest project
-2. Make a note of your Forest MCP Server URL; you will need it when installing the Zendesk app
+1. **A BFF serving your Forest back-end**, either embedded in your Node.js agent or deployed standalone.
+2. **OAuth enabled on it**, which is what lets each Zendesk agent sign in with their Forest account.
+3. **The app's iframe origin allow-listed**, because the app calls your BFF from the browser.
 
-<Tip>
-  If you're not sure whether the Forest MCP Server has been enabled or which URL to access it on, ask your Tech team - they can simply follow [this guide](/product/embed/mcp-server) to set it up.
-</Tip>
+Allow-list `https://*.apps.zdusercontent.com`. Zendesk serves every app's iframe from that domain, one subdomain per app, and the Forest app's is `https://1231469.apps.zdusercontent.com`. That number is the Forest app's Marketplace id, not yours, so it is the same value on every Forest installation and nothing in it is yours to replace. Allow-list it instead of the wildcard when you want the narrower entry.
+
+<Warning>
+  Neither form is your Zendesk URL, and the numeric subdomain is not a typo. A Zendesk app runs in an iframe served from Zendesk's own app domain, so the `Origin` the browser sends is that iframe's, never `https://your-subdomain.zendesk.com`. Allow-listing your tenant URL gets every call refused with `403 origin_not_allowed`.
+</Warning>
+
+<Note>
+  The wildcard form needs `@forestadmin/agent-bff` 1.31.0 or later, and it admits every other Zendesk app too, since Zendesk serves them all from that domain. On an older BFF, or when you want the narrowest allow-list, use the exact origin. To read it off a running installation, open a ticket with the Forest app in the sidebar and inspect that panel's iframe. See [Cross-origin access](/product/embed/bff#cross-origin-access).
+</Note>
+
+The embedded option needs `@forestadmin/agent` 1.100.0 or later, the release that added `addBff()`, and loads `@forestadmin/agent-bff` at runtime, an optional peer dependency of `@forestadmin/agent`, so install it alongside your agent or the agent throws on `start()`. Installing `@forestadmin/agent-bff` does not upgrade the agent: on an older one the call throws `agent.addBff is not a function`.
+
+<CodeGroup>
+
+```javascript Embedded in a Node.js back-end
+await createAgent(options)
+  .addDataSource(/* ... */)
+  .addBff({
+    allowedOrigins: ['https://*.apps.zdusercontent.com'],
+    tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
+  })
+  .mountOnStandaloneServer(3351)
+  .start();
+```
+
+```bash Standalone
+npm install @forestadmin/agent-bff
+
+BFF_ALLOWED_ORIGINS='https://*.apps.zdusercontent.com' \
+  BFF_TOKEN_ENCRYPTION_KEY=xxx \
+  AGENT_URL=https://your-agent.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
+  FOREST_SERVER_URL=https://api.forestadmin.com \
+  FOREST_APP_URL=https://app.forestadmin.com \
+  npx forest-bff
+```
+
+</CodeGroup>
+
+<Note>
+  A build served locally with `zcli apps:server` runs from `http://localhost:4567`. Allow-list that origin too while you develop.
+</Note>
+
+Embedding needs the Node.js agent. With a Ruby back-end, run the BFF standalone.
+
+Make a note of the URL your BFF answers on. You'll need it when installing the Zendesk app:
+
+| Deployment | Your BFF URL |
+| --- | --- |
+| Embedded | `{your-agent-url}/bff` |
+| Standalone | the BFF's own base URL, port `3450` by default |
+
+<Warning>
+  Without `tokenEncryptionKey` (or `BFF_TOKEN_ENCRYPTION_KEY`), the BFF boots but its `/oauth/*` routes stay disabled, and nobody can sign in from Zendesk. `GET {your-bff-url}/health` reports `configured.oauth` so you can check before installing.
+</Warning>
 
 ## Installing the Zendesk app
 
-1. Find the [Forest app in the Zendesk Marketplace](https://www.zendesk.fr/marketplace/apps/support/1231469/forest-admin/?queryID=507953d20df1906a17dbad7341966557)
-2. Click on Install
-3. Enter your Zendesk URL and click on Next; you will be re-directed to your Zendesk Admin Center
-   <Note>
-     You will need to be an Admin in Zendesk to access the Admin Center.
-   </Note>
-4. In the Installation form, you will need to provide:
-   1. The forestAgentUrl: this is the URL of your Forest MCP Server (as mentioned in the Pre-requisites section)
-   2. The contextField: this is the Zendesk Ticket Field that will be used to match the Ticket Sender with a record from your Forest project data
-   3. Optionally, you can set restrictions on which Zendesk Roles and Groups to grant access to the Forest app
-5. Click on Install
+<Steps>
+  <Step title="Install from the Marketplace">
+    Find the [Forest app in the Zendesk Marketplace](https://www.zendesk.fr/marketplace/apps/support/1231469/forest-admin/?queryID=507953d20df1906a17dbad7341966557) and click **Install**.
+  </Step>
+  <Step title="Open your Zendesk Admin Center">
+    Enter your Zendesk URL and click **Next**. You are redirected to the Admin Center.
+
+    <Note>
+      You need to be an Admin in Zendesk to access the Admin Center.
+    </Note>
+  </Step>
+  <Step title="Fill in the installation form">
+    - **Forest BFF URL** (`forestBFFUrl`): your Forest BFF URL, from the table above
+    - Optionally, restrict which Zendesk roles and groups get access to the Forest app
+
+    <Note>
+      A form labelled **Forest MCP URL**, suggesting a URL ending in `/mcp`, means the installation has not updated past 1.1.1 yet. Update it first, then enter your BFF URL. Nothing else to configure: versions up to 1.0.2 also carried a `contextField` parameter, and it is gone. The app matches tickets from their own content.
+    </Note>
+  </Step>
+  <Step title="Install">
+    Click **Install**.
+  </Step>
+</Steps>
 
 <Check>
-  The Forest Zendesk app is now installed! It can now be added to your ticket sidebar, from the Apps tab.
+  The Forest Zendesk app is now installed. Add it to your ticket sidebar from the Apps tab.
 </Check>
 
 <Frame>
-  ![Screenshot 2026 06 05 At 11 15 59](/images/Screenshot-2026-06-05-at-11.15.59.png)
+  ![The Forest app in a Zendesk ticket sidebar, showing the Connect with Forest Admin button](/images/Screenshot-2026-06-05-at-11.15.59.png)
 </Frame>
 
-## Configuring the Zendesk App
+## Signing in
 
-Now that the Forest app has been installed in your Zendesk project, your back-ends will simply need to configure it:
+Each Zendesk agent connects with their own Forest account, once:
 
-1. In the Forest app, click on "Connect with Forest"
-2. Enter your Forest credentials, as you usually would to access your Forest project
-3. Select your Organization, Project, Environment, and Team, and click on Save changes
+1. In the Forest app, click **Connect with Forest Admin**
+2. Sign in to Forest in the popup that opens, as you usually would to reach your project
+3. The popup closes and the app shows your data
 
-<Frame>
-  <img
-    src="/images/Screenshot-2026-06-10-at-14.24.29.png"
-    alt="Screenshot 2026 06 10 At 14 24 29"
-    title="Screenshot 2026 06 10 At 14 24 29"
-    className="mx-auto"
-    style={{ width:"45%" }}
-  />
-</Frame>
+There is nothing to pick. The project and environment come from the BFF your tech team deployed, and your team is resolved from your Forest account, so two Zendesk agents on the same ticket can see different records.
 
 <Card title="Your Forest app is now configured in Zendesk!" type="check">
-  It will now automatically analyze the customer request from the ticket,  find the relevant Customer, User, or Partner in your Forest data, and recommend relevant Data and Actions to solve the ticket.
+  It matches the ticket sender against your Forest data, surfaces the relevant Customer, User or Partner record, and suggests the actions that resolve the ticket.
 </Card>
 
 <Frame>
   <img
     src="/images/Screenshot-2026-06-10-at-14.28.29.png"
-    alt="Screenshot 2026 06 10 At 14 28 29"
-    title="Screenshot 2026 06 10 At 14 28 29"
+    alt="The Data tab listing the user matched from the ticket sender, with its related records"
+    title="The Data tab listing the user matched from the ticket sender"
     className="mx-auto"
     style={{ width:"48%" }}
   />
 </Frame>
+
+## How a ticket is matched to a record
+
+You configure nothing here. On every ticket the app reads the signals the ticket already carries, then searches your collections for them, with no model in the loop.
+
+It reads the requester's Zendesk id and email, plus the emails, URLs, UUIDs, `#12345` references and 6-digit-or-longer numbers it finds in the subject and description.
+
+It searches the fields your schema exposes, picked by name:
+
+| Field role | Recognized by | Score |
+| --- | --- | --- |
+| Email | a name containing `email` | 100 |
+| Zendesk user id | a name carrying `zendesk` or `external` plus a `user`, `requester` or `enduser` token before an `id` suffix, as in `zendeskUserId` | 95 |
+| Id | `id`, an `id` suffix, `uuid`, `externalId`, `referenceId` | 90 |
+| Reference | `slug`, `key`, `code`, `number`, `ref` | 70 |
+| Name | `name`, `fullName`, `title`, `label` | 40 |
+
+Exact hits outrank partial ones, join-like collections lose 30 points, and the best-scoring records surface in the Data tab. Each ticket is capped at 6 searches at once, 30 collections for the Zendesk id, 15 for emails, and 100 searches in total, so a wide schema does not fan out indefinitely.
+
+<Note>
+  A collection that stores the Zendesk user id under a name outside that convention, `crm_user_ref` or `support_id` for instance, is never searched for it. Expose a field whose name follows the convention, or rely on the email signal.
+</Note>
+
+## Where AI is used
+
+Two features call a model, both in the Actions tab, both through your BFF's `POST /agent/v1/ai/query`, which relays to Forest's AI proxy with the signed-in Zendesk agent's session. The BFF holds the Forest token, and the browser never sees it.
+
+| Feature | When it fires | What is sent |
+| --- | --- | --- |
+| Suggested actions | opening the Actions tab | ticket subject, description, requester email and name, plus the qualified names and types of the actions your schema exposes |
+| Draft customer reply | clicking **Generate a response to this ticket** on an action that ran | requester name, ticket subject, the action's name and its result, plus the first URL that result contains. The reply lands in the ticket's comment editor for the Zendesk agent to review and send |
+
+Suggested action names come back through a filter: the app keeps the ones that match a real action and drops the rest, so a hallucinated name never reaches a button. Every ticket field is sanitized before it leaves, with injection markers stripped and lengths capped. Records and relations browsed in the Data tab never reach the AI proxy, and neither does matching.
+
+<Note>
+  The AI relay is served whenever sign-in is configured on the BFF, which `GET {your-bff-url}/health` reports as `configured.ai`. Stay out of the Actions tab and nothing is sent: the Data tab, the search bar and the matching never call it.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Zendesk agents cannot sign in">
+    - Check `GET {your-bff-url}/health`, `configured.oauth` must be `true`
+    - Confirm `forestBFFUrl` points at the BFF, not at the agent itself and not at an MCP URL
+    - On a CORS error in the browser console, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way. The rejected preflight answers `204` with no headers, so the `403 origin_not_allowed` never reaches the browser — the BFF logs `BFF preflight origin rejected` with the origin it refused
+  </Accordion>
+  <Accordion title="A Zendesk agent sees no record on a ticket">
+    - Confirm their Forest role grants read access to the collection. The app shows what that person is allowed to see, nothing more
+    - Check that one of your collections carries the requester's email, or an id field [the naming convention](#how-a-ticket-is-matched-to-a-record) recognizes. Nothing is configured per installation, so a schema that stores the Zendesk id under an off-convention name stays invisible to the matcher
+    - Use the search bar to confirm the record exists and is readable: if search finds it but the ticket does not, the gap is in the signals, not in permissions
+  </Accordion>
+  <Accordion title="Actions are missing from the Actions tab">
+    Actions the caller's permissions do not confirm are hidden. Check the role's action permissions in **Project Settings → Roles**.
+  </Accordion>
+</AccordionGroup>
