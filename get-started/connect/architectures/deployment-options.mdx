@@ -13,7 +13,9 @@ The decision is one question. Does the Forest back-end run as its own service, o
 
 <Steps>
   <Step title="You are on Ruby">
-    The Ruby back-end ships as a Rails engine and mounts inside your application. Standalone deployment is currently available for Node.js only, so on Ruby the decision is already made. If you need standalone deployment with Ruby, please [contact our sales team](https://www.forestadmin.com/contact).
+    Standalone deployment is currently available for Node.js only. On Ruby, Forest ships a Rails integration, so the back-end the Forest UI talks to runs inside your application. If you need standalone deployment with Ruby, please [contact our sales team](https://www.forestadmin.com/contact).
+
+    That does not mean everything has to live in one process. Ruby can distribute the data work across [RPC back-ends](/get-started/connect/data-sources/rpc) — separate services that a main back-end aggregates — which is how you keep a heavy datasource off the process serving your users.
   </Step>
   <Step title="Forest needs your application's live runtime">
     Not your code — your *running* code. An in-process service you cannot reach over HTTP, a transaction the agent must join, an in-memory cache or singleton your business logic depends on. Sharing a process is the only way to share those.
@@ -46,7 +48,7 @@ The decision is one question. Does the Forest back-end run as its own service, o
 | Deploys and scales independently | Yes | No |
 | Can reuse your ORM models | Yes, from a shared codebase | Yes |
 | Can use your application's live runtime | No | Yes |
-| Available for Ruby | No | Yes |
+| Available for Ruby | Not for the main back-end — see [RPC back-ends](/get-started/connect/data-sources/rpc) | Yes |
 
 ## What in-app actually shares
 
