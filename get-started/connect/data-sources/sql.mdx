@@ -47,7 +47,12 @@ Introspection reads the **whole schema**, every time the back-end starts:
 - Column, index and foreign-key metadata is fetched per table, concurrently and without a ceiling, so a wide schema issues hundreds of catalog queries at once.
 - Model and relation building then runs on the event loop of whatever process hosts the agent.
 
-On a small schema this is invisible. On a large one it is a measurable spike in database load and event-loop time on every boot, restart and redeploy — which is why [pre-computing the introspection](#pre-compute-the-introspection) is the recommended production setup, and why the agent belongs in [its own process](/get-started/connect/architectures/deployment-options) when it sits next to an application serving live traffic.
+On a small schema this is invisible. On a large one it is a burst of concurrent catalog queries against your production database, repeated on every boot, restart and redeploy — enough to show up as a performance hit while the database is also serving traffic.
+
+Two things follow:
+
+- [**Pre-compute the introspection**](#pre-compute-the-introspection) so the scan leaves the boot path entirely. This is the fix, and it works whatever your [deployment topology](/get-started/connect/architectures/deployment-options).
+- **On a large database, run the introspection off-peak.** Generating the file reads the whole catalog once, so schedule that run — and any deploy that still introspects live — outside your busy hours rather than during them.
 
 ## Configuration options
 
