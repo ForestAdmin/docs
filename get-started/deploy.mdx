@@ -29,7 +29,7 @@ This means you can iterate on your back-office configuration safely, then push c
 
     Make sure to set the environment variables (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`) in your hosting platform.
 
-    On a SQL datasource, [pre-compute the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) so restarts don't re-scan your schema.
+    On a SQL datasource with a wide schema, consider [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) so restarts don't re-scan it.
   </Step>
 
   <Step title="Create a production environment in Forest">

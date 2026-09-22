@@ -60,7 +60,7 @@ Sharing a process shares four things, and only the first is obvious:
 None of this is hypothetical on a large schema, and none of it is visible on a small one — which is why it tends to be discovered in production rather than in staging.
 
 <Warning>
-The boot also puts real load on the database, and that part is true of both topologies — see [what introspection costs at boot](/get-started/connect/data-sources/sql#what-it-costs-at-boot). In-app is what adds your application's own request latency on top of it. Either way, [pre-compute the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) so neither cost lands on a boot.
+The boot also puts real load on the database, and that part is true of both topologies — see [what introspection costs at boot](/get-started/connect/data-sources/sql#what-it-costs-at-boot). In-app is what adds your application's own request latency on top of it. If the schema is wide enough for either to bite, [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) takes both off the boot path.
 </Warning>
 
 ## A monorepo does not mean in-app
