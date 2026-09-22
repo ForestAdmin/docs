@@ -28,12 +28,16 @@ The decision is one question. Does the Forest back-end run as its own service, o
 
 <AccordionGroup>
   <Accordion title="Reusing your ORM models">
-    A real advantage — scopes, associations and validations come across, and with [`datasource-sql`](/get-started/connect/data-sources/sql) you rebuild them — but it does not need a shared process. `createSequelizeDataSource` takes any Sequelize instance, so model reuse needs your model definitions to be **importable**, which is a shared codebase, not a shared runtime. A monorepo gives you both reuse and a separate process; see [below](#a-monorepo-does-not-mean-in-app).
+    Model reuse does not need a shared process. `createSequelizeDataSource` takes any Sequelize instance, so what it needs is your model definitions to be **importable** — a shared codebase, not a shared runtime. A monorepo gives you the reuse and a separate process at once; see [below](#a-monorepo-does-not-mean-in-app).
 
-    What is true is the reverse. Forest reads your data through a [datasource](/get-started/connect/overview), the connector between the back-end and a database, an API or an ORM. Four of them read an ORM's model definitions — Sequelize and Mongoose on Node.js, ActiveRecord and Mongoid on Ruby. Every other stack (TypeORM, Prisma, Drizzle, Knex, raw SQL) connects through [`datasource-sql`](/get-started/connect/data-sources/sql), which reads the database itself and builds its own model layer. There is then nothing to reuse either way, so this consideration drops out of the decision entirely.
+    The reuse is worth having. Scopes, associations and validations come across, and with [`datasource-sql`](/get-started/connect/data-sources/sql) you rebuild them by hand. It is simply not an argument for in-app.
+
+    Whether it is available to you at all depends on your ORM. Forest reads your data through a [datasource](/get-started/connect/overview), the connector between the back-end and a database, an API or an ORM. Four of them read an ORM's model definitions: Sequelize and Mongoose on Node.js, ActiveRecord and Mongoid on Ruby. Every other stack — TypeORM, Prisma, Drizzle, Knex, raw SQL — connects through [`datasource-sql`](/get-started/connect/data-sources/sql), which reads the database itself and builds its own model layer. There is then nothing to reuse either way, and the question drops out of the decision entirely.
   </Accordion>
   <Accordion title="Introspection and boot cost">
-    Standalone introspects exactly as much as in-app; the work is identical, and [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) removes it from both. Standalone does not buy you a cheaper boot. It buys you a boot that cannot slow down the application serving your users — which is the same fact seen from the side that matters.
+    Standalone does not boot faster. It introspects exactly as much as in-app, and [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) removes that work from both.
+
+    What standalone gives you is a boot that cannot slow down the application serving your users. Same work, different process paying for it.
   </Accordion>
   <Accordion title="Sharing a database connection">
     Two processes against one database is normal. It costs you a second connection pool, which is a number to set deliberately, not an obstacle.
