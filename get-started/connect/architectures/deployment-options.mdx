@@ -37,7 +37,9 @@ The decision is one question. Does the Forest back-end run as its own service, o
   <Accordion title="Introspection and boot cost">
     Standalone does not boot faster. It introspects exactly as much as in-app, and [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) removes that work from both.
 
-    What standalone gives you is a boot that cannot slow down the application serving your users. Same work, different process paying for it.
+    What standalone moves is the CPU and event-loop cost: the scan, the model building and the schema generation happen in a process your users are not waiting on.
+
+    The database load is shared either way. Those catalog queries hit the same database your application queries, so a heavy introspection can still lengthen your application's own requests from a separate process. [Pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) is what removes that half, for both topologies.
   </Accordion>
   <Accordion title="Sharing a database connection">
     Two processes against one database is normal. It costs you a second connection pool, which is a number to set deliberately, not an obstacle.
