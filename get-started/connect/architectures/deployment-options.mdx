@@ -28,7 +28,7 @@ The decision is one question. Does the Forest back-end run as its own service, o
   <Accordion title="Reusing your ORM models">
     A real advantage — scopes, associations and validations come across, and with [`datasource-sql`](/get-started/connect/data-sources/sql) you rebuild them — but it does not need a shared process. `createSequelizeDataSource` takes any Sequelize instance, so model reuse needs your model definitions to be **importable**, which is a shared codebase, not a shared runtime. A monorepo gives you both reuse and a separate process; see [below](#a-monorepo-does-not-mean-in-app).
 
-    What is true is the reverse: if your ORM has no datasource — TypeORM, Prisma, Drizzle, Knex, raw SQL — there is nothing to reuse either way, so this consideration drops out of the decision entirely.
+    What is true is the reverse. Forest reads your data through a [datasource](/get-started/connect/overview), the connector between the back-end and a database, an API or an ORM. Four of them read an ORM's model definitions — Sequelize and Mongoose on Node.js, ActiveRecord and Mongoid on Ruby. Every other stack (TypeORM, Prisma, Drizzle, Knex, raw SQL) connects through [`datasource-sql`](/get-started/connect/data-sources/sql), which reads the database itself and builds its own model layer. There is then nothing to reuse either way, so this consideration drops out of the decision entirely.
   </Accordion>
   <Accordion title="Introspection and boot cost">
     Standalone introspects exactly as much as in-app; the work is identical, and [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) removes it from both. Standalone does not buy you a cheaper boot. It buys you a boot that cannot slow down the application serving your users — which is the same fact seen from the side that matters.
@@ -92,7 +92,7 @@ Your scopes, associations and validations come across, and no introspection runs
 You keep shared tooling, shared CI and shared types. You do not keep the shared process. Deploy that package as its own service.
 
 <Note>
-On an ORM with no Forest datasource, swap the import for [`createSqlDataSource`](/get-started/connect/data-sources/sql) with a pre-computed introspection. The rest of the shape is identical — the workspace package and the standalone mount are what matter here.
+On TypeORM, Prisma, Drizzle or any stack Forest reads through the database rather than your models, swap the import for [`createSqlDataSource`](/get-started/connect/data-sources/sql) with a pre-computed introspection. The rest of the shape is identical — the workspace package and the standalone mount are what matter here.
 </Note>
 
 If the agent genuinely needs your application's service layer — and not merely its models — that is a case for an internal API the agent calls, not for merging the two processes.
