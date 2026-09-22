@@ -34,7 +34,7 @@ const agent = createAgent(options: AgentOptions): Agent;
 | `prefix` | string | `''` | Path the Forest routes are mounted on (e.g. `/api/v1`). Only `-`, `~`, `/`, letters, digits and `_` are allowed. |
 
 <Warning>
-An agent answers every request under its mount path, so two agents on one host with the same `prefix` do not coexist — one of them silently takes all the traffic. Give a second agent its own hostname, or its own `prefix` **and** a matching environment URL in Forest: changing only one of the two leaves the agent unreachable or returning 404. See [Deployment options](/get-started/connect/architectures/deployment-options).
+An agent answers every request under its mount path, so two agents on one host with the same `prefix` do not coexist — one of them takes all the traffic, with nothing logged to say so. Give a second agent its own hostname, or its own `prefix` **and** a matching environment URL in Forest: changing only one of the two leaves the agent unreachable or returning 404. See [Deployment options](/get-started/connect/architectures/deployment-options).
 </Warning>
 
 #### Schema and typings

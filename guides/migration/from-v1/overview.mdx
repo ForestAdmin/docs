@@ -45,9 +45,9 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
 </Steps>
 
 <Warning>
-**Running both agents in one process defeats the point of parallel running.** Nothing stops you technically, but they then share a restart schedule, an event loop and a crash surface — so every deploy and every feature-flag toggle restarts the legacy agent too, exactly while you are redeploying the new one over and over. The stable fallback you set up stops being stable. Give them separate processes, and separate hosts if you can.
+**Running both agents in one process is not recommended.** It works, but the two then share a restart schedule, an event loop and a crash surface: every deploy, and every configuration change read at boot, restarts the legacy agent as well — while the new one is still being redeployed. The fallback you are relying on becomes as unsettled as the thing you are testing. Separate processes avoid that, and separate hosts more so.
 
-The one hard constraint is routing: two agents answering the **same path on the same host** do not coexist, whatever process they run in. One of them silently takes all the traffic. Give the new agent its own hostname, or its own `prefix` with the environment URL in Forest changed to match.
+Routing is the one hard constraint. Two agents answering the **same path on the same host** do not coexist, whatever process they run in: one of them takes all the traffic. Give the new agent its own hostname, or its own `prefix` with the environment URL in Forest changed to match.
 </Warning>
 
 ## Migration steps
