@@ -43,8 +43,6 @@ BFF_ALLOWED_ORIGINS=https://my-app.com \
   BFF_TOKEN_ENCRYPTION_KEY=xxx \
   AGENT_URL=https://your-agent.example.com \
   FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
-  FOREST_SERVER_URL=https://api.forestadmin.com \
-  FOREST_APP_URL=https://app.forestadmin.com \
   npx forest-bff
 ```
 
@@ -97,8 +95,8 @@ Standalone deployments are configured entirely through environment variables. Em
 | --- | --- | --- | --- |
 | `FOREST_AUTH_SECRET` | Yes | — | Your authentication secret. Must match your back-end's. |
 | `FOREST_ENV_SECRET` | Yes | — | Your environment secret. |
-| `FOREST_SERVER_URL` | Yes | — | Forest API base URL. |
-| `FOREST_APP_URL` | Yes | — | Forest front base URL, used to build the sign-in redirect. |
+| `FOREST_SERVER_URL` | No | `https://api.forestadmin.com` | Forest API base URL. Set it only for another region or a local stack. |
+| `FOREST_APP_URL` | No | `https://app.forestadmin.com` | Forest front base URL, used to build the sign-in redirect. Set it only for another region or a local stack. |
 | `AGENT_URL` | Yes | — | The back-end the BFF calls. Unused when embedded, where the BFF reaches it in-process. |
 | `BFF_TOKEN_ENCRYPTION_KEY` | For sign-in | — | Base64-encoded 32-byte key. Until it is set, nobody can sign in from a browser UI. |
 | `HTTP_PORT` | No | `3450` | Server port. Unused when embedded, where the BFF answers on the agent's port. |
