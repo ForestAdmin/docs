@@ -28,7 +28,7 @@ The decision is one question. Does the Forest back-end run as its own service, o
 
 <AccordionGroup>
   <Accordion title="Reusing your ORM models">
-    Model reuse does not need a shared process. `createSequelizeDataSource` takes any Sequelize instance, so what it needs is your model definitions to be **importable** — a shared codebase, not a shared runtime. A monorepo gives you the reuse and a separate process at once; see [below](#a-monorepo-does-not-mean-in-app).
+    Model reuse does not need a shared process. `createSequelizeDataSource` takes any Sequelize instance, so what it needs is your model definitions to be **importable** — a shared codebase, not a shared runtime. If yours already sit in a monorepo, [you can have the reuse and a separate process at once](#if-your-code-already-lives-in-a-monorepo).
 
     The reuse is worth having. Scopes, associations and validations come across, and with [`datasource-sql`](/get-started/connect/data-sources/sql) you rebuild them by hand. It is simply not an argument for in-app.
 
@@ -75,9 +75,9 @@ Which is the argument for caution on the first boot specifically. **Bring a new 
 The boot also puts real load on the database, and that part is true of both topologies — see [what introspection costs at boot](/get-started/connect/data-sources/sql#what-it-costs-at-boot). In-app is what adds your application's own request latency on top of it. If the schema is wide enough for either to bite, [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) takes both off the boot path.
 </Warning>
 
-## A monorepo does not mean in-app
+## If your code already lives in a monorepo
 
-Living in the same repository and running in the same process are different decisions, and the first does not force the second. This is the combination most teams actually want: **your models, your own process.**
+Living in the same repository and running in the same process are different decisions, and the first does not force the second. If your application is already a monorepo, this is how you reuse its models without giving up a separate process — not a reason to restructure a repository that is laid out some other way.
 
 Add the agent as its own workspace package with its own `package.json`, import the models from the package that defines them, and start it with `mountOnStandaloneServer()`:
 
