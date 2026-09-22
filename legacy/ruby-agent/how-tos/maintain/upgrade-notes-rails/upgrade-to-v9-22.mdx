@@ -1,0 +1,316 @@
+---
+title: Upgrade to v9.22
+description: >-
+  The purpose of this note is to help developers upgrade their Rails agent to
+  forest_liana 9.22. This release enforces role permissions on related data,
+  narrows the SQL it issues, and adds new collection and smart field options.
+  Please read it carefully before upgrading: some behaviors change even though
+  the version is not a new major.
+---
+
+<Warning>
+
+Please be aware that while Forest make every effort to ensure that our platform updates are broadly compatible and offer detailed instructions for upgrading, Forest cannot guarantee that custom code developed by the developers will always be compatible with new versions of our software. This includes any custom modifications or extensions to core functionalities, such as method overrides or custom integrations. It is the responsibility of the developers to review and test their custom code to ensure compatibility with each new version. Our team provides comprehensive upgrade guides to assist in this process, but these cannot encompass the unique customizations that may be present in each customer's environment. Therefore, Forest strongly recommend establishing a thorough testing protocol for your specific customizations to safeguard against potential issues during the upgrade process.
+
+</Warning>
+
+<Info>
+Please follow the recommended procedure to upgrade your agent version by following [this note](/legacy/ruby-agent/how-tos/maintain/push-your-new-version-to-production).
+</Info>
+
+This upgrade unlocks the following features:
+
+- Role permissions are enforced on **related data**: fields, filters, sorts and searches that reach a collection a role cannot read are refused or redacted, the same way they are on Node.js agents.
+- Lists select only the columns the page actually displays, instead of `SELECT *`.
+- Smart fields can declare the columns and relations they need with a new `dependencies:` option, removing N+1 queries on lists, related lists and CSV exports.
+- A collection can disable its record count with `countable: false`, without overriding a controller.
+- The agent announces its capabilities to the Forest Admin interface, which enables the projection features above and lets the interface adapt to what your agent supports.
+
+No database migration, generator or configuration file change is required. The minimum Rails version is unchanged (Rails 6.1 to 8.1 are supported).
+
+## Upgrading to v9.22
+
+<Warning>
+As for any dependency upgrade, it's very important to **test this upgrade in your testing environments**. Not doing so could result in your admin panel being unusable. This release changes what some existing requests return: read the [Before you upgrade](#before-you-upgrade) checklist first.
+</Warning>
+
+If you are upgrading from an older major version, please make sure you have also read the previous upgrade notes ([v9](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v9), [v8](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v8), [v7](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v7), ...).
+
+To upgrade, **update the version in your Gemfile**, then run:
+
+```bash
+bundle install
+```
+
+Restart your agent and check its startup logs: this release logs every configuration it detects and every declaration it cannot honor (see [Logs to watch](#logs-to-watch-after-deploying)).
+
+<Info>
+In case of a regression introduced in Production after the upgrade, a rollback to your previous agent version is the fastest way to restore your admin panel. Nothing in this release writes to your database or to your Forest Admin project settings, so rolling the gem back fully restores the previous behavior.
+</Info>
+
+### Deployment order with the Forest Admin interface
+
+The interface reads the capabilities your agent announces and enables features one by one. You can upgrade the agent before or after the interface is updated on our side:
+
+- **Agent upgraded first**: everything described in this note applies immediately on the agent side (permission refusals, redaction, column selection, count deactivation). The interface simply does not use the capabilities yet.
+- **Interface updated first**: your current agent does not serve the capabilities route, so the interface keeps its current behavior until you upgrade.
+
+<Warning>
+The permission changes below are enforced by the agent as soon as it is upgraded, **independently of the interface**. They do not wait for a capability to be announced.
+</Warning>
+
+## Before you upgrade
+
+Work through this checklist in your development environment. Each item names what changes, how to detect whether you are affected, and what to do.
+
+### 1. Review the read permissions of your roles
+
+Until now, a role could see the data of a related collection through a relation, a filter, a sort or a search even without the **read** permission on that collection. The agent now resolves every path to the collection it reaches and checks the role's permissions on it.
+
+| Request | What happens now when the role cannot read the reached collection |
+| --- | --- |
+| A field you explicitly ask for through a relation (`fields[...]`), in a list, a record, an update response or a related list | **403** — `You are not allowed to read '<path>' from the '<Collection>' collection.` |
+| A related field the interface expands by default (to-one relations) | Silently **removed** from the response |
+| CSV export | The unreadable columns and their headers are omitted |
+| A filter on a related field (`relation:column`) | **403** — `You cannot filter on '<path>': you are not allowed to read the '<Collection>' collection.` |
+| A sort on a related field (`relation.column`) | **403** — `You cannot sort on '<path>': you are not allowed to read the '<Collection>' collection.` |
+| A search (plain or extended) whose scope reaches the collection | **403** — `You cannot search on '<path>': you are not allowed to read the '<Collection>' collection.` |
+| A path reaching a collection that is **not exposed** to Forest Admin | **403** — the error explains that no role can be granted read on it until the collection is exposed |
+| Bulk delete / "select all" with a filter or sort on an unreadable collection | **403** (these actions were previously not checked) |
+
+Two more checks are now enforced on the **Related data** section of a record:
+
+- Listing or counting related records requires the **browse** permission on the related collection itself. A role that could open a parent record and see a related list without browse on the related collection will now get a **403** there.
+- Associating or updating related records requires **edit**; dissociating or replacing records that get destroyed requires **delete**.
+
+**How to detect it**: in your development or staging environment, log in with each non-admin role and open the collections, related data sections, filters, sorts and searches your teams use daily. A 403 with one of the messages above means the role is missing a permission it was implicitly relying on.
+
+**What to do**: grant the missing **read** (and **browse** for related lists) permissions in **Project settings > Roles**, as described in the [User Guide](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles). If you cannot review every role before upgrading, use the temporary opt-out below.
+
+<Info>
+Scopes injected by the agent are never checked: only the filter tree sent by the caller is. Smart field `search:` lambdas are not checked either, by design, since their reach cannot be described.
+</Info>
+
+### 2. Temporary opt-out: `skip_relation_read_permissions`
+
+If you need to upgrade before your roles are reviewed, you can keep the previous behavior for relation paths:
+
+```ruby
+# config/initializers/forest_liana.rb
+ForestLiana.skip_relation_read_permissions = true
+```
+
+When it is `true`, every **exposed** collection reached through a relation path is treated as readable: the redaction of related fields and the refusal of filters, sorts and searches described in the previous section are disabled. The agent logs it at startup and announces it to the interface, so that the interface does not rely on server-side pruning.
+
+<Warning>
+The option must be the boolean `true`. A string such as `"true"`, `"1"` or an unset environment variable keeps the checks **enabled**. If you drive it from an environment variable, cast it: `ForestLiana.skip_relation_read_permissions = ENV['FOREST_SKIP_RELATION_READ_PERMISSIONS'] == 'true'`.
+</Warning>
+
+It does **not** disable:
+
+- Collection-level permissions (`browse`, `read`, `edit`, `delete`, `add`, `export`), including the new **browse** check on related lists.
+- The refusal of paths reaching a collection that is **not exposed** to Forest Admin.
+- Scopes, segments, and smart action permissions.
+
+There is one global option: it cannot be set per collection or per field. We recommend treating it as a transition tool and turning it off once your roles are reviewed.
+
+### 3. Check the `read_only:` and `is_searchable:` options of your collections
+
+The options `collection :X, read_only: true` and `collection :X, is_searchable: ...` in `lib/forest_liana/collections/*.rb` were **silently ignored** on collections backed by an Active Record model. They are now honored.
+
+**How to detect it**:
+
+```bash
+grep -rn "read_only:\|is_searchable:" lib/forest_liana/collections/
+```
+
+**What to do**: for each match on a model-backed collection, confirm you still want it. A collection declared `read_only: true` will **lose its create, edit and delete buttons** in the interface as soon as you upgrade. Remove the option if it was left there by mistake.
+
+### 4. Check model code that reads columns the page does not display
+
+Lists of collections that declare **no smart field** now select only the columns the request asks for, plus the primary key, the foreign keys of the relations in the request, and the STI type column. Any Ruby code that runs on these records and reads another column raises `ActiveModel::MissingAttributeError`, which answers **500**.
+
+Typical places to look at, on your models:
+
+- `after_find` and `after_initialize` callbacks
+- `to_s` or `name` overrides used as record labels
+- `default_scope` blocks and decorators reading attributes
+- Smart actions and route overrides that reuse the records of a list
+
+**How to detect it**: open the lists of every collection in your development environment and watch for 500s. Enable your database query log to confirm which columns are selected.
+
+**What to do**: read the column through a smart field that declares it in `dependencies:` (see below), or make the code tolerant to a missing attribute (`object.has_attribute?(:column)`).
+
+<Info>
+Smart field getters are protected: a getter reading an undeclared column reloads the record once (at the cost of an extra query, logged once per process) and never returns a 500. This protection covers smart field getters only, not the model-level code listed above.
+</Info>
+
+### 5. Check your search configuration
+
+Two search behaviors change:
+
+- A search whose term matches **no real column** now returns **no records** instead of the whole table. You are affected if a collection's `search_fields` names only smart fields without a `search:` lambda, or only dotted relation entries used on a plain (non-extended) search. Previously the search silently returned every record.
+- A plain search (the default, without "extended search") no longer joins the related tables to count the results: the count matches what the list actually searches. Collections that keep a smart field `search:` lambda keep their joins.
+
+**How to detect it**: run the searches your teams use on each collection and compare the number of results before and after the upgrade.
+
+**What to do**: add real columns to `search_fields`, or give the smart field a `search:` lambda ([see the reference](/legacy/ruby-agent/reference-guide/smart-fields/overview#searching-sorting-and-filtering-on-a-smart-field)).
+
+### 6. Check the associations you will preload
+
+The new `dependencies:` option (see [New options](#new-options-you-can-adopt)) preloads relations instead of loading them once per row. One shape of association is incompatible with preloading: an association whose own scope narrows its select and drops the key linking it to its owner, such as:
+
+```ruby
+has_many :notes, -> { select(:content) }
+```
+
+It works when loaded lazily and raises `ActiveModel::MissingAttributeError` when preloaded. Do not name such an association in a `dependencies:` path, or add the foreign key to its `select`.
+
+### 7. Check your route and controller overrides
+
+If you override Forest routes or controllers:
+
+- Permission refusals raise `ForestLiana::Ability::Exceptions::UnauthorizedFieldsError`, `UnauthorizedQueryFieldError` and `UnexposedQueryCollectionError`, rendered as **403**. Overrides that rescue only the previous error classes should be extended.
+- A filter, sort or projection whose prefix names no relation now answers **422** `Relation not found: '<Collection>.<relation>'` instead of resolving to the root collection.
+- A malformed filter (a raw value instead of a condition tree) answers **422** `Filters cannot be a raw value` instead of a 500.
+- Count overrides that call `deactivate_count_response` keep working. For a whole collection, `countable: false` is now simpler (see below).
+
+## New options you can adopt
+
+None of these are required. They are the features this release adds; adopting them is incremental.
+
+### Disable the count of a collection
+
+```ruby
+class Forest::Order
+  include ForestLiana::Collection
+
+  collection :Order, countable: false
+end
+```
+
+The count endpoints of the collection, and of its related lists on other records, answer `{"meta":{"count":"deactivated"}}` without running any query. The interface shows the list without a total. On a related list, the option of the **related** collection applies.
+
+<Warning>
+On a smart collection, the option only takes effect if the collection also declares at least one field, action or segment.
+</Warning>
+
+### Declare what a smart field needs with `dependencies:`
+
+A smart field getter runs once per record. Declaring what it reads lets the agent select the right columns and preload the right relations for the whole page:
+
+```ruby
+class Forest::Customer
+  include ForestLiana::Collection
+
+  collection :Customer
+
+  # Bare names are columns of the collection: they are selected with the list.
+  field :full_name, type: 'String', dependencies: ['firstname', 'lastname'] do
+    "#{object.firstname} #{object.lastname}"
+  end
+
+  # `relation:column` paths are preloaded once for the page, whatever the depth.
+  field :company_name, type: 'String', dependencies: ['company:name'] do
+    object.company.name
+  end
+
+  field :city, type: 'String', dependencies: ['address:city:name'] do
+    object.address.city.name
+  end
+
+  # A to-many relation is preloaded the same way.
+  field :order_count, type: 'Number', dependencies: ['orders:id'] do
+    object.orders.size
+  end
+
+  # An empty list declares a getter that reads nothing from the record.
+  field :kind, type: 'String', dependencies: [] do
+    'customer'
+  end
+end
+```
+
+`dependencies:` accepts a string, a symbol, or an array of them.
+
+What you get:
+
+- A list, related list or CSV export that displays the field runs **one query per relation of the path** instead of one per row.
+- The columns named are selected with the list, so the getter reads them without an extra query.
+
+What happens without a declaration:
+
+- The field keeps working exactly as before. A request that displays a smart field with no `dependencies:` keeps the previous `SELECT *` behavior for that collection, and a getter reaching a relation keeps its one-query-per-row cost.
+- You can therefore declare your smart fields one at a time, starting with the ones on your largest lists.
+
+Validation happens at startup and never prevents the agent from booting:
+
+- An entry that does not resolve to a real column or relation, or that crosses a polymorphic relation, is **ignored with a warning**, and the field behaves as if it declared nothing.
+- On Rails 6.1, a path crossing an association with an instance-dependent scope cannot be preloaded: it is logged once and loaded per record as before.
+
+Preloading is not opt-out for a declared path: if a path you declared should not be preloaded, remove it from `dependencies:`.
+
+<Info>
+The validation above is lenient on purpose. The v2 agents reject the same declarations at boot — see [If you plan to migrate to a v2 agent later](#if-you-plan-to-migrate-to-a-v2-agent-later).
+</Info>
+
+### Projection on records and related data
+
+The interface now sends the agent the exact fields it displays, on lists, records and related data. Records (`show`) used to load every column and every to-one relation; they now load only what is displayed. Nothing is required on your side: this is enabled by the capabilities your agent announces.
+
+## If you plan to migrate to a v2 agent later
+
+The features of this release exist on the v2 agents (`@forestadmin/agent` for Node.js, `forest_admin_agent` for Ruby) with the same option names and the same 403 messages, so what you configure here carries over. Two behaviors are **more lenient on this v1 release than on v2**. If a migration to v2 is on your roadmap, writing your customizations the strict way now saves you a boot failure later.
+
+### Invalid or empty `dependencies:` fail the agent boot on v2
+
+On this release, a `dependencies:` entry that does not resolve (unknown column, unknown relation, path crossing a polymorphic relation) is ignored with a warning, and `dependencies: []` is accepted. On v2, both are rejected when the agent starts:
+
+- an unknown column or relation, or a path crossing a polymorphic relation, raises a schema error and stops the agent;
+- an empty list raises `Computed field '<Collection>.<field>' must have at least one dependency.`
+
+**What to do**: treat the `Invalid dependency ...` warnings of this release as errors and fix them now, and give every computed field at least one real dependency instead of `[]`.
+
+### A smart field `search:` lambda is not exempted from permission checks on v2
+
+On this release, a smart field `search:` lambda runs on every search without any permission check, because the fields it reaches cannot be described. On v2, a search handler whose reach is not declared is refused on **extended** search with a 403 (`You cannot run an extended search on the '<Collection>' collection: the fields it reaches cannot be determined, so they cannot be checked against your permissions.` on Node.js; on Ruby, unless the handler declares the fields it reaches). Plain search keeps working on both.
+
+**What to do**: nothing on this release. When migrating, expect to declare the fields your search handlers reach, or to restrict them to plain search.
+
+## Behavior changes at a glance
+
+| Area | Before | After |
+| --- | --- | --- |
+| Related field, filter, sort or search reaching an unreadable collection | Served | Redacted (default fields) or **403** (explicit request) |
+| Related data section | No permission check on the related collection | **browse** required on the related collection (and **edit** / **delete** on associate, update, dissociate) |
+| Bulk delete / select all with a filter or sort | Not checked | Checked like a list |
+| `collection :X, read_only: true` / `is_searchable:` on a model-backed collection | Ignored | Honored |
+| List of a collection without smart fields | `SELECT *` | Only the requested columns, keys and STI column |
+| Record (`show`) | Every column and to-one relation | Only the displayed fields |
+| Search matching no real column | Whole table | No records |
+| Plain searched count | Joined related tables | Searches the same columns as the list |
+| Smart field reading an undeclared column | Read from `SELECT *` | Reloaded once with a warning; never a 500 |
+| `in` filter on a Rails `enum` column with several values | Matched nothing | Matches each value |
+| `_internal/capabilities` route | Absent (404) | Served |
+| Filter or projection prefix naming no relation | Resolved to the root collection | **422** `Relation not found` |
+| Malformed filter | 500 | **422** |
+
+## Logs to watch after deploying
+
+Search your agent logs for `Forest 🌳🌳🌳` after the first requests in each environment:
+
+- `ForestLiana.skip_relation_read_permissions is true: ...` — the opt-out is active. Plan its removal.
+- `Invalid dependency '...' declared on smart field '...' of the '...' collection: it does not resolve to a real column, or crosses a polymorphic relation. Ignored ...` — fix the declaration.
+- `Invalid dependencies declared on field "...": expected a String, Symbol, or Array of them. Ignored ...` — fix the declaration.
+- `Field "..." of the "..." collection read the "..." column without declaring it in dependencies: — reloaded the record to serve it, at the cost of an extra query. Add it to the field's dependencies: to avoid this.` — add the column to `dependencies:`.
+- `Cannot retrieve the "..." value of the "..." collection because of an internal error in the getter implementation: ...` — the getter raised twice; its value is served as `nil`.
+- `The "..." dependency of the "..." collection cannot be preloaded ("..." has an instance-dependent scope, which Rails 6.1.x cannot preload) — the relation is loaded once per record instead ...` — expected on Rails 6.1; upgrade Rails to benefit from the preload.
+
+## Rollout recommendation
+
+1. Upgrade in development. Restart the agent and read the startup logs.
+2. Go through the [Before you upgrade](#before-you-upgrade) checklist with each role your teams use.
+3. Decide whether you set `skip_relation_read_permissions` for the transition, and record when you will remove it.
+4. Deploy to staging, then production, following [Push your new version to production](/legacy/ruby-agent/how-tos/maintain/push-your-new-version-to-production).
+5. Watch the logs above and the 403/422/500 rate of your agent for a few days.
+6. Adopt `dependencies:` and `countable: false` on your heaviest collections once the upgrade is stable.
