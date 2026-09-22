@@ -232,6 +232,7 @@ You do not need a running environment to check this. The new agent can build its
     `buildDisconnectedSequelizeInstance` turns that file into models with no connection at all, so the loop is fast enough to run on every change:
 
     ```javascript
+    import { createAgent } from '@forestadmin/agent';
     import { buildDisconnectedSequelizeInstance } from '@forestadmin/datasource-sql';
     import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
     import { readFileSync } from 'fs';
@@ -239,15 +240,28 @@ You do not need a running environment to check this. The new agent can build its
     const introspection = JSON.parse(readFileSync('./introspection.json', 'utf8'));
     const sequelize = await buildDisconnectedSequelizeInstance(introspection, () => {});
 
-    await createAgent(options)
+    // The same mapping your real agent uses.
+    const rename = { user_accounts: 'userAccounts' };
+
+    await createAgent({
+      authSecret: process.env.FOREST_AUTH_SECRET,
+      envSecret: process.env.FOREST_ENV_SECRET,
+      isProduction: false,
+      // A file of its own, so the legacy agent's .forestadmin-schema.json survives for the diff.
+      schemaPath: './.forestadmin-schema.v2.json',
+    })
       .addDataSource(createSequelizeDataSource(sequelize), { rename })
       .generateSchemaOnly();
     ```
 
     Apply the same `rename` and customizations here that your real agent uses, or the diff tells you nothing.
+
+    <Warning>
+    Keep `schemaPath` pointing at a file of its own. Its default is `.forestadmin-schema.json`, the path the legacy agent writes, so leaving it unset overwrites the file you are about to diff against and the check passes no matter what.
+    </Warning>
   </Step>
   <Step title="Diff against the legacy schema">
-    Compare the collection and field names with your existing `.forestadmin-schema.json`. Add `rename` and `renameField` entries until the name sets match.
+    Compare the collection and field names in `.forestadmin-schema.v2.json` with those in the legacy agent's `.forestadmin-schema.json`. Add `rename` and `renameField` entries until the name sets match.
   </Step>
 </Steps>
 

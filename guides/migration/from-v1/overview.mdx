@@ -109,12 +109,12 @@ Routing is the one hard constraint. Two agents answering the **same path on the 
     Only if your team needs a shared pre-production to click through. A fresh environment starts with a **default** layout, not a copy of production's, so transport it explicitly:
 
     ```bash
-    forest layout pull --env production --team Operations --with-workflows
-    forest layout apply --env node-test --team Operations --with-workflows --force
+    forest layout:pull --env production --team Operations --with-workflows
+    forest layout:apply forest-layout.json --env node-test --team Operations --with-workflows --force
     forest roles:copy --from production --to node-test
     ```
 
-    `layout pull` and `layout apply` resolve **one team at a time**, so run that pair once per team — a shell loop over your team names with `--force` does it unattended. `roles:copy` is environment-level and runs once. See the [CLI reference](/reference/cli/overview).
+    `layout:pull` and `layout:apply` resolve **one team at a time**, so run that pair once per team — a shell loop over your team names with `--force` does it unattended. `roles:copy` is environment-level and runs once. Keep the colons: with a space, the command prints help and exits successfully without transporting anything. See the [CLI reference](/reference/cli/overview).
   </Step>
   <Step title="Test side by side">
     Run both agents simultaneously, in separate processes. Point the test environment at the new agent and verify behavior matches the legacy one, especially actions, computed fields, and segments.
@@ -156,7 +156,7 @@ All of it is scoped to the **project**, not to the agent. Swapping the agent und
 | Smart Relationships | Code | [Smart Relationships](/guides/migration/from-v1/steps/smart-relationships) |
 | Smart Segments | Code | [Smart Segments](/guides/migration/from-v1/steps/smart-segments) |
 | Route overrides | Reimplemented as hooks | See [Hooks](/product/process/advanced-concepts/hooks/overview) |
-| ORM model callbacks | Reimplemented as hooks — Forest writes in bulk and does not trigger per-record callbacks | See [Hooks](/product/process/advanced-concepts/hooks/overview) |
+| ORM model callbacks | Depends on the datasource: Sequelize and Mongoose write in bulk and skip per-record callbacks, ActiveRecord runs them as before | See [Hooks](/product/process/advanced-concepts/hooks/overview) |
 | Where the agent runs | Decided before you start | [Deployment options](/get-started/connect/architectures/deployment-options) |
 | Environment variables | `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` are reused | No change |
 | Database | No change | No change |
@@ -168,10 +168,18 @@ All of it is scoped to the **project**, not to the agent. Swapping the agent und
     Names are case-sensitive, and a Sequelize model mapping a `camelCase` attribute onto a `snake_case` column was published under the attribute name by `forest-express-sequelize`. `datasource-sequelize` still is, so that pairing holds; `datasource-sql` publishes the column instead. Restore the old names with the `rename` option on `addDataSource` (collections) and `renameField` (fields) rather than editing the layout — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses).
   </Accordion>
   <Accordion title="My ORM has no datasource (TypeORM, Prisma, Drizzle...)">
-    Only Sequelize, Mongoose, ActiveRecord and Mongoid have a matching datasource. Every other ORM connects through [`datasource-sql`](/get-started/connect/data-sources/sql), which introspects the database and builds its own model layer — it cannot read your entities. That works, and it is the normal path, but two consequences follow: your application's model callbacks never fire on a write from Forest, and the agent pays a full-schema introspection at every boot. Both are covered in [deployment options](/get-started/connect/architectures/deployment-options).
+    Sequelize, Mongoose, ActiveRecord and Mongoid have a matching datasource, and so do Django and SQLAlchemy on the Python agent. On Node.js, other ORMs — TypeORM, Prisma on SQL, Drizzle, Knex — connect through [`datasource-sql`](/get-started/connect/data-sources/sql), and Prisma on MongoDB through [`datasource-mongo`](/get-started/connect/data-sources/mongodb). Both read the database itself and build their own model layer, so they cannot read your entities. That works, and it is the normal path, but two consequences follow: your application's model callbacks never fire on a write from Forest, and unless you pre-compute it, the agent pays a full-schema introspection at every boot. Both are covered in [deployment options](/get-started/connect/architectures/deployment-options).
   </Accordion>
   <Accordion title="A model callback stopped firing">
-    Forest writes through bulk operations, so per-record ORM callbacks (`beforeCreate`, `after_save`, and friends) do not run — and with `datasource-sql` no callback of yours runs at all, since your models are never loaded. Triage them by one question: **must this fire when an operator edits the record in Forest?** If yes, reimplement it as an [agent hook](/product/process/advanced-concepts/hooks/overview), or have the hook call an internal endpoint in your application.
+    Whether a callback fires depends on how the datasource writes:
+
+    - **`datasource-sequelize`** writes through bulk methods, so per-record hooks such as `beforeCreate` do not run. See [which hooks run](/get-started/connect/data-sources/sequelize#which-hooks-run-on-a-write-from-forest).
+    - **`datasource-mongoose`** writes through `insertMany`, `updateOne` and `updateMany`, which skip `save` middleware.
+    - **The ActiveRecord datasource** writes one record at a time, so `after_save` and the rest fire as they always have. Nothing to migrate.
+    - **The Mongoid datasource** fires them on create and on a single-record edit, but not on a multi-record edit or a delete.
+    - **`datasource-sql`** never loads your models, so no callback of yours runs at all.
+
+    For a callback that does not fire, triage by one question: **must this fire when an operator edits the record in Forest?** If yes, reimplement it as an [agent hook](/product/process/advanced-concepts/hooks/overview), or have the hook call an internal endpoint in your application. Do not reimplement one that still fires, or it runs twice.
   </Accordion>
   <Accordion title="Can I reuse my v1 .forestadmin-schema.json?">
     No — never copy it into the new agent. The file is generated output describing what the agent exposes, and the two generations do not write the same shape. Let the new agent generate its own, then use the old one as a **reference** to diff against while you close the naming gate.

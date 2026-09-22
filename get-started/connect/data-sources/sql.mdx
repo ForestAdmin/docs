@@ -44,10 +44,10 @@ Introspection is supported for PostgreSQL, MySQL, MariaDB, and Microsoft SQL Ser
 Introspection reads the **whole schema**, every time the back-end starts:
 
 - Every table and view in the schema is listed and described, whatever `include` and `exclude` say. Those options publish or hide collections *after* the datasource is built, so they do not shrink the scan — exposing one collection out of four hundred still reads four hundred tables.
-- Column, index and foreign-key metadata is fetched per table, concurrently and without a ceiling, so a wide schema issues hundreds of catalog queries at once.
+- Every table's indexes and foreign keys are fetched in two catalog queries of their own. They are all issued together and queue behind the datasource's connection pool, which holds five connections unless you set [`pool`](#connection-pooling), so a wide schema keeps that pool busy for the whole scan.
 - Model and relation building then runs on the event loop of whatever process hosts the agent.
 
-On a small schema this is invisible. On a large one it is a burst of concurrent catalog queries against your production database, repeated on every boot, restart and redeploy — enough to show up as a performance hit while the database is also serving traffic.
+On a small schema this is invisible. On a large one it is a sustained burst of catalog queries against your production database, repeated on every boot, restart and redeploy — enough to show up as a performance hit while the database is also serving traffic.
 
 If that describes your database, two things help:
 
