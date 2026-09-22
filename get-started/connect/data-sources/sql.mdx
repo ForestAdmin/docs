@@ -39,6 +39,16 @@ This requires database credentials with access to `information_schema`. Ownershi
 Introspection is supported for PostgreSQL, MySQL, MariaDB, and Microsoft SQL Server.
 </Info>
 
+### What it costs at boot
+
+Introspection reads the **whole schema**, every time the back-end starts:
+
+- Every table and view in the schema is listed and described, whatever `include` and `exclude` say. Those options publish or hide collections *after* the datasource is built, so they do not shrink the scan — exposing one collection out of four hundred still reads four hundred tables.
+- Column, index and foreign-key metadata is fetched per table, concurrently and without a ceiling, so a wide schema issues hundreds of catalog queries at once.
+- Model and relation building then runs on the event loop of whatever process hosts the agent.
+
+On a small schema this is invisible. On a large one it is a measurable spike in database load and event-loop time on every boot, restart and redeploy — which is why [pre-computing the introspection](#pre-compute-the-introspection) is the recommended production setup, and why the agent belongs in [its own process](/get-started/connect/architectures/deployment-topology) when it sits next to an application serving live traffic.
+
 ## Configuration options
 
 ### Connection URI
@@ -190,34 +200,53 @@ createSqlDataSource({
 
 This is useful when your application uses soft deletes (e.g., `deleted_at` column) and you want to manage deleted records in Forest.
 
-## Caching introspection
+## Pre-compute the introspection
 
-The schema introspection is JSON serializable. Cache it to a file:
+The introspection is JSON-serializable. Produce it once with the exported `introspect()` helper, commit the file, and hand it back to `createSqlDataSource` as its second argument. The datasource then skips the catalog scan entirely and builds its models from the file.
 
-```javascript
-import { createSqlDataSource } from '@forestadmin/datasource-sql';
-import { writeFileSync, readFileSync } from 'fs';
+**We recommend this as the standard production setup.** Forest Cloud already generates the introspection ahead of time; self-hosted back-ends are the ones paying the boot cost described [above](#what-it-costs-at-boot).
 
-// Option 1: Generate and cache schema
-const dataSource = await createSqlDataSource({
-  uri: 'postgresql://user:pass@host:5432/db'
-});
+<Steps>
+  <Step title="Generate the file">
+    Run this once, and again whenever your schema changes — in a migration step, a release script, or a CI job.
 
-writeFileSync('./schema-cache.json', JSON.stringify(dataSource.schema));
+    ```javascript
+    // scripts/introspect.mjs
+    import { introspect } from '@forestadmin/datasource-sql';
+    import { writeFileSync } from 'fs';
 
-// Option 2: Load from cache (faster startup, works offline)
-const schema = JSON.parse(readFileSync('./schema-cache.json', 'utf8'));
-const dataSource = createSqlDataSource({
-  uri: 'postgresql://user:pass@host:5432/db',
-  schema: schema
-});
-```
+    const introspection = await introspect(process.env.DATABASE_URL);
 
-**Benefits:**
-- Faster back-end startup (no introspection delay)
-- Work offline or with restricted credentials
-- Separate introspection and runtime credentials
-- Version control your schema
+    writeFileSync('./introspection.json', JSON.stringify(introspection, null, 2));
+    ```
+  </Step>
+  <Step title="Boot from it">
+    ```javascript
+    import { createSqlDataSource } from '@forestadmin/datasource-sql';
+    import { readFileSync } from 'fs';
+
+    const introspection = JSON.parse(readFileSync('./introspection.json', 'utf8'));
+
+    agent.addDataSource(
+      createSqlDataSource(process.env.DATABASE_URL, { introspection })
+    );
+    ```
+  </Step>
+</Steps>
+
+**What it buys you:**
+- No catalog scan at boot, so restarts and redeploys stop hammering `information_schema`
+- A schema change shows up as a reviewable diff in your pull request
+- Runtime credentials no longer need `information_schema` access
+- The back-end boots against a database that is momentarily slow or unreachable for metadata
+
+<Warning>
+The file is a snapshot. Regenerate it whenever you migrate the database, or the agent will expose the old shape — the same failure mode as a stale [`.forestadmin-schema.json`](/reference/schema/forestadmin-schema). The format is versioned and older files are migrated forward automatically.
+</Warning>
+
+<Note>
+`introspection` is an option on `createSqlDataSource`'s **second** argument. The `schema` key on the first argument is unrelated — it selects the Postgres schema to read (`public` by default).
+</Note>
 
 ## Live Query support
 

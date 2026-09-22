@@ -39,9 +39,27 @@ agent.addDataSource(createSequelizeDataSource(sequelize));
 The Sequelize datasource automatically preserves your ORM configuration:
 
 - **Sequelize scopes** - Mapped to Forest segments
-- **Sequelize hooks** - Continue to execute as configured
+- **Sequelize hooks** - Bulk hooks run; per-record hooks do not (see below)
 - **Associations** - Relationships are automatically recognized
-- **Validations** - Model validations are enforced
+- **Validations** - Enforced on edit, skipped on create (see below)
+
+### Which hooks run on a write from Forest
+
+Forest writes through Sequelize's bulk methods — `Model.bulkCreate()`, `Model.update()` and `Model.destroy()` — and does not pass `individualHooks`. That decides which of your model hooks fire:
+
+| Operation in Forest | Hooks that run | Hooks that do **not** run | Validations |
+| --- | --- | --- | --- |
+| Create a record | `beforeBulkCreate`, `afterBulkCreate` | `beforeCreate`, `afterCreate` | Skipped — `bulkCreate` defaults to `validate: false` |
+| Edit a record | `beforeBulkUpdate`, `afterBulkUpdate` | `beforeUpdate`, `afterUpdate` | Run |
+| Delete a record | `beforeBulkDestroy`, `afterBulkDestroy` | `beforeDestroy`, `afterDestroy` | n/a |
+
+<Warning>
+If a per-record hook is how you enforce an invariant — stamping an audit row, denormalising a counter, encrypting a column — it will not fire when an operator edits that record in Forest. Reimplement it as an [agent hook](/product/process/advanced-concepts/hooks/overview), which runs on every write Forest performs, whatever the datasource underneath.
+</Warning>
+
+<Note>
+The [SQL datasource](/get-started/connect/data-sources/sql) builds its own models by introspecting the database and never loads yours, so **none** of your application's model hooks or validations apply to it — not even the bulk ones.
+</Note>
 
 ## Live Query support
 

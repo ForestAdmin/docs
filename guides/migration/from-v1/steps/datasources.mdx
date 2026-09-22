@@ -179,6 +179,73 @@ agent.addDataSource(
 );
 ```
 
+<Note>
+These options decide what Forest **publishes**. They are applied to a datasource that has already been built, so with [`datasource-sql`](/get-started/connect/data-sources/sql#what-it-costs-at-boot) the full schema is still introspected at boot whatever you list here. To cut that cost, pre-compute the introspection.
+</Note>
+
+## Match the names your layout already uses
+
+Your existing layout — every column, filter, sort, segment and action configured over the years — addresses collections and fields by **name**. The agent swap preserves all of it on one condition: the new agent exposes the same names as the old one.
+
+A mismatch does not raise an error. The field simply reads as new, and everything configured against the old name detaches silently.
+
+Legacy agents often converted `snake_case` columns to `camelCase` for you. The current agent exposes what the database holds, so restore the old names explicitly:
+
+```javascript
+// Collections: a function, or an explicit map
+agent.addDataSource(createSqlDataSource(process.env.DATABASE_URL), {
+  rename: { user_accounts: 'userAccounts' },
+});
+
+// Fields: on the collection customizer
+agent.customizeCollection('userAccounts', collection =>
+  collection.renameField('first_name', 'firstName'),
+);
+```
+
+### Prove the match before you deploy
+
+You do not need a running environment to check this. The new agent can build its schema from an introspection file with no database connection, which lets you diff it against the schema your legacy agent already produces:
+
+<Steps>
+  <Step title="Capture the introspection once">
+    ```javascript
+    import { introspect } from '@forestadmin/datasource-sql';
+    import { writeFileSync } from 'fs';
+
+    writeFileSync(
+      './introspection.json',
+      JSON.stringify(await introspect(process.env.DATABASE_URL)),
+    );
+    ```
+  </Step>
+  <Step title="Generate the new schema without a database">
+    `buildDisconnectedSequelizeInstance` turns that file into models with no connection at all, so the loop is fast enough to run on every change:
+
+    ```javascript
+    import { buildDisconnectedSequelizeInstance } from '@forestadmin/datasource-sql';
+    import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
+
+    const sequelize = await buildDisconnectedSequelizeInstance(introspection, () => {});
+
+    await createAgent(options)
+      .addDataSource(createSequelizeDataSource(sequelize), { rename })
+      .generateSchemaOnly();
+    ```
+
+    Apply the same `rename` and customizations here that your real agent uses, or the diff tells you nothing.
+  </Step>
+  <Step title="Diff against the legacy schema">
+    Compare the collection and field names with your existing `.forestadmin-schema.json`. Add `rename` and `renameField` entries until the name sets match.
+  </Step>
+</Steps>
+
+An empty diff is a mechanical guarantee that your layout will still bind. Treat it as the gate for the rest of the migration.
+
+<Warning>
+Use the legacy `.forestadmin-schema.json` as a reference only. Never copy it into the new agent — it is generated output, and the two generations do not write the same shape.
+</Warning>
+
 ## Validate the migration
 
 After swapping the datasource:
