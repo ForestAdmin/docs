@@ -111,9 +111,9 @@ If the agent genuinely needs your application's service layer — and not merely
 
 ## Running two agents at once
 
-During a [migration](/guides/migration/from-v1/overview) you may want the current agent and the new one live at the same time. Give them separate processes — the whole value of running both is that one stays stable while you restart the other, and a shared process throws that away — and if they share a host, give them separate paths.
+During a [migration](/guides/migration/from-v1/overview) you may want the current agent and the new one live at the same time. Separate processes are recommended — you are running both so that one stays steady while the other is restarted, and a shared process gives up that separation — and if they share a host, give them separate paths.
 
-The paths are the part that is not negotiable. An agent mounted at a prefix answers **every** request under it. Two agents on one host at the same prefix do not coexist — one wins silently, and the symptom is either the wrong agent answering with the wrong environment secret, or an environment that looks dead for no visible reason.
+The paths are the part that is not negotiable. An agent mounted at a prefix answers **every** request under it. Two agents on one host at the same prefix do not coexist — one of them takes all the traffic, and the symptom is either the wrong agent answering with the wrong environment secret, or an environment that appears dead for no visible reason.
 
 Give the second agent its own hostname, or set [`prefix`](/reference/agent-api/nodejs) and change that environment's URL in Forest to match:
 
