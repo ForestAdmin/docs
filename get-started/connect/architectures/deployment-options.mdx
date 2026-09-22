@@ -61,7 +61,7 @@ The decision is one question. Does the Forest back-end run as its own service, o
 Sharing a process shares four things, and only the first is obvious:
 
 - **Memory and connection budget.** Two connection pools against one database, each with its own ceiling. Set [`pool`](/get-started/connect/data-sources/sql#connection-pooling) deliberately rather than taking the default on both sides.
-- **The restart schedule.** Every deploy of your application restarts the agent, and every deploy of the agent restarts your application. A configuration toggle read at boot is a redeploy of both.
+- **The restart schedule.** Every deploy of your application restarts the agent, and every deploy of the agent restarts your application.
 - **The event loop.** Agent startup — [schema introspection](/get-started/connect/data-sources/sql#what-it-costs-at-boot), model building, schema generation — runs on the loop your application serves requests from. On a wide schema that is a stall, not a delay: your application's own requests queue behind it, and it happens on every deploy and every restart, not once at install.
 - **The crash surface.** An error thrown out of agent construction that nothing catches exits the process, taking your application with it.
 
