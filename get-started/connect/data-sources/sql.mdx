@@ -213,6 +213,7 @@ Generate the introspection with `introspect()`, commit the file, and pass it to 
     import { introspect } from '@forestadmin/datasource-sql';
     import { writeFileSync } from 'fs';
 
+    // Same connection options as your createSqlDataSource call, schema included.
     const introspection = await introspect(process.env.DATABASE_URL);
 
     writeFileSync('./introspection.json', JSON.stringify(introspection, null, 2));
