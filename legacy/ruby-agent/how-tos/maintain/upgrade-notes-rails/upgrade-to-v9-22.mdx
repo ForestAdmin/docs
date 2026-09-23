@@ -181,7 +181,7 @@ It works when loaded lazily and raises `ActiveModel::MissingAttributeError` when
 If you override Forest routes or controllers:
 
 - Permission refusals raise `ForestLiana::Ability::Exceptions::UnauthorizedFieldsError`, `UnauthorizedQueryFieldError` and `UnexposedQueryCollectionError`, rendered as **403**. Overrides that rescue only the previous error classes should be extended.
-- The list, the count and (new in this release) the record view render every **other** `ForestLiana::Errors::ExpectedError` themselves, with the error's own status. A `rescue_from ForestLiana::Errors::HTTP422Error` (or similar) you added in an override no longer fires for an error raised inside those actions — rescue it inside your override, or rely on the status the agent already returns. The three permission classes above are the exception: they are re-raised on purpose, so that their `name` and `data` reach the response.
+- The list, the count, bulk delete, the related-data actions and the record view render every **other** `ForestLiana::Errors::ExpectedError` themselves, with the error's own status. A `rescue_from ForestLiana::Errors::HTTP422Error` (or similar) you added in an override no longer fires for an error raised inside those actions — rescue it inside your override, or rely on the status the agent already returns. The three permission classes above are the exception: they are re-raised on purpose, so that their `name` and `data` reach the response.
 - A filter, sort or projection whose prefix names no relation now answers **422** `Relation not found: '<Collection>.<relation>'` instead of resolving to the root collection.
 - A malformed filter (a raw value instead of a condition tree) answers **422** `Filters cannot be a raw value` instead of a 500.
 - Count overrides that call `deactivate_count_response` keep working. For a whole collection, `countable: false` is now simpler (see below).
@@ -309,6 +309,7 @@ On this release, a smart field `search:` lambda runs on every search without any
 | `_internal/capabilities` route | Absent (404) | Served |
 | Filter or projection prefix naming no relation | Resolved to the root collection | **422** `Relation not found` |
 | Malformed filter | 500 | **422** |
+| Forest permissions API answering an error | **403** `Permission could not be retrieved` | **503** `PermissionsUnavailableError`, same message |
 
 ## Logs to watch after deploying
 
@@ -327,5 +328,5 @@ Search your agent logs for `Forest 🌳🌳🌳` after the first requests in eac
 2. Go through the [Before you upgrade](#before-you-upgrade) checklist with each role your teams use.
 3. Decide whether you set `skip_relation_read_permissions` for the transition, and record when you will remove it.
 4. Deploy to staging, then production, following [Push your new version to production](/legacy/ruby-agent/how-tos/maintain/push-your-new-version-to-production).
-5. Watch the logs above and the 403/422/500 rate of your agent for a few days.
+5. Watch the logs above and the 403/422/500/503 rate of your agent for a few days.
 6. Adopt `dependencies:` and `countable: false` on your heaviest collections once the upgrade is stable.
