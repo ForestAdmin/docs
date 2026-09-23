@@ -80,10 +80,10 @@ Until now, a role could see the data of a related collection through a relation,
 
 Two more checks are now enforced on the **Related data** section of a record:
 
-- Listing or counting related records requires the **browse** permission on the related collection itself. A role that could open a parent record and see a related list without browse on the related collection will now get a **403** there.
+- Listing or counting related records requires the **browse** permission on the related collection itself, and **exporting a related list to CSV requires `export`** on it. A role that could open a parent record and see or export a related list without those permissions will now get a **403** there.
 - Associating or updating related records requires **edit**; dissociating or replacing records that get destroyed requires **delete**.
 
-**How to detect it**: in your development or staging environment, log in with each non-admin role and open the collections, related data sections, filters, sorts and searches your teams use daily. A 403 with one of the messages above means the role is missing a permission it was implicitly relying on.
+**How to detect it**: in your development or staging environment, log in with each non-admin role and open the collections, related data sections, filters, sorts and searches your teams use daily, including the export buttons of related lists. A 403 with one of the messages above means the role is missing a permission it was implicitly relying on.
 
 **What to do**: grant the missing **read** (and **browse** for related lists) permissions in **Project settings > Roles**, as described in the [User Guide](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles). If you cannot review every role before upgrading, use the temporary opt-out below.
 
@@ -128,7 +128,11 @@ grep -rn "read_only:\|is_searchable:" lib/forest_liana/collections/
 
 ### 4. Check model code that reads columns the page does not display
 
-Lists of collections that declare **no smart field** now select only the columns the request asks for, plus the primary key, the foreign keys of the relations in the request, and the STI type column. Any Ruby code that runs on these records and reads another column raises `ActiveModel::MissingAttributeError`, which answers **500**.
+Lists now select only the columns the request asks for, plus the primary key, the foreign keys of the relations in the request, and the STI type column. Any Ruby code that runs on these records and reads another column raises `ActiveModel::MissingAttributeError`, which answers **500**.
+
+<Warning>
+The rule is **per request, not per collection**. A collection that declares smart fields is still projected on every request that does not display them — a smart field defined but absent from the list view is the common case. Only a request that displays a smart field declaring no `dependencies:` (or a smart relation / integration field, which cannot declare its reach) keeps the previous `SELECT *` behavior, and only for that request. Do not read "this collection has smart fields" as "this collection is not affected".
+</Warning>
 
 Typical places to look at, on your models:
 
@@ -177,7 +181,7 @@ If you override Forest routes or controllers:
 
 ## New options you can adopt
 
-None of these are required. They are the features this release adds; adopting them is incremental.
+None of these are required. They are the features this release adds, and they can be adopted one collection at a time — with one caveat on `dependencies:`, which changes how the requests displaying the field are queried.
 
 ### Disable the count of a collection
 
@@ -240,8 +244,12 @@ What you get:
 
 What happens without a declaration:
 
-- The field keeps working exactly as before. A request that displays a smart field with no `dependencies:` keeps the previous `SELECT *` behavior for that collection, and a getter reaching a relation keeps its one-query-per-row cost.
+- The field keeps working exactly as before. A request that displays a smart field with no `dependencies:` keeps the previous `SELECT *` behavior for that request, and a getter reaching a relation keeps its one-query-per-row cost.
 - You can therefore declare your smart fields one at a time, starting with the ones on your largest lists.
+
+<Warning>
+Each step is itself a behavior change, not only an optimisation: declaring `dependencies:` on a smart field is what switches the requests displaying it from `SELECT *` to column selection. Re-run [check 4](#4-check-model-code-that-reads-columns-the-page-does-not-display) on a collection after declaring a field there — model code that was safe immediately after the upgrade can start raising `ActiveModel::MissingAttributeError`.
+</Warning>
 
 Validation happens at startup and never prevents the agent from booting:
 
@@ -282,10 +290,10 @@ On this release, a smart field `search:` lambda runs on every search without any
 | Area | Before | After |
 | --- | --- | --- |
 | Related field, filter, sort or search reaching an unreadable collection | Served | Redacted (default fields) or **403** (explicit request) |
-| Related data section | No permission check on the related collection | **browse** required on the related collection (and **edit** / **delete** on associate, update, dissociate) |
+| Related data section | No permission check on the related collection | **browse** required on the related collection, **export** on its CSV export (and **edit** / **delete** on associate, update, dissociate) |
 | Bulk delete / select all with a filter or sort | Not checked | Checked like a list |
 | `collection :X, read_only: true` / `is_searchable:` on a model-backed collection | Ignored | Honored |
-| List of a collection without smart fields | `SELECT *` | Only the requested columns, keys and STI column |
+| List or related list whose requested fields include no undeclared smart field | `SELECT *` | Only the requested columns, keys and STI column |
 | Record (`show`) | Every column and to-one relation | Only the displayed fields |
 | Search matching no real column | Whole table | No records |
 | Plain searched count | Joined related tables | Searches the same columns as the list |
