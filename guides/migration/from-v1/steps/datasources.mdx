@@ -220,10 +220,10 @@ You can check names without a running environment, by diffing the new agent's sc
     import { introspect } from '@forestadmin/datasource-sql';
     import { writeFileSync } from 'fs';
 
-    writeFileSync(
-      './introspection.json',
-      JSON.stringify(await introspect(process.env.DATABASE_URL)),
-    );
+    // Same connection options as your createSqlDataSource call, schema included.
+    const introspection = await introspect(process.env.DATABASE_URL);
+
+    writeFileSync('./introspection.json', JSON.stringify(introspection));
     ```
   </Step>
   <Step title="Generate the new schema without a database">
