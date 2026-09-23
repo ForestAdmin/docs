@@ -156,7 +156,7 @@ These all live in Forest's UI configuration and continue to work as long as the 
     Restore the old names with `rename` (collections) and `renameField` (fields) rather than editing the layout — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses).
   </Accordion>
   <Accordion title="My ORM has no datasource (TypeORM, Prisma, Drizzle...)">
-    Sequelize, Mongoose, ActiveRecord and Mongoid have matching datasources, and so do Django and SQLAlchemy on the Python agent. Other Node.js ORMs connect through [`datasource-sql`](/get-started/connect/data-sources/sql), or [`datasource-mongo`](/get-started/connect/data-sources/mongodb) for MongoDB. Both read the database directly. That works, but your model callbacks won't fire, and the agent introspects the whole schema at every boot unless you [pre-compute it](/get-started/connect/data-sources/sql#pre-compute-the-introspection).
+    Sequelize, Mongoose, ActiveRecord and Mongoid have matching datasources, and so do Django and SQLAlchemy on the Python agent. Other Node.js ORMs connect through [`datasource-sql`](/get-started/connect/data-sources/sql), or [`datasource-mongo`](/get-started/connect/data-sources/mongodb) for MongoDB. Both read the database directly. That works, but your model callbacks won't fire, and the agent introspects the whole schema at every boot unless you [cache it](/get-started/connect/data-sources/sql#caching-introspection).
   </Accordion>
   <Accordion title="A model callback stopped firing">
     Whether a callback fires depends on the datasource:

@@ -47,7 +47,7 @@ Introspection reads the whole schema on every boot:
 - Each table costs two catalog queries, queued behind the connection pool (five connections unless you set [`pool`](#connection-pooling)).
 - Model building then runs on the event loop of the process hosting the agent.
 
-On a large schema, every boot and redeploy puts a burst of load on your production database. [Pre-computing the introspection](#pre-compute-the-introspection) removes it. Until you do, bring new back-ends up outside busy hours.
+On a large schema, every boot and redeploy puts a burst of load on your production database. [Caching the introspection](#caching-introspection) removes it. Until you do, bring new back-ends up outside busy hours.
 
 ## Configuration options
 
@@ -200,9 +200,9 @@ createSqlDataSource({
 
 This is useful when your application uses soft deletes (e.g., `deleted_at` column) and you want to manage deleted records in Forest.
 
-## Pre-compute the introspection
+## Caching introspection
 
-Generate the introspection with `introspect()`, commit the file, and pass it to `createSqlDataSource` to skip the scan at boot. Your runtime credentials then no longer need `information_schema` access. It's worth doing on a wide schema or with frequent deploys. On a small schema, the default is fine.
+Generate the introspection with `introspect()`, commit the file as a cache, and pass it to `createSqlDataSource` to skip the scan at boot. Your runtime credentials then no longer need `information_schema` access. It's worth doing on a wide schema or with frequent deploys. On a small schema, the default is fine.
 
 <Steps>
   <Step title="Generate the file">
