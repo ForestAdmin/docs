@@ -926,6 +926,7 @@
                     "group": "Upgrade notes",
                     "pages": [
                       "legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/README",
+                      "legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v9-22",
                       "legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v9",
                       "legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v8",
                       "legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v7",
