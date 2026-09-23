@@ -69,8 +69,8 @@ Until now, a role could see the data of a related collection through a relation,
 
 | Request | What happens now when the role cannot read the reached collection |
 | --- | --- |
-| A field you explicitly ask for through a relation (`fields[...]`), in a list, a record, an update response or a related list | **403** — `You are not allowed to read '<path>' from the '<Collection>' collection.` |
-| A related field the interface expands by default (to-one relations) | Silently **removed** from the response |
+| A field you explicitly ask for through a relation (`fields[...]`), in a list, a record or a related list | **403** — `You are not allowed to read '<path>' from the '<Collection>' collection.` |
+| A related field the interface expands by default (to-one relations), or any related field of a create / update response, which carries no projection | Silently **removed** from the response |
 | CSV export | The unreadable columns and their headers are omitted |
 | A filter on a related field (`relation:column`) | **403** — `You cannot filter on '<path>': you are not allowed to read the '<Collection>' collection.` |
 | A sort on a related field (`relation.column`) | **403** — `You cannot sort on '<path>': you are not allowed to read the '<Collection>' collection.` |
@@ -87,7 +87,13 @@ Two more checks are now enforced on the **Related data** section of a record:
 
 **What to do**: grant the missing **read** (and **browse** for related lists) permissions in **Project settings > Roles**, as described in the [User Guide](https://docs.forestadmin.com/user-guide/project-settings/teams-and-users/manage-roles). If you cannot review every role before upgrading, use the temporary opt-out below.
 
+<Warning>
+**A permission you grant is not always visible on the next request.** The agent caches the environment permissions for `FOREST_PERMISSIONS_EXPIRATION_IN_SECONDS` (**900 seconds — 15 minutes — by default**), and only a request that is about to **refuse** re-reads them. So a **403** disappears as soon as you replay the request, while a field that was **silently removed** (a related field of a default-expanded record, a column of a CSV export) can stay missing for up to the cache lifetime. Wait it out, lower `FOREST_PERMISSIONS_EXPIRATION_IN_SECONDS`, or restart the agent to see the change at once.
+</Warning>
+
 <Info>
+Only the collections a path **reaches** are checked. The collection the request is rooted on is not re-checked here — `browse` (list), `read` (record) and `export` (CSV) already gate it — so a role that may browse a collection without reading it keeps seeing its list.
+
 Scopes injected by the agent are never checked: only the filter tree sent by the caller is. Smart field `search:` lambdas are not checked either, by design, since their reach cannot be described.
 </Info>
 
@@ -128,7 +134,7 @@ grep -rn "read_only:\|is_searchable:" lib/forest_liana/collections/
 
 ### 4. Check model code that reads columns the page does not display
 
-Lists now select only the columns the request asks for, plus the primary key, the foreign keys of the relations in the request, and the STI type column. Any Ruby code that runs on these records and reads another column raises `ActiveModel::MissingAttributeError`, which answers **500**.
+Lists now select only the columns the request asks for, plus the primary key, the foreign keys of the relations in the request, the STI type column, and the columns of your model's default ordering. Anything the query loads on its own is covered too: a relation joined by a Forest **scope** is selected whole, and a relation an association scope or a `default_scope` preloads keeps the key the preload reads off the row. Any Ruby code that runs on these records and reads another column raises `ActiveModel::MissingAttributeError`, which answers **500**.
 
 <Warning>
 The rule is **per request, not per collection**. A collection that declares smart fields is still projected on every request that does not display them — a smart field defined but absent from the list view is the common case. Only a request that displays a smart field declaring no `dependencies:` (or a smart relation / integration field, which cannot declare its reach) keeps the previous `SELECT *` behavior, and only for that request. Do not read "this collection has smart fields" as "this collection is not affected".
@@ -175,6 +181,7 @@ It works when loaded lazily and raises `ActiveModel::MissingAttributeError` when
 If you override Forest routes or controllers:
 
 - Permission refusals raise `ForestLiana::Ability::Exceptions::UnauthorizedFieldsError`, `UnauthorizedQueryFieldError` and `UnexposedQueryCollectionError`, rendered as **403**. Overrides that rescue only the previous error classes should be extended.
+- The list, the count and (new in this release) the record view render every **other** `ForestLiana::Errors::ExpectedError` themselves, with the error's own status. A `rescue_from ForestLiana::Errors::HTTP422Error` (or similar) you added in an override no longer fires for an error raised inside those actions — rescue it inside your override, or rely on the status the agent already returns. The three permission classes above are the exception: they are re-raised on purpose, so that their `name` and `data` reach the response.
 - A filter, sort or projection whose prefix names no relation now answers **422** `Relation not found: '<Collection>.<relation>'` instead of resolving to the root collection.
 - A malformed filter (a raw value instead of a condition tree) answers **422** `Filters cannot be a raw value` instead of a 500.
 - Count overrides that call `deactivate_count_response` keep working. For a whole collection, `countable: false` is now simpler (see below).
@@ -293,7 +300,7 @@ On this release, a smart field `search:` lambda runs on every search without any
 | Related data section | No permission check on the related collection | **browse** required on the related collection, **export** on its CSV export (and **edit** / **delete** on associate, update, dissociate) |
 | Bulk delete / select all with a filter or sort | Not checked | Checked like a list |
 | `collection :X, read_only: true` / `is_searchable:` on a model-backed collection | Ignored | Honored |
-| List or related list whose requested fields include no undeclared smart field | `SELECT *` | Only the requested columns, keys and STI column |
+| List or related list whose requested fields include no undeclared smart field | `SELECT *` | Only the requested columns, keys, STI and ordering columns — plus whatever a scope or an association scope makes the query load on its own |
 | Record (`show`) | Every column and to-one relation | Only the displayed fields |
 | Search matching no real column | Whole table | No records |
 | Plain searched count | Joined related tables | Searches the same columns as the list |
@@ -311,7 +318,7 @@ Search your agent logs for `Forest 🌳🌳🌳` after the first requests in eac
 - `Invalid dependency '...' declared on smart field '...' of the '...' collection: it does not resolve to a real column, or crosses a polymorphic relation. Ignored ...` — fix the declaration.
 - `Invalid dependencies declared on field "...": expected a String, Symbol, or Array of them. Ignored ...` — fix the declaration.
 - `Field "..." of the "..." collection read the "..." column without declaring it in dependencies: — reloaded the record to serve it, at the cost of an extra query. Add it to the field's dependencies: to avoid this.` — add the column to `dependencies:`.
-- `Cannot retrieve the "..." value of the "..." collection because of an internal error in the getter implementation: ...` — the getter raised twice; its value is served as `nil`.
+- `Cannot retrieve the "..." value of the "..." collection because of an internal error in the getter implementation: ...` — the getter could not be served (it raised again after a reload, or read a column of a relation that a reload cannot restore); its value is served as `nil`.
 - `The "..." dependency of the "..." collection cannot be preloaded ("..." has an instance-dependent scope, which Rails 6.1.x cannot preload) — the relation is loaded once per record instead ...` — expected on Rails 6.1; upgrade Rails to benefit from the preload.
 
 ## Rollout recommendation
