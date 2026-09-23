@@ -180,25 +180,23 @@ agent.addDataSource(
 ```
 
 <Note>
-These options decide what Forest **publishes**. They are applied to a datasource that has already been built, so with [`datasource-sql`](/get-started/connect/data-sources/sql#what-it-costs-at-boot) the full schema is still introspected at boot whatever you list here. To cut that cost, [pre-compute the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection).
+These options only hide collections: with `datasource-sql`, the whole schema is still [read at boot](/get-started/connect/data-sources/sql#what-it-costs-at-boot). To avoid that, [pre-compute the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection).
 </Note>
 
 ## Match the names your layout already uses
 
-Your existing layout — every column, filter, sort, segment and action configured over the years — addresses collections and fields by **name**. The agent swap preserves all of it on one condition: the new agent exposes the same names as the old one.
+Your layout refers to collections and fields by name, so the new agent must expose the same names as the old one. A mismatch raises no error: the old configuration just stops applying.
 
-A mismatch does not raise an error. The field simply reads as new, and everything configured against the old name detaches silently.
+Whether names change depends on what each agent reads:
 
-Whether you have any renaming to do depends on what each side reads, not on your language. Both v1 agents published a name, and each v2 datasource publishes one:
-
-| Reads | Publishes |
+| Agent or datasource | Publishes |
 | --- | --- |
-| `forest-rails` | the database column name |
-| `forest-express-sequelize` | the Sequelize **attribute** name, which parts company with the column as soon as a model uses `underscored` or an explicit `field` mapping |
-| `datasource-sequelize`, `datasource-mongoose`, `datasource-active-record` | the model's attribute keys, the same names your ORM already uses |
-| `datasource-sql`, `datasource-mongo` | the database column or field name, from introspection |
+| `forest-rails` | database column names |
+| `forest-express-sequelize` | Sequelize attribute names, which differ from the columns with `underscored` or a `field` mapping |
+| `datasource-sequelize`, `datasource-mongoose`, `datasource-active-record` | the model's attribute names |
+| `datasource-sql`, `datasource-mongo` | the database's column or field names |
 
-So a Sequelize project keeping its models through `datasource-sequelize` usually has nothing to rename: a `firstName` attribute over a `first_name` column was published as `firstName` before and still is. The same project moving to `datasource-sql` gets `first_name` and does. Where the two sides disagree, restore the old names explicitly:
+So a Sequelize project that keeps `datasource-sequelize` usually has nothing to rename, while one moving to `datasource-sql` does. Restore the old names where they differ:
 
 ```javascript
 // Collections: a function, or an explicit map
@@ -214,7 +212,7 @@ agent.customizeCollection('userAccounts', collection =>
 
 ### Prove the match before you deploy
 
-You do not need a running environment to check this. The new agent can build its schema from an introspection file with no database connection, which lets you diff it against the schema your legacy agent already produces:
+You can check names without a running environment, by diffing the new agent's schema against the legacy one:
 
 <Steps>
   <Step title="Capture the introspection once">
@@ -229,7 +227,7 @@ You do not need a running environment to check this. The new agent can build its
     ```
   </Step>
   <Step title="Generate the new schema without a database">
-    `buildDisconnectedSequelizeInstance` turns that file into models with no connection at all, so the loop is fast enough to run on every change:
+    Build models from that file, with no database connection:
 
     ```javascript
     import { createAgent } from '@forestadmin/agent';
@@ -247,29 +245,20 @@ You do not need a running environment to check this. The new agent can build its
       authSecret: process.env.FOREST_AUTH_SECRET,
       envSecret: process.env.FOREST_ENV_SECRET,
       isProduction: false,
-      // A file of its own, so the legacy agent's .forestadmin-schema.json survives for the diff.
-      schemaPath: './.forestadmin-schema.v2.json',
+      schemaPath: './.forestadmin-schema.v2.json', // not the legacy agent's file
     })
       .addDataSource(createSequelizeDataSource(sequelize), { rename })
       .generateSchemaOnly();
     ```
 
-    Apply the same `rename` and customizations here that your real agent uses, or the diff tells you nothing.
-
-    <Warning>
-    Keep `schemaPath` pointing at a file of its own. Its default is `.forestadmin-schema.json`, the path the legacy agent writes, so leaving it unset overwrites the file you are about to diff against and the check passes no matter what.
-    </Warning>
+    Use the same `rename` and customizations as your real agent.
   </Step>
   <Step title="Diff against the legacy schema">
-    Compare the collection and field names in `.forestadmin-schema.v2.json` with those in the legacy agent's `.forestadmin-schema.json`. Add `rename` and `renameField` entries until the name sets match.
+    Compare the collection and field names in `.forestadmin-schema.v2.json` with the legacy `.forestadmin-schema.json`, adding `rename` and `renameField` entries until they match.
   </Step>
 </Steps>
 
-An empty diff is a mechanical guarantee that your layout will still bind. Treat it as the gate for the rest of the migration.
-
-<Warning>
-Use the legacy `.forestadmin-schema.json` as a reference only. Never copy it into the new agent — it is generated output, and the two generations do not write the same shape.
-</Warning>
+Once the names match, your existing layout applies to the new agent.
 
 ## Validate the migration
 

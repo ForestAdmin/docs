@@ -1,93 +1,49 @@
 ---
 title: "Deployment options"
-description: "Whether the Forest back-end runs in its own process or inside your application, and what each choice commits you to"
+description: "Choosing whether the Forest back-end runs as its own service or inside your application"
 ---
 
-[Architecture](/get-started/connect/architectures/self-hosted) describes the two ways to run the Forest back-end — in-app and standalone. This page is for choosing between them: which one your situation calls for, and what each commits you to afterwards.
+[Architecture](/get-started/connect/architectures/self-hosted) describes the two ways to run the Forest back-end. This page helps you choose.
 
-The decision is one question. Does the Forest back-end run as its own service, or inside an application process you already have?
+**Default to standalone.** Both options do the same work at boot. Standalone keeps that work out of the process serving your users, along with the back-end's restarts and crashes.
 
-**Default to standalone.** Not because it is faster — it does exactly the same work — but because it keeps the back-end's lifecycle out of the process serving your users. Go in-app when something on this page actually requires it.
+## When you need in-app
 
-## What genuinely requires in-app
+- **You're on Ruby.** Standalone deployment is currently available for Node.js only; the Ruby back-end runs as a Rails integration. To keep a heavy datasource out of your application's process, move it to an [RPC back-end](/get-started/connect/data-sources/rpc). If you need standalone deployment with Ruby, please [contact our sales team](https://www.forestadmin.com/contact).
+- **Forest needs your running application**, not just its code: an in-process service, a transaction to join, a shared in-memory cache. If you only need to call your business logic, expose an internal endpoint instead.
 
-<Steps>
-  <Step title="You are on Ruby">
-    Standalone deployment is currently available for Node.js only. On Ruby, Forest ships a Rails integration, so the back-end the Forest UI talks to runs inside your application. If you need standalone deployment with Ruby, please [contact our sales team](https://www.forestadmin.com/contact).
+## What doesn't require in-app
 
-    That does not mean everything has to live in one process. Ruby can distribute the data work across [RPC back-ends](/get-started/connect/data-sources/rpc) — separate services that a main back-end aggregates — which is how you keep a heavy datasource off the process serving your users.
-  </Step>
-  <Step title="Forest needs your application's live runtime">
-    Not your code — your *running* code. An in-process service you cannot reach over HTTP, a transaction the agent must join, an in-memory cache or singleton your business logic depends on. Sharing a process is the only way to share those.
-
-    If what you actually need is to call your business logic, an internal endpoint the agent calls gets you there without merging the processes.
-  </Step>
-</Steps>
-
-## What does not require it
-
-<AccordionGroup>
-  <Accordion title="Reusing your ORM models">
-    Model reuse does not need a shared process. `createSequelizeDataSource` takes any Sequelize instance, so what it needs is your model definitions to be **importable** — a shared codebase, not a shared runtime. If yours already sit in a monorepo, [you can have the reuse and a separate process at once](#if-your-code-already-lives-in-a-monorepo).
-
-    The reuse is worth having. Scopes and associations come across, and with [`datasource-sql`](/get-started/connect/data-sources/sql) you rebuild them by hand. How much of the rest carries over depends on how the datasource writes: Sequelize creates through `bulkCreate`, which skips model validations — see [which hooks and validations run](/get-started/connect/data-sources/sequelize#which-hooks-run-on-a-write-from-forest) — while the ActiveRecord and Mongoid datasources create one record at a time, so their validations run. None of it is an argument for in-app.
-
-    Whether it is available to you at all depends on your ORM. Forest reads your data through a [datasource](/get-started/connect/overview), the connector between the back-end and a database, an API or an ORM. Six of them read an ORM's model definitions: Sequelize and Mongoose on Node.js, ActiveRecord and Mongoid on Ruby, Django and SQLAlchemy on Python. On Node.js, TypeORM, Prisma on SQL, Drizzle, Knex and raw SQL connect through [`datasource-sql`](/get-started/connect/data-sources/sql), and Prisma on MongoDB through [`datasource-mongo`](/get-started/connect/data-sources/mongodb) — both read the database itself and build their own model layer. There is then nothing to reuse either way, and the question drops out of the decision entirely.
-  </Accordion>
-  <Accordion title="Introspection and boot cost">
-    Standalone does not boot faster. It introspects exactly as much as in-app, and [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) removes that work from both.
-
-    What standalone moves is the CPU and event-loop cost: the scan, the model building and the schema generation happen in a process your users are not waiting on.
-
-    The database load is shared either way. Those catalog queries hit the same database your application queries, so a heavy introspection can still lengthen your application's own requests from a separate process. [Pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) is what removes that half, for both topologies.
-  </Accordion>
-  <Accordion title="Sharing a database connection">
-    Two processes against one database is normal. It costs you a second connection pool, which is a number to set deliberately, not an obstacle.
-  </Accordion>
-</AccordionGroup>
+- **Reusing your ORM models.** `createSequelizeDataSource` accepts any Sequelize instance, so your models only need to be importable — see [monorepos](#if-your-code-already-lives-in-a-monorepo). Six [datasources](/get-started/connect/overview) read ORM models: Sequelize, Mongoose, ActiveRecord, Mongoid, Django and SQLAlchemy. Other stacks (TypeORM, Prisma, Drizzle, Knex) connect through [`datasource-sql`](/get-started/connect/data-sources/sql) or [`datasource-mongo`](/get-started/connect/data-sources/mongodb). Those read the database directly, so there's nothing to reuse.
+- **Boot cost.** Introspection does the same work, and puts the same load on your database, in either option. [Pre-computing it](/get-started/connect/data-sources/sql#pre-compute-the-introspection) is what removes it.
+- **Sharing a database.** Two processes on one database just means a second connection pool. Size it with [`pool`](/get-started/connect/data-sources/sql#connection-pooling).
 
 | | Standalone | In-app |
 | --- | --- | --- |
-| Restarts when you deploy the application | No | Yes |
-| Competes for your application's event loop | No | Yes |
-| Can take the application down by crashing | No | Yes |
-| Deploys and scales independently | Yes | No |
-| Can reuse your ORM models | Yes, from a shared codebase | Yes |
-| Can use your application's live runtime | No | Yes |
-| Available for Ruby | Not for the main back-end — see [RPC back-ends](/get-started/connect/data-sources/rpc) | Yes |
+| Restarts when your application deploys | No | Yes |
+| Shares your application's event loop | No | Yes |
+| A crash can take your application down | No | Yes |
+| Reuses your ORM models | Yes, if importable | Yes |
+| Uses your application's live runtime | No | Yes |
+| Available on Ruby | Not for the main back-end | Yes |
 
-## What in-app actually shares
+## What sharing a process costs
 
-Sharing a process shares four things, and only the first is obvious:
+- **Restarts.** Every deploy of either one restarts both.
+- **The event loop.** At every boot, the agent builds a model for each table synchronously, on the loop that serves your requests. On a wide schema, your application's requests queue behind that work on every deploy and restart.
+- **Crashes.** An uncaught error while the agent starts exits the whole process.
 
-- **Memory and connection budget.** Two connection pools against one database, each with its own ceiling. Set [`pool`](/get-started/connect/data-sources/sql#connection-pooling) deliberately rather than taking the default on both sides.
-- **The restart schedule.** Every deploy of your application restarts the agent, and every deploy of the agent restarts your application.
-- **The event loop.** Agent startup — [schema introspection](/get-started/connect/data-sources/sql#what-it-costs-at-boot), model building, schema generation — runs on the loop your application serves requests from. On a wide schema that is a stall, not a delay: your application's own requests queue behind it, and it happens on every deploy and every restart, not once at install.
-- **The crash surface.** An error thrown out of agent construction that nothing catches exits the process, taking your application with it.
-
-None of this is hypothetical on a large schema, and none of it is visible on a small one.
-
-You can measure most of it before production: boot against an anonymised copy of the real database and you get the true schema width, so the scan takes the time it will take. What a copy will not reproduce is the contention — an event-loop stall only costs you something while your application is serving real traffic on that loop, so staging shows you the duration without the consequence.
-
-Which is the argument for caution on the first boot specifically. **Bring a new back-end up outside core hours**, on either topology, and keep any deploy that still introspects live out of your busy window.
-
-<Warning>
-The boot also puts real load on the database, and that part is true of both topologies — see [what introspection costs at boot](/get-started/connect/data-sources/sql#what-it-costs-at-boot). In-app is what adds your application's own request latency on top of it. If the schema is wide enough for either to bite, [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) takes both off the boot path.
-</Warning>
+None of this shows on a small schema. An anonymised copy of production shows how long boot takes, but not how it affects live traffic. Bring a new back-end up outside core hours.
 
 ## If your code already lives in a monorepo
 
-Living in the same repository and running in the same process are different decisions, and the first does not force the second. If your application is already a monorepo, this is how you reuse its models without giving up a separate process — not a reason to restructure a repository that is laid out some other way.
-
-Add the agent as its own workspace package with its own `package.json`, import the models from the package that defines them, and start it with `mountOnStandaloneServer()`:
+Same repository doesn't mean same process. Add the agent as its own workspace package, import your models, and deploy it as its own service:
 
 ```typescript
 // packages/forest-agent/src/index.ts
 import { createAgent } from '@forestadmin/agent';
 import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
-
-// The same model definitions your application uses — imported, not shared at runtime.
-import sequelize from '@acme/models';
+import sequelize from '@acme/models'; // your application's models
 
 createAgent({
   authSecret: process.env.FOREST_AUTH_SECRET,
@@ -95,43 +51,18 @@ createAgent({
   isProduction: process.env.NODE_ENV === 'production',
 })
   .addDataSource(createSequelizeDataSource(sequelize))
-  .mountOnStandaloneServer()
+  .mountOnStandaloneServer() // reads PORT, defaults to 3351
   .start();
 ```
 
-Your scopes and associations come across, and no introspection runs at boot because the models are already declared. `mountOnStandaloneServer()` reads `PORT` itself and falls back to `3351`, so leave the argument off unless you are choosing the port in code. The agent opens its own connection pool from those definitions, in its own process.
-
-You keep shared tooling, shared CI and shared types. You do not keep the shared process. Deploy that package as its own service.
-
-<Note>
-On TypeORM, Prisma, Drizzle or any stack Forest reads through the database rather than your models, replace both the import and the datasource call: [`createSqlDataSource(process.env.DATABASE_URL, { introspection })`](/get-started/connect/data-sources/sql) takes the place of `createSequelizeDataSource(sequelize)`, and the model import goes away with it. The rest of the shape is identical — the workspace package and the standalone mount are what matter here.
-</Note>
-
-If the agent genuinely needs your application's service layer — and not merely its models — that is a case for an internal API the agent calls, not for merging the two processes.
+Without a matching ORM datasource, use `createSqlDataSource(process.env.DATABASE_URL, { introspection })` in place of `createSequelizeDataSource(sequelize)`.
 
 ## Running two agents at once
 
-During a [migration](/guides/migration/from-v1/overview) you may want the current agent and the new one live at the same time. Separate processes are recommended — you are running both so that one stays steady while the other is restarted, and a shared process gives up that separation — and if they share a host, give them separate paths.
+During a [migration](/guides/migration/from-v1/overview), run the old and new agents in separate processes. If they share a host, give them separate paths: an agent answers every request under its prefix, so two at the same prefix means one silently takes all the traffic.
 
-The paths are the part that is not negotiable. An agent mounted at a prefix answers **every** request under it. Two agents on one host at the same prefix do not coexist — one of them takes all the traffic, and the symptom is either the wrong agent answering with the wrong environment secret, or an environment that appears dead for no visible reason.
-
-Give the second agent its own hostname, or set [`prefix`](/reference/agent-api/nodejs) and change that environment's URL in Forest to match:
+Use a separate hostname, or set [`prefix`](/reference/agent-api/nodejs) and update that environment's URL in Forest to match. Change both, or the agent is unreachable or returns 404:
 
 ```typescript
 createAgent({ ...options, prefix: '/forest-v2' })
 ```
-
-<Warning>
-The two changes must land together. Setting `prefix` without updating the environment URL in Forest leaves the new agent unreachable; updating the URL without setting `prefix` gives a 404. Either half looks exactly like a broken deployment.
-</Warning>
-
-## What's next
-
-<CardGroup cols={2}>
-  <Card title="Deploy" icon="arrow-right" href="/get-started/deploy">
-    Ship the back-end and keep its schema current.
-  </Card>
-  <Card title="Migrating from v1" icon="arrow-right" href="/guides/migration/from-v1/overview">
-    Where this decision belongs in a migration.
-  </Card>
-</CardGroup>
