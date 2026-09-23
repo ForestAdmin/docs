@@ -45,20 +45,20 @@ The Sequelize datasource automatically preserves your ORM configuration:
 
 ### Which hooks run on a write from Forest
 
-Forest writes through Sequelize's bulk methods — `Model.bulkCreate()`, `Model.update()` and `Model.destroy()` — and does not pass `individualHooks`. That decides which of your model hooks fire:
+Forest writes through `bulkCreate`, `update` and `destroy` without `individualHooks`, so only bulk hooks fire:
 
 | Operation in Forest | Hooks that run | Hooks that do **not** run | Validations |
 | --- | --- | --- | --- |
-| Create a record | `beforeBulkCreate`, `afterBulkCreate` | `beforeCreate`, `afterCreate` | Skipped — `bulkCreate` defaults to `validate: false` |
+| Create a record | `beforeBulkCreate`, `afterBulkCreate` | `beforeCreate`, `afterCreate` | Skipped |
 | Edit a record | `beforeBulkUpdate`, `afterBulkUpdate` | `beforeUpdate`, `afterUpdate` | Run |
 | Delete a record | `beforeBulkDestroy`, `afterBulkDestroy` | `beforeDestroy`, `afterDestroy` | n/a |
 
 <Warning>
-If a per-record hook is how you enforce an invariant — stamping an audit row, denormalising a counter, encrypting a column — it will not fire when an operator edits that record in Forest. Reimplement it as an [agent hook](/product/process/advanced-concepts/hooks/overview), which runs on every write Forest performs, whatever the datasource underneath.
+A per-record hook that enforces an invariant, such as writing an audit row, won't fire on a Forest edit. Move it into an [agent hook](/product/process/advanced-concepts/hooks/overview).
 </Warning>
 
 <Note>
-The [SQL datasource](/get-started/connect/data-sources/sql) builds its own models by introspecting the database and never loads yours, so **none** of your application's model hooks or validations apply to it — not even the bulk ones.
+The [SQL datasource](/get-started/connect/data-sources/sql) never loads your models, so none of your hooks or validations apply to it.
 </Note>
 
 ## Live Query support

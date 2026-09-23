@@ -81,7 +81,7 @@ forest init
 
 ### Layout transport
 
-Move a rendering between environments as a file. Useful when you stand up a new environment — which starts with a **default** layout, not a copy of production's — and when you want a layout change reviewed in Git.
+Copy a layout between environments through a file, for example to populate a new environment, which starts with the default layout.
 
 | Command | Description |
 |---|---|
@@ -94,10 +94,10 @@ forest layout:pull --env production --team Operations --with-workflows
 forest layout:apply forest-layout.json --env staging --team Operations --with-workflows --force
 ```
 
-`--env` (`-e`) and `--team` (`-t`) each resolve **one** environment and **one** team, so a project with several teams needs the pair run once per team — loop over your team names with `--force` to skip the prompt. `--with-workflows` carries each workflow's BPMN in sidecar files, on both ends of the round trip.
+Each run covers one environment and one team, so repeat it per team (`--force` skips the confirmation). `--with-workflows` includes workflow definitions.
 
 <Warning>
-The colon is part of the command name. `forest layout pull`, with a space, matches no command: it prints the `layout` help and exits successfully without pulling anything, which a script will not notice.
+Keep the colon: `forest layout pull`, with a space, prints help and exits successfully without doing anything.
 </Warning>
 
 ### Roles and teams
@@ -105,17 +105,13 @@ The colon is part of the command name. `forest layout pull`, with a space, match
 | Command | Description |
 |---|---|
 | `forest roles:copy` | Copy role permissions from one environment to another |
-| `forest teams:copy-layout` | Copy a team's whole layout onto another team in the same project |
+| `forest teams:copy-layout` | Copy one team's layout onto another in the same project, overwriting it |
 
 ```bash
 forest roles:copy --from production --to staging
 ```
 
-`roles:copy` takes two environment names and nothing else — permissions have no team dimension, so it runs once per environment pair regardless of how many teams you have.
-
-<Warning>
-`teams:copy-layout` overwrites the destination team's layout.
-</Warning>
+`roles:copy` runs once per pair of environments, however many teams you have.
 
 ### Schema
 

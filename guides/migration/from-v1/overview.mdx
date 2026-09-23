@@ -20,18 +20,14 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
 ## Before you start
 
 <Steps>
-  <Step title="Upgrade the agent you are migrating away from">
-    Do this first, before any v2 work. A migration means repeated restarts of the legacy agent, and old releases handle a cold restart badly: `@forestadmin/forestadmin-client` before **1.36.2** caches failed permission lookups for the full 15-minute TTL, so one slow response during a restart locks users out of that environment until the cache expires. Bring the legacy agent up to date and you turn a possible outage into a blip.
+  <Step title="Upgrade the legacy agent">
+    Releases of `@forestadmin/forestadmin-client` before **1.36.2** cache a failed permission lookup for 15 minutes, so a slow response during one of the migration's restarts can lock users out of an environment.
   </Step>
   <Step title="Decide where the new agent will run">
-    Settle this before you write any code — it is the decision that is expensive to reverse, and the one most often taken by default. See [Deployment options](/get-started/connect/architectures/deployment-options).
-
-    During the migration specifically, run the two agents in **separate processes**, and if they share a host give them distinct prefixes or hostnames.
+    In-app or standalone: settle it before writing code. See [Deployment options](/get-started/connect/architectures/deployment-options).
   </Step>
   <Step title="Migrate into a new environment, not a new project">
-    Everything you have built in the UI — layouts, segments, dashboards, workspaces, roles, teams, scopes — belongs to the **project**, and nothing carries across project boundaries. A new project starts empty and has to be rebuilt by hand.
-
-    Add an environment to the project you already have (**Project Settings → Environments → Add**), point it at the new agent, and your configuration is still there.
+    Layouts, segments, workspaces, roles and teams belong to the **project** and don't carry over to another one. Add an environment to your existing project (**Project Settings → Environments → Add**) and point it at the new agent.
   </Step>
   <Step title="Inventory your customizations">
     List every Smart Action, Smart Field, Smart Relationship, Smart Segment, and route override in your current project. Each step page below covers one of these surfaces.
@@ -40,21 +36,19 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
     Export your current Forest project layout. While the layout is preserved across the agent swap, having a baseline is good practice.
   </Step>
   <Step title="Plan parallel running">
-    Both agents can run side by side during migration, in separate processes.
+    Both agents can run side by side during migration.
   </Step>
 </Steps>
 
 <Warning>
-**Running both agents in one process is not recommended.** It works, but the two then share a restart schedule, an event loop and a crash surface: every deploy restarts the legacy agent as well, while the new one is still being redeployed. The fallback you are relying on becomes as unsettled as the thing you are testing. Separate processes avoid that, and separate hosts more so.
-
-Routing is the one hard constraint. Two agents answering the **same path on the same host** do not coexist, whatever process they run in: one of them takes all the traffic. Give the new agent its own hostname, or its own `prefix` with the environment URL in Forest changed to match.
+**Running both agents in one process is not recommended**: every deploy of the new agent would also restart the legacy one you are relying on. If they share a host, they also need separate paths — see [Running two agents at once](/get-started/connect/architectures/deployment-options#running-two-agents-at-once).
 </Warning>
 
 ## Migration steps
 
 <Steps>
   <Step title="Install the new agent">
-    Install the new packages alongside your existing ones. The legacy agent keeps running in its own process; the new one runs in a separate process on a different port, so restarting one never restarts the other.
+    Install the new packages alongside your existing ones, and run the new agent in its own process, on a different port.
 
     <Tabs>
       <Tab title="Node.js">
@@ -79,10 +73,8 @@ Routing is the one hard constraint. Two agents answering the **same path on the 
   <Step title="Migrate datasources">
     Re-declare your data sources using the new datasource API. See [Datasources](/guides/migration/from-v1/steps/datasources).
   </Step>
-  <Step title="Match the old names exactly — this is a gate">
-    Your layout addresses every column, filter and action by **name**. If the new agent exposes `first_name` where the old one exposed `firstName`, nothing errors: the field is simply treated as new, and everything configured against the old name silently detaches. On a mature project that is hundreds of broken views discovered one at a time.
-
-    Whether anything moved depends on what each side reads. `forest-rails` published your column names and `forest-express-sequelize` published your Sequelize attribute names; on the new side, the ORM datasources keep your attribute names while `datasource-sql` publishes the column. Close this before migrating any customization — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses) for the mapping, and for how to prove the match offline against your existing `.forestadmin-schema.json`.
+  <Step title="Match the old field names">
+    Your layout refers to every field by name, so the new agent must expose the same names as the old one. A mismatch raises no error: the configuration on that field just disappears. Check this before migrating any customization — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses).
   </Step>
   <Step title="Migrate Smart Actions">
     Convert each Smart Action to the new `addAction` API. See [Smart Actions](/guides/migration/from-v1/steps/smart-actions).
@@ -97,16 +89,16 @@ Routing is the one hard constraint. Two agents answering the **same path on the 
     Update segments to use condition trees instead of ORM-specific queries. See [Smart Segments](/guides/migration/from-v1/steps/smart-segments).
   </Step>
   <Step title="Rehearse against your real layout">
-    A branch starts from production's layout, so you can render all of it against the new agent without touching production:
+    A branch starts from production's layout, so you can test the new agent against it without touching production:
 
     ```bash
     forest branch migration-rehearsal --origin production
     ```
 
-    Anything you got wrong in the naming gate shows up here as a dead column or a broken action. This is cheaper than populating a shared environment, and it is usually enough.
+    Naming mistakes show up here as missing columns or broken actions. This is usually enough.
   </Step>
   <Step title="Populate a shared test environment (optional)">
-    Only if your team needs a shared pre-production to click through. A fresh environment starts with a **default** layout, not a copy of production's, so transport it explicitly:
+    Only if your team needs a shared pre-production environment. A new environment starts with the default layout, so copy production's across:
 
     ```bash
     forest layout:pull --env production --team Operations --with-workflows
@@ -114,16 +106,16 @@ Routing is the one hard constraint. Two agents answering the **same path on the 
     forest roles:copy --from production --to node-test
     ```
 
-    `layout:pull` and `layout:apply` resolve **one team at a time**, so run that pair once per team — a shell loop over your team names with `--force` does it unattended. `roles:copy` is environment-level and runs once. Keep the colons: with a space, the command prints help and exits successfully without transporting anything. See the [CLI reference](/reference/cli/overview).
+    Run the two `layout:` commands once per team; `roles:copy` runs once. Keep the colons — see the [CLI reference](/reference/cli/overview#layout-transport).
   </Step>
   <Step title="Test side by side">
-    Run both agents simultaneously, in separate processes. Point the test environment at the new agent and verify behavior matches the legacy one, especially actions, computed fields, and segments.
+    Run both agents simultaneously. Point the test environment at the new agent and verify behavior matches the legacy one, especially actions, computed fields, and segments.
   </Step>
   <Step title="Switch your environment URL">
-    Once you're confident, update your production environment's URL to point at the new agent. That is the whole cutover: same project, same environment, same `FOREST_ENV_SECRET`, and your layout, roles, workspaces and workflows are untouched.
+    Once you're confident, point your production environment's URL at the new agent. The UI configuration is preserved.
   </Step>
   <Step title="Keep the rollback available">
-    Rolling back is the same change reversed — point the environment URL back at the legacy agent, which takes seconds and leaves the layout alone. Keep the legacy agent deployed and running until you no longer want that option.
+    To roll back, point the URL back at the legacy agent. Keep it running until you're sure you won't need to.
   </Step>
   <Step title="Remove legacy packages">
     Once production has been stable on the new agent for a few days, remove the legacy packages and clean up the old code.
@@ -142,10 +134,6 @@ Your Forest UI configuration is **not** affected by the agent migration:
 
 These all live in Forest's UI configuration and continue to work as long as the new agent exposes the same collection and field names.
 
-<Warning>
-All of it is scoped to the **project**, not to the agent. Swapping the agent under an existing environment preserves everything above; standing up a second project preserves none of it, and there is no supported way to copy it across. Migrate into a new environment of the project you already have.
-</Warning>
-
 ## What needs updating
 
 | Surface | Where it changes | Step page |
@@ -156,7 +144,7 @@ All of it is scoped to the **project**, not to the agent. Swapping the agent und
 | Smart Relationships | Code | [Smart Relationships](/guides/migration/from-v1/steps/smart-relationships) |
 | Smart Segments | Code | [Smart Segments](/guides/migration/from-v1/steps/smart-segments) |
 | Route overrides | Reimplemented as hooks | See [Hooks](/product/process/advanced-concepts/hooks/overview) |
-| ORM model callbacks | Depends on the datasource: Sequelize and Mongoose write in bulk and skip per-record callbacks, ActiveRecord runs them as before | See [Hooks](/product/process/advanced-concepts/hooks/overview) |
+| ORM model callbacks | Some stop firing, depending on the datasource | See [Common issues](#common-issues) |
 | Where the agent runs | Decided before you start | [Deployment options](/get-started/connect/architectures/deployment-options) |
 | Environment variables | `FOREST_ENV_SECRET` and `FOREST_AUTH_SECRET` are reused | No change |
 | Database | No change | No change |
@@ -165,24 +153,24 @@ All of it is scoped to the **project**, not to the agent. Swapping the agent und
 
 <AccordionGroup>
   <Accordion title="Field names changed between v1 and v2">
-    Names are case-sensitive, and a Sequelize model mapping a `camelCase` attribute onto a `snake_case` column was published under the attribute name by `forest-express-sequelize`. `datasource-sequelize` still is, so that pairing holds; `datasource-sql` publishes the column instead. Restore the old names with the `rename` option on `addDataSource` (collections) and `renameField` (fields) rather than editing the layout — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses).
+    Restore the old names with `rename` (collections) and `renameField` (fields) rather than editing the layout — see [Datasources](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses).
   </Accordion>
   <Accordion title="My ORM has no datasource (TypeORM, Prisma, Drizzle...)">
-    Sequelize, Mongoose, ActiveRecord and Mongoid have a matching datasource, and so do Django and SQLAlchemy on the Python agent. On Node.js, other ORMs — TypeORM, Prisma on SQL, Drizzle, Knex — connect through [`datasource-sql`](/get-started/connect/data-sources/sql), and Prisma on MongoDB through [`datasource-mongo`](/get-started/connect/data-sources/mongodb). Both read the database itself and build their own model layer, so they cannot read your entities. That works, and it is the normal path, but two consequences follow: your application's model callbacks never fire on a write from Forest, and unless you pre-compute it, the agent pays a full-schema introspection at every boot. Both are covered in [deployment options](/get-started/connect/architectures/deployment-options).
+    Sequelize, Mongoose, ActiveRecord and Mongoid have matching datasources, and so do Django and SQLAlchemy on the Python agent. Other Node.js ORMs connect through [`datasource-sql`](/get-started/connect/data-sources/sql), or [`datasource-mongo`](/get-started/connect/data-sources/mongodb) for MongoDB. Both read the database directly. That works, but your model callbacks won't fire, and the agent introspects the whole schema at every boot unless you [pre-compute it](/get-started/connect/data-sources/sql#pre-compute-the-introspection).
   </Accordion>
   <Accordion title="A model callback stopped firing">
-    Whether a callback fires depends on how the datasource writes:
+    Whether a callback fires depends on the datasource:
 
-    - **`datasource-sequelize`** writes through bulk methods, so per-record hooks such as `beforeCreate` do not run. See [which hooks run](/get-started/connect/data-sources/sequelize#which-hooks-run-on-a-write-from-forest).
-    - **`datasource-mongoose`** writes through `insertMany`, `updateOne` and `updateMany`, which skip `save` middleware.
-    - **The ActiveRecord datasource** writes one record at a time, so `after_save` and the rest fire as they always have. Nothing to migrate.
-    - **The Mongoid datasource** fires them on create and on a single-record edit, but not on a multi-record edit or a delete.
-    - **`datasource-sql`** never loads your models, so no callback of yours runs at all.
+    - **`datasource-sequelize`**: per-record hooks such as `beforeCreate` don't run ([details](/get-started/connect/data-sources/sequelize#which-hooks-run-on-a-write-from-forest)).
+    - **`datasource-mongoose`**: `save` middleware doesn't run.
+    - **ActiveRecord**: all callbacks run as before.
+    - **Mongoid**: callbacks run on create and single-record edits, not on multi-record edits or deletes.
+    - **`datasource-sql`**: none of your callbacks run.
 
-    For a callback that does not fire, triage by one question: **must this fire when an operator edits the record in Forest?** If yes, reimplement it as an [agent hook](/product/process/advanced-concepts/hooks/overview), or have the hook call an internal endpoint in your application. Do not reimplement one that still fires, or it runs twice.
+    If one that no longer fires must run on Forest edits, move it into an [agent hook](/product/process/advanced-concepts/hooks/overview). Don't reimplement one that still fires, or it runs twice.
   </Accordion>
   <Accordion title="Can I reuse my v1 .forestadmin-schema.json?">
-    No — never copy it into the new agent. The file is generated output describing what the agent exposes, and the two generations do not write the same shape. Let the new agent generate its own, then use the old one as a **reference** to diff against while you close the naming gate.
+    Not as the new agent's schema: the two generations write different formats. Keep it to diff against while you check names.
   </Accordion>
   <Accordion title="A Smart Action's form behaves differently">
     The Smart Action form API is more structured in v2. Fields are declared explicitly. See [Smart Actions](/guides/migration/from-v1/steps/smart-actions) for the new form syntax.
