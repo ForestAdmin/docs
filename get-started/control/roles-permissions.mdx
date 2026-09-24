@@ -83,6 +83,22 @@ This workflow ensures sensitive operations (like refunds, data exports, or accou
 
 [Learn more about action approval workflows →](/product/collaborate/approval-workflows)
 
+### Copy permissions across environments
+
+Role permissions are configured per environment. To replicate a permission setup from one environment to another (for example, from staging to production), use **Actions → Copy roles permissions across environments** in **Project Settings → Roles**.
+
+1. Select the environment to copy **from**
+2. Select the environment to copy **to**
+3. Click **Copy**
+
+<Warning>
+All permissions of the destination environment are overridden, for **all roles**.
+</Warning>
+
+The copy runs in the background and can take a few minutes. You receive a notification and an email once it's done, then refresh your browser to see the updated permissions.
+
+This option is only available when your project has at least two remote environments (development environments are not eligible).
+
 ## Conditional permissions
 
 Restrict permissions based on data conditions using filters. For example, operators might trigger refunds under $1,000 without approval, while higher amounts require authorization.
