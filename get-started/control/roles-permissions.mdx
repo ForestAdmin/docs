@@ -83,6 +83,25 @@ This workflow ensures sensitive operations (like refunds, data exports, or accou
 
 [Learn more about action approval workflows →](/product/collaborate/approval-workflows)
 
+### Copy permissions across environments
+
+Role permissions are configured per environment. To replicate a permission setup from one environment to another (for example, from staging to production), use **Actions → Copy roles permissions across environments** in **Project Settings → Roles**.
+
+Requirements:
+- You need the Admin permission level
+- Your project needs at least two remote environments, production included. Development environments aren't eligible, and the **Actions** button doesn't appear until you have two
+- Both environments must have the same schema, otherwise Forest rejects the copy with an error
+
+<Warning>
+The copy overrides all permissions of the destination environment, for **all roles**.
+</Warning>
+
+1. Select the environment to copy **from**
+2. Select the environment to copy **to**
+3. Click **Copy**
+
+The copy runs in the background and can take a few minutes. When it's done, you get an email. Refresh your browser to see the updated permissions.
+
 ## Conditional permissions
 
 Restrict permissions based on data conditions using filters. For example, operators might trigger refunds under $1,000 without approval, while higher amounts require authorization.
