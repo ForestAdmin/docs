@@ -273,6 +273,100 @@ The validation above is lenient on purpose. The v2 agents reject the same declar
 
 The interface now sends the agent the exact fields it displays, on lists, records and related data. Records (`show`) used to load every column and every to-one relation; they now load only what is displayed. Nothing is required on your side: this is enabled by the capabilities your agent announces.
 
+## Adapt your application code to get the full benefit
+
+<Tip>
+The upgrade works without touching your code. The changes below are optional. They let the agent select fewer columns and load relations **once per page instead of once per row**. Start with the collections behind your largest lists and CSV exports, and apply them one collection at a time.
+</Tip>
+
+<Steps>
+<Step title="Declare dependencies: on your smart fields">
+
+A smart field without `dependencies:` makes every request that displays it fall back to `SELECT *`. If its getter reaches a relation, it also runs one query per row. Declare the columns and relation paths the getter reads:
+
+<CodeGroup>
+
+```ruby Before
+field :company_name, type: 'String' do
+  object.company.name
+end
+```
+
+```ruby After
+field :company_name, type: 'String', dependencies: ['company:name'] do
+  object.company.name
+end
+```
+
+</CodeGroup>
+
+Once a field is declared, run [check 4](#4-check-model-code-that-reads-columns-the-page-does-not-display) again on its collection, then look for `read the "..." column without declaring it` warnings in your logs: each one names a column that is missing from the declaration.
+
+</Step>
+<Step title="Replace lookup smart relationships with real associations">
+
+A [smart relationship](/legacy/ruby-agent/reference-guide/models/relationships/create-a-smart-relationship/overview) that only looks a record up by key runs its block once per row. The agent cannot optimize it. When the relation can be described by a key, declare a real `belongs_to` or `has_one` on the model instead. The agent then joins it, or preloads it for the whole page, and serves it like any other relation (filter, sort, related data).
+
+<CodeGroup>
+
+```ruby Before (lib/forest_liana/collections/car.rb)
+class Forest::Car
+  include ForestLiana::Collection
+
+  collection :Car
+
+  belongs_to :pilot, reference: 'Driver.id' do
+    Driver.find_by(firstname: object.model)
+  end
+end
+```
+
+```ruby After (app/models/car.rb)
+class Car < GarageRecord
+  belongs_to :pilot, class_name: 'Driver',
+             primary_key: :firstname, foreign_key: :model,
+             optional: true
+end
+```
+
+</CodeGroup>
+
+This works even when the target lives in **another database**. Such a relation cannot be joined, so the agent preloads it: on a list of 100 records, it runs 2 queries instead of 101. Use `primary_key:` when the key is not the target's primary key, and `optional: true` when the foreign key can be empty. Remove the smart relationship declaration so that only the real association is left, then restart the agent to regenerate the schema.
+
+{/* TODO: set the version that ships ForestAdmin/forest-rails#816 */}
+<Info>
+The preload of cross-database `belongs_to` and `has_one` relations on lists, CSV exports and Rails 6.1 related lists ships in forest_liana **9.22.x**. On earlier 9.22 versions, these relations still load once per row.
+</Info>
+
+</Step>
+<Step title="Keep the foreign key in association scopes">
+
+An association whose scope narrows its `select` must keep the key that links it to its owner. Otherwise it cannot be preloaded (see [check 6](#6-check-the-associations-you-will-preload)):
+
+<CodeGroup>
+
+```ruby Before
+has_many :notes, -> { select(:content) }
+```
+
+```ruby After
+has_many :notes, -> { select(:content, :customer_id) }
+```
+
+</CodeGroup>
+
+</Step>
+<Step title="Disable the count of your largest collections">
+
+If you overrode a count controller to call `deactivate_count_response` on a whole collection, replace the override with the collection option:
+
+```ruby
+collection :Order, countable: false
+```
+
+</Step>
+</Steps>
+
 ## If you plan to migrate to a v2 agent later
 
 The features of this release exist on the v2 agents (`@forestadmin/agent` for Node.js, `forest_admin_agent` for Ruby) with the same option names and the same 403 messages, so what you configure here carries over. Two behaviors are **more lenient on this v1 release than on v2**. If a migration to v2 is on your roadmap, writing your customizations the strict way now saves you a boot failure later.
@@ -329,4 +423,4 @@ Search your agent logs for `Forest 🌳🌳🌳` after the first requests in eac
 3. Decide whether you set `skip_relation_read_permissions` for the transition, and record when you will remove it.
 4. Deploy to staging, then production, following [Push your new version to production](/legacy/ruby-agent/how-tos/maintain/push-your-new-version-to-production).
 5. Watch the logs above and the 403/422/500/503 rate of your agent for a few days.
-6. Adopt `dependencies:` and `countable: false` on your heaviest collections once the upgrade is stable.
+6. Once the upgrade is stable, [adapt your application code](#adapt-your-application-code-to-get-the-full-benefit) on your heaviest collections.
