@@ -140,11 +140,11 @@ ForestLiana.workflow_executor_url = ENV['WORKFLOW_EXECUTOR_URL']
 
 </CodeGroup>
 
-<Note>The Python agents (`agent-python`, `django-forestadmin`) don't support the workflow executor yet.</Note>
+<Note>The Python agents (`agent-python`, `django-forestadmin`) don't support Forest Runtime yet.</Note>
 
 If the workflow executor URL is left unset, the agent returns `404` on those routes and Forest Runtime never receives any work. When the agent and Forest Runtime run on separate hosts, use an internal address the agent can reach on Forest Runtime's HTTP port (default `3400`).
 
-**2. Run the executor** as a Docker image or via the CLI:
+**2. Run Forest Runtime** as a Docker image or via the CLI:
 
 <CodeGroup>
 
@@ -156,7 +156,7 @@ docker run -d \
   -e AGENT_URL="http://host.docker.internal:3351" \
   -e DATABASE_URL="postgres://user:pass@host.docker.internal:5432/mydb" \
   -p 3400:3400 \
-  ghcr.io/forestadmin/workflow-executor:latest
+  ghcr.io/forestadmin/runtime:latest
 ```
 
 ```bash npx
@@ -178,6 +178,10 @@ npx @forestadmin/workflow-executor
 
 <Note>
   When Forest Runtime runs in Docker and your agent runs on the host machine, use `host.docker.internal` instead of `localhost` in `AGENT_URL` and `DATABASE_URL`. On Linux Docker Engine that hostname doesn't exist by default, so the `--add-host=host.docker.internal:host-gateway` flag above is required to resolve it (on Docker Desktop it's already provided and the flag is harmless).
+</Note>
+
+<Note>
+  The image was previously published as `ghcr.io/forestadmin/workflow-executor`. That name is still published, so existing deployments keep working — new ones should use `ghcr.io/forestadmin/runtime`. The npm package name is unchanged.
 </Note>
 
 ### Network requirements
