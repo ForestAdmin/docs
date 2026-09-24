@@ -97,7 +97,10 @@ All permissions of the destination environment are overridden, for **all roles**
 
 The copy runs in the background and can take a few minutes. You receive a notification and an email once it's done, then refresh your browser to see the updated permissions.
 
-This option is only available when your project has at least two remote environments (development environments are not eligible).
+Requirements:
+- Only admins can copy permissions
+- Your project must have at least two remote environments (production included). Development environments are not eligible
+- Both environments must have the same schema, otherwise the copy fails
 
 ## Conditional permissions
 
