@@ -28,6 +28,7 @@ This upgrade unlocks the following features:
 - Lists select only the columns the page actually displays, instead of `SELECT *`.
 - Smart fields can declare the columns and relations they need with a new `dependencies:` option, removing N+1 queries on lists, related lists and CSV exports.
 - A collection can disable its record count with `countable: false`, without overriding a controller.
+- `belongs_to` and `has_one` relations to **another database** are preloaded once per page on lists and CSV exports (and on related lists under Rails 6.1), instead of once per row.
 - The agent announces its capabilities to the Forest Admin interface, which enables the projection features above and lets the interface adapt to what your agent supports.
 
 No database migration, generator or configuration file change is required. The minimum Rails version is unchanged (Rails 6.1 to 8.1 are supported).
@@ -40,14 +41,17 @@ As for any dependency upgrade, it's very important to **test this upgrade in you
 
 If you are upgrading from an older major version, please make sure you have also read the previous upgrade notes ([v9](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v9), [v8](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v8), [v7](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v7), ...).
 
-To upgrade, **update the version in your Gemfile** to at least 9.22.1:
+To upgrade, **update the version in your Gemfile** to at least 9.22.2:
 
 ```ruby
-gem 'forest_liana', '~> 9.22.1'
+gem 'forest_liana', '~> 9.22.2'
 ```
 
 <Warning>
-Do not stay on 9.22.0: a smart field declaring a multi-hop `dependencies:` path (such as `address:city:name`) answers **500** on the whole list when the list also displays the first relation of the path. 9.22.1 fixes it.
+Do not stay on an earlier 9.22 version:
+
+- On **9.22.0**, a smart field declaring a multi-hop `dependencies:` path (such as `address:city:name`) answers **500** on the whole list when the list also displays the first relation of the path. Fixed in 9.22.1.
+- On **9.22.0 and 9.22.1**, a `belongs_to` or `has_one` whose target lives in another database is loaded once per row on lists and CSV exports. A cross-database relation not named after its target model can also be offered as filterable, and filtering on it answers **500**. Fixed in 9.22.2.
 </Warning>
 
 Then run:
@@ -342,7 +346,7 @@ Your models are not modified. However, the requests that display the field now s
 </Step>
 <Step title="Replace lookup smart relationships with real associations — Forest customization and application code">
 
-A [smart relationship](/legacy/ruby-agent/reference-guide/models/relationships/create-a-smart-relationship/overview) cannot declare what it reads, so a request that displays one falls back to `SELECT *` for the whole page, and its block runs once per row. When the relation can be described by a foreign key, declare a real `belongs_to` or `has_one` on the model instead. Every list that displays it then gets column selection back, the agent loads the relation with the page's query instead of one query per row, and it can be filtered and sorted.
+A [smart relationship](/legacy/ruby-agent/reference-guide/models/relationships/create-a-smart-relationship/overview) cannot declare what it reads, so a request that displays one falls back to `SELECT *` for the whole page, and its block runs once per row. When the relation can be described by a foreign key, declare a real `belongs_to` or `has_one` on the model instead. Every list that displays it then gets column selection back, and the agent loads the relation for the whole page instead of one query per row.
 
 This step touches both kinds of code: the smart relationship is **removed** from your Forest customization, and the association is **added** to your application model.
 
@@ -378,6 +382,23 @@ end
 
 Restart the agent afterwards to regenerate the schema.
 
+The association also works when its key is not the target's primary key, or when the target lives in **another database**:
+
+```ruby After — app/models/customer.rb (application code)
+class Customer < ApplicationRecord
+  belongs_to :account_manager, class_name: 'Employee',
+             primary_key: :email, foreign_key: :manager_email,
+             optional: true
+end
+```
+
+How the agent loads it depends on where the target lives:
+
+| Target | Loaded | Filter and sort |
+| --- | --- | --- |
+| Same database | Joined with the list query | Yes |
+| Another database | Preloaded in one extra query per page: 2 queries instead of 101 on a list of 100 records | No: a relation to another database cannot be joined |
+
 <Warning>
 The association becomes part of your model, so the rest of your application sees it too:
 
@@ -385,12 +406,6 @@ The association becomes part of your model, so the rest of your application sees
 - Check that the name you choose does not collide with an existing method of the model.
 - If your block looked the record up on a nullable column, a record with an empty key used to show the first target whose column is `NULL` (`find_by(column: nil)`). The association shows no related record instead. This is the correct result, but these rows change.
 </Warning>
-
-<Info>
-Keep this step to associations whose target lives in the **same database** and whose key is the target's primary key. On forest_liana 9.22.1, a relation to another database, or one declaring a `primary_key:` of its own, is still loaded once per row.
-</Info>
-
-{/* TODO: once ForestAdmin/forest-rails#816 is released, document the preload of cross-database belongs_to / has_one relations and of relations declaring a primary_key:, with its version. A cross-database relation is not filterable or sortable (SchemaUtils.disable_filter_and_sort_if_cross_db!). */}
 
 </Step>
 <Step title="Keep the foreign key in association scopes — application code">
@@ -481,6 +496,7 @@ On this release, a smart field `search:` lambda runs on every search without any
 | Record (`show`) | Every column and to-one relation | Only the displayed fields |
 | Search matching no real column | Whole table | No records |
 | Plain searched count | Joined related tables | Searches the same columns as the list |
+| Cross-database `belongs_to` / `has_one` on lists and CSV exports (and related lists on Rails 6.1) | One query per row | Preloaded once per page (9.22.2) |
 | Smart field reading an undeclared column | Read from `SELECT *` | Reloaded once with a warning; never a 500 |
 | `in` filter on a Rails `enum` column with several values | Matched nothing | Matches each value |
 | `_internal/capabilities` route | Absent (404) | Served |
@@ -498,6 +514,8 @@ Search your agent logs for `Forest 🌳🌳🌳` after the first requests in eac
 - `Field "..." of the "..." collection read the "..." column without declaring it in dependencies: — reloaded the record to serve it, at the cost of an extra query. Add it to the field's dependencies: to avoid this.` — add the column to `dependencies:`.
 - `Cannot retrieve the "..." value of the "..." collection because of an internal error in the getter implementation: ...` — the getter could not be served (it raised again after a reload, or read a column of a relation that a reload cannot restore); its value is served as `nil`.
 - `The "..." dependency of the "..." collection cannot be preloaded ("..." has an instance-dependent scope, which Rails 6.1.x cannot preload) — the relation is loaded once per record instead ...` — expected on Rails 6.1; upgrade Rails to benefit from the preload.
+- `The "..." relation of the "..." collection lives in another database and cannot be preloaded (its "..." key is not in the projected select) — ...` — the cross-database relation shows as empty. Report it to Forest support with the collection and relation names.
+- `The "..." relation of the "..." collection cannot be preloaded (its "..." key is not in the query's select) — ...` — a segment or scope narrows the `select` of the collection and drops the key the relation reads. Add that key to the `select`.
 
 ## Rollout recommendation
 
