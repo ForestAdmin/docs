@@ -98,7 +98,6 @@
                 "pages": [
                   "get-started/connect/integrations/overview",
                   "get-started/connect/integrations/mcp-servers",
-                  "get-started/connect/integrations/slack-mcp",
                   "product/embed/bff",
                   "product/embed/zendesk",
                   "product/embed/n8n"

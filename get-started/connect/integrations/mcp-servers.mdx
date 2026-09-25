@@ -41,7 +41,7 @@ Connect any of these from **Project Settings → Integrations → Add MCP Server
 ### Communication
 
 <Columns cols={2}>
-  <Card title="Slack" href="/get-started/connect/integrations/slack-mcp">Messages, channels, users. See the setup guide.</Card>
+  <Card title="Slack">Messages, channels, users.</Card>
 </Columns>
 
 ### Analytics & data
@@ -99,3 +99,7 @@ If a tool isn't in the list above, connect any MCP server by URL:
 5. Save your configuration.
 
 Learn more about building and hosting MCP servers in the [Claude MCP documentation](https://docs.claude.com/en/docs/agents-and-tools/remote-mcp-servers).
+
+## OAuth and refresh tokens
+
+Workflow steps run on [Forest Runtime](/product/process/workflows/forest-runtime), which needs to renew a connector's access on its own. An OAuth connector therefore works only if the provider issues a **refresh token**. Some providers issue one only when a setting is turned on in your OAuth app, so check the provider's documentation before you connect. Without a refresh token, the connector is created but can't be used, and connecting again doesn't help until the setting is on.
