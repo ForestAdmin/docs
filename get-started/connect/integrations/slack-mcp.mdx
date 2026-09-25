@@ -1,0 +1,68 @@
+---
+title: "Slack MCP Connector"
+description: "Set up a Slack app so the Slack MCP connector connects, stays connected, and loads its tools in your workflows."
+---
+
+The Slack connector uses Slack's official MCP server (`https://mcp.slack.com/mcp`) and authenticates with OAuth through **a Slack app you own**. Slack needs three settings on that app before Forest can keep a working connection: **MCP access**, **token rotation**, and, in workspaces that require it, **admin approval**. Configure all three before you connect the app in Forest.
+
+<Note>
+  Slack only allows internal apps (built for your own workspace or organization) and apps published in the Slack Marketplace to use its MCP server. Unlisted distributed apps are rejected.
+</Note>
+
+## Set up the Slack app
+
+<Steps>
+  <Step title="Create a dedicated Slack app">
+    From [api.slack.com/apps](https://api.slack.com/apps), click **Create New App** and create it **from scratch** in your workspace.
+
+    Use a new app for Forest rather than one your other integrations already use: the token rotation you turn on below can't be turned off again, and it changes how every integration of that app must handle its tokens.
+  </Step>
+  <Step title="Add the Forest redirect URL">
+    In **OAuth & Permissions → Redirect URLs**, add:
+
+    ```
+    https://app.forestadmin.com/mcp-oauth-redirect
+    ```
+
+    Use this URL even if you access Forest through a custom domain.
+  </Step>
+  <Step title="Add the user token scopes">
+    Still in **OAuth & Permissions**, under **User Token Scopes**, add the scopes for the Slack tools you want your workflows to use, for example `chat:write` to send messages or `search:read.public` to search public channels. Slack lists the scope each tool needs in its [MCP server documentation](https://docs.slack.dev/ai/slack-mcp-server/).
+  </Step>
+  <Step title="Turn on token rotation">
+    In **OAuth & Permissions**, under **Advanced token security via token rotation**, click **Opt in**. For an app published in the Slack Marketplace, the setting is under **Published App Settings**.
+
+    Without token rotation, Slack issues no refresh token and Forest can't store the connection.
+
+    <Warning>
+      Slack doesn't let you turn token rotation off once it's on. See Slack's [Using token rotation](https://docs.slack.dev/authentication/using-token-rotation).
+    </Warning>
+  </Step>
+  <Step title="Enable MCP access">
+    In **Features → Agents & AI Apps**, turn on **Model Context Protocol**.
+
+    Without it, Slack refuses the connection with *"App is not enabled for Slack MCP server access"*.
+  </Step>
+  <Step title="Get the app approved and installed">
+    If your workspace requires admin approval for apps, have a workspace admin approve the app and install it **before** you connect it in Forest.
+
+    Otherwise, Slack's consent screen stops at *"request sent for review"* and never returns to Forest. Forest closes the consent window after two minutes with an OAuth timeout, and approval usually takes longer than that. Once the app is approved, connecting again succeeds.
+  </Step>
+  <Step title="Copy the credentials">
+    In **Basic Information → App Credentials**, copy the **Client ID** and the **Client Secret**.
+  </Step>
+</Steps>
+
+## Connect it in Forest
+
+1. Go to **Project Settings → Integrations → Add MCP Server**.
+2. Select **Slack**.
+3. Paste the **Client ID** and **Client Secret** from your Slack app.
+4. Authorize the app in the Slack window that opens.
+5. Confirm the exposed tools, then save.
+
+The tools list loads once the connection succeeds. If it doesn't, check the three settings above: MCP access, token rotation and approval.
+
+## Replacing a connector
+
+If you delete the Slack connector and create a new one, for example to switch to a new Slack app, workflow steps that used the deleted connector don't move to the new one on their own. Edit each of those steps and select the new connector.
