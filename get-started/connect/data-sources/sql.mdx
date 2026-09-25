@@ -39,6 +39,16 @@ This requires database credentials with access to `information_schema`. Ownershi
 Introspection is supported for PostgreSQL, MySQL, MariaDB, and Microsoft SQL Server.
 </Info>
 
+### What it costs at boot
+
+Introspection reads the whole schema on every boot:
+
+- Every table is read, whatever `include` and `exclude` say. Those only hide collections after the scan.
+- Each table costs two catalog queries, queued behind the connection pool (five connections unless you set [`pool`](#connection-pooling)).
+- Model building then runs on the event loop of the process hosting the agent.
+
+On a large schema, every boot and redeploy puts a burst of load on your production database. [Pre-computing the introspection](#pre-compute-the-introspection) removes it. Until you do, bring new back-ends up outside busy hours.
+
 ## Configuration options
 
 ### Connection URI
@@ -190,34 +200,46 @@ createSqlDataSource({
 
 This is useful when your application uses soft deletes (e.g., `deleted_at` column) and you want to manage deleted records in Forest.
 
-## Caching introspection
+## Pre-compute the introspection
 
-The schema introspection is JSON serializable. Cache it to a file:
+Generate the introspection with `introspect()`, commit the file, and pass it to `createSqlDataSource` to skip the scan at boot. Your runtime credentials then no longer need `information_schema` access. It's worth doing on a wide schema or with frequent deploys. On a small schema, the default is fine.
 
-```javascript
-import { createSqlDataSource } from '@forestadmin/datasource-sql';
-import { writeFileSync, readFileSync } from 'fs';
+<Steps>
+  <Step title="Generate the file">
+    Run this on every migration, in the same CI step. It needs no time window:
 
-// Option 1: Generate and cache schema
-const dataSource = await createSqlDataSource({
-  uri: 'postgresql://user:pass@host:5432/db'
-});
+    ```javascript
+    // scripts/introspect.mjs
+    import { introspect } from '@forestadmin/datasource-sql';
+    import { writeFileSync } from 'fs';
 
-writeFileSync('./schema-cache.json', JSON.stringify(dataSource.schema));
+    // Same connection options as your createSqlDataSource call, schema included.
+    const introspection = await introspect(process.env.DATABASE_URL);
 
-// Option 2: Load from cache (faster startup, works offline)
-const schema = JSON.parse(readFileSync('./schema-cache.json', 'utf8'));
-const dataSource = createSqlDataSource({
-  uri: 'postgresql://user:pass@host:5432/db',
-  schema: schema
-});
-```
+    writeFileSync('./introspection.json', JSON.stringify(introspection, null, 2));
+    ```
+  </Step>
+  <Step title="Boot from it">
+    ```javascript
+    import { createSqlDataSource } from '@forestadmin/datasource-sql';
+    import { readFileSync } from 'fs';
 
-**Benefits:**
-- Faster back-end startup (no introspection delay)
-- Work offline or with restricted credentials
-- Separate introspection and runtime credentials
-- Version control your schema
+    const introspection = JSON.parse(readFileSync('./introspection.json', 'utf8'));
+
+    agent.addDataSource(
+      createSqlDataSource(process.env.DATABASE_URL, { introspection })
+    );
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+Nothing checks the file against your database. After a migration, a new column stays hidden and a dropped one is still exposed until you regenerate. A [schema drift check](/get-started/deploy#fail-ci-when-the-committed-schema-drifts) won't catch it either, since it reads the same file.
+</Warning>
+
+<Note>
+`introspection` goes in the **second** argument. The `schema` key in the first selects the Postgres schema (`public` by default).
+</Note>
 
 ## Live Query support
 

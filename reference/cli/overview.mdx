@@ -79,6 +79,40 @@ forest init
 | `forest projects` | List all projects |
 | `forest projects:get` | Get a project's configuration |
 
+### Layout transport
+
+Copy a layout between environments through a file, for example to populate a new environment, which starts with the default layout.
+
+| Command | Description |
+|---|---|
+| `forest layout:pull` | Pull one environment's layout into a `forest-layout.json` file |
+| `forest layout:apply <file>` | Apply a layout file to an environment as JSON-Patch changes |
+| `forest layout:patch` | Send layout operations directly, without a pull/apply round trip |
+
+```bash
+forest layout:pull --env production --team Operations --with-workflows
+forest layout:apply forest-layout.json --env staging --team Operations --with-workflows --force
+```
+
+Each run covers one environment and one team, so repeat it per team (`--force` skips the confirmation). `--with-workflows` includes workflow definitions.
+
+<Warning>
+Keep the colon: `forest layout pull`, with a space, prints help and exits successfully without doing anything.
+</Warning>
+
+### Roles and teams
+
+| Command | Description |
+|---|---|
+| `forest roles:copy` | Copy role permissions from one environment to another |
+| `forest teams:copy-layout` | Copy one team's layout onto another in the same project, overwriting it |
+
+```bash
+forest roles:copy --from production --to staging
+```
+
+`roles:copy` runs once per pair of environments, however many teams you have.
+
 ### Schema
 
 | Command | Description |

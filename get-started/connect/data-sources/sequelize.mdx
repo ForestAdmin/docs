@@ -39,9 +39,27 @@ agent.addDataSource(createSequelizeDataSource(sequelize));
 The Sequelize datasource automatically preserves your ORM configuration:
 
 - **Sequelize scopes** - Mapped to Forest segments
-- **Sequelize hooks** - Continue to execute as configured
+- **Sequelize hooks** - Bulk hooks run; per-record hooks do not (see below)
 - **Associations** - Relationships are automatically recognized
-- **Validations** - Model validations are enforced
+- **Validations** - Enforced on edit, skipped on create (see below)
+
+### Which hooks run on a write from Forest
+
+Forest writes through `bulkCreate`, `update` and `destroy` without `individualHooks`, so only bulk hooks fire:
+
+| Operation in Forest | Hooks that run | Hooks that do **not** run | Validations |
+| --- | --- | --- | --- |
+| Create a record | `beforeBulkCreate`, `afterBulkCreate` | `beforeCreate`, `afterCreate` | Skipped |
+| Edit a record | `beforeBulkUpdate`, `afterBulkUpdate` | `beforeUpdate`, `afterUpdate` | Run |
+| Delete a record | `beforeBulkDestroy`, `afterBulkDestroy` | `beforeDestroy`, `afterDestroy` | n/a |
+
+<Warning>
+A per-record hook that enforces an invariant, such as writing an audit row, won't fire on a Forest edit. Move it into an [agent hook](/product/process/advanced-concepts/hooks/overview).
+</Warning>
+
+<Note>
+The [SQL datasource](/get-started/connect/data-sources/sql) never loads your models, so none of your hooks or validations apply to it.
+</Note>
 
 ## Live Query support
 

@@ -33,6 +33,10 @@ const agent = createAgent(options: AgentOptions): Agent;
 |--------|------|---------|-------------|
 | `prefix` | string | `''` | Path the Forest routes are mounted on (e.g. `/api/v1`). Only `-`, `~`, `/`, letters, digits and `_` are allowed. |
 
+<Note>
+Changing `prefix` changes the URL Forest calls, so update the environment's URL in Forest to match. Two agents on one host need different prefixes — see [Running two agents at once](/get-started/connect/architectures/deployment-options#running-two-agents-at-once).
+</Note>
+
 #### Schema and typings
 
 | Option | Type | Default | Description |

@@ -20,10 +20,16 @@ This means you can iterate on your back-office configuration safely, then push c
 ## Deploy your back-end
 
 <Steps>
+  <Step title="Decide where it runs">
+    On Node.js, run it as its own service by default. On Ruby, it runs inside your application. See [Deployment options](/get-started/connect/architectures/deployment-options).
+  </Step>
+
   <Step title="Deploy your back-end to your infrastructure">
     Host your Forest back-end on any platform that can run a Node.js application (AWS, Heroku, GCP, your own servers, etc.).
 
     Make sure to set the environment variables (`FOREST_ENV_SECRET`, `FOREST_AUTH_SECRET`, `DATABASE_URL`) in your hosting platform.
+
+    On a SQL datasource with a wide schema, consider [pre-computing the introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection) so restarts don't re-scan it.
   </Step>
 
   <Step title="Create a production environment in Forest">
@@ -86,6 +92,10 @@ Because the file is generated locally, someone can change a data source or custo
     ```
   </Tab>
 </Tabs>
+
+<Warning>
+With a [pre-computed introspection](/get-started/connect/data-sources/sql#pre-compute-the-introspection), this check reads that file instead of the database, so it can't catch a stale one. Regenerate the introspection on every migration.
+</Warning>
 
 ### Generate the schema at build time
 
