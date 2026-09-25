@@ -18,12 +18,17 @@ Please be aware that while Forest make every effort to ensure that our platform 
 Please follow the recommended procedure to upgrade your agent version by following [this note](/legacy/ruby-agent/how-tos/maintain/push-your-new-version-to-production).
 </Info>
 
+<Note>
+This note applies only to the **v1 Rails agent, the `forest_liana` gem**. If your project runs the v2 Ruby agent (`forest_admin_rails` / `forest_admin_agent` gems), it does not apply to you.
+</Note>
+
 This upgrade unlocks the following features:
 
 - Role permissions are enforced on **related data**: fields, filters, sorts and searches that reach a collection a role cannot read are refused or redacted, the same way they are on Node.js agents.
 - Lists select only the columns the page actually displays, instead of `SELECT *`.
 - Smart fields can declare the columns and relations they need with a new `dependencies:` option, removing N+1 queries on lists, related lists and CSV exports.
 - A collection can disable its record count with `countable: false`, without overriding a controller.
+- `belongs_to` and `has_one` relations to **another database** are preloaded once per page on lists and CSV exports (and on related lists under Rails 6.1), instead of once per row.
 - The agent announces its capabilities to the Forest Admin interface, which enables the projection features above and lets the interface adapt to what your agent supports.
 
 No database migration, generator or configuration file change is required. The minimum Rails version is unchanged (Rails 6.1 to 8.1 are supported).
@@ -36,7 +41,20 @@ As for any dependency upgrade, it's very important to **test this upgrade in you
 
 If you are upgrading from an older major version, please make sure you have also read the previous upgrade notes ([v9](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v9), [v8](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v8), [v7](/legacy/ruby-agent/how-tos/maintain/upgrade-notes-rails/upgrade-to-v7), ...).
 
-To upgrade, **update the version in your Gemfile**, then run:
+To upgrade, **update the version in your Gemfile** to at least 9.22.2:
+
+```ruby
+gem 'forest_liana', '~> 9.22.2'
+```
+
+<Warning>
+Do not stay on an earlier 9.22 version:
+
+- On **9.22.0**, a smart field declaring a multi-hop `dependencies:` path (such as `address:city:name`) answers **500** on the whole list when the list also displays the first relation of the path. Fixed in 9.22.1.
+- On **9.22.0 and 9.22.1**, a `belongs_to` or `has_one` whose target lives in another database is loaded once per row on lists and CSV exports. A cross-database relation not named after its target model can also be offered as filterable, and filtering on it answers **500**. Fixed in 9.22.2.
+</Warning>
+
+Then run:
 
 ```bash
 bundle install
@@ -168,13 +186,14 @@ Two search behaviors change:
 
 ### 6. Check the associations you will preload
 
-The new `dependencies:` option (see [New options](#new-options-you-can-adopt)) preloads relations instead of loading them once per row. One shape of association is incompatible with preloading: an association whose own scope narrows its select and drops the key linking it to its owner, such as:
+The new `dependencies:` option (see [New options](#new-options-you-can-adopt)) preloads relations instead of loading them once per row. One shape of association is incompatible with preloading: an association whose own scope narrows its select and drops the column the preload matches records on. That column is in the target table: the foreign key for a `has_many` or `has_one`, the target's primary key (`id`, or the `primary_key:` option) for a `belongs_to`. For example:
 
 ```ruby
 has_many :notes, -> { select(:content) }
+belongs_to :company, -> { select(:name) }
 ```
 
-It works when loaded lazily and raises `ActiveModel::MissingAttributeError` when preloaded. Do not name such an association in a `dependencies:` path, or add the foreign key to its `select`.
+It works when loaded lazily and raises `ActiveModel::MissingAttributeError` when preloaded. Do not name such an association in a `dependencies:` path, or add that column to its `select`.
 
 ### 7. Check your route and controller overrides
 
@@ -273,6 +292,182 @@ The validation above is lenient on purpose. The v2 agents reject the same declar
 
 The interface now sends the agent the exact fields it displays, on lists, records and related data. Records (`show`) used to load every column and every to-one relation; they now load only what is displayed. Nothing is required on your side: this is enabled by the capabilities your agent announces.
 
+## Adapt your code to get the full benefit
+
+<Info>
+This section applies to the **v1 Rails agent only**: the `forest_liana` gem, from 9.22. It does not apply to the v2 Ruby agent (`forest_admin_rails` / `forest_admin_agent` gems), which declares the same options with its own syntax.
+</Info>
+
+<Tip>
+The upgrade works without touching your code. The changes below are optional. They let the agent select fewer columns and load relations **once per page instead of once per row**. Start with the collections behind your largest lists and CSV exports, and apply them one collection at a time.
+</Tip>
+
+Each step names the code it touches:
+
+| Label | Files | Scope |
+| --- | --- | --- |
+| **Forest customization** | `lib/forest_liana/collections/*.rb`, `lib/forest_liana/controllers/*.rb`, the `namespace :forest` routes | Read by the agent only. A change affects Forest and nothing else. |
+| **Application code** | `app/models/*.rb` | Shared by your whole Rails application. A change also affects your own controllers, jobs, validations and tests: review it like any other change to your models. |
+
+<Steps>
+<Step title="Declare dependencies: on your smart fields — Forest customization">
+
+A smart field without `dependencies:` makes every request that displays it fall back to `SELECT *`. If its getter reaches a relation, it also runs one query per row. Declare the columns and relation paths the getter reads:
+
+<CodeGroup>
+
+```ruby Before — lib/forest_liana/collections/customer.rb
+class Forest::Customer
+  include ForestLiana::Collection
+
+  collection :Customer
+
+  field :company_name, type: 'String' do
+    object.company.name
+  end
+end
+```
+
+```ruby After — lib/forest_liana/collections/customer.rb
+class Forest::Customer
+  include ForestLiana::Collection
+
+  collection :Customer
+
+  field :company_name, type: 'String', dependencies: ['company:name'] do
+    object.company.name
+  end
+end
+```
+
+</CodeGroup>
+
+Your models are not modified. However, the requests that display the field now select only the columns they need: run [check 4](#4-check-model-code-that-reads-columns-the-page-does-not-display) again on the collection, since model callbacks reading other columns can start to fail. Then look for `read the "..." column without declaring it` warnings in your logs: each one names a column that is missing from the declaration.
+
+</Step>
+<Step title="Replace lookup smart relationships with real associations — Forest customization and application code">
+
+A [smart relationship](/legacy/ruby-agent/reference-guide/models/relationships/create-a-smart-relationship/overview) cannot declare what it reads, so a request that displays one falls back to `SELECT *` for the whole page, and its block runs once per row. When the relation can be described by a foreign key, declare a real `belongs_to` or `has_one` on the model instead. Every list that displays it then gets column selection back, and the agent loads the relation for the whole page instead of one query per row.
+
+This step touches both kinds of code: the smart relationship is **removed** from your Forest customization, and the association is **added** to your application model.
+
+<CodeGroup>
+
+```ruby Before — lib/forest_liana/collections/customer.rb (Forest customization)
+class Forest::Customer
+  include ForestLiana::Collection
+
+  collection :Customer
+
+  belongs_to :account_manager, reference: 'Employee.id' do
+    Employee.find_by(id: object.account_manager_id)
+  end
+end
+```
+
+```ruby After — lib/forest_liana/collections/customer.rb (Forest customization)
+class Forest::Customer
+  include ForestLiana::Collection
+
+  collection :Customer
+end
+```
+
+```ruby After — app/models/customer.rb (application code)
+class Customer < ApplicationRecord
+  belongs_to :account_manager, class_name: 'Employee', optional: true
+end
+```
+
+</CodeGroup>
+
+Restart the agent afterwards to regenerate the schema.
+
+The association also works when its key is not the target's primary key, or when the target lives in **another database**:
+
+```ruby After — app/models/customer.rb (application code)
+class Customer < ApplicationRecord
+  belongs_to :account_manager, class_name: 'Employee',
+             primary_key: :email, foreign_key: :manager_email,
+             optional: true
+end
+```
+
+How the agent loads it depends on where the target lives:
+
+| Target | Loaded | Filter and sort |
+| --- | --- | --- |
+| Same database | Joined with the list query | Yes |
+| Another database | Preloaded in one extra query per page: 2 queries instead of 101 on a list of 100 records | No: a relation to another database cannot be joined |
+
+<Warning>
+The association becomes part of your model, so the rest of your application sees it too:
+
+- Since Rails 5, a `belongs_to` is **required by default**. Without `optional: true`, saving a record whose foreign key is empty or matches no target fails validation everywhere in your application, not only in Forest.
+- Check that the name you choose does not collide with an existing method of the model.
+- If your block looked the record up on a nullable column, a record with an empty key used to show the first target whose column is `NULL` (`find_by(column: nil)`). The association shows no related record instead. This is the correct result, but these rows change.
+</Warning>
+
+</Step>
+<Step title="Keep the matching key in association scopes — application code">
+
+An association whose scope narrows its `select` must keep the column the preload matches records on: the foreign key for a `has_many` or `has_one`, the target's primary key (`id`, or the `primary_key:` option) for a `belongs_to`. Otherwise, as soon as a `dependencies:` path names it, the preload raises `ActiveModel::MissingAttributeError` and the request answers **500** (see [check 6](#6-check-the-associations-you-will-preload)):
+
+<CodeGroup>
+
+```ruby Before — app/models/customer.rb (application code)
+class Customer < ApplicationRecord
+  has_many :notes, -> { select(:content) }
+  belongs_to :company, -> { select(:name) }
+end
+```
+
+```ruby After — app/models/customer.rb (application code)
+class Customer < ApplicationRecord
+  has_many :notes, -> { select(:content, :customer_id) }
+  belongs_to :company, -> { select(:id, :name) }
+end
+```
+
+</CodeGroup>
+
+This change applies to every use of the association in your application. It only adds a column to the query, but review it like any other change to your models.
+
+</Step>
+<Step title="Disable the count of your largest collections — Forest customization">
+
+If you overrode the count action of a whole collection to call `deactivate_count_response`, replace the override with the collection option:
+
+<CodeGroup>
+
+```ruby Before — lib/forest_liana/controllers/orders_controller.rb (Forest customization)
+class Forest::OrdersController < ForestLiana::ResourcesController
+  def count
+    deactivate_count_response
+  end
+end
+
+# config/routes.rb, before `mount ForestLiana::Engine => '/forest'`
+namespace :forest do
+  get '/Order/count', to: 'orders#count'
+end
+```
+
+```ruby After — lib/forest_liana/collections/order.rb (Forest customization)
+class Forest::Order
+  include ForestLiana::Collection
+
+  collection :Order, countable: false
+end
+```
+
+</CodeGroup>
+
+Remove the controller and its route once the option is in place.
+
+</Step>
+</Steps>
+
 ## If you plan to migrate to a v2 agent later
 
 The features of this release exist on the v2 agents (`@forestadmin/agent` for Node.js, `forest_admin_agent` for Ruby) with the same option names and the same 403 messages, so what you configure here carries over. Two behaviors are **more lenient on this v1 release than on v2**. If a migration to v2 is on your roadmap, writing your customizations the strict way now saves you a boot failure later.
@@ -304,6 +499,7 @@ On this release, a smart field `search:` lambda runs on every search without any
 | Record (`show`) | Every column and to-one relation | Only the displayed fields |
 | Search matching no real column | Whole table | No records |
 | Plain searched count | Joined related tables | Searches the same columns as the list |
+| Cross-database `belongs_to` / `has_one` on lists and CSV exports (and related lists on Rails 6.1) | One query per row | Preloaded once per page (9.22.2) |
 | Smart field reading an undeclared column | Read from `SELECT *` | Reloaded once with a warning; never a 500 |
 | `in` filter on a Rails `enum` column with several values | Matched nothing | Matches each value |
 | `_internal/capabilities` route | Absent (404) | Served |
@@ -321,6 +517,8 @@ Search your agent logs for `Forest 🌳🌳🌳` after the first requests in eac
 - `Field "..." of the "..." collection read the "..." column without declaring it in dependencies: — reloaded the record to serve it, at the cost of an extra query. Add it to the field's dependencies: to avoid this.` — add the column to `dependencies:`.
 - `Cannot retrieve the "..." value of the "..." collection because of an internal error in the getter implementation: ...` — the getter could not be served (it raised again after a reload, or read a column of a relation that a reload cannot restore); its value is served as `nil`.
 - `The "..." dependency of the "..." collection cannot be preloaded ("..." has an instance-dependent scope, which Rails 6.1.x cannot preload) — the relation is loaded once per record instead ...` — expected on Rails 6.1; upgrade Rails to benefit from the preload.
+- `The "..." relation of the "..." collection lives in another database and cannot be preloaded (its "..." key is not in the projected select) — ...` — the cross-database relation shows as empty. Report it to Forest support with the collection and relation names.
+- `The "..." relation of the "..." collection cannot be preloaded (its "..." key is not in the query's select) — ...` — a segment or scope narrows the `select` of the collection and drops the key the relation reads. Add that key to the `select`.
 
 ## Rollout recommendation
 
@@ -329,4 +527,4 @@ Search your agent logs for `Forest 🌳🌳🌳` after the first requests in eac
 3. Decide whether you set `skip_relation_read_permissions` for the transition, and record when you will remove it.
 4. Deploy to staging, then production, following [Push your new version to production](/legacy/ruby-agent/how-tos/maintain/push-your-new-version-to-production).
 5. Watch the logs above and the 403/422/500/503 rate of your agent for a few days.
-6. Adopt `dependencies:` and `countable: false` on your heaviest collections once the upgrade is stable.
+6. Once the upgrade is stable, [adapt your code](#adapt-your-code-to-get-the-full-benefit) on your heaviest collections.
