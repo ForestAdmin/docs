@@ -186,13 +186,14 @@ Two search behaviors change:
 
 ### 6. Check the associations you will preload
 
-The new `dependencies:` option (see [New options](#new-options-you-can-adopt)) preloads relations instead of loading them once per row. One shape of association is incompatible with preloading: an association whose own scope narrows its select and drops the key linking it to its owner, such as:
+The new `dependencies:` option (see [New options](#new-options-you-can-adopt)) preloads relations instead of loading them once per row. One shape of association is incompatible with preloading: an association whose own scope narrows its select and drops the column the preload matches records on. That column is in the target table: the foreign key for a `has_many` or `has_one`, the target's primary key (`id`, or the `primary_key:` option) for a `belongs_to`. For example:
 
 ```ruby
 has_many :notes, -> { select(:content) }
+belongs_to :company, -> { select(:name) }
 ```
 
-It works when loaded lazily and raises `ActiveModel::MissingAttributeError` when preloaded. Do not name such an association in a `dependencies:` path, or add the foreign key to its `select`.
+It works when loaded lazily and raises `ActiveModel::MissingAttributeError` when preloaded. Do not name such an association in a `dependencies:` path, or add that column to its `select`.
 
 ### 7. Check your route and controller overrides
 
@@ -408,21 +409,23 @@ The association becomes part of your model, so the rest of your application sees
 </Warning>
 
 </Step>
-<Step title="Keep the foreign key in association scopes — application code">
+<Step title="Keep the matching key in association scopes — application code">
 
-An association whose scope narrows its `select` must keep the key that links it to its owner. Otherwise, as soon as a `dependencies:` path names it, the preload raises `ActiveModel::MissingAttributeError` and the request answers **500** (see [check 6](#6-check-the-associations-you-will-preload)):
+An association whose scope narrows its `select` must keep the column the preload matches records on: the foreign key for a `has_many` or `has_one`, the target's primary key (`id`, or the `primary_key:` option) for a `belongs_to`. Otherwise, as soon as a `dependencies:` path names it, the preload raises `ActiveModel::MissingAttributeError` and the request answers **500** (see [check 6](#6-check-the-associations-you-will-preload)):
 
 <CodeGroup>
 
 ```ruby Before — app/models/customer.rb (application code)
 class Customer < ApplicationRecord
   has_many :notes, -> { select(:content) }
+  belongs_to :company, -> { select(:name) }
 end
 ```
 
 ```ruby After — app/models/customer.rb (application code)
 class Customer < ApplicationRecord
   has_many :notes, -> { select(:content, :customer_id) }
+  belongs_to :company, -> { select(:id, :name) }
 end
 ```
 
