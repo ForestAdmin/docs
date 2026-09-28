@@ -14,7 +14,7 @@ description: "Choosing whether the Forest back-end runs as its own service or in
 
 ## What doesn't require in-app
 
-- **Reusing your ORM models.** `createSequelizeDataSource` accepts any Sequelize instance, so your models only need to be importable — see [monorepos](#if-your-code-already-lives-in-a-monorepo). Six [datasources](/get-started/connect/overview) read ORM models: Sequelize, Mongoose, ActiveRecord, Mongoid, Django and SQLAlchemy. Other stacks (TypeORM, Prisma, Drizzle, Knex) connect through [`datasource-sql`](/get-started/connect/data-sources/sql) or [`datasource-mongo`](/get-started/connect/data-sources/mongodb). Those read the database directly, so there's nothing to reuse.
+- **Reusing your ORM models.** `createSequelizeDataSource` accepts any Sequelize instance, so your models only need to be importable — see [monorepos](#if-your-code-already-lives-in-a-monorepo). Four [datasources](/get-started/connect/overview) read ORM models: Sequelize, Mongoose, ActiveRecord and Mongoid. Other stacks (TypeORM, Prisma, Drizzle, Knex) connect through [`datasource-sql`](/get-started/connect/data-sources/sql) or [`datasource-mongo`](/get-started/connect/data-sources/mongodb). Those read the database directly, so there's nothing to reuse.
 - **Boot cost.** Introspection does the same work, and puts the same load on your database, in either option. [Caching it](/get-started/connect/data-sources/sql#caching-introspection) is what removes it.
 - **Sharing a database.** Two processes on one database just means a second connection pool. Size it with [`pool`](/get-started/connect/data-sources/sql#connection-pooling).
 
