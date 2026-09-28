@@ -98,7 +98,14 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
     Naming mistakes show up here as missing columns or broken actions. This is usually enough.
   </Step>
   <Step title="Populate a shared test environment (optional)">
-    Only if your team needs a shared pre-production environment. A new environment in the same project inherits production's layout, but not its role permissions. Copy them from **Project settings → Roles → Copy role permissions across environments**, from production to the new environment, or with `forest roles:copy --from production --to node-test` if you script your environment setup.
+    Only if your team needs a shared pre-production environment. A new environment in the same project inherits production's layout, but not its role permissions. Production runs the legacy agent and `node-test` the new one, so their schemas differ and [copying permissions across environments](/get-started/control/roles-permissions#copy-permissions-across-environments) refuses them. Move the permissions through a file instead, once the new agent has started on `node-test`:
+
+    1. Back up the target, so you can re-apply it to undo: `forest roles:export --env node-test --output node-test-backup.csv`
+    2. Export production: `forest roles:export --env production --output roles.csv`
+    3. Rename the columns to the new agent's names. The file has one column per collection permission and Smart Action grant, headed `collection:permission` or `collection:action:grant`. If you [kept the legacy names](/guides/migration/from-v1/steps/datasources#match-the-names-your-layout-already-uses), there's nothing to rename. Drop the columns of collections the new agent doesn't expose: a column naming a collection the environment doesn't have fails that role's update.
+    4. Apply it: `forest roles:apply --env node-test roles.csv`. It lists the changes and asks before applying them.
+
+    Smart Action conditions aren't carried over. Set them again on the new environment.
   </Step>
   <Step title="Test side by side">
     Run both agents simultaneously. Point the test environment at the new agent and verify behavior matches the legacy one, especially actions, computed fields, and segments.
