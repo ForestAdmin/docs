@@ -92,6 +92,8 @@ Requirements:
 - Your project needs at least two remote environments, production included. Development environments aren't eligible, and the **Actions** button doesn't appear until you have two
 - Both environments must have the same schema, otherwise Forest rejects the copy with an error
 
+If the schemas differ, for example between a legacy agent's environment and a new one's during a migration, [move the permissions through a file](/guides/migration/from-v1/overview#populate-a-shared-test-environment) instead.
+
 <Warning>
 The copy overrides all permissions of the destination environment, for **all roles**.
 </Warning>

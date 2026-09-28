@@ -37,7 +37,7 @@ You can deploy the Forest back-end in two ways, depending on your application ar
 
 With in-app deployment, the Forest back-end becomes part of your existing application. It runs in the same Node.js or Ruby process, sharing the same database connection pool and resources. When you deploy your application, the back-end deploys with it as a single unit.
 
-This approach is particularly valuable when you want to leverage your existing ORM models. Whether you're using Sequelize, Mongoose, or ActiveRecord, Forest can read directly from your model definitions, no need to redefine your schema. You can also reuse your existing business logic, sharing code, services, and utilities between your application and Forest without duplication.
+This approach suits a back-end that needs your application's running code, such as an in-process service or a transaction to join. It can also read your ORM models directly, but so can a standalone back-end that imports them.
 
 <img src="/assets/deployment-in-app.svg" alt="In-app Deployment Architecture" />
 
@@ -54,7 +54,7 @@ This architecture provides a cleaner separation of concerns. Your application co
 <img src="/assets/deployment-standalone.svg" alt="Standalone Deployment Architecture" />
 
 <Info>
-**Recommendation**: We recommend **standalone deployment** for cleaner architecture and better separation of concerns. Use **in-app** if you need to reuse your ORM models or existing business logic.
+**Recommendation**: We recommend **standalone deployment** for cleaner architecture and better separation of concerns. See [Deployment options](/get-started/connect/architectures/deployment-options) for the cases that call for in-app.
 </Info>
 
 ## Privacy by design

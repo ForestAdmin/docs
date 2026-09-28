@@ -79,6 +79,21 @@ forest init
 | `forest projects` | List all projects |
 | `forest projects:get` | Get a project's configuration |
 
+### Roles and teams
+
+| Command | Description |
+|---|---|
+| `forest roles:copy` | Copy role permissions from one environment to another with the same schema |
+| `forest roles:export` | Export every role's permissions on one environment to a CSV file |
+| `forest roles:apply <file>` | Apply a CSV of role permissions to an environment, after showing the changes |
+| `forest teams:copy-layout` | Copy one team's layout onto another in the same project, overwriting it |
+
+```bash
+forest roles:copy --from production --to staging
+```
+
+`roles:copy` runs once per pair of environments, however many teams you have. Between environments whose schemas differ, such as a legacy agent's and a new one's, use `roles:export` and `roles:apply`, which match permissions by collection and action name.
+
 ### Schema
 
 | Command | Description |
