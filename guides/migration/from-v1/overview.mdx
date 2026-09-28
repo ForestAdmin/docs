@@ -98,15 +98,7 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
     Naming mistakes show up here as missing columns or broken actions. This is usually enough.
   </Step>
   <Step title="Populate a shared test environment (optional)">
-    Only if your team needs a shared pre-production environment. A new environment starts with the default layout, so copy production's across:
-
-    ```bash
-    forest layout:pull --env production --team Operations --with-workflows
-    forest layout:apply forest-layout.json --env node-test --team Operations --with-workflows --force
-    forest roles:copy --from production --to node-test
-    ```
-
-    Run the two `layout:` commands once per team; `roles:copy` runs once. Keep the colons — see the [CLI reference](/reference/cli/overview#layout-transport).
+    Only if your team needs a shared pre-production environment. A new environment in the same project inherits production's layout, but not its role permissions. Copy them from **Project settings → Roles → Copy role permissions across environments**, from production to the new environment, or with `forest roles:copy --from production --to node-test` if you script your environment setup.
   </Step>
   <Step title="Test side by side">
     Run both agents simultaneously. Point the test environment at the new agent and verify behavior matches the legacy one, especially actions, computed fields, and segments.
