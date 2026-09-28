@@ -369,6 +369,7 @@
             "group": "Best Practices",
             "pages": [
               "guides/best-practices/performance",
+              "guides/best-practices/monitoring",
               "guides/best-practices/troubleshooting",
               "guides/best-practices/layout-maintenance"
             ]
