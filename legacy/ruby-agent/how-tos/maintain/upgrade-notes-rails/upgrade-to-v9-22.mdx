@@ -408,6 +408,19 @@ The association becomes part of your model, so the rest of your application sees
 - If your block looked the record up on a nullable column, a record with an empty key used to show the first target whose column is `NULL` (`find_by(column: nil)`). The association shows no related record instead. This is the correct result, but these rows change.
 </Warning>
 
+#### The association is already declared on the model
+
+If your model already declares an association with the same name as the smart relationship, you have nothing to add: only remove the smart relationship from your Forest customization.
+
+Keeping both does not break the upgrade: requests that display the relation behave exactly as they did before 9.22. But the Forest declaration is not merely redundant, it **takes precedence** over the association:
+
+- Its block serves the value, still once per row. The association the agent joins for the list is loaded, then ignored.
+- Every request that displays the relation keeps the `SELECT *` behavior, as for any smart relationship.
+- The relation is listed twice in `.forestadmin-schema.json`.
+- For a smart `has_many`, the related list is served by the route you declared for it (`/forest/<Collection>/:id/<relation>`), not by the agent.
+
+Before removing the smart relationship, check that the association returns the same records as the block. A block that adds a condition, or looks the record up on another column, must be reproduced on the association first, with a scope or the `primary_key:` and `foreign_key:` options shown above. For a smart `has_many`, also remove the route and the controller action that served it.
+
 </Step>
 <Step title="Keep the matching key in association scopes — application code">
 
