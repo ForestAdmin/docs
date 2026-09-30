@@ -73,7 +73,7 @@ Changing `prefix` changes the URL Forest calls, so update the environment's URL 
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `bodyParserOptions` | object | `{ jsonLimit: '50mb' }` | Forwarded to [`@koa/bodyparser`](https://github.com/koajs/bodyparser?tab=readme-ov-file#options). Accepts `jsonLimit` (number of bytes or size string) and `enableRawChecking`. |
+| `bodyParserOptions` | object | `{ jsonLimit: '50mb' }` | Forwarded to [`@koa/bodyparser`](https://github.com/koajs/bodyparser?tab=readme-ov-file#options). Accepts `jsonLimit` (number of bytes or size string) and `enableRawChecking`. Set `enableRawChecking: true` when your app parses JSON before the agent is mounted, so the agent reuses the parsed body. Without it, every `POST` answers `500` and the agent logs `stream is not readable`. |
 | `maxBodySize` | string | `'50mb'` | **Deprecated**, use `bodyParserOptions.jsonLimit` instead. |
 | `limitExportSize` | number | _unlimited_ | Maximum number of records a CSV export returns. |
 | <code style={{whiteSpace: 'nowrap'}}>useUnsafeActionEndpoint</code> | boolean | `false` | Drop the positional index from Smart Action routes. |
