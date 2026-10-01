@@ -262,7 +262,8 @@
           {
             "group": "Control",
             "pages": [
-              "get-started/control/roles-permissions",
+              "get-started/control/permission-levels",
+              "get-started/control/roles",
               "get-started/control/teams",
               "get-started/control/scopes-and-visibility",
               "get-started/control/audit",
@@ -1020,6 +1021,12 @@
       "name": "GitHub",
       "url": "https://github.com/ForestAdmin",
       "icon": "github"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/get-started/control/roles-permissions",
+      "destination": "/get-started/control/roles"
     }
   ]
 }

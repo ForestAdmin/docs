@@ -98,7 +98,7 @@ The new generation is a rebuilt agent with a cleaner, more composable customizat
     Naming mistakes show up here as missing columns or broken actions. This is usually enough.
   </Step>
   <Step title="Populate a shared test environment (optional)" id="populate-a-shared-test-environment">
-    Only if your team needs a shared pre-production environment. A new environment in the same project inherits production's layout, but not its role permissions. Production runs the legacy agent and `node-test` the new one, so their schemas differ and [copying permissions across environments](/get-started/control/roles-permissions#copy-permissions-across-environments) refuses them. Move the permissions through a file instead, once the new agent has started on `node-test`:
+    Only if your team needs a shared pre-production environment. A new environment in the same project inherits production's layout, but not its role permissions. Production runs the legacy agent and `node-test` the new one, so their schemas differ and [copying permissions across environments](/get-started/control/roles#copy-permissions-across-environments) refuses them. Move the permissions through a file instead, once the new agent has started on `node-test`:
 
     1. Back up the target, so you can re-apply it to undo: `forest roles:export --env node-test --output node-test-backup.csv`
     2. Export production: `forest roles:export --env production --output roles.csv`
