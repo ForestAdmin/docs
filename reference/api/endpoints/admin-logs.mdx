@@ -1,32 +1,7 @@
 ---
-title: Admin Logs
-description: "List admin logs for a project"
+openapi: "/reference/api/openapi.json GET /v1/project/{projectName}/admin-logs"
 ---
-
-## List admin logs
-
-Returns admin logs for a specific project, sorted by `createdAt` date in descending order (most recent first).
-
-Use the `createdAt` filter for pagination.
-
-```
-GET /v1/project/{projectName}/admin-logs
-```
-
-### Authentication
-
-All requests require a Bearer token in the `Authorization` header. Generate one from [your account settings](https://app.forestadmin.com/user-settings).
-
-```
-Authorization: Bearer YOUR_APPLICATION_TOKEN
-```
 
 <Warning>
   If your project uses SSO, the application token must be generated while logged in with SSO.
 </Warning>
-
-### Path parameters
-
-| Parameter | Type | Description |
-|---|---|---|
-| `projectName` | string | Your project name |
