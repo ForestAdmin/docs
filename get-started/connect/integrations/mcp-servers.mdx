@@ -99,3 +99,18 @@ If a tool isn't in the list above, connect any MCP server by URL:
 5. Save your configuration.
 
 Learn more about building and hosting MCP servers in the [Claude MCP documentation](https://docs.claude.com/en/docs/agents-and-tools/remote-mcp-servers).
+
+## Set up an OAuth app for a connector
+
+Some providers let Forest register itself when you connect, and there's nothing to set up. Others ask you for a **Client ID** and a **Client Secret**. For those, create an OAuth app in the provider's developer settings first, and check these four points before you connect it in Forest:
+
+1. **Redirect URL.** Add `https://app.forestadmin.com/mcp-oauth-redirect` to the app's allowed redirect URLs. This is where the provider sends you back after you approve access. It isn't the connector's **Server URL**, which only Forest uses to reach the MCP server.
+2. **Client ID and Client Secret.** Copy both from the app into the connector form. Most providers require the secret.
+3. **Refresh token.** Workflow steps run on [Forest Runtime](/product/process/workflows/forest-runtime), which renews a connector's access on its own, so the provider must issue a **refresh token**. Some providers issue one only when a setting is turned on in the app, such as token rotation or offline access. Without a refresh token, the connector is created but can't be used, and connecting again doesn't help until the setting is on.
+4. **Approval.** If your organization requires an admin to approve new apps, get the app approved and installed before you connect it in Forest. Otherwise the provider's consent screen waits for approval and the connection times out.
+
+<Note>
+  Some providers don't let you turn the refresh-token setting off again once it's on. Use an app dedicated to Forest rather than one shared with other integrations.
+</Note>
+
+Your provider's documentation explains where each of these settings is.
