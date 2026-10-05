@@ -34,7 +34,7 @@ Install an APM on the Forest back-end: Datadog, Sentry, New Relic, or OpenTeleme
 | `count` | `GET /forest/{collection}/count` |
 | `search` | `list` route with a `search` query parameter |
 | `chart` | `POST /forest/stats/{collection}` (charts configured in the UI), `/forest/_charts/{chart}` and `/forest/_charts/{collection}/{chart}` (charts defined in code, `GET` and `POST`) |
-| `action` | `POST /forest/_actions/{collection}/{index}/{slug}` |
+| `action` | `POST /forest/_actions/{collection}/{index}/{slug}`, or `POST /forest/_actions/{collection}/{slug}` with `useUnsafeActionEndpoint`; action forms call the same path plus `/hooks/load`, `/hooks/change` or `/hooks/search` |
 | `export` | `GET /forest/{collection}.csv` |
 
 In your APM, derive the collection and the operation type from these patterns, and attach both as tags. With a `prefix` option, the routes start with `/{prefix}/forest`.
