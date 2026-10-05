@@ -131,6 +131,8 @@ Add a statement timeout on that user, so that a single Forest query cannot degra
 ALTER ROLE forest_backend SET statement_timeout = '30s';
 ```
 
+The setting applies to new sessions only: restart the Forest back-end, or recycle its database connection pool, so pooled connections pick it up.
+
 <Warning>
   A 30-second timeout interrupts CSV exports and charts over large tables that legitimately run longer. Measure your longest expected queries first, then set the timeout above them, or serve exports and heavy charts from a read replica with a higher limit.
 </Warning>
