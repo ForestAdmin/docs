@@ -33,7 +33,7 @@ Install an APM on the Forest back-end: Datadog, Sentry, New Relic, or OpenTeleme
 | `list` | `GET /forest/{collection}`, `GET /forest/{collection}/{id}/relationships/{relation}` |
 | `count` | `GET /forest/{collection}/count` |
 | `search` | `list` route with a `search` query parameter |
-| `chart` | `POST /forest/stats/{collection}` |
+| `chart` | `POST /forest/stats/{collection}` (charts configured in the UI), `/forest/_charts/{chart}` and `/forest/_charts/{collection}/{chart}` (charts defined in code, `GET` and `POST`) |
 | `action` | `POST /forest/_actions/{collection}/{index}/{slug}` |
 | `export` | `GET /forest/{collection}.csv` |
 
@@ -58,12 +58,14 @@ Pass a custom logger to the Forest back-end so its logs reach your log platform 
     const agent = createAgent({
       ...options,
       logger: (level, message, error) => {
+        // Errors usually come as the third argument; some calls pass them as the second.
+        const err = error ?? (message instanceof Error ? message : undefined);
         console.log(JSON.stringify({
           timestamp: new Date().toISOString(),
           service: 'forest-backend',
           level,
-          message,
-          error: error?.stack,
+          message: message instanceof Error ? message.message : message,
+          error: err?.stack,
         }));
       },
     });
