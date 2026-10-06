@@ -112,9 +112,9 @@ Your Forest MCP Server URL will be `{your-agent-url}/mcp`
 </Note>
 
 <Warning>
-  When mounted, the MCP server intercepts the **entire** `/oauth/*` and `/.well-known/*` namespaces plus `/mcp` at your back-end's root. Any request in those namespaces is captured by the MCP server — if it doesn't serve that exact route (or your back-end already does), the request gets a 404/405 **instead of reaching your back-end**. So your own `/oauth/callback` or `/.well-known/apple-app-site-association` would break, not just OAuth.
+  When mounted, the MCP server intercepts the **entire** `/oauth/*` namespace plus `/mcp` at your back-end's root, and claims the two `.well-known` discovery documents (`/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource/mcp`). Any request in those namespaces is captured by the MCP server — if it doesn't serve that exact route (or your back-end already does), the request gets a 404/405 **instead of reaching your back-end**. So your own `/oauth/callback` would break, and so would a back-end version of either discovery document. Every other `/.well-known/*` request (e.g. `acme-challenge/...` or `security.txt`) reaches your back-end.
 
-  Pass a `basePath` to narrow the MCP server to a dedicated prefix so your routes are left untouched. The OAuth and protocol routes move under the prefix; the `.well-known` discovery documents stay at the root (as OAuth discovery requires) but are served at prefix-suffixed paths such as `/.well-known/oauth-authorization-server/ai`, narrowing the `.well-known` claim to just those two paths:
+  Pass a `basePath` to narrow the MCP server to a dedicated prefix so your routes are left untouched. The OAuth and protocol routes move under the prefix; the `.well-known` discovery documents stay at the root (as OAuth discovery requires) but are served at prefix-suffixed paths such as `/.well-known/oauth-authorization-server/ai`, so your back-end's own root OAuth metadata is not claimed:
 
   ```text
   const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer({ basePath: '/ai' });

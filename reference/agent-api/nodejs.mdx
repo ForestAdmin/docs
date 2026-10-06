@@ -313,7 +313,7 @@ By default, the MCP server registers its endpoints at the host root:
 | `GET /.well-known/oauth-protected-resource/mcp` | Protected resource metadata |
 
 <Warning>
-When mounted inside an existing application, the MCP server intercepts the **entire** `/oauth/*` and `/.well-known/*` namespaces plus `/mcp` at the host root. Any request in those namespaces is captured by the MCP server — if it doesn't serve that exact route (or your app already does), the request gets a 404/405 **instead of reaching your app**. For example, your own `/oauth/callback` or `/.well-known/apple-app-site-association` would break, not just OAuth. Set `basePath` to narrow the MCP server to a dedicated prefix (and just two suffixed `.well-known` paths) so your routes are left untouched.
+When mounted inside an existing application, the MCP server intercepts the **entire** `/oauth/*` namespace plus `/mcp` at the host root, and claims the two `.well-known` discovery documents (`/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource/mcp`). Any request in those namespaces is captured by the MCP server — if it doesn't serve that exact route (or your app already does), the request gets a 404/405 **instead of reaching your app**. For example, your own `/oauth/callback` would break. Every other `/.well-known/*` request (e.g. `acme-challenge/...` or `security.txt`) reaches your app. Set `basePath` to narrow the MCP server to a dedicated prefix (and move the `.well-known` claim to two prefix-suffixed paths) so your routes are left untouched.
 </Warning>
 
 **Scoping under a prefix:**
