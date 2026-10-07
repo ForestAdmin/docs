@@ -20,13 +20,15 @@ Every operation on data runs with the permissions of the authenticated Forest us
 
 ## Turn on the MCP server
 
-With the Node.js back-end, mount the MCP server when you create the back-end in your `index.js`:
+With the Node.js back-end, enable the [Forest Gateway](/product/embed/gateway)'s MCP service when you create the back-end in your `index.js`:
 
 ```javascript
 const agent = createAgent(options)
   .addDataSource(/* ... */)
-  .mountAiMcpServer();
+  .addGateway({ mcp: true });
 ```
+
+`addGateway()` exists since `@forestadmin/agent` TBD and requires `@forestadmin/agent-bff` at the exact version the agent declares — install both with `npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest`.
 
 Restart your back-end. You should see:
 
@@ -45,8 +47,8 @@ You can find your back-end URL in **Project Settings → Environments**. Each en
 By default all tools are enabled. To expose only a subset, pass `enabledTools`, new tools added in future releases stay off until you opt in:
 
 ```javascript
-agent.mountAiMcpServer({
-  enabledTools: ['describeCollection', 'list', 'listRelated'],
+agent.addGateway({
+  mcp: { enabledTools: ['describeCollection', 'list', 'listRelated'] },
 });
 ```
 

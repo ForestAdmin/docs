@@ -1,0 +1,266 @@
+---
+title: "Forest Gateway"
+description: "Expose your Forest back-end to AI assistants and trusted browser UIs through one embedded gateway."
+---
+
+The Forest Gateway is one component that exposes your Forest back-end to two kinds of consumers, on one mount:
+
+- **The MCP service**, which serves tools to AI assistants over the [Model Context Protocol](/product/embed/mcp-server).
+- **The API service**, the "Gateway API", a flat REST contract for interfaces people click in — the [Zendesk app](/product/embed/zendesk) runs on it.
+
+One component means one set of routes, one OAuth namespace and one package to install. If you have read about the "Forest BFF" before, that product is the API service of the Gateway: `addBff()` is now a deprecated alias of the Gateway's `api` option, and `mountAiMcpServer()` a deprecated alias of its `mcp` option.
+
+<Info>
+  Three names, three things: the **Agent API** is your agent's own `/forest` routes, what the Forest UI calls — see the [Agent SDK overview](/reference/agent-api/overview). The **Forest API** is Forest's public reporting API — see [its introduction](/reference/api/introduction). The Gateway API is neither: it is the REST surface the Gateway serves to your trusted UIs.
+</Info>
+
+## Your back-end stays the authority
+
+The Gateway forwards calls, your back-end decides them. Every call reaches your back-end as the person who made it, and comes back filtered exactly as it would for them in Forest. Roles, permissions and scopes apply unchanged, and a collection your schema no longer exposes is re-checked on every call.
+
+<Warning>
+  `GET /api/agent/v1/permissions` returns **display hints**, meant for graying out buttons an operator cannot use. It is never an authorization decision. A UI that treats it as one is not enforcing anything, your back-end is.
+</Warning>
+
+## Adding the Gateway
+
+Embedded in the Node.js agent, the Gateway needs two packages: `@forestadmin/agent`, and `@forestadmin/agent-bff` — an optional peer dependency the agent loads at runtime, at **exactly the version the agent declares**. Install or upgrade both in one command, so the versions never drift:
+
+```bash
+npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest
+```
+
+`addGateway()` exists since `@forestadmin/agent` TBD (the release that ships the Gateway); on an earlier agent the call throws `agent.addGateway is not a function`.
+
+```javascript
+await createAgent(options)
+  .addDataSource(/* ... */)
+  .addGateway({
+    mcp: true, // or MCP options: { enabledTools, tokenTtl, fileUploads }
+    api: {
+      allowedOrigins: ['https://my-app.com'],
+      tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
+    },
+  })
+  .mountOnStandaloneServer(3351)
+  .start();
+```
+
+Call `addGateway()` once, before `start()`. It must enable at least one service: `addGateway({ mcp: true })` for MCP only, `addGateway({ api: { ... } })` for the API only, or both as above. An empty `addGateway()` throws.
+
+Each service is off until you enable it, and what you leave out stays off:
+
+- The **MCP service** exposes the tools, their restrictions and their token lifetimes — all documented on the [Forest MCP Server page](/product/embed/mcp-server).
+- The **API service** is configured through the `api` options: `tokenEncryptionKey` enables OAuth sign-in (and with it the AI relay), `allowedOrigins` enables browser access, `openapiEnabled` serves the API docs. The secrets, the Forest URLs and the logger are inherited from the agent: embedded, the Gateway API never reads the environment.
+
+On a Ruby back-end, or any deployment where the agent cannot host it, run the [standalone BFF deployment](#standalone-bff-deployment) instead: it serves the same REST contract on its own port.
+
+## Routes
+
+With an empty `basePath` (the default), the Gateway claims these routes at the root of whatever the agent is mounted on — `{basePath}` stands for your prefix below:
+
+| Route | Service | What it does |
+| --- | --- | --- |
+| `POST {basePath}/mcp` | MCP | the MCP protocol endpoint (Bearer token required) |
+| `{basePath}/mcp/uploads` | MCP | the in-memory upload endpoint for action file fields |
+| `{basePath}/oauth/authorize` · `/token` | MCP / API | OAuth, shared — see the `?service` rule below |
+| `{basePath}/api/agent/v1/*` | API | the REST data routes: `list`, `count`, action `form`/`execute`, `context`, `permissions`, `ai/query` |
+| `GET {basePath}/api/health` | API | the deployment probe |
+| `GET {basePath}/api/docs` | API | a Redoc viewer over the OpenAPI document, served only when `api.openapiEnabled` is set |
+| `/.well-known/oauth-authorization-server{basePath}` | MCP | OAuth discovery, anchored at the origin root |
+| `/.well-known/oauth-protected-resource{basePath}/mcp` | MCP | MCP discovery, anchored at the origin root |
+
+The two `.well-known` documents only exist when the MCP service is on: OAuth discovery must stay at the origin root (RFC 8414/9728), so a `basePath` is carried as a suffix rather than a prefix. Every other `/.well-known/*` request reaches your host application.
+
+**The `/oauth/*` namespace is shared.** Both services run their own OAuth: `GET`/`POST {basePath}/oauth/authorize` and `POST {basePath}/oauth/token` dispatch on one query parameter — `{basePath}/oauth/*?service=api` goes to the API service, the same paths without a `service` go to the MCP service, and any other value answers `400 invalid_request`. API OAuth needs `api.tokenEncryptionKey`: without it the API's `/oauth` side stays off, sign-in included. Only API callers ever send `service` — an MCP client never does.
+
+The data routes under `/api/agent/v1` are `POST`, and the filter, projection, sort, search and paging all travel in the body, never in the query string. Errors use a type-first contract, `{ error: { type, status, message, details? } }`, so branch on `error.type` and never on message text — with one exception: `POST /api/agent/v1/ai/query` relays the Forest server, whose JSON answers below `500` keep the upstream's own `{ errors: [{ detail }] }` shape. To-one relations are not listable and answer `404 unknown_relation` by design.
+
+The route layout never depends on which services are on: the API is always under `{basePath}/api`, even when it is the only service.
+
+## Choosing a `basePath`
+
+Leave `basePath` empty when your host application does not need the root paths. Set it when the host already serves `/api`, `/mcp` or `/oauth`, or, with the MCP service on, when it has a use for the root `.well-known` documents. A `basePath` must be a plain path prefix like `/gateway` (letters, digits, `-` and `_` only) and may not overlap the agent's own mount prefix.
+
+<Warning>
+  **With the MCP service on, a non-empty `basePath` requires the agent to be served at the domain root.** OAuth discovery is anchored at the origin root, so `addGateway({ basePath: '/ai', mcp: true })` throws at startup if the agent's own URL already carries a path (`https://host/api`), and the root `/.well-known/*` requests must still reach the agent — a proxy that forwards only `/{basePath}/*` breaks discovery. This constraint does not apply to an API-only Gateway, whose discovery needs nothing at the root.
+</Warning>
+
+## Ingress and network rules
+
+An ingress or WAF that allow-lists only `{basePath}/api/*` **breaks sign-in**: the browser sign-in runs on `{basePath}/oauth/*`, so that namespace must pass too — for the API (`?service=api`) as for the MCP service. With the MCP service on and a non-empty `basePath`, the two discovery paths `/.well-known/oauth-authorization-server{basePath}` and `/.well-known/oauth-protected-resource{basePath}/mcp` must reach the agent as well, even though they sit outside `{basePath}`.
+
+## Restricting which OAuth clients can connect
+
+By default, any OAuth client application registered at Forest can connect. The Gateway's top-level `allowedOAuthClients` restricts **both services at once**, MCP and API:
+
+```javascript
+.addGateway({
+  allowedOAuthClients: ['dust.tt', 'forestadmin.com'],
+  mcp: true,
+  api: { tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY },
+})
+```
+
+Entries are **domains**, not client ids: a client is allowed only when **every** redirect URI it registered is an `http(s)` URI on a listed domain or one of its subdomains (`dust.tt` matches `eu.dust.tt`). Matching uses redirect URIs because they are the one piece of registration metadata an impostor cannot benefit from. Every other client is rejected with a standard OAuth `invalid_client` error; the response does not reveal the allowed domains.
+
+Keep `forestadmin.com` in the list as long as you use Forest's [Zendesk app](/product/embed/zendesk): its sign-in redirect runs through `app.forestadmin.com`, so without that entry the app itself gets rejected. See [Restrict which AI clients can connect](/product/embed/mcp-server#restrict-which-ai-clients-can-connect) for the fine print (native desktop clients and loopback redirect URIs, token lifetime of approvals granted before the restriction).
+
+The deprecated aliases do not share this scope: `mountAiMcpServer()` keeps its **own** `allowedOAuthClients` (MCP only), and `addBff()` has **no** allowlist at all — its API accepts any client registered at Forest.
+
+## Deprecated aliases, and when to keep them
+
+`mountAiMcpServer()` and `addBff()` still work on their current paths and semantics — `mountAiMcpServer()` at the host root or under its own `basePath`, `addBff()` under `/bff` — but both are deprecated: the agent logs a warning at startup, and `/bff/*` answers carry a `Deprecation` header pointing here.
+
+<Warning>
+  `addGateway()` and the aliases cannot be combined. Calling one after the other throws on the spot, at the builder call rather than from `start()`: *"addGateway() cannot be combined with mountAiMcpServer() or addBff()"*. Configure every service through `addGateway({ mcp, api })`, or keep both aliases.
+</Warning>
+
+Two cases justify keeping both aliases instead of moving to `addGateway()`:
+
+1. **You want the MCP service restricted by `allowedOAuthClients` while the API stays open** to any client registered at Forest — the Gateway's list covers both services, so only `mountAiMcpServer({ allowedOAuthClients })` + `addBff()` gives you that split.
+2. **The MCP service must stay at the root while your host already serves `/api`** — with an empty `basePath` the Gateway API would claim `/api/agent/*`, `/api/docs` and `/api/health`, and you cannot give the API alone a `basePath` the MCP does not use: keep `mountAiMcpServer()` at the root and `addBff()` on `/bff`.
+
+## Moving from `addBff()` to `addGateway({ api })`
+
+The migration is mechanical:
+
+- The `addBff()` options move under `api` unchanged: `addBff({ allowedOrigins, tokenEncryptionKey })` becomes `addGateway({ api: { allowedOrigins, tokenEncryptionKey } })`.
+- The URL moves from `/bff` to `{basePath}/api` — `/api` by default. Update **every** application that called the old URL: in the [Zendesk app](/product/embed/zendesk), the `forestBFFUrl` setting changes from `{your-agent-url}/bff` to `{your-agent-url}/api`.
+- Users sign in again: sessions live in memory in the agent process, and the routes they authenticated against have moved.
+
+## Mount before your body parser
+
+<Warning>
+  **On every framework, mount the agent before your application's own body parser.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back — every API `POST` then fails, OAuth included (`{basePath}/oauth/*?service=api`): the symptom is `500 stream.not.readable` on Express, and `499` (client closed request) on Koa.
+
+```typescript
+const app = express();
+agent.mountOnExpress(app);  // first
+app.use(express.json());    // then yours
+await agent.start();
+```
+
+NestJS needs no special handling as long as you mount before `listen()`. The MCP service is unaffected by the ordering — its tool calls dispatch in-process — but mount it first anyway: one rule, no exceptions.
+</Warning>
+
+## Cross-origin access
+
+A browser UI is cross-origin by definition, so the API's `allowedOrigins` decides what reaches your data.
+
+Matching is exact: scheme, host and port, case-insensitive, default ports normalized away, no trailing slash. An origin outside the list never reaches your data, and how it is refused depends on the preflight. A request arriving without one answers `403 origin_not_allowed`, rather than running and then being served without the header for the browser to discard. A preflighted one is stopped one step earlier, at the `OPTIONS`, which is what the warning below is about.
+
+<Warning>
+  A browser rarely shows you that `403`. Every data route is a `POST` with a JSON body, so the browser sends a preflight first, and a rejected `OPTIONS` answers `204` with no CORS headers — the browser then reports a plain CORS error and never issues the request that would have carried the `403`. What names the cause is the Gateway's own log line, `BFF preflight origin rejected`, with the origin it refused. Read it there, or replay the call with `curl -H 'Origin: ...'` to see the `403` body.
+</Warning>
+
+An entry may carry one wildcard label at the front of the host, `https://*.example.com`, which needs `@forestadmin/agent-bff` 1.31.0 or later. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly, and the wildcard is only accepted in that position: anywhere else in the host, more than once, or over a host with fewer than two remaining labels, the entry is refused at boot and named in the startup warning.
+
+One shape escapes that check. A `*` placed in the URL's userinfo rather than the host, as in `https://*@example.com`, is stripped when the entry is normalized, so the entry is accepted as the exact origin `https://example.com` and no warning names it. Mistyping `*.` as `*@` therefore allows the bare domain and none of its subdomains, which is narrower than intended but silent. Check the startup log lists the entries you expect.
+
+<Note>
+  A wildcard widens the allow-list to every host under that domain, including ones you do not control when the domain is shared. That is usually acceptable here, since the origin check is not the authentication boundary, a session or an API key is still required. Weigh it per domain rather than reaching for the wildcard by default.
+</Note>
+
+A request carrying no `Origin` at all is untouched, which is every server-to-server call. The opaque `Origin: null` is different: it counts as a present origin and is refused. A sandboxed iframe sends it, so give yours `allow-same-origin` if it has to reach the Gateway.
+
+<Warning>
+  When your UI runs in an iframe, the `Origin` the browser sends is the **iframe's**, not the page hosting it. Allow-listing the host application's domain then refuses every call with `403 origin_not_allowed`. Read the `Origin` header off a failing request in your browser's network inspector rather than deriving it from the URL in the address bar.
+</Warning>
+
+<Note>
+  Browsers enforce this against `localhost` too, so add your dev origin (for example `http://localhost:4200`) while developing. There is no development bypass.
+</Note>
+
+## Timezone
+
+On every route that reaches your back-end, the API forwards an explicit timezone, resolved in order: the `X-Forest-Timezone` header, then a `timezone` field in the body, then the fallback configured by `api.defaultTimezone`. None of the three gives `400 missing_timezone`, and a non-IANA value gives `400 invalid_timezone`.
+
+## Checking a deployment
+
+```bash
+curl {your-gateway-url}/api/health
+```
+
+```jsonc
+{
+  "status": "ok",
+  "version": "<package version>",
+  "configured": { "oauth": true, "ai": true, "cors": true, "openapi": true }
+}
+```
+
+`configured` says which optional surfaces this deployment was set up to serve, not that they work. A `503 degraded` means a required variable is missing. The body never names which keys are present, because that would leak your configuration to an unauthenticated probe. Missing keys are logged at startup for operators instead.
+
+## OpenAPI document
+
+With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`; pass a session bearer or an `X-Forest-Bff-Key`.
+
+<Warning>
+  The served document is **not filtered per caller**: anyone who can reach it reads the name of every exposed collection, relation and field, whatever their role. That is why it is off by default when embedded. Exporting it without booting the server works too, which is what you want in CI — the standalone BFF's `forest-bff openapi` command below keeps working either way.
+</Warning>
+
+## Timeouts and failures
+
+A back-end that accepts the connection and then does not answer within `api.agentTimeoutMs` (default `10s`) gives `504 agent_timeout`. A back-end that refuses the connection, whose host does not resolve, or that fails outright mid-flight gives `502 network_error`. The two are deliberately distinct, so a slow back-end and an unreachable one are not diagnosed as the same incident. The `agentTimeoutMs` bound cancels nothing: a write cut off at the deadline keeps running inside the agent and still commits, so a client retrying on the timeout can double the mutation — raise it rather than relying on a retry.
+
+Over the rate limit, the API answers `429 too_many_requests` with a `Retry-After` and a `details.cause` saying whether the caller exceeded its budget or the limiter is saturated. Either way the body is the Gateway's own `{ error: { type, status, message } }`, never your back-end's JSON:API `errors` array, so branch on `error.type` rather than parsing an upstream shape.
+
+<Warning>
+  Sessions live in memory, in one process, and so does the deduplication of in-flight token refreshes. There is no shared store to plug in, so horizontal scaling needs sticky sessions. Without them, two calls for one session landing on different nodes each refresh the Forest token, the second presents a refresh token the first already rotated, and that call fails with `session_expired`.
+</Warning>
+
+<Note>
+  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate, since applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or an `X-Forest-Bff-Key` API key.
+</Note>
+
+## Standalone BFF deployment
+
+The Gateway above is the **embedded** deployment, inside the Node.js agent. When the agent cannot host it — a Ruby back-end, or an API that must scale separately from the agent — the standalone **BFF** deployment serves the same REST contract from its own process and port. It predates the Gateway and is unaffected by the rename: same routes at its own root (`{your-bff-url}/agent/v1/...`), same configuration through environment variables.
+
+```bash
+npm install @forestadmin/agent-bff
+
+BFF_ALLOWED_ORIGINS=https://my-app.com \
+  BFF_TOKEN_ENCRYPTION_KEY=xxx \
+  AGENT_URL=https://your-agent.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
+  npx forest-bff
+```
+
+It listens on port `3450` by default, and forwards to the single back-end `AGENT_URL` names, so several agents cannot share one. A standalone BFF forwards to your agent over HTTP: everything the embedded Gateway API does in-process, it does through the network.
+
+The AI agents side has its own standalone: the [standalone MCP server](/product/embed/mcp-server#standalone-forest-mcp-server). A single standalone process serving both services the way the embedded Gateway does is planned, and will be documented when it ships.
+
+The full environment-variable reference of the standalone BFF:
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `FOREST_AUTH_SECRET` | Yes | — | Your authentication secret. Must match your back-end's. |
+| `FOREST_ENV_SECRET` | Yes | — | Your environment secret. |
+| `AGENT_URL` | Yes | — | The back-end the BFF calls. |
+| `FOREST_SERVER_URL` | No | `https://api.forestadmin.com` | Forest API base URL. Internal use: only Forest Admin developers set it, to reach a local or staging server. |
+| `FOREST_APP_URL` | No | `https://app.forestadmin.com` | Forest front base URL, used to build the sign-in redirect. Internal use, except when your project serves Forest on a custom domain. |
+| `BFF_TOKEN_ENCRYPTION_KEY` | For sign-in | — | Base64-encoded 32-byte key. Until it is set, nobody can sign in from a browser UI. |
+| `HTTP_PORT` | No | `3450` | Server port. Unused when embedded, where the Gateway answers on the agent's port. |
+| `BFF_ALLOWED_ORIGINS` | No | empty | Comma-separated allow-list of origins, exact or one leading wildcard label. Empty means no cross-origin browser access. |
+| `BFF_DEFAULT_TIMEZONE` | No | — | Fallback IANA timezone when a request carries none. |
+| `BFF_PUBLIC_URL` | No | — | The BFF's own external base URL, published in the OpenAPI document. |
+| `BFF_AGENT_TIMEOUT_MS` | No | `10000` | How long to wait for your back-end on a data or action call. |
+| `BFF_AI_TIMEOUT_MS` | No | `120000` | How long to wait for the Forest server on an AI query, `POST /agent/v1/ai/query`. |
+| `BFF_RATE_LIMIT_MAX_REQUESTS` | No | `300` | Requests allowed per caller per window. |
+| `BFF_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. |
+| `BFF_OPENAPI_ENABLED` | No | `true` | Serve the OpenAPI document over HTTP. `false` when embedded. |
+
+A malformed value fails the boot with a clear error and never echoes the offending value. `BFF_ALLOWED_ORIGINS` is the exception: an entry that cannot be parsed is dropped, the boot carries on, and a startup warning names the entries it dropped. Read that warning, because a typo there leaves you with a narrower allow-list than you wrote, and the symptom only shows up later as `403 origin_not_allowed`. A required variable that is merely absent boots anyway and reports the gap through `/health`.
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="Next: Zendesk app →" icon="arrow-right" href="/product/embed/zendesk">
+    The Forest app for Zendesk, which runs on the Gateway's API service.
+  </Card>
+  <Card title="Forest MCP Server →" icon="arrow-right" href="/product/embed/mcp-server">
+    The MCP service's tools, restrictions, token lifetimes and uploads.
+  </Card>
+</CardGroup>

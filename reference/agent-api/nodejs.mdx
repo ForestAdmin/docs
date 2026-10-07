@@ -265,7 +265,76 @@ await agent.restart(): Promise<void>;
 
 ---
 
+### agent.addGateway(options?)
+
+Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Since `@forestadmin/agent` TBD, the release that ships the Gateway. Requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares — install or upgrade both in one command:
+
+```bash
+npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest
+```
+
+```typescript
+agent.addGateway(options?: {
+  basePath?: string;
+  allowedOAuthClients?: string[];
+  mcp?: {
+    enabledTools?: ToolName[];
+    tokenTtl?: { accessTokenSeconds?: number; refreshTokenSeconds?: number };
+    fileUploads?: false | FileUploadsOptions;
+  } | boolean;
+  api?: {
+    allowedOrigins?: string[];
+    tokenEncryptionKey?: string;
+    defaultTimezone?: string;
+    agentTimeoutMs?: number;
+    aiTimeoutMs?: number;
+    openapiEnabled?: boolean;
+  } | boolean;
+}): Agent;
+```
+
+**Parameters:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `basePath` | `string` | Prefix for every Gateway route: `{basePath}/mcp`, `{basePath}/oauth/*`, `{basePath}/api/*`. Defaults to the root. A plain path prefix (letters, digits, `-` and `_` only) that must not overlap the agent's own mount prefix. With the MCP service on, a non-empty `basePath` requires the agent at the domain root. See [Choosing a `basePath`](/product/embed/gateway#choosing-a-basepath). |
+| `allowedOAuthClients` | `string[]` | Accept only OAuth clients whose registered redirect URIs are all `http(s)` URIs on the listed domains or their subdomains; covers **both services**, MCP and API. Every other client gets `invalid_client`. Keep `forestadmin.com` in the list while Forest's Zendesk app is in use. See [Restricting which OAuth clients can connect](/product/embed/gateway#restricting-which-oauth-clients-can-connect). |
+| `mcp` | `boolean \| object` | Enable the MCP service, optionally with the same options as `mountAiMcpServer` except `basePath` and `allowedOAuthClients`, which are top-level here. |
+| `api` | `boolean \| object` | Enable the API service, with the same options as `addBff`. `tokenEncryptionKey` enables OAuth sign-in; without it the API's `/oauth` side stays off. |
+
+**Routes:** with an empty `basePath`, `POST /mcp`, `/mcp/uploads`, `/oauth/authorize` · `/oauth/token` (`?service=api` dispatches to the API service), `/api/agent/v1/*`, `GET /api/health`, and `GET /api/docs` when `api.openapiEnabled` is set; the two `/.well-known` discovery documents sit at the origin root. The full route table and the ingress rules live on the [Gateway page](/product/embed/gateway#routes).
+
+<Note>
+`addGateway()` can be called once, before `start()`, and must enable at least one service (`addGateway({ mcp: true })`, `addGateway({ api: {} })`, or both). It cannot be combined with the deprecated `mountAiMcpServer()` or `addBff()` aliases: whichever is called second throws. Nesting a top-level option under a service (`addGateway({ mcp: { basePath } })`) throws too, with the correct placement named.
+</Note>
+
+<Warning>
+**Mount the agent before any body parser of your own**, on every framework — a host parser that runs first consumes the request body, so every API `POST` fails, OAuth included (`{basePath}/oauth/*?service=api`): `500 stream.not.readable` on Express, `499` on Koa. See [Mount before your body parser](/product/embed/gateway#mount-before-your-body-parser).
+</Warning>
+
+**Example:**
+
+```typescript
+await createAgent(options)
+  .addDataSource(/* ... */)
+  .addGateway({
+    mcp: true,
+    api: {
+      allowedOrigins: ['https://my-app.com'],
+      tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY
+    },
+  })
+  .mountOnStandaloneServer(3351)
+  .start();
+```
+
+---
+
 ### agent.mountAiMcpServer(options?)
+
+<Note>
+**Deprecated.** Use `addGateway({ mcp })` instead. `mountAiMcpServer()` keeps its current paths and semantics — the host root, or its own `basePath` — and the agent logs a deprecation warning at startup. It cannot be combined with `addGateway()`. See [Deprecated aliases](/product/embed/gateway#deprecated-aliases-and-when-to-keep-them).
+</Note>
 
 Enable a Model Context Protocol (MCP) server on the agent, allowing AI assistants to interact with your data through standardized tools.
 
@@ -348,7 +417,11 @@ When the MCP server runs standalone (`npx forest-mcp-server`), the same options 
 
 ### agent.addBff(options?)
 
-Run a [Forest BFF](/product/embed/bff) inside the agent process, so a trusted browser UI can call your agent over REST without a second deployment and without a second port. Since `@forestadmin/agent` 1.100.0 — on an earlier agent the call throws `agent.addBff is not a function`, whatever version of `@forestadmin/agent-bff` is installed.
+<Note>
+**Deprecated.** Use `addGateway({ api })` instead, which serves the same routes under `{basePath}/api` (`/api` by default). `addBff()` keeps serving on `/bff` with its current semantics, and the agent logs a deprecation warning when the route is called. It cannot be combined with `addGateway()`. See [Moving from addBff() to addGateway({ api })](/product/embed/gateway#moving-from-addbff-to-addgateway-api).
+</Note>
+
+Serve the [Forest Gateway](/product/embed/gateway)'s API service through its deprecated alias, on `/bff` inside the agent process, so a trusted browser UI can call your agent over REST without a second deployment and without a second port. Since `@forestadmin/agent` 1.100.0 — on an earlier agent the call throws `agent.addBff is not a function`, whatever version of `@forestadmin/agent-bff` is installed.
 
 ```typescript
 agent.addBff(options?: {
@@ -371,7 +444,7 @@ npm install @forestadmin/agent-bff
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `allowedOrigins` | `string[]` | `[]` | Origins (scheme, host, port) allowed to call the BFF from a browser. Matching is exact, except for a single leading wildcard label, `https://*.example.com`, which needs `@forestadmin/agent-bff` 1.31.0 or later. Empty means no cross-origin access. See [Cross-origin access](/product/embed/bff#cross-origin-access). |
+| `allowedOrigins` | `string[]` | `[]` | Origins (scheme, host, port) allowed to call the BFF from a browser. Matching is exact, except for a single leading wildcard label, `https://*.example.com`, which needs `@forestadmin/agent-bff` 1.31.0 or later. Empty means no cross-origin access. See [Cross-origin access](/product/embed/gateway#cross-origin-access). |
 | `tokenEncryptionKey` | `string` | — | Base64-encoded 32-byte key. Enables the sign-in routes; without it nobody can sign in from a browser UI. |
 | `defaultTimezone` | `string` | — | Fallback IANA timezone for a request that carries none. Without it, such a request answers `400 missing_timezone`. Embedded there is no `BFF_DEFAULT_TIMEZONE` to fall back on, so this option is the only way to set it. |
 | `agentTimeoutMs` | `number` | `10000` | How long a data or action call to the agent may take. It bounds the wait and cancels nothing: a write cut off at the deadline still commits inside the agent, so a client retrying on the timeout can double a non-idempotent mutation. |
@@ -396,16 +469,7 @@ The secrets, the Forest URLs and the logger are inherited from the agent and can
 The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST /bff/agent/v1/{collection}/list`, `GET /bff/health`. A host serving the agent under a sub-path of its own works too, and `app.use('/api', mounted)` puts the BFF at `/api/bff`.
 
 <Warning>
-**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` answers `500 stream.not.readable`.
-
-```typescript
-const app = express();
-agent.mountOnExpress(app);  // first
-app.use(express.json());    // then yours
-await agent.start();
-```
-
-NestJS needs no special handling as long as you mount before `listen()`.
+**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` answers `500 stream.not.readable`. The full warning — every framework, the OAuth symptom, the Koa `499` — lives on the [Gateway page](/product/embed/gateway#mount-before-your-body-parser).
 </Warning>
 
 <Warning>

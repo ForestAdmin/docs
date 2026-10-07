@@ -7,19 +7,19 @@ The Forest Zendesk app lets you view and act on your data without leaving Zendes
 
 ## How it works
 
-The app reaches your back-end through a [Forest BFF](/product/embed/bff), the REST gateway that lets a browser UI call a Forest back-end. Each Zendesk agent signs in with their own Forest account, and every call travels to your back-end as that person. Their roles, permissions and scopes apply exactly as they do in Forest.
+The app reaches your back-end through the [Forest Gateway](/product/embed/gateway), whose API service exposes a flat REST contract to browser UIs. Each Zendesk agent signs in with their own Forest account, and every call travels to your back-end as that person. Their roles, permissions and scopes apply exactly as they do in Forest.
 
 <Info>
-  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the BFF does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your BFF URL. The setting was renamed at the same time, from `forestAgentUrl` to `forestBFFUrl`, so the update leaves the field empty and an admin has to enter the URL again before anyone can sign in.
+  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the Gateway API does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your Gateway URL. The setting was renamed at the same time, from `forestAgentUrl` to `forestBFFUrl`, so the update leaves the field empty and an admin has to enter the URL again before anyone can sign in.
 </Info>
 
 ## Prerequisites
 
-Before installing the app, your tech team needs a Forest BFF that a browser can reach:
+Before installing the app, your tech team needs a Gateway API that a browser can reach:
 
-1. **A BFF serving your Forest back-end**, either embedded in your Node.js agent or deployed standalone.
+1. **A Gateway serving your Forest back-end**, either embedded in your Node.js agent (`addGateway({ api })`) or deployed as the standalone BFF.
 2. **OAuth enabled on it**, which is what lets each Zendesk agent sign in with their Forest account.
-3. **The app's iframe origin allow-listed**, because the app calls your BFF from the browser.
+3. **The app's iframe origin allow-listed**, because the app calls the Gateway from the browser.
 
 Allow-list `https://*.apps.zdusercontent.com`. Zendesk serves every app's iframe from that domain, one subdomain per app, and the Forest app's is `https://1231469.apps.zdusercontent.com`. That number is the Forest app's Marketplace id, not yours, so it is the same value on every Forest installation and nothing in it is yours to replace. Allow-list it instead of the wildcard when you want the narrower entry.
 
@@ -28,19 +28,21 @@ Allow-list `https://*.apps.zdusercontent.com`. Zendesk serves every app's iframe
 </Warning>
 
 <Note>
-  The wildcard form needs `@forestadmin/agent-bff` 1.31.0 or later, and it admits every other Zendesk app too, since Zendesk serves them all from that domain. On an older BFF, or when you want the narrowest allow-list, use the exact origin. To read it off a running installation, open a ticket with the Forest app in the sidebar and inspect that panel's iframe. See [Cross-origin access](/product/embed/bff#cross-origin-access).
+  The wildcard form needs `@forestadmin/agent-bff` 1.31.0 or later, and it admits every other Zendesk app too, since Zendesk serves them all from that domain. On an older BFF, or when you want the narrowest allow-list, use the exact origin. To read it off a running installation, open a ticket with the Forest app in the sidebar and inspect that panel's iframe. See [Cross-origin access](/product/embed/gateway#cross-origin-access).
 </Note>
 
-The embedded option needs `@forestadmin/agent` 1.100.0 or later, the release that added `addBff()`, and loads `@forestadmin/agent-bff` at runtime, an optional peer dependency of `@forestadmin/agent`, so install it alongside your agent or the agent throws on `start()`. Installing `@forestadmin/agent-bff` does not upgrade the agent: on an older one the call throws `agent.addBff is not a function`.
+The embedded option needs `@forestadmin/agent` TBD or later, the release that ships the Gateway and its `addGateway()` method, and loads `@forestadmin/agent-bff` at runtime, an optional peer dependency of `@forestadmin/agent` — at exactly the version the agent declares, so install or upgrade both in one command: `npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest`. On an older agent the call throws `agent.addGateway is not a function`.
 
 <CodeGroup>
 
 ```javascript Embedded in a Node.js back-end
 await createAgent(options)
   .addDataSource(/* ... */)
-  .addBff({
-    allowedOrigins: ['https://*.apps.zdusercontent.com'],
-    tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
+  .addGateway({
+    api: {
+      allowedOrigins: ['https://*.apps.zdusercontent.com'],
+      tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
+    },
   })
   .mountOnStandaloneServer(3351)
   .start();
@@ -59,20 +61,28 @@ BFF_ALLOWED_ORIGINS='https://*.apps.zdusercontent.com' \
 </CodeGroup>
 
 <Note>
+  If you restrict OAuth clients with the Gateway's `allowedOAuthClients`, keep `forestadmin.com` in the list: the app's sign-in redirect runs through `app.forestadmin.com`, and without that entry the Zendesk app itself is rejected with `invalid_client`.
+</Note>
+
+<Note>
+  Migrating from the deprecated `addBff()`? Its options move under `api` unchanged, and the URL the app points at changes from `{your-agent-url}/bff` to `{your-agent-url}/api` — update `forestBFFUrl` accordingly, and every Zendesk agent signs in again. See [Moving from addBff() to addGateway({ api })](/product/embed/gateway#moving-from-addbff-to-addgateway-api).
+</Note>
+
+<Note>
   A build served locally with `zcli apps:server` runs from `http://localhost:4567`. Allow-list that origin too while you develop.
 </Note>
 
 Embedding needs the Node.js agent. With a Ruby back-end, run the BFF standalone.
 
-Make a note of the URL your BFF answers on. You'll need it when installing the Zendesk app:
+Make a note of the URL your Gateway answers on. You'll need it when installing the Zendesk app:
 
-| Deployment | Your BFF URL |
+| Deployment | Your Gateway URL |
 | --- | --- |
-| Embedded | `{your-agent-url}/bff` |
+| Embedded | `{your-agent-url}/api` |
 | Standalone | the BFF's own base URL, port `3450` by default |
 
 <Warning>
-  Without `tokenEncryptionKey` (or `BFF_TOKEN_ENCRYPTION_KEY`), the BFF boots but its `/oauth/*` routes stay disabled, and nobody can sign in from Zendesk. `GET {your-bff-url}/health` reports `configured.oauth` so you can check before installing.
+  Without `tokenEncryptionKey` (or `BFF_TOKEN_ENCRYPTION_KEY`), the Gateway boots but its OAuth routes stay disabled, and nobody can sign in from Zendesk. `GET {your-gateway-url}/api/health` reports `configured.oauth` so you can check before installing.
 </Warning>
 
 ## Installing the Zendesk app
@@ -89,11 +99,11 @@ Make a note of the URL your BFF answers on. You'll need it when installing the Z
     </Note>
   </Step>
   <Step title="Fill in the installation form">
-    - **Forest BFF URL** (`forestBFFUrl`): your Forest BFF URL, from the table above
+    - **Forest BFF URL** (`forestBFFUrl`): your Gateway URL, from the table above
     - Optionally, restrict which Zendesk roles and groups get access to the Forest app
 
     <Note>
-      A form labelled **Forest MCP URL**, suggesting a URL ending in `/mcp`, means the installation has not updated past 1.1.1 yet. Update it first, then enter your BFF URL. Nothing else to configure: versions up to 1.0.2 also carried a `contextField` parameter, and it is gone. The app matches tickets from their own content.
+      A form labelled **Forest MCP URL**, suggesting a URL ending in `/mcp`, means the installation has not updated past 1.1.1 yet. Update it first, then enter your Gateway URL. Nothing else to configure: versions up to 1.0.2 also carried a `contextField` parameter, and it is gone. The app matches tickets from their own content.
     </Note>
   </Step>
   <Step title="Install">
@@ -117,7 +127,7 @@ Each Zendesk agent connects with their own Forest account, once:
 2. Sign in to Forest in the popup that opens, as you usually would to reach your project
 3. The popup closes and the app shows your data
 
-There is nothing to pick. The project and environment come from the BFF your tech team deployed, and your team is resolved from your Forest account, so two Zendesk agents on the same ticket can see different records.
+There is nothing to pick. The project and environment come from the Gateway your tech team deployed, and your team is resolved from your Forest account, so two Zendesk agents on the same ticket can see different records.
 
 <Card title="Your Forest app is now configured in Zendesk!" type="check">
   It matches the ticket sender against your Forest data, surfaces the relevant Customer, User or Partner record, and suggests the actions that resolve the ticket.
@@ -157,7 +167,7 @@ Exact hits outrank partial ones, join-like collections lose 30 points, and the b
 
 ## Where AI is used
 
-Two features call a model, both in the Actions tab, both through your BFF's `POST /agent/v1/ai/query`, which relays to Forest's AI proxy with the signed-in Zendesk agent's session. The BFF holds the Forest token, and the browser never sees it.
+Two features call a model, both in the Actions tab, both through the Gateway API's relay, `POST /api/agent/v1/ai/query` on an embedded Gateway (`/agent/v1/ai/query` on the standalone BFF), which relays to Forest's AI proxy with the signed-in Zendesk agent's session. The Gateway holds the Forest token, and the browser never sees it.
 
 | Feature | When it fires | What is sent |
 | --- | --- | --- |
@@ -167,15 +177,15 @@ Two features call a model, both in the Actions tab, both through your BFF's `POS
 Suggested action names come back through a filter: the app keeps the ones that match a real action and drops the rest, so a hallucinated name never reaches a button. Every ticket field is sanitized before it leaves, with injection markers stripped and lengths capped. Records and relations browsed in the Data tab never reach the AI proxy, and neither does matching.
 
 <Note>
-  The AI relay is served whenever sign-in is configured on the BFF, which `GET {your-bff-url}/health` reports as `configured.ai`. Stay out of the Actions tab and nothing is sent: the Data tab, the search bar and the matching never call it.
+  The AI relay is served whenever sign-in is configured on the Gateway, which `GET {your-gateway-url}/api/health` reports as `configured.ai`. Stay out of the Actions tab and nothing is sent: the Data tab, the search bar and the matching never call it.
 </Note>
 
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Zendesk agents cannot sign in">
-    - Check `GET {your-bff-url}/health`, `configured.oauth` must be `true`
-    - Confirm `forestBFFUrl` points at the BFF, not at the agent itself and not at an MCP URL
+    - Check `GET {your-gateway-url}/api/health`, `configured.oauth` must be `true`
+    - Confirm `forestBFFUrl` points at the Gateway API (`…/api`), not at the agent root and not at an MCP URL
     - On a CORS error in the browser console, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way. The rejected preflight answers `204` with no headers, so the `403 origin_not_allowed` never reaches the browser — the BFF logs `BFF preflight origin rejected` with the origin it refused
   </Accordion>
   <Accordion title="A Zendesk agent sees no record on a ticket">
