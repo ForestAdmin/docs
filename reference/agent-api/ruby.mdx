@@ -691,6 +691,17 @@ collection.disable_search
 
 ---
 
+### collection.disable_field_filtering(name)
+
+Disable filtering for end users on a column, or on a many-to-one or one-to-one relationship. See [Disabling filtering](/product/process/fields/filter#disabling-filtering).
+
+```ruby
+collection.disable_field_filtering('reference_code')
+collection.disable_field_filtering('author')
+```
+
+---
+
 ### collection.replace_field_sorting(name, equivalent_sort)
 
 Replace sorting implementation for a field.

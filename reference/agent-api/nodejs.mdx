@@ -1151,6 +1151,23 @@ collection.disableFieldSorting(name: string): CollectionCustomizer;
 
 ## Filtering
 
+### collection.disableFieldFiltering(name)
+
+Disable filtering for end users on a column, or on a many-to-one or one-to-one relationship. See [Disabling filtering](/product/process/fields/filter#disabling-filtering).
+
+```typescript
+collection.disableFieldFiltering(name: string): CollectionCustomizer;
+```
+
+**Example:**
+
+```typescript
+collection.disableFieldFiltering('referenceCode');
+collection.disableFieldFiltering('author');
+```
+
+---
+
 ### collection.emulateFieldFiltering(name)
 
 Enable in-memory filtering on all operators for a field.
