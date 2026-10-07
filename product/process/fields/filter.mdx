@@ -4,11 +4,48 @@ title: Filtering & Sorting
 
 ## Filtering
 
-### Disabling operators
+### Disabling filtering
 
 <Info>
-  Disable filtering without any code in the field settings in the Forest UI.
+  Disable filtering without any code in the field settings in the Forest UI. That setting only hides the filter in the UI: the API still accepts filters on the field. Use the method below to make the back-end reject them too.
 </Info>
+
+The `disableFieldFiltering` method removes filtering for end users on a column, or on a many-to-one or one-to-one relationship. It needs `@forestadmin/agent` 1.107.0 or later, or `forest_admin_rails` 1.45.0 or later.
+
+<CodeGroup>
+```javascript Node.js / Cloud
+// A column
+collection.disableFieldFiltering('referenceCode');
+
+// A many-to-one or one-to-one relationship
+collection.disableFieldFiltering('author');
+```
+```ruby Ruby
+# A column
+collection.disable_field_filtering('reference_code')
+
+# A many-to-one or one-to-one relationship
+collection.disable_field_filtering('author')
+```
+</CodeGroup>
+
+The Forest UI no longer offers the field as a filter. The back-end rejects any filter on it that comes from the UI or the API, including UI segments and saved views. On a relationship, the rejection covers every filter that goes through it: with `author` disabled, the back-end rejects a filter on `author:name`.
+
+<Warning>
+  Saved views and UI segments that already filter on the field stop working. Before you disable filtering on a field of an existing project, check which views and segments use it.
+</Warning>
+
+Your customizations keep filtering on the field:
+
+- A disabled column remains usable as the key of a custom relationship.
+- Code segments keep filtering on a disabled column or through a disabled relationship.
+- The search bar keeps reading a disabled column, and searching through a disabled relationship.
+
+Limitations:
+
+- The method accepts a column, a many-to-one or a one-to-one relationship. On a primary key, a one-to-many or many-to-many relationship, or a polymorphic relationship, the back-end fails to start.
+- Disabling a many-to-one relationship leaves its foreign key filterable: with `author` disabled, users still filter on `authorId`. Disable the foreign key too to remove both.
+- Pass the field's original name. On a field renamed with `renameField` (Node.js) or `rename_field` (Ruby), use the name it had before the renaming.
 
 ### Substitution
 
