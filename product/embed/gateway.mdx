@@ -38,7 +38,7 @@ Embedded in the Node.js agent, the Gateway needs `@forestadmin/agent`, plus `@fo
 
     Agent pinned below `latest`? Install the exact `@forestadmin/agent-bff` version your agent's release declares instead. On a mismatch the agent refuses to start, and the error names the version it wants with the command to run, `npm install @forestadmin/agent-bff@X.Y.Z`.
 
-    `addGateway()` exists since `@forestadmin/agent` TBD (the release that ships the Gateway). On an earlier agent the call throws `agent.addGateway is not a function`.
+    `addGateway()` exists since `@forestadmin/agent` 1.104.0 (the release that ships the Gateway). On an earlier agent the call throws `agent.addGateway is not a function`.
   </Step>
   <Step title="Enable the services you need">
     ```javascript
@@ -157,7 +157,7 @@ The migration is mechanical:
 ## Mount before your body parser
 
 <Warning>
-  **On every framework, mount the agent before your application's own body parser.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back. Every API `POST` then fails, OAuth included (`{basePath}/oauth/*?service=api`), with `500 stream.not.readable` on Express.
+  **On every framework, mount the agent before your application's own body parser.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back. Every API `POST` on the data routes then fails with `500 stream.not.readable` on Express, and with a bare `500 Internal Server Error` on Koa. The OAuth routes (`{basePath}/oauth/*?service=api`) answer the host framework's own bare `500` on every framework: the typed error body only covers the data routes.
 
 ```typescript
 const app = express();
@@ -230,7 +230,7 @@ With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a 
 
 ## Timeouts and failures
 
-Embedded, your agent runs in the same process: there is no socket, and a dispatch that fails or does not answer within `api.agentTimeoutMs` (default `10s`) maps to `503 agent_unavailable`. The `504 agent_timeout` and `502 network_error` types belong to the [standalone BFF](#standalone-bff-deployment), which calls your agent over HTTP: `504` when the agent accepts the connection and does not answer in time, `502` when it refuses the connection, its host does not resolve, or it fails mid-flight. The two are distinct on purpose, so a slow back-end and an unreachable one are not diagnosed as the same incident. Branch on `error.type` with that split in mind: an embedded client never sees a `504` or a `502`.
+Embedded, your agent runs in the same process: there is no socket, and a dispatch that fails or does not answer within `api.agentTimeoutMs` (default `10s`) maps to `503 agent_unavailable`. The `504 agent_timeout` and `502 network_error` types belong to the [standalone BFF](#standalone-bff-deployment), which calls your agent over HTTP: `504` when the agent accepts the connection and does not answer in time, `502` when it refuses the connection, its host does not resolve, or it fails mid-flight. The two are distinct on purpose, so a slow back-end and an unreachable one are not diagnosed as the same incident. Branch on `error.type` with that split in mind: an embedded client never sees a `504` or a `502` **from its agent**. `ai/query` is the exception: it relays the Forest server over the network and answers `502 network_error` when that server cannot be reached and `504 upstream_timeout` when it does not respond in time, embedded and standalone alike.
 
 The `agentTimeoutMs` bound cancels nothing. A write cut off at the deadline keeps running inside the agent and still commits, so a client retrying on the timeout can double the mutation. Raise the timeout rather than relying on a retry.
 

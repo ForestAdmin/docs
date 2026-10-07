@@ -97,7 +97,7 @@ In your node.js's `index.js` file, enable the Gateway's MCP service with `addGat
 const agent = createAgent(options).addDataSource(/* ... */).addGateway({ mcp: true });
 ```
 
-`addGateway({ mcp: true })` exists since `@forestadmin/agent` TBD (the release that ships the Gateway). MCP alone installs nothing extra: the `@forestadmin/agent-bff` peer package is only loaded when the API service (`api`) is enabled too.
+`addGateway({ mcp: true })` exists since `@forestadmin/agent` 1.104.0 (the release that ships the Gateway); on an earlier agent, keep `mountAiMcpServer()`, its deprecated alias, which still works. MCP alone installs nothing extra: the `@forestadmin/agent-bff` peer package is only loaded when the API service (`api`) is enabled too.
 
 Upon restarting your back-end, the Forest MCP Server starts with it, as confirmed by the following console logs:
 

@@ -267,7 +267,7 @@ await agent.restart(): Promise<void>;
 
 ### agent.addGateway(options?)
 
-Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Since `@forestadmin/agent` TBD, the release that ships the Gateway. The API service also requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares; MCP alone installs nothing extra.
+Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Since `@forestadmin/agent` 1.104.0, the release that ships the Gateway. The API service also requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares; MCP alone installs nothing extra.
 
 ```typescript
 agent.addGateway(options: {
@@ -305,7 +305,7 @@ agent.addGateway(options: {
 </Note>
 
 <Warning>
-**Mount the agent before any body parser of your own**, on every framework. A host parser that runs first consumes the request body, so every API `POST` fails, OAuth included (`{basePath}/oauth/*?service=api`), with `500 stream.not.readable` on Express. See [Mount before your body parser](/product/embed/gateway#mount-before-your-body-parser).
+**Mount the agent before any body parser of your own**, on every framework. A host parser that runs first consumes the request body, so every API `POST` on the data routes fails with `500 stream.not.readable` on Express and a bare `500 Internal Server Error` on Koa; the OAuth routes answer the host's bare `500` on every framework. See [Mount before your body parser](/product/embed/gateway#mount-before-your-body-parser).
 </Warning>
 
 **Example:**
@@ -465,7 +465,7 @@ The secrets, the Forest URLs and the logger are inherited from the agent and can
 The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST /bff/agent/v1/{collection}/list`, `GET /bff/health`. A host serving the agent under a sub-path of its own works too, and `app.use('/api', mounted)` puts the BFF at `/api/bff`.
 
 <Warning>
-**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` answers `500 stream.not.readable`. The full warning, with every framework and the OAuth symptom, lives on the [Gateway page](/product/embed/gateway#mount-before-your-body-parser).
+**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` on the data routes answers `500 stream.not.readable` on Express and a bare `500 Internal Server Error` on Koa, while the OAuth routes answer the host's bare `500`. The full warning, with every framework and the OAuth symptom, lives on the [Gateway page](/product/embed/gateway#mount-before-your-body-parser).
 </Warning>
 
 <Warning>
