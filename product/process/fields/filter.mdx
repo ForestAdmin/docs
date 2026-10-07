@@ -7,10 +7,10 @@ title: Filtering & Sorting
 ### Disabling filtering
 
 <Info>
-  Disable filtering without any code in the field settings in the Forest UI.
+  Disable filtering without any code in the field settings in the Forest UI. That setting only hides the filter in the UI: the API still accepts filters on the field. Use the method below to make the back-end reject them too.
 </Info>
 
-The `disableFieldFiltering` method removes filtering for end users on a column, or on a many-to-one or one-to-one relationship.
+The `disableFieldFiltering` method removes filtering for end users on a column, or on a many-to-one or one-to-one relationship. It needs `@forestadmin/agent` 1.107.0 or later, or `forest_admin_rails` 1.45.0 or later.
 
 <CodeGroup>
 ```javascript Node.js / Cloud

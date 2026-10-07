@@ -660,7 +660,7 @@ collection.add_chart('top_sellers', ->(context, result_builder) {
 
 ---
 
-## Search & Sorting
+## Search, Filtering & Sorting
 
 ### collection.replace_search(definition)
 
@@ -693,7 +693,7 @@ collection.disable_search
 
 ### collection.disable_field_filtering(name)
 
-Disable filtering for end users on a column, or on a many-to-one or one-to-one relationship. See [Disabling filtering](/product/process/fields/filter#disabling-filtering).
+Disable filtering for end users on a column, or on a many-to-one or one-to-one relationship. Needs `forest_admin_rails` 1.45.0 or later. See [Disabling filtering](/product/process/fields/filter#disabling-filtering).
 
 ```ruby
 collection.disable_field_filtering('reference_code')
