@@ -267,14 +267,10 @@ await agent.restart(): Promise<void>;
 
 ### agent.addGateway(options?)
 
-Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Since `@forestadmin/agent` TBD, the release that ships the Gateway. Requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares. Install or upgrade both in one command:
-
-```bash
-npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest
-```
+Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Since `@forestadmin/agent` TBD, the release that ships the Gateway. The API service also requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares; MCP alone installs nothing extra.
 
 ```typescript
-agent.addGateway(options?: {
+agent.addGateway(options: {
   basePath?: string;
   allowedOAuthClients?: string[];
   mcp?: {
@@ -305,11 +301,11 @@ agent.addGateway(options?: {
 **Routes:** with an empty `basePath`, `POST /mcp`, `/mcp/uploads`, `/oauth/authorize` · `/oauth/token` (`?service=api` dispatches to the API service), `/api/agent/v1/*`, `GET /api/health`, and `GET /api/docs` when `api.openapiEnabled` is set; the two `/.well-known` discovery documents sit at the origin root. The full route table and the ingress rules live on the [Gateway page](/product/embed/gateway#routes).
 
 <Note>
-`addGateway()` can be called once, before `start()`, and must enable at least one service (`addGateway({ mcp: true })`, `addGateway({ api: {} })`, or both). It cannot be combined with the deprecated `mountAiMcpServer()` or `addBff()` aliases: whichever is called second throws. Nesting a top-level option under a service (`addGateway({ mcp: { basePath } })`) throws too, with the correct placement named.
+`addGateway()` can be called once, before `start()`: a second call throws `addGateway can only be called once`, so merge the options you need into a single call rather than stacking calls. It must enable at least one service (`addGateway({ mcp: true })`, `addGateway({ api: {} })`, or both), checked when the agent starts; an argument-less `addGateway()` is a `TypeError` on the spot. It cannot be combined with the deprecated `mountAiMcpServer()` or `addBff()` aliases: whichever is called second throws. Nesting a top-level option under a service (`addGateway({ mcp: { basePath } })`) throws too, with the correct placement named.
 </Note>
 
 <Warning>
-**Mount the agent before any body parser of your own**, on every framework. A host parser that runs first consumes the request body, so every API `POST` fails, OAuth included (`{basePath}/oauth/*?service=api`), with `500 stream.not.readable` on Express, `499` on Koa. See [Mount before your body parser](/product/embed/gateway#mount-before-your-body-parser).
+**Mount the agent before any body parser of your own**, on every framework. A host parser that runs first consumes the request body, so every API `POST` fails, OAuth included (`{basePath}/oauth/*?service=api`), with `500 stream.not.readable` on Express. See [Mount before your body parser](/product/embed/gateway#mount-before-your-body-parser).
 </Warning>
 
 **Example:**
@@ -469,7 +465,7 @@ The secrets, the Forest URLs and the logger are inherited from the agent and can
 The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST /bff/agent/v1/{collection}/list`, `GET /bff/health`. A host serving the agent under a sub-path of its own works too, and `app.use('/api', mounted)` puts the BFF at `/api/bff`.
 
 <Warning>
-**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` answers `500 stream.not.readable`. The full warning, with every framework, the OAuth symptom and the Koa `499`, lives on the [Gateway page](/product/embed/gateway#mount-before-your-body-parser).
+**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` answers `500 stream.not.readable`. The full warning, with every framework and the OAuth symptom, lives on the [Gateway page](/product/embed/gateway#mount-before-your-body-parser).
 </Warning>
 
 <Warning>
@@ -481,6 +477,28 @@ The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST 
 </Note>
 
 `addBff()` can be called once, and before `start()`. A mount is what opens a socket, and `start()` only builds the agent's router, so without a `mountOn*` call nothing is served, the BFF included. While the BFF is not serving, `/bff/*` answers `503`, with a different type at each end of the lifecycle: `bff_not_started` between `addBff()` and the end of `start()`, `bff_stopped` after `stop()`.
+
+### Standalone BFF environment variables
+
+When the agent cannot host the Gateway, the [standalone BFF deployment](/product/embed/gateway#standalone-bff-deployment) serves the same REST contract from its own process, configured through environment variables:
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `FOREST_AUTH_SECRET` | Yes | n/a | Your authentication secret. Must match your back-end's. |
+| `FOREST_ENV_SECRET` | Yes | n/a | Your environment secret. |
+| `AGENT_URL` | Yes | n/a | The back-end the BFF calls. |
+| `FOREST_SERVER_URL` | No | `https://api.forestadmin.com` | Forest API base URL. Internal use: only Forest Admin developers set it, to reach a local or staging server. |
+| `FOREST_APP_URL` | No | `https://app.forestadmin.com` | Forest front base URL, used to build the sign-in redirect. Internal use, except when your project serves Forest on a custom domain. |
+| `BFF_TOKEN_ENCRYPTION_KEY` | For sign-in | n/a | Base64-encoded 32-byte key. Until it is set, nobody can sign in from a browser UI. |
+| `HTTP_PORT` | No | `3450` | Server port. Unused when embedded, where the Gateway answers on the agent's port. |
+| `BFF_ALLOWED_ORIGINS` | No | empty | Comma-separated allow-list of origins, exact or one leading wildcard label. Empty means no cross-origin browser access. |
+| `BFF_DEFAULT_TIMEZONE` | No | n/a | Fallback IANA timezone when a request carries none. |
+| `BFF_PUBLIC_URL` | No | n/a | The BFF's own external base URL, published in the OpenAPI document. |
+| `BFF_AGENT_TIMEOUT_MS` | No | `10000` | How long to wait for your back-end on a data or action call. |
+| `BFF_AI_TIMEOUT_MS` | No | `120000` | How long to wait for the Forest server on an AI query, `POST /agent/v1/ai/query`. |
+| `BFF_RATE_LIMIT_MAX_REQUESTS` | No | `300` | Requests allowed per caller per window. |
+| `BFF_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. |
+| `BFF_OPENAPI_ENABLED` | No | `true` | Serve the OpenAPI document over HTTP. `false` when embedded. |
 
 ---
 

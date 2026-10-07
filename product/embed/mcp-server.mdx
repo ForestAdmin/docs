@@ -97,9 +97,9 @@ In your node.js's `index.js` file, enable the Gateway's MCP service with `addGat
 const agent = createAgent(options).addDataSource(/* ... */).addGateway({ mcp: true });
 ```
 
-`addGateway({ mcp: true })` exists since `@forestadmin/agent` TBD (the release that ships the Gateway). Calling `addGateway()` requires the `@forestadmin/agent-bff` package at the exact version the agent declares. Install or upgrade both in one command: `npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest`.
+`addGateway({ mcp: true })` exists since `@forestadmin/agent` TBD (the release that ships the Gateway). MCP alone installs nothing extra: the `@forestadmin/agent-bff` peer package is only loaded when the API service (`api`) is enabled too.
 
-Upon restarting your back-end, the Forest MCP Server will automatically start, as confirmed by the following console logs:
+Upon restarting your back-end, the Forest MCP Server starts with it, as confirmed by the following console logs:
 
 ```text
 info: [MCP] Server initialized successfully
@@ -192,6 +192,10 @@ FOREST_MCP_ENABLED_TOOLS="describeCollection,list,listRelated" \
 ```
 
 </CodeGroup>
+
+<Note>
+  One call per agent: `addGateway()` can only be called once, so each example on this page **replaces** the previous one. Combine the options you need inside a single call, `addGateway({ mcp: { enabledTools, tokenTtl, fileUploads } })`, rather than stacking calls.
+</Note>
 
 When `enabledTools` is not set, all tools are enabled by default.
 
@@ -294,7 +298,7 @@ the prefix is already there.
 
 Nothing to provision: by default the back-end holds uploaded files in memory and serves its own
 upload endpoint at `<your-agent-url>/mcp/uploads`, or `<your-agent-url>/<basePath>/mcp/uploads` if
-you set a `basePath` on the Gateway (or on the deprecated `mountAiMcpServer()`) , and that host is the one to get allowed in the next
+you set a `basePath` on the Gateway (or on the deprecated `mountAiMcpServer()`), and that host is the one to get allowed in the next
 section. Objects are lost on restart, and it is correct for a **single back-end instance
 only**: with several replicas or on a serverless runtime, the upload and the action can land on
 different instances. Plug a storage

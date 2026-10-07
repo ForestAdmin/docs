@@ -28,7 +28,7 @@ const agent = createAgent(options)
   .addGateway({ mcp: true });
 ```
 
-`addGateway()` exists since `@forestadmin/agent` TBD and requires `@forestadmin/agent-bff` at the exact version the agent declares. Install both with `npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest`.
+`addGateway()` exists since `@forestadmin/agent` TBD, the release that ships the Gateway. MCP alone installs nothing extra: `@forestadmin/agent-bff` is only loaded when the API service is enabled too. `addGateway()` is called once per agent, so this call is the one to extend later, not one to repeat.
 
 Restart your back-end. You should see:
 
@@ -44,7 +44,7 @@ You can find your back-end URL in **Project Settings → Environments**. Each en
 
 ## Restrict which tools are exposed
 
-By default all tools are enabled. To expose only a subset, pass `enabledTools`, new tools added in future releases stay off until you opt in:
+By default all tools are enabled. To expose only a subset, pass `enabledTools`, new tools added in future releases stay off until you opt in. This replaces the `addGateway({ mcp: true })` call above rather than adding to it, one call per agent:
 
 ```javascript
 agent.addGateway({

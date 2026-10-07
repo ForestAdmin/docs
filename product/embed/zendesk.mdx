@@ -60,9 +60,9 @@ BFF_ALLOWED_ORIGINS='https://*.apps.zdusercontent.com' \
 
 </CodeGroup>
 
-<Note>
+<Warning>
   If you restrict OAuth clients with the Gateway's `allowedOAuthClients`, keep `forestadmin.com` in the list: the app's sign-in redirect runs through `app.forestadmin.com`, and without that entry the Zendesk app itself is rejected with `invalid_client`.
-</Note>
+</Warning>
 
 <Note>
   Migrating from the deprecated `addBff()`? Its options move under `api` unchanged, and the URL the app points at changes from `{your-agent-url}/bff` to `{your-agent-url}/api`. Update `forestBFFUrl` accordingly; every Zendesk agent signs in again. See [Moving from addBff() to addGateway({ api })](/product/embed/gateway#moving-from-addbff-to-addgateway-api).
@@ -78,7 +78,7 @@ Make a note of the URL your Gateway answers on. You'll need it when installing t
 
 | Deployment | Your Gateway URL |
 | --- | --- |
-| Embedded | `{your-agent-url}/api` |
+| Embedded | `{your-agent-url}{basePath}/api` (`{your-agent-url}/api` with the default empty `basePath`) |
 | Standalone | the BFF's own base URL, port `3450` by default |
 
 <Warning>
