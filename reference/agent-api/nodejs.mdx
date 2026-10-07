@@ -267,7 +267,7 @@ await agent.restart(): Promise<void>;
 
 ### agent.addGateway(options?)
 
-Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Since `@forestadmin/agent` TBD, the release that ships the Gateway. Requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares — install or upgrade both in one command:
+Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Since `@forestadmin/agent` TBD, the release that ships the Gateway. Requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares. Install or upgrade both in one command:
 
 ```bash
 npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest
@@ -309,7 +309,7 @@ agent.addGateway(options?: {
 </Note>
 
 <Warning>
-**Mount the agent before any body parser of your own**, on every framework — a host parser that runs first consumes the request body, so every API `POST` fails, OAuth included (`{basePath}/oauth/*?service=api`): `500 stream.not.readable` on Express, `499` on Koa. See [Mount before your body parser](/product/embed/gateway#mount-before-your-body-parser).
+**Mount the agent before any body parser of your own**, on every framework. A host parser that runs first consumes the request body, so every API `POST` fails, OAuth included (`{basePath}/oauth/*?service=api`), with `500 stream.not.readable` on Express, `499` on Koa. See [Mount before your body parser](/product/embed/gateway#mount-before-your-body-parser).
 </Warning>
 
 **Example:**
@@ -333,7 +333,7 @@ await createAgent(options)
 ### agent.mountAiMcpServer(options?)
 
 <Note>
-**Deprecated.** Use `addGateway({ mcp })` instead. `mountAiMcpServer()` keeps its current paths and semantics — the host root, or its own `basePath` — and the agent logs a deprecation warning at startup. It cannot be combined with `addGateway()`. See [Deprecated aliases](/product/embed/gateway#deprecated-aliases-and-when-to-keep-them).
+**Deprecated.** Use `addGateway({ mcp })` instead. `mountAiMcpServer()` keeps its current paths and semantics (the host root, or its own `basePath`), and the agent logs a deprecation warning at startup. It cannot be combined with `addGateway()`. See [Deprecated aliases](/product/embed/gateway#deprecated-aliases-and-when-to-keep-them).
 </Note>
 
 Enable a Model Context Protocol (MCP) server on the agent, allowing AI assistants to interact with your data through standardized tools.
@@ -421,7 +421,7 @@ When the MCP server runs standalone (`npx forest-mcp-server`), the same options 
 **Deprecated.** Use `addGateway({ api })` instead, which serves the same routes under `{basePath}/api` (`/api` by default). `addBff()` keeps serving on `/bff` with its current semantics, and the agent logs a deprecation warning when the route is called. It cannot be combined with `addGateway()`. See [Moving from addBff() to addGateway({ api })](/product/embed/gateway#moving-from-addbff-to-addgateway-api).
 </Note>
 
-Serve the [Forest Gateway](/product/embed/gateway)'s API service through its deprecated alias, on `/bff` inside the agent process, so a trusted browser UI can call your agent over REST without a second deployment and without a second port. Since `@forestadmin/agent` 1.100.0 — on an earlier agent the call throws `agent.addBff is not a function`, whatever version of `@forestadmin/agent-bff` is installed.
+Serve the [Forest Gateway](/product/embed/gateway)'s API service through its deprecated alias, on `/bff` inside the agent process, so a trusted browser UI can call your agent over REST without a second deployment and without a second port. Since `@forestadmin/agent` 1.100.0. On an earlier agent the call throws `agent.addBff is not a function`, whatever version of `@forestadmin/agent-bff` is installed.
 
 ```typescript
 agent.addBff(options?: {
@@ -469,7 +469,7 @@ The secrets, the Forest URLs and the logger are inherited from the agent and can
 The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST /bff/agent/v1/{collection}/list`, `GET /bff/health`. A host serving the agent under a sub-path of its own works too, and `app.use('/api', mounted)` puts the BFF at `/api/bff`.
 
 <Warning>
-**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` answers `500 stream.not.readable`. The full warning — every framework, the OAuth symptom, the Koa `499` — lives on the [Gateway page](/product/embed/gateway#mount-before-your-body-parser).
+**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` answers `500 stream.not.readable`. The full warning, with every framework, the OAuth symptom and the Koa `499`, lives on the [Gateway page](/product/embed/gateway#mount-before-your-body-parser).
 </Warning>
 
 <Warning>
