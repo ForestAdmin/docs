@@ -82,7 +82,7 @@ Make a note of the URL your Gateway answers on. You'll need it when installing t
 | Standalone | the BFF's own base URL, port `3450` by default |
 
 <Warning>
-  Without `tokenEncryptionKey` (or `BFF_TOKEN_ENCRYPTION_KEY`), the Gateway boots but its OAuth routes stay disabled, and nobody can sign in from Zendesk. `GET {your-gateway-url}/api/health` reports `configured.oauth` so you can check before installing.
+  Without `tokenEncryptionKey` (or `BFF_TOKEN_ENCRYPTION_KEY`), the Gateway boots but its OAuth routes stay disabled, and nobody can sign in from Zendesk. `GET {your-gateway-url}/health` reports `configured.oauth` so you can check before installing.
 </Warning>
 
 ## Installing the Zendesk app
@@ -167,7 +167,7 @@ Exact hits outrank partial ones, join-like collections lose 30 points, and the b
 
 ## Where AI is used
 
-Two features call a model, both in the Actions tab, both through the Gateway API's relay, `POST /api/agent/v1/ai/query` on an embedded Gateway (`/agent/v1/ai/query` on the standalone BFF), which relays to Forest's AI proxy with the signed-in Zendesk agent's session. The Gateway holds the Forest token, and the browser never sees it.
+Two features call a model, both in the Actions tab, both through the Gateway API's relay, `POST {basePath}/api/agent/v1/ai/query` on an embedded Gateway (`/agent/v1/ai/query` on the standalone BFF), which relays to Forest's AI proxy with the signed-in Zendesk agent's session. The Gateway holds the Forest token, and the browser never sees it.
 
 | Feature | When it fires | What is sent |
 | --- | --- | --- |
@@ -177,14 +177,14 @@ Two features call a model, both in the Actions tab, both through the Gateway API
 Suggested action names come back through a filter: the app keeps the ones that match a real action and drops the rest, so a hallucinated name never reaches a button. Every ticket field is sanitized before it leaves, with injection markers stripped and lengths capped. Records and relations browsed in the Data tab never reach the AI proxy, and neither does matching.
 
 <Note>
-  The AI relay is served whenever sign-in is configured on the Gateway, which `GET {your-gateway-url}/api/health` reports as `configured.ai`. Stay out of the Actions tab and nothing is sent: the Data tab, the search bar and the matching never call it.
+  The AI relay is served whenever sign-in is configured on the Gateway, which `GET {your-gateway-url}/health` reports as `configured.ai`. Stay out of the Actions tab and nothing is sent: the Data tab, the search bar and the matching never call it.
 </Note>
 
 ## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Zendesk agents cannot sign in">
-    - Check `GET {your-gateway-url}/api/health`, `configured.oauth` must be `true`
+    - Check `GET {your-gateway-url}/health`, `configured.oauth` must be `true`
     - Confirm `forestBFFUrl` points at the Gateway API (`…/api`), not at the agent root and not at an MCP URL
     - On a CORS error in the browser console, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way. The rejected preflight answers `204` with no headers, so the `403 origin_not_allowed` never reaches the browser — the BFF logs `BFF preflight origin rejected` with the origin it refused
   </Accordion>
