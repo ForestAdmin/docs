@@ -123,7 +123,7 @@ The API service reads these too:
 
 The MCP service reads the same `FOREST_MCP_*` variables as before, under the same names: enabled tools, token lifetimes and file uploads. They are listed on the [MCP server page](/product/embed/mcp-server#standalone-configuration).
 
-**When a value is wrong.** A malformed value (a bad URL, a bad port, an API public URL that does not end with `{basePath}/api`) stops the boot with an error naming the variable, never its value. A required variable that is merely missing does not: the service that needs it starts degraded, answers `503`, and a boot warning names the variable. `FOREST_GATEWAY_API_ALLOWED_ORIGINS` is the one exception to the first rule: an entry that cannot be parsed is dropped, and a boot warning names the key.
+**When a value is wrong.** A malformed value (a bad URL, a bad port, an API public URL that does not end with `{basePath}/api`) stops the boot with an error naming the variable. A required variable that is merely missing does not: the service that needs it starts degraded, answers `503`, and a boot warning names the variable. `FOREST_GATEWAY_API_ALLOWED_ORIGINS` is the one exception to the first rule: an entry that cannot be parsed is dropped, and a boot warning names the key.
 
 ### Legacy names
 
@@ -145,7 +145,7 @@ An ingress or WAF that allow-lists only `{basePath}/api/*` **breaks sign-in**. B
 
 ## Restricting which OAuth clients can connect
 
-`FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` restricts **both services at once**, MCP and API. Without it, any OAuth client registered at Forest can connect.
+`FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` restricts **both services at once**, MCP and API. Without it, or with an empty value, any OAuth client registered at Forest can connect. A value that lists no domain, such as spaces or a lone comma, stops the boot instead of opening the Gateway to every client.
 
 ```bash
 FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS=dust.tt,forestadmin.com
