@@ -2,6 +2,12 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Forest Documentation",
+  "redirects": [
+    {
+      "source": "/product/embed/bff",
+      "destination": "/product/embed/gateway"
+    }
+  ],
   "colors": {
     "primary": "#3F5B1E",
     "light": "#DDF327",
@@ -99,7 +105,8 @@
                 "pages": [
                   "get-started/connect/integrations/overview",
                   "get-started/connect/integrations/mcp-servers",
-                  "product/embed/bff",
+                  "product/embed/gateway",
+                  "product/embed/gateway-standalone",
                   "product/embed/zendesk",
                   "product/embed/n8n"
                 ]
@@ -254,7 +261,8 @@
             "group": "Embed",
             "pages": [
               "product/embed/mcp-server",
-              "product/embed/bff",
+              "product/embed/gateway",
+              "product/embed/gateway-standalone",
               "product/embed/zendesk",
               "product/embed/n8n"
             ]

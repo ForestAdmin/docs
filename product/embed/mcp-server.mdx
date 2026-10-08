@@ -18,54 +18,56 @@ The Forest MCP server lets AI tools like Claude, Dust, and others to:
 
 All of this while respecting the Roles & Permissions of your Forest project, and logging activity just like if it were performed through the UI — see [Identity, auditing, and limits](#identity-auditing-and-limits) for the four tools that are not logged.
 
-The Forest MCP Server also enables other third party apps to embed and access Forest data and actions, for example in [n8n](/product/embed/n8n). The [Zendesk app](/product/embed/zendesk) used it up to its 1.1.1 release and now runs on the [BFF](/product/embed/bff).
+The Forest MCP Server also enables other third party apps to embed and access Forest data and actions, for example in [n8n](/product/embed/n8n). The [Zendesk app](/product/embed/zendesk) used it up to its 1.1.1 release and now runs on the [Gateway](/product/embed/gateway).
 
 # Enabling the Forest MCP Server
 
 There are 2 ways to configure the Forest MCP Server:
 
-- **Standalone**: the Forest MCP Server runs as an standalone service, pointing to your existing node.js or ruby back-end
-- **Mounted**: the Forest MCP Server runs as part of your node.js back-end
+- **Standalone**: the Forest MCP Server runs as the MCP service of the [standalone Forest Gateway](/product/embed/gateway-standalone), a separate service pointing to your existing back-end
+- **Mounted**: the Forest MCP Server runs as part of your node.js back-end, as the MCP service of the [Forest Gateway](/product/embed/gateway)
 
 ## Standalone Forest MCP Server
 
-To run your Forest MCP Server as a standalone service, you will first need to download the mcp-server package:
+Run the standalone Gateway with the MCP service on. It needs your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET, to authenticate and reach the right back-end for your project and environment:
 
-```text
-npm install @forestadmin/mcp-server
+<CodeGroup>
+
+```bash Docker
+docker run -d -p 3931:3931 \
+  -e FOREST_GATEWAY_SERVICES=mcp \
+  -e FOREST_GATEWAY_URL=https://mcp.example.com \
+  -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
+  ghcr.io/forestadmin/gateway:latest
 ```
 
-You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET variables to start the Forest MCP Server, to ensure it can authenticate and access the right back-end, corresponding to your project and environment of choice:
-
-```text
-FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
-
-# deployed
-FOREST_MCP_SERVER_URL=https://mcp.example.com \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+```bash npx
+FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_GATEWAY_URL=https://mcp.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx @forestadmin/gateway
 ```
+
+</CodeGroup>
 
 <Note>
   Follow [this guide](/get-started/connect/environment-variables) to retrieve your AUTH and ENV secrets for the relevant environment.
 </Note>
 
+<Note>
+  `npx forest-mcp-server`, from the `@forestadmin/mcp-server` package, keeps working with the same variables and URLs, and is deprecated. [Moving to the Gateway](/product/embed/gateway-standalone#from-forest-mcp-server) keeps your MCP URLs.
+</Note>
+
 ### Standalone configuration
 
-The standalone Forest MCP Server is configured entirely through environment variables:
+The standalone Gateway's own variables (`FOREST_GATEWAY_SERVICES`, `FOREST_GATEWAY_URL`, `PORT`, `FOREST_AGENT_URL`, `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS`) are listed on [its page](/product/embed/gateway-standalone#environment-variables). The MCP service also reads:
 
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
-| `FOREST_ENV_SECRET` | Yes | — | Your environment secret, used to authenticate and reach the right back-end. |
-| `FOREST_AUTH_SECRET` | Yes | — | Your authentication secret. Must match the one of the corresponding back-end. |
-| `MCP_SERVER_PORT` | No | `3931` | Port the standalone server listens on. |
-| `FOREST_MCP_SERVER_URL` | Yes, when deployed | `http://localhost:<port>` | Public URL the server is reachable at — an http(s) origin, no path. An invalid value fails at startup. |
 | `FOREST_MCP_ENABLED_TOOLS` | No | all tools | Comma-separated allowlist of tools to expose (see [Restrict tools](#restrict-tools)). |
-| `FOREST_AGENT_URL` | No | your environment's back-end URL | URL the MCP Server uses to reach your back-end's data layer. |
 | `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` | No | `3600` (1 hour) | Shortens the OAuth access token lifetime (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
 | `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` | No | unbounded | Shortens the time between two interactive logins (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
-| `FOREST_MCP_ALLOWED_OAUTH_CLIENTS` | No | any registered client | Comma-separated domains of the OAuth clients allowed to connect (see [Restrict which AI clients can connect](#restrict-which-ai-clients-can-connect)). |
 | `FOREST_MCP_FILE_UPLOADS` | No | on | `false` turns action file uploads off (see [Action file uploads](#action-file-uploads)). |
-| `FOREST_MCP_UPLOAD_STORAGE_MODULE` | No | in-memory store | Path to a module exporting the `fileUploads` options, for a real storage backend (see [Action file uploads](#action-file-uploads)). |
+| `FOREST_MCP_UPLOAD_STORAGE_MODULE` | No | in-memory store | Path to a module exporting the `fileUploads` options, for a real storage backend (see [Action file uploads](#action-file-uploads)). With the image, [mount it into the container](/product/embed/gateway-standalone#action-file-uploads-with-the-image). |
 
 <Note>
   Set `FOREST_AGENT_URL` when the MCP Server runs next to a self-hosted back-end reachable at an internal address (e.g. `http://localhost:3310`), so tool calls hit it directly instead of the public back-end URL registered in Forest.
@@ -91,16 +93,19 @@ Your Forest MCP Server will be accessible at this URL: `{your-standalone-server-
   width="100%"
 />
 
-In your node.js's `index.js` file, simply call the `mountAiMcpServer()` method when creating the back-end, for example:
+In your node.js's `index.js` file, enable the Gateway's MCP service with `addGateway()` when creating the back-end, for example:
 
 ```text
-const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer();
+const agent = createAgent(options).addDataSource(/* ... */).addGateway({ mcp: true });
 ```
 
-Upon restarting your back-end, the Forest MCP Server will automatically start, as confirmed by the following console log:
+`addGateway({ mcp: true })` ships with the first `@forestadmin/agent` release that includes the Gateway; on an earlier agent, keep `mountAiMcpServer()`, its deprecated alias, which still works. MCP alone installs nothing extra: the `@forestadmin/agent-bff` peer package is only loaded when the API service (`api`) is enabled too.
+
+Upon restarting your back-end, the Forest MCP Server starts with it, as confirmed by the following console logs:
 
 ```text
 info: [MCP] Server initialized successfully
+info: [Gateway] MCP: /mcp, /mcp/uploads, /oauth/*, /.well-known/oauth-authorization-server, /.well-known/oauth-protected-resource/mcp
 ```
 
 Your Forest MCP Server URL will be `{your-agent-url}/mcp`
@@ -112,18 +117,22 @@ Your Forest MCP Server URL will be `{your-agent-url}/mcp`
 </Note>
 
 <Warning>
-  When mounted, the MCP server intercepts the **entire** `/oauth/*` namespace plus `/mcp` at your back-end's root, and claims the two `.well-known` discovery documents (`/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource/mcp`). Any request in those namespaces is captured by the MCP server — if it doesn't serve that exact route (or your back-end already does), the request gets a 404/405 **instead of reaching your back-end**. So your own `/oauth/callback` would break, and so would a back-end version of either discovery document. Every other `/.well-known/*` request (e.g. `acme-challenge/...` or `security.txt`) reaches your back-end.
+  When mounted, the MCP service intercepts the **entire** `/oauth/*` namespace plus `/mcp` at your back-end's root, and claims the two `.well-known` discovery documents (`/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource/mcp`). Any request in those namespaces is captured by the MCP service. If it doesn't serve that exact route (or your back-end already does), the request gets a 404/405 **instead of reaching your back-end**. So your own `/oauth/callback` would break, and so would a back-end version of either discovery document. Every other `/.well-known/*` request (e.g. `acme-challenge/...` or `security.txt`) reaches your back-end.
 
-  Pass a `basePath` to narrow the MCP server to a dedicated prefix so your routes are left untouched. The OAuth and protocol routes move under the prefix; the `.well-known` discovery documents stay at the root (as OAuth discovery requires) but are served at prefix-suffixed paths such as `/.well-known/oauth-authorization-server/ai`, so your back-end's own root OAuth metadata is not claimed:
+  Pass a `basePath` to `addGateway()` to narrow the Gateway to a dedicated prefix so your routes are left untouched. The MCP and OAuth routes move under the prefix; the `.well-known` discovery documents stay at the root (as OAuth discovery requires) but are served at prefix-suffixed paths such as `/.well-known/oauth-authorization-server/ai`, so your back-end's own root OAuth metadata is not claimed:
 
   ```text
-  const agent = createAgent(options).addDataSource(/* ... */).mountAiMcpServer({ basePath: '/ai' });
+  const agent = createAgent(options).addDataSource(/* ... */).addGateway({ basePath: '/ai', mcp: true });
   ```
 
-  Your Forest MCP Server URL then becomes `{your-agent-url}/ai/mcp`. Because OAuth discovery must stay at the origin root, `basePath` requires your agent to be served at the domain root (it throws at startup if the agent URL already includes a path), and root `/.well-known/*` requests must still reach the agent.
+  Your Forest MCP Server URL then becomes `{your-agent-url}/ai/mcp`. Because OAuth discovery must stay at the origin root, a non-empty `basePath` requires your agent to be served at the domain root (it throws at startup if the agent URL already includes a path), and root `/.well-known/*` requests must still reach the agent.
 
   The prefix applies to every route, including the protocol endpoint — so `basePath: '/mcp'` would make the endpoint `/mcp/mcp`. Prefer a distinct prefix such as `/ai` to avoid the repetition.
 </Warning>
+
+<Note>
+  **Deprecated alias.** `mountAiMcpServer()` still works, on the same paths and with the same semantics, at the root or under its own `basePath`. It is deprecated, so use `addGateway({ mcp })` instead, which the agent reminds you of with a startup warning. The two cannot be combined: calling `addGateway()` and an alias on the same agent throws, whichever is called second. See [Deprecated aliases](/product/embed/gateway#deprecated-aliases-and-when-to-keep-them).
+</Note>
 
 # Available tools
 
@@ -174,17 +183,22 @@ You can restrict which tools the MCP server exposes using `enabledTools`. Only t
 <CodeGroup>
 
 ```javascript Mounted on agent
-agent.mountAiMcpServer({
-  enabledTools: ['describeCollection', 'list', 'listRelated'],
+agent.addGateway({
+  mcp: { enabledTools: ['describeCollection', 'list', 'listRelated'] },
 });
 ```
 
 ```bash Standalone
 FOREST_MCP_ENABLED_TOOLS="describeCollection,list,listRelated" \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+  FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx @forestadmin/gateway
 ```
 
 </CodeGroup>
+
+<Note>
+  One call per agent: `addGateway()` can only be called once, so each example on this page **replaces** the previous one. Combine the options you need inside a single call, `addGateway({ mcp: { enabledTools, tokenTtl, fileUploads } })`, rather than stacking calls.
+</Note>
 
 When `enabledTools` is not set, all tools are enabled by default.
 
@@ -194,19 +208,25 @@ When `enabledTools` is not set, all tools are enabled by default.
 
 ## Restrict which AI clients can connect
 
-By default, any OAuth client application can register against the MCP server through Dynamic Client Registration and, once one of your users signs in, obtain tokens. Use `allowedOAuthClients` (`@forestadmin/agent` ≥ 1.92.0, `@forestadmin/mcp-server` ≥ 1.21.0) to accept only approved client applications:
+By default, any OAuth client application can register against the MCP server through Dynamic Client Registration and, once one of your users signs in, obtain tokens. Use `allowedOAuthClients` to accept only approved client applications. On the Gateway, the option is top-level and covers **both services**, MCP and API. `addGateway()` ships with the first `@forestadmin/agent` release that includes the Gateway; on an earlier agent (≥ 1.92.0), pass the option to `mountAiMcpServer()` instead, where it covers MCP only. The standalone server needs `@forestadmin/mcp-server` ≥ 1.21.0:
 
 <CodeGroup>
 
 ```javascript Mounted on agent
-agent.mountAiMcpServer({
+agent.addGateway({
   allowedOAuthClients: ['dust.tt'],
+  mcp: true,
 });
 ```
 
+```javascript Agent before the Gateway
+agent.mountAiMcpServer({ allowedOAuthClients: ['dust.tt'] });
+```
+
 ```bash Standalone
-FOREST_MCP_ALLOWED_OAUTH_CLIENTS="dust.tt" \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS="dust.tt" \
+  FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx @forestadmin/gateway
 ```
 
 </CodeGroup>
@@ -226,10 +246,12 @@ The MCP server issues OAuth tokens whose lifetimes come from Forest: **1 hour** 
 <CodeGroup>
 
 ```javascript Mounted on agent
-agent.mountAiMcpServer({
-  tokenTtl: {
-    accessTokenSeconds: 900,
-    refreshTokenSeconds: 86400,
+agent.addGateway({
+  mcp: {
+    tokenTtl: {
+      accessTokenSeconds: 900,
+      refreshTokenSeconds: 86400,
+    },
   },
 });
 ```
@@ -237,7 +259,8 @@ agent.mountAiMcpServer({
 ```bash Standalone
 FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS=900 \
   FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS=86400 \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+  FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx @forestadmin/gateway
 ```
 
 </CodeGroup>
@@ -284,7 +307,7 @@ the prefix is already there.
 
 Nothing to provision: by default the back-end holds uploaded files in memory and serves its own
 upload endpoint at `<your-agent-url>/mcp/uploads`, or `<your-agent-url>/<basePath>/mcp/uploads` if
-you passed `basePath` to `mountAiMcpServer` — that host is the one to get allowed in the next
+you set a `basePath` on the Gateway (or on the deprecated `mountAiMcpServer()`), and that host is the one to get allowed in the next
 section. Objects are lost on restart, and it is correct for a **single back-end instance
 only**: with several replicas or on a serverless runtime, the upload and the action can land on
 different instances. Plug a storage
@@ -293,30 +316,32 @@ backend (S3 presigned URLs, GCS, Azure SAS) for those deployments, or turn the f
 <CodeGroup>
 
 ```javascript Storage backend
-agent.mountAiMcpServer({
-  // any object implementing createUploadUrl / download / getSize —
-  // see the @forestadmin/mcp-server README for the contract and an S3 example
-  fileUploads: { storage: myUploadStorage },
+agent.addGateway({
+  mcp: {
+    // any object implementing createUploadUrl / download / getSize
+    // see the @forestadmin/mcp-server README for the contract and an S3 example
+    fileUploads: { storage: myUploadStorage },
+  },
 });
 ```
 
 ```javascript Turn it off
-agent.mountAiMcpServer({ fileUploads: false });
+agent.addGateway({ mcp: { fileUploads: false } });
 ```
 
 ```bash Standalone
 # only 'true' or 'false' — any other value fails at startup
-FOREST_MCP_FILE_UPLOADS=false npx forest-mcp-server
+FOREST_MCP_FILE_UPLOADS=false FOREST_GATEWAY_SERVICES=mcp npx @forestadmin/gateway
 
 # or point it at a storage module. FOREST_MCP_FILE_UPLOADS=false wins over it,
 # so do not set both unless you mean to turn uploads off.
-FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js npx forest-mcp-server
+FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js FOREST_GATEWAY_SERVICES=mcp npx @forestadmin/gateway
 ```
 
 </CodeGroup>
 
 <Warning>
-  **A deployed standalone server must be told its public URL.** Set `FOREST_MCP_SERVER_URL`, or it
+  **A deployed standalone Gateway must be told its public URL.** Set `FOREST_GATEWAY_URL`, or it
   advertises `http://localhost:<port>` to clients and none of them can connect. Mounted deployments
   are unaffected: their URLs derive from the back-end URL registered in Forest.
 </Warning>
@@ -355,7 +380,8 @@ Whether the client can make it depends on where it runs:
   from a file over `maxBytes`, so branch on the body, not the status.
 
 <Note>
-  The four `fileUploads.*` settings above are code-only — they are passed to `mountAiMcpServer`,
+  The four `fileUploads.*` settings above are code-only: they are passed to `addGateway({ mcp })`
+  (or to the deprecated `mountAiMcpServer()`),
   and there is no environment variable for any of them. On a standalone server they are set in the
   module `FOREST_MCP_UPLOAD_STORAGE_MODULE` points at, which carries the whole `fileUploads` object
   and not just the storage.
