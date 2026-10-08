@@ -24,48 +24,50 @@ The Forest MCP Server also enables other third party apps to embed and access Fo
 
 There are 2 ways to configure the Forest MCP Server:
 
-- **Standalone**: the Forest MCP Server runs as an standalone service, pointing to your existing node.js or ruby back-end
+- **Standalone**: the Forest MCP Server runs as the MCP service of the [standalone Forest Gateway](/product/embed/gateway-standalone), a separate service pointing to your existing back-end
 - **Mounted**: the Forest MCP Server runs as part of your node.js back-end, as the MCP service of the [Forest Gateway](/product/embed/gateway)
 
 ## Standalone Forest MCP Server
 
-To run your Forest MCP Server as a standalone service, you will first need to download the mcp-server package:
+Run the standalone Gateway with the MCP service on. It needs your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET, to authenticate and reach the right back-end for your project and environment:
 
-```text
-npm install @forestadmin/mcp-server
+<CodeGroup>
+
+```bash Docker
+docker run -d -p 3931:3931 \
+  -e FOREST_GATEWAY_SERVICES=mcp \
+  -e FOREST_GATEWAY_URL=https://mcp.example.com \
+  -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
+  ghcr.io/forestadmin/gateway:latest
 ```
 
-You will then need to provide your FOREST\_ENV\_SECRET and FOREST\_AUTH\_SECRET variables to start the Forest MCP Server, to ensure it can authenticate and access the right back-end, corresponding to your project and environment of choice:
-
-```text
-FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
-
-# deployed
-FOREST_MCP_SERVER_URL=https://mcp.example.com \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+```bash npx
+FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_GATEWAY_URL=https://mcp.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx @forestadmin/gateway
 ```
+
+</CodeGroup>
 
 <Note>
   Follow [this guide](/get-started/connect/environment-variables) to retrieve your AUTH and ENV secrets for the relevant environment.
 </Note>
 
+<Note>
+  `npx forest-mcp-server`, from the `@forestadmin/mcp-server` package, keeps working with the same variables and URLs, and is deprecated. [Moving to the Gateway](/product/embed/gateway-standalone#from-forest-mcp-server) keeps your MCP URLs.
+</Note>
+
 ### Standalone configuration
 
-The standalone Forest MCP Server is configured entirely through environment variables:
+The standalone Gateway's own variables (`FOREST_GATEWAY_SERVICES`, `FOREST_GATEWAY_URL`, `PORT`, `FOREST_AGENT_URL`, `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS`) are listed on [its page](/product/embed/gateway-standalone#environment-variables). The MCP service also reads:
 
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
-| `FOREST_ENV_SECRET` | Yes | — | Your environment secret, used to authenticate and reach the right back-end. |
-| `FOREST_AUTH_SECRET` | Yes | — | Your authentication secret. Must match the one of the corresponding back-end. |
-| `MCP_SERVER_PORT` | No | `3931` | Port the standalone server listens on. |
-| `FOREST_MCP_SERVER_URL` | Yes, when deployed | `http://localhost:<port>` | Public URL the server is reachable at — an http(s) origin, no path. An invalid value fails at startup. |
 | `FOREST_MCP_ENABLED_TOOLS` | No | all tools | Comma-separated allowlist of tools to expose (see [Restrict tools](#restrict-tools)). |
-| `FOREST_AGENT_URL` | No | your environment's back-end URL | URL the MCP Server uses to reach your back-end's data layer. |
 | `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` | No | `3600` (1 hour) | Shortens the OAuth access token lifetime (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
 | `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` | No | unbounded | Shortens the time between two interactive logins (see [Token lifetimes](#token-lifetimes)). Minimum `60`. |
-| `FOREST_MCP_ALLOWED_OAUTH_CLIENTS` | No | any registered client | Comma-separated domains of the OAuth clients allowed to connect (see [Restrict which AI clients can connect](#restrict-which-ai-clients-can-connect)). |
 | `FOREST_MCP_FILE_UPLOADS` | No | on | `false` turns action file uploads off (see [Action file uploads](#action-file-uploads)). |
-| `FOREST_MCP_UPLOAD_STORAGE_MODULE` | No | in-memory store | Path to a module exporting the `fileUploads` options, for a real storage backend (see [Action file uploads](#action-file-uploads)). |
+| `FOREST_MCP_UPLOAD_STORAGE_MODULE` | No | in-memory store | Path to a module exporting the `fileUploads` options, for a real storage backend (see [Action file uploads](#action-file-uploads)). With the image, [mount it into the container](/product/embed/gateway-standalone#action-file-uploads-with-the-image). |
 
 <Note>
   Set `FOREST_AGENT_URL` when the MCP Server runs next to a self-hosted back-end reachable at an internal address (e.g. `http://localhost:3310`), so tool calls hit it directly instead of the public back-end URL registered in Forest.
@@ -188,7 +190,8 @@ agent.addGateway({
 
 ```bash Standalone
 FOREST_MCP_ENABLED_TOOLS="describeCollection,list,listRelated" \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+  FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx @forestadmin/gateway
 ```
 
 </CodeGroup>
@@ -217,8 +220,9 @@ agent.addGateway({
 ```
 
 ```bash Standalone
-FOREST_MCP_ALLOWED_OAUTH_CLIENTS="dust.tt" \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS="dust.tt" \
+  FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx @forestadmin/gateway
 ```
 
 </CodeGroup>
@@ -251,7 +255,8 @@ agent.addGateway({
 ```bash Standalone
 FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS=900 \
   FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS=86400 \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx forest-mcp-server
+  FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx npx @forestadmin/gateway
 ```
 
 </CodeGroup>
@@ -322,17 +327,17 @@ agent.addGateway({ mcp: { fileUploads: false } });
 
 ```bash Standalone
 # only 'true' or 'false' — any other value fails at startup
-FOREST_MCP_FILE_UPLOADS=false npx forest-mcp-server
+FOREST_MCP_FILE_UPLOADS=false FOREST_GATEWAY_SERVICES=mcp npx @forestadmin/gateway
 
 # or point it at a storage module. FOREST_MCP_FILE_UPLOADS=false wins over it,
 # so do not set both unless you mean to turn uploads off.
-FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js npx forest-mcp-server
+FOREST_MCP_UPLOAD_STORAGE_MODULE=./my-storage.js FOREST_GATEWAY_SERVICES=mcp npx @forestadmin/gateway
 ```
 
 </CodeGroup>
 
 <Warning>
-  **A deployed standalone server must be told its public URL.** Set `FOREST_MCP_SERVER_URL`, or it
+  **A deployed standalone Gateway must be told its public URL.** Set `FOREST_GATEWAY_URL`, or it
   advertises `http://localhost:<port>` to clients and none of them can connect. Mounted deployments
   are unaffected: their URLs derive from the back-end URL registered in Forest.
 </Warning>

@@ -106,6 +106,7 @@
                   "get-started/connect/integrations/overview",
                   "get-started/connect/integrations/mcp-servers",
                   "product/embed/gateway",
+                  "product/embed/gateway-standalone",
                   "product/embed/zendesk",
                   "product/embed/n8n"
                 ]
@@ -261,6 +262,7 @@
             "pages": [
               "product/embed/mcp-server",
               "product/embed/gateway",
+              "product/embed/gateway-standalone",
               "product/embed/zendesk",
               "product/embed/n8n"
             ]
