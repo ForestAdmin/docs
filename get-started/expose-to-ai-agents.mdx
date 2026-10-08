@@ -28,7 +28,7 @@ const agent = createAgent(options)
   .addGateway({ mcp: true });
 ```
 
-`addGateway()` exists since `@forestadmin/agent` 1.104.0, the release that ships the Gateway. MCP alone installs nothing extra: `@forestadmin/agent-bff` is only loaded when the API service is enabled too. `addGateway()` is called once per agent, so this call is the one to extend later, not one to repeat.
+`addGateway()` ships with the first `@forestadmin/agent` release that includes the Gateway. MCP alone installs nothing extra: `@forestadmin/agent-bff` is only loaded when the API service is enabled too. `addGateway()` is called once per agent, so this call is the one to extend later, not one to repeat.
 
 Restart your back-end. You should see:
 

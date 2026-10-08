@@ -31,7 +31,7 @@ Allow-list `https://*.apps.zdusercontent.com`. Zendesk serves every app's iframe
   The wildcard form needs `@forestadmin/agent-bff` 1.31.0 or later, and it admits every other Zendesk app too, since Zendesk serves them all from that domain. On an older BFF, or when you want the narrowest allow-list, use the exact origin. To read it off a running installation, open a ticket with the Forest app in the sidebar and inspect that panel's iframe. See [Cross-origin access](/product/embed/gateway#cross-origin-access).
 </Note>
 
-The embedded option needs `@forestadmin/agent` 1.104.0 or later, the release that ships the Gateway and its `addGateway()` method, and loads `@forestadmin/agent-bff` at runtime, an optional peer dependency of `@forestadmin/agent`, at exactly the version the agent declares. Install or upgrade both in one command: `npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest`. On an older agent the call throws `agent.addGateway is not a function`.
+The embedded option needs an `@forestadmin/agent` release that ships the Gateway and its `addGateway()` method, and loads `@forestadmin/agent-bff` at runtime, an optional peer dependency of `@forestadmin/agent`, at exactly the version the agent declares. Install or upgrade both in one command: `npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest`. On an older agent the call throws `agent.addGateway is not a function`.
 
 <CodeGroup>
 

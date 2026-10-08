@@ -267,7 +267,7 @@ await agent.restart(): Promise<void>;
 
 ### agent.addGateway(options?)
 
-Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Since `@forestadmin/agent` 1.104.0, the release that ships the Gateway. The API service also requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares; MCP alone installs nothing extra.
+Serve the [Forest Gateway](/product/embed/gateway) inside the agent process: one mount exposing the MCP service (`mcp`), the API service (`api`, the "Gateway API"), or both. Available from the first `@forestadmin/agent` release that ships the Gateway. The API service also requires the `@forestadmin/agent-bff` package, installed at the exact version the agent declares; MCP alone installs nothing extra.
 
 ```typescript
 agent.addGateway(options: {

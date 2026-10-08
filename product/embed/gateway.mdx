@@ -38,7 +38,7 @@ Embedded in the Node.js agent, the Gateway needs `@forestadmin/agent`, plus `@fo
 
     Agent pinned below `latest`? Install the exact `@forestadmin/agent-bff` version your agent's release declares instead. On a mismatch the agent refuses to start, and the error names the version it wants with the command to run, `npm install @forestadmin/agent-bff@X.Y.Z`.
 
-    `addGateway()` exists since `@forestadmin/agent` 1.104.0 (the release that ships the Gateway). On an earlier agent the call throws `agent.addGateway is not a function`.
+    `addGateway()` ships with the first `@forestadmin/agent` release that includes the Gateway. On an earlier agent the call throws `agent.addGateway is not a function`.
   </Step>
   <Step title="Enable the services you need">
     ```javascript
