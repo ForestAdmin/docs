@@ -205,7 +205,7 @@ When `enabledTools` is not set, all tools are enabled by default.
 
 ## Restrict which AI clients can connect
 
-By default, any OAuth client application can register against the MCP server through Dynamic Client Registration and, once one of your users signs in, obtain tokens. Use `allowedOAuthClients` (`@forestadmin/agent` ≥ 1.92.0, `@forestadmin/mcp-server` ≥ 1.21.0) to accept only approved client applications. On the Gateway, the option is top-level and covers **both services**, MCP and API:
+By default, any OAuth client application can register against the MCP server through Dynamic Client Registration and, once one of your users signs in, obtain tokens. Use `allowedOAuthClients` to accept only approved client applications. On the Gateway, the option is top-level and covers **both services**, MCP and API. `addGateway()` ships with the first `@forestadmin/agent` release that includes the Gateway; on an earlier agent (≥ 1.92.0), pass the option to `mountAiMcpServer()` instead, where it covers MCP only. The standalone server needs `@forestadmin/mcp-server` ≥ 1.21.0:
 
 <CodeGroup>
 
@@ -214,6 +214,10 @@ agent.addGateway({
   allowedOAuthClients: ['dust.tt'],
   mcp: true,
 });
+```
+
+```javascript Agent before the Gateway
+agent.mountAiMcpServer({ allowedOAuthClients: ['dust.tt'] });
 ```
 
 ```bash Standalone
