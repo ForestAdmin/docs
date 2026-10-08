@@ -76,7 +76,7 @@ Each service is off until you enable it:
 - The **MCP service** exposes the tools, their restrictions and their token lifetimes, all documented on the [Forest MCP Server page](/product/embed/mcp-server).
 - The **API service** is configured through the `api` options. `tokenEncryptionKey` enables OAuth sign-in (and with it the AI relay), `allowedOrigins` enables browser access, `openapiEnabled` serves the API docs. The secrets, the Forest URLs and the logger are inherited from the agent: embedded, the Gateway API never reads the environment.
 
-On a Ruby back-end, or any deployment where the agent cannot host the Gateway, run the [standalone BFF deployment](#standalone-bff-deployment) instead. It serves the same REST contract on its own port.
+On a Ruby back-end, or any deployment where the agent cannot host the Gateway, run the [standalone Gateway](/product/embed/gateway-standalone) instead. It serves the same routes from its own process and port.
 
 ## Routes
 
@@ -225,12 +225,12 @@ curl {your-agent-url}{basePath}/api/health
 With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or an `X-Forest-Bff-Key`.
 
 <Warning>
-  The served document is **not filtered per caller**. Anyone who can reach it reads the name of every exposed collection, relation and field, whatever their role. That is why it is off by default when embedded. You can export it without booting the server, which is what you want in CI: the standalone BFF's `forest-bff openapi` command below works either way.
+  The served document is **not filtered per caller**. Anyone who can reach it reads the name of every exposed collection, relation and field, whatever their role. That is why it is off by default when embedded. You can export it without booting the server, which is what you want in CI: the standalone Gateway's [`forest-gateway openapi`](/product/embed/gateway-standalone#exporting-the-openapi-document) command works either way.
 </Warning>
 
 ## Timeouts and failures
 
-Embedded, your agent runs in the same process: there is no socket, and a dispatch that fails or does not answer within `api.agentTimeoutMs` (default `10s`) maps to `503 agent_unavailable`. The `504 agent_timeout` and `502 network_error` types belong to the [standalone BFF](#standalone-bff-deployment), which calls your agent over HTTP: `504` when the agent accepts the connection and does not answer in time, `502` when it refuses the connection, its host does not resolve, or it fails mid-flight. The two are distinct on purpose, so a slow back-end and an unreachable one are not diagnosed as the same incident. Branch on `error.type` with that split in mind: an embedded client never sees a `504` or a `502` **from its agent**. `ai/query` is the exception: it relays the Forest server over the network and answers `502 network_error` when that server cannot be reached and `504 upstream_timeout` when it does not respond in time, embedded and standalone alike.
+Embedded, your agent runs in the same process: there is no socket, and a dispatch that fails or does not answer within `api.agentTimeoutMs` (default `10s`) maps to `503 agent_unavailable`. The `504 agent_timeout` and `502 network_error` types belong to the [standalone Gateway](/product/embed/gateway-standalone), which calls your agent over HTTP: `504` when the agent accepts the connection and does not answer in time, `502` when it refuses the connection, its host does not resolve, or it fails mid-flight. The two are distinct on purpose, so a slow back-end and an unreachable one are not diagnosed as the same incident. Branch on `error.type` with that split in mind: an embedded client never sees a `504` or a `502` **from its agent**. `ai/query` is the exception: it relays the Forest server over the network and answers `502 network_error` when that server cannot be reached and `504 upstream_timeout` when it does not respond in time, embedded and standalone alike.
 
 The `agentTimeoutMs` bound cancels nothing. A write cut off at the deadline keeps running inside the agent and still commits, so a client retrying on the timeout can double the mutation. Raise the timeout rather than relying on a retry.
 
@@ -244,27 +244,13 @@ Over the rate limit, the API answers `429 too_many_requests` with a `Retry-After
   **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or an `X-Forest-Bff-Key` API key.
 </Warning>
 
-## Standalone BFF deployment
+## Standalone deployment
 
-The Gateway above is the **embedded** deployment, inside the Node.js agent. When the agent cannot host it, for a Ruby back-end or an API that must scale separately from the agent, the standalone **BFF** deployment serves the same REST contract from its own process and port. It predates the Gateway and is unaffected by the rename: same routes at its own root (`{your-bff-url}/agent/v1/...`), same configuration through environment variables.
+The Gateway above is the **embedded** deployment, inside the Node.js agent. When the agent cannot host it, for a Ruby back-end or an API that must scale apart from the agent, run the [standalone Gateway](/product/embed/gateway-standalone): the same routes and the same OAuth, from its own process and port, configured through environment variables. It ships as the `@forestadmin/gateway` package and the `ghcr.io/forestadmin/gateway` image.
 
-```bash
-npm install @forestadmin/agent-bff
-
-BFF_ALLOWED_ORIGINS=https://my-app.com \
-  BFF_TOKEN_ENCRYPTION_KEY=xxx \
-  AGENT_URL=https://your-agent.example.com \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
-  npx forest-bff
-```
-
-It listens on port `3450` by default and forwards to the single back-end `AGENT_URL` names, so several agents cannot share one. A standalone BFF forwards to your agent over HTTP: everything the embedded Gateway API does in-process, it does through the network.
-
-The AI agents side has its own standalone: the [standalone MCP server](/product/embed/mcp-server#standalone-forest-mcp-server). There is no single standalone process serving both services; run the standalone BFF for the API and the standalone MCP server for tools.
-
-The full environment-variable reference of the standalone BFF lives on the [Node.js agent reference page](/reference/agent-api/nodejs#standalone-bff-environment-variables).
-
-A malformed value fails the boot with a clear error and never echoes the offending value. `BFF_ALLOWED_ORIGINS` is the exception: an entry that cannot be parsed is dropped, the boot carries on, and a startup warning names the entries it dropped. Read that warning, because a typo leaves you with a narrower allow-list than you wrote, and the symptom only shows up later as `403 origin_not_allowed`. A required variable that is merely absent boots anyway and reports the gap through `/health`.
+<Note>
+  `forest-bff` and `forest-mcp-server`, the standalone commands that came before the Gateway, keep working and are deprecated. `forest-bff` serves the API at its root rather than under `/api`. [Moving to the Gateway](/product/embed/gateway-standalone#moving-from-forest-mcp-server-or-forest-bff) covers what changes.
+</Note>
 
 ## What's next
 

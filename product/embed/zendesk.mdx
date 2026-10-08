@@ -17,7 +17,7 @@ The app reaches your back-end through the [Forest Gateway](/product/embed/gatewa
 
 Before installing the app, your tech team needs a Gateway API that a browser can reach:
 
-1. **A Gateway serving your Forest back-end**, either embedded in your Node.js agent (`addGateway({ api })`) or deployed as the standalone BFF.
+1. **A Gateway serving your Forest back-end**, either embedded in your Node.js agent (`addGateway({ api })`) or deployed as the [standalone Gateway](/product/embed/gateway-standalone).
 2. **OAuth enabled on it**, which is what lets each Zendesk agent sign in with their Forest account.
 3. **The app's iframe origin allow-listed**, because the app calls the Gateway from the browser.
 
@@ -49,13 +49,13 @@ await createAgent(options)
 ```
 
 ```bash Standalone
-npm install @forestadmin/agent-bff
-
-BFF_ALLOWED_ORIGINS='https://*.apps.zdusercontent.com' \
-  BFF_TOKEN_ENCRYPTION_KEY=xxx \
-  AGENT_URL=https://your-agent.example.com \
-  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
-  npx forest-bff
+docker run -d -p 3450:3450 \
+  -e FOREST_GATEWAY_SERVICES=api \
+  -e FOREST_GATEWAY_API_ALLOWED_ORIGINS='https://*.apps.zdusercontent.com' \
+  -e FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY=xxx \
+  -e FOREST_AGENT_URL=https://your-agent.example.com \
+  -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
+  ghcr.io/forestadmin/gateway:latest
 ```
 
 </CodeGroup>
@@ -72,17 +72,17 @@ BFF_ALLOWED_ORIGINS='https://*.apps.zdusercontent.com' \
   A build served locally with `zcli apps:server` runs from `http://localhost:4567`. Allow-list that origin too while you develop.
 </Note>
 
-Embedding needs the Node.js agent. With a Ruby back-end, run the BFF standalone.
+Embedding needs the Node.js agent. With a Ruby back-end, run the [standalone Gateway](/product/embed/gateway-standalone). A `forest-bff` you already run keeps working: point the app at its root URL, and never publish it under a path ending in `/api`, which the app reads as a Gateway ([why](/product/embed/gateway-standalone#from-forest-bff)).
 
 Make a note of the URL your Gateway answers on. You'll need it when installing the Zendesk app:
 
 | Deployment | Your Gateway URL |
 | --- | --- |
 | Embedded | `{your-agent-url}{basePath}/api` (`{your-agent-url}/api` with the default empty `basePath`) |
-| Standalone | the BFF's own base URL, port `3450` by default |
+| Standalone | `{gateway-public-origin}{basePath}/api` (`…/api` with the default empty base path) |
 
 <Warning>
-  Without `tokenEncryptionKey` (or `BFF_TOKEN_ENCRYPTION_KEY`), the Gateway boots but its OAuth routes stay disabled, and nobody can sign in from Zendesk. `GET {your-gateway-url}/health` reports `configured.oauth` so you can check before installing.
+  Without `tokenEncryptionKey` (or `FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY` standalone), the Gateway boots but its OAuth routes stay disabled, and nobody can sign in from Zendesk. `GET {your-gateway-url}/health` reports `configured.oauth` so you can check before installing.
 </Warning>
 
 ## Installing the Zendesk app

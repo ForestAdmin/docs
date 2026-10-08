@@ -407,7 +407,7 @@ The prefix applies to **all** routes, including the protocol endpoint — so `ba
 Because the `.well-known` discovery documents must stay at the origin root, `basePath` requires the agent to be served at the **domain root**. If your agent's URL already includes a path (e.g. `https://host/api`), setting `basePath` throws at startup. And root `/.well-known/*` requests must still reach the agent — a reverse proxy that forwards only `/<prefix>/*` will break discovery.
 </Note>
 
-When the MCP server runs standalone (`npx forest-mcp-server`), the same options are set through environment variables: `FOREST_MCP_ENABLED_TOOLS` (comma-separated tool names), `FOREST_MCP_ALLOWED_OAUTH_CLIENTS` (comma-separated domains), `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` and `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` (seconds), and `MCP_SERVER_PORT` (default: `3931`). A mounted server does not read these variables — pass the options to `mountAiMcpServer` instead.
+When the MCP service runs in the [standalone Gateway](/product/embed/gateway-standalone), the same options are set through environment variables: `FOREST_MCP_ENABLED_TOOLS` (comma-separated tool names), `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` (comma-separated domains), `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` and `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` (seconds), and `PORT` (default: `3931`). A mounted server does not read these variables — pass the options to `mountAiMcpServer` instead.
 
 ---
 
@@ -478,27 +478,9 @@ The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST 
 
 `addBff()` can be called once, and before `start()`. A mount is what opens a socket, and `start()` only builds the agent's router, so without a `mountOn*` call nothing is served, the BFF included. While the BFF is not serving, `/bff/*` answers `503`, with a different type at each end of the lifecycle: `bff_not_started` between `addBff()` and the end of `start()`, `bff_stopped` after `stop()`.
 
-### Standalone BFF environment variables
+### Standalone Gateway environment variables
 
-When the agent cannot host the Gateway, the [standalone BFF deployment](/product/embed/gateway#standalone-bff-deployment) serves the same REST contract from its own process, configured through environment variables:
-
-| Variable | Required | Default | Description |
-| --- | --- | --- | --- |
-| `FOREST_AUTH_SECRET` | Yes | n/a | Your authentication secret. Must match your back-end's. |
-| `FOREST_ENV_SECRET` | Yes | n/a | Your environment secret. |
-| `AGENT_URL` | Yes | n/a | The back-end the BFF calls. |
-| `FOREST_SERVER_URL` | No | `https://api.forestadmin.com` | Forest API base URL. Internal use: only Forest Admin developers set it, to reach a local or staging server. |
-| `FOREST_APP_URL` | No | `https://app.forestadmin.com` | Forest front base URL, used to build the sign-in redirect. Internal use, except when your project serves Forest on a custom domain. |
-| `BFF_TOKEN_ENCRYPTION_KEY` | For sign-in | n/a | Base64-encoded 32-byte key. Until it is set, nobody can sign in from a browser UI. |
-| `HTTP_PORT` | No | `3450` | Server port. Unused when embedded, where the Gateway answers on the agent's port. |
-| `BFF_ALLOWED_ORIGINS` | No | empty | Comma-separated allow-list of origins, exact or one leading wildcard label. Empty means no cross-origin browser access. |
-| `BFF_DEFAULT_TIMEZONE` | No | n/a | Fallback IANA timezone when a request carries none. |
-| `BFF_PUBLIC_URL` | No | n/a | The BFF's own external base URL, published in the OpenAPI document. |
-| `BFF_AGENT_TIMEOUT_MS` | No | `10000` | How long to wait for your back-end on a data or action call. |
-| `BFF_AI_TIMEOUT_MS` | No | `120000` | How long to wait for the Forest server on an AI query, `POST /agent/v1/ai/query`. |
-| `BFF_RATE_LIMIT_MAX_REQUESTS` | No | `300` | Requests allowed per caller per window. |
-| `BFF_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. |
-| `BFF_OPENAPI_ENABLED` | No | `true` | Serve the OpenAPI document over HTTP. `false` when embedded. |
+When the agent cannot host the Gateway, the [standalone Gateway](/product/embed/gateway-standalone) serves the same routes from its own process, configured through environment variables. Their reference lives on [its page](/product/embed/gateway-standalone#environment-variables).
 
 ---
 
