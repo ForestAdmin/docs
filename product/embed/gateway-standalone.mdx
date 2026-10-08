@@ -22,6 +22,10 @@ The **API service** calls your back-end directly, over HTTP. It has been verifie
 
 What was verified: listing and counting records, with filters, sort, search and projection; listing and counting related records; loading an action form. On a Node.js agent, prefer the [embedded Gateway](/product/embed/gateway).
 
+<Warning>
+  On `forest_liana`, a model whose declared primary key is not unique, the workaround Rails 7.0 and earlier use for composite keys (`self.primary_key = "tenant_id"` on a `(tenant_id, seq)` table), is not supported. The agent returns the same id for several records, so the API cannot tell them apart: lists show duplicate ids, and a record cannot be found back by its id.
+</Warning>
+
 ## Deploying the Gateway
 
 <Steps>
