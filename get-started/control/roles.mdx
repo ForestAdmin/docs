@@ -1,50 +1,17 @@
 ---
-title: "Roles & Permissions"
-description: "Create and manage custom roles with granular permission controls in Forest"
+title: "Roles"
+description: "Control access to data with role-based permissions on collections and actions"
 ---
 
 ## Overview
 
-Forest enables admins to create and manage custom roles with granular permission controls. The roles system allows organizations to define what actions users can perform within the platform.
+Roles are the RBAC (role-based access control) setting that controls access to data. A role defines which collections users can read, create, update, delete, or export, and which actions they can trigger or approve.
 
-Only users with Admin permission level can create and manage roles. Roles are configured in the Roles tab within project settings, where permissions apply to all users assigned to that role.
+Roles are configured per environment in **Project Settings → Roles** and assigned to users through [teams](/get-started/control/teams). Only users with the Admin [permission level](/get-started/control/permission-levels) can create and manage roles.
 
-## Permission levels
+Roles don't decide what users can do in the Forest interface, like customizing layouts or managing environments. That's set by their [permission level](/get-started/control/permission-levels).
 
-Forest defines five user permission levels with increasing administrative capabilities:
-
-| Capability | User | Manager | Editor | Developer | Admin |
-|-----------|------|---------|--------|-----------|-------|
-| **Data Management** | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Browse collections | ✓ | ✓ | ✓ | ✓ | ✓ |
-| View, create, update, delete records* | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Execute actions* | ✓ | ✓ | ✓ | ✓ | ✓ |
-| **Inbox Management** | | ✓ | ✓ | ✓ | ✓ |
-| Manage inbox and notifications | | ✓ | ✓ | ✓ | ✓ |
-| **UI Customization** | | | ✓ | ✓ | ✓ |
-| Customize layouts and views | | | ✓ | ✓ | ✓ |
-| Configure collection displays | | | ✓ | ✓ | ✓ |
-| Create and edit Smart Views | | | ✓ | ✓ | ✓ |
-| Create workspaces | | | ✓ | ✓ | ✓ |
-| Create dashboards | | | ✓ | ✓ | ✓ |
-| Create workflows | | | ✓ | ✓ | ✓ |
-| **Environment Management** | | | | ✓ | ✓ |
-| Manage environments | | | | ✓ | ✓ |
-| Configure environment settings | | | | ✓ | ✓ |
-| Deploy between environments | | | | ✓ | ✓ |
-| **Team & Role Management** | | | | | ✓ |
-| Manage teams and users | | | | | ✓ |
-| Create and manage roles | | | | | ✓ |
-| Configure project settings | | | | | ✓ |
-| Access all administrative features | | | | | ✓ |
-
-*Based on collection and action permissions configured for the role
-
-## Roles
-
-Roles are configured in **Project Settings → Roles**. Each role defines granular permissions for collections and actions.
-
-### Collection permissions
+## Collection permissions
 
 Control what users can do with data in each collection:
 
@@ -57,7 +24,7 @@ Control what users can do with data in each collection:
 | **Delete** | Remove records permanently |
 | **Export** | Export data from the collection in various formats (CSV, JSON, etc.) |
 
-### Action permissions
+## Action permissions
 
 Control user ability to trigger and approve actions:
 
@@ -68,7 +35,7 @@ Control user ability to trigger and approve actions:
 | **Approve** | Permits role members to approve trigger requests submitted by other users - can review and authorize pending action requests |
 | **Self Approve** | Allows users to approve their own action requests - bypasses the need for another user to review the action, useful for trusted users who need faster execution |
 
-### Approval workflows
+## Approval workflows
 
 When "Require Approval" is enabled for an action:
 
@@ -83,7 +50,7 @@ This workflow ensures sensitive operations (like refunds, data exports, or accou
 
 [Learn more about action approval workflows →](/product/collaborate/approval-workflows)
 
-### Copy permissions across environments
+## Copy permissions across environments
 
 Role permissions are configured per environment. To replicate a permission setup from one environment to another (for example, from staging to production), use **Actions → Copy roles permissions across environments** in **Project Settings → Roles**.
 
