@@ -608,6 +608,7 @@ Tool failures come back as tool errors with an explanatory message, so the assis
 | A `runId` that is not a positive integer within range | Invalid argument — the call reaches Forest and is refused there; nothing is read |
 | The environment's workflows still run in the browser engine | Conflict — automated triggering needs server-side execution ([Forest Runtime](/product/process/workflows/forest-runtime)) |
 | The workflow contains an MCP Task step targeting an OAuth2-protected connector, and the environment's [Forest Runtime](/product/process/workflows/forest-runtime) is older than 1.14.0 | Unprocessable — upgrade Forest Runtime to run these steps server-side; nothing starts |
+| The workflow contains an MCP Task step [restricted to selected tools](/product/process/workflows/forest-runtime#mcp-task-tool-restriction), and the environment's Forest Runtime is older than 1.32.0 | Unprocessable — upgrade Forest Runtime, or empty those steps' **Tools** field; nothing starts |
 
 ### Identity, auditing, and limits
 

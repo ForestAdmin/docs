@@ -287,6 +287,15 @@ If your workflows include [MCP Tasks](/product/process/workflows/overview) backe
 - Use the **same value on every instance** that shares a database, or an instance won't decrypt credentials written by another.
 - Treat it as permanent: there is no managed rotation. Changing it forces every affected user to reconnect their connectors.
 
+## MCP Task tool restriction
+
+Restricting an [MCP Task](/product/process/workflows/overview#mcp-tasks) to some of its server's tools needs **Forest Runtime 1.32.0** or later; embedded, that's `@forestadmin/agent` 1.107.3 or later, which pins it. An older runtime ignores the restriction and would let the AI use every tool of the server, so Forest doesn't let it run one:
+
+- The workflow editor hides the **Tools** field on MCP Tasks. A step that already restricts its tools keeps its selection and shows *"This step's tool restriction needs a newer Forest Runtime. Update it to run this workflow."*
+- Forest refuses to start a run whose MCP Task restricts its tools, and checks again when a run steps into a called workflow, so nothing in that workflow runs. The error names the steps: *"MCP Task steps restricted to selected tools require a more recent Forest runtime than the one running on this environment. Reconfigure or remove the following step(s): …"*
+
+MCP Tasks whose **Tools** field is empty run on any version.
+
 ## Observability
 
 The Docker image ships with [OpenTelemetry](https://opentelemetry.io/) APM built in, compatible with any OTLP backend (Datadog, Grafana Tempo, Jaeger, Honeycomb…). It is **off by default** and turns on as soon as you set `OTEL_EXPORTER_OTLP_ENDPOINT`. OpenTelemetry is bundled only in the Docker image, not the npm package.
@@ -319,6 +328,25 @@ A server that answers but exposes no tools is not a failure: you get an empty to
 <Note>
   If your logs show a `failedConfigNames` list instead of `failures`, your runtime predates this change: it names which server failed but not why, and reports a healthy server exposing no tools as a failure. Upgrade to get the cause.
 </Note>
+
+### When an MCP Task's allowed tools are missing
+
+A step restricted to some tools keeps running on the allowed tools its server still lists. When some are missing — renamed or removed on the server, or not offered to the connected user — Forest Runtime logs one line at `Warn` per step execution, with the run and step it belongs to, naming them in `unmatchedAllowedTools`:
+
+```json
+{
+  "level": "Warn",
+  "message": "MCP step allow-list names tools that match no single loaded tool",
+  "timestamp": "2026-10-08T14:02:51.417Z",
+  "runId": "1287",
+  "stepIndex": 2,
+  "mcpServerId": "39",
+  "mcpServerName": "acme-crm",
+  "unmatchedAllowedTools": ["create_ticket"]
+}
+```
+
+When none of them is left, the step fails with *"None of the tools this step is allowed to use are available on its server: …"*, naming the step's allowed tools. Select its tools again in the step's **Tools** field, where a tool the server no longer lists is labelled *(no longer on this server)*.
 
 ## Tuning
 
