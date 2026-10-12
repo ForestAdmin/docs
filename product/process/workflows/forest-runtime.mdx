@@ -287,9 +287,11 @@ If your workflows include [MCP Tasks](/product/process/workflows/overview) backe
 - Use the **same value on every instance** that shares a database, or an instance won't decrypt credentials written by another.
 - Treat it as permanent: there is no managed rotation. Changing it forces every affected user to reconnect their connectors.
 
-## MCP Task tool restriction
+## MCP Task tools
 
-Restricting an [MCP Task](/product/process/workflows/overview#mcp-tasks) to some of its server's tools needs **Forest Runtime 1.32.0** or later; embedded, that's `@forestadmin/agent` 1.107.3 or later, which pins it. An older runtime ignores the restriction and would let the AI use every tool of the server, so Forest doesn't let it run one:
+Restricting an [MCP Task](/product/process/workflows/overview#mcp-tasks) to some of its server's tools, and letting it make several tool calls per step, need **Forest Runtime TBD** or later; embedded, that's `@forestadmin/agent` TBD or later, which pins it.
+
+On an older runtime, an MCP Task makes a single tool call. Below 1.32.0, the runtime also ignores the restriction and would let the AI use every tool of the server, so Forest doesn't let it run one:
 
 - The workflow editor hides the **Tools** field on MCP Tasks. A step that already restricts its tools keeps its selection and shows *"This step's tool restriction needs a newer Forest Runtime. Update it to run this workflow."*
 - Forest refuses to start a run whose MCP Task restricts its tools, and checks again when a run steps into a called workflow, so nothing in that workflow runs. The error names the steps: *"MCP Task steps restricted to selected tools require a more recent Forest runtime than the one running on this environment. Reconfigure or remove the following step(s): …"*
