@@ -58,7 +58,7 @@ The following step types are available (\* denotes AI-powered):
 
 **Escalations** indicate a point where the workflow run is placed in an Inbox, so that another user can pick it up where the previous one left off.
 
-**MCP Tasks**\* let the end user perform an action in a 3rd party app via the corresponding MCP Server.
+**MCP Tasks**\* let the AI perform an action in a 3rd party app via the corresponding MCP Server, calling as many of its tools as the step needs. The step's **Tools** field restricts which ones it can use.
 
 <Note>
   MCP Tasks require an MCP Server to be configured in your Forest project. See [MCP Servers](/get-started/connect/integrations/mcp-servers) for details.
@@ -70,10 +70,16 @@ Workflows are designed to be human-first for reliability and compliance, but it 
 
 At the end of each step, the user clicks the confirmation button (labelled **Done** by default) to proceed. Skip this by setting the **Step Completion** toggle to **Automatic**, so the workflow advances to the next step immediately upon completion.
 
-On **Trigger Action** and **MCP Tasks** steps, the end user must explicitly click Execute by default. Once you're confident in the AI suggesting the correct tool, set the **Execution** toggle to **Automatic** to skip that extra click.
+On **Trigger Action** steps, the end user must explicitly click Execute by default. Once you're confident in the AI suggesting the correct action, set the **Execution** toggle to **Automatic** to skip that extra click.
 
 <Note>
   Actions featuring a form still need to be filled out by the end user before the workflow submits them automatically.
+</Note>
+
+**MCP Tasks** always call their tools without asking for confirmation, so the **Tools** field is how you keep a tool away from the AI, such as one that sends an email or deletes a record.
+
+<Note>
+  Restricting the **Tools** field and making several calls per step need [Forest Runtime](/product/process/workflows/forest-runtime) 1.33.0 or later (`@forestadmin/agent` 1.108.2 when embedded). Below 1.32.0 the field is hidden, and the AI can use any tool of the server without asking.
 </Note>
 
 **Decisions** can also be delegated to AI: set the **Decision maker** toggle to **AI** on a decision step, and the workflow will automatically guide users through the correct branch, assuming it has sufficient context from previous steps.
