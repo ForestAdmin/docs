@@ -320,25 +320,6 @@ A server that answers but exposes no tools is not a failure: you get an empty to
   If your logs show a `failedConfigNames` list instead of `failures`, your runtime predates this change: it names which server failed but not why, and reports a healthy server exposing no tools as a failure. Upgrade to get the cause.
 </Note>
 
-### When an MCP Task's allowed tools are missing
-
-A step restricted to some tools keeps running on the allowed tools its server still lists. When some are missing — renamed or removed on the server, or not offered to the connected user — Forest Runtime logs one line at `Warn` per step execution, with the run and step it belongs to, naming them in `unmatchedAllowedTools`:
-
-```json
-{
-  "level": "Warn",
-  "message": "MCP step allow-list names tools that match no single loaded tool",
-  "timestamp": "2026-10-08T14:02:51.417Z",
-  "runId": "1287",
-  "stepIndex": 2,
-  "mcpServerId": "39",
-  "mcpServerName": "acme-crm",
-  "unmatchedAllowedTools": ["create_ticket"]
-}
-```
-
-When none of them is left, the step fails with *"None of the tools this step is allowed to use are available on its server: …"*, naming the step's allowed tools. Select its tools again in the step's **Tools** field, where a tool the server no longer lists is labelled *(no longer on this server)*.
-
 ## Tuning
 
 Beyond the required variables, these optional knobs have sensible defaults and rarely need changing:
