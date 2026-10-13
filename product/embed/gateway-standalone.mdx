@@ -1,0 +1,261 @@
+---
+title: "Standalone Forest Gateway"
+description: "Run the Forest Gateway as its own process, in front of a back-end that cannot embed it, and move to it from forest-mcp-server or forest-bff."
+---
+
+The [Forest Gateway](/product/embed/gateway) serves two things: the **MCP service**, for AI assistants, and the **API service**, a REST contract for trusted browser UIs such as the [Zendesk app](/product/embed/zendesk). On a Node.js agent, you embed it with `addGateway()`. On any other back-end, or when the API must scale apart from the agent, run it standalone: one process, one port, either or both services.
+
+The standalone Gateway ships as the `@forestadmin/gateway` npm package, whose command is `forest-gateway`, and as the `ghcr.io/forestadmin/gateway` Docker image.
+
+## Supported back-ends
+
+The **MCP service** supports the same back-ends as the [standalone MCP server](/product/embed/mcp-server) it replaces.
+
+The **API service** calls your back-end directly, over HTTP. It has been verified against these agents:
+
+| Back-end | Package | Version tested |
+| --- | --- | --- |
+| Ruby | `forest_admin_agent` | 1.39.0 |
+| Ruby on Rails (v1) | `forest_liana` | 9.21.0 |
+| Express + Sequelize (v1) | `forest-express-sequelize` | 9.6.10 |
+| Express + Mongoose (v1) | `forest-express-mongoose` | 9.6.7 |
+
+What was verified: listing and counting records, with filters, sort, search and projection; listing and counting related records; loading an action form. On a Node.js agent, prefer the [embedded Gateway](/product/embed/gateway).
+
+<Warning>
+  On `forest_liana`, a model whose declared primary key is not unique, the workaround Rails 7.0 and earlier use for composite keys (`self.primary_key = "tenant_id"` on a `(tenant_id, seq)` table), is not supported. The agent returns the same id for several records, so the API cannot tell them apart: lists show duplicate ids, and a record cannot be found back by its id.
+</Warning>
+
+## Deploying the Gateway
+
+<Steps>
+  <Step title="Choose the services">
+    `FOREST_GATEWAY_SERVICES` lists what the Gateway serves: `mcp`, `api`, or `mcp,api`. It is required: without it, or with any other value, the Gateway refuses to start.
+  </Step>
+  <Step title="Start it">
+    <CodeGroup>
+
+    ```bash Docker
+    docker run -d -p 3931:3931 \
+      -e FOREST_GATEWAY_SERVICES=mcp,api \
+      -e FOREST_ENV_SECRET=xxx \
+      -e FOREST_AUTH_SECRET=xxx \
+      -e FOREST_AGENT_URL=https://your-agent.example.com \
+      -e FOREST_GATEWAY_URL=https://gateway.example.com \
+      -e FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY=xxx \
+      -e FOREST_GATEWAY_API_ALLOWED_ORIGINS=https://my-app.com \
+      ghcr.io/forestadmin/gateway:latest
+    ```
+
+    ```bash npx
+    FOREST_GATEWAY_SERVICES=mcp,api \
+      FOREST_ENV_SECRET=xxx \
+      FOREST_AUTH_SECRET=xxx \
+      FOREST_AGENT_URL=https://your-agent.example.com \
+      FOREST_GATEWAY_URL=https://gateway.example.com \
+      FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY=xxx \
+      FOREST_GATEWAY_API_ALLOWED_ORIGINS=https://my-app.com \
+      npx @forestadmin/gateway
+    ```
+
+    </CodeGroup>
+
+    The image needs nothing else. With `npx`, the Gateway needs **Node.js 22.12 or later**.
+
+    The Gateway listens on `3931` whenever the MCP service is on, and on `3450` when it serves the API alone. `PORT` overrides both.
+
+    <Note>
+      Follow [this guide](/get-started/connect/environment-variables) to retrieve your AUTH and ENV secrets. `FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY` is a Base64-encoded 32-byte key, generated with `openssl rand -base64 32`.
+    </Note>
+  </Step>
+  <Step title="Check it">
+    ```bash
+    curl https://gateway.example.com/health
+    ```
+
+    ```jsonc
+    {
+      "healthy": true,
+      "version": "<package version>",
+      "services": {
+        "mcp": "ok",
+        "api": { "status": "ok", "configured": { "oauth": true, "ai": true, "cors": true, "openapi": true } }
+      }
+    }
+    ```
+
+    `/health` answers `200` when every service it serves is configured, and `503` otherwise. A service that is off reads `"disabled"`. It always sits at the root, whatever `FOREST_GATEWAY_BASE_PATH` says, and the image's `HEALTHCHECK` probes it.
+  </Step>
+  <Step title="Give out the URLs">
+    With the default empty base path:
+
+    - AI assistants connect to `https://gateway.example.com/mcp`.
+    - Trusted UIs, the Zendesk app included, call `https://gateway.example.com/api`.
+  </Step>
+</Steps>
+
+The routes are the embedded Gateway's, listed on [its page](/product/embed/gateway#routes), plus the root `/health`.
+
+## Environment variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `FOREST_GATEWAY_SERVICES` | Yes | n/a | `mcp`, `api` or `mcp,api`. |
+| `FOREST_ENV_SECRET` | Yes | n/a | Your environment secret. |
+| `FOREST_AUTH_SECRET` | Yes | n/a | Your authentication secret. Must match your back-end's. |
+| `FOREST_AGENT_URL` | With `api` | for `mcp`: your environment's back-end URL | The back-end both services call: one per Gateway, so several back-ends cannot share one. Set it for the MCP alone when it runs next to a self-hosted back-end reachable at an internal address. |
+| `FOREST_GATEWAY_URL` | With `mcp`, once deployed | `http://localhost:<port>` | The public origin MCP clients are told to use. An http(s) origin with no path. Not read by the API. |
+| `FOREST_GATEWAY_BASE_PATH` | No | empty | Prefix for every route except `/health`, e.g. `/forest`. See [Choosing a basePath](/product/embed/gateway#choosing-a-basepath). |
+| `PORT` | No | `3931` with `mcp`, `3450` with `api` alone | The port the Gateway listens on. |
+| `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` | No | any registered client | Comma-separated domains. See [Restricting OAuth clients](#restricting-which-oauth-clients-can-connect). |
+| `FOREST_SERVER_URL` | No | `https://api.forestadmin.com` | Forest API base URL. Internal use only. |
+| `FOREST_APP_URL` | No | `https://app.forestadmin.com` | Forest front base URL. Internal use, except when your project serves Forest on a custom domain. |
+
+The API service reads these too:
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY` | For sign-in | n/a | Base64-encoded 32-byte key. It turns on OAuth sign-in and, with it, the AI relay. Without it, the API serves API keys only. |
+| `FOREST_GATEWAY_API_ALLOWED_ORIGINS` | For browser UIs | empty | Comma-separated origins allowed to call the API from a browser, exact or with one leading wildcard label. Empty means server-to-server calls only. See [Cross-origin access](/product/embed/gateway#cross-origin-access). |
+| `FOREST_GATEWAY_API_PUBLIC_URL` | No | relative `{basePath}/api` | The API's external URL, published in the OpenAPI document. Must end with `{basePath}/api`. |
+| `FOREST_GATEWAY_API_DEFAULT_TIMEZONE` | No | n/a | Fallback IANA timezone when a request carries none. |
+| `FOREST_GATEWAY_API_AGENT_TIMEOUT_MS` | No | `10000` | How long to wait for your back-end on a data or action call. |
+| `FOREST_GATEWAY_API_AI_TIMEOUT_MS` | No | `120000` | How long to wait for the Forest server on an AI query. |
+| `FOREST_GATEWAY_API_RATE_LIMIT_MAX_REQUESTS` | No | `300` | Requests allowed per caller per window. |
+| `FOREST_GATEWAY_API_RATE_LIMIT_WINDOW_MS` | No | `60000` | Length of that window. |
+| `FOREST_GATEWAY_API_OPENAPI_ENABLED` | No | `true` | Serve the OpenAPI document over HTTP. |
+
+The MCP service reads the same `FOREST_MCP_*` variables as before, under the same names: enabled tools, token lifetimes and file uploads. They are listed on the [MCP server page](/product/embed/mcp-server#standalone-configuration).
+
+**When a value is wrong.** A malformed value (a bad URL, a bad port, an API public URL that does not end with `{basePath}/api`) stops the boot with an error naming the variable. A required variable that is merely missing does not: the service that needs it starts degraded, answers `503`, and a boot warning names the variable. `FOREST_GATEWAY_API_ALLOWED_ORIGINS` is the one exception to the first rule: an entry that cannot be parsed is dropped, and a boot warning names the key.
+
+### Legacy names
+
+The Gateway also reads the names `forest-mcp-server` and `forest-bff` used, so a migrated configuration boots unchanged:
+
+| Gateway name | Also read |
+| --- | --- |
+| `PORT` | `MCP_SERVER_PORT`, `HTTP_PORT` |
+| `FOREST_GATEWAY_URL` | `FOREST_MCP_SERVER_URL` |
+| `FOREST_AGENT_URL` | `AGENT_URL`, with `api` on |
+| `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` | `FOREST_MCP_ALLOWED_OAUTH_CLIENTS` |
+| `FOREST_GATEWAY_API_*` | `BFF_*`, e.g. `BFF_TOKEN_ENCRYPTION_KEY` |
+
+The Gateway name wins when it is set. Each legacy name in use logs one boot warning naming its replacement. Two legacy names that disagree with no Gateway name set, such as `HTTP_PORT=8080` and `MCP_SERVER_PORT=3931`, stop the boot. These names have no removal date.
+
+## Ingress and network rules
+
+An ingress or WAF that allow-lists only `{basePath}/api/*` **breaks sign-in**. Browser sign-in runs on `{basePath}/oauth/*`, so that namespace must pass too. With the MCP service on and a non-empty base path, the two discovery paths `/.well-known/oauth-authorization-server{basePath}` and `/.well-known/oauth-protected-resource{basePath}/mcp` must also reach the Gateway, even though they sit at the origin root, outside `{basePath}`.
+
+## Restricting which OAuth clients can connect
+
+`FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` restricts **both services at once**, MCP and API. Without it, or with an empty value, any OAuth client registered at Forest can connect. A value that lists no domain, such as spaces or a lone comma, stops the boot instead of opening the Gateway to every client.
+
+```bash
+FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS=dust.tt,forestadmin.com
+```
+
+Entries are **domains**, not client ids. A client is allowed only when every redirect URI it registered is on a listed domain or one of its subdomains. Every other client gets a standard OAuth `invalid_client` error. Keep `forestadmin.com` in the list as long as you use Forest's [Zendesk app](/product/embed/zendesk): its sign-in redirects through `app.forestadmin.com`. The details are on the [Gateway page](/product/embed/gateway#restricting-which-oauth-clients-can-connect).
+
+## Action file uploads with the image
+
+`FOREST_MCP_UPLOAD_STORAGE_MODULE` points to a module on the Gateway's filesystem. With the image, mount that module into the container and point to it there. The path resolves from `/app`, the image's working directory. The module's own dependencies are not in the image, so mount a directory that carries its `node_modules`:
+
+```bash
+docker run -d -p 3931:3931 \
+  -v "$PWD/uploads:/app/uploads:ro" \
+  -e FOREST_MCP_UPLOAD_STORAGE_MODULE=./uploads/my-storage.js \
+  -e FOREST_GATEWAY_SERVICES=mcp \
+  -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
+  -e FOREST_GATEWAY_URL=https://gateway.example.com \
+  ghcr.io/forestadmin/gateway:latest
+```
+
+What the module exports is described in [Action file uploads](/product/embed/mcp-server#action-file-uploads).
+
+## Exporting the OpenAPI document
+
+`forest-gateway openapi` writes the API's OpenAPI document to stdout without starting the server, with its paths under `{basePath}/api`. `--output [file]` writes it to a file instead.
+
+```bash
+npx @forestadmin/gateway openapi > openapi.json
+```
+
+## Moving from `forest-mcp-server` or `forest-bff`
+
+**Staying is fine.** `forest-mcp-server` and `forest-bff` keep working as they do today, with the same variables and the same URLs. Both are deprecated: they log one warning at boot pointing here. Moving to the Gateway gets you both services in one process, and the new variable names.
+
+Moving is explicit: nothing switches on its own. Replace the command or the image, add `FOREST_GATEWAY_SERVICES`, and keep your variables. The legacy names still work and each logs one warning until you rename it.
+
+### From `forest-mcp-server`
+
+Your MCP URLs do not change if you keep an empty base path: the Gateway serves the MCP on `/mcp` and listens on `3931` whenever the MCP service is on, as before.
+
+<CodeGroup>
+
+```bash Before
+FOREST_MCP_SERVER_URL=https://mcp.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
+  npx forest-mcp-server
+```
+
+```bash After
+FOREST_GATEWAY_SERVICES=mcp \
+  FOREST_GATEWAY_URL=https://mcp.example.com \
+  FOREST_ENV_SECRET=xxx FOREST_AUTH_SECRET=xxx \
+  npx @forestadmin/gateway
+```
+
+</CodeGroup>
+
+The Gateway needs Node.js 22.12 or later. On an older Node.js, use the image.
+
+### From `forest-bff`
+
+The API moves from the root of your URL to `/api`: `https://your-bff.example.com/agent/v1/...` becomes `https://your-bff.example.com/api/agent/v1/...`. Update every application that calls it. In the Zendesk app, set the URL to `https://your-bff.example.com/api`. Users sign in again.
+
+<CodeGroup>
+
+```bash Before
+docker run -d -p 3450:3450 \
+  -e HTTP_PORT=3450 \
+  -e AGENT_URL=https://your-agent.example.com \
+  -e BFF_TOKEN_ENCRYPTION_KEY=xxx \
+  -e BFF_ALLOWED_ORIGINS=https://my-app.com \
+  -e BFF_PUBLIC_URL=https://your-bff.example.com \
+  -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
+  ghcr.io/forestadmin/agent-bff:latest
+```
+
+```bash After
+docker run -d -p 3450:3450 \
+  -e FOREST_GATEWAY_SERVICES=api \
+  -e PORT=3450 \
+  -e FOREST_AGENT_URL=https://your-agent.example.com \
+  -e FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY=xxx \
+  -e FOREST_GATEWAY_API_ALLOWED_ORIGINS=https://my-app.com \
+  -e FOREST_GATEWAY_API_PUBLIC_URL=https://your-bff.example.com/api \
+  -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
+  ghcr.io/forestadmin/gateway:latest
+```
+
+</CodeGroup>
+
+- The image changes from `ghcr.io/forestadmin/agent-bff` to `ghcr.io/forestadmin/gateway`, and `HTTP_PORT` becomes `PORT`.
+- If you set a public URL, point it at `…/api`. A `BFF_PUBLIC_URL` left at the root stops the boot, with an error saying it must end with `/api`.
+- `forest-bff` had no OAuth client allowlist. Setting `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` on the Gateway restricts the API too.
+
+<Warning>
+  **Do not publish a `forest-bff` under a path ending in `/api`**, such as `https://corp.example.com/forest/api`. The Zendesk app reads a URL ending in `/api` as a Gateway, and sends sign-in to `https://corp.example.com/forest/oauth/*?service=api`, which `forest-bff` does not serve: nobody can sign in. Publish `forest-bff` under another path, or move to the Gateway.
+</Warning>
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="Forest Gateway →" icon="arrow-right" href="/product/embed/gateway">
+    Routes, OAuth, CORS, timeouts and errors, shared by both deployments.
+  </Card>
+  <Card title="Forest MCP Server →" icon="arrow-right" href="/product/embed/mcp-server">
+    The MCP service's tools, restrictions, token lifetimes and uploads.
+  </Card>
+</CardGroup>
