@@ -296,7 +296,7 @@ On an older runtime, an MCP Task makes a single tool call. Below 1.32.0, the run
 - The workflow editor hides the **Tools** field on MCP Tasks. A step that already restricts its tools keeps its selection and shows *"This step's tool restriction needs a newer Forest Runtime. Update it to run this workflow."*
 - Forest refuses to start a run whose MCP Task restricts its tools, and checks again when a run steps into a called workflow, so nothing in that workflow runs. The error names the steps: *"MCP Task steps restricted to selected tools require a more recent Forest runtime than the one running on this environment. Reconfigure or remove the following step(s): …"*
 
-MCP Tasks whose **Tools** field is empty run on any version.
+MCP Tasks whose **Tools** field is empty run on any version. Since MCP Tasks call their tools without asking, below 1.32.0 the AI can use any tool of the server: update Forest Runtime to keep a tool away from it.
 
 ## Observability
 
