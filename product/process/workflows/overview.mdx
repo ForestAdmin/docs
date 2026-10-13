@@ -58,7 +58,7 @@ The following step types are available (\* denotes AI-powered):
 
 **Escalations** indicate a point where the workflow run is placed in an Inbox, so that another user can pick it up where the previous one left off.
 
-**MCP Tasks**\* let the AI perform an action in a 3rd party app via the corresponding MCP Server. The step's **Tools** field specifies which tools from the MCP Server can be used to execute this step at runtime: the AI calls any of them, as many times as the step needs, up to 10 calls per step. Left empty, the field reads **All tools allowed**, and the AI can use every tool of the server. See [MCP Tasks](#mcp-tasks) for how they run.
+**MCP Tasks**\* let the AI perform an action in a 3rd party app via the corresponding MCP Server, calling as many of its tools as the step needs. The step's **Tools** field restricts which ones it can use.
 
 <Note>
   MCP Tasks require an MCP Server to be configured in your Forest project. See [MCP Servers](/get-started/connect/integrations/mcp-servers) for details.
@@ -76,23 +76,13 @@ On **Trigger Action** steps, the end user must explicitly click Execute by defau
   Actions featuring a form still need to be filled out by the end user before the workflow submits them automatically.
 </Note>
 
-**MCP Tasks** always call their tools without asking for confirmation, so the **Tools** field is how you keep a tool away from the AI: leave out of the selection any tool the step must never use, such as one that sends an email or deletes a record. Completion still applies: with **After execution** set to **Keep step open**, the step waits for a person once the AI has made its calls, while **Go to next step** moves the run on.
-
-**Decisions** can also be delegated to AI: set the **Decision maker** toggle to **AI** on a decision step, and the workflow will automatically guide users through the correct branch, assuming it has sufficient context from previous steps.
-
-#### MCP Tasks
-
-When a workflow runs, an MCP Task shows each tool call the AI made as its own panel — the tool, its input and its result — followed by the AI's answer. Each call sees the results of the previous ones, so a step can look something up, then act on it.
-
-- A step the AI can answer from the workflow's context alone succeeds without calling any tool.
-- A step that fails after some calls still lists the calls that ran, so whoever handles it manually doesn't repeat them.
-- A step that needs more than 10 calls fails with *"The AI needed more than 10 tool calls to complete this step. Try narrowing the step's prompt."*
-
-In the editor, a selected tool the server no longer lists stays selected, labelled *(no longer on this server)*, until you remove it. A workflow whose MCP Task has an invalid tool selection can't be published: the **Errors Panel** lists it under **MCP Tool Selections**, and the step asks you to select its tools again.
+**MCP Tasks** always call their tools without asking for confirmation, so the **Tools** field is how you keep a tool away from the AI, such as one that sends an email or deletes a record.
 
 <Note>
-  Restricting the **Tools** field and making several calls per step need Forest Runtime 1.33.0 or later. See [MCP Task tools](/product/process/workflows/forest-runtime#mcp-task-tools) for what an older runtime does.
+  Restricting the **Tools** field and making several calls per step need [Forest Runtime](/product/process/workflows/forest-runtime) 1.33.0 or later (`@forestadmin/agent` 1.108.2 when embedded). Below 1.32.0 the field is hidden, and the AI can use any tool of the server without asking.
 </Note>
+
+**Decisions** can also be delegated to AI: set the **Decision maker** toggle to **AI** on a decision step, and the workflow will automatically guide users through the correct branch, assuming it has sufficient context from previous steps.
 
 ### Managing workflows
 
