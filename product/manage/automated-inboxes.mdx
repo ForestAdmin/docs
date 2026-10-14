@@ -12,7 +12,7 @@ For example, your `Documents` collection has a `Waiting for validation` segment.
 - **Segment**: a saved filter on a collection, for instance the documents waiting for validation. A record is in the segment while it matches the filter.
 - **Workflow**: a series of steps Forest runs on a record, such as checks, data updates, emails or actions.
 - **Run**: one pass of the workflow on one record.
-- **Check**: every 5 minutes, Forest looks for new records in the segment.
+- **Check**: at a regular interval, every 5 minutes by default, Forest looks for new records in the segment.
 - **Fallback inbox**: a regular inbox where your operators handle the runs the workflow cannot finish alone.
 - **Service account**: a Forest user that stands for the automation, not for a person. The workflow acts with its permissions.
 - **Backend**: the server your developers run to connect Forest to your data.
@@ -25,7 +25,7 @@ For example, your `Documents` collection has a `Waiting for validation` segment.
 ```mermaid
 flowchart LR
   subgraph Auto["Automated inbox: the workflow works"]
-    A["A record enters<br/>the segment"] --> B["The workflow starts<br/>within 5 minutes"]
+    A["A record enters<br/>the segment"] --> B["The workflow starts<br/>at the next check"]
     B --> C{"Does a step<br/>need a person?"}
     C -- "No" --> D["The workflow updates the record.<br/>It leaves the segment: done"]
   end
@@ -161,7 +161,7 @@ After you save, the settings show *"Applying your changes… This can take up to
 
 ### How fast records start
 
-- Forest checks the segment for new records **every 5 minutes**. Your developers change this interval in [Forest Runtime](/product/process/workflows/forest-runtime#tuning).
+- Forest checks the segment for new records **every 5 minutes by default**. Your developers set this interval in [Forest Runtime](/product/process/workflows/forest-runtime#tuning), so ask them if records start later than that.
 - Each inbox runs at most **20 workflows** at the same time. The other records wait for the next check. Runs waiting on a person in the fallback inbox do not count.
 - Records start in the same order the inbox would give them to operators, set by its dispatch rule, for instance oldest first. With a random dispatch rule, the order is not guaranteed.
 
@@ -202,7 +202,7 @@ While the inbox is paused:
 
 Click **Resume** to start again. The records that entered the segment meanwhile start at the usual pace, with no count and no confirmation.
 
-A workflow that fails on every record fills the fallback inbox with up to 20 tasks every 5 minutes. Pause the automation, fix the workflow, then resume.
+A workflow that fails on every record fills the fallback inbox with up to 20 tasks at every check. Pause the automation, fix the workflow, then resume.
 
 <Tip>
   Pause works even when an error has already stopped the automation. A pause set in production stays in place when your developers deploy a branch. Use it as the emergency stop.
@@ -229,7 +229,7 @@ To stop for a while and keep the settings, [pause](#pause-the-automation) instea
 The top of the inbox's automation settings shows **Automation is running.** when everything works, or **Paused.** after a [pause](#pause-the-automation). Any other message shows at the bottom of the automation settings. These messages stop the automation until someone fixes their cause, and most of them come with a link to the right page.
 
 <Info>
-  A change takes a moment to apply, and the status updates at the next check, within 5 minutes. If Forest Runtime stops, the settings keep showing the last status they received. If a status looks outdated, refresh the page.
+  A change takes a moment to apply, and the status updates at the next check. If Forest Runtime stops, the settings keep showing the last status they received. If a status looks outdated, refresh the page.
 </Info>
 
 ### Setup to finish
