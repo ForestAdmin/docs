@@ -95,7 +95,7 @@ Make sure the workflow ends with a data update or an action that changes what th
         Forest then counts the records already in the segment, for instance *"42 records already in this segment will start."* The workflow processes these records too: if it sends emails or payments, it sends them for these records. Click **Continue**.
       </Step>
       <Step title="Confirmation">
-        Check the **Inbox name**, the **Data from** and the **Workflow**. Above 100 records, Forest asks *"Start the workflow on 240 records?"*. Click **Confirm**.
+        Check the **Inbox name**, the **Data from** and the **Workflow**. Above 100 records, Forest asks *"Start the workflow on 240 records?"*. When it could not count them, it asks *"Start the workflow on every record in this segment?"*. Click **Confirm**.
 
         The workflow starts on the records already in the segment, then on every new one.
       </Step>
@@ -124,7 +124,7 @@ Make sure the workflow ends with a data update or an action that changes what th
         Under **How it starts**, Forest shows how many records already in the inbox will start, for instance *"Up to 42 records already in this inbox will start."*
       </Step>
       <Step title="Save">
-        Click **Save**. Above 100 records, or when operators hold tasks in this inbox, Forest asks *"Switch this inbox to automatic?"*. Click **Switch to automatic**.
+        Click **Save**. Forest asks *"Switch this inbox to automatic?"* above 100 records, when it could not count them, or when operators hold tasks in this inbox. In that last case, the question says how many, for instance *"3 tickets currently handled by users will be auto-cancelled."* Click **Switch to automatic**.
       </Step>
     </Steps>
   </Tab>
@@ -144,7 +144,7 @@ After you save, the settings show *"Applying your changes… This can take up to
     Past 100 records in this state, the automation stops starting new runs and shows *"More than 100 records are still in the segment after their run. No new run starts until your workflow takes them out of the segment."* It starts again on its own once the count is back to 100 or below.
   </Accordion>
   <Accordion title="A step needs a person" icon="user">
-    A step errors, asks for a confirmation, or needs a manual input. A task opens in the fallback inbox, linked to the same run. The workflow keeps processing the other records meanwhile.
+    A step errors, asks for a confirmation, or needs a manual input. A task opens in the fallback inbox, linked to the same run. The workflow keeps processing the other records meanwhile. In the automated inbox's Backlog, the record shows **Escalated**.
 
     The operator who takes the task resumes the run where it stopped, with everything the workflow already did. From then on, the automated steps run with that operator's permissions, not the service account's.
 
@@ -170,7 +170,7 @@ After you save, the settings show *"Applying your changes… This can take up to
 - Records start in the same order the inbox would give them to operators, set by its dispatch rule, for instance oldest first. With a random dispatch rule, the order is not guaranteed.
 
 <Note>
-  On forest-express and agent-php backends, records start in the order of the dispatch rule's first sort field only. Your developers know which backend you use.
+  On older backends and on agent-php, records start in the order of the dispatch rule's first sort field only. Your developers know which backend and version you use.
 </Note>
 
 ## Follow the automation
@@ -181,7 +181,7 @@ The automation's state and the records' states only refresh when the page loads.
 
 ### The automation's state
 
-Forest shows the automation's state in three places: the tooltip of the bolt icon in the navbar, the header of the inbox (for instance *"Automatic · Running · Workflow: Validate document · Service account: Validation bot"*), and each inbox listed under the workflow's **On data change** trigger.
+Forest shows the automation's state in three places: the tooltip of the bolt icon in the navbar, the header of the inbox (for instance *"Automatic · Running · Workflow: Validate document · Service account: Validation bot · Fallback inbox: Document review"*), and each inbox listed under the workflow's **On data change** trigger.
 
 | State | What it means | What to do |
 |---|---|---|
@@ -196,16 +196,19 @@ The Backlog of an automated inbox only lists the records the workflow started. A
 
 | What you see | What it means |
 |---|---|
-| **Doing**, with no assignee | The workflow started on the record. Three cases look the same: the run is going, the run waits on a person in the fallback inbox, or the run ended but the record stayed in the segment. |
+| **Doing**, with no assignee | The workflow started on the record. Two cases look the same: the run is going, or the run ended but the record stayed in the segment. |
+| **Escalated** | A step needed a person: a task opened in the fallback inbox. The record stays **Escalated** until it leaves the segment, even once an operator took the task. |
 | The record leaves the Backlog | The run ended and the record left the segment: the work is done. Forest removes the record from the Backlog at the next check. A record whose run someone aborted leaves the Backlog too, and comes back as **Doing** if the workflow starts again on it. |
 | **Completed** | The run ended after the inbox went back to operators. |
 | **To do** | A task an operator received before the inbox switched to automatic, and never started. It stays as it is. |
 
-Each row has an **Open** button that opens the record. The Backlog has no **Assign** or **Unassign** button, and no link to the run or to the fallback inbox.
+Each row has an **Open** button that opens the record. The Backlog has no **Assign** or **Unassign** button. To reach the fallback inbox, click its name at the end of the inbox header.
 
 ### Unstick a record
 
-A record that stays **Doing** for too long has a run that ended without taking it out of the segment, or a run that waits on a person. Check the fallback inbox first. If no task waits there, abort the run:
+A record that stays **Escalated** waits on a person: click the fallback inbox in the inbox header and handle its task there.
+
+A record that stays **Doing** for too long has a run that ended without taking it out of the segment. Fix the workflow, then abort the run:
 
 1. In the Backlog, click **Open** on the record.
 2. Resume its workflow run. This only opens the run.
