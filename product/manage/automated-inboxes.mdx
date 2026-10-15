@@ -1,327 +1,67 @@
 ---
 title: "Automated inboxes"
-description: "Let a workflow process every record that enters an inbox, and send only the exceptions to your team"
+description: "Let a workflow process every record that enters an inbox, and send only the exceptions to your team."
 ---
 
-An automated inbox gives its records to a workflow instead of your team. Each time a record enters the inbox, the workflow processes it, with nobody clicking anything. Your team steps in only when the workflow needs a person.
+An **automated inbox** gives its records to a workflow instead of your operators. Each record that enters the inbox's segment starts the workflow, and your team only steps in when a run needs a person.
 
-For example, your `Documents` collection has a `Waiting for validation` segment. A new document enters the segment, the workflow checks it, sets its status to `Validated`, and the document leaves the segment. When the workflow cannot decide on its own, a task opens for an operator in another inbox, the fallback inbox.
-
-## Key terms
-
-- **Segment**: a saved filter on a collection, for instance the documents waiting for validation. A record is in the segment while it matches the filter.
-- **Workflow**: a series of steps Forest runs on a record, such as checks, data updates, emails or actions.
-- **Run**: one pass of the workflow on one record.
-- **Check**: at a regular interval, every 5 minutes by default, Forest looks for new records in the segment.
-- **Fallback inbox**: a regular inbox where your operators handle the runs the workflow cannot finish alone.
-- **Service account**: a Forest user that stands for the automation, not for a person. The workflow acts with its permissions.
-- **Backend**: the server your developers run to connect Forest to your data.
-- **Forest Runtime**: the Forest program your developers install on your own servers. It runs the workflows and checks the segment.
-- **Backlog**: the inbox page that lists records with their state.
-- **Dispatch rule**: the order in which an inbox hands out its records, for instance oldest first.
+For example, every document that enters the `Waiting for validation` segment starts a workflow that checks it and sets its status to `Validated`.
 
 ## How it works
 
-```mermaid
-flowchart LR
-  subgraph Auto["Automated inbox: the workflow works"]
-    A["A record enters<br/>the segment"] --> B["The workflow starts<br/>at the next check"]
-    B --> C{"Does a step<br/>need a person?"}
-    C -- "No" --> D["The workflow updates the record.<br/>It leaves the segment: done"]
-  end
-  subgraph Fallback["Fallback inbox: your team works"]
-    E["A task opens<br/>for an operator"] --> F["The operator handles the step.<br/>The workflow continues"]
-  end
-  C -- "Yes" --> E
-  F --> D
-```
+An automation uses two inboxes:
 
-### Two inboxes, two roles
+- **The automated inbox** receives every record of the segment. The workflow processes them, nobody takes them.
+- **The fallback inbox** receives a task when a run needs a person: an error, a confirmation or a manual step. Operators work it like any [inbox](/product/manage/inbox), and the run continues where it stopped.
 
-An automation always works with two inboxes: one for the workflow, one for your team.
+A record is done when it leaves the segment. End your workflow with a step that changes what the segment filters on, for instance an **Update Data** step that sets the status to `Validated`.
 
-| | Automated inbox | Fallback inbox |
-|---|---|---|
-| **What lands there** | Every record that matches the segment | A task for each run that needs a person: an error, a confirmation, a manual input |
-| **What people do there** | Admins follow the progress | Operators take and finish tasks, like in any inbox |
-
-<Info>
-  An automated inbox has no **To do** or **Doing** page, no **Start processing** button and no **Next ticket** bar. Nobody takes its records: the workflow does. If someone tries, Forest refuses with *"Records of an automated inbox cannot be assigned or unassigned."*
-</Info>
+New records start within 5 minutes.
 
 ## Before you start
 
-Check these points first. If one is missing, the settings tell you which one, but checking first saves a trip back.
-
-1. **An inbox based on a segment.** An inbox that receives escalations from a workflow cannot become automatic.
-2. **A workflow on the same collection**, with a **fallback inbox** selected in its **Triggers** section.
-3. **The workflow's On data change trigger, turned on.** See [Workflow triggers](/product/process/workflows/triggers#the-on-data-change-trigger).
-4. **A workflow that takes the record out of the segment.** See [the next section](#make-your-workflow-take-records-out-of-the-segment).
-5. **A service account in the inbox's team.** The workflow runs as this account, with its permissions. Its role needs read access to the collections of both inboxes.
-6. **[Forest Runtime](/product/process/workflows/forest-runtime)** running on your environment. Your developers install it.
-
-Only the **Admin** and **Process Owner** permission levels set up an automated inbox. See [Who can do what](#who-can-do-what).
-
-## Make your workflow take records out of the segment
-
-This is the one rule that matters. A record leaves the automated inbox only when it leaves the segment: Forest has no other way to know the work is done.
-
-Make sure the workflow ends with a data update or an action that changes what the segment filters on. The settings remind you under **Workflow**: *"Ensure your workflow contains a data update or action that takes the record out of the segment, otherwise it won't be marked as Done."*
-
-<Tip>
-  The `Waiting for validation` segment keeps the documents whose status is `pending`. The last step of the workflow, an **Update Data** step, sets the status to `validated`. The document leaves the segment, and the inbox marks it as done.
-</Tip>
+- An inbox based on a segment.
+- A workflow on the same collection, with a **Fallback inbox** and the **On data change** trigger turned on. See [Workflow triggers](/product/process/workflows/triggers#the-on-data-change-trigger).
+- A service account in the inbox's team. The workflow runs with its permissions.
+- [Forest Runtime](/product/process/workflows/forest-runtime) running on your environment.
 
 ## Set up an automated inbox
 
+Only Admins can pick the service account in **Runs as**.
+
 <Tabs>
   <Tab title="New inbox">
-    <Steps>
-      <Step title="Open the Customization Center">
-        At the bottom of the left navbar, click **Add new**. In the **Customization Center**, pick the **Inbox** card and click **Next**.
-      </Step>
-      <Step title="What should go in this inbox?">
-        Give the inbox a **Name** and an **Icon**, then pick the **Collection** and the **Segment**. Click **Continue**.
-      </Step>
-      <Step title="Choose your dispatch rule.">
-        Pick the order in which records come out, for instance oldest first. The workflow starts the records in this order too. Click **Continue**.
-      </Step>
-      <Step title="How are these records processed?">
-        Pick **A workflow processes them**. Then:
-
-        - In **Workflow**, pick the workflow. The list only shows the workflows whose **On data change** trigger is on.
-        - In **Runs as**, pick a service account. Every run starts with its permissions.
-
-        Forest then counts the records already in the segment, for instance *"42 records already in this segment will start."* The workflow processes these records too: if it sends emails or payments, it sends them for these records. Click **Continue**.
-      </Step>
-      <Step title="Confirmation">
-        Check the **Inbox name**, the **Data from** and the **Workflow**. Above 100 records, Forest asks *"Start the workflow on 240 records?"*. When it could not count them, it asks *"Start the workflow on every record in this segment?"*. Click **Confirm**.
-
-        The workflow starts on the records already in the segment, then on every new one.
-      </Step>
-    </Steps>
+    1. Turn on **Layout Editor** mode, click **Add new** at the bottom of the left navbar, then pick **Inbox**.
+    2. Name the inbox, then pick its **Collection** and **Segment**.
+    3. Pick the dispatch rule. The workflow starts the records in this order.
+    4. Pick **A workflow processes them**, then the **Workflow** and the service account in **Runs as**.
+    5. Click **Confirm**.
   </Tab>
   <Tab title="Existing inbox">
-    <Warning>
-      Switching an existing inbox to automatic cancels the tasks operators hold in **Doing**, and aborts the workflow runs they started there. The settings warn you before you save: *"Tickets currently handled by users will be auto-cancelled."*
-
-      The workflow then starts these records again at its next check. An aborted run keeps what it already did. If the workflow sends an email or a payment, the new run sends it again. Ask operators to finish their tasks in **Doing** before you switch.
-
-      The cancelled tasks leave the **Backlog**. The record's history keeps a trace: *"… has been automatically unassigned from … because the inbox was switched to automatic"*.
-    </Warning>
-
-    <Steps>
-      <Step title="Open the inbox settings">
-        Turn on **Layout Editor** mode, then click the inbox in the left navbar. Its **General settings** open.
-      </Step>
-      <Step title="Switch to automatic">
-        In the **Process** section, set **How it starts** to **Automatically, as soon as a record enters**.
-      </Step>
-      <Step title="Pick the workflow and who it runs as">
-        In **Workflow**, pick the workflow. The list only shows the workflows whose **On data change** trigger is on. Then pick the service account in **Runs as**.
-      </Step>
-      <Step title="Check how many records will start">
-        Under **How it starts**, Forest shows how many records already in the inbox will start, for instance *"Up to 42 records already in this inbox will start."*
-      </Step>
-      <Step title="Save">
-        Click **Save**. Forest asks *"Switch this inbox to automatic?"* above 100 records, when it could not count them, or when operators hold tasks in this inbox. In that last case, the question says how many, for instance *"3 tickets currently handled by users will be auto-cancelled."* Click **Switch to automatic**.
-      </Step>
-    </Steps>
+    1. Turn on **Layout Editor** mode and click the inbox in the left navbar.
+    2. In the **Process** section, set **How it starts** to **Automatically, as soon as a record enters**.
+    3. Pick the **Workflow** and the service account in **Runs as**, then click **Save**.
   </Tab>
 </Tabs>
 
-After you save, the settings show *"Applying your changes… This can take up to 20 seconds."*, then **Automation is running.** Any other message means the automation is stopped: see [Status messages](#status-messages).
-
-## What happens to each record
-
-<AccordionGroup>
-  <Accordion title="The workflow runs to the end and the record leaves the segment" icon="circle-check">
-    The record leaves the inbox. Nobody had to do anything.
-  </Accordion>
-  <Accordion title="The workflow runs to the end, but the record stays in the segment" icon="circle-pause">
-    The record stays **Doing** in the Backlog. The workflow does not start again on it, and no task opens for your team. Fix the workflow, or move these records out of the segment with a bulk action.
-
-    Past 100 records in this state, the automation stops starting new runs and shows *"More than 100 records are still in the segment after their run. No new run starts until your workflow takes them out of the segment."* It starts again on its own once the count is back to 100 or below.
-  </Accordion>
-  <Accordion title="A step needs a person" icon="user">
-    A step errors, asks for a confirmation, or needs a manual input. A task opens in the fallback inbox, linked to the same run. The workflow keeps processing the other records meanwhile. In the automated inbox's Backlog, the record shows **Escalated**.
-
-    The operator who takes the task resumes the run where it stopped, with everything the workflow already did. From then on, the automated steps run with that operator's permissions, not the service account's.
-
-    The task stays with the operator until the run ends, even if the run blocks again. When the run ends, the task closes on its own. If the operator aborts the run and the record is still in the segment, the workflow starts again on it at the next check.
-
-    If Forest Runtime stops in the middle of a step that changes data, the task shows *"Step execution was interrupted. Please retry the step manually."* Retry the step from the task. Forest never replays it on its own, so nothing runs twice.
-  </Accordion>
-  <Accordion title="The record leaves the segment, then comes back" icon="rotate">
-    The workflow starts a new run on it. If the record leaves and comes back between two checks, Forest never sees it leave, and no new run starts.
-  </Accordion>
-  <Accordion title="Someone already runs the same workflow on the record" icon="hourglass">
-    A record never runs the same workflow twice at the same time. If an operator, a webhook or an AI assistant already started this workflow on the record, the automation waits for that run to end.
-  </Accordion>
-  <Accordion title="The record belongs to two automated inboxes" icon="clone">
-    Each inbox runs its own workflow on it. When both inboxes use the same workflow, the second run waits for the first one to end. It then starts if the record is still in its segment, so the record goes through the workflow twice. Keep the segments apart when the workflow sends an email or a payment.
-  </Accordion>
-</AccordionGroup>
-
-### How fast records start
-
-- Forest checks the segment for new records **every 5 minutes by default**. Your developers set this interval in [Forest Runtime](/product/process/workflows/forest-runtime#tuning), so ask them if records start later than that.
-- Each inbox runs at most **20 workflows** at the same time. The other records wait for the next check. Runs waiting on a person in the fallback inbox do not count.
-- Records start in the same order the inbox would give them to operators, set by its dispatch rule, for instance oldest first. With a random dispatch rule, the order is not guaranteed.
-
-<Note>
-  On older backends and on agent-php, records start in the order of the dispatch rule's first sort field only. Your developers know which backend and version you use.
-</Note>
+The workflow also starts on the records already in the segment. Forest shows how many before you confirm.
 
 ## Follow the automation
 
-Admins open an automated inbox from the left navbar, where a bolt icon marks it. It opens on its **Backlog**. Other roles do not see the automated inbox in the navbar, except in **Layout Editor** mode, where it opens its settings.
+Admins open an automated inbox from the left navbar, where a bolt icon marks it. It opens on its **Backlog**:
 
-The automation's state and the records' states only refresh when the page loads. Click **Refresh** at the top of the Backlog to update them.
-
-### The automation's state
-
-Forest shows the automation's state in three places: the tooltip of the bolt icon in the navbar, the header of the inbox (for instance *"Automatic · Running · Workflow: Validate document · Service account: Validation bot · Fallback inbox: Document review"*), and each inbox listed under the workflow's **On data change** trigger.
-
-| State | What it means | What to do |
-|---|---|---|
-| **Running** | The automation checks the segment and starts new runs. | Nothing. |
-| **Paused** | Someone [paused](#pause-the-automation) the automation. No new run starts, the runs already going finish. The Backlog shows *"The automation is paused. No new run starts until it is resumed."* | Click **Resume** in the inbox settings when you are ready. |
-| **Stopped** | Something blocks the automation. No new run starts. The Backlog shows *"The automation is stopped."* followed by the reason. | Find the reason in [Status messages](#status-messages) and fix it. |
-| **State unavailable** | Forest could not read the automation's state. It says nothing about the automation itself. The Backlog shows *"The automation state is unavailable. Refresh to try again."* | Click **Refresh**. |
-
-### The records in the Backlog
-
-The Backlog of an automated inbox only lists the records the workflow started. A record that waits in the segment for the next check is not listed yet. When the workflow has not started any record yet, the Backlog reads *"The segment has not been processed yet or no records are available."*
-
-| What you see | What it means |
+| State | Meaning |
 |---|---|
-| **Doing**, with no assignee | The workflow started on the record. Two cases look the same: the run is going, or the run ended but the record stayed in the segment. |
-| **Escalated** | A step needed a person: a task opened in the fallback inbox. The record stays **Escalated** until it leaves the segment, even once an operator took the task. |
-| The record leaves the Backlog | The run ended and the record left the segment: the work is done. Forest removes the record from the Backlog at the next check. A record whose run someone aborted leaves the Backlog too, and comes back as **Doing** if the workflow starts again on it. |
-| **Completed** | The run ended after the inbox went back to operators. |
-| **To do** | A task an operator received before the inbox switched to automatic, and never started. It stays as it is. |
+| **Doing** | The workflow is processing the record. |
+| **Escalated** | The run waits on a person in the fallback inbox. Click the fallback inbox name in the header to reach it. |
 
-Each row has an **Open** button that opens the record. The Backlog has no **Assign** or **Unassign** button. To reach the fallback inbox, click its name at the end of the inbox header.
+A record leaves the Backlog once it leaves the segment. Click **Refresh** to update the list.
 
-### Unstick a record
+## Pause or stop the automation
 
-A record that stays **Escalated** waits on a person: click the fallback inbox in the inbox header and handle its task there.
+To pause, open the inbox settings in **Layout Editor** mode and click **Pause** in the **Process** section. No new run starts, and the runs already going finish. Click **Resume** to start again.
 
-A record that stays **Doing** for too long has a run that ended without taking it out of the segment. Fix the workflow, then abort the run:
-
-1. In the Backlog, click **Open** on the record.
-2. Resume its workflow run. This only opens the run.
-3. Close the workflow panel and choose **Abort**.
-
-If the record is still in the segment, the workflow starts again on it at the next check.
-
-## Pause the automation
-
-Pause an automated inbox when something goes wrong, for instance a workflow that misbehaves, without losing its settings.
-
-1. Turn on **Layout Editor** mode and click the inbox in the left navbar. Its **General settings** open.
-2. In the **Process** section, click **Pause**.
-
-The pause applies at once, with no **Save**, and Forest confirms with *"Automation paused."* The settings then read *"Paused. No new run starts until you resume it; runs already going finish as usual."*
-
-While the inbox is paused:
-
-- **No new run starts.** The runs already going finish as usual, and the ones that need a person still go to the fallback inbox.
-- **The inbox stays automated.** Operators still cannot take its records, and its workflow, service account and dispatch order stay as they are.
-- **Everyone sees the pause.** The Backlog shows *"The automation is paused. No new run starts until it is resumed."*, its header and the workflow's **On data change** row say **Paused**, and the navbar tooltip reads *"Automatic inbox, paused"*.
-
-Click **Resume** to start again. The records that entered the segment meanwhile start at the usual pace, with no count and no confirmation.
-
-A workflow that fails on every record fills the fallback inbox with up to 20 tasks at every check. Pause the automation, fix the workflow, then resume.
-
-<Tip>
-  Pause works even when an error has already stopped the automation. A pause set in production stays in place when your developers deploy a branch. Use it as the emergency stop.
-</Tip>
-
-## Change or stop the automation
-
-To stop for a while and keep the settings, [pause](#pause-the-automation) instead.
-
-| To | Do this | What happens to the runs already started |
-|---|---|---|
-| Stop the automation | In the inbox settings, set **How it starts** to **Operators handle the records, no workflow** | They keep going and close on their own when they end. Operators work the inbox again. |
-| Change the workflow or the service account | Pick another one in the inbox settings and save | They keep going. New runs use the new settings. |
-| Turn off the workflow's **On data change** trigger | In the workflow's **Triggers** section | They keep going. Every automated inbox using this workflow stops, and the trigger row lists them, for instance *"2 inboxes stopped: Documents, Invoices."* |
-| Delete the automated inbox | In its **General settings**, under **Delete inbox** | They keep going, and the ones that need a person still go to the fallback inbox. |
-| Delete the service account | In **Project settings** → **Service accounts** | They keep going, and operators still unblock them from the fallback inbox. The confirmation lists the automated inboxes that will stop. |
-
-<Note>
-  Forest refuses to delete a fallback inbox while a workflow with an automated trigger sends its runs there. First turn off that workflow's automated triggers, or pick another fallback inbox for it.
-</Note>
-
-## Status messages
-
-The top of the inbox's automation settings shows **Automation is running.** when everything works, or **Paused.** after a [pause](#pause-the-automation). Any other message shows at the bottom of the automation settings. These messages stop the automation until someone fixes their cause, and most of them come with a link to the right page.
-
-<Info>
-  A change takes a moment to apply, and the status updates at the next check. If Forest Runtime stops, the settings keep showing the last status they received. If a status looks outdated, refresh the page.
-</Info>
-
-### Setup to finish
-
-| Message | What to do | Who |
-|---|---|---|
-| *Save to check this automation.* | Save the settings. | You |
-| *Choose the service account the runs are started as.* | Pick a service account in **Runs as**. | Admin or Process Owner |
-| *Won't start until an Admin or a Process Owner picks who it runs as.* | Ask an Admin or a Process Owner to pick **Runs as**. | Admin or Process Owner |
-| *No Forest Runtime is connected to this environment.* | Install [Forest Runtime](/product/process/workflows/forest-runtime). | Your developers |
-| *Your Forest Runtime is missing or too old to run automated inboxes.* | Update Forest Runtime. | Your developers |
-
-### The service account
-
-| Message | What to do | Who |
-|---|---|---|
-| *The user this automation runs as is not a service account. Choose a service account to start it again.* | Pick a service account in **Runs as**. | Admin or Process Owner |
-| *The user this automation runs as no longer exists.* | Pick another service account in **Runs as**. | Admin or Process Owner |
-| *The user this automation runs as is blocked.* | Unblock it in **Project settings** → **Users**, or pick another one in **Runs as**. | Admin |
-| *The user this automation runs as is not a member of this team.* | Add it to the inbox's team in **Project settings** → **Users**, or pick another one in **Runs as**. | Admin |
-| *The role of the user this automation runs as is disabled on this environment.* | Enable the role in **Project settings** → **Roles**, or pick another service account. | Admin |
-| *The user this automation runs as can't read this inbox's collection.* | Give its role read access to the collection in **Project settings** → **Roles**. | Admin |
-| *The user this automation runs as can't read the collection of this workflow's fallback inbox.* | Give its role read access to that collection in **Project settings** → **Roles**. | Admin |
-
-### The workflow and the segment
-
-| Message | What to do | Who |
-|---|---|---|
-| *This workflow can't start automatically. Turn on its "On data change" trigger.* | In the workflow's **Triggers** section, turn on **On data change**, or pick another workflow. | Admin or Process Owner |
-| *The selected workflow no longer exists or has no fallback inbox.* | Pick a fallback inbox in the workflow's **Triggers** section, or pick another workflow. | Admin or Process Owner |
-| *The selected workflow runs on another collection than this inbox.* | Pick a workflow on the inbox's collection. | You |
-| *This workflow's fallback inbox no longer exists. Choose another one.* | Pick another fallback inbox in the workflow's **Triggers** section. | Admin or Process Owner |
-| *This workflow's fallback inbox is automated. Choose a fallback inbox people work from.* | Pick a fallback inbox your operators work from, in the workflow's **Triggers** section. | Admin or Process Owner |
-| *More than 100 records are still in the segment after their run. No new run starts until your workflow takes them out of the segment.* | Fix the workflow so it takes records out of the segment, then move the records stuck in it. See [Make your workflow take records out of the segment](#make-your-workflow-take-records-out-of-the-segment). | Admin or Process Owner |
-| *The collection or segment of this inbox is no longer available.* | Restore the segment, or create a new automated inbox on another one. | Admin or Process Owner |
-| *The segment filter cannot be evaluated by the Forest Runtime.* | Find out which part of the segment filter Forest Runtime cannot read, or rebuild the segment with simpler conditions. | Your developers |
-
-### Your backend
-
-These messages clear on their own at the first check that reads the segment again.
-
-| Message | What to do | Who |
-|---|---|---|
-| *Your backend refused to let the service account read this inbox's segment.* | Give the service account's role read access to the collection in **Project settings** → **Roles**. | Admin |
-| *Your backend could not be reached when checking this inbox. Check that it is running.* | Check that the backend is running. | Your developers |
-| *Your backend could not read this inbox's segment.* | Check the segment on the backend, with the error code shown in the message when there is one. | Your developers |
-| *This automation cannot run right now.* | Contact Forest support. | You |
-
-## Who can do what
-
-| Action | Admin | Process Owner | Developer, Editor | Manager, User |
-|---|:-:|:-:|:-:|:-:|
-| Make an inbox automatic | ✅ | ✅ | — | — |
-| Change the workflow of an automated inbox | ✅ | ✅ | ✅ | — |
-| Switch an automated inbox back to operators | ✅ | ✅ | ✅ | — |
-| Pick **Runs as** | ✅ | ✅ | — | — |
-| Turn the workflow's **On data change** trigger on or off | ✅ | ✅ | — | — |
-| Pause and resume the automation | ✅ | ✅ | ✅ | — |
-| Open the automated inbox's **Backlog** | ✅ | — | — | — |
-| See the automated inbox in the navbar | ✅ | Layout Editor mode | Layout Editor mode | — |
-| Work the fallback inbox | ✅ | ✅ | ✅ | ✅ |
+To stop, choose **Operators know what to do** in the **Process** section and click **Save**. Operators work the inbox again.
 
 ## Related
 
@@ -331,11 +71,5 @@ These messages clear on their own at the first check that reads the segment agai
   </Card>
   <Card title="Workflow triggers" icon="bolt" href="/product/process/workflows/triggers">
     Manual, webhook, MCP and On data change.
-  </Card>
-  <Card title="Forest Runtime" icon="server" href="/product/process/workflows/forest-runtime">
-    The service that runs workflows and watches automated inboxes.
-  </Card>
-  <Card title="Executing workflows" icon="play" href="/product/execute/workflows">
-    How operators resume and abort a run.
   </Card>
 </CardGroup>
