@@ -204,7 +204,7 @@ Every API route except `context` and `ai/query` requires an explicit timezone, r
 Every data route needs one credential, and only one:
 
 - **A user session**, sent as `Authorization: Bearer <token>`, which a browser UI such as the [Zendesk app](/product/embed/zendesk) gets through OAuth sign-in. The user's role, permissions and scopes apply.
-- **A service account API key**, sent in the `X-Forest-Gateway-Key` header, for server-to-server calls such as a nightly reconciliation job or an internal back-office tool. The service account's role and teams apply. The AI relay, `POST {basePath}/api/agent/v1/ai/query`, needs a user session: called with a key it answers `403 oauth_required`.
+- **A service account API key**, sent in the `X-Forest-Gateway-Key` header, for server-to-server calls such as a nightly reconciliation job or an internal back-office tool. The service account's role and teams apply. The header needs `@forestadmin/agent` 1.110.1 or later embedded, or `@forestadmin/gateway` 1.0.2 or later standalone. The AI relay, `POST {basePath}/api/agent/v1/ai/query`, needs a user session: called with a key it answers `403 oauth_required`.
 
 A request carrying a bearer and a key, or two different keys, answers `400 ambiguous_credentials` before either credential is checked.
 
