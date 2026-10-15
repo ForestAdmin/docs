@@ -1,6 +1,6 @@
 ---
 title: "Standalone Forest Gateway"
-description: "Run the Forest Gateway as its own process, in front of a back-end that cannot embed it, and move to it from forest-mcp-server."
+description: "Run the Forest Gateway as its own process, in front of a back-end that cannot embed it, and move to it from forest-mcp-server or forest-bff."
 ---
 
 The [Forest Gateway](/product/embed/gateway) serves two things: the **MCP service**, for AI assistants, and the **API service**, a REST contract for trusted browser UIs such as the [Zendesk app](/product/embed/zendesk). On a Node.js agent, you embed it with `addGateway()`. On any other back-end, or when the API must scale apart from the agent, run it standalone: one process, one port, either or both services.
@@ -131,15 +131,17 @@ The MCP service reads the same `FOREST_MCP_*` variables as before, under the sam
 
 ### Legacy names
 
-The Gateway also reads the variable names `forest-mcp-server` used, so a migrated configuration boots unchanged:
+The Gateway also reads the variable names `forest-mcp-server` and `forest-bff` used, so a migrated configuration boots unchanged:
 
 | Gateway name | Also read |
 | --- | --- |
-| `PORT` | `MCP_SERVER_PORT` |
+| `PORT` | `MCP_SERVER_PORT`, `HTTP_PORT` |
 | `FOREST_GATEWAY_URL` | `FOREST_MCP_SERVER_URL` |
+| `FOREST_AGENT_URL` | `AGENT_URL`, with `api` on |
 | `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` | `FOREST_MCP_ALLOWED_OAUTH_CLIENTS` |
+| `FOREST_GATEWAY_API_*` | `BFF_*`, e.g. `BFF_TOKEN_ENCRYPTION_KEY` |
 
-The Gateway name wins when it is set. Each legacy name in use logs one boot warning naming its replacement. Two legacy names that disagree with no Gateway name set, such as `MCP_SERVER_PORT=3931` and `PORT=8080`, stop the boot. These names have no removal date.
+The Gateway name wins when it is set. Each legacy name in use logs one boot warning naming its replacement. Two legacy names that disagree with no Gateway name set, such as `HTTP_PORT=8080` and `MCP_SERVER_PORT=3931`, stop the boot. These names have no removal date.
 
 ## Ingress and network rules
 
@@ -179,9 +181,9 @@ What the module exports is described in [Action file uploads](/product/embed/mcp
 npx @forestadmin/gateway openapi > openapi.json
 ```
 
-## Moving from `forest-mcp-server`
+## Moving from `forest-mcp-server` or `forest-bff`
 
-**Staying is fine.** `forest-mcp-server` keeps working as it does today, with the same variables and the same URLs. It is deprecated and logs one warning at boot pointing here. Moving to the Gateway gets you the MCP and the API in one process, and the new variable names.
+**Staying is fine.** `forest-mcp-server` and `forest-bff` keep working as they do today, with the same variables and the same URLs. Both are deprecated: they log one warning at boot pointing here. Moving to the Gateway gets you both services in one process, and the new variable names.
 
 Moving is explicit: nothing switches on its own. Replace the command or the image, add `FOREST_GATEWAY_SERVICES`, and keep your variables. The legacy names still work and each logs one warning until you rename it.
 
@@ -207,6 +209,45 @@ FOREST_GATEWAY_SERVICES=mcp \
 </CodeGroup>
 
 The Gateway needs Node.js 22.12 or later. On an older Node.js, use the image.
+
+### From `forest-bff`
+
+The API moves from the root of your URL to `/api`: `https://your-bff.example.com/agent/v1/...` becomes `https://your-bff.example.com/api/agent/v1/...`. Update every application that calls it. In the Zendesk app, set the URL to `https://your-bff.example.com/api`. Users sign in again.
+
+<CodeGroup>
+
+```bash Before
+docker run -d -p 3450:3450 \
+  -e HTTP_PORT=3450 \
+  -e AGENT_URL=https://your-agent.example.com \
+  -e BFF_TOKEN_ENCRYPTION_KEY=xxx \
+  -e BFF_ALLOWED_ORIGINS=https://my-app.com \
+  -e BFF_PUBLIC_URL=https://your-bff.example.com \
+  -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
+  ghcr.io/forestadmin/agent-bff:latest
+```
+
+```bash After
+docker run -d -p 3450:3450 \
+  -e FOREST_GATEWAY_SERVICES=api \
+  -e PORT=3450 \
+  -e FOREST_AGENT_URL=https://your-agent.example.com \
+  -e FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY=xxx \
+  -e FOREST_GATEWAY_API_ALLOWED_ORIGINS=https://my-app.com \
+  -e FOREST_GATEWAY_API_PUBLIC_URL=https://your-bff.example.com/api \
+  -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
+  ghcr.io/forestadmin/gateway:latest
+```
+
+</CodeGroup>
+
+- The image changes from `ghcr.io/forestadmin/agent-bff` to `ghcr.io/forestadmin/gateway`, and `HTTP_PORT` becomes `PORT`.
+- If you set a public URL, point it at `…/api`. A `BFF_PUBLIC_URL` left at the root stops the boot, with an error saying it must end with `/api`.
+- `forest-bff` had no OAuth client allowlist. Setting `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` on the Gateway restricts the API too.
+
+<Warning>
+  **Do not publish a `forest-bff` under a path ending in `/api`**, such as `https://corp.example.com/forest/api`. The Zendesk app reads a URL ending in `/api` as a Gateway, and sends sign-in to `https://corp.example.com/forest/oauth/*?service=api`, which `forest-bff` does not serve: nobody can sign in. Publish `forest-bff` under another path, or move to the Gateway.
+</Warning>
 
 ## What's next
 

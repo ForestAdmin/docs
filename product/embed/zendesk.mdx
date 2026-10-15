@@ -10,7 +10,7 @@ The Forest Zendesk app lets you view and act on your data without leaving Zendes
 The app reaches your back-end through the [Forest Gateway](/product/embed/gateway), whose API service exposes a flat REST contract to browser UIs. Each Zendesk agent signs in with their own Forest account, and every call travels to your back-end as that person. Their roles, permissions and scopes apply exactly as they do in Forest.
 
 <Info>
-  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the Gateway API does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your Gateway URL. The setting has since been renamed to `forestGatewayApiUrl` in 1.3.0, so the update leaves the field empty and an admin has to enter the URL again before anyone can sign in.
+  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the Gateway API does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your Gateway URL. 1.3.0 renamed the setting to `forestGatewayApiUrl`, so the update leaves the field empty and an admin has to enter the URL again before anyone can sign in.
 </Info>
 
 ## Prerequisites
@@ -69,7 +69,7 @@ docker run -d -p 3450:3450 \
   A build served locally with `zcli apps:server` runs from `http://localhost:4567`. Allow-list that origin too while you develop.
 </Note>
 
-Embedding needs the Node.js agent. With a Ruby back-end, run the [standalone Gateway](/product/embed/gateway-standalone).
+Embedding needs the Node.js agent. With a Ruby back-end, run the [standalone Gateway](/product/embed/gateway-standalone). Already running `addBff()` or `forest-bff`? Move to the Gateway first, through [Moving from `addBff()`](/product/embed/gateway#moving-from-addbff-to-addgateway-api) or [From `forest-bff`](/product/embed/gateway-standalone#from-forest-bff), then point the app at the new `…/api` URL.
 
 Make a note of the URL your Gateway answers on. You'll need it when installing the Zendesk app:
 
