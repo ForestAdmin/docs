@@ -20,7 +20,13 @@ It requires an agent version that ships the audit trail (`@forestadmin/agent` fo
 
 <Tabs>
   <Tab title="Node.js">
-    Pass an `auditTrail` option to `createAgent`. Sequelize does not bundle database drivers, so install the one matching your connection string — e.g. `pg` and `pg-hstore` for PostgreSQL — even if your main datasource is not SQL.
+    Install `sequelize` and `umzug`, which the agent leaves to you so that an agent without the audit trail does not carry them, plus the database driver matching your connection string — e.g. `pg` and `pg-hstore` for PostgreSQL — even if your main datasource is not SQL. Without them, the agent fails at boot and names the packages to install.
+
+    ```bash
+    npm install sequelize umzug pg pg-hstore
+    ```
+
+    Then pass an `auditTrail` option to `createAgent`.
 
     ```javascript
     import { createAgent } from '@forestadmin/agent';
