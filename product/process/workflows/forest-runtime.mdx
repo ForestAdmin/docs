@@ -328,6 +328,7 @@ Beyond the required variables, these optional knobs have sensible defaults and r
 | --- | --- | --- |
 | `HTTP_PORT` | `3400` | Port Forest Runtime's HTTP server listens on. |
 | `POLLING_INTERVAL_S` | `30` | How often it polls the orchestrator for pending steps. |
+| `AUTOMATION_POLL_INTERVAL_S` | `300` | How often it checks the segments of [automated inboxes](/product/manage/automated-inboxes) for new records. Each check reads your database. `0` turns the checks off. |
 | `LOG_LEVEL` | `Info` | `Debug`, `Info`, `Warn`, or `Error`. `Debug` adds one line per MCP server with its tool count and load time. |
 | `STEP_TIMEOUT_S` | `300` | Max duration of a single step. |
 | `AI_INVOKE_TIMEOUT_S` | `30` | Max duration of a single AI provider invocation. |
