@@ -177,6 +177,7 @@
                 "pages": [
                   "product/process/workflows/overview",
                   "product/process/workflows/triggers",
+                  "product/process/workflows/automated-inboxes",
                   "product/process/workflows/forest-runtime"
                 ]
               },
@@ -253,7 +254,6 @@
             "pages": [
               "product/manage/team-performance",
               "product/manage/inbox",
-              "product/manage/automated-inboxes",
               "product/manage/charts/overview",
               "product/manage/charts/smart-charts"
             ]

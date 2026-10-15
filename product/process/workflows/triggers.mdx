@@ -10,7 +10,7 @@ A workflow starts in four independent ways:
 | **Manual** | Users, from a matching record in the interface (List View, Summary/Details, or a Workspace). See [Executing workflows](/product/execute/workflows). | Enabled |
 | **Webhook** | Any external system, via an authenticated HTTP POST to a stable URL. | Disabled |
 | **MCP** | An AI assistant (Claude, Cursor, …) connected to the [Forest MCP server](/product/embed/mcp-server). | Disabled |
-| **On data change** | An [automated inbox](/product/manage/automated-inboxes), when a record enters its segment. | Disabled |
+| **On data change** | An [automated inbox](/product/process/workflows/automated-inboxes), when a record enters its segment. | Disabled |
 
 Each has its own on/off toggle and they can be enabled in any combination. Toggling one **never** affects the others: turning MCP off blocks MCP triggering only, and the same workflow keeps starting from the interface and from its webhook.
 
@@ -129,7 +129,7 @@ For the tool contracts and the discover → trigger → poll flow, see [Triggeri
 
 ## The On data change trigger
 
-This trigger lets an [automated inbox](/product/manage/automated-inboxes) start the workflow on every record that enters the inbox's segment. The row reads *"Lets an inbox start this workflow when a record enters its segment."*
+This trigger lets an [automated inbox](/product/process/workflows/automated-inboxes) start the workflow on every record that enters the inbox's segment. The row reads *"Lets an inbox start this workflow when a record enters its segment."*
 
 The toggle alone starts nothing: an Admin or a Process Owner then picks the workflow in an inbox's **Process** settings. Under the toggle, the row lists the inboxes that start this workflow, each with its state (**Running**, **Stopped** or **State unavailable**) and its service account. **New automatic inbox** creates one from there.
 
@@ -137,7 +137,7 @@ The toggle alone starts nothing: an Admin or a Process Owner then picks the work
 - Turning it off applies at once, with no confirmation. Every automated inbox using the workflow stops, and the row lists them, for instance *"2 inboxes stopped: Documents, Invoices."*
 - The **Manual** trigger plays no part in automation. An operator in the fallback inbox resumes a run of a workflow whose only trigger is On data change.
 
-See [Automated inboxes](/product/manage/automated-inboxes) for the setup and what happens to each record.
+See [Automated inboxes](/product/process/workflows/automated-inboxes) for the setup and what happens to each record.
 
 ## Auditing
 
@@ -149,7 +149,7 @@ Every automated run is recorded in the workflow run history and in your **Activi
   <Card title="Trigger via webhook (API)" icon="code" href="/reference/api/endpoints/trigger-workflow-webhook">
     The HTTP contract: body, response codes, idempotency, rate limits.
   </Card>
-  <Card title="Automated inboxes" icon="bolt" href="/product/manage/automated-inboxes">
+  <Card title="Automated inboxes" icon="bolt" href="/product/process/workflows/automated-inboxes">
     Start a workflow on every record that enters an inbox.
   </Card>
   <Card title="Forest MCP Server" icon="robot" href="/product/embed/mcp-server">
