@@ -1,23 +1,24 @@
 ---
 title: "Workflow triggers"
-description: "Choose how a workflow starts — manually from the interface, from an external system via a webhook, or from an AI assistant through the Forest MCP server."
+description: "Choose how a workflow starts — manually from the interface, from an external system via a webhook, from an AI assistant through the Forest MCP server, or from an automated inbox."
 ---
 
-A workflow can be started in three independent ways:
+A workflow starts in four independent ways:
 
 | Trigger | Who starts the run | Default |
 |---|---|---|
 | **Manual** | Users, from a matching record in the interface (List View, Summary/Details, or a Workspace). See [Executing workflows](/product/execute/workflows). | Enabled |
 | **Webhook** | Any external system, via an authenticated HTTP POST to a stable URL. | Disabled |
 | **MCP** | An AI assistant (Claude, Cursor, …) connected to the [Forest MCP server](/product/embed/mcp-server). | Disabled |
+| **On data change** | An [automated inbox](/product/process/workflows/automated-inboxes), when a record enters its segment. | Disabled |
 
 Each has its own on/off toggle and they can be enabled in any combination. Toggling one **never** affects the others: turning MCP off blocks MCP triggering only, and the same workflow keeps starting from the interface and from its webhook.
 
-All three are available on **all environments**, with no production-only restriction.
+All four are available on **all environments**, with no production-only restriction.
 
 ## Where triggers are configured
 
-Open the workflow settings page and go to the **Triggers** section. **Manual** sits at the top with its own toggle, followed by an **Automated** group holding the **Fallback Inbox** selector and the **Webhook** and **MCP** rows.
+Open the workflow settings page and go to the **Triggers** section. **Manual** sits at the top with its own toggle, followed by an **Automated** group holding the **Fallback Inbox** selector and the **Webhook**, **MCP** and **On data change** rows.
 
 <Frame>
   <img src="/images/workflows/trigger-rows.png" alt="Triggers section: the Manual row, then the Automated group with the fallback inbox, the webhook, and the MCP toggle" />
@@ -25,7 +26,7 @@ Open the workflow settings page and go to the **Triggers** section. **Manual** s
 
 ### Before you can enable an automated trigger
 
-Both automated triggers (Webhook and MCP) share three prerequisites.
+The automated triggers (Webhook, MCP and On data change) share three prerequisites.
 
 - **You must be able to manage workflows.** All three trigger toggles — Manual included — are disabled below the **Admin**, **Process Owner** or **Developer** level, since turning an automated trigger on is what makes a workflow startable with nobody watching. This is enforced in the interface; the underlying layout permission is broader today, so the API still accepts the change from an Editor.
 - **[Forest Runtime](/product/process/workflows/forest-runtime) must be running.** An automated run can fire at any time, with nobody holding Forest open in a browser, so its steps can only run server-side. Until a runtime has reported in, the workflow settings page shows *"Your Forest Runtime can't be reached"* instead of the trigger rows. On an environment still configured for the legacy browser engine, the rows do show but both toggles are locked, with the tooltip *"This environment still runs workflows in the browser. Automated triggers need Forest Runtime."*
@@ -126,6 +127,12 @@ For the tool contracts and the discover → trigger → poll flow, see [Triggeri
 | **Restrict the MCP server's tools** | Set an `enabledTools` allowlist that leaves `triggerWorkflow` out to remove MCP triggering across *all* workflows at once — when `enabledTools` is unset, every tool is enabled. See [Restrict tools](/product/embed/mcp-server#restrict-tools). |
 | **Revoke the user's access** | The assistant acts as its connected Forest user. Removing that user's access to the rendering stops new triggers immediately — the assistant is told the workflow could not be resolved and that retrying will not help. A run already in flight is not aborted: it keeps going until it next touches data, then fails on the permission check and stalls with the error recorded on the current step. By default the agent refreshes its permissions from Forest's event stream, so the revocation lands within seconds; an agent started with `instantCacheRefresh: false` instead waits out its permission cache — 15 minutes by default, or whatever `permissionsCacheDurationInSeconds` is set to. Neither delay is a guarantee: abort a run explicitly if you need it stopped now. |
 
+## The On data change trigger
+
+This trigger starts the workflow on every record that enters a segment. Only Admins and Process Owners turn it on or off.
+
+The toggle alone starts nothing: you then link the workflow to a segment through an automated inbox. See [Run a workflow on data change](/product/process/workflows/automated-inboxes).
+
 ## Auditing
 
 Every automated run is recorded in the workflow run history and in your **Activity Logs**, attributed to the user the run acted as, and labelled by channel — *via webhook* or *via MCP* — so you can tell automated runs from manual ones, and from each other. An MCP trigger writes two complementary entries: *requested the workflow "…" via MCP* before the run starts (the audit that blocks the trigger if it cannot be written, with no run attached yet), and *triggered the workflow "…" via MCP* once the run exists. Only the first is guaranteed — the second is best-effort — so count *triggered* rows for runs actually started.
@@ -135,6 +142,9 @@ Every automated run is recorded in the workflow run history and in your **Activi
 <CardGroup cols={2}>
   <Card title="Trigger via webhook (API)" icon="code" href="/reference/api/endpoints/trigger-workflow-webhook">
     The HTTP contract: body, response codes, idempotency, rate limits.
+  </Card>
+  <Card title="Run a workflow on data change" icon="bolt" href="/product/process/workflows/automated-inboxes">
+    Start a workflow on every record that enters a segment.
   </Card>
   <Card title="Forest MCP Server" icon="robot" href="/product/embed/mcp-server">
     The workflow tools, and the discover → trigger → poll flow.
