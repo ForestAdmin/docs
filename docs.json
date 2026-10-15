@@ -316,6 +316,7 @@
             "pages": [
               "get-started/project-settings/general",
               "get-started/project-settings/users",
+              "get-started/project-settings/service-accounts",
               "get-started/project-settings/interface",
               "get-started/project-settings/billing"
             ]

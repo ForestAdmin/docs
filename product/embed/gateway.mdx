@@ -16,7 +16,7 @@ One component means one set of routes, one OAuth namespace and one package to in
 
 ## Permissions
 
-The Gateway forwards calls and your back-end decides them. Every call reaches your back-end as the person who made it, and comes back filtered exactly as it would for them in Forest. Roles, permissions and scopes apply unchanged, and a collection your schema no longer exposes is re-checked on every call.
+The Gateway forwards calls and your back-end decides them. Every call reaches your back-end as the person who made it, or as the [service account](/get-started/project-settings/service-accounts) whose application token it carries, and comes back filtered by that identity's Role exactly as it would in Forest. Roles, permissions and scopes apply unchanged, and a collection your schema no longer exposes is re-checked on every call.
 
 <Warning>
   `GET /api/agent/v1/permissions` returns **display hints**, meant for graying out buttons an operator cannot use. It is never an authorization decision. A UI that treats it as one enforces nothing: your back-end does.
@@ -24,7 +24,7 @@ The Gateway forwards calls and your back-end decides them. Every call reaches yo
 
 ## Audit trail
 
-Every data and action operation through the API is written to your Forest activity logs, attributed to the signed-in user, exactly as if they had acted in the Forest UI. The MCP service logs the same way, with four tool exceptions listed on [its page](/product/embed/mcp-server#identity-auditing-and-limits).
+Every data and action operation through the API is written to your Forest activity logs, attributed to the signed-in user, or to the service account for a call made with an application token, the same way as an action taken in the Forest UI. The MCP service logs the same way, with four tool exceptions listed on [its page](/product/embed/mcp-server#identity-auditing-and-limits).
 
 ## Adding the Gateway
 
@@ -84,7 +84,7 @@ With an empty `basePath` (the default), the Gateway claims these routes at the r
 
 | Route | Service | What it does |
 | --- | --- | --- |
-| `POST {basePath}/mcp` | MCP | The MCP protocol endpoint (Bearer token required) |
+| `POST {basePath}/mcp` | MCP | The MCP protocol endpoint (Bearer token required: an OAuth token or a [service account application token](/get-started/project-settings/service-accounts)) |
 | `{basePath}/mcp/uploads` | MCP | The in-memory upload endpoint for action file fields, served while uploads use the built-in in-memory storage (the default) |
 | `{basePath}/oauth/authorize` · `/token` | MCP / API | OAuth, shared (see the `?service` rule below) |
 | `{basePath}/api/agent/v1/*` | API | The REST data routes: `list`, `count`, action `form`/`execute`, `context`, `permissions`, `ai/query` |
@@ -128,6 +128,8 @@ By default, any OAuth client application registered at Forest can connect. The G
 ```
 
 Entries are **domains**, not client ids. A client is allowed only when **every** redirect URI it registered is an `http(s)` URI on a listed domain or one of its subdomains (`dust.tt` matches `eu.dust.tt`). Matching uses redirect URIs because they are the one piece of registration metadata an impostor cannot benefit from. Every other client is rejected with a standard OAuth `invalid_client` error, and the response does not reveal the allowed domains.
+
+The list does not apply to [service account application tokens](/get-started/project-settings/service-accounts): they authenticate a service account directly, without an OAuth client.
 
 Keep `forestadmin.com` in the list as long as you use Forest's [Zendesk app](/product/embed/zendesk). Its sign-in redirect runs through `app.forestadmin.com`, so without that entry the app itself gets rejected. [Restrict which AI clients can connect](/product/embed/mcp-server#restrict-which-ai-clients-can-connect) covers native desktop clients, loopback redirect URIs, and the token lifetime of approvals granted before the restriction.
 
@@ -182,7 +184,7 @@ An entry may carry one wildcard label at the front of the host, `https://*.examp
 One shape escapes that check. A `*` placed in the URL's userinfo rather than the host, as in `https://*@example.com`, is stripped when the entry is normalized. The entry is then accepted as the exact origin `https://example.com` and no warning names it. Mistyping `*.` as `*@` therefore allows the bare domain and none of its subdomains, which is narrower than intended and silent. Check that the startup log lists the entries you expect.
 
 <Warning>
-  A wildcard widens the allow-list to every host under that domain, including hosts you do not control when the domain is shared. That is usually acceptable here, since the origin check is not the authentication boundary: a session or an API key is still required. Weigh it per domain.
+  A wildcard widens the allow-list to every host under that domain, including hosts you do not control when the domain is shared. That is usually acceptable here, since the origin check is not the authentication boundary: a session or a [service account application token](/get-started/project-settings/service-accounts) is still required. Weigh it per domain.
 </Warning>
 
 A request carrying no `Origin` at all is untouched, which covers every server-to-server call. The opaque `Origin: null` counts as a present origin and is refused. A sandboxed iframe sends it, so give yours `allow-same-origin` if it has to reach the Gateway.
@@ -204,7 +206,7 @@ Every API route except `context` and `ai/query` requires an explicit timezone, r
 Every data route needs one credential, and only one:
 
 - **A user session**, sent as `Authorization: Bearer <token>`, which a browser UI such as the [Zendesk app](/product/embed/zendesk) gets through OAuth sign-in. The user's role, permissions and scopes apply.
-- **A service account API key**, sent in the `X-Forest-Gateway-Key` header, for server-to-server calls such as a nightly reconciliation job or an internal back-office tool. The service account's role and teams apply. The header needs `@forestadmin/agent` 1.110.1 or later embedded, or `@forestadmin/gateway` 1.0.2 or later standalone. The AI relay, `POST {basePath}/api/agent/v1/ai/query`, needs a user session: called with a key it answers `403 oauth_required`.
+- **A [service account](/get-started/project-settings/service-accounts) application token**, sent in the `X-Forest-Gateway-Key` header, for server-to-server calls such as a nightly reconciliation job or an internal back-office tool. The service account's role and teams apply. The header needs `@forestadmin/agent` 1.110.1 or later embedded, or `@forestadmin/gateway` 1.0.2 or later standalone. The AI relay, `POST {basePath}/api/agent/v1/ai/query`, needs a user session: called with a key it answers `403 oauth_required`.
 
 A request carrying a bearer and a key, or two different keys, answers `400 ambiguous_credentials` before either credential is checked.
 
@@ -226,7 +228,7 @@ curl {your-agent-url}{basePath}/api/health
 
 ## OpenAPI document
 
-With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or an `X-Forest-Gateway-Key`.
+With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or a [service account application token](/get-started/project-settings/service-accounts) in `X-Forest-Gateway-Key`.
 
 <Warning>
   The served document is **not filtered per caller**. Anyone who can reach it reads the name of every exposed collection, relation and field, whatever their role. That is why it is off by default when embedded. You can export it without booting the server, which is what you want in CI: the standalone Gateway's [`forest-gateway openapi`](/product/embed/gateway-standalone#exporting-the-openapi-document) command works either way.
@@ -245,7 +247,7 @@ Over the rate limit, the API answers `429 too_many_requests` with a `Retry-After
 </Warning>
 
 <Warning>
-  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or an `X-Forest-Gateway-Key` API key.
+  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or a [service account application token](/get-started/project-settings/service-accounts) in `X-Forest-Gateway-Key`.
 </Warning>
 
 ## Standalone deployment

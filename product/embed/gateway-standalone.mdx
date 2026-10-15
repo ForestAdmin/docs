@@ -115,7 +115,7 @@ The API service reads these too:
 
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
-| `FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY` | For sign-in | n/a | Base64-encoded 32-byte key. It turns on OAuth sign-in and, with it, the AI relay. Without it, the API serves API keys only. |
+| `FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY` | For sign-in | n/a | Base64-encoded 32-byte key. It turns on OAuth sign-in and, with it, the AI relay. Without it, the API serves [service account application tokens](/get-started/project-settings/service-accounts) only. |
 | `FOREST_GATEWAY_API_ALLOWED_ORIGINS` | For browser UIs | empty | Comma-separated origins allowed to call the API from a browser, exact or with one leading wildcard label. Empty means server-to-server calls only. See [Cross-origin access](/product/embed/gateway#cross-origin-access). |
 | `FOREST_GATEWAY_API_PUBLIC_URL` | No | relative `{basePath}/api` | The API's external URL, published in the OpenAPI document. Must end with `{basePath}/api`. |
 | `FOREST_GATEWAY_API_DEFAULT_TIMEZONE` | No | n/a | Fallback IANA timezone when a request carries none. |
