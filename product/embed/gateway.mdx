@@ -8,7 +8,7 @@ The Forest Gateway exposes your Forest back-end to two kinds of consumers from o
 - **The MCP service** serves tools to AI assistants over the [Model Context Protocol](/product/embed/mcp-server).
 - **The API service**, the "Gateway API", is a flat REST contract for interfaces people click in. The [Zendesk app](/product/embed/zendesk) runs on it.
 
-One component means one set of routes, one OAuth namespace and one package to install. If you have read about the "Forest BFF" before, that product is now the API service of the Gateway. `addBff()` is a deprecated alias of the Gateway's `api` option, and `mountAiMcpServer()` a deprecated alias of its `mcp` option.
+One component means one set of routes, one OAuth namespace and one package to install. `mountAiMcpServer()` is a deprecated alias of the Gateway's `mcp` option.
 
 <Info>
   Three names, three things. The **Agent API** is your agent's own `/forest` routes, the ones the Forest UI calls (see the [Agent SDK overview](/reference/agent-api/overview)). The **Forest API** is Forest's public reporting API (see [its introduction](/reference/api/introduction)). The Gateway API is neither: it is the REST surface the Gateway serves to your trusted UIs.
@@ -48,7 +48,7 @@ Embedded in the Node.js agent, the Gateway needs `@forestadmin/agent`, plus `@fo
         mcp: true, // or MCP options: { enabledTools, tokenTtl, fileUploads }
         api: {
           allowedOrigins: ['https://my-app.com'],
-          tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
+          tokenEncryptionKey: process.env.FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY,
         },
       })
       .mountOnStandaloneServer(3351)
@@ -123,7 +123,7 @@ By default, any OAuth client application registered at Forest can connect. The G
 .addGateway({
   allowedOAuthClients: ['dust.tt', 'forestadmin.com'],
   mcp: true,
-  api: { tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY },
+  api: { tokenEncryptionKey: process.env.FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY },
 })
 ```
 
@@ -131,20 +131,15 @@ Entries are **domains**, not client ids. A client is allowed only when **every**
 
 Keep `forestadmin.com` in the list as long as you use Forest's [Zendesk app](/product/embed/zendesk). Its sign-in redirect runs through `app.forestadmin.com`, so without that entry the app itself gets rejected. [Restrict which AI clients can connect](/product/embed/mcp-server#restrict-which-ai-clients-can-connect) covers native desktop clients, loopback redirect URIs, and the token lifetime of approvals granted before the restriction.
 
-The deprecated aliases do not share this scope. `mountAiMcpServer()` keeps its **own** `allowedOAuthClients` (MCP only), and `addBff()` has **no** allowlist: its API accepts any client registered at Forest.
+The deprecated `mountAiMcpServer()` alias does not share this scope: it keeps its **own** `allowedOAuthClients`, for MCP only.
 
-## Deprecated aliases, and when to keep them
+## The deprecated MCP alias
 
-`mountAiMcpServer()` and `addBff()` still work on their current paths and semantics: `mountAiMcpServer()` at the host root or under its own `basePath`, `addBff()` under `/bff`. Both are deprecated, though. `mountAiMcpServer()` logs its deprecation warning at startup; `addBff()` logs its own when `/bff/*` is first called, at most once an hour, and every `/bff/*` response carries `Deprecation` and `Link` headers. The `Link` points at the retired `/product/embed/bff` URL, which this documentation redirects to this page: that redirect stays in place for good.
+`mountAiMcpServer()` still works at the host root or under its own `basePath`, and logs a deprecation warning at startup.
 
 <Warning>
-  `addGateway()` and the aliases cannot be combined. Calling one after the other throws at the builder call, not from `start()`: *"addGateway() cannot be combined with mountAiMcpServer() or addBff(): configure every service through addGateway({ mcp, api }), or keep both aliases."*. Configure every service through `addGateway({ mcp, api })`, or keep both aliases.
+  `addGateway()` and `mountAiMcpServer()` cannot be combined. Calling one after the other throws at the builder call, not from `start()`. Configure every service through `addGateway({ mcp, api })`.
 </Warning>
-
-Two cases justify keeping both aliases instead of moving to `addGateway()`:
-
-1. **You want the MCP service restricted by `allowedOAuthClients` while the API stays open** to any client registered at Forest. The Gateway's list covers both services, so only `mountAiMcpServer({ allowedOAuthClients })` plus `addBff()` gives you that split.
-2. **The MCP service must stay at the root while your host already serves `/api`.** With an empty `basePath`, the Gateway API would claim `/api/agent/*`, `/api/docs` and `/api/health`, and you cannot give the API alone a `basePath` the MCP does not use. Keep `mountAiMcpServer()` at the root and `addBff()` on `/bff`.
 
 ## Moving from `addBff()` to `addGateway({ api })`
 
@@ -182,7 +177,7 @@ Matching is exact: scheme, host and port, case-insensitive, default ports normal
   A browser rarely shows you that `403`. Every data route is a `POST` with a JSON body, so the browser sends a preflight first. A rejected `OPTIONS` answers `204` with no CORS headers, and the browser reports a plain CORS error without ever issuing the request that would have carried the `403`. The cause shows up in the Gateway's own log line, `BFF preflight origin rejected`, with the origin it refused. Read it there, or replay the call with `curl -H 'Origin: ...'` to see the `403` body.
 </Note>
 
-An entry may carry one wildcard label at the front of the host, `https://*.example.com`, which needs `@forestadmin/agent-bff` 1.31.0 or later. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly. The wildcard is refused at boot, and named in the startup warning, when it appears anywhere else in the host, more than once, or over a host with fewer than two remaining labels.
+An entry may carry one wildcard label at the front of the host, `https://*.example.com`. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly. The wildcard is refused at boot, and named in the startup warning, when it appears anywhere else in the host, more than once, or over a host with fewer than two remaining labels.
 
 One shape escapes that check. A `*` placed in the URL's userinfo rather than the host, as in `https://*@example.com`, is stripped when the entry is normalized. The entry is then accepted as the exact origin `https://example.com` and no warning names it. Mistyping `*.` as `*@` therefore allows the bare domain and none of its subdomains, which is narrower than intended and silent. Check that the startup log lists the entries you expect.
 
@@ -204,6 +199,15 @@ A request carrying no `Origin` at all is untouched, which covers every server-to
 
 Every API route except `context` and `ai/query` requires an explicit timezone, resolved in this order: the `X-Forest-Timezone` header, a `timezone` field in the body, then the fallback set by `api.defaultTimezone`. The requirement covers `permissions` too, although that route never reaches your back-end. With none of the three, the answer is `400 missing_timezone`, and a non-IANA value gives `400 invalid_timezone`.
 
+## Authentication
+
+Every data route needs one credential, and only one:
+
+- **A user session**, sent as `Authorization: Bearer <token>`, which a browser UI such as the [Zendesk app](/product/embed/zendesk) gets through OAuth sign-in. The user's role, permissions and scopes apply.
+- **A service account API key**, sent in the `X-Forest-Gateway-Key` header, for server-to-server calls such as a nightly reconciliation job or an internal back-office tool. The service account's role and teams apply. The header needs `@forestadmin/agent` 1.110.1 or later embedded, or `@forestadmin/gateway` 1.0.2 or later standalone. The AI relay, `POST {basePath}/api/agent/v1/ai/query`, needs a user session: called with a key it answers `403 oauth_required`.
+
+A request carrying a bearer and a key, or two different keys, answers `400 ambiguous_credentials` before either credential is checked.
+
 ## Checking a deployment
 
 ```bash
@@ -222,7 +226,7 @@ curl {your-agent-url}{basePath}/api/health
 
 ## OpenAPI document
 
-With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or an `X-Forest-Bff-Key`.
+With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or an `X-Forest-Gateway-Key`.
 
 <Warning>
   The served document is **not filtered per caller**. Anyone who can reach it reads the name of every exposed collection, relation and field, whatever their role. That is why it is off by default when embedded. You can export it without booting the server, which is what you want in CI: the standalone Gateway's [`forest-gateway openapi`](/product/embed/gateway-standalone#exporting-the-openapi-document) command works either way.
@@ -241,7 +245,7 @@ Over the rate limit, the API answers `429 too_many_requests` with a `Retry-After
 </Warning>
 
 <Warning>
-  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or an `X-Forest-Bff-Key` API key.
+  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or an `X-Forest-Gateway-Key` API key.
 </Warning>
 
 ## Standalone deployment

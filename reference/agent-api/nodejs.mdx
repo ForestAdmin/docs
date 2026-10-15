@@ -296,12 +296,26 @@ agent.addGateway(options: {
 | `basePath` | `string` | Prefix for every Gateway route: `{basePath}/mcp`, `{basePath}/oauth/*`, `{basePath}/api/*`. Defaults to the root. A plain path prefix (letters, digits, `-` and `_` only) that must not overlap the agent's own mount prefix. With the MCP service on, a non-empty `basePath` requires the agent at the domain root. See [Choosing a `basePath`](/product/embed/gateway#choosing-a-basepath). |
 | `allowedOAuthClients` | `string[]` | Accept only OAuth clients whose registered redirect URIs are all `http(s)` URIs on the listed domains or their subdomains; covers **both services**, MCP and API. Every other client gets `invalid_client`. Keep `forestadmin.com` in the list while Forest's Zendesk app is in use. See [Restricting which OAuth clients can connect](/product/embed/gateway#restricting-which-oauth-clients-can-connect). |
 | `mcp` | `boolean \| object` | Enable the MCP service, optionally with the same options as `mountAiMcpServer` except `basePath` and `allowedOAuthClients`, which are top-level here. |
-| `api` | `boolean \| object` | Enable the API service, with the same options as `addBff`. `tokenEncryptionKey` enables OAuth sign-in; without it the API's `/oauth` side stays off. |
+| `api` | `boolean \| object` | Enable the API service, with the options below. `tokenEncryptionKey` enables OAuth sign-in; without it the API's `/oauth` side stays off. |
+
+**`api` options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `allowedOrigins` | `string[]` | `[]` | Origins (scheme, host, port) allowed to call the API from a browser. Matching is exact, except for a single leading wildcard label, `https://*.example.com`. Empty means no cross-origin access. See [Cross-origin access](/product/embed/gateway#cross-origin-access). |
+| `tokenEncryptionKey` | `string` | — | Base64-encoded 32-byte key. Enables the sign-in routes; without it nobody can sign in from a browser UI. |
+| `defaultTimezone` | `string` | — | Fallback IANA timezone for a request that carries none. Without it, such a request answers `400 missing_timezone`. Embedded there is no `FOREST_GATEWAY_API_DEFAULT_TIMEZONE` to fall back on, so this option is the only way to set it. |
+| `agentTimeoutMs` | `number` | `10000` | How long a data or action call to the agent may take. It bounds the wait and cancels nothing: a write cut off at the deadline still commits inside the agent, so a client retrying on the timeout can double a non-idempotent mutation. |
+| `aiTimeoutMs` | `number` | `120000` | How long the AI relay waits for the Forest server on `POST {basePath}/api/agent/v1/ai/query`. That route needs an OAuth session: called with an `X-Forest-Gateway-Key` API key it answers `403 oauth_required`. |
+| `openapiEnabled` | `boolean` | `false` | Serve the OpenAPI document over HTTP. Off by default when embedded. |
+
+The secrets, the Forest URLs and the logger are inherited from the agent and cannot be overridden. These options are the only configuration channel: embedded, the API never reads the environment, so `FOREST_GATEWAY_API_RATE_LIMIT_MAX_REQUESTS`, `FOREST_GATEWAY_API_RATE_LIMIT_WINDOW_MS`, `FOREST_GATEWAY_API_PUBLIC_URL` and `PORT` are ignored silently and their defaults stand. The feature switches default to off, so what you leave out stays off, and `GET {basePath}/api/health` reports which surfaces are on under `configured`.
+
 
 **Routes:** with an empty `basePath`, `POST /mcp`, `/mcp/uploads`, `/oauth/authorize` · `/oauth/token` (`?service=api` dispatches to the API service), `/api/agent/v1/*`, `GET /api/health`, and `GET /api/docs` when `api.openapiEnabled` is set; the two `/.well-known` discovery documents sit at the origin root. The full route table and the ingress rules live on the [Gateway page](/product/embed/gateway#routes).
 
 <Note>
-`addGateway()` can be called once, before `start()`: a second call throws `addGateway can only be called once`, so merge the options you need into a single call rather than stacking calls. It must enable at least one service (`addGateway({ mcp: true })`, `addGateway({ api: {} })`, or both), checked when the agent starts; an argument-less `addGateway()` is a `TypeError` on the spot. It cannot be combined with the deprecated `mountAiMcpServer()` or `addBff()` aliases: whichever is called second throws. Nesting a top-level option under a service (`addGateway({ mcp: { basePath } })`) throws too, with the correct placement named.
+`addGateway()` can be called once, before `start()`: a second call throws `addGateway can only be called once`, so merge the options you need into a single call rather than stacking calls. It must enable at least one service (`addGateway({ mcp: true })`, `addGateway({ api: {} })`, or both), checked when the agent starts; an argument-less `addGateway()` is a `TypeError` on the spot. It cannot be combined with the deprecated `mountAiMcpServer()` alias: whichever is called second throws. Nesting a top-level option under a service (`addGateway({ mcp: { basePath } })`) throws too, with the correct placement named.
 </Note>
 
 <Warning>
@@ -317,7 +331,7 @@ await createAgent(options)
     mcp: true,
     api: {
       allowedOrigins: ['https://my-app.com'],
-      tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY
+      tokenEncryptionKey: process.env.FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY
     },
   })
   .mountOnStandaloneServer(3351)
@@ -329,7 +343,7 @@ await createAgent(options)
 ### agent.mountAiMcpServer(options?)
 
 <Note>
-**Deprecated.** Use `addGateway({ mcp })` instead. `mountAiMcpServer()` keeps its current paths and semantics (the host root, or its own `basePath`), and the agent logs a deprecation warning at startup. It cannot be combined with `addGateway()`. See [Deprecated aliases](/product/embed/gateway#deprecated-aliases-and-when-to-keep-them).
+**Deprecated.** Use `addGateway({ mcp })` instead. `mountAiMcpServer()` keeps its current paths and semantics (the host root, or its own `basePath`), and the agent logs a deprecation warning at startup. It cannot be combined with `addGateway()`. See [The deprecated MCP alias](/product/embed/gateway#the-deprecated-mcp-alias).
 </Note>
 
 Enable a Model Context Protocol (MCP) server on the agent, allowing AI assistants to interact with your data through standardized tools.
@@ -410,73 +424,6 @@ Because the `.well-known` discovery documents must stay at the origin root, `bas
 When the MCP service runs in the [standalone Gateway](/product/embed/gateway-standalone), the same options are set through environment variables: `FOREST_MCP_ENABLED_TOOLS` (comma-separated tool names), `FOREST_GATEWAY_ALLOWED_OAUTH_CLIENTS` (comma-separated domains), `FOREST_MCP_ACCESS_TOKEN_TTL_SECONDS` and `FOREST_MCP_REFRESH_TOKEN_TTL_SECONDS` (seconds), and `PORT` (default: `3931`). A mounted server does not read these variables — pass the options to `mountAiMcpServer` instead.
 
 ---
-
-### agent.addBff(options?)
-
-<Note>
-**Deprecated.** Use `addGateway({ api })` instead, which serves the same routes under `{basePath}/api` (`/api` by default). `addBff()` keeps serving on `/bff` with its current semantics, and the agent logs a deprecation warning when the route is called. It cannot be combined with `addGateway()`. See [Moving from addBff() to addGateway({ api })](/product/embed/gateway#moving-from-addbff-to-addgateway-api).
-</Note>
-
-Serve the [Forest Gateway](/product/embed/gateway)'s API service through its deprecated alias, on `/bff` inside the agent process, so a trusted browser UI can call your agent over REST without a second deployment and without a second port. Since `@forestadmin/agent` 1.100.0. On an earlier agent the call throws `agent.addBff is not a function`, whatever version of `@forestadmin/agent-bff` is installed.
-
-```typescript
-agent.addBff(options?: {
-  allowedOrigins?: string[];
-  tokenEncryptionKey?: string;
-  defaultTimezone?: string;
-  agentTimeoutMs?: number;
-  aiTimeoutMs?: number;
-  openapiEnabled?: boolean;
-}): Agent;
-```
-
-Requires the `@forestadmin/agent-bff` package:
-
-```bash
-npm install @forestadmin/agent-bff
-```
-
-**Parameters:**
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `allowedOrigins` | `string[]` | `[]` | Origins (scheme, host, port) allowed to call the BFF from a browser. Matching is exact, except for a single leading wildcard label, `https://*.example.com`, which needs `@forestadmin/agent-bff` 1.31.0 or later. Empty means no cross-origin access. See [Cross-origin access](/product/embed/gateway#cross-origin-access). |
-| `tokenEncryptionKey` | `string` | — | Base64-encoded 32-byte key. Enables the sign-in routes; without it nobody can sign in from a browser UI. |
-| `defaultTimezone` | `string` | — | Fallback IANA timezone for a request that carries none. Without it, such a request answers `400 missing_timezone`. Embedded there is no `BFF_DEFAULT_TIMEZONE` to fall back on, so this option is the only way to set it. |
-| `agentTimeoutMs` | `number` | `10000` | How long a data or action call to the agent may take. It bounds the wait and cancels nothing: a write cut off at the deadline still commits inside the agent, so a client retrying on the timeout can double a non-idempotent mutation. |
-| `aiTimeoutMs` | `number` | `120000` | How long the AI relay waits for the Forest server on `POST /bff/agent/v1/ai/query`. That route needs an OAuth session: called with an `X-Forest-Bff-Key` it answers `403 oauth_required`. |
-| `openapiEnabled` | `boolean` | `false` | Serve the OpenAPI document over HTTP. Off by default when embedded. |
-
-**Example:**
-
-```typescript
-await createAgent(options)
-  .addDataSource(/* ... */)
-  .addBff({
-    allowedOrigins: ['https://my-app.com'],
-    tokenEncryptionKey: process.env.BFF_TOKEN_ENCRYPTION_KEY,
-  })
-  .mountOnStandaloneServer(3351)
-  .start();
-```
-
-The secrets, the Forest URLs and the logger are inherited from the agent and cannot be overridden. These options are the only configuration channel: embedded, the BFF never reads the environment, so `BFF_RATE_LIMIT_MAX_REQUESTS`, `BFF_RATE_LIMIT_WINDOW_MS`, `BFF_PUBLIC_URL` and `HTTP_PORT` are ignored silently and their defaults stand. The feature switches default to off, so what you leave out stays off, and `GET /bff/health` reports which surfaces are on under `configured`.
-
-The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST /bff/agent/v1/{collection}/list`, `GET /bff/health`. A host serving the agent under a sub-path of its own works too, and `app.use('/api', mounted)` puts the BFF at `/api/bff`.
-
-<Warning>
-**Mount the agent before any body parser of your own.** A parser that runs first has already consumed the request stream, and nothing downstream can put it back, so every BFF `POST` on the data routes answers `500 stream.not.readable` on Express and a bare `500 Internal Server Error` on Koa, while the OAuth routes answer the host's bare `500`. The full warning, with every framework and the OAuth symptom, lives on the [Gateway page](/product/embed/gateway#mount-before-your-body-parser).
-</Warning>
-
-<Warning>
-**Forest's IP whitelist does not apply to requests served under `/bff`.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate, since applying the whitelist would filter the browsers a third-party UI is made of, and the agent logs a warning at startup naming the exemption. Authentication is still required, either an OAuth sign-in or an `X-Forest-Bff-Key` API key.
-</Warning>
-
-<Note>
-`addBff()` and `mountAiMcpServer({ basePath: '/bff' })` are mutually exclusive: the MCP server would claim `/bff/oauth` and `/bff/mcp`. Whichever you call second throws on the spot, at the builder call rather than from `start()`. Any `basePath` landing inside `/bff` counts, so mount the MCP server elsewhere.
-</Note>
-
-`addBff()` can be called once, and before `start()`. A mount is what opens a socket, and `start()` only builds the agent's router, so without a `mountOn*` call nothing is served, the BFF included. While the BFF is not serving, `/bff/*` answers `503`, with a different type at each end of the lifecycle: `bff_not_started` between `addBff()` and the end of `start()`, `bff_stopped` after `stop()`.
 
 ### Standalone Gateway environment variables
 
