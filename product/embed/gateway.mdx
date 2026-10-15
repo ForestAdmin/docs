@@ -16,7 +16,7 @@ One component means one set of routes, one OAuth namespace and one package to in
 
 ## Permissions
 
-The Gateway forwards calls and your back-end decides them. Every call reaches your back-end as the person who made it, and comes back filtered exactly as it would for them in Forest. Roles, permissions and scopes apply unchanged, and a collection your schema no longer exposes is re-checked on every call.
+The Gateway forwards calls and your back-end decides them. Every call reaches your back-end as the person who made it, or as the [service account](/get-started/project-settings/service-accounts) whose application token it carries, and comes back filtered by that identity's Role exactly as it would in Forest. Roles, permissions and scopes apply unchanged, and a collection your schema no longer exposes is re-checked on every call.
 
 <Warning>
   `GET /api/agent/v1/permissions` returns **display hints**, meant for graying out buttons an operator cannot use. It is never an authorization decision. A UI that treats it as one enforces nothing: your back-end does.
@@ -24,7 +24,7 @@ The Gateway forwards calls and your back-end decides them. Every call reaches yo
 
 ## Audit trail
 
-Every data and action operation through the API is written to your Forest activity logs, attributed to the signed-in user, exactly as if they had acted in the Forest UI. The MCP service logs the same way, with four tool exceptions listed on [its page](/product/embed/mcp-server#identity-auditing-and-limits).
+Every data and action operation through the API is written to your Forest activity logs, attributed to the signed-in user, or to the service account for a call made with an application token, the same way as an action taken in the Forest UI. The MCP service logs the same way, with four tool exceptions listed on [its page](/product/embed/mcp-server#identity-auditing-and-limits).
 
 ## Adding the Gateway
 
@@ -189,7 +189,7 @@ An entry may carry one wildcard label at the front of the host, `https://*.examp
 One shape escapes that check. A `*` placed in the URL's userinfo rather than the host, as in `https://*@example.com`, is stripped when the entry is normalized. The entry is then accepted as the exact origin `https://example.com` and no warning names it. Mistyping `*.` as `*@` therefore allows the bare domain and none of its subdomains, which is narrower than intended and silent. Check that the startup log lists the entries you expect.
 
 <Warning>
-  A wildcard widens the allow-list to every host under that domain, including hosts you do not control when the domain is shared. That is usually acceptable here, since the origin check is not the authentication boundary: a session or an API key is still required. Weigh it per domain.
+  A wildcard widens the allow-list to every host under that domain, including hosts you do not control when the domain is shared. That is usually acceptable here, since the origin check is not the authentication boundary: a session or a [service account application token](/get-started/project-settings/service-accounts) is still required. Weigh it per domain.
 </Warning>
 
 A request carrying no `Origin` at all is untouched, which covers every server-to-server call. The opaque `Origin: null` counts as a present origin and is refused. A sandboxed iframe sends it, so give yours `allow-same-origin` if it has to reach the Gateway.

@@ -469,7 +469,7 @@ The BFF answers under `/bff` on whatever port the agent is mounted on, so `POST 
 </Warning>
 
 <Warning>
-**Forest's IP whitelist does not apply to requests served under `/bff`.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate, since applying the whitelist would filter the browsers a third-party UI is made of, and the agent logs a warning at startup naming the exemption. Authentication is still required, either an OAuth sign-in or an `X-Forest-Bff-Key` API key.
+**Forest's IP whitelist does not apply to requests served under `/bff`.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate, since applying the whitelist would filter the browsers a third-party UI is made of, and the agent logs a warning at startup naming the exemption. Authentication is still required, either an OAuth sign-in or a [service account application token](/get-started/project-settings/service-accounts) in `X-Forest-Bff-Key`.
 </Warning>
 
 <Note>
