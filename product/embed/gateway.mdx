@@ -199,6 +199,15 @@ A request carrying no `Origin` at all is untouched, which covers every server-to
 
 Every API route except `context` and `ai/query` requires an explicit timezone, resolved in this order: the `X-Forest-Timezone` header, a `timezone` field in the body, then the fallback set by `api.defaultTimezone`. The requirement covers `permissions` too, although that route never reaches your back-end. With none of the three, the answer is `400 missing_timezone`, and a non-IANA value gives `400 invalid_timezone`.
 
+## Authentication
+
+Every data route needs one credential, and only one:
+
+- **A user session**, sent as `Authorization: Bearer <token>`, which a browser UI such as the [Zendesk app](/product/embed/zendesk) gets through OAuth sign-in. The user's role, permissions and scopes apply.
+- **A service account API key**, sent in the `X-Forest-Gateway-Key` header, for server-to-server calls such as a nightly reconciliation job or an internal back-office tool. The service account's role and teams apply. The AI relay, `POST {basePath}/api/agent/v1/ai/query`, needs a user session: called with a key it answers `403 oauth_required`.
+
+A request carrying a bearer and a key, or two different keys, answers `400 ambiguous_credentials` before either credential is checked.
+
 ## Checking a deployment
 
 ```bash
@@ -217,7 +226,7 @@ curl {your-agent-url}{basePath}/api/health
 
 ## OpenAPI document
 
-With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or an `X-Forest-Bff-Key`.
+With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or an `X-Forest-Gateway-Key`.
 
 <Warning>
   The served document is **not filtered per caller**. Anyone who can reach it reads the name of every exposed collection, relation and field, whatever their role. That is why it is off by default when embedded. You can export it without booting the server, which is what you want in CI: the standalone Gateway's [`forest-gateway openapi`](/product/embed/gateway-standalone#exporting-the-openapi-document) command works either way.
@@ -236,7 +245,7 @@ Over the rate limit, the API answers `429 too_many_requests` with a `Retry-After
 </Warning>
 
 <Warning>
-  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or an `X-Forest-Bff-Key` API key.
+  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or an `X-Forest-Gateway-Key` API key.
 </Warning>
 
 ## Standalone deployment
