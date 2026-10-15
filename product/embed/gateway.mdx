@@ -8,7 +8,7 @@ The Forest Gateway exposes your Forest back-end to two kinds of consumers from o
 - **The MCP service** serves tools to AI assistants over the [Model Context Protocol](/product/embed/mcp-server).
 - **The API service**, the "Gateway API", is a flat REST contract for interfaces people click in. The [Zendesk app](/product/embed/zendesk) runs on it.
 
-One component means one set of routes, one OAuth namespace and one package to install. `mountAiMcpServer()` is a deprecated alias of its `mcp` option.
+One component means one set of routes, one OAuth namespace and one package to install. `mountAiMcpServer()` is a deprecated alias of the Gateway's `mcp` option.
 
 <Info>
   Three names, three things. The **Agent API** is your agent's own `/forest` routes, the ones the Forest UI calls (see the [Agent SDK overview](/reference/agent-api/overview)). The **Forest API** is Forest's public reporting API (see [its introduction](/reference/api/introduction)). The Gateway API is neither: it is the REST surface the Gateway serves to your trusted UIs.

@@ -10,7 +10,7 @@ The Forest Zendesk app lets you view and act on your data without leaving Zendes
 The app reaches your back-end through the [Forest Gateway](/product/embed/gateway), whose API service exposes a flat REST contract to browser UIs. Each Zendesk agent signs in with their own Forest account, and every call travels to your back-end as that person. Their roles, permissions and scopes apply exactly as they do in Forest.
 
 <Info>
-  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the Gateway API does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your Gateway URL. The setting was renamed since then, and is `forestGatewayApiUrl` from 1.3.0. The update leaves the field empty, and an admin has to enter the URL again before anyone can sign in.
+  Versions up to and including 1.1.1 went through the Forest MCP Server, and they speak a protocol the Gateway API does not serve. Changing the URL on one of those installations is not enough: update the app first, then repoint it at your Gateway URL. The setting has since been renamed to `forestGatewayApiUrl` in 1.3.0, so the update leaves the field empty and an admin has to enter the URL again before anyone can sign in.
 </Info>
 
 ## Prerequisites
@@ -168,7 +168,7 @@ Exact hits outrank partial ones, join-like collections lose 30 points, and the b
 
 ## Where AI is used
 
-Two features call a model, both in the Actions tab, both through the Gateway API's relay, `POST {basePath}/api/agent/v1/ai/query` on an embedded Gateway, which relays to Forest's AI proxy with the signed-in Zendesk agent's session. The Gateway holds the Forest token, and the browser never sees it.
+Two features call a model, both in the Actions tab, both through the Gateway API's relay, `POST {basePath}/api/agent/v1/ai/query`, which relays to Forest's AI proxy with the signed-in Zendesk agent's session. The Gateway holds the Forest token, and the browser never sees it.
 
 | Feature | When it fires | What is sent |
 | --- | --- | --- |
@@ -187,7 +187,7 @@ Suggested action names come back through a filter: the app keeps the ones that m
   <Accordion title="Zendesk agents cannot sign in">
     - Check `GET {your-gateway-url}/health`, `configured.oauth` must be `true`
     - Confirm `forestGatewayApiUrl` points at the Gateway API (`…/api`), not at the agent root and not at an MCP URL
-    - On a CORS error in the browser console, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way. The rejected preflight answers `204` with no headers, so the `403 origin_not_allowed` never reaches the browser — the Gateway logs `BFF preflight origin rejected` with the origin it refused
+    - On a CORS error in the browser console, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way. The rejected preflight answers `204` with no headers, so the `403 origin_not_allowed` never reaches the browser, and the Gateway logs `BFF preflight origin rejected` with the origin it refused
   </Accordion>
   <Accordion title="A Zendesk agent sees no record on a ticket">
     - Confirm their Forest role grants read access to the collection. The app shows what that person is allowed to see, nothing more
