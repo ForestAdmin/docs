@@ -129,15 +129,9 @@ For the tool contracts and the discover → trigger → poll flow, see [Triggeri
 
 ## The On data change trigger
 
-This trigger lets an [automated inbox](/product/process/workflows/automated-inboxes) start the workflow on every record that enters the inbox's segment. The row reads *"Lets an inbox start this workflow when a record enters its segment."*
+This trigger starts the workflow on every record that enters a segment. Only Admins and Process Owners turn it on or off.
 
-The toggle alone starts nothing: an Admin or a Process Owner then picks the workflow in an inbox's **Process** settings. Under the toggle, the row lists the inboxes that start this workflow, each with its state (**Running**, **Stopped** or **State unavailable**) and its service account. **New automatic inbox** creates one from there.
-
-- Only the **Admin** and **Process Owner** permission levels turn this trigger on or off.
-- Turning it off applies at once, with no confirmation. Every automated inbox using the workflow stops, and the row lists them, for instance *"2 inboxes stopped: Documents, Invoices."*
-- The **Manual** trigger plays no part in automation. An operator in the fallback inbox resumes a run of a workflow whose only trigger is On data change.
-
-See [Automated inboxes](/product/process/workflows/automated-inboxes) for the setup and what happens to each record.
+The toggle alone starts nothing: you then link the workflow to a segment through an automated inbox. See [Run a workflow on data change](/product/process/workflows/automated-inboxes).
 
 ## Auditing
 
@@ -149,8 +143,8 @@ Every automated run is recorded in the workflow run history and in your **Activi
   <Card title="Trigger via webhook (API)" icon="code" href="/reference/api/endpoints/trigger-workflow-webhook">
     The HTTP contract: body, response codes, idempotency, rate limits.
   </Card>
-  <Card title="Automated inboxes" icon="bolt" href="/product/process/workflows/automated-inboxes">
-    Start a workflow on every record that enters an inbox.
+  <Card title="Run a workflow on data change" icon="bolt" href="/product/process/workflows/automated-inboxes">
+    Start a workflow on every record that enters a segment.
   </Card>
   <Card title="Forest MCP Server" icon="robot" href="/product/embed/mcp-server">
     The workflow tools, and the discover → trigger → poll flow.
