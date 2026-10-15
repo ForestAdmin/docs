@@ -84,7 +84,7 @@ With an empty `basePath` (the default), the Gateway claims these routes at the r
 
 | Route | Service | What it does |
 | --- | --- | --- |
-| `POST {basePath}/mcp` | MCP | The MCP protocol endpoint (Bearer token required) |
+| `POST {basePath}/mcp` | MCP | The MCP protocol endpoint (Bearer token required: an OAuth token or a [service account application token](/get-started/project-settings/service-accounts)) |
 | `{basePath}/mcp/uploads` | MCP | The in-memory upload endpoint for action file fields, served while uploads use the built-in in-memory storage (the default) |
 | `{basePath}/oauth/authorize` · `/token` | MCP / API | OAuth, shared (see the `?service` rule below) |
 | `{basePath}/api/agent/v1/*` | API | The REST data routes: `list`, `count`, action `form`/`execute`, `context`, `permissions`, `ai/query` |
@@ -128,6 +128,8 @@ By default, any OAuth client application registered at Forest can connect. The G
 ```
 
 Entries are **domains**, not client ids. A client is allowed only when **every** redirect URI it registered is an `http(s)` URI on a listed domain or one of its subdomains (`dust.tt` matches `eu.dust.tt`). Matching uses redirect URIs because they are the one piece of registration metadata an impostor cannot benefit from. Every other client is rejected with a standard OAuth `invalid_client` error, and the response does not reveal the allowed domains.
+
+The list does not apply to [service account application tokens](/get-started/project-settings/service-accounts): they authenticate a service account directly, without an OAuth client.
 
 Keep `forestadmin.com` in the list as long as you use Forest's [Zendesk app](/product/embed/zendesk). Its sign-in redirect runs through `app.forestadmin.com`, so without that entry the app itself gets rejected. [Restrict which AI clients can connect](/product/embed/mcp-server#restrict-which-ai-clients-can-connect) covers native desktop clients, loopback redirect URIs, and the token lifetime of approvals granted before the restriction.
 
@@ -222,7 +224,7 @@ curl {your-agent-url}{basePath}/api/health
 
 ## OpenAPI document
 
-With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or an `X-Forest-Bff-Key`.
+With `api.openapiEnabled` set, `GET {basePath}/api/agent/openapi.json` serves a document you can generate a typed client from. It sits behind the same credentials as the data routes, so an uncredentialed `curl` answers `401 unauthorized`. Pass a session bearer or a [service account application token](/get-started/project-settings/service-accounts) in `X-Forest-Bff-Key`.
 
 <Warning>
   The served document is **not filtered per caller**. Anyone who can reach it reads the name of every exposed collection, relation and field, whatever their role. That is why it is off by default when embedded. You can export it without booting the server, which is what you want in CI: the standalone Gateway's [`forest-gateway openapi`](/product/embed/gateway-standalone#exporting-the-openapi-document) command works either way.
@@ -241,7 +243,7 @@ Over the rate limit, the API answers `429 too_many_requests` with a `Retry-After
 </Warning>
 
 <Warning>
-  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or an `X-Forest-Bff-Key` API key.
+  **Forest's IP whitelist does not apply to requests served by the Gateway API.** They reach the agent in-process, over what the whitelist treats as a trusted loopback caller. That is deliberate: applying the whitelist would filter the browsers a third-party UI is made of. Authentication is still required, either an OAuth sign-in or a [service account application token](/get-started/project-settings/service-accounts) in `X-Forest-Bff-Key`.
 </Warning>
 
 ## Standalone deployment
