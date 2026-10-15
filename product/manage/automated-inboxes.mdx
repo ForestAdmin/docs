@@ -20,10 +20,10 @@ New records start within 5 minutes.
 
 ## Before you start
 
-- An inbox based on a segment.
-- A workflow on the same collection, with a **Fallback inbox** and the **On data change** trigger turned on. See [Workflow triggers](/product/process/workflows/triggers#the-on-data-change-trigger).
-- A service account in the inbox's team. The workflow runs with its permissions.
-- [Forest Runtime](/product/process/workflows/forest-runtime) running on your environment.
+1. Create a segment with the records the workflow should process.
+2. Create a workflow on the same collection. In its **Triggers** section, pick a **Fallback inbox** and turn on **On data change**. See [Workflow triggers](/product/process/workflows/triggers#the-on-data-change-trigger).
+3. Add a service account to the inbox's team. The workflow runs with its permissions.
+4. Ask your developers to run [Forest Runtime](/product/process/workflows/forest-runtime) on your environment.
 
 ## Set up an automated inbox
 
