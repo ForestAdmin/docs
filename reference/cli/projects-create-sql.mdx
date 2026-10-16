@@ -1,0 +1,39 @@
+---
+title: forest projects:create:sql
+description: "Create a new Forest Admin project"
+---
+
+# forest projects:create:sql
+
+Create a new Forest Admin project.
+
+## Usage
+
+```bash
+forest projects:create:sql [APPLICATIONNAME] [options]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `APPLICATIONNAME` | Name of the project to create. |
+
+## Options
+
+| Option | Description |
+|---|---|
+| `-H, --applicationHost=<value>` | Hostname of your admin backend application. |
+| `-P, --applicationPort=<value>` | Port of your admin backend application. |
+| `-c, --databaseConnectionURL=<value>` | Enter the database credentials with a connection URL. |
+| `-d, --databaseDialect=<option>` | Enter your database dialect. <options: mssql\|mysql / mariadb\|postgres> |
+| `-h, --databaseHost=<value>` | Enter your database host. |
+| `-l, --language=<option>` | Choose the language you want to use for your project. <options: javascript\|typescript> |
+| `-n, --databaseName=<value>` | Enter your database name. |
+| `-p, --databasePort=<value>` | Enter your database port. |
+| `-s, --databaseSchema=<value>` | Enter your database schema. |
+| `-u, --databaseUser=<value>` | Enter your database user. |
+| `--databasePassword=<value>` | Enter your database password. |
+| `--databaseSSL` | Use SSL for database connection. |
+| `--databaseSslMode=<option>` | SSL mode. <options: preferred\|verify\|required\|disabled> |
+

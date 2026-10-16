@@ -1,0 +1,94 @@
+---
+title: Claude Code
+description: The forest plugin for Claude Code — vibe-code your Forest back-office from natural language.
+---
+
+# Claude Code — the `forest` plugin
+
+The **`forest` plugin** for [Claude Code](https://docs.claude.com/en/docs/claude-code) turns natural-language requests into Forest changes. You describe what you want; Claude runs the Forest CLI to make it happen, and you review the result in the app.
+
+One plugin, one skill per domain — each invoked as `/forest:<skill>`.
+
+## Prerequisites
+
+<Steps>
+  <Step title="Claude Code">
+    Install [Claude Code](https://docs.claude.com/en/docs/claude-code).
+  </Step>
+  <Step title="Forest CLI, logged in">
+    ```bash
+    npm install -g forest-cli
+    forest login
+    ```
+  </Step>
+</Steps>
+
+## Install the plugin
+
+```bash
+# add the Forest Admin marketplace, then install the plugin
+/plugin marketplace add forestadmin/ai-marketplace
+/plugin install forest@forest-admin-ai
+```
+
+Then reload and check the skills are available:
+
+```bash
+/reload-plugins
+/plugin        # Installed → forest → Skills
+```
+
+## The skills
+
+<CardGroup cols={2}>
+  <Card title="/forest:onboard" icon="rocket">
+    From zero to a running back-office — create a project (your database or a zero-DB demo), boot the dev agent, and (opt-in) deploy to production and invite your team.
+  </Card>
+  <Card title="/forest:layout" icon="table-cells">
+    Build the UI as code — workspaces with master→detail components, dashboards & charts, collection display, and folders.
+  </Card>
+  <Card title="/forest:workflows" icon="diagram-project">
+    Author workflows from a declarative `steps` spec — the skill compiles them to BPMN and deploys them, editable afterwards in the UI.
+  </Card>
+  <Card title="/forest:management" icon="users-gear">
+    Administer the project — roles (RBAC as code), users, teams, environments, branches, and production deploys.
+  </Card>
+</CardGroup>
+
+## Example prompts
+
+Just describe the outcome — the skill picks the right commands:
+
+- **Onboard** — *"Create me a Forest demo and start it."*
+- **Layout** — *"Add an 'AML Review' workspace: the list of AML alerts, and when I select one, the related customer's details below it."*
+- **Workflows** — *"Add a refund approval workflow on refund_requests: review → approve/reject → if approved, mark refunded → end."*
+- **Management** — *"Invite alice@acme.co as an editor on the Support team."*
+
+## The loop
+
+<Steps>
+  <Step title="Describe">
+    Tell Claude the outcome you want, in plain language.
+  </Step>
+  <Step title="Preview">
+    The skill shows the plan (and supports `--dry-run` on the underlying commands) before sending anything.
+  </Step>
+  <Step title="Apply">
+    Claude runs the CLI — creating the workspace, compiling the workflow, applying the layout…
+  </Step>
+  <Step title="Review">
+    Open the result in the Forest app, or pull it back as code (`forest layout pull`). Iterate by asking for changes.
+  </Step>
+</Steps>
+
+## How it works
+
+The plugin is a thin layer over the [Forest CLI](/reference/cli/overview): each skill resolves your intent into deterministic `forest` commands (`projects:create:*`, `layout:*`, `workflow:apply`, `roles:*`/`users:*`/`teams:*`, `environments:*`). Because the output is CLI calls and JSON (`forest-layout.json`, workflow BPMN, role CSVs), everything is versionable and reproducible.
+
+<Tip>
+Working on a `development` environment? Layout and workflow edits need a branch first (`forest branch <name>`) — the skills handle this. A zero-DB `create:demo` project accepts direct edits without a branch.
+</Tip>
+
+<Info>
+For writing agent code (Smart Actions, computed fields, hooks) use the companion **forest-code** plugin; for querying/manipulating data from an agent, see [MCP](/ai/mcp).
+</Info>

@@ -1,0 +1,26 @@
+---
+title: forest environments:create
+description: "Create a new environment"
+---
+
+# forest environments:create
+
+Create a new environment.
+
+## Usage
+
+```bash
+forest environments:create [options]
+```
+
+## Options
+
+| Option | Description |
+|---|---|
+| `-f, --format=<option>` | [default: table] Ouput format. <options: table\|json> |
+| `-n, --name=<value>` | (required) Environment name. |
+| `-p, --projectId=<value>` | Forest project ID. |
+| `-t, --type=<option>` | Environment type (defaults to "remote" when omitted). Use "production" to create the first production environment. Development environments are created with "forest init". <options: production\|remote> |
+| `-u, --url=<value>` | Application URL. Required, except with --type production where it may be omitted. |
+| `--disableRoles` | Disable roles on new environment. |
+

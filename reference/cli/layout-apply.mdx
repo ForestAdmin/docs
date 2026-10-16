@@ -1,0 +1,31 @@
+---
+title: forest layout:apply
+description: "Apply a forest-layout.json to an environment (pushes JSON-Patch changes)"
+---
+
+# forest layout:apply
+
+Apply a forest-layout.json to an environment (pushes JSON-Patch changes).
+
+## Usage
+
+```bash
+forest layout:apply [FILE] [options]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `FILE` | Layout file to apply (e.g. forest-layout.json). |
+
+## Options
+
+| Option | Description |
+|---|---|
+| `-e, --env=<value>` | Environment to apply to (name or id). Prompted if omitted. |
+| `-f, --force` | Skip the confirmation prompt. |
+| `-p, --projectId=<value>` | Id of the project (resolved/prompted when omitted). |
+| `-t, --team=<value>` | Team to apply to (name or id). Prompted if omitted. |
+| `--with-workflows` | Also upload workflow BPMN sidecars (workflows/<id>.bpmn) to the target env — the round-trip counterpart of `pull --with-workflows`. |
+

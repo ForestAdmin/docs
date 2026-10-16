@@ -1,0 +1,29 @@
+---
+title: forest roles:apply
+description: "Apply a wide-format CSV to update role permissions in an environment"
+---
+
+# forest roles:apply
+
+Apply a wide-format CSV to update role permissions in an environment.
+
+## Usage
+
+```bash
+forest roles:apply [FILE] [options]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `FILE` | Path to the wide-format CSV file. |
+
+## Options
+
+| Option | Description |
+|---|---|
+| `-F, --force` | Skip confirmation prompt. |
+| `-e, --env=<value>` | (required) Environment name to apply to. |
+| `-p, --projectId=<value>` | Forest project ID. |
+
