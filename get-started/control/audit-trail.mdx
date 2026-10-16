@@ -104,7 +104,15 @@ It requires an agent version that ships the audit trail (`@forestadmin/agent` fo
     | `redact` | `{}` | `{ 'collection_name' => ['field', ...] }` — field values masked while still recording the change |
     | `critical` | `false` | `true` refuses a write when recording its pending audit entry fails — no unaudited write ever happens. `false` logs the failure and lets the write proceed unaudited, same as before this option existed. |
 
-    Storage uses ActiveRecord. Outside Rails, add `gem 'activerecord'` and your adapter gem to the Gemfile — nothing is loaded and no connection is opened while the feature is unconfigured. Once it is configured, the connection is opened and the pending migrations applied during agent startup, so an unreachable database or a failed migration fails the boot rather than the first audited write.
+    Storage uses ActiveRecord, even if your main datasource is not SQL (Mongoid, an API…). Add the adapter gem matching your audit database — e.g. `pg` for PostgreSQL — and, outside Rails, `activerecord` itself; a Rails app already has it through `rails`, even one generated without ActiveRecord. Without them, the agent fails at boot and names the gem to add.
+
+    ```ruby
+    # Gemfile
+    gem 'activerecord' # outside Rails only
+    gem 'pg'
+    ```
+
+    Nothing is loaded and no connection is opened while the feature is unconfigured. Once it is configured, the connection is opened and the pending migrations applied during agent startup, so an unreachable database or a failed migration fails the boot rather than the first audited write.
   </Tab>
 </Tabs>
 
