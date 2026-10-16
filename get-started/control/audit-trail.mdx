@@ -13,20 +13,14 @@ It has two halves:
 <Note>
 The audit trail is **off until you configure a database** for it. No connection is opened, no route is exposed, and no hook is installed on your collections.
 
-It requires an agent version that ships the audit trail (`@forestadmin/agent` for Node.js, `forest_admin_agent` for Ruby) and a SQL database. The audit database is independent from your data: you can audit a **Mongo** datasource and store the trail in **Postgres**.
+It requires an agent version that ships the audit trail (`@forestadmin/agent` for Node.js, `forest_admin_agent` for Ruby) and a PostgreSQL database. The audit database is independent from your data: you can audit a **Mongo** datasource and store the trail in **Postgres**.
 </Note>
 
 ## Enable it on your agent
 
 <Tabs>
   <Tab title="Node.js">
-    Install `sequelize` and `umzug`, which the agent leaves to you so that an agent without the audit trail does not carry them, plus the database driver matching your connection string — e.g. `pg` and `pg-hstore` for PostgreSQL — even if your main datasource is not SQL. Without them, the agent fails at boot and names the packages to install.
-
-    ```bash
-    npm install sequelize umzug pg pg-hstore
-    ```
-
-    Then pass an `auditTrail` option to `createAgent`.
+    There is nothing to install: the agent ships what the audit trail needs, PostgreSQL driver included, even if your main datasource is not SQL. Pass an `auditTrail` option to `createAgent`. {/* TODO(PRD-1323): from the release that ships agent-nodejs#1983; before it, install `pg` and `pg-hstore`. */}
 
     ```javascript
     import { createAgent } from '@forestadmin/agent';
@@ -61,15 +55,9 @@ It requires an agent version that ships the audit trail (`@forestadmin/agent` fo
     The connection opens and pending migrations run during `agent.start()`, so a bad connection string or a failed migration **fails at startup**, not on the first audited write.
   </Tab>
   <Tab title="Ruby">
-    Add the ActiveRecord adapter gem matching your audit database — e.g. `pg` for PostgreSQL — even if your main datasource is not SQL (Mongoid, an API…), since storage uses ActiveRecord. Outside Rails, add `activerecord` itself too; a Rails app already has it through `rails`, even one generated without ActiveRecord. Without them, the agent fails at boot and names the gem to add.
+    There is nothing to add to your Gemfile: the agent ships ActiveRecord and the `pg` driver the audit trail stores with, even if your main datasource is not SQL (Mongoid, an API…). Since `pg` compiles against libpq, installing the agent needs the libpq headers (`libpq-dev` on Debian and Ubuntu). {/* TODO(PRD-1323): from the release that ships agent-ruby#410; before it, add `gem 'pg'` (and `gem 'activerecord'` outside Rails). */}
 
-    ```ruby
-    # Gemfile
-    gem 'activerecord' # outside Rails only
-    gem 'pg'
-    ```
-
-    Then, in a Rails app, set `audit_trail` on the initializer:
+    In a Rails app, set `audit_trail` on the initializer:
 
     ```ruby
     # config/initializers/forest_admin_rails.rb

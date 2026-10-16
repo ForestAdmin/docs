@@ -93,7 +93,7 @@ Changing `prefix` changes the URL Forest calls, so update the environment's URL 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `workflowExecutorUrl` | string \| null | `null` | Base URL of the [Forest Runtime](/product/process/workflows/forest-runtime) instance workflow requests are proxied to. The workflow routes return `404` while it is unset. |
-| `auditTrail` | object \| null | `null` | Record every create, update and delete into a SQL database and expose the record history routes. Requires the `sequelize` and `umzug` packages. See [Audit trail](/get-started/control/audit-trail). |
+| `auditTrail` | object \| null | `null` | Record every create, update and delete into a PostgreSQL database and expose the record history routes. See [Audit trail](/get-started/control/audit-trail). |
 | `experimental` | object | `null` | Opt in to no-code customizations built in the Forest UI: `webhookCustomActions` and `updateRecordCustomActions`. Incompatible with `skipSchemaUpdate`. |
 | `forestAdminClient` | ForestAdminClient | _built from the options_ | Replace the client used to talk to the Forest API. Intended for tests and internal tooling. |
 
