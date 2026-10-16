@@ -47,7 +47,7 @@ It requires an agent version that ships the audit trail (`@forestadmin/agent` fo
     | option | default | description |
     |--------|---------|-------------|
     | `connectionString` | _(required)_ | SQL connection string for the audit storage. **Setting it activates the audit trail.** |
-    | `schema` | `forest` | schema namespacing the Forest-owned table (ignored on dialects without schemas) |
+    | `schema` | `forest` | PostgreSQL schema holding the Forest-owned table |
     | `tableName` | `audit_logs` | name of the audit table |
     | `redact` | `{}` | `{ [collection]: string[] }` — field values to mask while still recording the change |
     | `critical` | `false` | `true` refuses a write when recording its pending audit entry fails — no unaudited write ever happens. `false` logs the failure and lets the write proceed unaudited, same as before this option existed. |
@@ -95,7 +95,7 @@ It requires an agent version that ships the audit trail (`@forestadmin/agent` fo
     | option | default | description |
     |--------|---------|-------------|
     | `database` | _(required)_ | ActiveRecord URL or config hash. **Setting it activates the audit trail.** |
-    | `schema` | `forest` | Postgres schema holding the table (ignored on other adapters) |
+    | `schema` | `forest` | PostgreSQL schema holding the table |
     | `table_name` | `audit_logs` | name of the audit table |
     | `redact` | `{}` | `{ 'collection_name' => ['field', ...] }` — field values masked while still recording the change |
     | `critical` | `false` | `true` refuses a write when recording its pending audit entry fails — no unaudited write ever happens. `false` logs the failure and lets the write proceed unaudited, same as before this option existed. |
@@ -229,12 +229,8 @@ The per-record history route accepts these optional filters, all combining with 
 | `operations` | comma-separated, from `create`, `update`, `delete`, `action`, `action_failed` | keep entries recorded under one of them; an unknown value returns **400** rather than being ignored |
 | `startDate` | `YYYY-MM-DD`, or `YYYY-MM-DD HH:mm[:ss]` (a `T` separator works too) | keep entries from this bound onward (inclusive) |
 | `endDate` | same | keep entries up to this bound (inclusive) |
-| `fields` | comma-separated field names | keep entries whose diff touched one of them — see the adapter note below |
+| `fields` | comma-separated field names | keep entries whose diff touched one of them |
 | `search` | free text, trimmed; empty ⇒ ignored | keep entries matching the term — see below |
-
-<Warning>
-**`fields` and `search` depend on the audit database's adapter.** Both interrogate the stored JSON, which every engine spells differently, so an unsupported one makes the request **fail** rather than fall back to an unfiltered answer. `fields` works on PostgreSQL, SQLite and MySQL/MariaDB on both agents, plus SQL Server on Node.js (2022+, for `JSON_PATH_EXISTS`). `search` works on any dialect on Node.js, and on PostgreSQL, SQLite and MySQL/MariaDB on Ruby. Anywhere else, the two filters raise — the rest of the route, including the unfiltered history, is unaffected.
-</Warning>
 
 Dates are read as **wall-clock time in the request `timezone`** and converted to a UTC instant before querying. A bare day snaps to the start of the day for `startDate` and to `23:59:59.999` for `endDate`; a datetime without seconds is completed the same way. A malformed date or timezone returns **400**; non-numeric `userIds` tokens are dropped.
 
