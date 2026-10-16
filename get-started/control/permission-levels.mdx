@@ -1,0 +1,41 @@
+---
+title: "Permission Levels"
+description: "Control what each user can do in the Forest interface"
+---
+
+## Overview
+
+A permission level sets what a user can do in the Forest interface: browse and edit data, customize layouts, manage environments, administer the project. Each user has one permission level, selected when they're invited in **Project Settings → Users**.
+
+Permission levels don't decide which data a user can access. That's the job of [roles](/get-started/control/roles), the RBAC setting that controls access to collections, records, and actions.
+
+## Permission levels
+
+Forest defines five user permission levels with increasing administrative capabilities:
+
+| Capability | User | Manager | Editor | Developer | Admin |
+|-----------|------|---------|--------|-----------|-------|
+| **Data Management** | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Browse collections | ✓ | ✓ | ✓ | ✓ | ✓ |
+| View, create, update, delete records* | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Execute actions* | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **Inbox Management** | | ✓ | ✓ | ✓ | ✓ |
+| Manage inbox and notifications | | ✓ | ✓ | ✓ | ✓ |
+| **UI Customization** | | | ✓ | ✓ | ✓ |
+| Customize layouts and views | | | ✓ | ✓ | ✓ |
+| Configure collection displays | | | ✓ | ✓ | ✓ |
+| Create and edit Smart Views | | | ✓ | ✓ | ✓ |
+| Create workspaces | | | ✓ | ✓ | ✓ |
+| Create dashboards | | | ✓ | ✓ | ✓ |
+| Create workflows | | | ✓ | ✓ | ✓ |
+| **Environment Management** | | | | ✓ | ✓ |
+| Manage environments | | | | ✓ | ✓ |
+| Configure environment settings | | | | ✓ | ✓ |
+| Deploy between environments | | | | ✓ | ✓ |
+| **Team & Role Management** | | | | | ✓ |
+| Manage teams and users | | | | | ✓ |
+| Create and manage roles | | | | | ✓ |
+| Configure project settings | | | | | ✓ |
+| Access all administrative features | | | | | ✓ |
+
+*Based on the collection and action permissions configured for the user's [role](/get-started/control/roles)
