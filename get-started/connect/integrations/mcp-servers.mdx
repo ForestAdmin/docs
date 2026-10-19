@@ -99,6 +99,10 @@ If a tool isn't in the list above, connect any MCP server by URL:
 4. Check that all the expected tools are exposed.
 5. Save your configuration.
 
+<Note>
+  Forest connects to the server when you save it, so the URL must use HTTPS and point at an address reachable from the internet. Forest refuses `localhost`, private IP addresses and cloud metadata addresses.
+</Note>
+
 Learn more about building and hosting MCP servers in the [Claude MCP documentation](https://docs.claude.com/en/docs/agents-and-tools/remote-mcp-servers).
 
 ## Set up an OAuth app for a connector
