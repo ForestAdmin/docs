@@ -201,8 +201,8 @@ The tab is present on every record, whether or not the audit trail is on. Field-
 The project-level **Activity Logs** page uses the same timeline across every collection: the project's activity logs, enriched with the audit rows of every collection you can read. It offers the same filters and the same newest-first / oldest-first toggle as a record's Activity tab, and each entry links to its record.
 
 - **Who can open the page** is the team's Activity Logs setting, as before. The agent does not add a gate of its own.
-- **What it shows** follows the rule in [Who sees the recorded values](#who-sees-the-recorded-values): if you can read a collection, you see its rows' values here as on each record's tab.
-- **A collection you only see through a record-level scope is left out** of the project timeline. A scope can't be evaluated across the whole timeline without reading every record it mentions, and a row alone would say that a record you cannot read was touched. Those records' trails stay available on their own Activity tab.
+- **What it shows** follows the rule in [Who sees the recorded values](#who-sees-the-recorded-values): if you can read a collection and your team has no scope on it, you see its rows' values here as on each record's tab.
+- **A collection your team has a record-level scope on has no audit trail on this page**, whatever the scope's condition, even one every record passes. A scope can't be evaluated across the whole timeline without reading every record it mentions. The collection's activity logs still appear, without diffs, since activity logs are not filtered by roles or scopes. Each record's audit trail stays available on its own Activity tab.
 - **The page needs an agent that serves the cross-collection route**: Node.js from **1.108.0**, with the oldest-first toggle from **1.110.0**. On an older agent, or one without the audit trail configured, the page shows the activity logs alone. {/* TODO(PRD-1323): add the Ruby version that ships agent-ruby#410 once it is released. */}
 
 ## HTTP routes
@@ -269,7 +269,7 @@ The `/state` route rebuilds a record by taking it as it stands now and undoing e
 
 ## Who sees the recorded values
 
-**If you can read a record, you can read its audit trail**, on its Activity tab and on the project's Activity Logs page alike. There is no separate admin gate on the values: your role's read permission and your record-level scopes decide, as they do for the record itself.
+**If you can read a record, you can read its audit trail** on its Activity tab. There is no separate admin gate on the values: your role's read permission and your record-level scopes decide, as they do for the record itself. The project's Activity Logs page applies the same rule but leaves out every collection your team has a scope on; see [The project's Activity Logs page](#the-projects-activity-logs-page).
 
 A scope can't be evaluated against a record that no longer exists, so a deleted record's history stays readable to anyone who can read the collection — seeing what was deleted is much of the point of an audit trail. **The values its rows captured are tested against your scope instead**, and withheld where they would have failed it. The row itself is always returned: that something happened, by whom and when, stays visible.
 
