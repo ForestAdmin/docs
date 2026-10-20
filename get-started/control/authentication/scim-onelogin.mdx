@@ -15,6 +15,16 @@ The OneLogin SCIM integration enables:
 - Deleting users when removed from the Forest app in OneLogin
 - SCIM Groups for team assignment
 
+## Users who already have a Forest account
+
+When the email you provision belongs to a Forest account that isn't a member of your organization, Forest sends that person an invitation instead of adding them to the project. On a project without an organization, this applies to every existing Forest account. Until the person accepts:
+
+- OneLogin shows them as inactive
+- the role, permission level and tags you push update their invitation
+- removing them from the Forest app in OneLogin cancels the invitation
+
+They join with the invitation's role, permission level and tags, on the first team you listed. Forest applies their other teams on the next push after they accept. Forest adds members of your organization, and emails with no Forest account, to the project directly.
+
 ## Configuration Steps
 
 ### 1. Adding the Forest App
