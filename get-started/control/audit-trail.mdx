@@ -279,10 +279,7 @@ A scope can't be evaluated against a record that no longer exists, so a deleted 
 - **An id freed and taken again has two lives.** When a record is deleted, or its primary key moves, and another record takes the same id, being able to read the current record says nothing about the earlier one. The rows from before the id was taken go through the same test as a deleted record's, even though a record you can read holds the id now. {/* TODO(PRD-1323): Node.js from the release that ships agent-nodejs#1983. */}
 - The record is read twice, before and after the audit rows are, and the values are withheld if either read found it gone. An id taken by a record you cannot read answers **404**.
 
-**Every route that serves captured values applies this**: the per-record history (where `search` and `fields` then match the served values, so the count and the author list can't reveal a withheld value either), `/state` (a reconstruction that fails your scope returns `null`) and both correlation routes. That holds from Node.js **1.106.1** and Ruby **1.44.5**. Older versions withhold less:
-
-- Node.js before 1.106.1 withholds on the history route only.
-- Ruby between 1.44.1 and 1.44.4 withholds on the history route only. Ruby between 1.39.0, where the trail shipped, and 1.44.0 does not withhold at all: it returns a deleted record's values to anyone who can read the collection.
+**Every route that serves captured values applies this**: the per-record history (where `search` and `fields` then match the served values, so the count and the author list can't reveal a withheld value either), `/state` (a reconstruction that fails your scope returns `null`) and both correlation routes. That holds from Node.js **1.106.1** and Ruby **1.46.2**. Node.js before 1.106.1 withholds on the history route only.
 
 ## Limitations
 
