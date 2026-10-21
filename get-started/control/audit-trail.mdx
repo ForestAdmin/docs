@@ -13,14 +13,14 @@ It has two halves:
 <Note>
 The audit trail is **off until you configure a database** for it. No connection is opened, no route is exposed, and no hook is installed on your collections.
 
-It requires an agent version that ships the audit trail (`@forestadmin/agent` for Node.js, `forest_admin_agent` **1.46.2** or later for Ruby) and a PostgreSQL database. The audit database is independent from your data: you can audit a **Mongo** datasource and store the trail in **Postgres**.
+It requires an agent version that ships the audit trail (`@forestadmin/agent` **1.110.4** or later for Node.js, `forest_admin_agent` **1.46.3** or later for Ruby) and a PostgreSQL database. The audit database is independent from your data: you can audit a **Mongo** datasource and store the trail in **Postgres**.
 </Note>
 
 ## Enable it on your agent
 
 <Tabs>
   <Tab title="Node.js">
-    There is nothing to install: the agent ships what the audit trail needs, PostgreSQL driver included, even if your main datasource is not SQL. Pass an `auditTrail` option to `createAgent`. {/* TODO(PRD-1323): from the release that ships agent-nodejs#1983; before it, install `pg` and `pg-hstore`. */}
+    Use `@forestadmin/agent` **1.110.4** or later. There is nothing to install: the agent ships what the audit trail needs, PostgreSQL driver included, even if your main datasource is not SQL. Pass an `auditTrail` option to `createAgent`.
 
     ```javascript
     import { createAgent } from '@forestadmin/agent';
@@ -55,7 +55,7 @@ It requires an agent version that ships the audit trail (`@forestadmin/agent` fo
     The connection opens and pending migrations run during `agent.start()`, so a bad connection string or a failed migration **fails at startup**, not on the first audited write.
   </Tab>
   <Tab title="Ruby">
-    Use `forest_admin_agent` **1.46.2** or later. There is nothing to add to your Gemfile: the agent ships ActiveRecord and the `pg` driver the audit trail stores with, even if your main datasource is not SQL (Mongoid, an API…). Since `pg` compiles against libpq, installing the agent needs the libpq headers (`libpq-dev` on Debian and Ubuntu).
+    Use `forest_admin_agent` **1.46.3** or later. There is nothing to add to your Gemfile: the agent ships ActiveRecord and the `pg` driver the audit trail stores with, even if your main datasource is not SQL (Mongoid, an API…). Since `pg` compiles against libpq, installing the agent needs the libpq headers (`libpq-dev` on Debian and Ubuntu).
 
     In a Rails app, set `audit_trail` on the initializer:
 
@@ -203,7 +203,7 @@ The project-level **Activity Logs** page uses the same timeline across every col
 - **Who can open the page** is the team's Activity Logs setting, as before. The agent does not add a gate of its own.
 - **What it shows** follows the rule in [Who sees the recorded values](#who-sees-the-recorded-values): if you can read a collection and your team has no scope on it, you see its rows' values here as on each record's tab.
 - **A collection your team has a record-level scope on has no audit trail on this page**, whatever the scope's condition, even one every record passes. A scope can't be evaluated across the whole timeline without reading every record it mentions. The collection's activity logs still appear, without diffs, since activity logs are not filtered by roles or scopes, and each carries a **Scoped** tag saying why it has no audit trail. Each record's audit trail stays available on its own Activity tab.
-- **The page needs an agent that serves the cross-collection route**: Node.js from **1.108.0**, with the oldest-first toggle from **1.110.0**, and Ruby from **1.46.2**. On an older agent, or one without the audit trail configured, the page shows the activity logs alone.
+- **The page needs an agent that serves the cross-collection route**: Node.js from **1.110.4** and Ruby from **1.46.3**. On an older agent, or one without the audit trail configured, the page shows the activity logs alone.
 
 ## HTTP routes
 
@@ -261,7 +261,7 @@ It never matches `operation`, `correlation_key`, `record_id`, `collection`, `sta
 
 A redacted value can never match a search for the real value: `redact` replaces it before the row is ever written, so the real value was never in the database to find. The mask itself is ignored too, so searching `redacted` does not reveal which rows hold a masked value.
 
-The match runs against the *serialized JSON text* of `previous_values`/`new_values`, not a structural walk of the parsed value — cheap, and correct for matching keys and scalar values. The term is escaped the way the values were, so `5"` finds the row holding `5"`, and a bare quote can't match the JSON structure. One thing remains inherent to the approach: a punctuation-only term (`,`, `:`, `{`) matches almost any row whose diff has more than one key, since those characters are JSON structure rather than content. {/* TODO(PRD-1323): the escaping and the ignored mask are on Node.js from the release that ships agent-nodejs#1983; name it, or state the floor. */}
+The match runs against the *serialized JSON text* of `previous_values`/`new_values`, not a structural walk of the parsed value — cheap, and correct for matching keys and scalar values. The term is escaped the way the values were, so `5"` finds the row holding `5"`, and a bare quote can't match the JSON structure. One thing remains inherent to the approach: a punctuation-only term (`,`, `:`, `{`) matches almost any row whose diff has more than one key, since those characters are JSON structure rather than content.
 
 ### Reconstructing a past state
 
@@ -276,10 +276,10 @@ A scope can't be evaluated against a record that no longer exists, so a deleted 
 - A `delete` row keeps its previous values, and a `create` row its new values, only if they pass your scope. An `update` row's two sides are a partial diff, so each side is tested on its own values and kept only if it passes.
 - A side that can't answer your scope is withheld rather than guessed at: a scope on a read-only column (never captured), on a relation, or on a value stored redacted. A captured `null` never passes a negated condition such as `status != 'private'`, as in the database.
 - The primary key is filled from the row's own id where the row doesn't capture it. On an update's previous side, a redacted primary key is not filled, since a writable key may have moved: that side is withheld from a scope on the key.
-- **An id freed and taken again has two lives.** When a record is deleted, or its primary key moves, and another record takes the same id, being able to read the current record says nothing about the earlier one. The rows from before the id was taken go through the same test as a deleted record's, even though a record you can read holds the id now. {/* TODO(PRD-1323): Node.js from the release that ships agent-nodejs#1983. */}
+- **An id freed and taken again has two lives.** When a record is deleted, or its primary key moves, and another record takes the same id, being able to read the current record says nothing about the earlier one. The rows from before the id was taken go through the same test as a deleted record's, even though a record you can read holds the id now.
 - The record is read twice, before and after the audit rows are, and the values are withheld if either read found it gone. An id taken by a record you cannot read answers **404**.
 
-**Every route that serves captured values applies this**: the per-record history (where `search` and `fields` then match the served values, so the count and the author list can't reveal a withheld value either), `/state` (a reconstruction that fails your scope returns `null`) and both correlation routes. That holds from Node.js **1.106.1** and Ruby **1.46.2**. Node.js before 1.106.1 withholds on the history route only.
+**Every route that serves captured values applies this**: the per-record history (where `search` and `fields` then match the served values, so the count and the author list can't reveal a withheld value either), `/state` (a reconstruction that fails your scope returns `null`) and both correlation routes. That holds from Node.js **1.110.4** and Ruby **1.46.3**.
 
 ## Limitations
 
