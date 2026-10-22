@@ -22,7 +22,7 @@ Forest tracks all user activities across different areas:
 For each action, the system logs the **user, targeted record(s), and timestamp**. Forest tracks and stores these activities **without records' sensitive data** except the ID/primary key.
 
 <Info>
-To also record **what changed** — field-level before/after values, in a database you own — enable the [audit trail](/get-started/control/audit-trail) on your agent. Each record's **Activity** tab then shows the diffs alongside these logs.
+To also record **what changed** — field-level before/after values, in a database you own — enable the [audit trail](/get-started/control/audit-trail) on your agent. The project's **Activity Logs** page and each record's **Activity** tab then show the diffs alongside these logs.
 </Info>
 
 <Warning>
@@ -31,13 +31,19 @@ To also record **what changed** — field-level before/after values, in a databa
 
 ## Viewing activity logs
 
-### Global activity tab
+The project's Activity Logs page and each record's Activity tab share the same timeline interface:
 
-Access the Activity tab to see all team activities across your Forest project. The logs show all actions with user information, affected records, and timestamps.
+- each entry shows the user, the record and the timestamp, and links to its record;
+- the filter panel narrows by **author**, **activity type** and **date range**, and the sort toggle switches between newest-first (default) and oldest-first. Filters apply to the whole history, not the current page;
+- with the [audit trail](/get-started/control/audit-trail) configured on your agent, entries also show **field-level diffs**, and **free-text search** runs across the recorded values. Without it, the timeline shows the activity logs alone.
+
+### Project Activity Logs page
+
+The Activity Logs page shows all team activities across your Forest project. Who can open it is the team's Activity Logs setting. With the audit trail, it adds the changes of every collection you can read and your team has no scope on; see [Project Activity Logs page](/get-started/control/audit-trail#project-activity-logs-page) for which collections are included and the agent versions it needs.
 
 ### Record-level activity
 
-Individual records display their own activity history through a dedicated Activity tab on each record's detail page, enabling team members to track specific record changes over time.
+Each record's detail page has an Activity tab with that record's own history, so team members can track its changes over time. See [The Activity tab](/get-started/control/audit-trail#the-activity-tab) for what its entries show.
 
 ## Export all activities
 
