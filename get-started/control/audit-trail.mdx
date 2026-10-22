@@ -196,7 +196,7 @@ The tab is present on every record, whether or not the audit trail is on. Field-
 **Bulk and global actions do not appear in a record's timeline.** They target no single record, so the agent records them with an empty `record_id`, which no record-scoped query matches.
 </Info>
 
-## The project's Activity Logs page
+## Project Activity Logs page
 
 The project-level **Activity Logs** page uses the same timeline across every collection: the project's activity logs, enriched with the audit rows of every collection you can read. It offers the same filters and the same newest-first / oldest-first toggle as a record's Activity tab, and each entry links to its record. A record that has since been deleted is shown crossed out, and one outside your scope is named without a link, since neither can be opened.
 
@@ -269,17 +269,18 @@ The `/state` route rebuilds a record by taking it as it stands now and undoing e
 
 ## Who sees the recorded values
 
-**If you can read a record, you can read its audit trail** on its Activity tab. There is no separate admin gate on the values: your role's read permission and your record-level scopes decide, as they do for the record itself. The project's Activity Logs page applies the same rule but leaves out every collection your team has a scope on; see [The project's Activity Logs page](#the-projects-activity-logs-page).
+**If you can read a record, you can read its audit trail** on its Activity tab. There is no separate admin gate on the values: your role's read permission and your record-level scopes decide, as they do for the record itself. The project's Activity Logs page applies the same rule but leaves out every collection your team has a scope on; see [Project Activity Logs page](#project-activity-logs-page).
 
-A scope can't be evaluated against a record that no longer exists, so a deleted record's history stays readable to anyone who can read the collection — seeing what was deleted is much of the point of an audit trail. **The values its rows captured are tested against your scope instead**, and withheld where they would have failed it. The row itself is always returned: that something happened, by whom and when, stays visible.
+A scope can't be evaluated against a record that no longer exists, so a deleted record's history stays readable to anyone who can read the collection — seeing what was deleted is much of the point of an audit trail. **The column values its rows captured are tested against your scope instead**, and withheld where they would have failed it. The row itself is always returned: that something happened, by whom and when, stays visible.
 
 - A `delete` row keeps its previous values, and a `create` row its new values, only if they pass your scope. An `update` row's two sides are a partial diff, so each side is tested on its own values and kept only if it passes.
 - A side that can't answer your scope is withheld rather than guessed at: a scope on a read-only column (never captured), on a relation, or on a value stored redacted. A captured `null` never passes a negated condition such as `status != 'private'`, as in the database.
 - The primary key is filled from the row's own id where the row doesn't capture it. On an update's previous side, a redacted primary key is not filled, since a writable key may have moved: that side is withheld from a scope on the key.
 - **An id freed and taken again has two lives.** When a record is deleted, or its primary key moves, and another record takes the same id, being able to read the current record says nothing about the earlier one. The rows from before the id was taken go through the same test as a deleted record's, even though a record you can read holds the id now.
 - The record is read twice, before and after the audit rows are, and the values are withheld if either read found it gone. An id taken by a record you cannot read answers **404**.
+- **Action rows are not tested.** An `action` or `action_failed` row holds the form values submitted to the action and a result summary, not column values, so your scope has nothing to test. It is returned as recorded, even on a deleted record outside your scope.
 
-**Every route that serves captured values applies this**: the per-record history (where `search` and `fields` then match the served values, so the count and the author list can't reveal a withheld value either), `/state` (a reconstruction that fails your scope returns `null`) and both correlation routes. That holds from Node.js **1.110.4** and Ruby **1.46.3**.
+**Every route that serves captured column values applies this**: the per-record history (where `search` and `fields` then match the served values, so the count and the author list can't reveal a withheld value either), `/state` (a reconstruction that fails your scope returns `null`) and both correlation routes. That holds from Node.js **1.110.4** and Ruby **1.46.3**.
 
 ## Limitations
 
