@@ -1,0 +1,84 @@
+---
+title: "Run a workflow on data change"
+sidebarTitle: "On data change"
+description: "Start a workflow on every record that enters a segment, and send only the exceptions to your team."
+---
+
+A workflow can start on its own each time a record enters a segment. Your team only steps in when a run needs a person.
+
+For example, every document that enters the `Waiting for validation` segment starts a workflow that checks it and sets its status to `Validated`.
+
+## How it works
+
+The workflow uses two inboxes:
+
+- **The automated inbox** lists every record of the segment. The workflow processes them, nobody takes them.
+- **The fallback inbox** receives a task when a run needs a person: an error, a confirmation or a manual step. Operators work it like any [inbox](/product/manage/inbox), and the run continues where it stopped.
+
+A record is done when it leaves the segment. End your workflow with a step that changes what the segment filters on, for instance an **Update Data** step that sets the status to `Validated`.
+
+New records start within 5 minutes by default. Your developers can change this interval in [Forest Runtime](/product/process/workflows/forest-runtime#tuning).
+
+## Before you start
+
+To start a workflow on data change, you need:
+
+- A segment on the workflow's collection.
+- A **Fallback inbox** and the **On data change** trigger turned on, in the workflow's **Triggers** section. See [Workflow triggers](/product/process/workflows/triggers#the-on-data-change-trigger).
+- A service account in the inbox's team. The workflow runs with its permissions.
+- [Forest Runtime](/product/process/workflows/forest-runtime) running on your environment.
+
+## Set it up
+
+Only Admins and Process Owners can pick the service account in **Runs as**.
+
+<Tabs>
+  <Tab title="From the workflow">
+    1. In the workflow's **Triggers** section, under **On data change**, click **New automatic inbox**.
+    2. Pick the **Segment**.
+    3. Pick the dispatch rule. The workflow starts the records in this order.
+    4. Pick the service account in **Runs as**.
+    5. Click **Confirm**.
+
+    You can also create the inbox from the Customization Center: **Add new** → **Inbox**.
+  </Tab>
+  <Tab title="From an existing inbox">
+    1. Turn on **Layout Editor** mode and click the inbox in the left navbar.
+    2. In the **Process** section, set **How it starts** to **Automatically, as soon as a record enters**.
+    3. Pick the **Workflow** and the service account in **Runs as**, then click **Save**.
+  </Tab>
+</Tabs>
+
+The workflow also starts on the records already in the segment. Forest shows how many before you confirm.
+
+## Follow the runs
+
+The workflow's **On data change** row lists its automated inboxes, with their state and service account.
+
+Admins open an automated inbox from the left navbar, where a bolt icon marks it. It opens on its **Backlog**:
+
+| State | Meaning |
+|---|---|
+| **Doing** | The workflow is processing the record. |
+| **Escalated** | The run waits on a person in the fallback inbox. Click the fallback inbox name in the header to reach it. |
+
+A record leaves the Backlog once it leaves the segment. Click **Refresh** to update the list.
+
+## Pause or stop
+
+To pause, open the inbox settings in **Layout Editor** mode and click **Pause** in the **Process** section. No new run starts, and the runs already going finish. Click **Resume** to start again.
+
+To stop for one inbox, choose **Operators know what to do** in its **Process** section and click **Save**. Operators work the inbox again.
+
+To stop for every inbox, turn off **On data change** in the workflow's **Triggers** section.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Workflow triggers" icon="bolt" href="/product/process/workflows/triggers">
+    Manual, webhook, MCP and On data change.
+  </Card>
+  <Card title="Inbox" icon="inbox" href="/product/manage/inbox">
+    How operators process tasks in an inbox.
+  </Card>
+</CardGroup>

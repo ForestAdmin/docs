@@ -177,6 +177,7 @@
                 "pages": [
                   "product/process/workflows/overview",
                   "product/process/workflows/triggers",
+                  "product/process/workflows/automated-inboxes",
                   "product/process/workflows/forest-runtime"
                 ]
               },

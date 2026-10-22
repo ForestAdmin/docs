@@ -10,6 +10,10 @@ An inbox is either tied to:
 - A **Segment**, for example the `Waiting for Validation` segment of a `Documents` collection. Every record in that segment becomes a task for operators to process.
 - A **Workflow**, as an escalation mechanism for a user to pick up a process where a previous user left off.
 
+<Tip>
+  A segment-based inbox also runs on its own: a workflow processes every record that enters it, and operators only handle the exceptions. See [Run a workflow on data change](/product/process/workflows/automated-inboxes).
+</Tip>
+
 ## Creating an inbox
 
 To create an inbox, navigate to the **Collaboration** tab and enable **Layout Editor** mode. In the left navbar, find the **Inboxes** section and click **Add New**.
