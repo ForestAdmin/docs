@@ -1,0 +1,31 @@
+---
+title: forest workflow:apply
+description: "Create or update a workflow from a JSON steps spec (compiles to BPMN and uploads it)"
+---
+
+# forest workflow:apply
+
+Create or update a workflow from a JSON steps spec (compiles to BPMN and uploads it). Reading the spec from stdin disables prompts: pass -p/-e/-t and --force explicitly.
+
+## Usage
+
+```bash
+forest workflow:apply [FILE] [options]
+```
+
+## Arguments
+
+| Argument | Description |
+|---|---|
+| `FILE` | JSON workflow spec ({ name, collection, steps, id?, segments?, position?, start?, version? }). "-" or omit to read stdin. |
+
+## Options
+
+| Option | Description |
+|---|---|
+| `-e, --env=<value>` | Environment name or id. |
+| `-f, --force` | Skip the confirmation prompt (required when the spec is read from stdin). |
+| `-p, --projectId=<value>` | Project id. |
+| `-t, --team=<value>` | Team name or id. |
+| `--dry-run` | Resolve the scope, match the workflow and print the plan; send nothing. |
+
