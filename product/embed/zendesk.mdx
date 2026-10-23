@@ -19,17 +19,13 @@ Before installing the app, your tech team needs a Gateway API that a browser can
 
 1. **A Gateway serving your Forest back-end**, either embedded in your Node.js agent (`addGateway({ api })`) or deployed as the [standalone Gateway](/product/embed/gateway-standalone).
 2. **OAuth enabled on it**, which is what lets each Zendesk agent sign in with their Forest account.
-3. **The app's iframe origin allow-listed**, because the app calls the Gateway from the browser.
+3. **The app's iframe origin allowed**, because the app calls the Gateway from the browser. Recent Gateways allow it on their own.
 
-Allow-list `https://*.apps.zdusercontent.com`. Zendesk serves every app's iframe from that domain, one subdomain per app, and the Forest app's is `https://1231469.apps.zdusercontent.com`. That number is the Forest app's Marketplace id, not yours, so it is the same value on every Forest installation and nothing in it is yours to replace. Allow-list it instead of the wildcard when you want the narrower entry.
+From `@forestadmin/agent` 1.111.0 and the standalone Gateway 1.1.0, the Gateway API always allows `https://*.apps.zdusercontent.com`, the domain Zendesk serves every app's iframe from, so there is nothing to configure. The Forest app's own origin is `https://1231469.apps.zdusercontent.com`, its Marketplace id, the same on every installation. Your `allowedOrigins` entries are added to that one, never in place of it.
 
 <Warning>
-  Neither form is your Zendesk URL, and the numeric subdomain is not a typo. A Zendesk app runs in an iframe served from Zendesk's own app domain, so the `Origin` the browser sends is that iframe's, never `https://your-subdomain.zendesk.com`. Allow-listing your tenant URL gets every call refused with `403 origin_not_allowed`.
+  On an older Gateway, allow-list `https://*.apps.zdusercontent.com` yourself. Your Zendesk URL does not work in its place: a Zendesk app runs in an iframe served from Zendesk's own app domain, so the `Origin` the browser sends is that iframe's, never `https://your-subdomain.zendesk.com`, and every call is refused with `403 origin_not_allowed`.
 </Warning>
-
-<Note>
-  The wildcard form admits every other Zendesk app too, since Zendesk serves them all from that domain. When you want the narrowest allow-list, use the exact origin. To read it off a running installation, open a ticket with the Forest app in the sidebar and inspect that panel's iframe. See [Cross-origin access](/product/embed/gateway#cross-origin-access).
-</Note>
 
 The embedded option needs `@forestadmin/agent` 1.109.0 or later, which ships the Gateway and its `addGateway()` method, and loads `@forestadmin/agent-bff` at runtime, an optional peer dependency of `@forestadmin/agent`, at exactly the version the agent declares. Install or upgrade both in one command: `npm install @forestadmin/agent@latest @forestadmin/agent-bff@latest`. On an older agent the call throws `agent.addGateway is not a function`.
 
@@ -40,7 +36,6 @@ await createAgent(options)
   .addDataSource(/* ... */)
   .addGateway({
     api: {
-      allowedOrigins: ['https://*.apps.zdusercontent.com'],
       tokenEncryptionKey: process.env.FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY,
     },
   })
@@ -51,7 +46,6 @@ await createAgent(options)
 ```bash Standalone
 docker run -d -p 3450:3450 \
   -e FOREST_GATEWAY_SERVICES=api \
-  -e FOREST_GATEWAY_API_ALLOWED_ORIGINS='https://*.apps.zdusercontent.com' \
   -e FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY=xxx \
   -e FOREST_AGENT_URL=https://your-agent.example.com \
   -e FOREST_ENV_SECRET=xxx -e FOREST_AUTH_SECRET=xxx \
@@ -187,7 +181,7 @@ Suggested action names come back through a filter: the app keeps the ones that m
   <Accordion title="Zendesk agents cannot sign in">
     - Check `GET {your-gateway-url}/health`, `configured.oauth` must be `true`
     - Confirm `forestGatewayApiUrl` points at the Gateway API (`…/api`), not at the agent root and not at an MCP URL
-    - On a CORS error in the browser console, check the allow-list holds `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin, and a wrong port fails the same way. The rejected preflight answers `204` with no headers, so the `403 origin_not_allowed` never reaches the browser, and the Gateway logs `BFF preflight origin rejected` with the origin it refused
+    - On a CORS error in the browser console, check the Gateway version first: before `@forestadmin/agent` 1.111.0 and the standalone Gateway 1.1.0, the allow-list must hold `https://*.apps.zdusercontent.com` or the exact `https://1231469.apps.zdusercontent.com`. Your Zendesk tenant URL never covers the iframe origin. The rejected preflight answers `204` with no headers, so the `403 origin_not_allowed` never reaches the browser, and the Gateway logs `BFF preflight origin rejected` with the origin it refused
   </Accordion>
   <Accordion title="A Zendesk agent sees no record on a ticket">
     - Confirm their Forest role grants read access to the collection. The app shows what that person is allowed to see, nothing more

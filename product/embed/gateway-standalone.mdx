@@ -116,7 +116,7 @@ The API service reads these too:
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |
 | `FOREST_GATEWAY_API_TOKEN_ENCRYPTION_KEY` | For sign-in | n/a | Base64-encoded 32-byte key. It turns on OAuth sign-in and, with it, the AI relay. Without it, the API serves [service account application tokens](/get-started/project-settings/service-accounts) only. |
-| `FOREST_GATEWAY_API_ALLOWED_ORIGINS` | For browser UIs | empty | Comma-separated origins allowed to call the API from a browser, exact or with one leading wildcard label. Empty means server-to-server calls only. See [Cross-origin access](/product/embed/gateway#cross-origin-access). |
+| `FOREST_GATEWAY_API_ALLOWED_ORIGINS` | For browser UIs | empty | Comma-separated origins allowed to call the API from a browser, exact or with one leading wildcard label. `https://*.apps.zdusercontent.com` is always added, so empty means the Zendesk app and server-to-server calls only. See [Cross-origin access](/product/embed/gateway#cross-origin-access). |
 | `FOREST_GATEWAY_API_PUBLIC_URL` | No | relative `{basePath}/api` | The API's external URL, published in the OpenAPI document. Must end with `{basePath}/api`. |
 | `FOREST_GATEWAY_API_DEFAULT_TIMEZONE` | No | n/a | Fallback IANA timezone when a request carries none. |
 | `FOREST_GATEWAY_API_AGENT_TIMEOUT_MS` | No | `10000` | How long to wait for your back-end on a data or action call. |
@@ -127,7 +127,7 @@ The API service reads these too:
 
 The MCP service reads the same `FOREST_MCP_*` variables as before, under the same names: enabled tools, token lifetimes and file uploads. They are listed on the [MCP server page](/product/embed/mcp-server#standalone-configuration).
 
-**When a value is wrong.** A malformed value (a bad URL, a bad port, an API public URL that does not end with `{basePath}/api`) stops the boot with an error naming the variable. A required variable that is merely missing does not: the service that needs it starts degraded, answers `503`, and a boot warning names the variable. `FOREST_GATEWAY_API_ALLOWED_ORIGINS` is the one exception to the first rule: an entry that cannot be parsed is dropped, and a boot warning names the key.
+**When a value is wrong.** A malformed value (a bad URL, a bad port, an API public URL that does not end with `{basePath}/api`) stops the boot with an error naming the variable. A required variable that is merely missing does not: the service that needs it starts degraded, answers `503`, and a boot warning names the variable. That includes an allowed origin that cannot be parsed, from 1.1.0: older versions dropped it with a boot warning.
 
 ### Legacy names
 

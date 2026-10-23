@@ -74,7 +74,7 @@ Embedded in the Node.js agent, the Gateway needs `@forestadmin/agent`, plus `@fo
 Each service is off until you enable it:
 
 - The **MCP service** exposes the tools, their restrictions and their token lifetimes, all documented on the [Forest MCP Server page](/product/embed/mcp-server).
-- The **API service** is configured through the `api` options. `tokenEncryptionKey` enables OAuth sign-in (and with it the AI relay), `allowedOrigins` enables browser access, `openapiEnabled` serves the API docs. The secrets, the Forest URLs and the logger are inherited from the agent: embedded, the Gateway API never reads the environment.
+- The **API service** is configured through the `api` options. `tokenEncryptionKey` enables OAuth sign-in (and with it the AI relay), `allowedOrigins` adds the browser origins allowed beside the built-in Zendesk one, `openapiEnabled` serves the API docs. The secrets, the Forest URLs and the logger are inherited from the agent: embedded, the Gateway API never reads the environment.
 
 On a Ruby back-end, or any deployment where the agent cannot host the Gateway, run the [standalone Gateway](/product/embed/gateway-standalone) instead. It serves the same routes from its own process and port.
 
@@ -170,7 +170,9 @@ NestJS needs no special handling as long as you mount before `listen()`. The MCP
 
 A browser UI is cross-origin by definition, so the API's `allowedOrigins` decides what reaches your data.
 
-Matching is exact: scheme, host and port, case-insensitive, default ports normalized away, no trailing slash. An origin outside the list never reaches your data, with one exemption: a request from the very host serving the Gateway is allowed through, compared on host, so an application serving its own UI beside the mount works with an empty allow-list. How a refused origin is answered depends on the preflight:
+From `@forestadmin/agent` 1.111.0 and the standalone Gateway 1.1.0, the allow-list always holds `https://*.apps.zdusercontent.com`, so the [Zendesk app](/product/embed/zendesk) works with nothing configured. Your entries are added to it, and no option removes it. The Gateway logs the effective list at boot, `Allowed origins: https://my-app.com, https://*.apps.zdusercontent.com`.
+
+Matching is exact: scheme, host and port, case-insensitive, default ports normalized away, no trailing slash. An origin outside the list never reaches your data, with one exemption: a request from the very host serving the Gateway is allowed through, compared on host, so an application serving its own UI beside the mount works with nothing configured. How a refused origin is answered depends on the preflight:
 
 - A request without a preflight answers `403 origin_not_allowed`.
 - A preflighted request is stopped one step earlier, at the `OPTIONS`.
@@ -179,12 +181,20 @@ Matching is exact: scheme, host and port, case-insensitive, default ports normal
   A browser rarely shows you that `403`. Every data route is a `POST` with a JSON body, so the browser sends a preflight first. A rejected `OPTIONS` answers `204` with no CORS headers, and the browser reports a plain CORS error without ever issuing the request that would have carried the `403`. The cause shows up in the Gateway's own log line, `BFF preflight origin rejected`, with the origin it refused. Read it there, or replay the call with `curl -H 'Origin: ...'` to see the `403` body.
 </Note>
 
-An entry may carry one wildcard label at the front of the host, `https://*.example.com`. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly. The wildcard is refused at boot, and named in the startup warning, when it appears anywhere else in the host, more than once, or over a host with fewer than two remaining labels.
+An entry may carry one wildcard label at the front of the host, `https://*.example.com`. It stands for exactly one subdomain label, so it covers `https://app.example.com` but neither `https://a.b.example.com` nor the bare `https://example.com`. Scheme and port still match exactly. The wildcard is refused when it appears anywhere else in the host, more than once, or over a host with fewer than two remaining labels.
+
+A malformed entry stops the boot. The error names the setting, every rejected entry, the expected format, and the `https://` form when the entry only lacks its scheme:
+
+```text
+Invalid configuration: api.allowedOrigins has malformed entries: "client.com" (did you mean "https://client.com"?). Each entry is an origin: scheme, host and optional port, e.g. https://client.com or https://*.client.com. See https://docs.forest.app/product/embed/gateway#cross-origin-access.
+```
+
+Older Gateways dropped a malformed entry with a boot warning and started anyway, so an upgrade can stop a deployment that carried one. Fix the entry the error names.
 
 One shape escapes that check. A `*` placed in the URL's userinfo rather than the host, as in `https://*@example.com`, is stripped when the entry is normalized. The entry is then accepted as the exact origin `https://example.com` and no warning names it. Mistyping `*.` as `*@` therefore allows the bare domain and none of its subdomains, which is narrower than intended and silent. Check that the startup log lists the entries you expect.
 
 <Warning>
-  A wildcard widens the allow-list to every host under that domain, including hosts you do not control when the domain is shared. That is usually acceptable here, since the origin check is not the authentication boundary: a session or a [service account application token](/get-started/project-settings/service-accounts) is still required. Weigh it per domain.
+  A wildcard widens the allow-list to every host under that domain, including hosts you do not control when the domain is shared, which is the case of the built-in Zendesk entry: any app Zendesk hosts passes the origin check. That is acceptable here, since the origin check is not the authentication boundary: a session or a [service account application token](/get-started/project-settings/service-accounts) is still required. Weigh it per domain.
 </Warning>
 
 A request carrying no `Origin` at all is untouched, which covers every server-to-server call. The opaque `Origin: null` counts as a present origin and is refused. A sandboxed iframe sends it, so give yours `allow-same-origin` if it has to reach the Gateway.
