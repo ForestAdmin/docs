@@ -142,7 +142,15 @@ There is nothing to pick. The project and environment come from the Gateway your
 
 You configure nothing here. On every ticket the app reads the signals the ticket already carries, then searches your collections for them, with no model in the loop.
 
-It reads the requester's Zendesk id and email, plus the emails, URLs, UUIDs, `#12345` references and 6-digit-or-longer numbers it finds in the subject and description.
+It reads the requester's Zendesk id and email, plus the emails, URLs and record ids it finds in the subject and description. It recognizes five record id formats:
+
+- a UUID
+- a prefixed id, 2 to 8 letters and an underscore followed by at least 10 letters and digits mixing both, as in `abc_9f8e7d6c5b4a`
+- a 24-character hexadecimal ObjectId
+- a `#1234` reference of 4 digits or more
+- a number of 6 digits or more
+
+Because a prefixed id must carry both letters and digits, `snake_case` words, file names and version strings are not read as ids.
 
 It searches the fields your schema exposes, picked by name:
 
@@ -154,7 +162,9 @@ It searches the fields your schema exposes, picked by name:
 | Reference | `slug`, `key`, `code`, `number`, `ref` | 70 |
 | Name | `name`, `fullName`, `title`, `label` | 40 |
 
-Exact hits outrank partial ones, join-like collections lose 30 points, and the best-scoring records surface in the Data tab. Each ticket is capped at 6 searches at once, 30 collections for the Zendesk id, 15 for emails, and 100 searches in total, so a wide schema does not fan out indefinitely.
+Each record id goes to every collection whose key can hold it, a UUID to a `Uuid` or `String` field, a number to a `Number` or `String` field, a prefixed id or ObjectId to a `String` field. In each collection the app searches one id field, `id` when it fits and otherwise the first id field that does, plus the collection's external user id fields. A Zendesk user id field only receives numbers. No collection is skipped for its position in your schema, so a ticket carrying an order id and a customer id can surface both records.
+
+Exact hits outrank partial ones, join-like collections lose 30 points, and the best-scoring records surface in the Data tab. Each ticket is capped at 6 searches at once, 30 collections for the Zendesk id, 15 for emails, and 100 searches in total, so a wide schema does not fan out indefinitely. Searches past that budget are dropped, and the app logs how many in the browser console.
 
 <Note>
   A collection that stores the Zendesk user id under a name outside that convention, `crm_user_ref` or `support_id` for instance, is never searched for it. Expose a field whose name follows the convention, or rely on the email signal.
