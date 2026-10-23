@@ -253,6 +253,7 @@
             "pages": [
               "product/manage/team-performance",
               "product/manage/inbox",
+              "product/manage/automated-inboxes",
               "product/manage/charts/overview",
               "product/manage/charts/smart-charts"
             ]
