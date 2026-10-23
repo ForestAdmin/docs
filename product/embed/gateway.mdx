@@ -145,7 +145,7 @@ The deprecated `mountAiMcpServer()` alias does not share this scope: it keeps it
 
 ## Moving from `addBff()` to `addGateway({ api })`
 
-The migration is mechanical, and it is all or nothing: `addBff()` cannot be combined with `addGateway()`, so remove the `addBff()` call when you add `addGateway()`.
+The migration is mechanical, and it is all or nothing: `addBff()` cannot be combined with `addGateway()`, so remove the `addBff()` call when you add `addGateway()`, and move any `mountAiMcpServer()` call into the same `addGateway({ mcp, api })`.
 
 - The `addBff()` options move under `api` unchanged: `addBff({ allowedOrigins, tokenEncryptionKey })` becomes `addGateway({ api: { allowedOrigins, tokenEncryptionKey } })`.
 - The URL moves from `/bff` to `{basePath}/api`, which is `/api` by default. Update **every** application that called the old URL. In the [Zendesk app](/product/embed/zendesk), the `forestGatewayApiUrl` setting changes from `{your-agent-url}/bff` to `{your-agent-url}/api`.
