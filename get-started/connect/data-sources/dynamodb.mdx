@@ -1,0 +1,229 @@
+---
+title: "DynamoDB datasource"
+description: "Connect Amazon DynamoDB tables to Forest with schema introspection, composite keys and cost controls"
+---
+
+<Note>Only available for Node.js.</Note>
+
+The DynamoDB datasource connects Amazon DynamoDB tables to Forest. It introspects each table or reads a schema you declare, exposes the partition key and the sort key as a composite primary key, and turns arrays of maps into collections of their own.
+
+## Installation
+
+```bash
+npm install @forestadmin/datasource-dynamodb @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb
+```
+
+The two AWS SDK packages are peer dependencies. The datasource uses the version your project installs.
+
+## Basic usage
+
+```javascript
+import { createAgent } from '@forestadmin/agent';
+import { createDynamoDBDataSource } from '@forestadmin/datasource-dynamodb';
+
+const agent = createAgent(options);
+
+// Every table of the account and region, introspected
+agent.addDataSource(createDynamoDBDataSource({ region: 'eu-west-1' }));
+```
+
+## Credentials and region
+
+DynamoDB has no connection string. The AWS SDK resolves the credentials from its standard chain, in this order: environment variables (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`), a shared profile (`AWS_PROFILE`), then an IAM role. The `region` option sets the region, and `AWS_REGION` does the same when the option is absent.
+
+| Option | Description |
+|--------|-------------|
+| `region` | AWS region of the tables. |
+| `credentials` | Credentials passed to the AWS SDK, instead of the standard chain. |
+| `endpoint` | Endpoint URL, for DynamoDB Local. |
+| `clientConfig` | Extra configuration passed to the `DynamoDBClient`. |
+| `client` | A `DynamoDBClient` or `DynamoDBDocumentClient` the project already has. |
+
+The datasource calls `ListTables` and `DescribeTable` to introspect, `Query`, `Scan`, `GetItem` and `BatchGetItem` to read, `PutItem`, `UpdateItem`, `DeleteItem` and `BatchWriteItem` to write, and `ExecuteStatement` for native queries. A read-only back-office needs only the read operations.
+
+## Choose the tables and name the collections
+
+By default the datasource introspects every table of the account and region and names each collection after its table. List the tables to restrict the set:
+
+```javascript
+createDynamoDBDataSource({
+  region: 'eu-west-1',
+  tables: ['Customers', 'Orders'],
+});
+```
+
+Use the builder to name a collection, tune its introspection or share one table between several collections:
+
+```javascript
+createDynamoDBDataSource({
+  region: 'eu-west-1',
+  builder: configurator =>
+    configurator
+      .addCollectionFromTable({ name: 'customers', tableName: 'Customers', sampleSize: 200 })
+      .addCollectionFromTable({ name: 'orders', tableName: 'Orders', scanPolicy: 'deny' }),
+});
+```
+
+## Schema introspection
+
+`DescribeTable` returns the keys and the indexes of a table. DynamoDB does not type the other attributes, so the datasource infers them from a sample of items.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `sampleSize` | `100` | Items read per table to infer its attributes. |
+| `maxDepth` | `5` | Deepest nested map exposed as separate columns. |
+
+Set both defaults for all tables with `introspectionConfig: { sampleSize, maxDepth }`.
+
+A table scan has no order, so the sample does not hold the latest items. Nested maps become `address->city` columns. An attribute absent or null in part of the sample is nullable. An attribute seen with several types becomes a Json column.
+
+## Manual schema
+
+Declare the collections yourself to skip the introspection:
+
+```javascript
+createDynamoDBDataSource({
+  region: 'eu-west-1',
+  disableIntrospection: true,
+  schema: {
+    collections: [
+      {
+        name: 'orders',
+        tableName: 'Orders',
+        partitionKey: { name: 'customerId', type: 'string' },
+        sortKey: { name: 'orderId', type: 'string' },
+        indexes: [
+          {
+            name: 'by-status',
+            type: 'GSI',
+            partitionKey: { name: 'status', type: 'string' },
+            sortKey: { name: 'createdAt', type: 'string' },
+            coversAllItems: true,
+          },
+        ],
+        fields: [
+          { name: 'total', type: 'number' },
+          { name: 'status', type: 'string', nullable: true },
+          { name: 'tags', type: 'array', subType: 'string', set: true },
+          { name: 'address', type: 'object', fields: [{ name: 'city', type: 'string' }] },
+        ],
+      },
+    ],
+  },
+});
+```
+
+Keys are strings or numbers. The field types are `string`, `number`, `boolean`, `date`, `dateonly`, `timeonly`, `object`, `array`, `point` and `binary`. `date` and `dateonly` hold ISO 8601 strings. `binary` holds base64 text and Forest filters it on the items the datasource reads. `point` holds GeoJSON, which Forest shows as Json. `timeonly` appears as Forest's `Time`.
+
+An index with a sort key leaves out the items that lack that attribute. The datasource reads such an index only when the filter has a condition on its sort key. Declare `coversAllItems: true` when every item holds the attribute, and the datasource reads the index whenever a filter pins its partition key.
+
+A string or number set reads as an array. The datasource writes it back as a set when the introspection saw the attribute as a set, or when the manual schema declares `set: true` on the array. Emptying a set in Forest removes the attribute, because DynamoDB holds no empty set. A number beyond 2^53 reads as text, which keeps every digit.
+
+## Composite keys
+
+The partition key and the sort key are both primary key columns of the collection, so Forest identifies a record by the two. Keys do not change once a record exists: editing a key returns an error, and moving a record means deleting it and creating another.
+
+Forest greys the key fields in the creation form. When a string partition key or sort key stays empty, the datasource generates a UUID, and a sort key keeps its entity prefix when the collection has one. A numeric key has no generated value, so the record needs it from another source.
+
+## Single-table design
+
+Several collections can share one table, each restricted to its own items. Pick the items with a sort key prefix or with a discriminator attribute:
+
+```javascript
+configurator
+  .addCollectionFromTable({
+    name: 'users',
+    tableName: 'App',
+    entity: { sortKeyPrefix: 'USER#' }, // or { attribute: 'entityType', value: 'USER' }
+  })
+  .addCollectionFromTable({
+    name: 'orders',
+    tableName: 'App',
+    entity: { sortKeyPrefix: 'ORDER#' },
+  });
+```
+
+The sort key prefix also serves as the sort key condition of queries, and the datasource checks it when it creates a record.
+
+## Arrays as collections
+
+Expose an array of maps as a collection of its own with `virtualCollections`:
+
+```javascript
+createDynamoDBDataSource({
+  virtualCollections: [
+    { parentCollection: 'orders', collectionName: 'order_lines', arrayField: 'lines' },
+  ],
+});
+```
+
+Each element of the array becomes a record. Its identity is the key of the table item plus its `index` in the array. Creating a record appends an element, updating sets the attributes of the element, and deleting removes it, so the index of the following elements shifts.
+
+`arrayField` points inside a map with `->`, as in `meta->items`. An array inside an array becomes a collection whose parent is the first virtual collection, declared after it. The position in the outer array becomes a key column named `<parent>Index`, and creating an inner element needs it:
+
+```javascript
+virtualCollections: [
+  { parentCollection: 'orders', collectionName: 'order_lines', arrayField: 'lines' },
+  { parentCollection: 'order_lines', collectionName: 'line_parts', arrayField: 'parts' },
+];
+```
+
+## How queries run
+
+DynamoDB reads fast by key and scans otherwise, and it cannot sort, count or aggregate on the server. The datasource uses the key whenever a filter allows it and does the rest on the items it reads.
+
+| Feature | Behavior |
+|---------|----------|
+| Filters | The datasource pushes a filter down when DynamoDB evaluates it. `Like`, `ILike`, `IContains`, `EndsWith` and date intervals run on the returned items, so they read more than they return. |
+| Access path | A `Query` on the table or on an index when an equality pins the partition key, a `BatchGetItem` when the filter names whole keys, a `Scan` otherwise. |
+| Sort | Free on the sort key of the table or index being read. Any other attribute reads the matching items, then sorts them in memory. |
+| Pagination | DynamoDB has no offset. The datasource remembers the key where earlier pages stopped and resumes from the closest one. `maxOffset` (default `100000`) caps how deep a page goes. |
+| Count and charts | The datasource computes them on the items it reads, in parallel segments for a table. It keeps results in memory for `chartCacheTtlMs` (default 30 seconds) and drops them when a write goes through the agent. Set `approximateCount: true` to answer an unfiltered count from the table description, which DynamoDB refreshes about every 6 hours. |
+| Search | Runs on the items, so it scans. It ignores case and keeps accents. |
+| Relations | DynamoDB has none. Declare them with `addManyToOneRelation` and the other relation methods: a lookup by key costs one `BatchGetItem`. |
+
+DynamoDB orders and compares dates as text. Store dates in one offset, UTC, when a date is a sort key or when you filter on ranges of it.
+
+## Control read costs
+
+A request that no key or index serves reads the whole table. `scanPolicy` decides what happens:
+
+| Value | Behavior |
+|-------|----------|
+| `'warn'` (default) | Scans and logs a warning that names the table and the filtered fields, never the values. |
+| `'allow'` | Scans without a warning. |
+| `'deny'` | Refuses the request with an explicit error. |
+
+The datasource refuses any other value at startup. Set `scanPolicy` on the datasource or on a single collection.
+
+`maxScannedItems` (default `1000000`) stops a request that reads more items than the limit. The request ends with an error, never with a partial result. Set it on the datasource or on a collection.
+
+`logQueries` logs the expressions sent to DynamoDB, and `logConsumedCapacity` logs the capacity units each request consumed. The AWS SDK retries throttled requests in adaptive mode, up to 10 attempts.
+
+## Native queries
+
+Set `liveQueryConnection` to offer PartiQL `SELECT` statements as native queries, with `$name` placeholders:
+
+```javascript
+createDynamoDBDataSource({
+  region: 'eu-west-1',
+  liveQueryConnection: 'dynamo',
+});
+```
+
+```sql
+SELECT * FROM "Orders" WHERE customerId = $customer
+```
+
+The datasource refuses any statement that does not start with `SELECT`. PartiQL cannot aggregate, so build charts from the aggregations of a collection instead.
+
+## Limitations
+
+- Collections backed by a secondary index are not available. The datasource still reads an index as an access path of its table's collection.
+- Updates have no optimistic locking: two users who edit one record at the same time both succeed, and the last write wins.
+- Binary partition keys and sort keys are not supported.
+- Counts and charts read the items. An exact count on a large table reads the whole table.
+
+## Source code
+
+This connector is open source. Browse the code or contribute on GitHub: [`@forestadmin/datasource-dynamodb`](https://github.com/ForestAdmin/agent-nodejs/tree/main/packages/datasource-dynamodb).

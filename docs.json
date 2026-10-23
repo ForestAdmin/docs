@@ -87,6 +87,7 @@
                   "get-started/connect/data-sources/rpc",
                   "get-started/connect/data-sources/graphql-hasura",
                   "get-started/connect/data-sources/cosmosdb",
+                  "get-started/connect/data-sources/dynamodb",
                   "get-started/connect/data-sources/snowflake",
                   "get-started/connect/data-sources/pylon",
                   "get-started/connect/data-sources/zendesk",
