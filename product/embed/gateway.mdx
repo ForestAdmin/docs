@@ -140,12 +140,12 @@ The deprecated `mountAiMcpServer()` alias does not share this scope: it keeps it
 `mountAiMcpServer()` still works at the host root or under its own `basePath`, and logs a deprecation warning at startup.
 
 <Warning>
-  `addGateway()` and `mountAiMcpServer()` cannot be combined. Calling one after the other throws at the builder call, not from `start()`. Configure every service through `addGateway({ mcp, api })`.
+  `addGateway()` cannot be combined with either deprecated alias, `mountAiMcpServer()` or `addBff()`. Calling one after the other, in either order, throws at the builder call, not from `start()`, and the agent logs the reason at `Error` level first, so it shows up even when your startup code catches the error. Configure every service through a single `addGateway({ mcp, api })`.
 </Warning>
 
 ## Moving from `addBff()` to `addGateway({ api })`
 
-The migration is mechanical:
+The migration is mechanical, and it is all or nothing: `addBff()` cannot be combined with `addGateway()`, so remove the `addBff()` call when you add `addGateway()`, and move any `mountAiMcpServer()` call into the same `addGateway({ mcp, api })`.
 
 - The `addBff()` options move under `api` unchanged: `addBff({ allowedOrigins, tokenEncryptionKey })` becomes `addGateway({ api: { allowedOrigins, tokenEncryptionKey } })`.
 - The URL moves from `/bff` to `{basePath}/api`, which is `/api` by default. Update **every** application that called the old URL. In the [Zendesk app](/product/embed/zendesk), the `forestGatewayApiUrl` setting changes from `{your-agent-url}/bff` to `{your-agent-url}/api`.
